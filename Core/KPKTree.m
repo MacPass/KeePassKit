@@ -27,31 +27,20 @@
 
 @implementation KPKTree
 
-- (id)initWithData:(NSData *)data password:(KPLPassword *)password {
-  [self doesNotRecognizeSelector:_cmd];
+- (id)initWithData:(NSData *)data password:(KPKPassword *)password {
   return nil;
 }
 
-- (KPLGroup *)createGroup:(KPLGroup *)parent {
-  [self doesNotRecognizeSelector:_cmd];
+- (KPKGroup *)createGroup:(KPKGroup *)parent {
   return nil;
 }
 
-- (KPLEntry *)createEntry:(KPLGroup *)parent {
-  [self doesNotRecognizeSelector:_cmd];
+- (KPKEntry *)createEntry:(KPKGroup *)parent {
   return nil;
 }
 
-- (NSData *)serializeWithPassword:(KPLPassword *)password error:(NSError *)error {
-  [self doesNotRecognizeSelector:_cmd];
+- (NSData *)serializeWithPassword:(KPKPassword *)password error:(NSError *)error {
   return nil;
-}
-
-- (KPLGroup *)root {
-  return nil;
-}
-
-- (void)setRoot:(KPLGroup *)root {
 }
 
 @end

@@ -26,12 +26,7 @@
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKAttachment.h"
-
-NSString *const KPKTitleKey     = @"Title";
-NSString *const KPKUsernameKey  = @"Username";
-NSString *const KPKUrlKey       = @"Url";
-NSString *const KPKPasswordKey  = @"Password";
-NSString *const KPKNotesKey     = @"Notes";
+#import "KPKFormat.h"
 
 @implementation KPKEntry {
   NSMutableDictionary *_defaultAttributes;
@@ -63,7 +58,7 @@ NSString *const KPKNotesKey     = @"Notes";
 }
 
 - (NSString *)url {
-  return _defaultAttributes[ KPKUrlKey ];
+  return _defaultAttributes[ KPKURLKey ];
 }
 
 - (void)setTitle:(NSString *)title {
@@ -83,7 +78,7 @@ NSString *const KPKNotesKey     = @"Notes";
 }
 
 - (void)setUrl:(NSString *)url {
-  [self _setAttribute:url forKey:KPKUrlKey];
+  [self _setAttribute:url forKey:KPKURLKey];
 }
 
 - (void)addTag:(NSString *)tag {

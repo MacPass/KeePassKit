@@ -101,12 +101,29 @@
           self.expiryTime];
 }
 
+
+- (NSUInteger)countOfEntries {
+  return [_entries count];
+}
+
 - (void)insertObject:(KPKEntry *)entry inEntriesAtIndex:(NSUInteger)index {
   [_entries insertObject:entry atIndex:index];
 }
 
+- (void)removeObjectFromEntriesAtIndex:(NSUInteger)index {
+  [_entries removeObjectAtIndex:index];
+}
+
+- (NSUInteger)countOfGroups {
+  return [_groups count];
+}
+
 - (void)insertObject:(KPKGroup *)group inGroupsAtIndex:(NSUInteger)index {
   [_groups insertObject:group atIndex:index];
+}
+
+- (void)removeObjectFromGroupsAtIndex:(NSUInteger)index {
+  [_groups removeObjectAtIndex:index];
 }
 
 @end

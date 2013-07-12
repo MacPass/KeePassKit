@@ -25,6 +25,8 @@
 
 #import <Foundation/Foundation.h>
 #import "KPKNode.h"
+
+
 @class KPKGroup;
 
 @interface KPKEntry : KPKNode {

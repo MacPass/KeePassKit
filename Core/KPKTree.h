@@ -27,20 +27,19 @@
 #import "KPKDatabaseVersion.h"
 #import "KPKNode.h"
 
-@class KPLGroup;
-@class KPLEntry;
-@class KPLPassword;
+@class KPKGroup;
+@class KPKEntry;
+@class KPKPassword;
 
 @interface KPKTree : KPKNode
 
-@property (nonatomic, assign) KPLGroup *root;
+@property (nonatomic, strong) KPKGroup *root;
 @property (nonatomic, readonly) KPKDatabaseVersion minimumVersion;
 
-- (id)initWithData:(NSData *)data password:(KPLPassword *)password;
+- (id)initWithData:(NSData *)data password:(KPKPassword *)password;
+- (NSData *)serializeWithPassword:(KPKPassword *)password error:(NSError *)error;
 
-- (NSData *)serializeWithPassword:(KPLPassword *)password error:(NSError *)error;
-
-- (KPLGroup *)createGroup:(KPLGroup *)parent;
-- (KPLEntry *)createEntry:(KPLGroup *)parent;
+- (KPKGroup *)createGroup:(KPKGroup *)parent;
+- (KPKEntry *)createEntry:(KPKGroup *)parent;
 
 @end
