@@ -1,8 +1,8 @@
 //
-//  KPKTree.h
+//  KPKEntry.h
 //  KeePassKit
 //
-//  Created by Michael Starke on 11.07.13.
+//  Created by Michael Starke on 12.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  KeePassKit - Cocoa KeePass Library
@@ -24,22 +24,23 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKDatabaseVersion.h"
 
-@class KPLGroup;
-@class KPLEntry;
-@class KPLPassword;
+@class KPKGroup;
 
-@interface KPKTree : NSObject
+@interface KPKEntry : NSObject  <NSCoding>
 
-@property (nonatomic, strong) KPLGroup *root;
-@property (nonatomic, readonly) KPKDatabaseVersion minimumVersion;
+@property(nonatomic, weak) KPKGroup *parent;
+@property(nonatomic, assign) NSInteger image;
 
-- (id)initWithData:(NSData *)data password:(KPLPassword *)password;
+@property (nonatomic, assign) NSString *title;
+@property (nonatomic, assign) NSString *password;
+@property (nonatomic, assign) NSString *username;
+@property (nonatomic, assign) NSString *url;
+@property (nonatomic, assign) NSString *notes;
 
-- (NSData *)serializeWithPassword:(KPLPassword *)password error:(NSError *)error;
-
-- (KPLGroup *)createGroup:(KPLGroup *)parent;
-- (KPLEntry *)createEntry:(KPLGroup *)parent;
+@property(nonatomic, strong) NSDate *creationTime;
+@property(nonatomic, strong) NSDate *lastModificationTime;
+@property(nonatomic, strong) NSDate *lastAccessTime;
+@property(nonatomic, strong) NSDate *expiryTime;
 
 @end

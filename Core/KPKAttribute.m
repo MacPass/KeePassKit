@@ -1,8 +1,8 @@
 //
-//  KPKTree.h
+//  KPKAttribute.m
 //  KeePassKit
 //
-//  Created by Michael Starke on 11.07.13.
+//  Created by Michael Starke on 12.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  KeePassKit - Cocoa KeePass Library
@@ -23,23 +23,39 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import <Foundation/Foundation.h>
-#import "KPKDatabaseVersion.h"
+#import "KPKAttribute.h"
 
-@class KPLGroup;
-@class KPLEntry;
-@class KPLPassword;
+@implementation KPKAttribute
 
-@interface KPKTree : NSObject
+- (id)init {
+  return [self initWithKey:nil value:nil];
+}
 
-@property (nonatomic, strong) KPLGroup *root;
-@property (nonatomic, readonly) KPKDatabaseVersion minimumVersion;
+- (id)initWithKey:(NSString *)key value:(NSString *)value {
+  self = [super init];
+  if(self) {
+    _key = [key copy];
+    _value = [value copy];
+  }
+  return self;
+}
 
-- (id)initWithData:(NSData *)data password:(KPLPassword *)password;
+- (id)copyWithZone:(NSZone *)zone {
+  return [[KPKAttribute allocWithZone:zone] initWithKey:self.key value:self.value];
+}
 
-- (NSData *)serializeWithPassword:(KPLPassword *)password error:(NSError *)error;
+- (BOOL)isEqual:(id)object {
+  if([object isKindOfClass:[self class]]) {
+    KPKAttribute *other = (KPKAttribute *)object;
+    [self.key isEqualToString:other.key] && [self.value isEqualToString:other.value];
+  }
+  return NO;
+}
 
-- (KPLGroup *)createGroup:(KPLGroup *)parent;
-- (KPLEntry *)createEntry:(KPLGroup *)parent;
+- (NSUInteger)hash {
+  //FIXME: Implement Hash function
+  NSAssert(false, @"Hash function not implemented");
+  return 0;
+}
 
 @end
