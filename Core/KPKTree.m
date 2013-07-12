@@ -47,4 +47,11 @@
   return nil;
 }
 
+- (KPLGroup *)root {
+  return nil;
+}
+
+- (void)setRoot:(KPLGroup *)root {
+}
+
 @end

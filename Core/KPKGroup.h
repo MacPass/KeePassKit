@@ -24,27 +24,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "KPKNode.h"
 
-@class KPKEntry;
-
-@interface KPKGroup : NSObject {
-@private
-  NSMutableArray *_groups;
-  NSMutableArray *_entries;
-}
-
-@property (nonatomic, retain) NSUUID *uuid;
-@property(nonatomic, weak) KPKGroup *parent;
+@interface KPKGroup : KPKNode
 
 @property(nonatomic, assign) NSInteger image;
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, readonly) NSArray *groups;
 @property(nonatomic, readonly) NSArray *entries;
-
-@property(nonatomic, strong) NSDate *creationTime;
-@property(nonatomic, strong) NSDate *lastModificationTime;
-@property(nonatomic, strong) NSDate *lastAccessTime;
-@property(nonatomic, strong) NSDate *expiryTime;
 
 @property(nonatomic, assign) BOOL canAddEntries;
 

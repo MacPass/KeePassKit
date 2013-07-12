@@ -24,13 +24,15 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "KPKNode.h"
 @class KPKGroup;
 
-@interface KPKEntry : NSObject  <NSCoding>
-
-@property(nonatomic, weak) KPKGroup *parent;
-@property(nonatomic, assign) NSInteger image;
+@interface KPKEntry : KPKNode {
+@private
+  NSMutableArray *_attachments;
+  NSMutableArray *_tags;
+  NSMutableDictionary *_attributes;
+}
 
 @property (nonatomic, assign) NSString *title;
 @property (nonatomic, assign) NSString *password;
@@ -38,9 +40,9 @@
 @property (nonatomic, assign) NSString *url;
 @property (nonatomic, assign) NSString *notes;
 
-@property(nonatomic, strong) NSDate *creationTime;
-@property(nonatomic, strong) NSDate *lastModificationTime;
-@property(nonatomic, strong) NSDate *lastAccessTime;
-@property(nonatomic, strong) NSDate *expiryTime;
+
+@property (nonatomic, strong) NSArray *attachmets;
+@property (nonatomic, strong) NSArray *tags;
+@property (nonatomic, strong) NSDictionary *attributes;
 
 @end

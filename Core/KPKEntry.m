@@ -25,7 +25,7 @@
 
 #import "KPKEntry.h"
 #import "KPKGroup.h"
-#import "KPKAttribute.h"
+#import "KPKAttachment.h"
 
 NSString *const KPKTitleKey     = @"Title";
 NSString *const KPKUsernameKey  = @"Username";
@@ -33,79 +33,106 @@ NSString *const KPKUrlKey       = @"Url";
 NSString *const KPKPasswordKey  = @"Password";
 NSString *const KPKNotesKey     = @"Notes";
 
-@interface KPKEntry ()
-
-@property (nonatomic, weak) KPKAttribute *titleAttribute;
-@property (nonatomic, weak) KPKAttribute *usernameAttribute;
-@property (nonatomic, weak) KPKAttribute *passwordAttribute;
-@property (nonatomic, weak) KPKAttribute *notesAttribute;
-
-@end
-
 @implementation KPKEntry {
-  NSMutableDictionary *_attributes;
+  NSMutableDictionary *_defaultAttributes;
 }
 
 - (id)init {
   self = [super init];
   if (self) {
+    _defaultAttributes = [[NSMutableDictionary alloc] initWithCapacity:5];
     _attributes = [[NSMutableDictionary alloc] initWithCapacity:5];
   }
   return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-  self = [super init];
-  if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
-    _attributes = [aDecoder decodeObjectForKey:@"attributes"];
-    _parent = [aDecoder decodeObjectForKey:@"parent"];
-  }
-  return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-  if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
-    [aCoder encodeObject:self.parent.uuid forKey:@"parent"];
-    [aCoder encodeObject:_attributes forKey:@"attributes"];
-  }
-}
-
 - (NSString *)title {
-  return self.titleAttribute.value;
+  return _defaultAttributes[ KPKTitleKey ];
 }
 
 - (NSString *)username {
-  return self.usernameAttribute.value;
+  return _defaultAttributes[ KPKUsernameKey ];
 }
 
 - (NSString *)password {
-  return self.passwordAttribute.value;
+  return _defaultAttributes[ KPKPasswordKey ];
+}
+
+- (NSString *)notes {
+  return _defaultAttributes[ KPKNotesKey ];
+}
+
+- (NSString *)url {
+  return _defaultAttributes[ KPKUrlKey ];
 }
 
 - (void)setTitle:(NSString *)title {
-  [self _setValue:title forAttributeWithKey:KPKTitleKey valueKey:@"titleAttribute"];
+  [self _setAttribute:title forKey:KPKTitleKey];
 }
 
-
 - (void)setUsername:(NSString *)username {
-  [self _setValue:username forAttributeWithKey:KPKUsernameKey valueKey:@"usernameAttribute"];
+  [self _setAttribute:username forKey:KPKUsernameKey];
 }
 
 - (void)setPassword:(NSString *)password {
-  [self _setValue:password forAttributeWithKey:KPKPasswordKey valueKey:@"passwordAttribute"];
+  [self _setAttribute:password forKey:KPKPasswordKey];
+}
+
+- (void)setNotes:(NSString *)notes {
+  [self _setAttribute:notes forKey:KPKNotesKey];
+}
+
+- (void)setUrl:(NSString *)url {
+  [self _setAttribute:url forKey:KPKUrlKey];
+}
+
+- (void)addTag:(NSString *)tag {
+  [self insertObject:tag inTagsAtIndex:[_tags count]];
+}
+
+- (void)removeTag:(NSString *)tag {
+  [self removeObjectFromTagsAtIndex:[_tags indexOfObject:tag]];
 }
 
 #pragma mark -
-#pragma mark Helper
+#pragma mark KVO
 
-- (void)_setValue:(NSString *)value forAttributeWithKey:(NSString *)attributeKey valueKey:(NSString *)valueKey {
-  KPKAttribute *attribute = nil;
-  if(![self valueForKey:valueKey]) {
-    attribute = [[KPKAttribute alloc] initWithKey:attributeKey value:value];
-    _attributes[ KPKTitleKey ] = attribute;
-    [self setValue:attribute forKey:valueKey];
+- (NSUInteger)countOfAttributes {
+  return [_attributes count];
+}
+
+- (NSUInteger)countOfAttachmets {
+  return [_attachments count];
+}
+
+- (void)insertObject:(KPKAttachment *)attachment inAttachmetsAtIndex:(NSUInteger)index {
+  [_attachments insertObject:attachment atIndex:index];
+}
+
+- (void)removeObjectFromAttachmetsAtIndex:(NSUInteger)index {
+  [_attachments removeObjectAtIndex:index];
+}
+
+- (NSUInteger)countOfTags {
+  return [_tags count];
+}
+
+- (void)insertObject:(NSString *)tag inTagsAtIndex:(NSUInteger)index {
+  [_tags insertObject:tag atIndex:index];
+}
+
+- (void)removeObjectFromTagsAtIndex:(NSUInteger)index {
+  [_tags removeObjectAtIndex:index];
+}
+
+#pragma mark -
+#pragma mark Private Helper
+
+- (void)_setAttribute:(NSString *)value forKey:(NSString *)key {
+  if([_defaultAttributes[ key ] isEqualToString:value]) {
+    return;
   }
-  attribute.value = value;
+  _defaultAttributes[ key ] = value;
 }
 
 @end

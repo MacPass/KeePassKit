@@ -26,6 +26,14 @@
 #import "KPKGroup.h"
 #import "KPKEntry.h"
 
+@interface KPKGroup () {
+  @private
+    NSMutableArray *_groups;
+    NSMutableArray *_entries;
+}
+
+@end
+
 @implementation KPKGroup
 
 - (id)init {
@@ -85,12 +93,12 @@
 
 - (NSString*)description {
   return [NSString stringWithFormat:@"KdbGroup [image=%ld, name=%@, creationTime=%@, lastModificationTime=%@, lastAccessTime=%@, expiryTime=%@]",
-          _image,
+          self.image,
           _name,
-          _creationTime,
-          _lastModificationTime,
-          _lastAccessTime,
-          _expiryTime];
+          self.creationTime,
+          self.lastModificationTime,
+          self.lastAccessTime,
+          self.expiryTime];
 }
 
 - (void)insertObject:(KPKEntry *)entry inEntriesAtIndex:(NSUInteger)index {

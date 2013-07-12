@@ -25,14 +25,15 @@
 
 #import <Foundation/Foundation.h>
 #import "KPKDatabaseVersion.h"
+#import "KPKNode.h"
 
 @class KPLGroup;
 @class KPLEntry;
 @class KPLPassword;
 
-@interface KPKTree : NSObject
+@interface KPKTree : KPKNode
 
-@property (nonatomic, strong) KPLGroup *root;
+@property (nonatomic, assign) KPLGroup *root;
 @property (nonatomic, readonly) KPKDatabaseVersion minimumVersion;
 
 - (id)initWithData:(NSData *)data password:(KPLPassword *)password;
