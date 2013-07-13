@@ -1,8 +1,8 @@
 //
-//  NSData+Keyfile.h
+//  KPKErrors.m
 //  KeePassKit
 //
-//  Created by Michael Starke on 12.07.13.
+//  Created by Michael Starke on 13.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#import "KPKErrors.h"
 
-#import <Foundation/Foundation.h>
-#import "KPKDatabaseVersion.h"
-
-@interface NSData (Keyfile)
-
-+ (NSData *)dataWithWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseVersion)version error:(NSError **)error;
-
-@end
+NSString *const KPKErrorDomain = @"com.hicknhack.keepasskit";
