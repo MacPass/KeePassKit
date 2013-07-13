@@ -5,9 +5,6 @@
 //  Created by Michael Starke on 11.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
-//  KeePassKit - Cocoa KeePass Library
-//  Copyright (c) 2012-2013  Michael Starke, HicknHack Software GmbH
-//
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
