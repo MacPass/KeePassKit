@@ -10,4 +10,20 @@
 
 @implementation KPKNode
 
+- (id)init {
+  self = [super init];
+  if (self) {
+    _image = 0;
+    _uuid = [NSUUID UUID];
+    _minimumVersion = KPKDatabaseVersion1;
+    
+    NSDate *now = [NSDate date];
+    _creationTime = now;
+    _lastModificationTime = now;
+    _lastAccessTime = now;
+    _expiryTime = [NSDate distantFuture];
+  }
+  return self;
+}
+
 @end

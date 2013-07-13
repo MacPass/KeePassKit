@@ -27,9 +27,9 @@
 #import "KPKEntry.h"
 
 @interface KPKGroup () {
-  @private
-    NSMutableArray *_groups;
-    NSMutableArray *_entries;
+@private
+  NSMutableArray *_groups;
+  NSMutableArray *_entries;
 }
 
 @end
@@ -63,27 +63,31 @@
 
 - (void)addEntry:(KPKEntry *)entry {
   entry.parent = self;
-  [_entries addObject:entry];
+  [self insertObject:entry inEntriesAtIndex:[_entries count]];
 }
 
 - (void)removeEntry:(KPKEntry *)entry {
-  entry.parent = nil;
-  [_entries removeObject:entry];
+  NSUInteger index = [_entries indexOfObject:entry];
+  if(NSNotFound != index) {
+    [self removeObjectFromEntriesAtIndex:index];
+    entry.parent = nil;
+  }
 }
 
-- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKEntry *)toGroup {
-  //[self removeEntry:entry];
-  //[toGroup addEntry:entry];
+- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup {
+  [self removeEntry:entry];
+  [toGroup addEntry:entry];
 }
 
 - (BOOL)containsGroup:(KPKGroup *)group {
   // Check trivial case where group is passed to itself
-  if (self == group) {
+  if(self == group) {
     return YES;
-  } else {
+  }
+  else {
     // Check subgroups
-    for (KPKGroup *subGroup in self.groups) {
-      if ([subGroup containsGroup:group]) {
+    for(KPKGroup *subGroup in self.groups) {
+      if([subGroup containsGroup:group]) {
         return YES;
       }
     }

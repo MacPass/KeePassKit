@@ -26,6 +26,8 @@
 #import <Foundation/Foundation.h>
 #import "KPKNode.h"
 
+@class KPKEntry;
+
 @interface KPKGroup : KPKNode
 
 @property(nonatomic, assign) NSInteger image;
@@ -39,9 +41,9 @@
 - (void)removeGroup:(KPKGroup *)group;
 - (void)moveToGroup:(KPKGroup *)group;
 
-- (void)addEntry:(KPKGroup *)entry;
-- (void)removeEntry:(KPKGroup *)entry;
-- (void)moveEntry:(KPKGroup *)entry toGroup:(KPKGroup *)toGroup;
+- (void)addEntry:(KPKEntry *)entry;
+- (void)removeEntry:(KPKEntry *)entry;
+- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup;
 
 - (BOOL)containsGroup:(KPKGroup *)group;
 
