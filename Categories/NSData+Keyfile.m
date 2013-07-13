@@ -22,46 +22,103 @@
 
 
 #import "NSData+Keyfile.h"
+
 #import <CommonCrypto/CommonCrypto.h>
+
+#import "DDXMLElementAdditions.h"
+#import "NSMutableData+Base64.h"
+#import "KPKErrors.h"
+
+
 
 
 @implementation NSData (Keyfile)
 
-+ (NSData *)dataWithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
++ (NSData *)dataWithWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseVersion)version error:(NSError *__autoreleasing *)error {
+  switch (version) {
+    case KPKDatabaseVersion1:
+      return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
+    case KPKDatabaseVersion2:
+      return nil;
+  }
+}
+
++ (NSData *)_dataVersion1WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
   // Open the keyfile
   NSData *fileData = [NSData dataWithContentsOfURL:url
                                            options:(NSDataReadingUncached|NSDataReadingMappedIfSafe)
                                              error:error];
-  if(error) {
+  if(error || !fileData) {
     return nil;
   }
   
-  if(!fileData) {
-    return nil;
-  }
   if([fileData length] == 32) {
     return fileData; // Loading of a 32 bit binary file succeded;
   }
   NSData *decordedData = nil;
   if ([fileData length] == 64) {
-    error = nil;
-    NSString *hexstring = [[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding];
-    if(!error && hexstring != nil) {
-      decordedData = [self _keyDataWithHexString:hexstring];
-    }
+    decordedData = [self _keyDataFromHex:fileData];
   }
   if(!decordedData) {
-    // The hex encoded file failed to load, so try and hash the file
     decordedData = [self _keyDataFromHash:fileData];
   }
   return decordedData;
 }
 
-+ (NSData *)_keyDataWithHexString:(NSString *)hexString {
-  uint8_t buffer[32];
-  
-  if(hexString == nil) {
++ (NSData *)_dataVersion2WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
+  // Try and load a 2.x XML keyfile first
+  NSData *data = [self _dataWithContentOfXMLKeyFile:url error:error];
+  if(!data) {
+    return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
+  }
+  return data;
+}
+
++ (NSData *)_dataWithContentOfXMLKeyFile:(NSURL *)fileURL error:(NSError *__autoreleasing *)error {
+  NSString *xmlString = [NSString stringWithContentsOfURL:fileURL encoding:NSUTF8StringEncoding error:error];
+  if (xmlString == nil) {
     return nil;
+  }
+  
+  DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:xmlString options:0 error:error];
+  if (document == nil) {
+    return nil;
+  }
+  
+  // Get the root document element
+  DDXMLElement *rootElement = [document rootElement];
+  
+  DDXMLElement *keyElement = [rootElement elementForName:@"Key"];
+  if (keyElement == nil) {
+    document = nil;
+    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: NSLocalizedStringFromTable(@"ERROR_KEYFILE_NO_KEY_XML_ELEMENT", @"LocalizeableErrors", "")};
+    if(error != NULL) {
+      *error = [NSError errorWithDomain:KPKErrorDomain code:KPKErrorKeyParsingFailed userInfo:userInfo];
+    }
+    return nil;
+  }
+  
+  DDXMLElement *dataElement = [keyElement elementForName:@"Data"];
+  if (dataElement == nil) {
+    document = nil;
+    @throw [NSException exceptionWithName:@"ParseError" reason:@"Failed to parse keyfile" userInfo:nil];
+  }
+  
+  NSString *dataString = [dataElement stringValue];
+  if (dataString == nil) {
+    document = nil;
+    @throw [NSException exceptionWithName:@"ParseError" reason:@"Failed to parse keyfile" userInfo:nil];
+  }
+  
+  return [NSMutableData mutableDataWithBase64DecodedData:[dataString dataUsingEncoding:NSASCIIStringEncoding]];
+}
+
++ (NSData *)_keyDataFromHex:(NSData *)hexData {
+  uint8_t buffer[32];
+ 
+  NSString *hexString = [[NSString alloc] initWithData:hexData encoding:NSUTF8StringEncoding];
+  if(!hexString) {
+   return nil;
   }
   if([hexString length] != 64) {
     return nil; // No valid lenght found

@@ -1,8 +1,8 @@
 //
-//  NSData+Keyfile.h
+//  KPKErrors.h
 //  KeePassKit
 //
-//  Created by Michael Starke on 12.07.13.
+//  Created by Michael Starke on 13.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,19 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#ifndef MacPass_KPKErrors_h
+#define MacPass_KPKErrors_h
 
 #import <Foundation/Foundation.h>
-#import "KPKDatabaseVersion.h"
 
-@interface NSData (Keyfile)
+FOUNDATION_EXPORT NSString *const KPKErrorDomain;
 
-+ (NSData *)dataWithWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseVersion)version error:(NSError **)error;
+typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
+  KPKErrorUnknownFileFormat = -1000,
+  KPKErrorFileCorrupted,
+  KPKErrorWriteFailed,
+  KPKErrorDatabseParsingFailed,
+  KPKErrorKeyParsingFailed,
+};
 
-@end
+#endif

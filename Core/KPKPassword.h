@@ -33,7 +33,6 @@
  
  The Final key is then created before a write or read gets performend
  */
-@property (nonatomic, readonly) NSData *compositeData;
 
 - (id)initWithPassword:(NSString *)password key:(NSURL *)url;
 /*
@@ -43,5 +42,10 @@
                      masterSeed:(NSData *)masterSeed
                   transformSeed:(NSData *)transformSeed
                          rounds:(NSUInteger )rounds;
+
+/*
+ @return YES if the password and/or key are correct for this composite key
+ */
+- (bool)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseVersion)version;
 
 @end
