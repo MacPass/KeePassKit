@@ -1,6 +1,7 @@
 #KeePassKit
 
-KeePass database loading, storing and manipulation framework
+KeePass database loading, storing and manipulation framework.
+It's borrowing a lot of code from [MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) and [KeePass Database Library](https://github.com/mpowrie/KeePassLib).
 
 ##License
 
@@ -20,4 +21,19 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+##References
+
+KeePassKit uses code from the following projects
+
+[KissXML](https://github.com/robbiehanson/KissXML) Copyright 2012 Robbie Hanson. All rights reserved.
+
+[MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) Copyright 2011 Jason Rush and John Flanagan. All rights reserved.
+
+[KeePass Database Library](https://github.com/mpowrie/KeePassLib) Copyright 2010 Qiang Yu. All rights reserved.
+
+[NSData Gzip Category](http://www.cocoadev.com/index.pl?NSDataCategory) from the [CocoaDev Wiki](http://www.cocoadev.com)
+
+[NSData Base64 Category](http://stackoverflow.com/questions/11386876/how-to-encode-and-decode-files-as-base64-in-cocoa-objective-c) from Stackoverflow user [deins2342](http://stackoverflow.com/users/200321/denis2342)
+
 
