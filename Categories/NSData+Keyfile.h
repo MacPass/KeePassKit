@@ -22,10 +22,10 @@
 
 
 #import <Foundation/Foundation.h>
-#import "KPKDatabaseVersion.h"
+#import "KPKVersion.h"
 
 @interface NSData (Keyfile)
 
-+ (NSData *)dataWithWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseVersion)version error:(NSError **)error;
++ (NSData *)dataWithWithContentsOfKeyFile:(NSURL *)url version:(KPKVersion)version error:(NSError **)error;
 
 @end

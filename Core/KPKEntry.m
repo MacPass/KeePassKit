@@ -25,37 +25,34 @@
 #import "KPKAttachment.h"
 #import "KPKFormat.h"
 
-@implementation KPKEntry {
-  NSMutableDictionary *_defaultAttributes;
-}
+@implementation KPKEntry
 
 - (id)init {
   self = [super init];
   if (self) {
-    _defaultAttributes = [[NSMutableDictionary alloc] initWithCapacity:5];
     _attributes = [[NSMutableDictionary alloc] initWithCapacity:5];
   }
   return self;
 }
 
 - (NSString *)title {
-  return _defaultAttributes[ KPKTitleKey ];
+  return _attributes[ KPKTitleKey ];
 }
 
 - (NSString *)username {
-  return _defaultAttributes[ KPKUsernameKey ];
+  return _attributes[ KPKUsernameKey ];
 }
 
 - (NSString *)password {
-  return _defaultAttributes[ KPKPasswordKey ];
+  return _attributes[ KPKPasswordKey ];
 }
 
 - (NSString *)notes {
-  return _defaultAttributes[ KPKNotesKey ];
+  return _attributes[ KPKNotesKey ];
 }
 
 - (NSString *)url {
-  return _defaultAttributes[ KPKURLKey ];
+  return _attributes[ KPKURLKey ];
 }
 
 - (void)setTitle:(NSString *)title {
@@ -83,7 +80,34 @@
 }
 
 - (void)removeTag:(NSString *)tag {
-  [self removeObjectFromTagsAtIndex:[_tags indexOfObject:tag]];
+  NSUInteger index = [_tags indexOfObject:tag];
+  if(index != NSNotFound) {
+    [self removeObjectFromTagsAtIndex:index];
+  }
+}
+
+- (void)addAttachment:(KPKAttachment *)attachment {
+  /* Update our minimum Database Version */
+  if([_attachments count] < 2 ) {
+    self.minimumVersion = KPKVersion1;
+  }
+  else {
+    self.minimumVersion = KPKVersion2;
+  }
+  [self insertObject:attachment inAttachmetsAtIndex:[_attachments count]];
+}
+
+- (void)removeAttachment:(KPKAttachment *)attachment {
+  NSUInteger index = [_attachments indexOfObject:attachment];
+  if(index != NSNotFound) {
+    [self removeObjectFromAttachmetsAtIndex:index];
+    if([_attachments count] < 2) {
+      self.minimumVersion = KPKVersion1;
+    }
+    else {
+      self.minimumVersion = KPKVersion2;
+    }
+  }
 }
 
 #pragma mark -
@@ -98,6 +122,8 @@
 }
 
 - (void)insertObject:(KPKAttachment *)attachment inAttachmetsAtIndex:(NSUInteger)index {
+  /* Clamp the index to make sure we do not add at wrong places */
+  index = MIN([_attachments count], index);
   [_attachments insertObject:attachment atIndex:index];
 }
 
@@ -121,10 +147,10 @@
 #pragma mark Private Helper
 
 - (void)_setAttribute:(NSString *)value forKey:(NSString *)key {
-  if([_defaultAttributes[ key ] isEqualToString:value]) {
+  if([_attributes[ key ] isEqualToString:value]) {
     return;
   }
-  _defaultAttributes[ key ] = value;
+  _attributes[ key ] = value;
 }
 
 @end

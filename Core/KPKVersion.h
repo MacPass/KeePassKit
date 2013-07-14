@@ -1,8 +1,8 @@
 //
-//  KPKEntry+Attachments.m
+//  KPKVersion.h
 //  KeePassKit
 //
-//  Created by Michael Starke on 12.07.13.
+//  Created by Michael Starke on 11.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -21,20 +21,14 @@
 //
 
 
-#import "KPKEntry+Attachments.h"
+#ifndef MacPass_KPKVersion_h
+#define MacPass_KPKVersion_h
 
-@implementation KPKEntry (Attachments)
+#import <Foundation/Foundation.h>
 
-- (BOOL)addBinaryWithContentsOfURL:(NSURL *)url error:(NSError *__autoreleasing *)error {
-  
-  /* Update our minimum Database Version */
-  if([_attachments count] < 2 ) {
-    self.minimumVersion = KPKDatabaseVersion1;
-  }
-  else {
-    self.minimumVersion = KPKDatabaseVersion2;
-  }
-  return NO;
-}
+typedef NS_ENUM( NSUInteger, KPKVersion ) {
+  KPKVersion1,
+  KPKVersion2
+};
 
-@end
+#endif

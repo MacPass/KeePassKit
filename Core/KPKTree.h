@@ -21,7 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKDatabaseVersion.h"
+#import "KPKVersion.h"
 #import "KPKNode.h"
 
 @class KPKGroup;
@@ -31,7 +31,13 @@
 @interface KPKTree : KPKNode
 
 @property (nonatomic, assign) KPKGroup *root;
+/**
+ Acces to the root group via the groups property
+ to offer a bindiable interface for a tree
+ */
 @property (nonatomic, readonly) NSArray *groups;
+@property (nonatomic, readonly) NSArray *allGroups;
+@property (nonatomic, readonly) NSArray *allEntries;
 
 - (id)initWithData:(NSData *)data password:(KPKPassword *)password;
 - (NSData *)serializeWithPassword:(KPKPassword *)password error:(NSError *)error;

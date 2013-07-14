@@ -22,7 +22,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import "KPKDatabaseVersion.h"
+#import "KPKVersion.h"
 
 @interface KPKPassword : NSObject
 
@@ -38,7 +38,7 @@
 /*
  @return the final Data to use to en/decrypt the database
  */
-- (NSData *)finalDataForVersion:(KPKDatabaseVersion )version
+- (NSData *)finalDataForVersion:(KPKVersion )version
                      masterSeed:(NSData *)masterSeed
                   transformSeed:(NSData *)transformSeed
                          rounds:(NSUInteger )rounds;
@@ -46,6 +46,6 @@
 /*
  @return YES if the password and/or key are correct for this composite key
  */
-- (bool)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseVersion)version;
+- (bool)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version;
 
 @end

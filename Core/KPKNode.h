@@ -22,7 +22,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import "KPKDatabaseVersion.h"
+#import "KPKVersion.h"
 @class KPKGroup;
 
 /* Basic Node in the Tree */
@@ -31,7 +31,7 @@
 @property(nonatomic, assign) NSInteger image;
 @property(nonatomic, weak) KPKGroup *parent;
 @property (nonatomic, retain) NSUUID *uuid;
-@property (nonatomic, assign) KPKDatabaseVersion minimumVersion;
+@property (nonatomic, assign) KPKVersion minimumVersion;
 
 @property(nonatomic, strong) NSDate *creationTime;
 @property(nonatomic, strong) NSDate *lastModificationTime;

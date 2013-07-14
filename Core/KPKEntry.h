@@ -25,6 +25,7 @@
 
 
 @class KPKGroup;
+@class KPKAttachment;
 
 @interface KPKEntry : KPKNode {
 @private
@@ -43,5 +44,39 @@
 @property (nonatomic, strong) NSArray *attachmets;
 @property (nonatomic, strong) NSArray *tags;
 @property (nonatomic, strong) NSDictionary *attributes;
+
+/**
+ @param key String that identifies the attributes
+ @returns the Value for the given attribute, nil if it's not set
+ */
+- (NSString *)attributeForKey:(NSString *)key;
+/**
+ Adds an attribute with value for the key
+ @param value Value for the attribute
+ @param key Identfying key for the attributes. Needs to be unique
+ */
+- (void)addAttribute:(NSString *)value forKey:(NSString *)key;
+/**
+ Sets the new value for the given attribute key
+ @param value The new value for the attribute
+ @param key Identifyer for the attribute
+ */
+- (void)setAttribute:(NSString *)value forKey:(NSString *)key;
+/**
+ Removes the attribute for the given string
+ @param Identifiy for the attribute to be removed
+ */
+- (void)removeAttributeForKey:(NSString *)key;
+
+/**
+ Adds the given attachment
+ @param attachment Attachment to add to the entry
+ */
+- (void)addAttachment:(KPKAttachment *)attachment;
+/**
+ Removes the given attachment
+ @param attachment The attachment to be removed
+ */
+- (void)removeAttachment:(KPKAttachment *)attachment;
 
 @end

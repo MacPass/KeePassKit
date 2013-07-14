@@ -20,10 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef MacPass_KPKFormat_h
-#define MacPass_KPKFormat_h
-
 #import <Foundation/Foundation.h>
+#import "KPKVersion.h"
 
 FOUNDATION_EXTERN NSString *const KPKTitleKey;
 FOUNDATION_EXTERN NSString *const KPKNameKey;
@@ -40,5 +38,28 @@ FOUNDATION_EXTERN NSString *const KPKImageKey;
 FOUNDATION_EXTERN NSString *const KPKAccesTimeKey;
 FOUNDATION_EXTERN NSString *const KPKModifcationTimeKey;
 FOUNDATION_EXTERN NSString *const KPKExpiryDateKey;
+/**
+ Format class.
+ Holds all allowed keys for an element.
+ */
+@interface KPKFormat : NSObject
+/**
+ @returns The shared format instance
+ */
++ (id)sharedFormat;
 
-#endif
+///@returns A set containing the strings that are default keys
+- (NSSet *)defaultKeys;
+/**
+ @param key The key to test for defaultness
+ @returns YES, if the key is a default key, NO otherwise
+ */
+- (BOOL)isDefautlKey:(NSString *)key;
+
+/**
+ @param key The key to determine the minimum version for
+ @returns The minimum version for a database to store this key
+ */
+- (KPKVersion)minimumVersionForKey:(NSString *)key;
+
+@end

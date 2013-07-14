@@ -20,7 +20,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #import "KPKFormat.h"
 
 NSString *const KPKTitleKey     = @"Title";
@@ -34,3 +33,58 @@ NSString *const KPKBinaryRefKey = @"BinaryRef";
 NSString *const KPKAutotypeKe   = @"Autotype";
 NSString *const KPKTagKey       = @"Tags";
 NSString *const KPKImageKey     = @"Image";
+
+@interface KPKFormat () {
+  NSSet *_defaultKeys;
+}
+
+@end
+
+@implementation KPKFormat
+
++ (id)sharedFormat {
+  static id formatInstance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    formatInstance = [[self _alloc] _init];
+  });
+  return formatInstance;
+}
+
+- (id)_init {
+  self = [super init];
+  if (self) {
+    NSArray *keys = @[ KPKTitleKey,
+                       KPKNameKey,
+                       KPKUsernameKey,
+                       KPKPasswordKey,
+                       KPKURLKey,
+                       KPKNotesKey,
+                       KPKImageKey];
+    _defaultKeys = [NSSet setWithArray:keys];
+  }
+  return self;
+}
+
++ (id)_alloc {
+  return [super allocWithZone:nil];
+}
+
++ (id)allocWithZone:(NSZone *)zone {
+  return [self sharedFormat];
+}
+
+- (NSSet *)defaultKeys {
+  return _defaultKeys;
+}
+
+- (BOOL)isDefautlKey:(NSString *)key {
+  return [_defaultKeys containsObject:key];
+}
+
+- (KPKVersion)minimumVersionForKey:(NSString *)key {
+  NSAssert(NO, @"Not implemented");
+  return KPKVersion1;
+}
+
+@end

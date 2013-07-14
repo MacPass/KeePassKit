@@ -34,11 +34,11 @@
 
 @implementation NSData (Keyfile)
 
-+ (NSData *)dataWithWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseVersion)version error:(NSError *__autoreleasing *)error {
++ (NSData *)dataWithWithContentsOfKeyFile:(NSURL *)url version:(KPKVersion)version error:(NSError *__autoreleasing *)error {
   switch (version) {
-    case KPKDatabaseVersion1:
+    case KPKVersion1:
       return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
-    case KPKDatabaseVersion2:
+    case KPKVersion2:
       return nil;
   }
 }

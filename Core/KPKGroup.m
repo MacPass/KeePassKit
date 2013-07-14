@@ -43,6 +43,27 @@
   return self;
 }
 
+#pragma mark Accessors
+
+- (NSArray *)childEntries {
+  NSMutableArray *childEntries = [NSMutableArray arrayWithArray:_entries];
+  for(KPKGroup *group in _groups) {
+    [childEntries addObjectsFromArray:[group childEntries]];
+  }
+  return  childEntries;
+}
+
+- (NSArray *)childGroups {
+  NSMutableArray *childGroups = [NSMutableArray arrayWithArray:_groups];
+  for(KPKGroup *group in _groups) {
+    [childGroups addObjectsFromArray:[group childGroups]];
+  }
+  return childGroups;
+}
+
+#pragma mark -
+#pragma mark Group/Entry editing
+
 - (void)addGroup:(KPKGroup *)group {
   group.parent = self;
   [self insertObject:group inGroupsAtIndex:[self.groups count]];
@@ -77,19 +98,11 @@
 }
 
 - (BOOL)containsGroup:(KPKGroup *)group {
-  // Check trivial case where group is passed to itself
   if(self == group) {
     return YES;
   }
-  else {
-    // Check subgroups
-    for(KPKGroup *subGroup in self.groups) {
-      if([subGroup containsGroup:group]) {
-        return YES;
-      }
-    }
-    return NO;
-  }
+  BOOL containsGroup = (nil != [self groupForUUID:group.uuid]);
+  return containsGroup;
 }
 
 - (NSString*)description {
@@ -102,6 +115,28 @@
           self.expiryTime];
 }
 
+#pragma mark Seaching
+
+- (KPKEntry *)entryForUUID:(NSUUID *)uuid {
+  NSArray *filterdEntries = [[self childEntries] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    return [uuid isEqual:(NSUUID *)[evaluatedObject uuid]];
+  }]];
+  NSAssert([filterdEntries count] <= 1, @"NSUUID hast to be unique");
+  return [filterdEntries lastObject];
+}
+
+- (KPKGroup *)groupForUUID:(NSUUID *)uuid {
+  NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    return [uuid isEqual:(NSUUID *)[evaluatedObject uuid]];
+  }];
+  NSArray *filteredGroups = [[self childGroups] filteredArrayUsingPredicate:predicate];
+  NSAssert([filteredGroups count] <= 1, @"NSUUID hast to be unique");
+  return  [filteredGroups lastObject];
+}
+
+
+#pragma mark -
+#pragma mark KVC
 
 - (NSUInteger)countOfEntries {
   return [_entries count];

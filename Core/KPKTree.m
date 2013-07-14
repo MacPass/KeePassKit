@@ -21,6 +21,7 @@
 //
 
 #import "KPKTree.h"
+#import "KPKGroup.h"
 
 @implementation KPKTree
 
@@ -57,6 +58,14 @@
 
 - (KPKGroup *)root {
   return _groups[0];
+}
+
+- (NSArray *)allGroups {
+  return [self.root childGroups];
+}
+
+- (NSArray *)allEntries {
+  return [self.root childEntries];
 }
 
 @end

@@ -30,7 +30,7 @@
   if (self) {
     _image = 0;
     _uuid = [NSUUID UUID];
-    _minimumVersion = KPKDatabaseVersion1;
+    _minimumVersion = KPKVersion1;
     
     NSDate *now = [NSDate date];
     _creationTime = now;

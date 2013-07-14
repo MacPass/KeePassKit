@@ -45,16 +45,16 @@
   return self;
 }
 
-- (NSData *)finalDataForVersion:(KPKDatabaseVersion)version
+- (NSData *)finalDataForVersion:(KPKVersion)version
                      masterSeed:(NSData *)masterSeed
                   transformSeed:(NSData *)transformSeed
                          rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
   uint8_t masterKey[KPK_KEYLENGTH];
-  if(version == KPKDatabaseVersion1) {
+  if(version == KPKVersion1) {
     [_compositeDataVersion1 getBytes:masterKey length:KPK_KEYLENGTH];
   }
-  else if(version == KPKDatabaseVersion2) {
+  else if(version == KPKVersion2) {
     [_compositeDataVersion2 getBytes:masterKey length:KPK_KEYLENGTH];
   }
   else {
@@ -85,20 +85,20 @@
   return [NSData dataWithBytes:finalKey length:KPK_KEYLENGTH];
 }
 
-- (bool)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseVersion)version {
+- (bool)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version {
   NSData *data;
   switch(version) {
-    case KPKDatabaseVersion1:
+    case KPKVersion1:
       data = [self _createVersion1CompositeDataWithPassword:password key:key];
       break;
-    case KPKDatabaseVersion2:
+    case KPKVersion2:
       data = [self _createVersion2CompositeDataWithPassword:password key:key];
       break;
     default:
       return NO;
   }
   if(data) {
-    NSData *compare = (version == KPKDatabaseVersion1) ? _compositeDataVersion1 : _compositeDataVersion2;
+    NSData *compare = (version == KPKVersion1) ? _compositeDataVersion1 : _compositeDataVersion2;
     return [data isEqualToData:compare];
   }
   return NO;
@@ -128,7 +128,7 @@
     
     // Get the bytes from the keyfile
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithWithContentsOfKeyFile:keyURL version:KPKDatabaseVersion1 error:&error];
+    NSData *keyFileData = [NSData dataWithWithContentsOfKeyFile:keyURL version:KPKVersion1 error:&error];
     if( keyFileData == nil) {
       return nil;
     }
@@ -165,7 +165,7 @@
   if (keyURL) {
     // Get the bytes from the keyfile
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithWithContentsOfKeyFile:keyURL version:KPKDatabaseVersion2 error:&error];
+    NSData *keyFileData = [NSData dataWithWithContentsOfKeyFile:keyURL version:KPKVersion2 error:&error];
     if(!keyURL) {
       return nil;
     }

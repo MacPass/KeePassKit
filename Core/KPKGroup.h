@@ -25,12 +25,14 @@
 
 @class KPKEntry;
 
-@interface KPKGroup : KPKNode
+@interface KPKGroup : KPKNode 
 
 @property(nonatomic, assign) NSInteger image;
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, readonly) NSArray *groups;
 @property(nonatomic, readonly) NSArray *entries;
+@property(nonatomic, readonly) NSArray *childEntries;
+@property(nonatomic, readonly) NSArray *childGroups;
 
 @property(nonatomic, assign) BOOL canAddEntries;
 
@@ -43,6 +45,23 @@
 - (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup;
 
 - (BOOL)containsGroup:(KPKGroup *)group;
+
+/**
+ Looks for a entry with the supplied UUID.
+ If the UUID is not unique, the first hit will be returned.
+ 
+ @param uuid The UUID to locate entry for;
+ @returns Entry that was found, nil if non was found
+ */
+- (KPKEntry *)entryForUUID:(NSUUID *)uuid;
+/**
+ Looks for a group with the supplied UUID.
+ If the UUID is not unique, the first hit will be returned.
+ 
+ @param uuid The UUID of the group to locate
+ @returns Group that matches the uuid, nil if none was found.
+ */
+- (KPKGroup *)groupForUUID:(NSUUID *)uuid;
 
 @end
 
