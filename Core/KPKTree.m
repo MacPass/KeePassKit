@@ -22,6 +22,7 @@
 
 #import "KPKTree.h"
 #import "KPKGroup.h"
+#import "KPKEntry.h"
 
 @implementation KPKTree
 
@@ -38,11 +39,17 @@
 }
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent {
-  return nil;
+  KPKGroup *group = [[KPKGroup alloc] init];
+  group.undoManger = self.undoManger;
+  group.parent = parent;
+  return group;
 }
 
 - (KPKEntry *)createEntry:(KPKGroup *)parent {
-  return nil;
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  entry.parent = parent;
+  entry.undoManger = self.undoManger;
+  return entry;
 }
 
 - (NSData *)serializeWithPassword:(KPKPassword *)password error:(NSError *)error {

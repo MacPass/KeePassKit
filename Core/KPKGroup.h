@@ -36,13 +36,19 @@
 
 @property(nonatomic, assign) BOOL canAddEntries;
 
-- (void)addGroup:(KPKGroup *)group;
+/**
+ All actions register with the undomanager and
+ thus are undoable.
+ Action names aren't set by the model
+ */
+- (void)remove;
+- (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 - (void)removeGroup:(KPKGroup *)group;
-- (void)moveToGroup:(KPKGroup *)group;
+- (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 
-- (void)addEntry:(KPKEntry *)entry;
+- (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index;
 - (void)removeEntry:(KPKEntry *)entry;
-- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup;
+- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup atIndex:(NSUInteger)index;
 
 - (BOOL)containsGroup:(KPKGroup *)group;
 

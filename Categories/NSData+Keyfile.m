@@ -27,10 +27,8 @@
 
 #import "DDXMLElementAdditions.h"
 #import "NSMutableData+Base64.h"
+#import "NSString+Hexdata.h"
 #import "KPKErrors.h"
-
-
-
 
 @implementation NSData (Keyfile)
 
@@ -39,15 +37,15 @@
     case KPKVersion1:
       return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
     case KPKVersion2:
+      return [self _dataVersion2WithWithContentsOfKeyFile:url error:error];
+    default:
       return nil;
   }
 }
 
 + (NSData *)_dataVersion1WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
   // Open the keyfile
-  NSData *fileData = [NSData dataWithContentsOfURL:url
-                                           options:(NSDataReadingUncached|NSDataReadingMappedIfSafe)
-                                             error:error];
+  NSData *fileData = [NSData dataWithContentsOfURL:url options:0 error:error];
   if(error || !fileData) {
     return nil;
   }
@@ -59,6 +57,7 @@
   if ([fileData length] == 64) {
     decordedData = [self _keyDataFromHex:fileData];
   }
+  /* Hexdata loading failed, so just hash the key */
   if(!decordedData) {
     decordedData = [self _keyDataFromHash:fileData];
   }
@@ -114,8 +113,6 @@
 }
 
 + (NSData *)_keyDataFromHex:(NSData *)hexData {
-  uint8_t buffer[32];
- 
   NSString *hexString = [[NSString alloc] initWithData:hexData encoding:NSUTF8StringEncoding];
   if(!hexString) {
    return nil;
@@ -123,23 +120,7 @@
   if([hexString length] != 64) {
     return nil; // No valid lenght found
   }
-  BOOL scanOk = YES;
-  @autoreleasepool {
-    for(NSUInteger iIndex = 0; iIndex < 32; iIndex++) {
-      NSString *split = [hexString substringWithRange:NSMakeRange(iIndex * 2, 2)];
-      NSScanner * scanner = [NSScanner scannerWithString:split];
-      uint32_t integer = 0;
-      if(![scanner scanHexInt:&integer]) {
-        scanOk = NO;
-        break;
-      }
-      buffer[iIndex] = (uint8_t)integer;
-    }
-  }
-  if(!scanOk) {
-    return nil; // Hex scanning failed
-  }
-  return [NSData dataWithBytes:buffer length:32];
+  return [hexString dataFromHexString];
 }
 
 + (NSData *)_keyDataFromHash:(NSData *)fileData {

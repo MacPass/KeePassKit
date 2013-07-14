@@ -45,6 +45,8 @@
 @property (nonatomic, strong) NSArray *tags;
 @property (nonatomic, strong) NSDictionary *attributes;
 
+- (void)remove;
+
 /**
  @param key String that identifies the attributes
  @returns the Value for the given attribute, nil if it's not set

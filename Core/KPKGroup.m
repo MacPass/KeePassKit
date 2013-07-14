@@ -64,37 +64,70 @@
 #pragma mark -
 #pragma mark Group/Entry editing
 
-- (void)addGroup:(KPKGroup *)group {
+- (void)remove {
+  /* Undo is handled in removeGroup */
+  [self.parent removeGroup:self];
+}
+
+- (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   group.parent = self;
-  [self insertObject:group inGroupsAtIndex:[self.groups count]];
+  index = MIN([_entries count], index);
+  [[self.undoManger prepareWithInvocationTarget:self] removeGroup:group];
+  [self insertObject:group inGroupsAtIndex:index];
 }
 
 - (void)removeGroup:(KPKGroup *)group {
-  group.parent = nil;
-  [_groups removeObject:group];
+  NSUInteger index = [_groups indexOfObject:group];
+  if(index != NSNotFound) {
+    [[self.undoManger prepareWithInvocationTarget:self] addGroup:self atIndex:index];
+    group.parent = nil;
+    [self removeObjectFromGroupsAtIndex:index];
+  }
 }
 
-- (void)moveToGroup:(KPKGroup *)group {
+- (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
+  NSUInteger oldIndex = [self.parent.groups indexOfObject:self];
+  if(oldIndex == NSNotFound) {
+    return; // Parent does not contain us!
+  }
+  [[self.undoManger prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:oldIndex];
+  BOOL wasEnabled = [self.undoManger isUndoRegistrationEnabled];
+  [self.undoManger disableUndoRegistration];
   [self.parent removeGroup:group];
-  [group addGroup:group];
+  [group addGroup:group atIndex:index];
+  if(wasEnabled) {
+    [self.undoManger enableUndoRegistration];
+  }
 }
 
-- (void)addEntry:(KPKEntry *)entry {
+- (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
   entry.parent = self;
-  [self insertObject:entry inEntriesAtIndex:[_entries count]];
+  index = MIN([_entries count], index);
+  [[self.undoManger prepareWithInvocationTarget:self] removeEntry:entry];
+  [self insertObject:entry inEntriesAtIndex:index];
 }
 
 - (void)removeEntry:(KPKEntry *)entry {
   NSUInteger index = [_entries indexOfObject:entry];
   if(NSNotFound != index) {
+    [[self.undoManger prepareWithInvocationTarget:self] addEntry:entry atIndex:index];
     [self removeObjectFromEntriesAtIndex:index];
     entry.parent = nil;
   }
 }
 
-- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup {
-  [self removeEntry:entry];
-  [toGroup addEntry:entry];
+- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup atIndex:(NSUInteger)index {
+  NSUInteger oldIndex = [_entries indexOfObject:entry];
+  if(index != NSNotFound) {
+    [[self.undoManger prepareWithInvocationTarget:toGroup] moveEntry:entry toGroup:self atIndex:oldIndex];
+    BOOL wasEnabled = [self.undoManger isUndoRegistrationEnabled];
+    [self.undoManger disableUndoRegistration];
+    [self removeEntry:entry];
+    [toGroup addEntry:entry atIndex:index];
+    if(wasEnabled) {
+      [self.undoManger enableUndoRegistration];
+    }
+  }
 }
 
 - (BOOL)containsGroup:(KPKGroup *)group {

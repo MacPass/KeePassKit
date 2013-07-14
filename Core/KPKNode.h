@@ -38,4 +38,15 @@
 @property(nonatomic, strong) NSDate *lastAccessTime;
 @property(nonatomic, strong) NSDate *expiryTime;
 
+/**
+ Holds the Undomanager that is propagated throughout the tree.
+ If you plan on using the Model inside a document base application
+ be sure to supply the undomanager when you create the tree.
+ 
+ If you ommit the manager, the object does not register any undoable actions.
+ 
+ The Model does NOT set any names on undo/redo.
+ */
+@property(nonatomic, weak) NSUndoManager *undoManger;
+
 @end
