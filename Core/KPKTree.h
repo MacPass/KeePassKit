@@ -30,7 +30,8 @@
 
 @interface KPKTree : KPKNode
 
-@property (nonatomic, strong) KPKGroup *root;
+@property (nonatomic, assign) KPKGroup *root;
+@property (nonatomic, readonly) NSArray *groups;
 
 - (id)initWithData:(NSData *)data password:(KPKPassword *)password;
 - (NSData *)serializeWithPassword:(KPKPassword *)password error:(NSError *)error;

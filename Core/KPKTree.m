@@ -24,8 +24,16 @@
 
 @implementation KPKTree
 
+- (id)init {
+  return [self initWithData:nil password:nil];
+}
+
 - (id)initWithData:(NSData *)data password:(KPKPassword *)password {
-  return nil;
+  self = [super init];
+  if(self) {
+    
+  }
+  return self;
 }
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent {
@@ -38,6 +46,17 @@
 
 - (NSData *)serializeWithPassword:(KPKPassword *)password error:(NSError *)error {
   return nil;
+}
+
+- (void)setRoot:(KPKGroup *)root {
+  id group = _groups[0];
+  if(group != root) {
+    _groups = @[root];
+  }
+}
+
+- (KPKGroup *)root {
+  return _groups[0];
 }
 
 @end

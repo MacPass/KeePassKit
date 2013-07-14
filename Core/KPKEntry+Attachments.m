@@ -26,6 +26,14 @@
 @implementation KPKEntry (Attachments)
 
 - (BOOL)addBinaryWithContentsOfURL:(NSURL *)url error:(NSError *__autoreleasing *)error {
+  
+  /* Update our minimum Database Version */
+  if([_attachments count] < 2 ) {
+    self.minimumVersion = KPKDatabaseVersion1;
+  }
+  else {
+    self.minimumVersion = KPKDatabaseVersion2;
+  }
   return NO;
 }
 
