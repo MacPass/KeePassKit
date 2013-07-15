@@ -23,16 +23,11 @@
 #import <Foundation/Foundation.h>
 #import "KPKNode.h"
 
-
 @class KPKGroup;
 @class KPKAttachment;
+@class KPKAttribute;
 
-@interface KPKEntry : KPKNode {
-@private
-  NSMutableArray *_attachments;
-  NSMutableArray *_tags;
-  NSMutableDictionary *_attributes;
-}
+@interface KPKEntry : KPKNode <NSCopying>
 
 @property (nonatomic, assign) NSString *title;
 @property (nonatomic, assign) NSString *password;
@@ -40,45 +35,53 @@
 @property (nonatomic, assign) NSString *url;
 @property (nonatomic, assign) NSString *notes;
 
-
 @property (nonatomic, strong) NSArray *attachmets;
 @property (nonatomic, strong) NSArray *tags;
-@property (nonatomic, strong) NSDictionary *attributes;
+@property (nonatomic, strong) NSArray *customAttributes;
 
 - (void)remove;
-
 /**
  @param key String that identifies the attributes
- @returns the Value for the given attribute, nil if it's not set
+ @returns the attribute with the given key
  */
-- (NSString *)attributeForKey:(NSString *)key;
+- (KPKAttribute *)attributeForKey:(NSString *)key;
 /**
- Adds an attribute with value for the key
- @param value Value for the attribute
- @param key Identfying key for the attributes. Needs to be unique
+ Adds an attribute to the entry
+ @param attribute The attribute to be added
+ @param index the position at wicht to add the attribute
  */
-- (void)addAttribute:(NSString *)value forKey:(NSString *)key;
-/**
- Sets the new value for the given attribute key
- @param value The new value for the attribute
- @param key Identifyer for the attribute
- */
-- (void)setAttribute:(NSString *)value forKey:(NSString *)key;
+- (void)addCustomAttribute:(KPKAttribute *)attribute atIndex:(NSUInteger)index;
+- (void)addCustomAttribute:(KPKAttribute *)attribute;
 /**
  Removes the attribute for the given string
- @param Identifiy for the attribute to be removed
+ @param attribute The attribute to be removed
  */
-- (void)removeAttributeForKey:(NSString *)key;
+- (void)removeCustomAttribute:(KPKAttribute *)attribute;
 
 /**
  Adds the given attachment
  @param attachment Attachment to add to the entry
+ @param index The position at whicht to att the attachment
  */
+- (void)addAttachment:(KPKAttachment *)attachment atIndex:(NSUInteger)index;
 - (void)addAttachment:(KPKAttachment *)attachment;
 /**
  Removes the given attachment
  @param attachment The attachment to be removed
  */
 - (void)removeAttachment:(KPKAttachment *)attachment;
+/**
+ Adds the tag to the entry
+ @param tag The tag to be added
+ @param index The location for the new tag
+ */
+- (void)addTag:(NSString *)tag atIndex:(NSUInteger)index;
+- (void)addTag:(NSString *)tag;
+/**
+ Removes the given tag from the entry
+ @param tag The tag to be removed
+ */
+- (void)removeTag:(NSString *)tag;
 
+- (BOOL)hasAttributeWithKey:(NSString *)key;
 @end

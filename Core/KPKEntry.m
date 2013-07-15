@@ -23,98 +23,181 @@
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKAttachment.h"
+#import "KPKAttribute.h"
 #import "KPKFormat.h"
+
+@interface KPKEntry () {
+@private
+  NSMutableArray *_attachments;
+  NSMutableArray *_customAttributes;
+  NSMutableArray *_tags;
+}
+
+@property (nonatomic, copy) KPKAttribute *titleAttribute;
+@property (nonatomic, copy) KPKAttribute *passwordAttribute;
+@property (nonatomic, copy) KPKAttribute *usernameAttribute;
+@property (nonatomic, strong) KPKAttribute *urlAttribute;
+@property (nonatomic, copy) KPKAttribute *notesAttribute;
+
+@end
 
 @implementation KPKEntry
 
 - (id)init {
   self = [super init];
   if (self) {
-    _attributes = [[NSMutableDictionary alloc] initWithCapacity:5];
+    _titleAttribute = [[KPKAttribute alloc] initWithKey:KPKTitleKey value:@""];
+    _passwordAttribute = [[KPKAttribute alloc] initWithKey:KPKPasswordKey value:@""];
+    _usernameAttribute = [[KPKAttribute alloc] initWithKey:KPKUsernameKey value:@""];
+    _urlAttribute = [[KPKAttribute alloc] initWithKey:KPKURLKey value:@""];
+    _notesAttribute = [[KPKAttribute alloc] initWithKey:KPKNotesKey value:@""];
+    _customAttributes = [[NSMutableArray alloc] initWithCapacity:2];
+    _tags = [[NSMutableArray alloc] initWithCapacity:5];
+    _attachments = [[NSMutableArray alloc] initWithCapacity:2];
   }
   return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+  KPKEntry *entry = [[KPKEntry allocWithZone:zone] init];
+  entry.title = self.title;
+  entry.username = self.username;
+  entry.url = self.url;
+  entry.notes = self.notes;
+  entry->_attachments = [self.attachmets copyWithZone:zone];
+  entry->_customAttributes = [self.customAttributes copyWithZone:zone];
+  entry->_tags = [self.tags copyWithZone:zone];
+
+  return entry;
+}
+
 - (NSString *)title {
-  return _attributes[ KPKTitleKey ];
+  return self.titleAttribute.value;
 }
 
 - (NSString *)username {
-  return _attributes[ KPKUsernameKey ];
+  return self.usernameAttribute.value;
 }
 
 - (NSString *)password {
-  return _attributes[ KPKPasswordKey ];
+  return self.passwordAttribute.value;
 }
 
 - (NSString *)notes {
-  return _attributes[ KPKNotesKey ];
+  return self.notesAttribute.value;
 }
 
 - (NSString *)url {
-  return _attributes[ KPKURLKey ];
+  return self.urlAttribute.value;
 }
 
 - (void)setTitle:(NSString *)title {
-  [self _setAttribute:title forKey:KPKTitleKey];
+  [self.undoManger registerUndoWithTarget:self selector:@selector(setTitle:) object:self.title];
+  self.titleAttribute.value = title;
 }
 
 - (void)setUsername:(NSString *)username {
-  [self _setAttribute:username forKey:KPKUsernameKey];
+  self.usernameAttribute.value = username;
 }
 
 - (void)setPassword:(NSString *)password {
-  [self _setAttribute:password forKey:KPKPasswordKey];
+  self.passwordAttribute.value = password;
 }
 
 - (void)setNotes:(NSString *)notes {
-  [self _setAttribute:notes forKey:KPKNotesKey];
+  [self.undoManger registerUndoWithTarget:self selector:@selector(setNotes) object:self.url];
+  self.notesAttribute.value = notes;
 }
 
 - (void)setUrl:(NSString *)url {
-  [self _setAttribute:url forKey:KPKURLKey];
+  [self.undoManger registerUndoWithTarget:self selector:@selector(setUrl:) object:self.url.value];
+  self.urlAttribute.value = url;
+}
+
+- (void)remove {
+  /*
+   Undo is handelded in the groups implementation of entry removal
+   */
+  [self.parent removeEntry:self];
+}
+
+- (void)addCustomAttribute:(KPKAttribute *)attribute {
+}
+
+- (void)addCustomAttribute:(KPKAttribute *)attribute atIndex:(NSUInteger)index {
 }
 
 - (void)addTag:(NSString *)tag {
-  [self insertObject:tag inTagsAtIndex:[_tags count]];
+  [self addTag:tag atIndex:[_tags count]];
+}
+
+- (void)addTag:(NSString *)tag atIndex:(NSUInteger)index {
+  index = MIN([_tags count], index);
+  [self.undoManger registerUndoWithTarget:self selector:@selector(removeTag:) object:tag];
+  [self insertObject:tag inTagsAtIndex:index];
+  self.minimumVersion = [self _minimumVersionForCurrentAttributes];
 }
 
 - (void)removeTag:(NSString *)tag {
   NSUInteger index = [_tags indexOfObject:tag];
   if(index != NSNotFound) {
+    [[self.undoManger prepareWithInvocationTarget:self] addTag:tag atIndex:index];
     [self removeObjectFromTagsAtIndex:index];
+    self.minimumVersion = [self _minimumVersionForCurrentAttributes];
   }
 }
 
 - (void)addAttachment:(KPKAttachment *)attachment {
-  /* Update our minimum Database Version */
-  if([_attachments count] < 2 ) {
-    self.minimumVersion = KPKVersion1;
-  }
-  else {
-    self.minimumVersion = KPKVersion2;
-  }
-  [self insertObject:attachment inAttachmetsAtIndex:[_attachments count]];
+  [self addAttachment:attachment atIndex:[_attachments count]];
+}
+
+- (void)addAttachment:(KPKAttachment *)attachment atIndex:(NSUInteger)index {
+  index = MIN([_attachments count], index);
+  [self.undoManger registerUndoWithTarget:self selector:@selector(removeAttachment:) object:attachment];
+  [self insertObject:attachment inAttachmetsAtIndex:index];
+  self.minimumVersion = [self _minimumVersionForCurrentAttachments];
 }
 
 - (void)removeAttachment:(KPKAttachment *)attachment {
+  /*
+   Attachments are stored on entries.
+   Only on load the binaries are stored ad meta entries to the tree
+   So we do not need to take care of cleanup after we did
+   delete an attachment
+   */
   NSUInteger index = [_attachments indexOfObject:attachment];
   if(index != NSNotFound) {
+    [[self.undoManger prepareWithInvocationTarget:self] addAttachment:attachment atIndex:index];
     [self removeObjectFromAttachmetsAtIndex:index];
-    if([_attachments count] < 2) {
-      self.minimumVersion = KPKVersion1;
-    }
-    else {
-      self.minimumVersion = KPKVersion2;
-    }
+    self.minimumVersion = [self _minimumVersionForCurrentAttachments];
   }
+}
+
+- (BOOL)hasAttributeWithKey:(NSString *)key {
+  // test for default keys;
+  NSPredicate *filter = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    return [[evaluatedObject key] isEqualToString:key];
+  }];
+  NSArray *filterdAttributes = [self.customAttributes filteredArrayUsingPredicate:filter];
+  return [filterdAttributes count] > 0;
 }
 
 #pragma mark -
 #pragma mark KVO
 
-- (NSUInteger)countOfAttributes {
-  return [_attributes count];
+- (NSUInteger)countOfCustomAttributes {
+  return [_customAttributes count];
+}
+
+- (void)insertObject:(KPKAttribute *)object inCustomAttributesAtIndex:(NSUInteger)index {
+  index = MIN([_customAttributes count], index);
+  [_customAttributes removeObjectAtIndex:index];
+}
+
+- (void)removeObjectFromCustomAttributesAtIndex:(NSUInteger)index {
+  if(index < [_customAttributes count]) {
+    [_customAttributes removeObjectAtIndex:index];
+  }
 }
 
 - (NSUInteger)countOfAttachmets {
@@ -128,6 +211,7 @@
 }
 
 - (void)removeObjectFromAttachmetsAtIndex:(NSUInteger)index {
+  index = MIN([_attachments count], index);
   [_attachments removeObjectAtIndex:index];
 }
 
@@ -146,11 +230,12 @@
 #pragma mark -
 #pragma mark Private Helper
 
-- (void)_setAttribute:(NSString *)value forKey:(NSString *)key {
-  if([_attributes[ key ] isEqualToString:value]) {
-    return;
-  }
-  _attributes[ key ] = value;
+- (KPKVersion)_minimumVersionForCurrentAttachments {
+  return ([_attachments count] > 1 ? KPKVersion2 : KPKVersion1);
+}
+
+- (KPKVersion)_minimumVersionForCurrentAttributes {
+  return ([_customAttributes count] > 0 ? KPKVersion2 : KPKVersion1);
 }
 
 @end

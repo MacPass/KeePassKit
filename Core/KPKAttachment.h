@@ -23,10 +23,10 @@
 #import <Foundation/Foundation.h>
 
 /* Binärdatenknoten */
-@interface KPKAttachment : NSObject
+@interface KPKAttachment : NSObject <NSCopying>
 
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, strong) NSData *data;
+@property (nonatomic, copy) NSData *data;
 
 - (id)initWithName:(NSString *)name value:(NSString *)value compressed:(BOOL)compressed;
 - (id)initWithContentsOfURL:(NSURL *)url;

@@ -31,6 +31,7 @@
   self = [super init];
   if(self) {
     _name = [name copy];
+    // if compressed, decompress the data
   }
   return self;
 }
@@ -48,7 +49,16 @@
       _name = [url lastPathComponent];
     }
   }
-return self;
+  return self;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+  KPKAttachment *copy = [[KPKAttachment allocWithZone:zone] init];
+  if(copy) {
+    copy.name = _name;
+    copy.data = _data;
+  }
+  return copy;
 }
 
 - (NSData *)_dataForString:(NSString *)string compressed:(BOOL)compressed {
