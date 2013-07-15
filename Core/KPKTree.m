@@ -52,10 +52,6 @@
   return entry;
 }
 
-- (NSData *)serializeWithPassword:(KPKPassword *)password error:(NSError *)error {
-  return nil;
-}
-
 - (void)setRoot:(KPKGroup *)root {
   id group = _groups[0];
   if(group != root) {

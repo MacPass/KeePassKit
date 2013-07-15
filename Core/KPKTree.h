@@ -30,7 +30,6 @@
 
 @interface KPKTree : KPKNode
 
-/*
 @property(nonatomic, assign) uint64_t rounds;
 @property(nonatomic, assign) uint32_t compressionAlgorithm;
 
@@ -61,9 +60,8 @@
 @property(nonatomic, assign) NSInteger historyMaxSize;
 @property(nonatomic, strong) NSUUID *lastSelectedGroup;
 @property(nonatomic, strong) NSUUID *lastTopVisibleGroup;
-@property(nonatomic, strong, readonly) NSMutableArray *binaries;
 @property(nonatomic, strong, readonly) NSMutableArray *customData;
-*/
+
 
 @property (nonatomic, assign) KPKGroup *root;
 /**
@@ -75,7 +73,6 @@
 @property (nonatomic, readonly) NSArray *allEntries;
 
 - (id)initWithData:(NSData *)data password:(KPKPassword *)password;
-- (NSData *)serializeWithPassword:(KPKPassword *)password error:(NSError *)error;
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent;
 - (KPKEntry *)createEntry:(KPKGroup *)parent;
