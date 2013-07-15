@@ -67,10 +67,11 @@
   entry->_attachments = [self.attachmets copyWithZone:zone];
   entry->_customAttributes = [self.customAttributes copyWithZone:zone];
   entry->_tags = [self.tags copyWithZone:zone];
-
+  
   return entry;
 }
 
+#pragma mark Default Attributes
 - (NSString *)title {
   return self.titleAttribute.value;
 }
@@ -121,11 +122,65 @@
   [self.parent removeEntry:self];
 }
 
+#pragma mark CustomAttributes
+
+- (KPKAttribute *)customAttributeForKey:(NSString *)key {
+  // test for default keys;
+  NSPredicate *filter = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    return [[evaluatedObject key] isEqualToString:key];
+  }];
+  NSArray *filterdAttributes = [self.customAttributes filteredArrayUsingPredicate:filter];
+  return [filterdAttributes lastObject];
+}
+
+- (BOOL)hasAttributeWithKey:(NSString *)key {
+  // test for default keys;
+  NSPredicate *filter = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    return [[evaluatedObject key] isEqualToString:key];
+  }];
+  NSArray *filterdAttributes = [self.customAttributes filteredArrayUsingPredicate:filter];
+  return [filterdAttributes count] > 0;
+}
+
+-(NSString *)proposedKeyForAttributeKey:(NSString *)key {
+  /*
+   FIXME: Introduce some cachin behaviour. We iterate over after every single edit
+   */
+  NSMutableSet *keys = [[NSMutableSet alloc] initWithCapacity:[_customAttributes count]];
+  for(KPKAttribute *attribute in _customAttributes) {
+    [keys addObject:_customAttributes.key];
+  }
+  NSUInteger counter = 1;
+  NSString *base = key;
+  while([keys containsObject:key]) {
+    key = [NSString stringWithFormat:@"%@-%ld", base, counter++];
+  }
+  return key;
+}
+
 - (void)addCustomAttribute:(KPKAttribute *)attribute {
+  [self addCustomAttribute:attribute atIndex:[_customAttributes count]];
 }
 
 - (void)addCustomAttribute:(KPKAttribute *)attribute atIndex:(NSUInteger)index {
+  index = MIN([_customAttributes count], index);
+  [self.undoManger registerUndoWithTarget:self selector:@selector(removeCustomAttribute:) object:attribute];
+  [self insertObject:attribute inCustomAttributesAtIndex:index];
+  attribute.entry = self;
+  self.minimumVersion = [self _minimumVersionForCurrentAttributes];
 }
+
+- (void)removeCustomAttribute:(KPKAttribute *)attribute {
+  NSUInteger index = [_customAttributes indexOfObject:attribute];
+  if(NSNotFound != index) {
+    [[self.undoManger prepareWithInvocationTarget:self] addCustomAttribute:attribute atIndex:index];
+    attribute.entry = nil;
+    [self removeObjectFromCustomAttributesAtIndex:index];
+    self.minimumVersion = [self _minimumVersionForCurrentAttributes];
+  }
+}
+
+#pragma mark Tags
 
 - (void)addTag:(NSString *)tag {
   [self addTag:tag atIndex:[_tags count]];
@@ -146,6 +201,8 @@
     self.minimumVersion = [self _minimumVersionForCurrentAttributes];
   }
 }
+
+#pragma mark Attachments
 
 - (void)addAttachment:(KPKAttachment *)attachment {
   [self addAttachment:attachment atIndex:[_attachments count]];
@@ -171,15 +228,6 @@
     [self removeObjectFromAttachmetsAtIndex:index];
     self.minimumVersion = [self _minimumVersionForCurrentAttachments];
   }
-}
-
-- (BOOL)hasAttributeWithKey:(NSString *)key {
-  // test for default keys;
-  NSPredicate *filter = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-    return [[evaluatedObject key] isEqualToString:key];
-  }];
-  NSArray *filterdAttributes = [self.customAttributes filteredArrayUsingPredicate:filter];
-  return [filterdAttributes count] > 0;
 }
 
 #pragma mark -

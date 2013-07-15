@@ -44,7 +44,15 @@
  @param key String that identifies the attributes
  @returns the attribute with the given key
  */
-- (KPKAttribute *)attributeForKey:(NSString *)key;
+- (KPKAttribute *)customAttributeForKey:(NSString *)key;
+/**
+ @returns YES, if the supplied key is a key in the attributes of this entry
+ */
+- (BOOL)hasAttributeWithKey:(NSString *)key;
+/**
+ @returns a unique key for the proposed key.
+ */
+- (NSString *)proposedKeyForAttributeKey:(NSString *)key;
 /**
  Adds an attribute to the entry
  @param attribute The attribute to be added
@@ -82,6 +90,4 @@
  @param tag The tag to be removed
  */
 - (void)removeTag:(NSString *)tag;
-
-- (BOOL)hasAttributeWithKey:(NSString *)key;
 @end

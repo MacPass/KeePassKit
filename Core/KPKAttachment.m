@@ -31,7 +31,7 @@
   self = [super init];
   if(self) {
     _name = [name copy];
-    // if compressed, decompress the data
+    _data = [self _dataForEncodedString:value compressed:compressed];
   }
   return self;
 }
@@ -41,7 +41,7 @@
   if(self) {
     if(url) {
       NSError *error = nil;
-      _data = [NSData dataWithContentsOfURL:url options:NSDataReadingMappedIfSafe error:&error];
+      _data = [NSData dataWithContentsOfURL:url options:0 error:&error];
       if(!_data) {
         self = nil;
         return self;
@@ -61,8 +61,23 @@
   return copy;
 }
 
-- (NSData *)_dataForString:(NSString *)string compressed:(BOOL)compressed {
-  return nil;
+- (NSData *)_dataForEncodedString:(NSString *)string compressed:(BOOL)compressed {
+  NSData *data = [NSMutableData mutableDataWithBase64EncodedData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  if(data && compressed) {
+    data = [data gzipInflate];
+  }
+  return data;
+}
+
+- (NSString *)encodeDataUsingCompression:(BOOL)compress {
+  NSData *data;
+  if(compress) {
+    data = [self.data gzipDeflate];
+  }
+  else {
+    data = self.data;
+  }
+  return [[NSString alloc] initWithData:[NSMutableData mutableDataWithBase64EncodedData:data] encoding:NSASCIIStringEncoding];
 }
 
 @end

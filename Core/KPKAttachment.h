@@ -28,7 +28,19 @@
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSData *data;
 
+/**
+ @param name The name for the attachment, usually this should be the filename with extension
+ @param value The data represented as Base64 encoded string.
+ @param compressed Supply YES if the string data in value is Gziped, otherwise supply NO
+ @return Attachment initalized with the given data and name, nil if errors occured
+ */
 - (id)initWithName:(NSString *)name value:(NSString *)value compressed:(BOOL)compressed;
+/**
+ @param url Location of the file to use
+ @returns Attachment initalized with the name and data from the given file URL. nil if errors occured
+ */
 - (id)initWithContentsOfURL:(NSURL *)url;
+
+- (NSString *)encodeDataUsingCompression:(BOOL)compress;
 
 @end

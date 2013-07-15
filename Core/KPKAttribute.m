@@ -8,6 +8,7 @@
 
 #import "KPKAttribute.h"
 #import "KPKEntry.h"
+#import "KPKFormat.h"
 
 @implementation KPKAttribute
 /**
@@ -37,9 +38,15 @@
 
 - (BOOL)validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey error:(out NSError *__autoreleasing *)outError {
   if([inKey isEqualToString:@"key"]) {
-    [self.entry hasAttributeWithKey:[*ioValue stringValue]];
+    if([self.entry hasAttributeWithKey:[*ioValue stringValue]]) {
+      *ioValue = [self.entry proposedKeyForAttributeKey:@"Untitled"];
+    }
   }
   return YES;
+}
+
+- (BOOL)isDefault {
+  return [[KPKFormat sharedFormat] isDefautlKey:self.key];
 }
 
 @end

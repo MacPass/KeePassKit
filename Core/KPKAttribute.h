@@ -14,11 +14,14 @@
 
 @property (nonatomic, copy) NSString *key;
 @property (nonatomic, copy) NSString *value;
+@property (nonatomic, copy) NSData *xorPad;
+@property (nonatomic, copy) NSData *protectedData;
 @property (nonatomic, assign) BOOL protected;
 
 @property (weak) KPKEntry *entry; /// Reference to entry to be able to validate keys
 
 - (id)initWithKey:(NSString *)key value:(NSString *)value protected:(BOOL)protected;
 - (id)initWithKey:(NSString *)key value:(NSString *)value;
+- (BOOL)isDefault;
 
 @end

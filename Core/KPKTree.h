@@ -30,6 +30,41 @@
 
 @interface KPKTree : KPKNode
 
+/*
+@property(nonatomic, assign) uint64_t rounds;
+@property(nonatomic, assign) uint32_t compressionAlgorithm;
+
+@property(nonatomic, copy) NSString *generator;
+@property(nonatomic, copy) NSString *databaseName;
+@property(nonatomic, strong) NSDate *databaseNameChanged;
+@property(nonatomic, copy) NSString *databaseDescription;
+@property(nonatomic, strong) NSDate *databaseDescriptionChanged;
+@property(nonatomic, copy) NSString *defaultUserName;
+@property(nonatomic, strong) NSDate *defaultUserNameChanged;
+@property(nonatomic, assign) NSInteger maintenanceHistoryDays;
+@property(nonatomic, copy) NSString *color;
+@property(nonatomic, strong) NSDate *masterKeyChanged;
+@property(nonatomic, assign) NSInteger masterKeyChangeRec;
+@property(nonatomic, assign) NSInteger masterKeyChangeForce;
+@property(nonatomic, assign) BOOL protectTitle;
+@property(nonatomic, assign) BOOL protectUserName;
+@property(nonatomic, assign) BOOL protectPassword;
+@property(nonatomic, assign) BOOL protectUrl;
+@property(nonatomic, assign) BOOL protectNotes;
+@property(nonatomic, strong, readonly) NSMutableArray *customIcons;
+@property(nonatomic, assign) BOOL recycleBinEnabled;
+@property(nonatomic, strong) NSUUID *recycleBinUuid;
+@property(nonatomic, strong) NSDate *recycleBinChanged;
+@property(nonatomic, strong) NSUUID *entryTemplatesGroup;
+@property(nonatomic, strong) NSDate *entryTemplatesGroupChanged;
+@property(nonatomic, assign) NSInteger historyMaxItems;
+@property(nonatomic, assign) NSInteger historyMaxSize;
+@property(nonatomic, strong) NSUUID *lastSelectedGroup;
+@property(nonatomic, strong) NSUUID *lastTopVisibleGroup;
+@property(nonatomic, strong, readonly) NSMutableArray *binaries;
+@property(nonatomic, strong, readonly) NSMutableArray *customData;
+*/
+
 @property (nonatomic, assign) KPKGroup *root;
 /**
  Acces to the root group via the groups property

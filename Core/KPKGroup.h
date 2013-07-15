@@ -27,12 +27,23 @@
 
 @interface KPKGroup : KPKNode 
 
-@property(nonatomic, assign) NSInteger image;
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, readonly) NSArray *groups;
 @property(nonatomic, readonly) NSArray *entries;
 @property(nonatomic, readonly) NSArray *childEntries;
 @property(nonatomic, readonly) NSArray *childGroups;
+
+/*
+@property(nonatomic, copy) NSString *notes;
+@property(nonatomic, assign) BOOL isExpanded;
+@property(nonatomic, copy) NSString *defaultAutoTypeSequence;
+@property(nonatomic, copy) NSString *enableAutoType;
+@property(nonatomic, copy) NSString *enableSearching;
+@property(nonatomic, strong) NSUUID *lastTopVisibleEntry;
+@property(nonatomic, assign) BOOL expires;
+@property(nonatomic, assign) NSInteger usageCount;
+@property(nonatomic, strong) NSDate *locationChanged;
+*/
 
 @property(nonatomic, assign) BOOL canAddEntries;
 
