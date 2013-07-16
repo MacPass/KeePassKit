@@ -158,7 +158,6 @@
   return groupElement;
 }
 
-- (DDXMLElement *)_
 - (DDXMLElement *)_xmlBinaries {
   
   [self _prepateAttachments];
