@@ -11,5 +11,6 @@
 @interface KPKTree (Serializing)
 
 - (NSData *)serializeWithPassword:(KPKPassword *)password forVersion:(KPKVersion)version error:(NSError *)error;
+- (NSString *)serializeXml;
 
 @end

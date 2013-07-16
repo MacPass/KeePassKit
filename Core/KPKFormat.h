@@ -38,6 +38,13 @@ FOUNDATION_EXTERN NSString *const KPKImageKey;
 FOUNDATION_EXTERN NSString *const KPKAccesTimeKey;
 FOUNDATION_EXTERN NSString *const KPKModifcationTimeKey;
 FOUNDATION_EXTERN NSString *const KPKExpiryDateKey;
+
+
+typedef NS_ENUM(NSUInteger, KPKCompression) {
+  KPKCompressionNone,
+  KPKCompressionGzip,
+  KPKCompressionCount,
+};
 /**
  Format class.
  Holds all allowed keys for an element.

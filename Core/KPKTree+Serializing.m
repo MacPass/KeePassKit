@@ -8,7 +8,7 @@
 
 #import "KPKTree+Serializing.h"
 
-#import "KPKTree+XML.h"
+#import "KPKXmlTreeWriter.h"
 #import "DDXMLDocument.h"
 #import "KPKPassword.h"
 
@@ -23,13 +23,20 @@
    */
   return nil;
 }
+
+- (NSString *)serializeXml {
+  KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self];
+  return [[treeWriter xmlDocument] XMLStringWithOptions:DDXMLNodeCompactEmptyElement|DDXMLNodePrettyPrint];
+}
+
 - (NSData *)_serializeVersion1WithPassword:(KPKPassword *)password error:(NSError *)error {
   return nil;
 }
 
 - (NSData *)_serializeVersion2WithPassword:(KPKPassword *)password error:(NSError *)error {
-  NSData *data = [[self xmlDocument] XMLDataWithOptions:DDXMLNodeCompactEmptyElement];
-  
+  KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self];
+  NSData *data = [[treeWriter xmlDocument] XMLDataWithOptions:DDXMLNodeCompactEmptyElement];
+  // Process Data
   return data;
 }
 
