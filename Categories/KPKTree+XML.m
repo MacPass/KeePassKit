@@ -8,6 +8,10 @@
 
 #import "KPKTree+XML.h"
 #import "DDXMLDocument.h"
+#import "NSUUID+KeePassKit.h"
+
+#import "KPKGroup.h"
+#import "KPKEntry.h"
 
 #define KPKAddElement(element, name, value) [element addChild:[DDXMLNode elementWithName:name stringValue:value]]
 #define KPKStringFromLong(integer) [NSString stringWithFormat:@"%ld", integer]
@@ -48,58 +52,93 @@
   
   [element addChild:memoryProtectionElement];
   /*
-  if ([self.customIcons count] > 0) {
-    DDXMLElement *customIconsElements = [DDXMLElement elementWithName:@"CustomIcons"];
-    for (CustomIcon *customIcon in self.customIcons) {
-      [customIconsElements addChild:[self persistCustomIcon:customIcon]];
-    }
-    [element addChild:customIconsElements];
-  }
-  */
+   if ([self.customIcons count] > 0) {
+   DDXMLElement *customIconsElements = [DDXMLElement elementWithName:@"CustomIcons"];
+   for (CustomIcon *customIcon in self.customIcons) {
+   [customIconsElements addChild:[self persistCustomIcon:customIcon]];
+   }
+   [element addChild:customIconsElements];
+   }
+   */
   
   KPKAddElement(element, @"RecycleBinEnabled", KPKStringFromBool(self.recycleBinEnabled));
-  KPKAddElement(element, @"RecycleBinUUID", @"");
+  KPKAddElement(element, @"RecycleBinUUID", [self.recycleBinUuid encodedString]);
+  KPKAddElement(element, @"RecycleBinChanged", KPKFormattedDate(dateFormatter, self.recycleBinChanged));
+  KPKAddElement(element, @"EntryTemplatesGroup", [self.entryTemplatesGroup encodedString]);
+  KPKAddElement(element, @"EntryTemplatesGroupChanged", KPKFormattedDate(dateFormatter, self.entryTemplatesGroupChanged));
+  KPKAddElement(element, @"HistoryMaxItems", KPKStringFromLong(self.historyMaxItems));
+  KPKAddElement(element, @"HistoryMaxSize", KPKStringFromLong(self.historyMaxItems));
+  KPKAddElement(element, @"LastSelectedGroup", [self.lastSelectedGroup encodedString]);
+  KPKAddElement(element, @"LastTopVisibleGroup", [self.lastTopVisibleGroup encodedString]);
+  
+  
   /*
-  
-  [element addChild:[DDXMLNode elementWithName:@"RecycleBinEnabled"
-                                   stringValue:self.recycleBinEnabled ? @"True" : @"False"]];
-  [element addChild:[DDXMLNode elementWithName:@"RecycleBinUUID"
-                                   stringValue:[self persistUuid:self.recycleBinUuid]]];
-  [element addChild:[DDXMLNode elementWithName:@"RecycleBinChanged"
-                                   stringValue:[dateFormatter stringFromDate:self.recycleBinChanged]]];
-  [element addChild:[DDXMLNode elementWithName:@"EntryTemplatesGroup"
-                                   stringValue:[self persistUuid:self.entryTemplatesGroup]]];
-  [element addChild:[DDXMLNode elementWithName:@"EntryTemplatesGroupChanged"
-                                   stringValue:[dateFormatter stringFromDate:self.entryTemplatesGroupChanged]]];
-  [element addChild:[DDXMLNode elementWithName:@"HistoryMaxItems"
-                                   stringValue:[NSString stringWithFormat:@"%ld", self.historyMaxItems]]];
-  [element addChild:[DDXMLNode elementWithName:@"HistoryMaxSize"
-                                   stringValue:[NSString stringWithFormat:@"%ld", self.historyMaxSize]]];
-  [element addChild:[DDXMLNode elementWithName:@"LastSelectedGroup"
-                                   stringValue:[self persistUuid:self.lastSelectedGroup]]];
-  [element addChild:[DDXMLNode elementWithName:@"LastTopVisibleGroup"
-                                   stringValue:[self persistUuid:self.lastTopVisibleGroup]]];
-  
-  DDXMLElement *binaryElements = [DDXMLElement elementWithName:@"Binaries"];
-  for (Binary *binary in self.binaries) {
-    [binaryElements addChild:[self persistBinary:binary]];
-  }
-  [element addChild:binaryElements];
-  
-  DDXMLElement *customDataElements = [DDXMLElement elementWithName:@"CustomData"];
-  for (CustomItem *customItem in self.customData) {
-    [customDataElements addChild:[self persistCustomItem:customItem]];
-  }
-  [element addChild:customDataElements];
-  
-  [document.rootElement addChild:element];
-  
-  element = [DDXMLNode elementWithName:@"Root"];
-  [element addChild:[self persistGroup:(Kdb4Group *)self.root]];
-  [document.rootElement addChild:element];
-  */
+   DDXMLElement *binaryElements = [DDXMLElement elementWithName:@"Binaries"];
+   for (Binary *binary in self.binaries) {
+   [binaryElements addChild:[self persistBinary:binary]];
+   }
+   [element addChild:binaryElements];
+   
+   DDXMLElement *customDataElements = [DDXMLElement elementWithName:@"CustomData"];
+   for (CustomItem *customItem in self.customData) {
+   [customDataElements addChild:[self persistCustomItem:customItem]];
+   }
+   [element addChild:customDataElements];
+   
+   [document.rootElement addChild:element];
+   
+   element = [DDXMLNode elementWithName:@"Root"];
+   [element addChild:[self persistGroup:(Kdb4Group *)self.root]];
+   [document.rootElement addChild:element];
+   */
   return document;
+}
+
+- (DDXMLElement *)_xmlGroup:(KPKGroup *)group {
+  DDXMLElement *groupElement = [DDXMLNode elementWithName:@"Group"];
   
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+  dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
+  
+  // Add the standard properties
+  KPKAddElement(groupElement, @"UUID", [group.uuid encodedString]);
+  KPKAddElement(groupElement, @"Name", group.name);
+  KPKAddElement(groupElement, @"Notes", group.notes);
+  KPKAddElement(groupElement, @"IconId", KPKStringFromLong(group.image));
+  
+  DDXMLElement *timesElement = [DDXMLNode elementWithName:@"Times"];
+  KPKAddElement(timesElement, @"LastModificationTime", KPKFormattedDate(dateFormatter, group.lastModificationTime));
+  KPKAddElement(timesElement, @"dateFormatter", KPKFormattedDate(dateFormatter, group.creationTime));
+  KPKAddElement(timesElement, @"LastAccessTime", KPKFormattedDate(dateFormatter, group.lastAccessTime));
+  KPKAddElement(timesElement, @"ExpiryTime", KPKFormattedDate(dateFormatter, group.expiryTime));
+  KPKAddElement(timesElement, @"Expires", KPKStringFromBool(group.expires));
+  // FIXME: Add additional properties to group/node/entry
+  //KPKAddElement(timesElement, @"UsageCount", group.usageCount)
+  //KPKAddElement(timesElement, @"LocationChanged", value)
+  [groupElement addChild:timesElement];
+  
+  /*
+  [groupElement addChild:[DDXMLNode elementWithName:@"IsExpanded"
+                                        stringValue:group.isExpanded ? @"True" : @"False"]];
+  [groupElement addChild:[DDXMLNode elementWithName:@"DefaultAutoTypeSequence"
+                                        stringValue:group.defaultAutoTypeSequence]];
+  [groupElement addChild:[DDXMLNode elementWithName:@"EnableAutoType"
+                                        stringValue:group.enableAutoType]];
+  [groupElement addChild:[DDXMLNode elementWithName:@"EnableSearching"
+                                        stringValue:group.enableSearching]];
+  [groupElement addChild:[DDXMLNode elementWithName:@"LastTopVisibleEntry"
+                                        stringValue:[self persistUuid:group.lastTopVisibleEntry]]];
+  
+  for (Kdb4Entry *entry in group.entries) {
+    [groupElement addChild:[self persistEntry:entry includeHistory:YES]];
+  }
+  */
+  for (KPKGroup *subGroup in group.groups) {
+    [groupElement addChild:[self _xmlGroup:subGroup]];
+  }
+  
+  return groupElement;
 }
 
 @end

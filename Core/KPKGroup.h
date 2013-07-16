@@ -28,6 +28,8 @@
 @interface KPKGroup : KPKNode 
 
 @property(nonatomic, copy) NSString *name;
+@property(nonatomic, copy) NSString *notes;
+@property(nonatomic, assing) BOOL expires;
 @property(nonatomic, readonly) NSArray *groups;
 @property(nonatomic, readonly) NSArray *entries;
 @property(nonatomic, readonly) NSArray *childEntries;
