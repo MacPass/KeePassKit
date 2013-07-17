@@ -24,10 +24,12 @@
 #import <Foundation/Foundation.h>
 #import "KPKVersion.h"
 @class KPKGroup;
+@class KPKTree;
 
 /* Basic Node in the Tree */
 @interface KPKNode : NSObject
 
+@property(nonatomic, weak) KPKTree *tree;
 @property(nonatomic, assign) NSInteger image;
 @property(nonatomic, weak) KPKGroup *parent;
 @property (nonatomic, retain) NSUUID *uuid;
@@ -48,5 +50,7 @@
  The Model does NOT set any names on undo/redo.
  */
 @property(nonatomic, weak) NSUndoManager *undoManger;
+
+- (KPKGroup *)rootGroup;
 
 @end

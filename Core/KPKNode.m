@@ -22,6 +22,7 @@
 
 
 #import "KPKNode.h"
+#import "KPKGroup.h"
 
 @implementation KPKNode
 
@@ -39,6 +40,14 @@
     _expiryTime = [NSDate distantFuture];
   }
   return self;
+}
+
+- (KPKGroup *)rootGroup {
+  KPKGroup *rootGroup = self.parent;
+  while(rootGroup) {
+    rootGroup = rootGroup.parent;
+  }
+  return rootGroup;
 }
 
 @end

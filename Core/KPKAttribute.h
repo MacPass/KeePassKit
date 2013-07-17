@@ -17,6 +17,11 @@
 @property (nonatomic, copy) NSData *xorPad;
 @property (nonatomic, copy) NSData *protectedData;
 @property (nonatomic, assign) BOOL protected;
+@property (nonatomic, readonly) BOOL isReference;
+@property (nonatomic, readonly) BOOL isPlaceholder;
+@property (nonatomic, readonly) NSString *referencedValue;
+@property (nonatomic, readonly) NSString *placeholderValue;
+
 
 @property (weak) KPKEntry *entry; /// Reference to entry to be able to validate keys
 

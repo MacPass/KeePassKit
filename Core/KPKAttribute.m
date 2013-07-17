@@ -9,6 +9,40 @@
 #import "KPKAttribute.h"
 #import "KPKEntry.h"
 #import "KPKFormat.h"
+#import "KPKGroup.h"
+
+#import "NSString+KPKCommandString.h"
+
+/*
+ References are formatted as follows:
+ T	Title
+ U	User name
+ P	Password
+ A	URL
+ N	Notes
+ I	UUID
+ O	Other custom strings (KeePass 2.x only)
+ 
+ {REF:P@I:46C9B1FFBD4ABC4BBB260C6190BAD20C}
+ {REF:<WantedField>@<SearchIn>:<Text>}
+ 
+ Placeholder
+ 
+ {TITLE}	Title
+ {USERNAME}	User name
+ {URL}	URL
+ {PASSWORD}	Password
+ {NOTES}	Notes
+ {S:Name} CustomString Name
+ 
+ {URL:RMVSCM}	Entry URL without scheme name.
+ {URL:SCM}	Scheme name of the entry URL.
+ {URL:HOST}	Host component of the entry URL.
+ {URL:PORT}	Port number of the entry URL.
+ {URL:PATH}	Path component of the entry URL.
+ {URL:QUERY}	Query information of the entry URL.
+ 
+ */
 
 @implementation KPKAttribute
 /**
@@ -47,6 +81,31 @@
 
 - (BOOL)isDefault {
   return [[KPKFormat sharedFormat] isDefautlKey:self.key];
+}
+
+- (BOOL)isReference {
+  return [self.value isRefernce];
+}
+
+- (BOOL)isPlaceholder {
+  return NO;
+}
+
+- (NSString *)referencedValue {
+  /*
+   Find references value ... need the database.
+   */
+  KPKGroup *rootGroup = [self.entry rootGroup];
+  // Determin what type to look for
+  return nil;
+}
+
+- (NSString *)placeholderValue {
+  /*
+   Finds the referenced value.
+   Entry is sufficient to look
+   */
+  return nil;
 }
 
 @end
