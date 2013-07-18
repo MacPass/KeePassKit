@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "NSString+KPKCommandString.h"
+#import "NSString+CommandString.h"
 
 /*
  References are formatted as follows:
@@ -38,7 +38,7 @@
  {URL:QUERY}	Query information of the entry URL.
 */
 
-@implementation NSString (KPKCommandString)
+@implementation NSString (CommandString)
 
 + (NSDictionary *)_tokenMap {
   static NSDictionary *dict = nil;
@@ -50,7 +50,7 @@
               @"A" : @"url",
               @"N" : @"notes",
               @"I" : @"uuid",
-              @"O" : @"...",
+              @"O" : @"valueForKey:",
               };
   });
   return dict;
@@ -68,11 +68,26 @@
 - (SEL)referenceSelector {
   //NSString *clean = [self substringWithRange:NSMakeRange(5, [self length] - 5)];
   //NSArray *tokens = [clean componentsSeparatedByString:@":"];
-  
   return NULL;
 }
 
 - (NSPredicate *)referencePredicate {
   return nil;
 }
+
+- (BOOL)isPlaceholder {
+  if([self isCommandString]) {
+    
+  }
+  return NO;
+}
+
+- (NSString *)_removeBraces {
+  return [self substringWithRange:NSMakeRange(1, [self length] - 2)];
+}
+
+- (NSString *)placeholderValue {
+  return nil;
+}
+
 @end

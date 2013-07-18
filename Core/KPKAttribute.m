@@ -11,7 +11,7 @@
 #import "KPKFormat.h"
 #import "KPKGroup.h"
 
-#import "NSString+KPKCommandString.h"
+#import "NSString+CommandString.h"
 
 /*
  References are formatted as follows:
@@ -92,19 +92,12 @@
 }
 
 - (NSString *)referencedValue {
-  /*
-   Find references value ... need the database.
-   */
   KPKGroup *rootGroup = [self.entry rootGroup];
   // Determin what type to look for
   return nil;
 }
 
 - (NSString *)placeholderValue {
-  /*
-   Finds the referenced value.
-   Entry is sufficient to look
-   */
   return nil;
 }
 
