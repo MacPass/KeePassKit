@@ -37,7 +37,7 @@
   if(self) {
     _customData = [[NSMutableArray alloc] init];
     _customIcons = [[NSMutableArray alloc] init];
-    _deletedObjects = [[NSMutableArray alloc] init];
+    _deletedObjects = [[NSMutableDictionary alloc] init];
   }
   return self;
 }

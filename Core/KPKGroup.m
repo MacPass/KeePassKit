@@ -22,6 +22,8 @@
 
 #import "KPKGroup.h"
 #import "KPKEntry.h"
+#import "KPKTree.h"
+#import "KPKDeletedNode.h"
 
 @interface KPKGroup () {
 @private
@@ -73,6 +75,8 @@
   group.parent = self;
   index = MIN([_entries count], index);
   [[self.undoManger prepareWithInvocationTarget:self] removeGroup:group];
+  /* Remove entries that might have been added to the deleted objects */
+  [self.tree.deletedObjects removeObjectForKey:group.uuid];
   [self insertObject:group inGroupsAtIndex:index];
 }
 
@@ -81,6 +85,8 @@
   if(index != NSNotFound) {
     [[self.undoManger prepareWithInvocationTarget:self] addGroup:self atIndex:index];
     group.parent = nil;
+    /* Add group to deleted objects */
+    self.tree.deletedObjects[ group.uuid ] = [[KPKDeletedNode alloc] initWithNode:group];
     [self removeObjectFromGroupsAtIndex:index];
   }
 }
@@ -104,6 +110,8 @@
   entry.parent = self;
   index = MIN([_entries count], index);
   [[self.undoManger prepareWithInvocationTarget:self] removeEntry:entry];
+  /* Remove the deleted Object */
+  [self.tree.deletedObjects removeObjectForKey:entry.uuid];
   [self insertObject:entry inEntriesAtIndex:index];
 }
 
@@ -112,6 +120,8 @@
   if(NSNotFound != index) {
     [[self.undoManger prepareWithInvocationTarget:self] addEntry:entry atIndex:index];
     [self removeObjectFromEntriesAtIndex:index];
+    /* Add the entry to the deleted Objects */
+    self.tree.deletedObjects[ entry.uuid ] = [[KPKDeletedNode alloc] initWithNode:entry];
     entry.parent = nil;
   }
 }
