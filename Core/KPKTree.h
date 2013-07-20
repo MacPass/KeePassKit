@@ -73,6 +73,7 @@
 
 @property(nonatomic, strong, readonly) NSMutableArray *customData;
 @property(nonatomic, strong, readonly) NSMutableArray *customIcons;
+@property(nonatomic, strong, readonly) NSMutableArray *deletedObjects;
 
 @property (nonatomic, assign) KPKGroup *root;
 /**

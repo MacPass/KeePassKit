@@ -35,7 +35,9 @@
 - (id)initWithData:(NSData *)data password:(KPKPassword *)password {
   self = [super init];
   if(self) {
-    
+    _customData = [[NSMutableArray alloc] init];
+    _customIcons = [[NSMutableArray alloc] init];
+    _deletedObjects = [[NSMutableArray alloc] init];
   }
   return self;
 }
