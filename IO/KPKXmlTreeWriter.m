@@ -30,6 +30,7 @@
 #import "KPKFormat.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"
+#import "KPKDeletedNode.h"
 #import "KPKAttachment.h"
 #import "KPKIcon.h"
 
@@ -121,6 +122,10 @@
    [document.rootElement addChild:element];
    */
   
+  if([self.tree.deletedObjects count] > 0) {
+    [element addChild:[self _xmlDeletedObjects]];
+  }
+  
   return document;
 }
 
@@ -196,6 +201,17 @@
     [customIconsElements addChild:iconElement];
   }
   return customIconsElements;
+}
+
+- (DDXMLElement *)_xmlDeletedObjects {
+  DDXMLElement *deletedObjectsElement = [DDXMLElement elementWithName:@"DeletedObjects"];
+  for(KPKDeletedNode *node in self.tree.deletedObjects) {
+    DDXMLElement *deletedElement = [DDXMLNode elementWithName:@"DeletedObject"];
+    KPKAddElement(deletedElement, @"UUID",[node.uuid encodedString]);
+    KPKAddElement(deletedElement, @"DeletionTime", KPKFormattedDate(node.deletionDate));
+    [deletedObjectsElement addChild:deletedElement];
+  }
+  return deletedObjectsElement;
 }
 
 - (void)_prepateAttachments {
