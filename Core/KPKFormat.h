@@ -46,9 +46,13 @@ typedef NS_ENUM(NSUInteger, KPKCompression) {
   KPKCompressionCount,
 };
 
-/**
- KDB File internals
- */
+typedef NS_ENUM(NSUInteger, KPKRandomStreamType) {
+  KPKRandomStreamNone,
+  KPKRandomStreamArc4,
+  KPKRandomStreamSalsa20,
+  KPKRandomStreamCount
+};
+
 typedef NS_ENUM(NSUInteger, KPKSignatures) {
   KPKVersion1Signature1 = 0x9AA2D903,
   KPKVersion1Signature2 = 0xB54BFB65,

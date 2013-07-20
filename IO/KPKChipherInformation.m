@@ -49,10 +49,8 @@
    */
   NSUInteger location = 16;
   uint8_t buffer[16];
-  
-  BOOL eoh = NO;
-  
-  while (!eoh) {
+   
+  while (true) {
     uint8_t fieldType;
     uint16_t fieldSize;
     
@@ -121,7 +119,7 @@
         break;
         
       case KPKHeaderKeyCompression:
-        _data getBytes:&compressionAlgorithm range:NSMakeRange(location, 4)];
+        [_data getBytes:&compressionAlgorithm range:NSMakeRange(location, 4)];
         compressionAlgorithm = CFSwapInt32LittleToHost(compressionAlgorithm);
         if (compressionAlgorithm >= KPKCompressionCount) {
           if(error != NULL) {
@@ -132,22 +130,24 @@
         }
         break;
       case KPKHeaderKeyRandomStreamId:
-        randomStreamID = [inputStream readInt32];
+        [_data getBytes:&randomStreamID range:NSMakeRange(location, 4)];
         randomStreamID = CFSwapInt32LittleToHost(randomStreamID);
-        if (randomStreamID >= CSR_COUNT) {
-          @throw [NSException exceptionWithName:@"IOException" reason:@"Invalid CSR algorithm" userInfo:nil];
+        if (randomStreamID >= KPKRandomStreamCount) {
+          // @throw [NSException exceptionWithName:@"IOException" reason:@"Invalid CSR algorithm" userInfo:nil];
+          return NO;
         }
         break;
         
       default:
-        @throw [NSException exceptionWithName:@"InvalidHeader" reason:@"InvalidField" userInfo:nil];
+        if(error != NULL) {
+
+        }
+        return NO;
     }
-    
+    /*
+     Increment the location
+     */
     location += fieldSize;
-    //  if (![cipherUuid isEqual:[UUID getAESUUID]]) {
-    //    @throw [NSException exceptionWithName:@"IOException" reason:@"Unsupported cipher" userInfo:nil];
-    //  }
-    
   }
 }
 @end
