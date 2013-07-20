@@ -52,7 +52,6 @@
 
 - (NSImage *)_decodeString:(NSString *)imageString {
   NSData *data = [NSMutableData mutableDataWithBase64DecodedData:[imageString dataUsingEncoding:NSUTF8StringEncoding]];
-  [data writeToFile:@"/Users/michael/Desktop/test.image.raw" atomically:YES];
   return [[NSImage alloc] initWithData:data];
 }
 
