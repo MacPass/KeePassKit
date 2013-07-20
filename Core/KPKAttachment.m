@@ -77,7 +77,7 @@
   else {
     data = self.data;
   }
-  return [[NSString alloc] initWithData:[NSMutableData mutableDataWithBase64EncodedData:data] encoding:NSASCIIStringEncoding];
+  return [[NSString alloc] initWithData:[NSMutableData mutableDataWithBase64EncodedData:data] encoding:NSUTF8StringEncoding];
 }
 
 @end

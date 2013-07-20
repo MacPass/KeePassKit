@@ -25,6 +25,18 @@ static NSUUID *aesUUID = nil;
   return aesUUID;
 }
 
++ (NSUUID *)uuidWithEncodedString:(NSString *)string {
+  return [[NSUUID alloc] initWithEncodedUUIDString:string];
+}
+
+- (id)initWithEncodedUUIDString:(NSString *)string {
+  NSData *stringData = [string dataUsingEncoding:NSUTF8StringEncoding];
+  NSData *decodedData = [NSMutableData mutableDataWithBase64DecodedData:stringData];
+  NSString *uuidString = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
+  self = [self initWithUUIDString:uuidString];
+  return self;
+}
+
 - (NSString *)encodedString {
   NSData *data = [NSMutableData mutableDataWithBase64EncodedData:[self getUUIDData]];
   return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];

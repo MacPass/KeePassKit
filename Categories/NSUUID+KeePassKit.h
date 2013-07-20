@@ -12,6 +12,9 @@
 
 + (NSUUID *)nullUUID;
 + (NSUUID *)AESUUID;
++ (NSUUID *)uuidWithEncodedString:(NSString *)string;
+
 - (NSString *)encodedString;
+- (id)initWithEncodedUUIDString:(NSString *)string;
 
 @end

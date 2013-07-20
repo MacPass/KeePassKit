@@ -17,6 +17,7 @@
 #import "KPKGroup.h"
 #import "KPKEntry.h"
 #import "KPKAttachment.h"
+#import "KPKIcon.h"
 
 #define KPKAddElement(element, name, value) [element addChild:[DDXMLNode elementWithName:name stringValue:value]]
 #define KPKAddAttribute(element, name, value) [element addAttributeWithName:name stringValue:value];
@@ -50,7 +51,7 @@
 - (DDXMLDocument *)xmlDocument {
   
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:@"<KeePassFile></KeePassFile>" options:0 error:nil];
-
+  
   DDXMLElement *element = [DDXMLNode elementWithName:@"Meta"];
   KPKAddElement(element, @"Generator", self.tree.generator);
   KPKAddElement(element, @"DatabaseName", self.tree.databaseName);
@@ -72,15 +73,13 @@
   KPKAddElement(memoryProtectionElement, @"ProtectNotes", KPKStringFromBool(self.tree.protectNotes));
   
   [element addChild:memoryProtectionElement];
-  /*
-   if ([self.tree.customIcons count] > 0) {
-   DDXMLElement *customIconsElements = [DDXMLElement elementWithName:@"CustomIcons"];
-   for (CustomIcon *customIcon in self.tree.customIcons) {
-   [customIconsElements addChild:[self persistCustomIcon:customIcon]];
-   }
-   [element addChild:customIconsElements];
-   }
-   */
+  
+  
+  
+  if ([self.tree.customIcons count] > 0) {
+    [element addChild:[self _xmlIcons]];
+  }
+  
   
   KPKAddElement(element, @"RecycleBinEnabled", KPKStringFromBool(self.tree.recycleBinEnabled));
   KPKAddElement(element, @"RecycleBinUUID", [self.tree.recycleBinUuid encodedString]);
@@ -93,7 +92,7 @@
   KPKAddElement(element, @"LastTopVisibleGroup", [self.tree.lastTopVisibleGroup encodedString]);
   
   [element addChild:[self _xmlBinaries]];
-
+  
   /*
    DDXMLElement *customDataElements = [DDXMLElement elementWithName:@"CustomData"];
    for (CustomItem *customItem in self.tree.customData) {
@@ -172,6 +171,17 @@
     [binaryElements addChild:binaryElement];
   }
   return binaryElements;
+}
+
+- (DDXMLElement *)_xmlIcons {
+  DDXMLElement *customIconsElements = [DDXMLElement elementWithName:@"CustomIcons"];
+  for (KPKIcon *icon in self.tree.customIcons) {
+    DDXMLElement *iconElement = [DDXMLNode elementWithName:@"Icon"];
+    KPKAddElement(iconElement, @"UUID", [icon.uuid encodedString]);
+    KPKAddElement(iconElement, @"Data", [icon encodedString]);
+    [customIconsElements addChild:iconElement];
+  }
+  return customIconsElements;
 }
 
 - (void)_prepateAttachments {
