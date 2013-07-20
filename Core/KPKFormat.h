@@ -45,6 +45,35 @@ typedef NS_ENUM(NSUInteger, KPKCompression) {
   KPKCompressionGzip,
   KPKCompressionCount,
 };
+
+/**
+ KDB File internals
+ */
+typedef NS_ENUM(NSUInteger, KPKSignatures) {
+  KPKVersion1Signature1 = 0x9AA2D903,
+  KPKVersion1Signature2 = 0xB54BFB65,
+  KPKVersion2Signature1 = 0x9AA2D903,
+  KPKVersion2Signature2 = 0xB54BFB67,
+};
+
+typedef NS_OPTIONS(NSUInteger, KPKVersion1Flags) {
+  KPKVersion1FlagSHA2       = 1<<0,
+  KPKVersion1FlagRijndael   = 1<<1,
+  KPKVersion1FlagArcFour    = 1<<2,
+  KPKVersion1FlagTwoFish    = 1<<3
+};
+
+typedef NS_ENUM(NSUInteger, KPKFileVersion) {
+  KPKFileVersion1 = 0x00030004,
+  KPKFileVersionVersion2 = 0x00030000
+};
+
+FOUNDATION_EXPORT const NSUInteger KPKVersion1HeaderSize;
+
+#define VERSION2_CRITICAL_MAX_32 0x00030000
+#define VERSION2_CRITICAL_MASK 0xFFFF0000
+#define VERSION_OFFSET 16
+
 /**
  Format class.
  Holds all allowed keys for an element.
@@ -55,7 +84,19 @@ typedef NS_ENUM(NSUInteger, KPKCompression) {
  */
 + (id)sharedFormat;
 
-///@returns A set containing the strings that are default keys
+/**
+ @param data The input data to read
+ @returns the Version for this file type
+ */
+- (KPKVersion)databaseVersionForData:(NSData *)data;
+/**
+ @param data The input data of a kdb file
+ @returns the interla veriosn number, NOT if it's a Version1 or Version2 file. Use databaseVersionForData to dertmine the Version
+ */
+- (uint32_t)fileVersionForData:(NSData *)data;
+/**
+ @returns A set containing the strings that are default keys
+ */
 - (NSSet *)defaultKeys;
 /**
  @param key The key to test for defaultness

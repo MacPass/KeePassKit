@@ -30,5 +30,6 @@
 
 - (NSString *)encodedString;
 - (id)initWithEncodedUUIDString:(NSString *)string;
+- (id)initWithData:(NSData *)data;
 
 @end

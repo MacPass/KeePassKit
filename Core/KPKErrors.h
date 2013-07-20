@@ -25,6 +25,9 @@
 
 #import <Foundation/Foundation.h>
 
+#define KPKCreateError(errorCode,localizedKey,comment) [NSError errorWithDomain:KPKErrorDomain code:errorCode userInfo:@{ NSLocalizedDescriptionKey: NSLocalizedStringFromTable(localizedKey, @"LocalizeableErrors", comment)}]
+
+
 FOUNDATION_EXPORT NSString *const KPKErrorDomain;
 
 typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
@@ -33,6 +36,8 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorWriteFailed,
   KPKErrorDatabseParsingFailed,
   KPKErrorKeyParsingFailed,
+  KPKErrorKDBDatabaseVersionUnsupported,
+  KPKErrorKDBXChipherUnsupported
 };
 
 #endif

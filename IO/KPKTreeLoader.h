@@ -26,9 +26,9 @@
 @class KPKPassword;
 @class KPKTree;
 
-@interface KPKParser : NSObject
+@interface KPKTreeLoader : NSObject
 
 - (id)initWithData:(NSData *)data;
-- (KPKTree *)parseTree;
+- (KPKTree *)loadTree:(NSError **)error;
 
 @end

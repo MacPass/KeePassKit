@@ -89,8 +89,6 @@
   
   [element addChild:memoryProtectionElement];
   
-  
-  
   if ([self.tree.customIcons count] > 0) {
     [element addChild:[self _xmlIcons]];
   }

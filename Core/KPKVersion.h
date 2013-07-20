@@ -27,6 +27,7 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM( NSUInteger, KPKVersion ) {
+  KPKUnknownVersion,
   KPKVersion1,
   KPKVersion2
 };

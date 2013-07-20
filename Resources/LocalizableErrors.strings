@@ -7,3 +7,6 @@
 */
 
 "ERROR_KEYFILE_NO_KEY_XML_ELEMENT" = "XML Keyfile is missing Key Element";
+"ERROR_UNSUPPORTED_KDB_DATABASER_VERION" = "The Database version is not supported";
+"ERROR_UNSUPPORTED_KDBX_CHIPHER" = "Unsupported Chipher ID";
+"ERROR_UNKNOWN_FILE_FORMAT" = "Unknown File Format";

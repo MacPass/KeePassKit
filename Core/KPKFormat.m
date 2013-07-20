@@ -34,6 +34,8 @@ NSString *const KPKAutotypeKe   = @"Autotype";
 NSString *const KPKTagKey       = @"Tags";
 NSString *const KPKImageKey     = @"Image";
 
+const NSUInteger KPKVersion1HeaderSize = 124;
+
 @interface KPKFormat () {
   NSSet *_defaultKeys;
 }
@@ -74,6 +76,31 @@ NSString *const KPKImageKey     = @"Image";
   return [self sharedFormat];
 }
 
+- (KPKVersion)databaseVersionForData:(NSData *)data {
+  uint32_t signature1;
+  uint32_t signature2;
+  
+  [data getBytes:&signature1 range:NSMakeRange(0, 4)];
+  [data getBytes:&signature2 range:NSMakeRange(4, 4)];
+  signature1 = CFSwapInt32LittleToHost(signature1);
+  signature2 = CFSwapInt32LittleToHost(signature2);
+  
+  if (signature1 == KPKVersion1Signature1 && signature2 == KPKVersion1Signature2) {
+    return KPKVersion1;
+  }
+  if (signature1 == KPKVersion1Signature1 && signature2 == KPKVersion2Signature2 ) {
+    return KPKVersion2;
+  }
+  return KPKUnknownVersion;
+}
+
+- (uint32_t)fileVersionForData:(NSData *)data {
+  uint32_t version;
+  [data getBytes:&version range:NSMakeRange(8, 4)];
+  version = CFSwapInt32LittleToHost(version);
+  return version;
+}
+
 - (NSSet *)defaultKeys {
   return _defaultKeys;
 }
@@ -86,5 +113,4 @@ NSString *const KPKImageKey     = @"Image";
   NSAssert(NO, @"Not implemented");
   return KPKVersion1;
 }
-
 @end
