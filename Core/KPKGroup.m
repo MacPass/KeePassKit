@@ -140,8 +140,8 @@
 
 - (NSString*)description {
   return [NSString stringWithFormat:@"KdbGroup [image=%ld, name=%@, creationTime=%@, lastModificationTime=%@, lastAccessTime=%@, expiryTime=%@]",
-          self.image,
-          _name,
+          self.icon,
+          self.name,
           self.creationTime,
           self.lastModificationTime,
           self.lastAccessTime,

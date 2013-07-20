@@ -41,6 +41,6 @@
  */
 - (id)initWithContentsOfURL:(NSURL *)url;
 
-- (NSString *)encodeDataUsingCompression:(BOOL)compress;
+- (NSString *)encodedStringUsingCompression:(BOOL)compress;
 
 @end

@@ -69,7 +69,7 @@
   return data;
 }
 
-- (NSString *)encodeDataUsingCompression:(BOOL)compress {
+- (NSString *)encodedStringUsingCompression:(BOOL)compress {
   NSData *data;
   if(compress) {
     data = [self.data gzipDeflate];

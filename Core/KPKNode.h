@@ -25,15 +25,17 @@
 #import "KPKVersion.h"
 @class KPKGroup;
 @class KPKTree;
+@class KPKIcon;
 
 /* Basic Node in the Tree */
 @interface KPKNode : NSObject
 
 @property(nonatomic, weak) KPKTree *tree;
-@property(nonatomic, assign) NSInteger image;
+@property(nonatomic, assign) NSInteger icon;
+@property(nonatomic, weak) KPKIcon *customIcon; // Refernce to the Tree Icons
 @property(nonatomic, weak) KPKGroup *parent;
-@property (nonatomic, retain) NSUUID *uuid;
-@property (nonatomic, assign) KPKVersion minimumVersion;
+@property(nonatomic, strong) NSUUID *uuid;
+@property(nonatomic, assign) KPKVersion minimumVersion;
 
 @property(nonatomic, strong) NSDate *creationTime;
 @property(nonatomic, strong) NSDate *lastModificationTime;

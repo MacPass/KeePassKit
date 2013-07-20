@@ -29,7 +29,7 @@
 - (id)init {
   self = [super init];
   if (self) {
-    _image = 0;
+    _icon = 0;
     _uuid = [NSUUID UUID];
     _minimumVersion = KPKVersion1;
     

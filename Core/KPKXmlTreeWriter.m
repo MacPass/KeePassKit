@@ -61,8 +61,8 @@
   KPKAddElement(element, @"MaintenanceHistoryDays", KPKStringFromLong(self.tree.maintenanceHistoryDays));
   KPKAddElement(element, @"Color", self.tree.color);
   KPKAddElement(element, @"MasterKeyChanged", KPKFormattedDate(self.tree.masterKeyChanged));
-  KPKAddElement(element, @"MasterKeyChangeRec", KPKStringFromLong(self.tree.masterKeyChangeRec));
-  KPKAddElement(element, @"MasterKeyChangeForce", KPKStringFromLong(self.tree.masterKeyChangeForce));
+  KPKAddElement(element, @"MasterKeyChangeRec", KPKStringFromLong(self.tree.masterKeyChangeIsRequired));
+  KPKAddElement(element, @"MasterKeyChangeForce", KPKStringFromLong(self.tree.masterKeyChangeIsForced));
   
   DDXMLElement *memoryProtectionElement = [DDXMLElement elementWithName:@"MemoryProtection"];
   KPKAddElement(memoryProtectionElement, @"ProtectTitle", KPKStringFromBool(self.tree.protectTitle));
@@ -122,7 +122,7 @@
   KPKAddElement(groupElement, @"UUID", [group.uuid encodedString]);
   KPKAddElement(groupElement, @"Name", group.name);
   KPKAddElement(groupElement, @"Notes", group.notes);
-  KPKAddElement(groupElement, @"IconId", KPKStringFromLong(group.image));
+  KPKAddElement(groupElement, @"IconId", KPKStringFromLong(group.icon));
   
   DDXMLElement *timesElement = [DDXMLNode elementWithName:@"Times"];
   KPKAddElement(timesElement, @"LastModificationTime", KPKFormattedDate(group.lastModificationTime));
@@ -168,7 +168,7 @@
     DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
     KPKAddAttribute(binaryElement, @"ID", KPKStringFromLong([_binaries indexOfObject:attachment]));
     KPKAddAttribute(binaryElement, @"Compressed", KPKStringFromBool(compress));
-    binaryElement.stringValue = [attachment encodeDataUsingCompression:compress];
+    binaryElement.stringValue = [attachment encodedStringUsingCompression:compress];
     [binaryElements addChild:binaryElement];
   }
   return binaryElements;

@@ -24,6 +24,8 @@
 #import "KPKGroup.h"
 #import "KPKEntry.h"
 
+@class KPKIcon;
+
 @implementation KPKTree
 
 - (id)init {
@@ -69,6 +71,42 @@
 
 - (NSArray *)allEntries {
   return [self.root childEntries];
+}
+
+
+- (void)addCustomIcon:(KPKIcon *)icon {
+  [self addCustomIcon:icon atIndex:[_customIcons count]];
+}
+
+- (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index {
+  /* Use undomanager ? */
+  index = MIN([_customIcons count], index);
+  [[self.undoManger prepareWithInvocationTarget:self] removeCustomIcon:icon];
+  [self insertObject:icon inCustomIconsAtIndex:index];
+}
+
+- (void)removeCustomIcon:(KPKIcon *)icon {
+  NSUInteger index = [_customIcons indexOfObject:icon];
+  if(index != NSNotFound) {
+    [[self.undoManger prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
+    [self removeObjectFromCustomIconsAtIndex:index];
+  }
+}
+
+#pragma mark KVO
+
+- (NSUInteger)countOfCustomIcons {
+  return [_customIcons count];
+}
+
+- (void)insertObject:(KPKIcon *)icon inCustomIconsAtIndex:(NSUInteger)index {
+  index = MIN([_customIcons count], index);
+  [_customIcons insertObject:icon atIndex:index];
+}
+
+- (void)removeObjectFromCustomIconsAtIndex:(NSUInteger)index {
+  index = MIN([_customIcons count], index);
+  [_customIcons removeObjectAtIndex:index];
 }
 
 @end
