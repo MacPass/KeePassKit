@@ -25,7 +25,10 @@
 
 #import <Foundation/Foundation.h>
 
-#define KPKCreateError(errorCode,localizedKey,comment) [NSError errorWithDomain:KPKErrorDomain code:errorCode userInfo:@{ NSLocalizedDescriptionKey: NSLocalizedStringFromTable(localizedKey, @"LocalizeableErrors", comment)}]
+#define KPKCreateError(errorPtr,errorCode,localizedKey,comment) if(errorPtr != NULL) {\
+*errorPtr = [NSError errorWithDomain:KPKErrorDomain code:errorCode userInfo:@{ NSLocalizedDescriptionKey: NSLocalizedString(localizedKey, comment)}];\
+}\
+
 
 
 FOUNDATION_EXPORT NSString *const KPKErrorDomain;
@@ -33,15 +36,15 @@ FOUNDATION_EXPORT NSString *const KPKErrorDomain;
 typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorUnknownFileFormat = -1000, // The file format is unknown
   KPKErrorFileCorrupted, // The File is courruptes
-  KPKErrorKDBXHeaderCorrupted, // The header is Corrupted
+  KPKErrorHeaderCorrupted, // The header is Corrupted
   KPKErrorWriteFailed, // Could write the File
   KPKErrorDatabaseParsingFailed, // The XML-Database couldn be parsed
   KPKErrorKeyParsingFailed, // The XML-Keyfile file couldn be parsed
-  KPKErrorKDBDatabaseVersionUnsupported, // The database version is to high/low
-  KPKErrorKDBXChipherUnsupported, // The header specifies a unsupported and/or wrong chipher methed
-  KPKErrorKDBXUnsupportedCompressionAlgorithm, // The header specifies an unsupporte and/or wrong compressoing algorithm
-  KPKErrorKDBXUnsupportedRandomStream, // The header specifies an unsupporte stream or it's corrupted
-  KPKErrorKDBXIntegrityCheckFaild // The startbytes in the header aren't matching the AES stream-start
+  KPKErrorDatabaseVersionUnsupported, // The database version is to high/low
+  KPKErrorChipherUnsupported, // The header specifies a unsupported and/or wrong chipher methed
+  KPKErrorUnsupportedCompressionAlgorithm, // The header specifies an unsupporte and/or wrong compressoing algorithm
+  KPKErrorUnsupportedRandomStream, // The header specifies an unsupporte stream or it's corrupted
+  KPKErrorIntegrityCheckFaild // The startbytes in the header aren't matching the AES stream-start
 };
 
 #endif

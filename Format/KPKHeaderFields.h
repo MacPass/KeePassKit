@@ -1,5 +1,5 @@
 //
-//  KPKBinaryTreeReader.h
+//  KPKHeaderFields.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 20.07.13.
@@ -20,14 +20,25 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#ifndef MacPass_KPKHeaderFields_h
+#define MacPass_KPKHeaderFields_h
+
 #import <Foundation/Foundation.h>
 
-@class KPKTree;
-@class KPKLegacyHeaderReader;
-
-@interface KPKBinaryTreeReader : NSObject
-
-- (id)initWithData:(NSData *)data chipherInformation:(KPKLegacyHeaderReader *)cipherInfo;
-- (KPKTree *)tree;
-
-@end
+/**
+ Header keys for KDBX files
+ */
+typedef NS_ENUM(NSUInteger, KPKHeaderKey ) {
+  KPKHeaderKeyEndOfHeader,
+  KPKHeaderKeyComment,
+  KPKHeaderKeyCipherId,
+  KPKHeaderKeyCompression,
+  KPKHeaderKeyMasterSeed,
+  KPKHeaderKeyTransformSeed,
+  KPKHeaderKeyTransformRounds,
+  KPKHeaderKeyEncryptionIV,
+  KPKHeaderKeyProtectedKey,
+  KPKHeaderKeyStartBytes,
+  KPKHeaderKeyRandomStreamId
+};
+#endif

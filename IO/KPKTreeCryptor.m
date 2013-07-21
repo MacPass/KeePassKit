@@ -1,8 +1,8 @@
 //
-//  KPKBinaryTreeReader.m
+//  KPKDataCryptor.m
 //  KeePassKit
 //
-//  Created by Michael Starke on 20.07.13.
+//  Created by Michael Starke on 21.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -20,45 +20,43 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKBinaryTreeReader.h"
-#import "KPKLegacyHeaderReader.h"
+#import "KPKTreeCryptor.h"
 
-@interface KPKBinaryTreeReader () {
-  NSData *_data;
-  KPKLegacyHeaderReader *_cipherInfo;
+#import "KPKLegacyTreeCryptor.h"
+#import "KPKXmlTreeCryptor.h"
+
+#import "KPKTree.h"
+#import "KPKPassword.h"
+#import "KPKFormat.h"
+
+@implementation KPKTreeCryptor
+
++ (id)treeCryptorWithData:(NSData *)data password:(KPKPassword *)passord {
+  KPKVersion version = [[KPKFormat sharedFormat] databaseVersionForData:data];
+  
+  if(version == KPKVersion1) {
+    return [[KPKLegacyTreeCryptor alloc] init];
+  }
+  if(version == KPKVersion2) {
+    return [[KPKXmlTreeCryptor alloc] init];
+  }
+  return nil;
 }
 
-@end
-
-@implementation KPKBinaryTreeReader
-
-- (id)initWithData:(NSData *)data chipherInformation:(KPKLegacyHeaderReader *)cipherInfo {
+- (id)initWithData:(NSData *)data passwort:(KPKPassword *)password {
   self = [super init];
   if(self) {
+    _password = password;
     _data = data;
-    _cipherInfo = cipherInfo;
   }
   return self;
 }
 
-- (KPKTree *)tree {
-  /*
-  levels = [[NSMutableArray alloc] initWithCapacity:numGroups];
-  groups = [[NSMutableArray alloc] initWithCapacity:numGroups];
-  entries = [[NSMutableArray alloc] initWithCapacity:numEntries];
-  
-  @try {
-    // Parse groups
-    [self readGroups:aesInputStream];
-    
-    // Parse entries
-    [self readEntries:aesInputStream];
-    
-    // Build the tree
-    return [self buildTree];
-  } @finally {
-    aesInputStream = nil;
-  }*/
+- (NSData *)encryptTree:(NSError *__autoreleasing *)error {
+  return nil;
+}
+
+- (KPKTree *)decryptTree:(NSError *__autoreleasing *)error {
   return nil;
 }
 

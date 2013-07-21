@@ -69,14 +69,14 @@ typedef NS_OPTIONS(NSUInteger, KPKVersion1Flags) {
 
 typedef NS_ENUM(NSUInteger, KPKFileVersion) {
   KPKFileVersion1 = 0x00030004,
-  KPKFileVersionVersion2 = 0x00030000
+  KPKFileVersion2 = 0x00030000
 };
 
 FOUNDATION_EXPORT const NSUInteger KPKVersion1HeaderSize;
 
 #define VERSION2_CRITICAL_MAX_32 0x00030000
 #define VERSION2_CRITICAL_MASK 0xFFFF0000
-#define VERSION_OFFSET 16
+#define VERSION_OFFSET 12
 
 /**
  Format class.

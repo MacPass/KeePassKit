@@ -1,12 +1,26 @@
 //
 //  KPKChipherInformation.m
-//  MacPass
+//  KeePassKit
 //
 //  Created by Michael Starke on 21.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
-#import "KPKXmlCipherInformation.h"
+#import "KPKXmlHeaderReader.h"
 #import "KPKFormat.h"
 #import "KPKErrors.h"
 #import "KPKHeaderFields.h"
@@ -14,7 +28,7 @@
 
 #import "NSData+Random.h"
 
-@interface KPKXmlCipherInformation () {
+@interface KPKXmlHeaderReader () {
   NSData *_comment;
   NSUInteger _endOfHeader;
   NSData *_data;
@@ -23,7 +37,7 @@
 
 @end
 
-@implementation KPKXmlCipherInformation
+@implementation KPKXmlHeaderReader
 
 - (id)init {
   self = [super init];
@@ -59,9 +73,7 @@
   uint32_t version = [format fileVersionForData:_data];
   
   if ((version & VERSION2_CRITICAL_MASK) > (VERSION2_CRITICAL_MAX_32 & VERSION2_CRITICAL_MASK)) {
-    if(error != NULL) {
-      *error = KPKCreateError(KPKErrorKDBDatabaseVersionUnsupported, @"ERROR_UNSUPPORTED_KDB_DATABASER_VERION", "");
-    }
+    KPKCreateError(error, KPKErrorDatabaseVersionUnsupported, @"ERROR_UNSUPPORTED_DATABASER_VERSION", "");
     return NO;
   }
   
@@ -102,9 +114,7 @@
           cipherOk = NO;
         }
         if(!cipherOk) {
-          if(error != NULL) {
-            *error = KPKCreateError(KPKErrorKDBXChipherUnsupported, @"ERROR_UNSUPPORTED_KDBX_CHIPHER", "");
-          }
+          KPKCreateError(error, KPKErrorChipherUnsupported, @"ERROR_UNSUPPORTED_CHIPHER", "");
           return NO;
         }
         break;
@@ -144,10 +154,7 @@
         [_data getBytes:&_compressionAlgorithm range:NSMakeRange(location, 4)];
         _compressionAlgorithm = CFSwapInt32LittleToHost(_compressionAlgorithm);
         if (_compressionAlgorithm >= KPKCompressionCount) {
-          if(error != NULL) {
-            // FIXME: Error creation
-            *error = KPKCreateError(KPKErrorKDBXUnsupportedCompressionAlgorithm, @"ERROR_UNSUPPORTED_KDBX_COMPRESSION_ALGORITHM", "");
-          }
+          KPKCreateError(error, KPKErrorUnsupportedCompressionAlgorithm, @"ERROR_UNSUPPORTED_KDBX_COMPRESSION_ALGORITHM", "");
           return NO;
         }
         break;
@@ -155,17 +162,13 @@
         [_data getBytes:&_randomStreamID range:NSMakeRange(location, 4)];
         _randomStreamID = CFSwapInt32LittleToHost(_randomStreamID);
         if (_randomStreamID >= KPKRandomStreamCount) {
-          if(error != NULL) {
-            *error = KPKCreateError(KPKErrorKDBXUnsupportedRandomStream, @"ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM", "");
-          }
+          KPKCreateError(error,KPKErrorUnsupportedRandomStream, @"ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM", "");
           return NO;
         }
         break;
         
       default:
-        if(error != NULL) {
-          *error = KPKCreateError(KPKErrorKDBXHeaderCorrupted, @"ERROR_HEADER_CORRUPTED", "");
-        }
+        KPKCreateError(error,KPKErrorHeaderCorrupted, @"ERROR_HEADER_CORRUPTED", "");
         return NO;
     }
     /*

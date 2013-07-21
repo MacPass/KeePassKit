@@ -1,8 +1,8 @@
 //
-//  KPKParser.h
+//  KPKDataCryptor.h
 //  KeePassKit
 //
-//  Created by Michael Starke on 12.07.13.
+//  Created by Michael Starke on 21.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -20,18 +20,25 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #import <Foundation/Foundation.h>
 
 @class KPKPassword;
 @class KPKTree;
 
-/**
- Facade to load fiel data into a tree
- */
-@interface KPKTreeLoader : NSObject
+@interface KPKTreeCryptor : NSObject {
+  @protected
+  NSData *_data;
+  KPKPassword *_password;
+}
 
-- (id)initWithData:(NSData *)data password:(KPKPassword *)password;
-- (KPKTree *)loadTree:(NSError **)error;
+/**
+ @return a data decryptor read to read the tree
+ */
++ (id)treeCryptorWithData:(NSData *)data password:(KPKPassword *)passord;
+
+- (id)initWithData:(NSData *)data passwort:(KPKPassword *)password;
+
+- (KPKTree *)decryptTree:(NSError **)error;
+- (NSData *)encryptTree:(NSError **)error;
 
 @end

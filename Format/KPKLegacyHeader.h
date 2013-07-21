@@ -1,13 +1,13 @@
 //
-//  KPKKdbHeader.h
+//  KPKLegacyHeader.h
 //  MacPass
 //
 //  Created by Michael Starke on 21.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 
-#ifndef MacPass_KPKKdbHeader_h
-#define MacPass_KPKKdbHeader_h
+#ifndef MacPass_KPKLegacyHeader_h
+#define MacPass_KPKLegacyHeader_h
 
 typedef struct {
 	uint32_t signature1;
@@ -25,6 +25,6 @@ typedef struct {
   
 	uint8_t masterSeed2[32];
 	uint32_t keyEncRounds;
-} KPKKdbHeader;
+} KPKLegacyHeader;
 
 #endif
