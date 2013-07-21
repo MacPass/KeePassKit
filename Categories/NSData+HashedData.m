@@ -64,12 +64,17 @@
     }
     uint8_t *rawData = malloc(sizeof(uint8_t)*bufferLength);
     [self getBytes:rawData range:NSMakeRange(location, bufferLength)];
+    location +=bufferLength;
+    
     uint8_t verifyHash[32];
     CC_SHA256(rawData, bufferLength, verifyHash);
-    if(memcmp(verifyHash, hash, 32)) {
+    if(!memcmp(verifyHash, hash, 32)) {
       [unhashed appendBytes:rawData length:bufferLength];
     }
     free(rawData);
+    if(location == [self length]) {
+      return  unhashed;
+    }
   }
 }
 

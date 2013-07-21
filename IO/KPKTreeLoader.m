@@ -40,6 +40,10 @@
 
 #import "DDXML.h"
 
+#import "RandomStream.h"
+#import "Salsa20RandomStream.h"
+#import "Arc4RandomStream.h"
+
 @interface KPKTreeLoader () {
 @private
   DDXMLDocument *_document;
@@ -76,7 +80,19 @@
     if(!data) {
       return nil;
     }
-    KPKXmlTreeReader *treeReader = [[KPKXmlTreeReader alloc] initWithData:data];
+    
+    // Create the CRS Algorithm
+    RandomStream *randomStream = nil;
+    if (_chipherInfo.randomStreamID == KPKRandomStreamSalsa20) {
+      randomStream = [[Salsa20RandomStream alloc] init:_chipherInfo.protectedStreamKey];
+    }
+    else if (_chipherInfo.randomStreamID == KPKRandomStreamArc4) {
+      randomStream = [[Arc4RandomStream alloc] init:_chipherInfo.protectedStreamKey];
+    }
+    else {
+      return nil;
+    }
+    KPKXmlTreeReader *treeReader = [[KPKXmlTreeReader alloc] initWithData:data randomStream:randomStream];
     return [treeReader tree];
   }
   if(error != NULL) {
@@ -121,42 +137,11 @@
     return nil;
   }
   
-  //  // Create the AES input stream
-  //  NSData *key = [kdbPassword createFinalKeyForVersion:4 masterSeed:masterSeed transformSeed:transformSeed rounds:rounds];
-  //  AesInputStream *aesInputStream = [[AesInputStream alloc] initWithInputStream:inputStream key:key iv:encryptionIv];
-  //
-  //  // Verify the stream start bytes match
-  //  NSData *startBytes = [aesInputStream readData:32];
-  //  if (![startBytes isEqual:streamStartBytes]) {
-  //    aesInputStream = nil;
-  //    @throw [NSException exceptionWithName:@"IOException" reason:@"Failed to decrypt" userInfo:nil];
-  //  }
-  //
-  //  // Create the hashed input stream and swap in the compression input stream if compressed
-  //  InputStream *stream = [[HashedInputStream alloc] initWithInputStream:aesInputStream];
-  //  if (compressionAlgorithm == COMPRESSION_GZIP) {
-  //    stream = [[GZipInputStream alloc] initWithInputStream:stream];
-  //  }
-  //
-  //  // Create the CRS Algorithm
-  //  RandomStream *randomStream = nil;
-  //  if (randomStreamID == CSR_SALSA20) {
-  //    randomStream = [[Salsa20RandomStream alloc] init:protectedStreamKey];
-  //  } else if (randomStreamID == CSR_ARC4VARIANT) {
-  //    randomStream = [[Arc4RandomStream alloc] init:protectedStreamKey];
-  //  } else {
-  //    @throw [NSException exceptionWithName:@"IOException" reason:@"Unsupported CSR algorithm" userInfo:nil];
-  //  }
-  //
-  //  // Parse the tree
-  //  Kdb4Parser *parser = [[Kdb4Parser alloc] initWithRandomStream:randomStream];
-  //  Kdb4Tree *tree = [parser parse:stream error:nil];
-  //
-  //  // Copy some parameters into the KdbTree
+  
   //  tree.rounds = rounds;
   //  tree.compressionAlgorithm = compressionAlgorithm;
   
-  return nil;
+  return unhashedData;
 }
 
 @end

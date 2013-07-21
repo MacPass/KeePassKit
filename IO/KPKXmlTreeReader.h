@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 @class KPKTree;
+@class RandomStream;
 
 @interface KPKXmlTreeReader : NSObject
 
-- (id)initWithData:(NSData *)data;
+- (id)initWithData:(NSData *)data randomStream:(RandomStream *)randomStream;
 - (KPKTree *)tree;
 
 @end

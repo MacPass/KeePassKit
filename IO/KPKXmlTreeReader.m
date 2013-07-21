@@ -7,24 +7,28 @@
 //
 
 #import "KPKXmlTreeReader.h"
+#import "DDXMLDocument.h"
 
 @interface KPKXmlTreeReader () {
   @private
-  NSData *_data;
+  DDXMLDocument *_document;
+  RandomStream *_randomStream;
 }
 @end
 
 @implementation KPKXmlTreeReader
 
-- (id)initWithData:(NSData *)data {
+- (id)initWithData:(NSData *)data randomStream:(RandomStream *)randomStream{
   self = [super init];
   if(self) {
-    _data = data;
+    _document = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
+    _randomStream = randomStream;
   }
   return self;
 }
 
 - (KPKTree *)tree {
+  DDXMLElement *rootElement = [_document rootElement];
   return nil;
 }
 
