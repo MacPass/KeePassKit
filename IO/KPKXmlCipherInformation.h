@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KPKChipherInformation : NSObject
+@interface KPKXmlCipherInformation : NSObject
 
 @property (nonatomic, readonly, strong) NSUUID *cipherUUID;
 
@@ -22,7 +22,25 @@
 @property (nonatomic, readonly, assign) uint32_t randomStreamID;
 @property (nonatomic, readonly, assign) uint64_t rounds;
 
+/**
+ Initalizes a new Chipher information with random seeds
+ @returns the initalized instance
+ */
+- (id)init;
+/**
+ Initalizes a new Chipher information with the information found in the header
+ @param data The file input to read (raw file data)
+ @param error Occuring errors. Suppy NULL if you're not interested in any errors
+ @returns the initalized instance
+ */
 - (id)initWithData:(NSData *)data error:(NSError **)error;
+/**
+ @returns the data with the header data removed.
+ */
 - (NSData *)dataWithoutHeader;
+/**
+ Writes the data to the header
+ */
+- (void)writeHeaderData:(NSMutableData *)data;
 
 @end

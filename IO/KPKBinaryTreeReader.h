@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @class KPKTree;
+@class KPKBinaryCipherInformation;
 
 @interface KPKBinaryTreeReader : NSObject
 
-- (id)initWithData:(NSData *)data;
+- (id)initWithData:(NSData *)data chipherInformation:(KPKBinaryCipherInformation *)cipherInfo;
 - (KPKTree *)tree;
 
 @end

@@ -9,26 +9,30 @@
 #import "KPKXmlTreeReader.h"
 #import "DDXMLDocument.h"
 
+#import "RandomStream.h"
+#import "Arc4RandomStream.h"
+#import "Salsa20RandomStream.h"
+
 @interface KPKXmlTreeReader () {
   @private
   DDXMLDocument *_document;
-  RandomStream *_randomStream;
+  KPKXmlCipherInformation *_cipherInfo;
 }
 @end
 
 @implementation KPKXmlTreeReader
 
-- (id)initWithData:(NSData *)data randomStream:(RandomStream *)randomStream{
+- (id)initWithData:(NSData *)data cipherInformation:(KPKXmlCipherInformation *)cipher {
   self = [super init];
   if(self) {
     _document = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
-    _randomStream = randomStream;
+    _cipherInfo = cipher;
   }
   return self;
 }
 
 - (KPKTree *)tree {
-  DDXMLElement *rootElement = [_document rootElement];
+  //DDXMLElement *rootElement = [_document rootElement];
   return nil;
 }
 

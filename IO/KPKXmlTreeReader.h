@@ -8,11 +8,20 @@
 
 #import <Foundation/Foundation.h>
 @class KPKTree;
-@class RandomStream;
+@class KPKXmlCipherInformation;
 
 @interface KPKXmlTreeReader : NSObject
 
-- (id)initWithData:(NSData *)data randomStream:(RandomStream *)randomStream;
+/**
+ Inilializes the XML Reader with the raw xml data and the random stream
+ used to protect containing string fields
+ @param data The raw XML data. Make sure to decrypt the data before passing it in
+ @param cipherInformation Chipher information to handle the writing
+ */
+- (id)initWithData:(NSData *)data cipherInformation:(KPKXmlCipherInformation *)cipher;
+/**
+ @returns
+ */
 - (KPKTree *)tree;
 
 @end

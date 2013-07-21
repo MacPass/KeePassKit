@@ -26,6 +26,9 @@
 @class KPKPassword;
 @class KPKTree;
 
+/**
+ Facade to load fiel data into a tree
+ */
 @interface KPKTreeLoader : NSObject
 
 - (id)initWithData:(NSData *)data password:(KPKPassword *)password;

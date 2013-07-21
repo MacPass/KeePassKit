@@ -6,13 +6,15 @@
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKChipherInformation.h"
+#import "KPKXmlCipherInformation.h"
 #import "KPKFormat.h"
 #import "KPKErrors.h"
 #import "KPKHeaderFields.h"
 #import "NSUUID+KeePassKit.h"
 
-@interface KPKChipherInformation () {
+#import "NSData+Random.h"
+
+@interface KPKXmlCipherInformation () {
   NSData *_comment;
   NSUInteger _endOfHeader;
   NSData *_data;
@@ -21,7 +23,19 @@
 
 @end
 
-@implementation KPKChipherInformation
+@implementation KPKXmlCipherInformation
+
+- (id)init {
+  self = [super init];
+  if(self) {
+    _masterSeed = [NSData dataWithRandomBytes:32];
+    _transformSeed = [NSData dataWithRandomBytes:32];
+    _encryptionIV = [NSData dataWithRandomBytes:16];
+    _protectedStreamKey = [NSData dataWithRandomBytes:32];
+    _streamStartBytes = [NSData dataWithRandomBytes:32];
+  }
+  return self;
+}
 
 - (id)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error{
   self = [super init];
@@ -160,4 +174,9 @@
     location += fieldSize;
   }
 }
+
+- (void)writeHeaderData:(NSMutableData *)data {
+  
+}
+
 @end

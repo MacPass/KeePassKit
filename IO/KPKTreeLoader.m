@@ -31,12 +31,12 @@
 #import "KPKErrors.h"
 
 #import "NSUUID+KeePassKit.h"
-#import "KPKChipherInformation.h"
+#import "KPKXmlCipherInformation.h"
+#import "KPKBinaryCipherInformation.h"
+
 #import "NSData+CommonCrypto.h"
 #import "NSData+HashedData.h"
 #import "NSData+Gzip.h"
-
-#import "KdbPassword.h"
 
 #import "DDXML.h"
 
@@ -49,7 +49,8 @@
   DDXMLDocument *_document;
   NSData *_data;
   KPKVersion _version;
-  KPKChipherInformation *_chipherInfo;
+  KPKBinaryCipherInformation *_binaryCipherInfo;
+  KPKXmlCipherInformation *_xmlCipherInfo;
   KPKPassword *_password;
 }
 
@@ -71,8 +72,11 @@
   _version = [format databaseVersionForData:_data];
   
   if(_version == KPKVersion1) {
-    NSData *data = [self _decryptVersion1Data];
-    KPKBinaryTreeReader *treeReader = [[KPKBinaryTreeReader alloc] initWithData:data];
+    NSData *data = [self _decryptVersion1Data:error];
+    if(!data) {
+      return nil;
+    }
+    KPKBinaryTreeReader *treeReader = [[KPKBinaryTreeReader alloc] initWithData:_data chipherInformation:_binaryCipherInfo];
     return [treeReader tree];
   }
   if(_version == KPKVersion2) {
@@ -80,19 +84,7 @@
     if(!data) {
       return nil;
     }
-    
-    // Create the CRS Algorithm
-    RandomStream *randomStream = nil;
-    if (_chipherInfo.randomStreamID == KPKRandomStreamSalsa20) {
-      randomStream = [[Salsa20RandomStream alloc] init:_chipherInfo.protectedStreamKey];
-    }
-    else if (_chipherInfo.randomStreamID == KPKRandomStreamArc4) {
-      randomStream = [[Arc4RandomStream alloc] init:_chipherInfo.protectedStreamKey];
-    }
-    else {
-      return nil;
-    }
-    KPKXmlTreeReader *treeReader = [[KPKXmlTreeReader alloc] initWithData:data randomStream:randomStream];
+    KPKXmlTreeReader *treeReader = [[KPKXmlTreeReader alloc] initWithData:data cipherInformation:_xmlCipherInfo];
     return [treeReader tree];
   }
   if(error != NULL) {
@@ -101,32 +93,65 @@
   return nil;
 }
 
-- (NSData *)_decryptVersion1Data {
-  return nil;
-}
+- (NSData *)_decryptVersion1Data:(NSError *__autoreleasing *)error {
+  _binaryCipherInfo = [[KPKBinaryCipherInformation alloc] initWithData:_data error:error];
+  
+  // Create the final key and initialize the AES input stream
+  NSData *keyData = [_password finalDataForVersion:_version
+                                             masterSeed:_binaryCipherInfo.masterSeed
+                                          transformSeed:_binaryCipherInfo.transformSeed
+                                            rounds:_binaryCipherInfo.rounds];
 
-- (NSData *)_decryptVersion2Data:(NSError **)error {
-  _chipherInfo = [[KPKChipherInformation alloc] initWithData:_data error:error];
-  if(!_chipherInfo) {
-    return nil;
-  }
-  //CCCryptorCreate(kCCDecrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding, key.bytes, kCCKeySizeAES256, iv.bytes, &cryptorRef);
-  NSData *keyData = [_password finalDataForVersion:_version masterSeed:_chipherInfo.masterSeed transformSeed:_chipherInfo.transformSeed rounds:_chipherInfo.rounds];
-  NSData *aesDecrypted = [[_chipherInfo dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
+  
+  NSData *aesDecrypted = [[_binaryCipherInfo dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
                                                                                    key:keyData
-                                                                  initializationVector:_chipherInfo.encryptionIV
+                                                                  initializationVector:_binaryCipherInfo.encryptionIV
                                                                                options:kCCOptionPKCS7Padding
                                                                                  error:NULL];
   
+  
+  return aesDecrypted;
+}
+
+- (NSData *)_decryptVersion2Data:(NSError **)error {
+  _xmlCipherInfo = [[KPKXmlCipherInformation alloc] initWithData:_data error:error];
+  if(!_xmlCipherInfo) {
+    return nil;
+  }
+
+  /*
+   Create the Key
+   Supply the Data found in the header
+   */
+  NSData *keyData = [_password finalDataForVersion:_version
+                                        masterSeed:_xmlCipherInfo.masterSeed
+                                     transformSeed:_xmlCipherInfo.transformSeed
+                                            rounds:_xmlCipherInfo.rounds];
+  
+  /*
+   The datastream is AES encrypted. Decrypt using the supplied
+   */
+  NSData *aesDecrypted = [[_xmlCipherInfo dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
+                                                                                   key:keyData
+                                                                  initializationVector:_xmlCipherInfo.encryptionIV
+                                                                               options:kCCOptionPKCS7Padding
+                                                                                 error:NULL];
+  /*
+   Compare the first Streambytes with the ones stores in the header
+   */
   NSData *startBytes = [aesDecrypted subdataWithRange:NSMakeRange(0, 32)];
-  if(![_chipherInfo.streamStartBytes isEqualToData:startBytes]) {
+  if(![_xmlCipherInfo.streamStartBytes isEqualToData:startBytes]) {
     if(error != NULL) {
       *error = KPKCreateError(KPKErrorKDBXIntegrityCheckFaild, @"ERROR_INTEGRITY_CHECK_FAILED", "");
     }
     return nil;
   }
+  /*
+   The Stream is Hashed, read the data and verify it.
+   If the Stream was Gzipped, uncrompress it.
+   */
   NSData *unhashedData = [[aesDecrypted subdataWithRange:NSMakeRange(32, [aesDecrypted length] - 32)] unhashedData];
-  if(_chipherInfo.compressionAlgorithm == KPKCompressionGzip) {
+  if(_xmlCipherInfo.compressionAlgorithm == KPKCompressionGzip) {
     unhashedData = [unhashedData gzipInflate];
   }
   
