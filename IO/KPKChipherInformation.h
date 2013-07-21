@@ -8,23 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KPKChipherInformation : NSObject {
-  NSUUID *cipherUuid;
-  uint32_t compressionAlgorithm;
-  NSData *masterSeed;
-  NSData *transformSeed;
-  uint64_t rounds;
-  NSData *encryptionIv;
-  NSData *protectedStreamKey;
-  NSData *streamStartBytes;
-  uint32_t randomStreamID;
-@private
-  NSData *_comment;
-  NSUInteger _endOfHeader;
-  NSData *_data;
-}
+@interface KPKChipherInformation : NSObject
+
+@property (nonatomic, readonly, strong) NSUUID *cipherUUID;
+
+@property (nonatomic, readonly, strong) NSData *masterSeed;
+@property (nonatomic, readonly, strong) NSData *transformSeed;
+@property (nonatomic, readonly, strong) NSData *encryptionIV;
+@property (nonatomic, readonly, strong) NSData *protectedStreamKey;
+@property (nonatomic, readonly, strong) NSData *streamStartBytes;
+
+@property (nonatomic, readonly, assign) uint32_t compressionAlgorithm;
+@property (nonatomic, readonly, assign) uint32_t randomStreamID;
+@property (nonatomic, readonly, assign) uint64_t rounds;
 
 - (id)initWithData:(NSData *)data error:(NSError **)error;
-- (NSData *)payload;
+- (NSData *)dataWithoutHeader;
 
 @end

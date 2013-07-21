@@ -10,3 +10,7 @@
 "ERROR_UNSUPPORTED_KDB_DATABASER_VERION" = "The Database version is not supported";
 "ERROR_UNSUPPORTED_KDBX_CHIPHER" = "Unsupported Chipher ID";
 "ERROR_UNKNOWN_FILE_FORMAT" = "Unknown File Format";
+"ERROR_HEADER_CORRUPTED" = "Header is corrupted";
+"ERROR_UNSUPPORTED_KDBX_COMPRESSION_ALGORITHM" = "Unsported Compression algorithm";
+"ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM" = "Unsupported Random Stream type";
+"ERROR_INTEGRITY_CHECK_FAILED" = "The database integrity isn't ensured. You can try to repair the database";

@@ -12,23 +12,32 @@
 #import "KPKHeaderFields.h"
 #import "NSUUID+KeePassKit.h"
 
+@interface KPKChipherInformation () {
+  NSData *_comment;
+  NSUInteger _endOfHeader;
+  NSData *_data;
+
+}
+
+@end
+
 @implementation KPKChipherInformation
 
 - (id)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error{
   self = [super init];
   if(self) {
+    _data = data;
     if(![self _parseHeader:error]) {
+      _data = nil;
       self = nil;
       return nil;
     }
-    _data = data;
   }
   return self;
 }
 
-- (NSData *)payload {
-  // return data minus header
-  return nil;
+- (NSData *)dataWithoutHeader {
+  return [_data subdataWithRange:NSMakeRange(_endOfHeader, [_data length] - _endOfHeader)];
 }
 
 - (BOOL)_parseHeader:(NSError *__autoreleasing *)error {
@@ -47,18 +56,17 @@
    4bytes signature 1, 4 bytes signature , 4 bytes version
    Hence start at 16;
    */
-  NSUInteger location = 16;
-  uint8_t buffer[16];
-   
+  NSUInteger location = 12;
   while (true) {
     uint8_t fieldType;
     uint16_t fieldSize;
     
-    [_data getBytes:&fieldType range:NSMakeRange(location, 2)];
-    location +=2;
+    [_data getBytes:&fieldType range:NSMakeRange(location, 1)];
+    location ++;
     
-    [_data getBytes:&fieldSize range:NSMakeRange(location, 3)];
+    [_data getBytes:&fieldSize range:NSMakeRange(location, 2)];
     fieldSize = CFSwapInt16LittleToHost(fieldSize);
+    location +=2;
     NSRange readRange = NSMakeRange(location, fieldSize);
 
     switch (fieldType) {
@@ -73,8 +81,8 @@
       case KPKHeaderKeyCipherId: {
         BOOL cipherOk = YES;
         if(fieldSize == 16) {
-          cipherUuid = [[NSUUID alloc] initWithData:[_data subdataWithRange:readRange]];
-          cipherOk = [[NSUUID AESUUID] isEqual:cipherUuid];
+          _cipherUUID = [[NSUUID alloc] initWithData:[_data subdataWithRange:readRange]];
+          cipherOk = [[NSUUID AESUUID] isEqual:_cipherUUID];
         }
         else {
           cipherOk = NO;
@@ -92,55 +100,57 @@
           // FIXME: Error invalid field size
           return NO;
         }
-        masterSeed = [_data subdataWithRange:readRange];
+        _masterSeed = [_data subdataWithRange:readRange];
         break;
       case KPKHeaderKeyTransformSeed:
         if (fieldSize != 32) {
           // FIXME: Error invalid field size
           return NO;
         }
-        transformSeed = [_data subdataWithRange:readRange];
+        _transformSeed = [_data subdataWithRange:readRange];
         break;
         
       case KPKHeaderKeyEncryptionIV:
-        encryptionIv = [_data subdataWithRange:readRange];
+        _encryptionIV = [_data subdataWithRange:readRange];
         break;
         
       case KPKHeaderKeyProtectedKey:
-        protectedStreamKey = [_data subdataWithRange:readRange];
+        _protectedStreamKey = [_data subdataWithRange:readRange];
         break;
       case KPKHeaderKeyStartBytes:
-        streamStartBytes = [_data subdataWithRange:readRange];
+        _streamStartBytes = [_data subdataWithRange:readRange];
         break;
         
       case KPKHeaderKeyTransformRounds:
-        [_data getBytes:&rounds range:NSMakeRange(location, 8)];
-        rounds = CFSwapInt64LittleToHost(rounds);
+        [_data getBytes:&_rounds range:NSMakeRange(location, 8)];
+        _rounds = CFSwapInt64LittleToHost(_rounds);
         break;
         
       case KPKHeaderKeyCompression:
-        [_data getBytes:&compressionAlgorithm range:NSMakeRange(location, 4)];
-        compressionAlgorithm = CFSwapInt32LittleToHost(compressionAlgorithm);
-        if (compressionAlgorithm >= KPKCompressionCount) {
+        [_data getBytes:&_compressionAlgorithm range:NSMakeRange(location, 4)];
+        _compressionAlgorithm = CFSwapInt32LittleToHost(_compressionAlgorithm);
+        if (_compressionAlgorithm >= KPKCompressionCount) {
           if(error != NULL) {
             // FIXME: Error creation
-            *error = KPKCreateError(KPKErrorDatabseParsingFailed, @"", "");
+            *error = KPKCreateError(KPKErrorKDBXUnsupportedCompressionAlgorithm, @"ERROR_UNSUPPORTED_KDBX_COMPRESSION_ALGORITHM", "");
           }
           return NO;
         }
         break;
       case KPKHeaderKeyRandomStreamId:
-        [_data getBytes:&randomStreamID range:NSMakeRange(location, 4)];
-        randomStreamID = CFSwapInt32LittleToHost(randomStreamID);
-        if (randomStreamID >= KPKRandomStreamCount) {
-          // @throw [NSException exceptionWithName:@"IOException" reason:@"Invalid CSR algorithm" userInfo:nil];
+        [_data getBytes:&_randomStreamID range:NSMakeRange(location, 4)];
+        _randomStreamID = CFSwapInt32LittleToHost(_randomStreamID);
+        if (_randomStreamID >= KPKRandomStreamCount) {
+          if(error != NULL) {
+            *error = KPKCreateError(KPKErrorKDBXUnsupportedRandomStream, @"ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM", "");
+          }
           return NO;
         }
         break;
         
       default:
         if(error != NULL) {
-
+          *error = KPKCreateError(KPKErrorKDBXHeaderCorrupted, @"ERROR_HEADER_CORRUPTED", "");
         }
         return NO;
     }

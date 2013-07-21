@@ -29,13 +29,13 @@ static NSUUID *aesUUID = nil;
 @implementation NSUUID (KeePassKit)
 
 + (NSUUID *)nullUUID {
-  return [[NSUUID alloc] initWithUUIDString:@"00000000000000000000000000000000"];
+  return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-0000-0000-000000000000"];
 }
 
 + (NSUUID *)AESUUID {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    aesUUID = [[NSUUID alloc] initWithUUIDString:@"31C1F2E6BF714350BE5805216AFC5AFF"];
+    aesUUID = [[NSUUID alloc] initWithUUIDString:@"31C1F2E6-BF71-4350-BE58-05216AFC5AFF"];
   });
   return aesUUID;
 }
@@ -51,8 +51,8 @@ static NSUUID *aesUUID = nil;
 }
 
 - (id)initWithData:(NSData *)data {
-  unsigned char uuidData[4];
-  [data getBytes:&uuidData length:4];
+  unsigned char uuidData[16];
+  [data getBytes:&uuidData length:16];
   self = [self initWithUUIDBytes:uuidData];
   return self;
 }

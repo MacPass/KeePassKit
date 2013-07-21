@@ -29,10 +29,6 @@
 @implementation KPKTree
 
 - (id)init {
-  return [self initWithData:nil password:nil];
-}
-
-- (id)initWithData:(NSData *)data password:(KPKPassword *)password {
   self = [super init];
   if(self) {
     _customData = [[NSMutableArray alloc] init];
@@ -74,7 +70,6 @@
 - (NSArray *)allEntries {
   return [self.root childEntries];
 }
-
 
 - (void)addCustomIcon:(KPKIcon *)icon {
   [self addCustomIcon:icon atIndex:[_customIcons count]];

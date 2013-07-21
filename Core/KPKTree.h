@@ -84,8 +84,6 @@
 @property (nonatomic, readonly) NSArray *allGroups;
 @property (nonatomic, readonly) NSArray *allEntries;
 
-- (id)initWithData:(NSData *)data password:(KPKPassword *)password;
-
 - (KPKGroup *)createGroup:(KPKGroup *)parent;
 - (KPKEntry *)createEntry:(KPKGroup *)parent;
 

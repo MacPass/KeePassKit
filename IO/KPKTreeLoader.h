@@ -28,7 +28,7 @@
 
 @interface KPKTreeLoader : NSObject
 
-- (id)initWithData:(NSData *)data;
+- (id)initWithData:(NSData *)data password:(KPKPassword *)password;
 - (KPKTree *)loadTree:(NSError **)error;
 
 @end

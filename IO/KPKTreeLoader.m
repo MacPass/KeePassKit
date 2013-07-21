@@ -24,6 +24,7 @@
 #import "KPKTreeLoader.h"
 #import "KPKTree.h"
 #import "KPKFormat.h"
+#import "KPKPassword.h"
 #import "KPKXmlTreeReader.h"
 #import "KPKBinaryTreeReader.h"
 #import "KPKHeaderFields.h"
@@ -31,6 +32,11 @@
 
 #import "NSUUID+KeePassKit.h"
 #import "KPKChipherInformation.h"
+#import "NSData+CommonCrypto.h"
+#import "NSData+HashedData.h"
+#import "NSData+Gzip.h"
+
+#import "KdbPassword.h"
 
 #import "DDXML.h"
 
@@ -40,17 +46,18 @@
   NSData *_data;
   KPKVersion _version;
   KPKChipherInformation *_chipherInfo;
-  
+  KPKPassword *_password;
 }
 
 @end
 
 @implementation KPKTreeLoader
 
-- (id)initWithData:(NSData *)data {
+- (id)initWithData:(NSData *)data password:(KPKPassword *)password {
   self = [super init];
   if(self) {
     _data = data;
+    _password = password;
   }
   return self;
 }
@@ -87,46 +94,67 @@
   if(!_chipherInfo) {
     return nil;
   }
+  //CCCryptorCreate(kCCDecrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding, key.bytes, kCCKeySizeAES256, iv.bytes, &cryptorRef);
+  NSData *keyData = [_password finalDataForVersion:_version masterSeed:_chipherInfo.masterSeed transformSeed:_chipherInfo.transformSeed rounds:_chipherInfo.rounds];
+  NSData *aesDecrypted = [[_chipherInfo dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
+                                                                                   key:keyData
+                                                                  initializationVector:_chipherInfo.encryptionIV
+                                                                               options:kCCOptionPKCS7Padding
+                                                                                 error:NULL];
   
-//  // Check the cipher algorithm
-//  if (![cipherUuid isEqual:[UUID getAESUUID]]) {
-//    @throw [NSException exceptionWithName:@"IOException" reason:@"Unsupported cipher" userInfo:nil];
-//  }
-//  
-//  // Create the AES input stream
-//  NSData *key = [kdbPassword createFinalKeyForVersion:4 masterSeed:masterSeed transformSeed:transformSeed rounds:rounds];
-//  AesInputStream *aesInputStream = [[AesInputStream alloc] initWithInputStream:inputStream key:key iv:encryptionIv];
-//  
-//  // Verify the stream start bytes match
-//  NSData *startBytes = [aesInputStream readData:32];
-//  if (![startBytes isEqual:streamStartBytes]) {
-//    aesInputStream = nil;
-//    @throw [NSException exceptionWithName:@"IOException" reason:@"Failed to decrypt" userInfo:nil];
-//  }
-//  
-//  // Create the hashed input stream and swap in the compression input stream if compressed
-//  InputStream *stream = [[HashedInputStream alloc] initWithInputStream:aesInputStream];
-//  if (compressionAlgorithm == COMPRESSION_GZIP) {
-//    stream = [[GZipInputStream alloc] initWithInputStream:stream];
-//  }
-//  
-//  // Create the CRS Algorithm
-//  RandomStream *randomStream = nil;
-//  if (randomStreamID == CSR_SALSA20) {
-//    randomStream = [[Salsa20RandomStream alloc] init:protectedStreamKey];
-//  } else if (randomStreamID == CSR_ARC4VARIANT) {
-//    randomStream = [[Arc4RandomStream alloc] init:protectedStreamKey];
-//  } else {
-//    @throw [NSException exceptionWithName:@"IOException" reason:@"Unsupported CSR algorithm" userInfo:nil];
-//  }
-//  
-//  // Parse the tree
-//  Kdb4Parser *parser = [[Kdb4Parser alloc] initWithRandomStream:randomStream];
-//  Kdb4Tree *tree = [parser parse:stream error:nil];
-//  
-//  // Copy some parameters into the KdbTree
-//  tree.rounds = rounds;
-//  tree.compressionAlgorithm = compressionAlgorithm;
+  NSData *startBytes = [aesDecrypted subdataWithRange:NSMakeRange(0, 32)];
+  if(![_chipherInfo.streamStartBytes isEqualToData:startBytes]) {
+    if(error != NULL) {
+      *error = KPKCreateError(KPKErrorKDBXIntegrityCheckFaild, @"ERROR_INTEGRITY_CHECK_FAILED", "");
+    }
+    return nil;
+  }
+  NSData *unhashedData = [[aesDecrypted subdataWithRange:NSMakeRange(32, [aesDecrypted length] - 32)] unhashedData];
+  if(_chipherInfo.compressionAlgorithm == KPKCompressionGzip) {
+    unhashedData = [unhashedData gzipInflate];
+  }
+  
+  if(!unhashedData) {
+    if(error != NULL) {
+      *error = KPKCreateError(KPKErrorKDBXIntegrityCheckFaild, @"ERROR_INTEGRITY_CHECK_FAILED", "");
+    }
+    return nil;
+  }
+  
+  //  // Create the AES input stream
+  //  NSData *key = [kdbPassword createFinalKeyForVersion:4 masterSeed:masterSeed transformSeed:transformSeed rounds:rounds];
+  //  AesInputStream *aesInputStream = [[AesInputStream alloc] initWithInputStream:inputStream key:key iv:encryptionIv];
+  //
+  //  // Verify the stream start bytes match
+  //  NSData *startBytes = [aesInputStream readData:32];
+  //  if (![startBytes isEqual:streamStartBytes]) {
+  //    aesInputStream = nil;
+  //    @throw [NSException exceptionWithName:@"IOException" reason:@"Failed to decrypt" userInfo:nil];
+  //  }
+  //
+  //  // Create the hashed input stream and swap in the compression input stream if compressed
+  //  InputStream *stream = [[HashedInputStream alloc] initWithInputStream:aesInputStream];
+  //  if (compressionAlgorithm == COMPRESSION_GZIP) {
+  //    stream = [[GZipInputStream alloc] initWithInputStream:stream];
+  //  }
+  //
+  //  // Create the CRS Algorithm
+  //  RandomStream *randomStream = nil;
+  //  if (randomStreamID == CSR_SALSA20) {
+  //    randomStream = [[Salsa20RandomStream alloc] init:protectedStreamKey];
+  //  } else if (randomStreamID == CSR_ARC4VARIANT) {
+  //    randomStream = [[Arc4RandomStream alloc] init:protectedStreamKey];
+  //  } else {
+  //    @throw [NSException exceptionWithName:@"IOException" reason:@"Unsupported CSR algorithm" userInfo:nil];
+  //  }
+  //
+  //  // Parse the tree
+  //  Kdb4Parser *parser = [[Kdb4Parser alloc] initWithRandomStream:randomStream];
+  //  Kdb4Tree *tree = [parser parse:stream error:nil];
+  //
+  //  // Copy some parameters into the KdbTree
+  //  tree.rounds = rounds;
+  //  tree.compressionAlgorithm = compressionAlgorithm;
   
   return nil;
 }

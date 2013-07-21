@@ -40,7 +40,7 @@
   self = [super init];
   if(self) {
     _compositeDataVersion1 = [self _createVersion1CompositeDataWithPassword:password key:url];
-    _compositeDataVersion2 = nil;
+    _compositeDataVersion2 = [self _createVersion2CompositeDataWithPassword:password key:url];
   }
   return self;
 }
