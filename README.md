@@ -36,4 +36,4 @@ KeePassKit uses code from the following projects
 
 [NSData Base64 Category](http://stackoverflow.com/questions/11386876/how-to-encode-and-decode-files-as-base64-in-cocoa-objective-c) from Stackoverflow user [deins2342](http://stackoverflow.com/users/200321/denis2342)
 
-
+[NSData CommonCrypto Category](https://github.com/AlanQuatermain/aqtoolkit) Copyright 2008-2009 Jim Dovey, All rights reserved.
