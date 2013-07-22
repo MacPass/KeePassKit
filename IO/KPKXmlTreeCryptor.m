@@ -40,7 +40,7 @@
 
 - (KPKTree *)decryptTree:(NSError *__autoreleasing *)error {
   _cipherInfo = [[KPKXmlHeaderReader alloc] initWithData:_data error:error];
-  if(_cipherInfo) {
+  if(!_cipherInfo) {
     return nil;
   }
   
@@ -84,8 +84,8 @@
   }
   //  tree.rounds = rounds;
   //  tree.compressionAlgorithm = compressionAlgorithm;
-  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:_data cipherInformation:_cipherInfo];
-  return [reader tree];
+  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:unhashedData cipherInformation:_cipherInfo];
+  return [reader tree:error];
 }
 
 @end

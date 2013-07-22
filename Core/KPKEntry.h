@@ -37,7 +37,7 @@
 
 @property (nonatomic, strong) NSArray *attachmets;
 @property (nonatomic, strong) NSArray *tags;
-@property (nonatomic, strong) NSArray *customAttributes;
+@property (nonatomic, strong) NSMutableArray *customAttributes;
 
 - (void)remove;
 /**

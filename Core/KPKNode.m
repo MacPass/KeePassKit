@@ -32,6 +32,7 @@
     _icon = 0;
     _uuid = [NSUUID UUID];
     _minimumVersion = KPKVersion1;
+    _expires = NO;
     
     NSDate *now = [NSDate date];
     _creationTime = now;

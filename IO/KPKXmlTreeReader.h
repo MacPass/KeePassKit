@@ -36,6 +36,6 @@
 /**
  @returns
  */
-- (KPKTree *)tree;
+- (KPKTree *)tree:(NSError **)error;
 
 @end

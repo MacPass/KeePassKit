@@ -62,26 +62,26 @@
 /**
  Designeted initalizer
  */
-- (id)initWithKey:(NSString *)key value:(NSString *)value protected:(BOOL)protected {
+- (id)initWithKey:(NSString *)key value:(NSString *)value isProtected:(BOOL)protected {
   self = [super init];
   if(self) {
     _key = [key copy];
     _value = [value copy];
-    _protected = protected;
+    _isProtected = protected;
   }
   return self;
 }
 
 - (id)initWithKey:(NSString *)key value:(NSString *)value {
-  return [self initWithKey:key value:value protected:NO];
+  return [self initWithKey:key value:value isProtected:NO];
 }
 
 - (id)init {
-  return  [self initWithKey:nil value:nil protected:NO];
+  return  [self initWithKey:nil value:nil isProtected:NO];
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-  return [[KPKAttribute allocWithZone:zone] initWithKey:self.key value:self.value protected:self.protected];
+  return [[KPKAttribute allocWithZone:zone] initWithKey:self.key value:self.value isProtected:self.isProtected];
 }
 
 - (BOOL)validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey error:(out NSError *__autoreleasing *)outError {
@@ -106,7 +106,7 @@
 }
 
 - (NSString *)referencedValue {
-  KPKGroup *rootGroup = [self.entry rootGroup];
+  //KPKGroup *rootGroup = [self.entry rootGroup];
   // Determin what type to look for
   return nil;
 }

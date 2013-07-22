@@ -41,6 +41,10 @@
 @property(nonatomic, strong) NSDate *lastModificationTime;
 @property(nonatomic, strong) NSDate *lastAccessTime;
 @property(nonatomic, strong) NSDate *expiryTime;
+@property(nonatomic, assign) BOOL expires;
+@property(nonatomic, strong) NSDate *locationChanged;
+@property(nonatomic, assign) NSUInteger usageCount;
+
 
 /**
  Holds the Undomanager that is propagated throughout the tree.

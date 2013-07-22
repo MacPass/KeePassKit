@@ -35,10 +35,10 @@
   KPKVersion version = [[KPKFormat sharedFormat] databaseVersionForData:data];
   
   if(version == KPKVersion1) {
-    return [[KPKLegacyTreeCryptor alloc] init];
+    return [[KPKLegacyTreeCryptor alloc] initWithData:data passwort:passord];
   }
   if(version == KPKVersion2) {
-    return [[KPKXmlTreeCryptor alloc] init];
+    return [[KPKXmlTreeCryptor alloc] initWithData:data passwort:passord];
   }
   return nil;
 }
