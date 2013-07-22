@@ -30,6 +30,8 @@
 #import "KPKFormat.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"
+#import "KPKMetaData.h"
+#import "KPKTimeInfo.h"
 #import "KPKDeletedNode.h"
 #import "KPKAttachment.h"
 #import "KPKIcon.h"
@@ -68,41 +70,40 @@
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:@"<KeePassFile></KeePassFile>" options:0 error:nil];
   
   DDXMLElement *element = [DDXMLNode elementWithName:@"Meta"];
-  KPKAddElement(element, @"Generator", self.tree.generator);
-  KPKAddElement(element, @"DatabaseName", self.tree.databaseName);
-  KPKAddElement(element, @"DatabaseNameChanged", KPKFormattedDate(self.tree.databaseNameChanged));
-  KPKAddElement(element, @"DatabaseDescription", self.tree.databaseDescription);
-  KPKAddElement(element, @"DatabaseDescriptionChanged", KPKFormattedDate(self.tree.databaseDescriptionChanged));
-  KPKAddElement(element, @"DefaultUserName", self.tree.defaultUserName);
-  KPKAddElement(element, @"MaintenanceHistoryDays", KPKStringFromLong(self.tree.maintenanceHistoryDays));
-  KPKAddElement(element, @"Color", self.tree.color);
-  KPKAddElement(element, @"MasterKeyChanged", KPKFormattedDate(self.tree.masterKeyChanged));
-  KPKAddElement(element, @"MasterKeyChangeRec", KPKStringFromLong(self.tree.masterKeyChangeIsRequired));
-  KPKAddElement(element, @"MasterKeyChangeForce", KPKStringFromLong(self.tree.masterKeyChangeIsForced));
+  KPKAddElement(element, @"Generator", self.tree.metadata.generator);
+  KPKAddElement(element, @"DatabaseName", self.tree.metadata.databaseName);
+  KPKAddElement(element, @"DatabaseNameChanged", KPKFormattedDate(self.tree.metadata.databaseNameChanged));
+  KPKAddElement(element, @"DatabaseDescription", self.tree.metadata.databaseDescription);
+  KPKAddElement(element, @"DatabaseDescriptionChanged", KPKFormattedDate(self.tree.metadata.databaseDescriptionChanged));
+  KPKAddElement(element, @"DefaultUserName", self.tree.metadata.defaultUserName);
+  KPKAddElement(element, @"MaintenanceHistoryDays", KPKStringFromLong(self.tree.metadata.maintenanceHistoryDays));
+  KPKAddElement(element, @"Color", self.tree.metadata.color);
+  KPKAddElement(element, @"MasterKeyChanged", KPKFormattedDate(self.tree.metadata.masterKeyChanged));
+  KPKAddElement(element, @"MasterKeyChangeRec", KPKStringFromLong(self.tree.metadata.masterKeyChangeIsRequired));
+  KPKAddElement(element, @"MasterKeyChangeForce", KPKStringFromLong(self.tree.metadata.masterKeyChangeIsForced));
   
   DDXMLElement *memoryProtectionElement = [DDXMLElement elementWithName:@"MemoryProtection"];
-  KPKAddElement(memoryProtectionElement, @"ProtectTitle", KPKStringFromBool(self.tree.protectTitle));
-  KPKAddElement(memoryProtectionElement, @"ProtectUserName", KPKStringFromBool(self.tree.protectUserName));
-  KPKAddElement(memoryProtectionElement, @"ProtectPassword", KPKStringFromBool(self.tree.protectPassword));
-  KPKAddElement(memoryProtectionElement, @"ProtectURL", KPKStringFromBool(self.tree.protectUrl));
-  KPKAddElement(memoryProtectionElement, @"ProtectNotes", KPKStringFromBool(self.tree.protectNotes));
+  KPKAddElement(memoryProtectionElement, @"ProtectTitle", KPKStringFromBool(self.tree.metadata.protectTitle));
+  KPKAddElement(memoryProtectionElement, @"ProtectUserName", KPKStringFromBool(self.tree.metadata.protectUserName));
+  KPKAddElement(memoryProtectionElement, @"ProtectPassword", KPKStringFromBool(self.tree.metadata.protectPassword));
+  KPKAddElement(memoryProtectionElement, @"ProtectURL", KPKStringFromBool(self.tree.metadata.protectUrl));
+  KPKAddElement(memoryProtectionElement, @"ProtectNotes", KPKStringFromBool(self.tree.metadata.protectNotes));
   
   [element addChild:memoryProtectionElement];
   
-  if ([self.tree.customIcons count] > 0) {
+  if ([self.tree.metadata.customIcons count] > 0) {
     [element addChild:[self _xmlIcons]];
   }
   
-  
-  KPKAddElement(element, @"RecycleBinEnabled", KPKStringFromBool(self.tree.recycleBinEnabled));
-  KPKAddElement(element, @"RecycleBinUUID", [self.tree.recycleBinUuid encodedString]);
-  KPKAddElement(element, @"RecycleBinChanged", KPKFormattedDate(self.tree.recycleBinChanged));
-  KPKAddElement(element, @"EntryTemplatesGroup", [self.tree.entryTemplatesGroup encodedString]);
-  KPKAddElement(element, @"EntryTemplatesGroupChanged", KPKFormattedDate(self.tree.entryTemplatesGroupChanged));
-  KPKAddElement(element, @"HistoryMaxItems", KPKStringFromLong(self.tree.historyMaxItems));
-  KPKAddElement(element, @"HistoryMaxSize", KPKStringFromLong(self.tree.historyMaxItems));
-  KPKAddElement(element, @"LastSelectedGroup", [self.tree.lastSelectedGroup encodedString]);
-  KPKAddElement(element, @"LastTopVisibleGroup", [self.tree.lastTopVisibleGroup encodedString]);
+  KPKAddElement(element, @"RecycleBinEnabled", KPKStringFromBool(self.tree.metadata.recycleBinEnabled));
+  KPKAddElement(element, @"RecycleBinUUID", [self.tree.metadata.recycleBinUuid encodedString]);
+  KPKAddElement(element, @"RecycleBinChanged", KPKFormattedDate(self.tree.metadata.recycleBinChanged));
+  KPKAddElement(element, @"EntryTemplatesGroup", [self.tree.metadata.entryTemplatesGroup encodedString]);
+  KPKAddElement(element, @"EntryTemplatesGroupChanged", KPKFormattedDate(self.tree.metadata.entryTemplatesGroupChanged));
+  KPKAddElement(element, @"HistoryMaxItems", KPKStringFromLong(self.tree.metadata.historyMaxItems));
+  KPKAddElement(element, @"HistoryMaxSize", KPKStringFromLong(self.tree.metadata.historyMaxItems));
+  KPKAddElement(element, @"LastSelectedGroup", [self.tree.metadata.lastSelectedGroup encodedString]);
+  KPKAddElement(element, @"LastTopVisibleGroup", [self.tree.metadata.lastTopVisibleGroup encodedString]);
   
   [element addChild:[self _xmlBinaries]];
   
@@ -140,15 +141,7 @@
   KPKAddElement(groupElement, @"Notes", group.notes);
   KPKAddElement(groupElement, @"IconId", KPKStringFromLong(group.icon));
   
-  DDXMLElement *timesElement = [DDXMLNode elementWithName:@"Times"];
-  KPKAddElement(timesElement, @"LastModificationTime", KPKFormattedDate(group.lastModificationTime));
-  KPKAddElement(timesElement, @"dateFormatter", KPKFormattedDate(group.creationTime));
-  KPKAddElement(timesElement, @"LastAccessTime", KPKFormattedDate(group.lastAccessTime));
-  KPKAddElement(timesElement, @"ExpiryTime", KPKFormattedDate(group.expiryTime));
-  KPKAddElement(timesElement, @"Expires", KPKStringFromBool(group.expires));
-  // FIXME: Add additional properties to group/node/entry
-  //KPKAddElement(timesElement, @"UsageCount", group.usageCount)
-  //KPKAddElement(timesElement, @"LocationChanged", value)
+  DDXMLElement *timesElement = [self _xmlTimeinfo:group.timeInfo];
   [groupElement addChild:timesElement];
   
   /*
@@ -179,7 +172,7 @@
   [self _prepateAttachments];
   DDXMLElement *binaryElements = [DDXMLElement elementWithName:@"Binaries"];
   
-  BOOL compress = (self.tree.compressionAlgorithm == KPKCompressionGzip);
+  BOOL compress = (self.tree.metadata.compressionAlgorithm == KPKCompressionGzip);
   for(KPKAttachment *attachment in _binaries) {
     DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
     KPKAddAttribute(binaryElement, @"ID", KPKStringFromLong([_binaries indexOfObject:attachment]));
@@ -192,7 +185,7 @@
 
 - (DDXMLElement *)_xmlIcons {
   DDXMLElement *customIconsElements = [DDXMLElement elementWithName:@"CustomIcons"];
-  for (KPKIcon *icon in self.tree.customIcons) {
+  for (KPKIcon *icon in self.tree.metadata.customIcons) {
     DDXMLElement *iconElement = [DDXMLNode elementWithName:@"Icon"];
     KPKAddElement(iconElement, @"UUID", [icon.uuid encodedString]);
     KPKAddElement(iconElement, @"Data", [icon encodedString]);
@@ -210,6 +203,18 @@
     [deletedObjectsElement addChild:deletedElement];
   }
   return deletedObjectsElement;
+}
+
+- (DDXMLElement *)_xmlTimeinfo:(KPKTimeInfo *)timeInfo {
+  DDXMLElement *timesElement = [DDXMLNode elementWithName:@"Times"];
+  KPKAddElement(timesElement, @"LastModificationTime", KPKFormattedDate(timeInfo.lastModificationTime));
+  KPKAddElement(timesElement, @"dateFormatter", KPKFormattedDate(timeInfo.creationTime));
+  KPKAddElement(timesElement, @"LastAccessTime", KPKFormattedDate(timeInfo.lastAccessTime));
+  KPKAddElement(timesElement, @"ExpiryTime", KPKFormattedDate(timeInfo.expiryTime));
+  KPKAddElement(timesElement, @"Expires", KPKStringFromBool(timeInfo.expires));
+  KPKAddElement(timesElement, @"UsageCount", KPKStringFromLong(timeInfo.usageCount));
+  KPKAddElement(timesElement, @"LocationChanged", KPKFormattedDate(timeInfo.locationChanged));
+  return timesElement;
 }
 
 - (void)_prepateAttachments {

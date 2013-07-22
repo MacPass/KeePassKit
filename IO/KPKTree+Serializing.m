@@ -22,6 +22,7 @@
 
 #import "KPKTree+Serializing.h"
 
+#import "KPKMetaData.h"
 #import "KPKXmlTreeWriter.h"
 #import "DDXMLDocument.h"
 #import "KPKPassword.h"
@@ -29,7 +30,7 @@
 @implementation KPKTree (Serializing)
 
 - (NSData *)serializeWithPassword:(KPKPassword *)password forVersion:(KPKVersion)version error:(NSError *)error {
-  NSData *passwordData = [password finalDataForVersion:version masterSeed:nil transformSeed:nil rounds:self.rounds];
+  NSData *passwordData = [password finalDataForVersion:version masterSeed:nil transformSeed:nil rounds:self.metadata.rounds];
   /*
    Create Stream for strong
    Add Serailized data

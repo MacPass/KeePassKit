@@ -23,12 +23,16 @@
 
 #import <Foundation/Foundation.h>
 #import "KPKVersion.h"
+#import "KPKTimerecording.h"
+#import "KPKUndoing.h"
+
 @class KPKGroup;
 @class KPKTree;
 @class KPKIcon;
+@class KPKTimeInfo;
 
 /* Basic Node in the Tree */
-@interface KPKNode : NSObject
+@interface KPKNode : NSObject <KPKTimerecording, KPKUndoing>
 
 @property(nonatomic, weak) KPKTree *tree;
 @property(nonatomic, assign) NSInteger icon;
@@ -36,27 +40,13 @@
 @property(nonatomic, weak) KPKGroup *parent;
 @property(nonatomic, strong) NSUUID *uuid;
 @property(nonatomic, assign) KPKVersion minimumVersion;
+@property(nonatomic, strong) KPKTimeInfo *timeInfo;
 
-@property(nonatomic, strong) NSDate *creationTime;
-@property(nonatomic, strong) NSDate *lastModificationTime;
-@property(nonatomic, strong) NSDate *lastAccessTime;
-@property(nonatomic, strong) NSDate *expiryTime;
-@property(nonatomic, assign) BOOL expires;
-@property(nonatomic, strong) NSDate *locationChanged;
-@property(nonatomic, assign) NSUInteger usageCount;
-
-
-/**
- Holds the Undomanager that is propagated throughout the tree.
- If you plan on using the Model inside a document base application
- be sure to supply the undomanager when you create the tree.
- 
- If you ommit the manager, the object does not register any undoable actions.
- 
- The Model does NOT set any names on undo/redo.
- */
-@property(nonatomic, weak) NSUndoManager *undoManger;
+@property (nonatomic, assign) BOOL updateTiming;
 
 - (KPKGroup *)rootGroup;
+
+#pragma mark KPKUndoing
+@property(nonatomic, weak) NSUndoManager *undoManager;
 
 @end

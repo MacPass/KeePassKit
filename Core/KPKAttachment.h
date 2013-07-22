@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-/* Binärdatenknoten */
+/* Binary */
 @interface KPKAttachment : NSObject <NSCopying>
 
 @property (nonatomic, copy) NSString *name;

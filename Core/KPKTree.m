@@ -23,6 +23,7 @@
 #import "KPKTree.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"
+#import "KPKMetaData.h"
 
 @class KPKIcon;
 
@@ -31,8 +32,7 @@
 - (id)init {
   self = [super init];
   if(self) {
-    _customData = [[NSMutableArray alloc] init];
-    _customIcons = [[NSMutableArray alloc] init];
+    _metadata = [[KPKMetaData alloc] init];
     _deletedObjects = [[NSMutableDictionary alloc] init];
   }
   return self;
@@ -40,7 +40,7 @@
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent {
   KPKGroup *group = [[KPKGroup alloc] init];
-  group.undoManger = self.undoManger;
+  group.undoManager = self.undoManager;
   group.parent = parent;
   return group;
 }
@@ -48,7 +48,7 @@
 - (KPKEntry *)createEntry:(KPKGroup *)parent {
   KPKEntry *entry = [[KPKEntry alloc] init];
   entry.parent = parent;
-  entry.undoManger = self.undoManger;
+  entry.undoManager = self.undoManager;
   return entry;
 }
 
@@ -57,6 +57,14 @@
   if(group != root) {
     _groups = @[root];
   }
+}
+
+- (NSUndoManager *)undoManager {
+  return self.metadata.undoManager;
+}
+
+- (void)setUndoManager:(NSUndoManager *)undoManager {
+  self.metadata.undoManager = undoManager;
 }
 
 - (KPKGroup *)root {
@@ -69,41 +77,6 @@
 
 - (NSArray *)allEntries {
   return [self.root childEntries];
-}
-
-- (void)addCustomIcon:(KPKIcon *)icon {
-  [self addCustomIcon:icon atIndex:[_customIcons count]];
-}
-
-- (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index {
-  /* Use undomanager ? */
-  index = MIN([_customIcons count], index);
-  [[self.undoManger prepareWithInvocationTarget:self] removeCustomIcon:icon];
-  [self insertObject:icon inCustomIconsAtIndex:index];
-}
-
-- (void)removeCustomIcon:(KPKIcon *)icon {
-  NSUInteger index = [_customIcons indexOfObject:icon];
-  if(index != NSNotFound) {
-    [[self.undoManger prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
-    [self removeObjectFromCustomIconsAtIndex:index];
-  }
-}
-
-#pragma mark KVO
-
-- (NSUInteger)countOfCustomIcons {
-  return [_customIcons count];
-}
-
-- (void)insertObject:(KPKIcon *)icon inCustomIconsAtIndex:(NSUInteger)index {
-  index = MIN([_customIcons count], index);
-  [_customIcons insertObject:icon atIndex:index];
-}
-
-- (void)removeObjectFromCustomIconsAtIndex:(NSUInteger)index {
-  index = MIN([_customIcons count], index);
-  [_customIcons removeObjectAtIndex:index];
 }
 
 @end

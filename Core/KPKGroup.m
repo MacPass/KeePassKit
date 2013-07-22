@@ -74,7 +74,7 @@
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   group.parent = self;
   index = MIN([_entries count], index);
-  [[self.undoManger prepareWithInvocationTarget:self] removeGroup:group];
+  [[self.undoManager prepareWithInvocationTarget:self] removeGroup:group];
   /* Remove entries that might have been added to the deleted objects */
   [self.tree.deletedObjects removeObjectForKey:group.uuid];
   [self insertObject:group inGroupsAtIndex:index];
@@ -83,7 +83,7 @@
 - (void)removeGroup:(KPKGroup *)group {
   NSUInteger index = [_groups indexOfObject:group];
   if(index != NSNotFound) {
-    [[self.undoManger prepareWithInvocationTarget:self] addGroup:self atIndex:index];
+    [[self.undoManager prepareWithInvocationTarget:self] addGroup:self atIndex:index];
     group.parent = nil;
     /* Add group to deleted objects */
     self.tree.deletedObjects[ group.uuid ] = [[KPKDeletedNode alloc] initWithNode:group];
@@ -96,20 +96,20 @@
   if(oldIndex == NSNotFound) {
     return; // Parent does not contain us!
   }
-  [[self.undoManger prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:oldIndex];
-  BOOL wasEnabled = [self.undoManger isUndoRegistrationEnabled];
-  [self.undoManger disableUndoRegistration];
+  [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:oldIndex];
+  BOOL wasEnabled = [self.undoManager isUndoRegistrationEnabled];
+  [self.undoManager disableUndoRegistration];
   [self.parent removeGroup:group];
   [group addGroup:group atIndex:index];
   if(wasEnabled) {
-    [self.undoManger enableUndoRegistration];
+    [self.undoManager enableUndoRegistration];
   }
 }
 
 - (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
   entry.parent = self;
   index = MIN([_entries count], index);
-  [[self.undoManger prepareWithInvocationTarget:self] removeEntry:entry];
+  [[self.undoManager prepareWithInvocationTarget:self] removeEntry:entry];
   /* Remove the deleted Object */
   [self.tree.deletedObjects removeObjectForKey:entry.uuid];
   [self insertObject:entry inEntriesAtIndex:index];
@@ -118,7 +118,7 @@
 - (void)removeEntry:(KPKEntry *)entry {
   NSUInteger index = [_entries indexOfObject:entry];
   if(NSNotFound != index) {
-    [[self.undoManger prepareWithInvocationTarget:self] addEntry:entry atIndex:index];
+    [[self.undoManager prepareWithInvocationTarget:self] addEntry:entry atIndex:index];
     [self removeObjectFromEntriesAtIndex:index];
     /* Add the entry to the deleted Objects */
     self.tree.deletedObjects[ entry.uuid ] = [[KPKDeletedNode alloc] initWithNode:entry];
@@ -129,13 +129,13 @@
 - (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup atIndex:(NSUInteger)index {
   NSUInteger oldIndex = [_entries indexOfObject:entry];
   if(index != NSNotFound) {
-    [[self.undoManger prepareWithInvocationTarget:toGroup] moveEntry:entry toGroup:self atIndex:oldIndex];
-    BOOL wasEnabled = [self.undoManger isUndoRegistrationEnabled];
-    [self.undoManger disableUndoRegistration];
+    [[self.undoManager prepareWithInvocationTarget:toGroup] moveEntry:entry toGroup:self atIndex:oldIndex];
+    BOOL wasEnabled = [self.undoManager isUndoRegistrationEnabled];
+    [self.undoManager disableUndoRegistration];
     [self removeEntry:entry];
     [toGroup addEntry:entry atIndex:index];
     if(wasEnabled) {
-      [self.undoManger enableUndoRegistration];
+      [self.undoManager enableUndoRegistration];
     }
   }
 }
@@ -149,13 +149,10 @@
 }
 
 - (NSString*)description {
-  return [NSString stringWithFormat:@"KdbGroup [image=%ld, name=%@, creationTime=%@, lastModificationTime=%@, lastAccessTime=%@, expiryTime=%@]",
+  return [NSString stringWithFormat:@"KdbGroup [image=%ld, name=%@, %@]",
           self.icon,
           self.name,
-          self.creationTime,
-          self.lastModificationTime,
-          self.lastAccessTime,
-          self.expiryTime];
+          self.timeInfo];
 }
 
 #pragma mark Seaching

@@ -25,6 +25,8 @@
 #import "KPKXmlHeaderReader.h"
 
 #import "KPKTree.h"
+#import "KPKMetaData.h"
+#import "KPKTimeInfo.h"
 #import "KPKGroup.h"
 #import "KPKNode.h"
 #import "KPKEntry.h"
@@ -95,13 +97,16 @@
   [self _decodeProtected:rootElement];
   
   KPKTree *tree = [[KPKTree alloc] init];
+  
+  tree.metadata.updateTiming = NO;
+  
   /* Set the information we got from the header */
-  tree.rounds = _cipherInfo.rounds;
-  tree.compressionAlgorithm = _cipherInfo.compressionAlgorithm;
+  tree.metadata.rounds = _cipherInfo.rounds;
+  tree.metadata.compressionAlgorithm = _cipherInfo.compressionAlgorithm;
   /* Parse the rest of the metadata from the file */
   DDXMLElement *meta = [rootElement elementForName:@"Meta"];
   if (meta != nil) {
-    [self _parseMeta:meta tree:tree];
+    [self _parseMeta:meta metaData:tree.metadata];
   }
   
   DDXMLElement *root = [rootElement elementForName:@"Root"];
@@ -117,6 +122,8 @@
   }
 
   tree.root = [self _parseGroup:element];
+  
+  tree.metadata.updateTiming = YES;
   
   return tree;
 }
@@ -142,45 +149,45 @@
   }
 }
 
-- (void)_parseMeta:(DDXMLElement *)root tree:(KPKTree *)tree {
+- (void)_parseMeta:(DDXMLElement *)root metaData:(KPKMetaData *)data {
   
-  tree.generator = KPKString(root, @"Generator");
-  tree.databaseName = KPKString(root, @"DatabaseName");
-  tree.databaseNameChanged = KPKDate(_dateFormatter, root, @"DatabaseNameChanged");
-  tree.databaseDescription = KPKString(root, @"DatabaseDescription");
-  tree.databaseNameChanged = KPKDate(_dateFormatter, root, @"DatabaseDescriptionChanged");
-  tree.defaultUserName = KPKString(root, @"DefaultUserName");
-  tree.defaultUserNameChanged = KPKDate(_dateFormatter, root, @"DefaultUserNameChanged");
-  tree.maintenanceHistoryDays = KPKInteger(root, @"MaintenanceHistoryDays");
-  tree.color = KPKString(root, @"Color");
-  tree.masterKeyChanged = KPKDate(_dateFormatter, root, @"MasterKeyChanged");
-  tree.masterKeyChangeIsRequired = KPKInteger(root, @"MasterKeyChangeRec");
-  tree.masterKeyChangeIsForced = KPKInteger(root, @"MasterKeyChangeForce");
+  data.generator = KPKString(root, @"Generator");
+  data.databaseName = KPKString(root, @"DatabaseName");
+  data.databaseNameChanged = KPKDate(_dateFormatter, root, @"DatabaseNameChanged");
+  data.databaseDescription = KPKString(root, @"DatabaseDescription");
+  data.databaseNameChanged = KPKDate(_dateFormatter, root, @"DatabaseDescriptionChanged");
+  data.defaultUserName = KPKString(root, @"DefaultUserName");
+  data.defaultUserNameChanged = KPKDate(_dateFormatter, root, @"DefaultUserNameChanged");
+  data.maintenanceHistoryDays = KPKInteger(root, @"MaintenanceHistoryDays");
+  data.color = KPKString(root, @"Color");
+  data.masterKeyChanged = KPKDate(_dateFormatter, root, @"MasterKeyChanged");
+  data.masterKeyChangeIsRequired = KPKInteger(root, @"MasterKeyChangeRec");
+  data.masterKeyChangeIsForced = KPKInteger(root, @"MasterKeyChangeForce");
   
   DDXMLElement *memoryProtectionElement = [root elementForName:@"MemoryProtection"];
   
-  tree.protectTitle = KPKBool(memoryProtectionElement, @"ProtectTitle");
-  tree.protectUserName = KPKBool(memoryProtectionElement, @"ProtectUserName");
-  tree.protectUserName = KPKBool(memoryProtectionElement, @"ProtectPassword");
-  tree.protectUserName = KPKBool(memoryProtectionElement, @"ProtectURL");
-  tree.protectUserName = KPKBool(memoryProtectionElement, @"ProtectNotes");
+  data.protectTitle = KPKBool(memoryProtectionElement, @"ProtectTitle");
+  data.protectUserName = KPKBool(memoryProtectionElement, @"ProtectUserName");
+  data.protectUserName = KPKBool(memoryProtectionElement, @"ProtectPassword");
+  data.protectUserName = KPKBool(memoryProtectionElement, @"ProtectURL");
+  data.protectUserName = KPKBool(memoryProtectionElement, @"ProtectNotes");
   
   DDXMLElement *customIconsElement = [root elementForName:@"CustomIcons"];
   for (DDXMLElement *element in [customIconsElement elementsForName:@"Icon"]) {
     NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKString(element, @"UUID")];
     KPKIcon *icon = [[KPKIcon alloc] initWithUUID:uuid encodedString:KPKString(root, @"Data")];
-    [tree.customIcons addObject:icon];
+    [data.customIcons addObject:icon];
   }
   
-  tree.recycleBinEnabled = KPKBool(root, @"RecycleBinEnabled");
-  tree.recycleBinUuid = [NSUUID uuidWithEncodedString:KPKString(root, @"RecycleBinUUID")];
-  tree.recycleBinChanged = KPKDate(_dateFormatter, root, @"RecycleBinChanged");
-  tree.entryTemplatesGroup = [NSUUID uuidWithEncodedString:KPKString(root, @"EntryTemplatesGroup")];
-  tree.entryTemplatesGroupChanged = KPKDate(_dateFormatter, root, @"EntryTemplatesGroupChanged");
-  tree.historyMaxItems = KPKInteger(root, @"HistoryMaxItems");
-  tree.historyMaxSize = KPKInteger(root, @"HistoryMaxSize");
-  tree.lastSelectedGroup = [NSUUID uuidWithEncodedString:KPKString(root, @"LastSelectedGroup")];
-  tree.lastTopVisibleGroup = [NSUUID uuidWithEncodedString:KPKString(root, @"LastTopVisibleGroup")];
+  data.recycleBinEnabled = KPKBool(root, @"RecycleBinEnabled");
+  data.recycleBinUuid = [NSUUID uuidWithEncodedString:KPKString(root, @"RecycleBinUUID")];
+  data.recycleBinChanged = KPKDate(_dateFormatter, root, @"RecycleBinChanged");
+  data.entryTemplatesGroup = [NSUUID uuidWithEncodedString:KPKString(root, @"EntryTemplatesGroup")];
+  data.entryTemplatesGroupChanged = KPKDate(_dateFormatter, root, @"EntryTemplatesGroupChanged");
+  data.historyMaxItems = KPKInteger(root, @"HistoryMaxItems");
+  data.historyMaxSize = KPKInteger(root, @"HistoryMaxSize");
+  data.lastSelectedGroup = [NSUUID uuidWithEncodedString:KPKString(root, @"LastSelectedGroup")];
+  data.lastTopVisibleGroup = [NSUUID uuidWithEncodedString:KPKString(root, @"LastTopVisibleGroup")];
   
   /*
    Binaries need to be stored and then associated with entires
@@ -211,7 +218,7 @@
   
   
   DDXMLElement *timesElement = [groupNode elementForName:@"Times"];
-  [self _parseTimes:group element:timesElement];
+  [self _parseTimes:group.timeInfo element:timesElement];
   
 //  group.isExpanded = [[[root elementForName:@"IsExpanded"] stringValue] boolValue];
 //  group.defaultAutoTypeSequence = [[root elementForName:@"DefaultAutoTypeSequence"] stringValue];
@@ -255,7 +262,7 @@
 //  entry.tags = [[root elementForName:@"Tags"] stringValue];
   
   DDXMLElement *timesElement = [entryElement elementForName:@"Times"];
-  [self _parseTimes:entry element:timesElement];
+  [self _parseTimes:entry.timeInfo element:timesElement];
   
   for (DDXMLElement *element in [entryElement elementsForName:@"String"]) {
     KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKString(element, @"Key")
@@ -298,14 +305,14 @@
   return entry;
 }
 
-- (void)_parseTimes:(KPKNode *)node element:(DDXMLElement *)nodeElement {
-  node.lastModificationTime = KPKDate(_dateFormatter, nodeElement, @"LastModificationTime");
-  node.creationTime = KPKDate(_dateFormatter, nodeElement, @"CreationTime");
-  node.lastAccessTime = KPKDate(_dateFormatter, nodeElement, @"LastAccessTime");
-  node.expiryTime = KPKDate(_dateFormatter, nodeElement, @"ExpiryTime");
-  node.expires = KPKBool(nodeElement, @"Expires");
-  node.usageCount = KPKInteger(nodeElement, @"UsageCount");
-  node.locationChanged = KPKDate(_dateFormatter, nodeElement, @"LocationChanged");
+- (void)_parseTimes:(KPKTimeInfo *)timeInfo element:(DDXMLElement *)nodeElement {
+  timeInfo.lastModificationTime = KPKDate(_dateFormatter, nodeElement, @"LastModificationTime");
+  timeInfo.creationTime = KPKDate(_dateFormatter, nodeElement, @"CreationTime");
+  timeInfo.lastAccessTime = KPKDate(_dateFormatter, nodeElement, @"LastAccessTime");
+  timeInfo.expiryTime = KPKDate(_dateFormatter, nodeElement, @"ExpiryTime");
+  timeInfo.expires = KPKBool(nodeElement, @"Expires");
+  timeInfo.usageCount = KPKInteger(nodeElement, @"UsageCount");
+  timeInfo.locationChanged = KPKDate(_dateFormatter, nodeElement, @"LocationChanged");
 }
 
 - (BOOL)_setupRandomStream {

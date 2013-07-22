@@ -93,7 +93,7 @@
 }
 
 - (void)setTitle:(NSString *)title {
-  [self.undoManger registerUndoWithTarget:self selector:@selector(setTitle:) object:self.title];
+  [self.undoManager registerUndoWithTarget:self selector:@selector(setTitle:) object:self.title];
   self.titleAttribute.value = title;
 }
 
@@ -106,12 +106,12 @@
 }
 
 - (void)setNotes:(NSString *)notes {
-  [self.undoManger registerUndoWithTarget:self selector:@selector(setNotes) object:self.url];
+  [self.undoManager registerUndoWithTarget:self selector:@selector(setNotes) object:self.url];
   self.notesAttribute.value = notes;
 }
 
 - (void)setUrl:(NSString *)url {
-  [self.undoManger registerUndoWithTarget:self selector:@selector(setUrl:) object:self.url.value];
+  [self.undoManager registerUndoWithTarget:self selector:@selector(setUrl:) object:self.url.value];
   self.urlAttribute.value = url;
 }
 
@@ -164,7 +164,7 @@
 
 - (void)addCustomAttribute:(KPKAttribute *)attribute atIndex:(NSUInteger)index {
   index = MIN([_customAttributes count], index);
-  [self.undoManger registerUndoWithTarget:self selector:@selector(removeCustomAttribute:) object:attribute];
+  [self.undoManager registerUndoWithTarget:self selector:@selector(removeCustomAttribute:) object:attribute];
   [self insertObject:attribute inCustomAttributesAtIndex:index];
   attribute.entry = self;
   self.minimumVersion = [self _minimumVersionForCurrentAttributes];
@@ -173,7 +173,7 @@
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
   NSUInteger index = [_customAttributes indexOfObject:attribute];
   if(NSNotFound != index) {
-    [[self.undoManger prepareWithInvocationTarget:self] addCustomAttribute:attribute atIndex:index];
+    [[self.undoManager prepareWithInvocationTarget:self] addCustomAttribute:attribute atIndex:index];
     attribute.entry = nil;
     [self removeObjectFromCustomAttributesAtIndex:index];
     self.minimumVersion = [self _minimumVersionForCurrentAttributes];
@@ -188,7 +188,7 @@
 
 - (void)addTag:(NSString *)tag atIndex:(NSUInteger)index {
   index = MIN([_tags count], index);
-  [self.undoManger registerUndoWithTarget:self selector:@selector(removeTag:) object:tag];
+  [self.undoManager registerUndoWithTarget:self selector:@selector(removeTag:) object:tag];
   [self insertObject:tag inTagsAtIndex:index];
   self.minimumVersion = [self _minimumVersionForCurrentAttributes];
 }
@@ -196,7 +196,7 @@
 - (void)removeTag:(NSString *)tag {
   NSUInteger index = [_tags indexOfObject:tag];
   if(index != NSNotFound) {
-    [[self.undoManger prepareWithInvocationTarget:self] addTag:tag atIndex:index];
+    [[self.undoManager prepareWithInvocationTarget:self] addTag:tag atIndex:index];
     [self removeObjectFromTagsAtIndex:index];
     self.minimumVersion = [self _minimumVersionForCurrentAttributes];
   }
@@ -210,7 +210,7 @@
 
 - (void)addAttachment:(KPKAttachment *)attachment atIndex:(NSUInteger)index {
   index = MIN([_attachments count], index);
-  [self.undoManger registerUndoWithTarget:self selector:@selector(removeAttachment:) object:attachment];
+  [self.undoManager registerUndoWithTarget:self selector:@selector(removeAttachment:) object:attachment];
   [self insertObject:attachment inAttachmetsAtIndex:index];
   self.minimumVersion = [self _minimumVersionForCurrentAttachments];
 }
@@ -224,7 +224,7 @@
    */
   NSUInteger index = [_attachments indexOfObject:attachment];
   if(index != NSNotFound) {
-    [[self.undoManger prepareWithInvocationTarget:self] addAttachment:attachment atIndex:index];
+    [[self.undoManager prepareWithInvocationTarget:self] addAttachment:attachment atIndex:index];
     [self removeObjectFromAttachmetsAtIndex:index];
     self.minimumVersion = [self _minimumVersionForCurrentAttachments];
   }
