@@ -1,5 +1,5 @@
 //
-//  KPKBinaryTreeWriter.m
+//  KPKBinaryTreeWriter.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 20.07.13.
@@ -20,8 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKBinaryTreeWriter.h"
+#import <Foundation/Foundation.h>
 
-@implementation KPKBinaryTreeWriter
+@interface KPKLegacyTreeWriter : NSObject
 
 @end

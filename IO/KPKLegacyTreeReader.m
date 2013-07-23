@@ -20,17 +20,17 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKBinaryTreeReader.h"
+#import "KPKLegacyTreeReader.h"
 #import "KPKLegacyHeaderReader.h"
 
-@interface KPKBinaryTreeReader () {
+@interface KPKLegacyTreeReader () {
   NSData *_data;
   KPKLegacyHeaderReader *_cipherInfo;
 }
 
 @end
 
-@implementation KPKBinaryTreeReader
+@implementation KPKLegacyTreeReader
 
 - (id)initWithData:(NSData *)data chipherInformation:(KPKLegacyHeaderReader *)cipherInfo {
   self = [super init];

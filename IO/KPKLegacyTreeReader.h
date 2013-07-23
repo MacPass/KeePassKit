@@ -1,5 +1,5 @@
 //
-//  KPKBinaryTreeWriter.h
+//  KPKBinaryTreeReader.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 20.07.13.
@@ -22,6 +22,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KPKBinaryTreeWriter : NSObject
+@class KPKTree;
+@class KPKLegacyHeaderReader;
+
+@interface KPKLegacyTreeReader : NSObject
+
+- (id)initWithData:(NSData *)data chipherInformation:(KPKLegacyHeaderReader *)cipherInfo;
+- (KPKTree *)tree;
 
 @end

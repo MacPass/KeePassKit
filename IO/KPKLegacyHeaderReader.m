@@ -67,7 +67,8 @@
 }
 
 - (NSData *)dataWithoutHeader {
-  return nil;
+  NSUInteger headerSize = sizeof(KPKLegacyHeader);
+  return [_data subdataWithRange:NSMakeRange(headerSize, [_data length] - headerSize)];
 }
 
 - (void)writeHeaderData:(NSMutableData *)data {

@@ -1,5 +1,5 @@
 //
-//  KPKBinaryTreeReader.h
+//  KPKBinaryTreeWriter.m
 //  KeePassKit
 //
 //  Created by Michael Starke on 20.07.13.
@@ -20,14 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import <Foundation/Foundation.h>
+#import "KPKLegacyTreeWriter.h"
 
-@class KPKTree;
-@class KPKLegacyHeaderReader;
-
-@interface KPKBinaryTreeReader : NSObject
-
-- (id)initWithData:(NSData *)data chipherInformation:(KPKLegacyHeaderReader *)cipherInfo;
-- (KPKTree *)tree;
+@implementation KPKLegacyTreeWriter
 
 @end

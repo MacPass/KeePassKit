@@ -8,7 +8,7 @@
 
 #import "KPKLegacyTreeCryptor.h"
 #import "KPKLegacyHeaderReader.h"
-#import "KPKBinaryTreeReader.h"
+#import "KPKLegacyTreeReader.h"
 #import "KPKPassword.h"
 #import "KPKVersion.h"
 
@@ -46,7 +46,7 @@
                                                                                     options:kCCOptionPKCS7Padding
                                                                                       error:NULL];
   
-  KPKBinaryTreeReader *reader = [[KPKBinaryTreeReader alloc] initWithData:aesDecrypted chipherInformation:_cipherInfo];
+  KPKLegacyTreeReader *reader = [[KPKLegacyTreeReader alloc] initWithData:aesDecrypted chipherInformation:_cipherInfo];
   return [reader tree];
 }
 
