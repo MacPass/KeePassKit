@@ -17,7 +17,7 @@
 #import <CommonCrypto/CommonCryptor.h>
 
 @interface KPKLegacyTreeCryptor () {
-  KPKLegacyHeaderReader *_cipherInfo;
+  KPKLegacyHeaderReader *_headerReader;
 }
 @end
 
@@ -31,23 +31,23 @@
 }
 
 - (KPKTree *)decryptTree:(NSError *__autoreleasing *)error {
-  _cipherInfo = [[KPKLegacyHeaderReader alloc] initWithData:_data error:error];
+  _headerReader = [[KPKLegacyHeaderReader alloc] initWithData:_data error:error];
   
   // Create the final key and initialize the AES input stream
   NSData *keyData = [_password finalDataForVersion:KPKVersion1
-                                        masterSeed:_cipherInfo.masterSeed
-                                     transformSeed:_cipherInfo.transformSeed
-                                            rounds:_cipherInfo.rounds];
+                                        masterSeed:_headerReader.masterSeed
+                                     transformSeed:_headerReader.transformSeed
+                                            rounds:_headerReader.rounds];
   
   
-  NSData *aesDecrypted = [[_cipherInfo dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
+  NSData *aesDecrypted = [[_headerReader dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
                                                                                         key:keyData
-                                                                       initializationVector:_cipherInfo.encryptionIV
+                                                                       initializationVector:_headerReader.encryptionIV
                                                                                     options:kCCOptionPKCS7Padding
                                                                                       error:NULL];
   
-  KPKLegacyTreeReader *reader = [[KPKLegacyTreeReader alloc] initWithData:aesDecrypted chipherInformation:_cipherInfo];
-  return [reader tree];
+  KPKLegacyTreeReader *reader = [[KPKLegacyTreeReader alloc] initWithData:aesDecrypted headerReader:_headerReader];
+  return [reader tree:error];
 }
 
 @end

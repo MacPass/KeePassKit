@@ -41,4 +41,40 @@ typedef NS_ENUM(NSUInteger, KPKHeaderKey ) {
   KPKHeaderKeyStartBytes,
   KPKHeaderKeyRandomStreamId
 };
+
+/**
+ Field Types for KDB Filey
+ */
+typedef NS_ENUM(NSUInteger, KPKFieldType) {
+  /* Common types */
+  KPKFieldTypeCommonSize = 0,
+  KPKFieldTypeCommonStop = 0xFFFF,
+  /* Groups Types */
+  KPKFieldTypeGroupId    = 1,
+  KPKFieldTypeGroupName,
+  KPKFieldTypeGroupCreationTime,
+  KPKFieldTypeGroupModificationTime,
+  KPKFieldTypeGroupAccessTime,
+  KPKFieldTypeGroupExpiryDate,
+  KPKFieldTypeGroupImage,
+  KPKFieldTypeGroupLevel,
+  KPKFieldTypeGroupFlags,
+  /* Entry Types */
+  KPKFieldTypeEntryUUID = 1,
+  KPKFieldTypeEntryGroupId,
+  KPKFieldTypeEntryImage,
+  KPKFieldTypeEntryTitle,
+  KPKFieldTypeEntryURL,
+  KPKFieldTypeEntryUsername,
+  KPKFieldTypeEntryPassword,
+  KPKFieldTypeEntryNotes,
+  KPKFieldTypeEntryCreationTime,
+  KPKFieldTypeEntryModificationTime,
+  KPKFieldTypeEntryAccessTime,
+  KPKFieldTypeEntryExpiryDate,
+  KPKFieldTypeEntryBinaryDescription,
+  KPKFieldTypeEntryBinaryData,
+};
+
+
 #endif

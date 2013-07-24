@@ -57,7 +57,7 @@
 @interface KPKXmlTreeReader () {
 @private
   DDXMLDocument *_document;
-  KPKXmlHeaderReader *_cipherInfo;
+  KPKXmlHeaderReader *_headerReader;
   RandomStream *_randomStream;
   NSDateFormatter *_dateFormatter;
 }
@@ -65,14 +65,15 @@
 
 @implementation KPKXmlTreeReader
 
-- (id)initWithData:(NSData *)data cipherInformation:(KPKXmlHeaderReader *)cipher {
+- (id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader {
   self = [super init];
   if(self) {
     _document = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
-    _cipherInfo = cipher;
+    NSAssert([headerReader isKindOfClass:[KPKXmlHeaderReader class]], @"Headerreader needs to be XML header reader");
+    _headerReader = (KPKXmlHeaderReader *)headerReader;
     if(![self _setupRandomStream]) {
       _document = nil;
-      _cipherInfo = nil;
+      _headerReader = nil;
       self = nil;
       return nil;
     }
@@ -101,8 +102,8 @@
   tree.metadata.updateTiming = NO;
   
   /* Set the information we got from the header */
-  tree.metadata.rounds = _cipherInfo.rounds;
-  tree.metadata.compressionAlgorithm = _cipherInfo.compressionAlgorithm;
+  tree.metadata.rounds = _headerReader.rounds;
+  tree.metadata.compressionAlgorithm = _headerReader.compressionAlgorithm;
   /* Parse the rest of the metadata from the file */
   DDXMLElement *meta = [rootElement elementForName:@"Meta"];
   if (meta != nil) {
@@ -114,13 +115,13 @@
     KPKCreateError(error, KPKErrorXMLRootElementMissing, @"ERROR_ROOT_ELEMENT_MISSING", "");
     return nil;
   }
-
+  
   DDXMLElement *element = [root elementForName:@"Group"];
   if(!element) {
     KPKCreateError(error, KPKErrorXMLGroupElementMissing, @"ERROR_GROUP_ELEMENT_MISSING", "");
     return nil;
   }
-
+  
   tree.root = [self _parseGroup:element];
   
   tree.metadata.updateTiming = YES;
@@ -193,15 +194,15 @@
    Binaries need to be stored and then associated with entires
    */
   
-//  DDXMLElement *binariesElement = [root elementForName:@"Binaries"];
-//  for (DDXMLElement *element in [binariesElement elementsForName:@"Binary"]) {
-//    [tree.binaries addObject:[self parseBinary:element]];
-//  }
-//  
-//  DDXMLElement *customDataElement = [root elementForName:@"CustomData"];
-//  for (DDXMLElement *element in [customDataElement elementsForName:@"Item"]) {
-//    [tree.customData addObject:[self parseCustomItem:element]];
-//  }
+  //  DDXMLElement *binariesElement = [root elementForName:@"Binaries"];
+  //  for (DDXMLElement *element in [binariesElement elementsForName:@"Binary"]) {
+  //    [tree.binaries addObject:[self parseBinary:element]];
+  //  }
+  //
+  //  DDXMLElement *customDataElement = [root elementForName:@"CustomData"];
+  //  for (DDXMLElement *element in [customDataElement elementsForName:@"Item"]) {
+  //    [tree.customData addObject:[self parseCustomItem:element]];
+  //  }
 }
 
 - (KPKGroup *)_parseGroup:(DDXMLElement *)groupNode {
@@ -220,11 +221,11 @@
   DDXMLElement *timesElement = [groupNode elementForName:@"Times"];
   [self _parseTimes:group.timeInfo element:timesElement];
   
-//  group.isExpanded = [[[root elementForName:@"IsExpanded"] stringValue] boolValue];
-//  group.defaultAutoTypeSequence = [[root elementForName:@"DefaultAutoTypeSequence"] stringValue];
-//  group.EnableAutoType = [[root elementForName:@"EnableAutoType"] stringValue];
-//  group.EnableSearching = [[root elementForName:@"EnableSearching"] stringValue];
-//  group.LastTopVisibleEntry = [self parseUuidString:[[root elementForName:@"LastTopVisibleEntry"] stringValue]];
+  //  group.isExpanded = [[[root elementForName:@"IsExpanded"] stringValue] boolValue];
+  //  group.defaultAutoTypeSequence = [[root elementForName:@"DefaultAutoTypeSequence"] stringValue];
+  //  group.EnableAutoType = [[root elementForName:@"EnableAutoType"] stringValue];
+  //  group.EnableSearching = [[root elementForName:@"EnableSearching"] stringValue];
+  //  group.LastTopVisibleEntry = [self parseUuidString:[[root elementForName:@"LastTopVisibleEntry"] stringValue]];
   
   for (DDXMLElement *element in [groupNode elementsForName:@"Entry"]) {
     KPKEntry *entry = [self _parseEntry:element];
@@ -251,15 +252,15 @@
   
   entry.icon = KPKInteger(entryElement, @"IconID");
   
-//  DDXMLElement *customIconUuidElement = [root elementForName:@"CustomIconUUID"];
-//  if (customIconUuidElement != nil) {
-//    entry.customIconUuid = [self parseUuidString:[customIconUuidElement stringValue]];
-//  }
+  //  DDXMLElement *customIconUuidElement = [root elementForName:@"CustomIconUUID"];
+  //  if (customIconUuidElement != nil) {
+  //    entry.customIconUuid = [self parseUuidString:[customIconUuidElement stringValue]];
+  //  }
   
-//  entry.foregroundColor = [[root elementForName:@"ForegroundColor"] stringValue];
-//  entry.backgroundColor = [[root elementForName:@"BackgroundColor"] stringValue];
-//  entry.overrideUrl = [[root elementForName:@"OverrideURL"] stringValue];
-//  entry.tags = [[root elementForName:@"Tags"] stringValue];
+  //  entry.foregroundColor = [[root elementForName:@"ForegroundColor"] stringValue];
+  //  entry.backgroundColor = [[root elementForName:@"BackgroundColor"] stringValue];
+  //  entry.overrideUrl = [[root elementForName:@"OverrideURL"] stringValue];
+  //  entry.tags = [[root elementForName:@"Tags"] stringValue];
   
   DDXMLElement *timesElement = [entryElement elementForName:@"Times"];
   [self _parseTimes:entry.timeInfo element:timesElement];
@@ -289,18 +290,18 @@
     }
   }
   
-//  for (DDXMLElement *element in [root elementsForName:@"Binary"]) {
-//    [entry.binaries addObject:[self parseBinaryRef:element]];
-//  }
-//  
-//  entry.autoType = [self parseAutoType:[root elementForName:@"AutoType"]];
-//  
-//  DDXMLElement *historyElement = [root elementForName:@"History"];
-//  if (historyElement != nil) {
-//    for (DDXMLElement *element in [historyElement elementsForName:@"Entry"]) {
-//      [entry.history addObject:[self parseEntry:element]];
-//    }
-//  }
+  //  for (DDXMLElement *element in [root elementsForName:@"Binary"]) {
+  //    [entry.binaries addObject:[self parseBinaryRef:element]];
+  //  }
+  //
+  //  entry.autoType = [self parseAutoType:[root elementForName:@"AutoType"]];
+  //
+  //  DDXMLElement *historyElement = [root elementForName:@"History"];
+  //  if (historyElement != nil) {
+  //    for (DDXMLElement *element in [historyElement elementsForName:@"Entry"]) {
+  //      [entry.history addObject:[self parseEntry:element]];
+  //    }
+  //  }
   
   return entry;
 }
@@ -316,13 +317,13 @@
 }
 
 - (BOOL)_setupRandomStream {
-  switch(_cipherInfo.randomStreamID ) {
+  switch(_headerReader.randomStreamID ) {
     case KPKRandomStreamSalsa20:
-      _randomStream = [[Salsa20RandomStream alloc] init:_cipherInfo.protectedStreamKey];
+      _randomStream = [[Salsa20RandomStream alloc] init:_headerReader.protectedStreamKey];
       return YES;
       
     case KPKRandomStreamArc4:
-      _randomStream = [[Arc4RandomStream alloc] init:_cipherInfo.protectedStreamKey];
+      _randomStream = [[Arc4RandomStream alloc] init:_headerReader.protectedStreamKey];
       return YES;
       
     default:

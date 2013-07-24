@@ -22,7 +22,7 @@
 #import <CommonCrypto/CommonCryptor.h>
 
 @interface KPKXmlTreeCryptor () {
-  KPKXmlHeaderReader *_cipherInfo;
+  KPKXmlHeaderReader *_headerReader;
 }
 
 @end
@@ -39,8 +39,8 @@
 }
 
 - (KPKTree *)decryptTree:(NSError *__autoreleasing *)error {
-  _cipherInfo = [[KPKXmlHeaderReader alloc] initWithData:_data error:error];
-  if(!_cipherInfo) {
+  _headerReader = [[KPKXmlHeaderReader alloc] initWithData:_data error:error];
+  if(!_headerReader) {
     return nil;
   }
   
@@ -49,23 +49,23 @@
    Supply the Data found in the header
    */
   NSData *keyData = [_password finalDataForVersion:KPKVersion2
-                                        masterSeed:_cipherInfo.masterSeed
-                                     transformSeed:_cipherInfo.transformSeed
-                                            rounds:_cipherInfo.rounds];
+                                        masterSeed:_headerReader.masterSeed
+                                     transformSeed:_headerReader.transformSeed
+                                            rounds:_headerReader.rounds];
   
   /*
    The datastream is AES encrypted. Decrypt using the supplied
    */
-  NSData *aesDecrypted = [[_cipherInfo dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
+  NSData *aesDecrypted = [[_headerReader dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
                                                                                      key:keyData
-                                                                    initializationVector:_cipherInfo.encryptionIV
+                                                                    initializationVector:_headerReader.encryptionIV
                                                                                  options:kCCOptionPKCS7Padding
                                                                                    error:NULL];
   /*
    Compare the first Streambytes with the ones stores in the header
    */
   NSData *startBytes = [aesDecrypted subdataWithRange:NSMakeRange(0, 32)];
-  if(![_cipherInfo.streamStartBytes isEqualToData:startBytes]) {
+  if(![_headerReader.streamStartBytes isEqualToData:startBytes]) {
     KPKCreateError(error, KPKErrorIntegrityCheckFaild, @"ERROR_INTEGRITY_CHECK_FAILED", "");
     return nil;
   }
@@ -74,7 +74,7 @@
    If the Stream was Gzipped, uncrompress it.
    */
   NSData *unhashedData = [[aesDecrypted subdataWithRange:NSMakeRange(32, [aesDecrypted length] - 32)] unhashedData];
-  if(_cipherInfo.compressionAlgorithm == KPKCompressionGzip) {
+  if(_headerReader.compressionAlgorithm == KPKCompressionGzip) {
     unhashedData = [unhashedData gzipInflate];
   }
   
@@ -84,7 +84,7 @@
   }
   //  tree.rounds = rounds;
   //  tree.compressionAlgorithm = compressionAlgorithm;
-  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:unhashedData cipherInformation:_cipherInfo];
+  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:unhashedData headerReader:_headerReader];
   return [reader tree:error];
 }
 

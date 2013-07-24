@@ -21,10 +21,11 @@
 //
 
 #import <Foundation/Foundation.h>
-@class KPKTree;
-@class KPKXmlHeaderReader;
+#import "KPKTreeReading.h"
 
-@interface KPKXmlTreeReader : NSObject
+@class KPKTree;
+
+@interface KPKXmlTreeReader : NSObject <KPKTreeReading>
 
 /**
  Inilializes the XML Reader with the raw xml data and the random stream
@@ -32,10 +33,7 @@
  @param data The raw XML data. Make sure to decrypt the data before passing it in
  @param cipherInformation Chipher information to handle the writing
  */
-- (id)initWithData:(NSData *)data cipherInformation:(KPKXmlHeaderReader *)cipher;
-/**
- @returns
- */
-- (KPKTree *)tree:(NSError **)error;
+-(id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
+- (KPKTree *)tree:(NSError *__autoreleasing *)error;
 
 @end

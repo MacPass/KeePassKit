@@ -21,13 +21,13 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "KPKTreeReading.h"
 @class KPKTree;
 @class KPKLegacyHeaderReader;
 
-@interface KPKLegacyTreeReader : NSObject
+@interface KPKLegacyTreeReader : NSObject <KPKTreeReading>
 
-- (id)initWithData:(NSData *)data chipherInformation:(KPKLegacyHeaderReader *)cipherInfo;
-- (KPKTree *)tree;
+- (id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
+- (KPKTree *)tree:(NSError *__autoreleasing *)error;
 
 @end
