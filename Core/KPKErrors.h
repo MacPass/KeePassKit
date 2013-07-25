@@ -48,6 +48,8 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorXMLRootElementMissing, // The root Elemetn is missing;
   KPKErrorXMLKeePassFileElementMissing, // the Keepass root element is missing
   KPKErrorXMLGroupElementMissing, // no Group element found
+  KPKErrorLegacyInvalidFieldType, // Invalid field type in Legacy format
+  KPKErrorLegacyInvalidFieldSize // Invalid field size in Legacy format
 };
 
 #endif

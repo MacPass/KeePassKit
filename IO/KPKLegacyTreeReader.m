@@ -23,11 +23,17 @@
 #import "KPKLegacyTreeReader.h"
 #import "KPKLegacyHeaderReader.h"
 #import "KPKHeaderFields.h"
+#import "KPKDataStreamer.h"
 
 #import "KPKGroup.h"
+#import "KPKTimeInfo.h"
+#import "KPKErrors.h"
+
+#import "NSDate+Packed.h"
 
 @interface KPKLegacyTreeReader () {
   NSData *_data;
+  KPKDataStreamer *_dataStreamer;
   KPKLegacyHeaderReader *_headerReader;
   NSMutableArray *_levels;
   NSMutableArray *_groups;
@@ -44,6 +50,7 @@
   self = [super init];
   if(self) {
     _data = data;
+    _dataStreamer = [[KPKDataStreamer alloc] initWithData:_data];
     _headerReader = (KPKLegacyHeaderReader *)headerReader;
     _levels = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];
     _groups = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];
@@ -75,101 +82,103 @@
 }
 
 - (BOOL)_readGroups:(NSError **)error {
-  
-  return NO;
-  
+    
   uint16_t fieldType;
   uint32_t fieldSize;
   uint8_t dateBuffer[5];
-  BOOL endOfStream;
   
   // Parse the groups
-  for (uint32_t i = 0; i < _headerReader.numberOfGroups; i++) {
+  for (NSUInteger groupIndex = 0; groupIndex < _headerReader.numberOfGroups; groupIndex++) {
     KPKGroup *group = [[KPKGroup alloc] init];
     
     // Parse the fields
-    NSUInteger location = 0;
     while (true) {
-      [_data getBytes:&fieldType range:NSMakeRange(location, 2)];
-      location += 2;
-      [_data getBytes:&fieldSize range:NSMakeRange(location, 4)];
-      location +=4;
+      fieldType = [_dataStreamer read2Bytes];
+      fieldSize = [_dataStreamer read4Bytes];
       
       fieldType = CFSwapInt16LittleToHost(fieldType);
       fieldSize = CFSwapInt32LittleToHost(fieldSize);
-      /*
-       switch (fieldType) {
-       case KPKFieldTypeCommonSize:
-       if (fieldSize > 0) {
-       [self readExtData:inputStream];
-       }
-       break;
-       
-       case KPKFieldTypeGroupId:
-       group.groupId = [inputStream readInt32];
-       group.groupId = CFSwapInt32LittleToHost(group.groupId);
-       break;
-       
-       case KPKFieldTypeGroupName:
-       group.name = [inputStream readCString:fieldSize encoding:NSUTF8StringEncoding];
-       break;
-       
-       case KPKFieldTypeGroupCreationTime:
-       [inputStream read:dateBuffer length:fieldSize];
-       group.creationTime =  [NSDate dateFromPackedBytes:dateBuffer];
-       break;
-       
-       case KPKFieldTypeGroupModificationTime:
-       [inputStream read:dateBuffer length:fieldSize];
-       group.lastModificationTime = [NSDate dateFromPackedBytes:dateBuffer];
-       break;
-       
-       case KPKFieldTypeGroupAccessTime:
-       [inputStream read:dateBuffer length:fieldSize];
-       group.lastAccessTime = [NSDate dateFromPackedBytes:dateBuffer];
-       break;
-       
-       case KPKFieldTypeGroupExpiryDate:
-       [inputStream read:dateBuffer length:fieldSize];
-       group.expiryTime = [NSDate dateFromPackedBytes:dateBuffer];
-       break;
-       
-       case KPKFieldTypeGroupImage:
-       group.image = [inputStream readInt32];
-       group.image = CFSwapInt32LittleToHost(group.image);
-       break;
-       
-       case KPKFieldTypeGroupLevel: {
-       uint16_t level = [inputStream readInt16];
-       level = CFSwapInt16LittleToHost(level);
-       [levels addObject:@(level)];
-       break;
-       }
-       
-       case KPKFieldTypeGroupFlags:
-       group.flags = [inputStream readInt32];
-       group.flags = CFSwapInt32LittleToHost(group.flags);
-       break;
-       
-       case KPKFieldTypeCommonStop:
-       if (fieldSize != 0) {
-       group = nil;
-       @throw [NSException exceptionWithName:@"IOException" reason:@"Invalid field size" userInfo:nil];
-       }
-       
-       [groups addObject:group];
-       
-       endOfStream = YES;
-       break;
-       
-       default:
-       group = nil;
-       @throw [NSException exceptionWithName:@"IOException" reason:@"Invalid field type" userInfo:nil];
-       }
-       */
+      
+      switch (fieldType) {
+        case KPKFieldTypeCommonSize:
+          if (fieldSize > 0) {
+            [self _readExtendedData];
+          }
+          break;
+          
+        case KPKFieldTypeGroupId: {
+          uint32 bytes = [_dataStreamer read4Bytes];
+          //group.groupId = [inputStream readInt32];
+          //group.groupId = CFSwapInt32LittleToHost(group.groupId);
+          break;
+          
+        }
+          
+        case KPKFieldTypeGroupName: {
+          char characters[fieldSize];
+          [_dataStreamer readBytes:characters length:fieldSize];
+          group.name = [NSString stringWithCString:characters encoding:NSUTF8StringEncoding];
+          break;
+        }
+        
+        case KPKFieldTypeGroupCreationTime:
+          [_dataStreamer readBytes:dateBuffer length:fieldSize];
+          group.timeInfo.creationTime = [NSDate dateFromPackedBytes:dateBuffer];
+          break;
+          
+        case KPKFieldTypeGroupModificationTime:
+          [_dataStreamer readBytes:dateBuffer length:fieldSize];
+          group.timeInfo.lastModificationTime = [NSDate dateFromPackedBytes:dateBuffer];
+          break;
+          
+        case KPKFieldTypeGroupAccessTime:
+          [_dataStreamer readBytes:dateBuffer length:fieldSize];
+          group.timeInfo.lastAccessTime = [NSDate dateFromPackedBytes:dateBuffer];
+          break;
+          
+        case KPKFieldTypeGroupExpiryDate:
+          [_dataStreamer readBytes:dateBuffer length:fieldSize];
+          group.timeInfo.expiryTime = [NSDate dateFromPackedBytes:dateBuffer];
+          break;
+        
+        case KPKFieldTypeGroupImage:
+          group.icon = [_dataStreamer read4Bytes];
+          group.icon = CFSwapInt32LittleToHost(group.icon);
+          break;
+          
+        case KPKFieldTypeGroupLevel: {
+          uint16_t level = [_dataStreamer read2Bytes];
+          level = CFSwapInt16LittleToHost(level);
+          [_levels addObject:@(level)];
+          break;
+        }
+          
+        case KPKFieldTypeGroupFlags:
+          [_dataStreamer read4Bytes];
+          /*group.flags = [inputStream readInt32];
+          group.flags = CFSwapInt32LittleToHost(group.flags);*/
+          break;
+          
+        case KPKFieldTypeCommonStop:
+          if (fieldSize != 0) {
+            group = nil;
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+          }
+          [_groups addObject:group];          
+          return YES; // Finished
+          
+        default:
+          group = nil;
+          KPKCreateError(error, KPKErrorLegacyInvalidFieldType, @"ERROR_INVALID_FIELD_TYPE", "");
+          return NO;
+      }
     }
   }
   return YES;
+}
+
+- (void)_readExtendedData {
+
 }
 
 

@@ -13,7 +13,8 @@
 - (id)initWithData:(NSData *)data;
 
 - (NSData *)dataWithRange:(NSRange)range;
-- (NSData *)dataWithLenght:(NSUInteger)lenght;
+- (NSData *)dataWithLength:(NSUInteger)length;
+- (void)readBytes:(void *)buffer length:(NSUInteger)length;
 - (uint8)readByte;
 - (uint16)read2Bytes;
 - (uint32)read4Bytes;

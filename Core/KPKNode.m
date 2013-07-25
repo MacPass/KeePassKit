@@ -23,6 +23,7 @@
 
 #import "KPKNode.h"
 #import "KPKGroup.h"
+#import "KPKTimeInfo.h"
 
 @implementation KPKNode
 
@@ -32,6 +33,7 @@
     _icon = 0;
     _uuid = [NSUUID UUID];
     _minimumVersion = KPKVersion1;
+    _timeInfo = [[KPKTimeInfo alloc] init];
   }
   return self;
 }

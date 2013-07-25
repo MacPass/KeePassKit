@@ -30,35 +30,42 @@
   return [_data subdataWithRange:range];
 }
 
-- (NSData *)dataWithLenght:(NSUInteger)lenght {
-  return [_data subdataWithRange:NSMakeRange(_location, lenght)];
-  _location += lenght;
+- (NSData *)dataWithLength:(NSUInteger)length {
+  return [_data subdataWithRange:NSMakeRange(_location, length)];
+  _location += length;
 }
 
+- (void)readBytes:(void *)buffer length:(NSUInteger)length {
+  [self _getBytes:buffer length:length];
+}
 
 - (uint8)readByte {
   uint8 buffer;
-  [_data getBytes:&buffer range:NSMakeRange(_location, 1)];
-  _location++;
+  [self _getBytes:&buffer length:1];
   return buffer;
 }
 
 - (uint16)read2Bytes {
   uint16 buffer;
-  [_data getBytes:&buffer range:NSMakeRange(_location, 2)];
-  _location++;
+  [self _getBytes:&buffer length:2];
   return buffer;
 }
 
 - (uint32)read4Bytes {
   uint32 buffer;
-  [_data getBytes:&buffer range:NSMakeRange(_location, 4)];
-  _location++;
+  [self _getBytes:&buffer length:4];
   return buffer;
+}
+
+- (NSUInteger)integer {
+  NSUInteger integer = 0;
+  [self _getBytes:&integer length:sizeof(NSUInteger)];
+  return integer;
 }
 
 - (void)skipBytes:(NSUInteger)numberOfBytes {
   _location += numberOfBytes;
+  _location = MIN([_data length] - 1, _location);
 }
 
 - (BOOL)endOfData {
@@ -69,12 +76,12 @@
   _location = 0;
 }
 
-- (NSUInteger)_getbytes:(void *)buffer lenght:(NSUInteger)lenght {
-  if([_data length] < _location + lenght) {
-    return 0;
-  }
-  [_data getBytes:buffer range:NSMakeRange(_location, lenght)];
-  return lenght;
+- (NSUInteger)_getBytes:(void *)buffer length:(NSUInteger)length {
+  NSUInteger maxLength = [_data length] - _location;
+  length = MIN(maxLength, length);
+  [_data getBytes:buffer range:NSMakeRange(_location, length)];
+  _location += length;
+  return length;
 }
 
 
