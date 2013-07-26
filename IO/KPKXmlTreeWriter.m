@@ -33,7 +33,7 @@
 #import "KPKMetaData.h"
 #import "KPKTimeInfo.h"
 #import "KPKDeletedNode.h"
-#import "KPKAttachment.h"
+#import "KPKBinary.h"
 #import "KPKIcon.h"
 
 #define KPKAddElement(element, name, value) [element addChild:[DDXMLNode elementWithName:name stringValue:value]]
@@ -173,7 +173,7 @@
   DDXMLElement *binaryElements = [DDXMLElement elementWithName:@"Binaries"];
   
   BOOL compress = (self.tree.metadata.compressionAlgorithm == KPKCompressionGzip);
-  for(KPKAttachment *attachment in _binaries) {
+  for(KPKBinary *attachment in _binaries) {
     DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
     KPKAddAttribute(binaryElement, @"ID", KPKStringFromLong([_binaries indexOfObject:attachment]));
     KPKAddAttribute(binaryElement, @"Compressed", KPKStringFromBool(compress));
@@ -222,8 +222,8 @@
   _entryToBinaryMap = [[NSMutableDictionary alloc] initWithCapacity:[entries count] / 4];
   _binaries = [[NSMutableArray alloc] initWithCapacity:[_entryToBinaryMap count]];
   for(KPKEntry *entry in entries) {
-    [_binaries addObjectsFromArray:entry.attachmets];
-    _entryToBinaryMap[ entry.uuid ] = entry.attachmets;
+    [_binaries addObjectsFromArray:entry.binaries];
+    _entryToBinaryMap[ entry.uuid ] = entry.binaries;
   }
 }
 

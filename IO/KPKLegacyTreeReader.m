@@ -26,6 +26,8 @@
 #import "KPKDataStreamer.h"
 
 #import "KPKGroup.h"
+#import "KPKEntry.h"
+#import "KPKBinary.h"
 #import "KPKTimeInfo.h"
 #import "KPKErrors.h"
 
@@ -65,11 +67,11 @@
     return nil;
   }
   
+  if(![self _readEntries:error]) {
+    return nil;
+  }
+  
   /*
-   @try {
-   // Parse groups
-   [self readGroups:aesInputStream];
-   
    // Parse entries
    [self readEntries:aesInputStream];
    
@@ -82,17 +84,18 @@
 }
 
 - (BOOL)_readGroups:(NSError **)error {
-    
-  uint16_t fieldType;
-  uint32_t fieldSize;
-  uint8_t dateBuffer[5];
+  
+  uint16 fieldType;
+  uint32 fieldSize;
+  uint8 dateBuffer[5];
   
   // Parse the groups
   for (NSUInteger groupIndex = 0; groupIndex < _headerReader.numberOfGroups; groupIndex++) {
     KPKGroup *group = [[KPKGroup alloc] init];
     
     // Parse the fields
-    while (true) {
+    BOOL done = NO;
+    while (!done) {
       fieldType = [_dataStreamer read2Bytes];
       fieldSize = [_dataStreamer read4Bytes];
       
@@ -102,25 +105,26 @@
       switch (fieldType) {
         case KPKFieldTypeCommonSize:
           if (fieldSize > 0) {
-            [self _readExtendedData];
+            if(![self _readExtendedData:error]) {
+              return NO;
+            }
           }
           break;
           
         case KPKFieldTypeGroupId: {
-          uint32 bytes = [_dataStreamer read4Bytes];
+          /* Read the 4 bytes and fill the rest with zeros */
+          uint8 bytes[16] = { 0 };
+          [_dataStreamer readBytes:&bytes length:4];
+          group.uuid = [[NSUUID alloc] initWithUUIDBytes:bytes];
           //group.groupId = [inputStream readInt32];
           //group.groupId = CFSwapInt32LittleToHost(group.groupId);
           break;
-          
         }
           
-        case KPKFieldTypeGroupName: {
-          char characters[fieldSize];
-          [_dataStreamer readBytes:characters length:fieldSize];
-          group.name = [NSString stringWithCString:characters encoding:NSUTF8StringEncoding];
+        case KPKFieldTypeGroupName:
+          group.name = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
           break;
-        }
-        
+          
         case KPKFieldTypeGroupCreationTime:
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
           group.timeInfo.creationTime = [NSDate dateFromPackedBytes:dateBuffer];
@@ -140,23 +144,27 @@
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
           group.timeInfo.expiryTime = [NSDate dateFromPackedBytes:dateBuffer];
           break;
-        
+          
         case KPKFieldTypeGroupImage:
           group.icon = [_dataStreamer read4Bytes];
           group.icon = CFSwapInt32LittleToHost(group.icon);
           break;
           
         case KPKFieldTypeGroupLevel: {
-          uint16_t level = [_dataStreamer read2Bytes];
+          uint16 level = [_dataStreamer read2Bytes];
           level = CFSwapInt16LittleToHost(level);
           [_levels addObject:@(level)];
           break;
         }
           
         case KPKFieldTypeGroupFlags:
+          /*
+           Flags contain information about the tree state
+           isExpanded
+           */
           [_dataStreamer read4Bytes];
           /*group.flags = [inputStream readInt32];
-          group.flags = CFSwapInt32LittleToHost(group.flags);*/
+           group.flags = CFSwapInt32LittleToHost(group.flags);*/
           break;
           
         case KPKFieldTypeCommonStop:
@@ -164,8 +172,9 @@
             group = nil;
             KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
           }
-          [_groups addObject:group];          
-          return YES; // Finished
+          [_groups addObject:group];
+          done = YES;
+          break;
           
         default:
           group = nil;
@@ -177,9 +186,202 @@
   return YES;
 }
 
-- (void)_readExtendedData {
-
+- (BOOL)_readEntries:(NSError **)error {
+  
+  uint16 fieldType;
+  uint32 fieldSize;
+  uint8 buffer[16];
+  NSUUID *groupUUID;
+  BOOL endOfStream;
+  
+  
+  // Parse the entries
+  for (NSUInteger iEntryIndex = 0; iEntryIndex < _headerReader.numberOfEntries; iEntryIndex++) {
+    KPKEntry *entry = [[KPKEntry alloc] init];
+    
+    // Parse the entry
+    endOfStream = NO;
+    while (!endOfStream) {
+      fieldType = [_dataStreamer read2Bytes];
+      fieldSize = [_dataStreamer read4Bytes];
+      
+      fieldType = CFSwapInt16LittleToHost(fieldType);
+      fieldSize = CFSwapInt32LittleToHost(fieldSize);
+      
+      switch (fieldType) {
+        case KPKFieldTypeCommonSize:
+          if (fieldSize > 0) {
+            if(![self _readExtendedData:error]){
+              return NO;
+            }
+          }
+          break;
+          
+        case KPKFieldTypeEntryUUID:
+          if (fieldSize != 16) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
+          //          if ([inputStream read:buffer length:fieldSize] != fieldSize) {
+          //
+          //            @throw [NSException exceptionWithName:@"IOException" reason:@"Failed to read UUID" userInfo:nil];
+          //          }
+          [_dataStreamer readBytes:buffer length:fieldSize];
+          entry.uuid = [[NSUUID alloc] initWithUUIDBytes:buffer];
+          break;
+          
+        case KPKFieldTypeEntryGroupId: {
+          uint8 bytes[16] = { 0 };
+          [_dataStreamer readBytes:&bytes length:4];
+          groupUUID = [[NSUUID alloc] initWithUUIDBytes:bytes];
+          break;
+        }
+          
+        case KPKFieldTypeEntryImage:
+          entry.icon = CFSwapInt32LittleToHost([_dataStreamer read4Bytes]);
+          break;
+          
+        case KPKFieldTypeEntryTitle:
+          entry.title = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          break;
+          
+        case KPKFieldTypeEntryURL:
+          entry.url = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          break;
+          
+        case KPKFieldTypeEntryUsername:
+          entry.username = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          break;
+          
+        case KPKFieldTypeEntryPassword:
+          entry.password = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          break;
+          
+        case KPKFieldTypeEntryNotes:
+          entry.notes = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          break;
+          
+        case KPKFieldTypeEntryCreationTime:
+          if (fieldSize != 5) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
+          [_dataStreamer readBytes:buffer length:fieldSize];
+          entry.timeInfo.creationTime = [NSDate dateFromPackedBytes:buffer];
+          break;
+          
+        case KPKFieldTypeEntryModificationTime:
+          if (fieldSize != 5) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
+          [_dataStreamer readBytes:buffer length:fieldSize];
+          entry.timeInfo.lastModificationTime = [NSDate dateFromPackedBytes:buffer];
+          break;
+          
+        case KPKFieldTypeEntryAccessTime:
+          if (fieldSize != 5) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
+          [_dataStreamer readBytes:buffer length:fieldSize];
+          entry.timeInfo.lastAccessTime = [NSDate dateFromPackedBytes:buffer];
+          break;
+          
+        case KPKFieldTypeEntryExpiryDate:
+          if (fieldSize != 5) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
+          [_dataStreamer readBytes:buffer length:fieldSize];
+          entry.timeInfo.expiryTime = [NSDate dateFromPackedBytes:buffer];
+          break;
+          
+        case KPKFieldTypeEntryBinaryDescription: {
+          KPKBinary *binary = [[KPKBinary alloc] init];
+          
+          binary.name = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          [entry addBinary:binary];
+          break;
+        }
+        case KPKFieldTypeEntryBinaryData:
+          if (fieldSize > 0) {
+            KPKBinary *binary = [entry.binaries lastObject];
+            binary.data = [_dataStreamer dataWithLength:fieldSize];;
+          }
+          break;
+          
+        case KPKFieldTypeCommonStop:
+          if (fieldSize != 0) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
+          
+          for(KPKGroup *group in _groups) {
+            if([group.uuid isEqual:groupUUID]) {
+              [group addEntry:entry];
+            }
+          }
+          [_entries addObject:entry];
+          
+          endOfStream = YES;
+          break;
+          
+        default:
+          KPKCreateError(error, KPKErrorLegacyInvalidFieldType, @"ERROR_INVALID_FIELD_TYPE", "");
+          return NO;
+      }
+    }
+  }
+  
 }
+
+- (BOOL)_readExtendedData:(NSError **)error {
+  uint16 fieldType;
+  uint32 fieldSize;
+  uint8 buffer[32];
+	
+  
+	while (YES) {
+    fieldType = [_dataStreamer read2Bytes];
+    fieldSize = [_dataStreamer read4Bytes];
+    
+    fieldSize = CFSwapInt32LittleToHost(fieldSize);
+    fieldType = CFSwapInt16LittleToHost(fieldType);
+		switch (fieldType) {
+      case 0x0000:
+        // Ignore field
+        [_dataStreamer skipBytes:fieldSize];
+        break;
+        
+      case 0x0001:
+        if (fieldSize != 32) {
+          KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+          return NO;
+        }
+        [_dataStreamer readBytes:buffer length:fieldSize];
+        // Compare the header hash
+        if (memcmp(_headerReader.headerHash.bytes, buffer, fieldSize) != 0) {
+          KPKCreateError(error, KPKErrorLegacyHeaderHashMissmatch, @"ERROR_HEADER_HASH_MISSMATCH", "");
+          return NO;
+        }
+        break;
+        
+      case 0x0002:
+        // Ignore random data
+        [_dataStreamer skipBytes:fieldSize];
+        break;
+        
+      case 0xFFFF:
+        return YES;
+        
+      default:
+        KPKCreateError(error, KPKErrorLegacyInvalidFieldType, @"ERROR_INVALID_FIELD_TYPE", "");
+        return NO;
+		}
+	}
+}
+
 
 
 @end

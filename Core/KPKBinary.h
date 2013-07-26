@@ -23,7 +23,7 @@
 #import <Foundation/Foundation.h>
 
 /* Binary */
-@interface KPKAttachment : NSObject <NSCopying>
+@interface KPKBinary : NSObject <NSCopying>
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSData *data;

@@ -59,6 +59,7 @@
 - (void)removeGroup:(KPKGroup *)group;
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 
+- (void)addEntry:(KPKEntry *)entry;
 - (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index;
 - (void)removeEntry:(KPKEntry *)entry;
 - (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup atIndex:(NSUInteger)index;

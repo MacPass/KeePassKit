@@ -14,11 +14,13 @@
 
 - (NSData *)dataWithRange:(NSRange)range;
 - (NSData *)dataWithLength:(NSUInteger)length;
+- (NSString *)stringWithLenght:(NSUInteger)length encoding:(NSStringEncoding)encoding;
 - (void)readBytes:(void *)buffer length:(NSUInteger)length;
 - (uint8)readByte;
 - (uint16)read2Bytes;
 - (uint32)read4Bytes;
 - (NSUInteger)integer;
+
 
 - (void)skipBytes:(NSUInteger)numberOfBytes;
 - (BOOL)endOfData;

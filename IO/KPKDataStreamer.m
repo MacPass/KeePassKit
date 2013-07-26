@@ -27,12 +27,20 @@
 }
 
 - (NSData *)dataWithRange:(NSRange)range {
+  // FIXME: Test for maxsize
   return [_data subdataWithRange:range];
 }
 
 - (NSData *)dataWithLength:(NSUInteger)length {
+  // FIXME: test for maxsize
   return [_data subdataWithRange:NSMakeRange(_location, length)];
   _location += length;
+}
+
+- (NSString *)stringWithLenght:(NSUInteger)length encoding:(NSStringEncoding)encoding {
+  char characters[length];
+  [self _getBytes:characters length:length];
+  return [NSString stringWithCString:characters encoding:encoding];
 }
 
 - (void)readBytes:(void *)buffer length:(NSUInteger)length {

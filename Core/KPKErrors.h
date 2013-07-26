@@ -49,7 +49,8 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorXMLKeePassFileElementMissing, // the Keepass root element is missing
   KPKErrorXMLGroupElementMissing, // no Group element found
   KPKErrorLegacyInvalidFieldType, // Invalid field type in Legacy format
-  KPKErrorLegacyInvalidFieldSize // Invalid field size in Legacy format
+  KPKErrorLegacyInvalidFieldSize, // Invalid field size in Legacy format
+  KPKErrorLegacyHeaderHashMissmatch // Header missmatch
 };
 
 #endif

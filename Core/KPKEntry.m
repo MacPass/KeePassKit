@@ -22,13 +22,13 @@
 
 #import "KPKEntry.h"
 #import "KPKGroup.h"
-#import "KPKAttachment.h"
+#import "KPKBinary.h"
 #import "KPKAttribute.h"
 #import "KPKFormat.h"
 
 @interface KPKEntry () {
 @private
-  NSMutableArray *_attachments;
+  NSMutableArray *_binaries;
   NSMutableArray *_customAttributes;
   NSMutableArray *_tags;
 }
@@ -53,7 +53,7 @@
     _notesAttribute = [[KPKAttribute alloc] initWithKey:KPKNotesKey value:@""];
     _customAttributes = [[NSMutableArray alloc] initWithCapacity:2];
     _tags = [[NSMutableArray alloc] initWithCapacity:5];
-    _attachments = [[NSMutableArray alloc] initWithCapacity:2];
+    _binaries = [[NSMutableArray alloc] initWithCapacity:2];
   }
   return self;
 }
@@ -64,7 +64,7 @@
   entry.username = self.username;
   entry.url = self.url;
   entry.notes = self.notes;
-  entry->_attachments = [self.attachmets copyWithZone:zone];
+  entry->_binaries = [self.binaries copyWithZone:zone];
   entry->_customAttributes = [self.customAttributes copyWithZone:zone];
   entry->_tags = [self.tags copyWithZone:zone];
   
@@ -204,28 +204,28 @@
 
 #pragma mark Attachments
 
-- (void)addAttachment:(KPKAttachment *)attachment {
-  [self addAttachment:attachment atIndex:[_attachments count]];
+- (void)addBinary:(KPKBinary *)binary {
+  [self addBinary:binary atIndex:[_binaries count]];
 }
 
-- (void)addAttachment:(KPKAttachment *)attachment atIndex:(NSUInteger)index {
-  index = MIN([_attachments count], index);
-  [self.undoManager registerUndoWithTarget:self selector:@selector(removeAttachment:) object:attachment];
-  [self insertObject:attachment inAttachmetsAtIndex:index];
+- (void)addBinary:(KPKBinary *)binary atIndex:(NSUInteger)index {
+  index = MIN([_binaries count], index);
+  [self.undoManager registerUndoWithTarget:self selector:@selector(removeAttachment:) object:binary];
+  [self insertObject:binary inBinariesAtIndex:index];
   self.minimumVersion = [self _minimumVersionForCurrentAttachments];
 }
 
-- (void)removeAttachment:(KPKAttachment *)attachment {
+- (void)removeBinary:(KPKBinary *)attachment {
   /*
    Attachments are stored on entries.
    Only on load the binaries are stored ad meta entries to the tree
    So we do not need to take care of cleanup after we did
    delete an attachment
    */
-  NSUInteger index = [_attachments indexOfObject:attachment];
+  NSUInteger index = [_binaries indexOfObject:attachment];
   if(index != NSNotFound) {
-    [[self.undoManager prepareWithInvocationTarget:self] addAttachment:attachment atIndex:index];
-    [self removeObjectFromAttachmetsAtIndex:index];
+    [[self.undoManager prepareWithInvocationTarget:self] addBinary:attachment atIndex:index];
+    [self removeObjectFromBinariesAtIndex:index];
     self.minimumVersion = [self _minimumVersionForCurrentAttachments];
   }
 }
@@ -248,19 +248,19 @@
   }
 }
 
-- (NSUInteger)countOfAttachmets {
-  return [_attachments count];
+- (NSUInteger)countOfBinaries {
+  return [_binaries count];
 }
 
-- (void)insertObject:(KPKAttachment *)attachment inAttachmetsAtIndex:(NSUInteger)index {
+- (void)insertObject:(KPKBinary *)binary inBinariesAtIndex:(NSUInteger)index {
   /* Clamp the index to make sure we do not add at wrong places */
-  index = MIN([_attachments count], index);
-  [_attachments insertObject:attachment atIndex:index];
+  index = MIN([_binaries count], index);
+  [_binaries insertObject:binary atIndex:index];
 }
 
-- (void)removeObjectFromAttachmetsAtIndex:(NSUInteger)index {
-  index = MIN([_attachments count], index);
-  [_attachments removeObjectAtIndex:index];
+- (void)removeObjectFromBinariesAtIndex:(NSUInteger)index {
+  index = MIN([_binaries count], index);
+  [_binaries removeObjectAtIndex:index];
 }
 
 - (NSUInteger)countOfTags {
@@ -279,7 +279,7 @@
 #pragma mark Private Helper
 
 - (KPKVersion)_minimumVersionForCurrentAttachments {
-  return ([_attachments count] > 1 ? KPKVersion2 : KPKVersion1);
+  return ([_binaries count] > 1 ? KPKVersion2 : KPKVersion1);
 }
 
 - (KPKVersion)_minimumVersionForCurrentAttributes {

@@ -21,11 +21,11 @@
 //
 
 
-#import "KPKAttachment.h"
+#import "KPKBinary.h"
 #import "NSData+Gzip.h"
 #import "NSMutableData+Base64.h"
 
-@implementation KPKAttachment
+@implementation KPKBinary
 
 - (id)initWithName:(NSString *)name value:(NSString *)value compressed:(BOOL)compressed {
   self = [super init];
@@ -53,7 +53,7 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-  KPKAttachment *copy = [[KPKAttachment allocWithZone:zone] init];
+  KPKBinary *copy = [[KPKBinary allocWithZone:zone] init];
   if(copy) {
     copy.name = _name;
     copy.data = _data;

@@ -25,7 +25,7 @@
 #import "KPKTimerecording.h"
 
 @class KPKGroup;
-@class KPKAttachment;
+@class KPKBinary;
 @class KPKAttribute;
 
 @interface KPKEntry : KPKNode <NSCopying>
@@ -36,7 +36,7 @@
 @property (nonatomic, assign) NSString *url;
 @property (nonatomic, assign) NSString *notes;
 
-@property (nonatomic, strong) NSArray *attachmets;
+@property (nonatomic, strong) NSArray *binaries;
 @property (nonatomic, strong) NSArray *tags;
 @property (nonatomic, strong) NSMutableArray *customAttributes;
 
@@ -72,13 +72,13 @@
  @param attachment Attachment to add to the entry
  @param index The position at whicht to att the attachment
  */
-- (void)addAttachment:(KPKAttachment *)attachment atIndex:(NSUInteger)index;
-- (void)addAttachment:(KPKAttachment *)attachment;
+- (void)addBinary:(KPKBinary *)binary atIndex:(NSUInteger)index;
+- (void)addBinary:(KPKBinary *)binary;
 /**
  Removes the given attachment
  @param attachment The attachment to be removed
  */
-- (void)removeAttachment:(KPKAttachment *)attachment;
+- (void)removeBinary:(KPKBinary *)binary;
 /**
  Adds the tag to the entry
  @param tag The tag to be added

@@ -106,6 +106,10 @@
   }
 }
 
+- (void)addEntry:(KPKEntry *)entry {
+  [self addEntry:entry atIndex:[self.entries count]];
+}
+
 - (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
   entry.parent = self;
   index = MIN([_entries count], index);
@@ -149,7 +153,8 @@
 }
 
 - (NSString*)description {
-  return [NSString stringWithFormat:@"KdbGroup [image=%ld, name=%@, %@]",
+  return [NSString stringWithFormat:@"%@ [image=%ld, name=%@, %@]",
+          [self class],
           self.icon,
           self.name,
           self.timeInfo];
