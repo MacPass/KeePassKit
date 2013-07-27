@@ -17,4 +17,18 @@
  */
 @property (nonatomic, assign) BOOL updateTiming;
 
+@optional
+/**
+ Can be called to update access times
+ */
+- (void)wasModified;
+/**
+ called to signal a usage
+ */
+- (void)wasAccessed;
+/**
+ called to signal a move
+ */
+- (void)wasMoved;
+
 @end

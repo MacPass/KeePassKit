@@ -28,7 +28,7 @@
 @class KPKBinary;
 @class KPKAttribute;
 
-@interface KPKEntry : KPKNode <NSCopying>
+@interface KPKEntry : KPKNode <NSCopying, NSCoding>
 
 @property (nonatomic, assign) NSString *title;
 @property (nonatomic, assign) NSString *password;

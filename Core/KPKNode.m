@@ -38,12 +38,55 @@
   return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+  self = [self init];
+  if(self) {
+    _timeInfo = [aDecoder decodeObjectForKey:@"timeInfo"];
+    _uuid = [aDecoder decodeObjectForKey:@"uuid"];
+    _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:@"minimumVersion"];
+    _icon = [aDecoder decodeIntegerForKey:@"icon"];
+  }
+  return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+  [aCoder encodeObject:self.timeInfo forKey:@"timeInfo"];
+  [aCoder encodeObject:self.uuid forKey:@"uuid"];
+  [aCoder encodeInteger:self.minimumVersion forKey:@"minimumVersion"];
+  [aCoder encodeInteger:self.icon forKey:@"icon"];
+  
+  return;
+}
+
 - (KPKGroup *)rootGroup {
   KPKGroup *rootGroup = self.parent;
   while(rootGroup) {
     rootGroup = rootGroup.parent;
   }
   return rootGroup;
+}
+
+- (void)wasModified {
+  self.timeInfo.lastModificationTime = [NSDate date];
+}
+
+- (void)wasAccessed {
+  self.timeInfo.lastAccessTime = [NSDate date];
+}
+
+- (void)wasMoved {
+  self.timeInfo.locationChanged = [NSDate date];
+}
+
+#pragma mark -
+#pragma mark Pastboard support
+
+- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
+  return @[];
+}
+
+- (id)pasteboardPropertyListForType:(NSString *)type {
+  return nil;
 }
 
 @end

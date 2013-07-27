@@ -22,7 +22,6 @@
 
 #import "NSUUID+KeePassKit.h"
 #import "NSMutableData+Base64.h"
-#import "NSString+Base64.h"
 
 static NSUUID *aesUUID = nil;
 
@@ -45,8 +44,9 @@ static NSUUID *aesUUID = nil;
 }
 
 - (id)initWithEncodedUUIDString:(NSString *)string {
-  NSString *uuidString = [string base64DecodedString];
-  self = [self initWithUUIDString:uuidString];
+  NSMutableData *data = [[string dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
+  [data decodeBase64];
+  self = [self initWithData:data];
   return self;
 }
 

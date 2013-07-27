@@ -32,7 +32,7 @@
 @class KPKTimeInfo;
 
 /* Basic Node in the Tree */
-@interface KPKNode : NSObject <KPKTimerecording, KPKUndoing>
+@interface KPKNode : NSObject <KPKTimerecording, NSCoding, KPKUndoing, NSPasteboardWriting>
 
 @property(nonatomic, weak) KPKTree *tree;
 @property(nonatomic, assign) NSInteger icon;
@@ -45,6 +45,10 @@
 @property (nonatomic, assign) BOOL updateTiming;
 
 - (KPKGroup *)rootGroup;
+
+- (void)wasModified;
+- (void)wasAccessed;
+- (void)wasMoved;
 
 #pragma mark KPKUndoing
 @property(nonatomic, weak) NSUndoManager *undoManager;

@@ -52,6 +52,21 @@
   return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+  self = [self init];
+  if(self) {
+    _name = [aDecoder decodeObjectForKey:@"name"];
+    _data = [aDecoder decodeObjectForKey:@"data"];
+  }
+  return self;
+
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+  [aCoder encodeObject:self.name forKey:@"name"];
+  [aCoder encodeObject:self.data forKey:@"data"];
+}
+
 - (id)copyWithZone:(NSZone *)zone {
   KPKBinary *copy = [[KPKBinary allocWithZone:zone] init];
   if(copy) {

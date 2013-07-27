@@ -36,7 +36,7 @@
 @property (nonatomic, copy) KPKAttribute *titleAttribute;
 @property (nonatomic, copy) KPKAttribute *passwordAttribute;
 @property (nonatomic, copy) KPKAttribute *usernameAttribute;
-@property (nonatomic, strong) KPKAttribute *urlAttribute;
+@property (nonatomic, copy) KPKAttribute *urlAttribute;
 @property (nonatomic, copy) KPKAttribute *notesAttribute;
 
 @end
@@ -70,6 +70,45 @@
   
   return entry;
 }
+
+#pragma mark NSCoding
+- (id)initWithCoder:(NSCoder *)aDecoder {
+  self = [super initWithCoder:aDecoder];
+  if(self) {
+    _titleAttribute= [aDecoder decodeObjectForKey:@"titleAttribute"];
+    _usernameAttribute = [aDecoder decodeObjectForKey:@"usernameAttribute"];
+    _urlAttribute = [aDecoder decodeObjectForKey:@"urlAttribute"];
+    _notesAttribute = [aDecoder decodeObjectForKey:@"notesAttribute"];
+    _binaries = [aDecoder decodeObjectForKey:@"binaries"];
+    _customAttributes = [aDecoder decodeObjectForKey:@"customAttributes"];
+    _tags = [aDecoder decodeObjectForKey:@"tags"];
+    
+    
+
+    _titleAttribute.entry = self;
+    _usernameAttribute.entry = self;
+    _urlAttribute.entry = self;
+    _notesAttribute.entry = self;
+
+    for(KPKAttribute *attribute in _customAttributes) {
+      attribute.entry = self;
+    }
+  }
+  return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+  [super encodeWithCoder:aCoder];
+  [aCoder encodeObject:self.titleAttribute forKey:@"titleAttribute"];
+  [aCoder encodeObject:self.usernameAttribute forKey:@"usernameAttribute"];
+  [aCoder encodeObject:self.urlAttribute forKey:@"urlAttribute"];
+  [aCoder encodeObject:self.notesAttribute forKey:@"notesAttribute"];
+  [aCoder encodeObject:self.binaries forKey:@"binaries"];
+  [aCoder encodeObject:self.customAttributes forKey:@"customAttributes"];
+  [aCoder encodeObject:self.tags forKey:@"tags"];
+  return;
+}
+
 
 #pragma mark Default Attributes
 - (NSString *)title {

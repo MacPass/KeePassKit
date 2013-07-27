@@ -24,9 +24,9 @@
 
 NSString *const KPKTitleKey     = @"Title";
 NSString *const KPKNameKey      = @"Name";
-NSString *const KPKUsernameKey  = @"Username";
+NSString *const KPKUsernameKey  = @"UserName";
 NSString *const KPKPasswordKey  = @"Password";
-NSString *const KPKURLKey       = @"Url";
+NSString *const KPKURLKey       = @"URL";
 NSString *const KPKNotesKey     = @"Notes";
 NSString *const KPKBinaryKey    = @"Binary";
 NSString *const KPKBinaryRefKey = @"BinaryRef";

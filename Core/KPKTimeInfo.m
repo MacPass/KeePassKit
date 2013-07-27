@@ -18,8 +18,35 @@
     _lastModificationTime = now;
     _lastAccessTime = now;
     _expiryTime = [NSDate distantFuture];
+    _expires = NO;
+    _usageCount = 0;
   }
   return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+  self = [self init];
+  if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
+    _creationTime = [aDecoder decodeObjectForKey:@"creationTime"];
+    _lastModificationTime = [aDecoder decodeObjectForKey:@"lastModificationTime"];
+    _lastAccessTime = [aDecoder decodeObjectForKey:@"lastAccessTime"];
+    _expiryTime = [aDecoder decodeObjectForKey:@"expiryTime"];
+    _expires = [aDecoder decodeBoolForKey:@"expires"];
+    _locationChanged = [aDecoder decodeObjectForKey:@"locationChanged"];
+    _usageCount = [aDecoder decodeIntegerForKey:@"usageCount"];
+  }
+  return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+  if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
+    [aCoder encodeObject:self.creationTime forKey:@"creationTime"];
+    [aCoder encodeObject:self.lastAccessTime forKey:@"lastAccessTime"];
+    [aCoder encodeObject:self.expiryTime forKey:@"expiryTime"];
+    [aCoder encodeBool:self.expires forKey:@"expires"];
+    [aCoder encodeObject:self.locationChanged forKey:@"locationChanged"];
+    [aCoder encodeInteger:self.usageCount forKey:@"usageCount"];
+  }
 }
 
 - (NSString *)description {

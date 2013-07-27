@@ -80,6 +80,22 @@
   return  [self initWithKey:nil value:nil isProtected:NO];
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+  self = [self init];
+  if(self) {
+    _key = [aDecoder decodeObjectForKey:@"key"];
+    _value = [aDecoder decodeObjectForKey:@"value"];
+    _isProtected = [aDecoder decodeBoolForKey:@"isProtected"];
+  }
+  return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+  [aCoder encodeBool:self.isProtected forKey:@"isProtected"];
+  [aCoder encodeObject:self.key forKey:@"key"];
+  [aCoder encodeObject:self.value forKey:@"value"];
+}
+
 - (id)copyWithZone:(NSZone *)zone {
   return [[KPKAttribute allocWithZone:zone] initWithKey:self.key value:self.value isProtected:self.isProtected];
 }
