@@ -31,11 +31,14 @@
 @class KPKIcon;
 @class KPKTimeInfo;
 
-/* Basic Node in the Tree */
-@interface KPKNode : NSObject <KPKTimerecording, NSCoding, KPKUndoing, NSPasteboardWriting>
+/**
+ *	Baseclass for all Nodes in a Tree.
+ */
+@interface KPKNode : NSObject <NSCoding, KPKTimerecording, KPKUndoing, NSPasteboardWriting>
 
 @property(nonatomic, weak) KPKTree *tree;
 @property(nonatomic, assign) NSInteger icon;
+@property(nonatomic, strong) NSUUID *iconUUID;
 @property(nonatomic, weak) KPKIcon *customIcon; // Refernce to the Tree Icons
 @property(nonatomic, weak) KPKGroup *parent;
 @property(nonatomic, strong) NSUUID *uuid;
@@ -44,6 +47,10 @@
 
 @property (nonatomic, assign) BOOL updateTiming;
 
+/**
+ *	Returns the root group of the node by walking up the tree
+ *	@return	root group of the node
+ */
 - (KPKGroup *)rootGroup;
 
 - (void)wasModified;

@@ -25,6 +25,8 @@
 #import "KPKGroup.h"
 #import "KPKTimeInfo.h"
 
+#import "NSUUID+KeePassKit.h"
+
 @implementation KPKNode
 
 - (id)init {
@@ -34,6 +36,9 @@
     _uuid = [NSUUID UUID];
     _minimumVersion = KPKVersion1;
     _timeInfo = [[KPKTimeInfo alloc] init];
+    /*
+     Let the iconUUID be nil
+     */
   }
   return self;
 }

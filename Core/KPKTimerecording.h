@@ -8,26 +8,35 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ *	Items implementing this protocoll are trackabale in changes,
+ *  Access and move.
+ */
 @protocol KPKTimerecording <NSObject>
 
 @required
+
 /**
- If property is set to NO, changes will not affect times
- If YES, changes will result in updated times
+ *	Tells the object to update it's timing information on mdofications
+ *  Set to YES, all actions result in modifed times, NO modifes withou
+ *  updating the dates.
  */
 @property (nonatomic, assign) BOOL updateTiming;
 
 @optional
+
 /**
- Can be called to update access times
+ *	Called to signal a modification
  */
 - (void)wasModified;
+
 /**
- called to signal a usage
+ *	Called to signal an access
  */
 - (void)wasAccessed;
+
 /**
- called to signal a move
+ *	Called to signal a move
  */
 - (void)wasMoved;
 

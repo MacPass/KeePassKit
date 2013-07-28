@@ -238,6 +238,10 @@
   group.notes = KPKString(groupNode, @"Notes");
   group.icon = KPKInteger(groupNode, @"IconID");
   
+  DDXMLElement *customIconUuidElement = [groupNode elementForName:@"CustomIconUUID"];
+  if (customIconUuidElement != nil) {
+    group.iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
+  } 
   
   DDXMLElement *timesElement = [groupNode elementForName:@"Times"];
   [self _parseTimes:group.timeInfo element:timesElement];
@@ -273,10 +277,10 @@
   
   entry.icon = KPKInteger(entryElement, @"IconID");
   
-  //  DDXMLElement *customIconUuidElement = [root elementForName:@"CustomIconUUID"];
-  //  if (customIconUuidElement != nil) {
-  //    entry.customIconUuid = [self parseUuidString:[customIconUuidElement stringValue]];
-  //  }
+  DDXMLElement *customIconUuidElement = [entryElement elementForName:@"CustomIconUUID"];
+  if (customIconUuidElement != nil) {
+    entry.iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
+  }
   
   //  entry.foregroundColor = [[root elementForName:@"ForegroundColor"] stringValue];
   //  entry.backgroundColor = [[root elementForName:@"BackgroundColor"] stringValue];
