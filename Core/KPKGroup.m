@@ -45,8 +45,8 @@
   return self;
 }
 
+#pragma mark -
 #pragma mark Accessors
-
 - (NSArray *)childEntries {
   NSMutableArray *childEntries = [NSMutableArray arrayWithArray:_entries];
   for(KPKGroup *group in _groups) {

@@ -30,6 +30,7 @@
 #import "KPKGroup.h"
 #import "KPKNode.h"
 #import "KPKEntry.h"
+#import "KPKBinary.h"
 #import "KPKAttribute.h"
 
 #import "KPKFormat.h"
@@ -60,6 +61,7 @@
   KPKXmlHeaderReader *_headerReader;
   RandomStream *_randomStream;
   NSDateFormatter *_dateFormatter;
+  NSMutableDictionary *_binaryMap;
 }
 @end
 
@@ -160,6 +162,9 @@
   data.defaultUserName = KPKString(root, @"DefaultUserName");
   data.defaultUserNameChanged = KPKDate(_dateFormatter, root, @"DefaultUserNameChanged");
   data.maintenanceHistoryDays = KPKInteger(root, @"MaintenanceHistoryDays");
+  /*
+   Color is HTML Hex code!
+   */
   data.color = KPKString(root, @"Color");
   data.masterKeyChanged = KPKDate(_dateFormatter, root, @"MasterKeyChanged");
   data.masterKeyChangeIsRequired = KPKInteger(root, @"MasterKeyChangeRec");
@@ -191,18 +196,34 @@
   data.lastTopVisibleGroup = [NSUUID uuidWithEncodedString:KPKString(root, @"LastTopVisibleGroup")];
   
   /*
-   Binaries need to be stored and then associated with entires
-   */
-  
-  //  DDXMLElement *binariesElement = [root elementForName:@"Binaries"];
-  //  for (DDXMLElement *element in [binariesElement elementsForName:@"Binary"]) {
-  //    [tree.binaries addObject:[self parseBinary:element]];
-  //  }
-  //
-  //  DDXMLElement *customDataElement = [root elementForName:@"CustomData"];
-  //  for (DDXMLElement *element in [customDataElement elementsForName:@"Item"]) {
-  //    [tree.customData addObject:[self parseCustomItem:element]];
-  //  }
+  <Binaries>
+   <Binary ID="1" Compressid="True">
+    -Base64EncodedData-
+   <Binary>
+  </Binaries>
+  */
+  DDXMLElement *binariesElement = [root elementForName:@"Binaries"];
+  for (DDXMLElement *element in [binariesElement elementsForName:@"Binary"]) {
+    DDXMLNode *idAttribute = [element attributeForName:@"ID"];
+    DDXMLNode *compressedAttribute = [element attributeForName:@"Compressed"];
+
+    KPKBinary *binary = [[KPKBinary alloc] initWithName:@"UNNAMED" value:[element stringValue] compressed:KPKYES(compressedAttribute)];
+    NSUInteger index = [[idAttribute stringValue] integerValue];
+    _binaryMap[ @(index) ] = binary;
+  }
+
+  DDXMLElement *customDataElement = [root elementForName:@"CustomData"];
+  for (DDXMLElement *element in [customDataElement elementsForName:@"Item"]) {
+    /*
+     <CustomData>
+      <Item>
+       <Key></Key>
+       <Value>-Base64EncodedValue-</Value>
+      </Item>
+     </CustomData>
+     */
+    //[tree.customData addObject:[self parseCustomItem:element]];
+  }
 }
 
 - (KPKGroup *)_parseGroup:(DDXMLElement *)groupNode {
@@ -266,33 +287,43 @@
   [self _parseTimes:entry.timeInfo element:timesElement];
   
   for (DDXMLElement *element in [entryElement elementsForName:@"String"]) {
-    KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKString(element, @"Key")
-                                                          value:KPKString(element, @"Value")
-                                                    isProtected:KPKBool(element, @"Protected")];
-    
-    if([attribute.key isEqualToString:KPKTitleKey]) {
-      entry.title = attribute.value;
-    }
-    else if([attribute.key isEqualToString:KPKUsernameKey]) {
-      entry.username = attribute.value;
-    }
-    else if([attribute.key isEqualToString:KPKPasswordKey]) {
-      entry.password = attribute.value;
-    }
-    else if([attribute.key isEqualToString:KPKURLKey]) {
-      entry.url = attribute.value;
-    }
-    else if([attribute.key isEqualToString:KPKNotesKey]) {
-      entry.notes = attribute.value;
-    }
-    else {
-      [entry.customAttributes addObject:attribute];
+    @autoreleasepool {
+      DDXMLElement *valueElement = [element elementForName:@"Value"];
+      DDXMLNode *protectedAttribute = [valueElement attributeForName:@"Protected"];
+      KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKString(element, @"Key")
+                                                            value:KPKString(element, @"Value")
+                                                      isProtected:KPKYES(protectedAttribute)];
+      
+      if([attribute.key isEqualToString:KPKTitleKey]) {
+        entry.title = attribute.value;
+      }
+      else if([attribute.key isEqualToString:KPKUsernameKey]) {
+        entry.username = attribute.value;
+      }
+      else if([attribute.key isEqualToString:KPKPasswordKey]) {
+        entry.password = attribute.value;
+      }
+      else if([attribute.key isEqualToString:KPKURLKey]) {
+        entry.url = attribute.value;
+      }
+      else if([attribute.key isEqualToString:KPKNotesKey]) {
+        entry.notes = attribute.value;
+      }
+      else {
+        [entry.customAttributes addObject:attribute];
+      }
     }
   }
   
-  //  for (DDXMLElement *element in [root elementsForName:@"Binary"]) {
-  //    [entry.binaries addObject:[self parseBinaryRef:element]];
-  //  }
+  for (DDXMLElement *binaryElement in [entryElement elementsForName:@"Binary"]) {
+    DDXMLElement *valueElement = [binaryElement elementForName:@"Value"];
+    DDXMLNode *refAttribute = [valueElement attributeForName:@"Ref"];
+    NSUInteger index = [[refAttribute stringValue] integerValue];
+    
+    KPKBinary *binary = _binaryMap[ @(index) ];
+    binary.name = KPKString(binaryElement, @"Key");
+    [entry addBinary:binary];
+  }
   //
   //  entry.autoType = [self parseAutoType:[root elementForName:@"AutoType"]];
   //

@@ -34,6 +34,7 @@
   if(self) {
     _metadata = [[KPKMetaData alloc] init];
     _deletedObjects = [[NSMutableDictionary alloc] init];
+    _groups = @[];
   }
   return self;
 }

@@ -333,7 +333,7 @@
       }
     }
   }
-  
+  return NO;
 }
 
 - (BOOL)_readExtendedData:(NSError **)error {

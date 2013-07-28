@@ -82,8 +82,6 @@
     _binaries = [aDecoder decodeObjectForKey:@"binaries"];
     _customAttributes = [aDecoder decodeObjectForKey:@"customAttributes"];
     _tags = [aDecoder decodeObjectForKey:@"tags"];
-    
-    
 
     _titleAttribute.entry = self;
     _usernameAttribute.entry = self;
