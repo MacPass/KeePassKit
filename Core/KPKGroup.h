@@ -36,7 +36,12 @@
 @property(nonatomic, readonly) NSArray *childGroups;
 
 @property(nonatomic, strong) NSUUID *lastTopVisibleEntry;
-@property(nonatomic, assign) BOOL *isExpanded;
+@property(nonatomic, assign) BOOL isExpanded;
+@property(nonatomic, copy) NSString *defaultAutoTypeSequence;
+@property(nonatomic, assign) BOOL isAutoTypeEnabled;
+@property(nonatomic, assign) BOOL isSearchEnabled;
+
+
 @property(nonatomic, assign) BOOL canAddEntries;
 
 /**

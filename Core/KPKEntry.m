@@ -30,14 +30,14 @@
 @private
   NSMutableArray *_binaries;
   NSMutableArray *_customAttributes;
-  NSMutableArray *_tags;
+  NSMutableArray *_history;
 }
 
-@property (nonatomic, copy) KPKAttribute *titleAttribute;
-@property (nonatomic, copy) KPKAttribute *passwordAttribute;
-@property (nonatomic, copy) KPKAttribute *usernameAttribute;
-@property (nonatomic, copy) KPKAttribute *urlAttribute;
-@property (nonatomic, copy) KPKAttribute *notesAttribute;
+@property (nonatomic, strong) KPKAttribute *titleAttribute;
+@property (nonatomic, strong) KPKAttribute *passwordAttribute;
+@property (nonatomic, strong) KPKAttribute *usernameAttribute;
+@property (nonatomic, strong) KPKAttribute *urlAttribute;
+@property (nonatomic, strong) KPKAttribute *notesAttribute;
 
 @end
 
@@ -52,8 +52,8 @@
     _urlAttribute = [[KPKAttribute alloc] initWithKey:KPKURLKey value:@""];
     _notesAttribute = [[KPKAttribute alloc] initWithKey:KPKNotesKey value:@""];
     _customAttributes = [[NSMutableArray alloc] initWithCapacity:2];
-    _tags = [[NSMutableArray alloc] initWithCapacity:5];
     _binaries = [[NSMutableArray alloc] initWithCapacity:2];
+    _history = [[NSMutableArray alloc] initWithCapacity:5];
   }
   return self;
 }
@@ -143,12 +143,12 @@
 }
 
 - (void)setNotes:(NSString *)notes {
-  [self.undoManager registerUndoWithTarget:self selector:@selector(setNotes) object:self.url];
+  [self.undoManager registerUndoWithTarget:self selector:@selector(setNotes) object:self.notes];
   self.notesAttribute.value = notes;
 }
 
 - (void)setUrl:(NSString *)url {
-  [self.undoManager registerUndoWithTarget:self selector:@selector(setUrl:) object:self.url.value];
+  [self.undoManager registerUndoWithTarget:self selector:@selector(setUrl:) object:self.url];
   self.urlAttribute.value = url;
 }
 
@@ -204,6 +204,7 @@
   [self.undoManager registerUndoWithTarget:self selector:@selector(removeCustomAttribute:) object:attribute];
   [self insertObject:attribute inCustomAttributesAtIndex:index];
   attribute.entry = self;
+  [self wasModified];
   self.minimumVersion = [self _minimumVersionForCurrentAttributes];
 }
 
@@ -213,32 +214,10 @@
     [[self.undoManager prepareWithInvocationTarget:self] addCustomAttribute:attribute atIndex:index];
     attribute.entry = nil;
     [self removeObjectFromCustomAttributesAtIndex:index];
+    [self wasModified];
     self.minimumVersion = [self _minimumVersionForCurrentAttributes];
   }
 }
-
-#pragma mark Tags
-
-- (void)addTag:(NSString *)tag {
-  [self addTag:tag atIndex:[_tags count]];
-}
-
-- (void)addTag:(NSString *)tag atIndex:(NSUInteger)index {
-  index = MIN([_tags count], index);
-  [self.undoManager registerUndoWithTarget:self selector:@selector(removeTag:) object:tag];
-  [self insertObject:tag inTagsAtIndex:index];
-  self.minimumVersion = [self _minimumVersionForCurrentAttributes];
-}
-
-- (void)removeTag:(NSString *)tag {
-  NSUInteger index = [_tags indexOfObject:tag];
-  if(index != NSNotFound) {
-    [[self.undoManager prepareWithInvocationTarget:self] addTag:tag atIndex:index];
-    [self removeObjectFromTagsAtIndex:index];
-    self.minimumVersion = [self _minimumVersionForCurrentAttributes];
-  }
-}
-
 #pragma mark Attachments
 
 - (void)addBinary:(KPKBinary *)binary {
@@ -249,6 +228,7 @@
   index = MIN([_binaries count], index);
   [self.undoManager registerUndoWithTarget:self selector:@selector(removeAttachment:) object:binary];
   [self insertObject:binary inBinariesAtIndex:index];
+  [self wasModified];
   self.minimumVersion = [self _minimumVersionForCurrentAttachments];
 }
 
@@ -263,13 +243,27 @@
   if(index != NSNotFound) {
     [[self.undoManager prepareWithInvocationTarget:self] addBinary:attachment atIndex:index];
     [self removeObjectFromBinariesAtIndex:index];
+    [self wasModified];
     self.minimumVersion = [self _minimumVersionForCurrentAttachments];
   }
+}
+
+#pragma mark History
+
+- (void)addHistoryEntry:(KPKEntry *)entry {
+  [self addHistoryEntry:entry atIndex:[_history count]];
+}
+
+- (void)addHistoryEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
+  [self.undoManager registerUndoWithTarget:self selector:@selector(removeHistoryEntry:) object:entry];
+  [self insertObject:entry inHistoryAtIndex:[_history count]];
+  // Update Minimum Version?
 }
 
 #pragma mark -
 #pragma mark KVO
 
+/* CustomAttributes */
 - (NSUInteger)countOfCustomAttributes {
   return [_customAttributes count];
 }
@@ -285,6 +279,7 @@
   }
 }
 
+/* Binaries */
 - (NSUInteger)countOfBinaries {
   return [_binaries count];
 }
@@ -300,16 +295,19 @@
   [_binaries removeObjectAtIndex:index];
 }
 
-- (NSUInteger)countOfTags {
-  return [_tags count];
+/* History */
+- (NSUInteger)countOfHistory {
+  return [_history count];
 }
 
-- (void)insertObject:(NSString *)tag inTagsAtIndex:(NSUInteger)index {
-  [_tags insertObject:tag atIndex:index];
+- (void)insertObject:(KPKEntry *)entry inHistoryAtIndex:(NSUInteger)index {
+  index = MIN([_history count], index);
+  [_history insertObject:entry atIndex:index];
 }
 
-- (void)removeObjectFromTagsAtIndex:(NSUInteger)index {
-  [_tags removeObjectAtIndex:index];
+- (void)removeObjectFromHistoryAtIndex:(NSUInteger)index {
+  index = MIN([_history count], index);
+  [_history removeObjectAtIndex:index];
 }
 
 #pragma mark -

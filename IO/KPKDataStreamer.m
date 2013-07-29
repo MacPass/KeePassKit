@@ -25,16 +25,16 @@
   }
   return self;
 }
-
-- (NSData *)dataWithRange:(NSRange)range {
-  // FIXME: Test for maxsize
-  return [_data subdataWithRange:range];
+- (NSUInteger)location {
+  return _location;
 }
 
 - (NSData *)dataWithLength:(NSUInteger)length {
   // FIXME: test for maxsize
-  return [_data subdataWithRange:NSMakeRange(_location, length)];
+  length = MIN([_data length] - _location, length);
+  NSData *data = [_data subdataWithRange:NSMakeRange(_location, length)];
   _location += length;
+  return data;
 }
 
 - (NSString *)stringWithLenght:(NSUInteger)length encoding:(NSStringEncoding)encoding {
@@ -62,6 +62,12 @@
 - (uint32)read4Bytes {
   uint32 buffer;
   [self _getBytes:&buffer length:4];
+  return buffer;
+}
+
+- (uint64)read8Bytes {
+  uint64 buffer;
+  [self _getBytes:&buffer length:64];
   return buffer;
 }
 

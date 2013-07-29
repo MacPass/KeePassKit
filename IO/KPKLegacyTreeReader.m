@@ -70,17 +70,7 @@
   if(![self _readEntries:error]) {
     return nil;
   }
-  
-  /*
-   // Parse entries
-   [self readEntries:aesInputStream];
-   
-   // Build the tree
-   return [self buildTree];
-   } @finally {
-   aesInputStream = nil;
-   }*/
-  return nil;
+  return [self _buildTree];
 }
 
 - (BOOL)_readGroups:(NSError **)error {
@@ -333,7 +323,7 @@
       }
     }
   }
-  return NO;
+  return YES;
 }
 
 - (BOOL)_readExtendedData:(NSError **)error {
@@ -382,6 +372,9 @@
 	}
 }
 
+- (KPKTree *)_buildTree {
+  return nil;
+}
 
 
 @end

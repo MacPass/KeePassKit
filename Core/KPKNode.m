@@ -72,15 +72,21 @@
 }
 
 - (void)wasModified {
-  self.timeInfo.lastModificationTime = [NSDate date];
+  if(self.updateTiming) {
+    self.timeInfo.lastModificationTime = [NSDate date];
+  }
 }
 
 - (void)wasAccessed {
-  self.timeInfo.lastAccessTime = [NSDate date];
+  if(self.updateTiming) {
+    self.timeInfo.lastAccessTime = [NSDate date];
+  }
 }
 
 - (void)wasMoved {
-  self.timeInfo.locationChanged = [NSDate date];
+  if(self.updateTiming) {
+    self.timeInfo.locationChanged = [NSDate date];
+  }
 }
 
 #pragma mark -

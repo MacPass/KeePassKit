@@ -37,10 +37,14 @@
 @property (nonatomic, assign) NSString *notes;
 
 @property (nonatomic, strong) NSArray *binaries;
-@property (nonatomic, strong) NSArray *tags;
-@property (nonatomic, strong) NSMutableArray *customAttributes;
+@property (nonatomic, copy) NSString *tags;
+@property (nonatomic, copy) NSString *foregroundColor;
+@property (nonatomic, copy) NSString *backgroundColor;
+@property (nonatomic, copy) NSString *overrideURL;
 
+@property (nonatomic, strong) NSArray *customAttributes;
 
+@property (nonatomic, strong) NSArray *history;
 
 - (void)remove;
 /**
@@ -82,15 +86,15 @@
  */
 - (void)removeBinary:(KPKBinary *)binary;
 /**
- Adds the tag to the entry
- @param tag The tag to be added
- @param index The location for the new tag
+ *	Adds an Item to the Entries history
+ *	@param	entry	Entry element to be added as history
  */
-- (void)addTag:(NSString *)tag atIndex:(NSUInteger)index;
-- (void)addTag:(NSString *)tag;
+- (void)addHistoryEntry:(KPKEntry *)entry;
+- (void)addHistoryEntry:(KPKEntry *)entry atIndex:(NSUInteger)index;
+- (void)removeHistoryEntry:(KPKEntry *)entry;
 /**
- Removes the given tag from the entry
- @param tag The tag to be removed
+ *	Clears the history and removes all entries
  */
-- (void)removeTag:(NSString *)tag;
+- (void)clearHistory;
+
 @end

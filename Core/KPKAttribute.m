@@ -77,7 +77,7 @@
 }
 
 - (id)init {
-  return  [self initWithKey:nil value:nil isProtected:NO];
+  return  [self initWithKey:@"" value:@"" isProtected:NO];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -107,6 +107,20 @@
     }
   }
   return YES;
+}
+
+- (void)setValue:(NSString *)value {
+  if(![_value isEqualToString:value]) {
+    _value = [value copy];
+    [self.entry wasModified];
+  }
+}
+
+- (void)setKey:(NSString *)key {
+  if(![_key isEqualToString:key]) {
+    _key = [key copy];
+    [self.entry wasModified];
+  }
 }
 
 - (BOOL)isDefault {

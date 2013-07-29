@@ -41,6 +41,7 @@
     _groups = [[NSMutableArray alloc] initWithCapacity:8];
     _entries = [[NSMutableArray alloc] initWithCapacity:16];
     _canAddEntries = YES;
+    self.updateTiming = YES;
   }
   return self;
 }

@@ -26,12 +26,14 @@
 #import "KPKHeaderFields.h"
 #import "NSUUID+KeePassKit.h"
 
+#import "KPKDataStreamer.h"
 #import "NSData+Random.h"
 
 @interface KPKXmlHeaderReader () {
   NSData *_comment;
   NSUInteger _endOfHeader;
   NSData *_data;
+  KPKDataStreamer *_dataStreamer;
 
 }
 
@@ -55,6 +57,7 @@
   self = [super init];
   if(self) {
     _data = data;
+    _dataStreamer = [[KPKDataStreamer alloc] initWithData:_data];
     if(![self _parseHeader:error]) {
       _data = nil;
       self = nil;
@@ -80,34 +83,31 @@
   /*
    We need to start reading after the version information,
    4bytes signature 1, 4 bytes signature , 4 bytes version
-   Hence start at 16;
+   Hence skipt first 12 bytes;
    */
-  NSUInteger location = 12;
+  [_dataStreamer skipBytes:12];
+  //NSUInteger location = 12;
   while (true) {
-    uint8_t fieldType;
-    uint16_t fieldSize;
-    
-    [_data getBytes:&fieldType range:NSMakeRange(location, 1)];
-    location ++;
-    
-    [_data getBytes:&fieldSize range:NSMakeRange(location, 2)];
+    uint8 fieldType = [_dataStreamer readByte];
+    uint16 fieldSize = [_dataStreamer read2Bytes];
     fieldSize = CFSwapInt16LittleToHost(fieldSize);
-    location +=2;
-    NSRange readRange = NSMakeRange(location, fieldSize);
+  
+    //NSRange readRange = NSMakeRange(location, fieldSize);
 
     switch (fieldType) {
       case KPKHeaderKeyEndOfHeader:
-        _endOfHeader = location + fieldSize;
+        [_dataStreamer skipBytes:fieldSize];
+        _endOfHeader = _dataStreamer.location;
         return YES; // Done
         
       case KPKHeaderKeyComment:
-        _comment = [_data subdataWithRange:readRange];
+        _comment = [_dataStreamer dataWithLength:fieldSize];
         break;
         
       case KPKHeaderKeyCipherId: {
         BOOL cipherOk = YES;
         if(fieldSize == 16) {
-          _cipherUUID = [[NSUUID alloc] initWithData:[_data subdataWithRange:readRange]];
+          _cipherUUID = [[NSUUID alloc] initWithData:[_dataStreamer dataWithLength:fieldSize]];
           cipherOk = [[NSUUID AESUUID] isEqual:_cipherUUID];
         }
         else {
@@ -121,37 +121,37 @@
       }
       case KPKHeaderKeyMasterSeed:
         if (fieldSize != 32) {
-          // FIXME: Error invalid field size
+          KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZED", "");
           return NO;
         }
-        _masterSeed = [_data subdataWithRange:readRange];
+        _masterSeed = [_dataStreamer dataWithLength:fieldSize];
         break;
       case KPKHeaderKeyTransformSeed:
         if (fieldSize != 32) {
-          // FIXME: Error invalid field size
+          KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZED", "");
           return NO;
         }
-        _transformSeed = [_data subdataWithRange:readRange];
+        _transformSeed =  [_dataStreamer dataWithLength:fieldSize];
         break;
         
       case KPKHeaderKeyEncryptionIV:
-        _encryptionIV = [_data subdataWithRange:readRange];
+        _encryptionIV = [_dataStreamer dataWithLength:fieldSize];
         break;
         
       case KPKHeaderKeyProtectedKey:
-        _protectedStreamKey = [_data subdataWithRange:readRange];
+        _protectedStreamKey = [_dataStreamer dataWithLength:fieldSize];
         break;
       case KPKHeaderKeyStartBytes:
-        _streamStartBytes = [_data subdataWithRange:readRange];
+        _streamStartBytes = [_dataStreamer dataWithLength:fieldSize];
         break;
         
       case KPKHeaderKeyTransformRounds:
-        [_data getBytes:&_rounds range:NSMakeRange(location, 8)];
+        _rounds = [_dataStreamer read8Bytes];
         _rounds = CFSwapInt64LittleToHost(_rounds);
         break;
         
       case KPKHeaderKeyCompression:
-        [_data getBytes:&_compressionAlgorithm range:NSMakeRange(location, 4)];
+        _compressionAlgorithm = [_dataStreamer read4Bytes];
         _compressionAlgorithm = CFSwapInt32LittleToHost(_compressionAlgorithm);
         if (_compressionAlgorithm >= KPKCompressionCount) {
           KPKCreateError(error, KPKErrorUnsupportedCompressionAlgorithm, @"ERROR_UNSUPPORTED_KDBX_COMPRESSION_ALGORITHM", "");
@@ -159,7 +159,7 @@
         }
         break;
       case KPKHeaderKeyRandomStreamId:
-        [_data getBytes:&_randomStreamID range:NSMakeRange(location, 4)];
+        _randomStreamID = [_dataStreamer read4Bytes];
         _randomStreamID = CFSwapInt32LittleToHost(_randomStreamID);
         if (_randomStreamID >= KPKRandomStreamCount) {
           KPKCreateError(error,KPKErrorUnsupportedRandomStream, @"ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM", "");
@@ -171,10 +171,6 @@
         KPKCreateError(error,KPKErrorHeaderCorrupted, @"ERROR_HEADER_CORRUPTED", "");
         return NO;
     }
-    /*
-     Increment the location
-     */
-    location += fieldSize;
   }
 }
 

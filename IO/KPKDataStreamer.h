@@ -12,16 +12,16 @@
 
 - (id)initWithData:(NSData *)data;
 
-- (NSData *)dataWithRange:(NSRange)range;
 - (NSData *)dataWithLength:(NSUInteger)length;
 - (NSString *)stringWithLenght:(NSUInteger)length encoding:(NSStringEncoding)encoding;
 - (void)readBytes:(void *)buffer length:(NSUInteger)length;
 - (uint8)readByte;
 - (uint16)read2Bytes;
 - (uint32)read4Bytes;
+- (uint64)read8Bytes;
 - (NSUInteger)integer;
 
-
+- (NSUInteger)location;
 - (void)skipBytes:(NSUInteger)numberOfBytes;
 - (BOOL)endOfData;
 - (void)reset;

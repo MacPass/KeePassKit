@@ -34,7 +34,6 @@
   if(self) {
     _metadata = [[KPKMetaData alloc] init];
     _deletedObjects = [[NSMutableDictionary alloc] init];
-    _groups = @[];
   }
   return self;
 }
@@ -54,6 +53,10 @@
 }
 
 - (void)setRoot:(KPKGroup *)root {
+  if(!_groups || [_groups count] == 0) {
+    _groups = @[root];
+    return;
+  }
   id group = _groups[0];
   if(group != root) {
     _groups = @[root];
