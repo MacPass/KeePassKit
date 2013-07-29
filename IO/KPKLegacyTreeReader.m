@@ -23,7 +23,7 @@
 #import "KPKLegacyTreeReader.h"
 #import "KPKLegacyHeaderReader.h"
 #import "KPKHeaderFields.h"
-#import "KPKDataStreamer.h"
+#import "KPKDataStreamReader.h"
 
 #import "KPKGroup.h"
 #import "KPKEntry.h"
@@ -35,7 +35,7 @@
 
 @interface KPKLegacyTreeReader () {
   NSData *_data;
-  KPKDataStreamer *_dataStreamer;
+  KPKDataStreamReader *_dataStreamer;
   KPKLegacyHeaderReader *_headerReader;
   NSMutableArray *_levels;
   NSMutableArray *_groups;
@@ -52,7 +52,7 @@
   self = [super init];
   if(self) {
     _data = data;
-    _dataStreamer = [[KPKDataStreamer alloc] initWithData:_data];
+    _dataStreamer = [[KPKDataStreamReader alloc] initWithData:_data];
     _headerReader = (KPKLegacyHeaderReader *)headerReader;
     _levels = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];
     _groups = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];

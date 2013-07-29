@@ -6,16 +6,16 @@
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKDataStreamer.h"
+#import "KPKDataStreamReader.h"
 
-@interface KPKDataStreamer () {
+@interface KPKDataStreamReader () {
   NSUInteger _location;
   NSData *_data;
 }
 
 @end
 
-@implementation KPKDataStreamer
+@implementation KPKDataStreamReader
 
 - (id)initWithData:(NSData *)data {
   self = [super init];

@@ -26,14 +26,14 @@
 #import "KPKHeaderFields.h"
 #import "NSUUID+KeePassKit.h"
 
-#import "KPKDataStreamer.h"
+#import "KPKDataStreamReader.h"
 #import "NSData+Random.h"
 
 @interface KPKXmlHeaderReader () {
   NSData *_comment;
   NSUInteger _endOfHeader;
   NSData *_data;
-  KPKDataStreamer *_dataStreamer;
+  KPKDataStreamReader *_dataStreamer;
 
 }
 
@@ -57,7 +57,7 @@
   self = [super init];
   if(self) {
     _data = data;
-    _dataStreamer = [[KPKDataStreamer alloc] initWithData:_data];
+    _dataStreamer = [[KPKDataStreamReader alloc] initWithData:_data];
     if(![self _parseHeader:error]) {
       _data = nil;
       self = nil;

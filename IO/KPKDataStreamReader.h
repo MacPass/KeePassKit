@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KPKDataStreamer : NSObject
+@interface KPKDataStreamReader : NSObject
 
 - (id)initWithData:(NSData *)data;
 
