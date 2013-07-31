@@ -24,7 +24,7 @@
 #import "KPKHeaderReading.h"
 #import "KPKHeaderWriting.h"
 
-@interface KPKXmlHeaderReader : NSObject <KPKHeaderReading, KPKHeaderWriting>
+@interface KPKXmlHeaderReader : NSObject <KPKHeaderReading>
 
 @property (nonatomic, readonly, strong) NSUUID *cipherUUID;
 
@@ -54,9 +54,5 @@
  @returns the data with the header data removed.
  */
 - (NSData *)dataWithoutHeader;
-/**
- Writes the data to the header
- */
-- (void)writeHeaderData:(NSMutableData *)data;
 
 @end

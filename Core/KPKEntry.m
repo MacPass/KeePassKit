@@ -270,7 +270,7 @@
 
 - (void)insertObject:(KPKAttribute *)object inCustomAttributesAtIndex:(NSUInteger)index {
   index = MIN([_customAttributes count], index);
-  [_customAttributes removeObjectAtIndex:index];
+  [_customAttributes insertObject:object atIndex:index];
 }
 
 - (void)removeObjectFromCustomAttributesAtIndex:(NSUInteger)index {

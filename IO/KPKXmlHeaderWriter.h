@@ -1,8 +1,8 @@
 //
-//  KPKTreeReading.h
+//  KPKXmlHeaderWriter.h
 //  KeePassKit
 //
-//  Created by Michael Starke on 24.07.13.
+//  Created by Michael Starke on 31.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -21,14 +21,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "KPKHeaderWriting.h"
 
-@class KPKTree;
-@protocol KPKHeaderReading;
+@interface KPKXmlHeaderWriter : NSObject <KPKHeaderWriting>
 
-@protocol KPKTreeReading <NSObject>
-
-@required
-- (id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
-- (KPKTree *)tree:(NSError *__autoreleasing*)error;
+@property (nonatomic, readonly) NSData *headerHash;
 
 @end
