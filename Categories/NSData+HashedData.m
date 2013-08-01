@@ -79,6 +79,7 @@
 }
 
 - (NSData *)hashedData {
+  NSAssert(NO, @"Not implemented");
   return nil;
 }
 

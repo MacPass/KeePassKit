@@ -25,10 +25,25 @@
 @class KPKTree;
 @protocol KPKHeaderReading;
 
+/**
+ *	Protocoll for tree reader
+ */
 @protocol KPKTreeReading <NSObject>
 
 @required
+/**
+ *	Initalizes the Treereader with the fiven data
+ *	@param	data raw data to read the tree. Any decryptiong is handled by the TreeCryptor
+ *	@param	headerReader	the used headerreader to parst the header for this data
+ *	@return	instance of tree reader
+ */
 - (id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
+
+/**
+ *	Reads the data and creates a tree from it
+ *	@param	error	Error object.
+ *	@return	initalizes tree object
+ */
 - (KPKTree *)tree:(NSError *__autoreleasing*)error;
 
 @end

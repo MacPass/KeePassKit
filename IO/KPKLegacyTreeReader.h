@@ -25,6 +25,9 @@
 @class KPKTree;
 @class KPKLegacyHeaderReader;
 
+/**
+ *	Tree reader capable of loading Legacy (KDB) file formats
+ */
 @interface KPKLegacyTreeReader : NSObject <KPKTreeReading>
 
 - (id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;

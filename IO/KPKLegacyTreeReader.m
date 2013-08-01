@@ -25,6 +25,8 @@
 #import "KPKHeaderFields.h"
 #import "KPKDataStreamReader.h"
 
+#import "KPKTree.h"
+#import "KPKMetaData.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"
 #import "KPKBinary.h"
@@ -37,7 +39,7 @@
   NSData *_data;
   KPKDataStreamReader *_dataStreamer;
   KPKLegacyHeaderReader *_headerReader;
-  NSMutableArray *_levels;
+  NSMutableArray *_groupLevels;
   NSMutableArray *_groups;
   NSMutableArray *_entries;
   
@@ -54,7 +56,7 @@
     _data = data;
     _dataStreamer = [[KPKDataStreamReader alloc] initWithData:_data];
     _headerReader = (KPKLegacyHeaderReader *)headerReader;
-    _levels = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];
+    _groupLevels = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];
     _groups = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];
     _entries = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfEntries];
     
@@ -70,7 +72,7 @@
   if(![self _readEntries:error]) {
     return nil;
   }
-  return [self _buildTree];
+  return [self _buildTree:error];
 }
 
 - (BOOL)_readGroups:(NSError **)error {
@@ -143,18 +145,19 @@
         case KPKFieldTypeGroupLevel: {
           uint16 level = [_dataStreamer read2Bytes];
           level = CFSwapInt16LittleToHost(level);
-          [_levels addObject:@(level)];
+          NSAssert(group.uuid != nil, @"UUDI needs to be present");
+          [_groupLevels addObject:@(level)];
           break;
         }
           
         case KPKFieldTypeGroupFlags:
           /*
-           Flags contain information about the tree state
-           isExpanded
+           KeePass suggest ignoring this is fine
+           group.flags = [inputStream readInt32];
+           group.flags = CFSwapInt32LittleToHost(group.flags);
            */
-          [_dataStreamer read4Bytes];
-          /*group.flags = [inputStream readInt32];
-           group.flags = CFSwapInt32LittleToHost(group.flags);*/
+          [_dataStreamer skipBytes:4];
+
           break;
           
         case KPKFieldTypeCommonStop:
@@ -212,10 +215,6 @@
             KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
             return NO;
           }
-          //          if ([inputStream read:buffer length:fieldSize] != fieldSize) {
-          //
-          //            @throw [NSException exceptionWithName:@"IOException" reason:@"Failed to read UUID" userInfo:nil];
-          //          }
           [_dataStreamer readBytes:buffer length:fieldSize];
           entry.uuid = [[NSUUID alloc] initWithUUIDBytes:buffer];
           break;
@@ -372,8 +371,56 @@
 	}
 }
 
-- (KPKTree *)_buildTree {
-  return nil;
+- (KPKTree *)_buildTree:(NSError **)error { 
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.metadata.rounds = _headerReader.rounds;
+  
+  NSInteger groupIndex;
+  NSInteger parentIndex;
+  NSUInteger groupLevel;
+  NSUInteger parentLevel;
+  
+  KPKGroup *root = [[KPKGroup alloc] init];
+  root.name = @"Groups"; /* Modify this to use the database Name? */
+  root.parent = nil;
+  tree.root = root;
+  
+  // Find the parent for every group
+  for (groupIndex = 0; groupIndex < [_groups count]; groupIndex++) {
+    KPKGroup *group = _groups[groupIndex];
+
+    groupLevel = [_groupLevels[groupIndex] integer];
+    
+    if (groupLevel == 0) {
+      [root addGroup:group];
+      continue;
+    }
+    // The first item with a lower level is the parent
+    for (parentIndex = groupIndex - 1; parentIndex >= 0; parentIndex--) {
+      parentLevel = [_groupLevels[parentIndex] integer];
+      if (parentLevel < groupLevel) {
+        if (groupLevel - parentLevel != 1) {
+          KPKCreateError(error, KPKErrorCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
+          return nil;
+        }
+        else {
+          break;
+        }
+      }
+      if (parentIndex == 0) {
+        /*
+        KPKCreateError(error, KPKErrorCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
+        return nil;
+         */
+        [root addGroup:group];
+      }
+    }
+    
+    KPKGroup *parent = _groups[parentIndex];
+    [parent addGroup:group];
+  }
+  
+  return tree;
 }
 
 

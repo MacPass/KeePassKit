@@ -72,6 +72,10 @@
   [self.parent removeGroup:self];
 }
 
+- (void)addGroup:(KPKGroup *)group {
+  [self addGroup:group atIndex:[_groups count]];
+}
+
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   group.parent = self;
   index = MIN([_entries count], index);

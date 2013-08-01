@@ -227,7 +227,7 @@
   group.lastTopVisibleEntry = [NSUUID uuidWithEncodedString:KPKString(groupElement, @"LastTopVisibleEntry")];
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Entry"]) {
-    KPKEntry *entry = [self _parseEntry:element ignoreHistory:NO];
+    KPKEntry *entry = [self _createEntry:element ignoreHistory:NO];
     entry.parent = group;
     [group addEntry:entry atIndex:[group.entries count]];
   }
@@ -242,7 +242,7 @@
   return group;
 }
 
-- (KPKEntry *)_parseEntry:(DDXMLElement *)entryElement ignoreHistory:(BOOL)ignoreHistory {
+- (KPKEntry *)_createEntry:(DDXMLElement *)entryElement ignoreHistory:(BOOL)ignoreHistory {
   KPKEntry *entry = [[KPKEntry alloc] init];
   
   entry.updateTiming = NO;
@@ -393,7 +393,7 @@
   DDXMLElement *historyElement = [entryElement elementForName:@"History"];
   if (historyElement != nil) {
     for (DDXMLElement *entryElement in [historyElement elementsForName:@"Entry"]) {
-      KPKEntry *historyEntry = [self _parseEntry:entryElement ignoreHistory:YES];
+      KPKEntry *historyEntry = [self _createEntry:entryElement ignoreHistory:YES];
       [entry addHistoryEntry:historyEntry];
     }
   }

@@ -255,9 +255,23 @@
 }
 
 - (void)addHistoryEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
+  /* Possible better to not register these action with the undomanager */
   [self.undoManager registerUndoWithTarget:self selector:@selector(removeHistoryEntry:) object:entry];
   [self insertObject:entry inHistoryAtIndex:[_history count]];
   // Update Minimum Version?
+}
+
+- (void)removeHistoryEntry:(KPKEntry *)entry {
+  NSUInteger index = [self.history indexOfObject:entry];
+  if(index != NSNotFound) {
+    [[self.undoManager prepareWithInvocationTarget:self] addHistoryEntry:entry atIndex:index];
+    [self removeObjectFromHistoryAtIndex:index];
+  }
+}
+
+- (void)clearHistory {
+  NSSet *set = [NSSet setWithArray:_history];
+  [self removeHistory:set];
 }
 
 #pragma mark -
@@ -308,6 +322,10 @@
 - (void)removeObjectFromHistoryAtIndex:(NSUInteger)index {
   index = MIN([_history count], index);
   [_history removeObjectAtIndex:index];
+}
+
+- (void)removeHistory:(NSSet *)objects {
+  [_history removeObjectsInArray:[objects allObjects]];
 }
 
 #pragma mark -

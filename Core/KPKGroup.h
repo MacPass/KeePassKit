@@ -25,7 +25,7 @@
 
 @class KPKEntry;
 
-@interface KPKGroup : KPKNode 
+@interface KPKGroup : KPKNode
 
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, copy) NSString *notes;
@@ -50,6 +50,7 @@
  Action names aren't set by the model
  */
 - (void)remove;
+- (void)addGroup:(KPKGroup *)group;
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 - (void)removeGroup:(KPKGroup *)group;
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;

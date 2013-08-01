@@ -50,7 +50,8 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorXMLGroupElementMissing, // no Group element found
   KPKErrorLegacyInvalidFieldType, // Invalid field type in Legacy format
   KPKErrorLegacyInvalidFieldSize, // Invalid field size in Legacy format
-  KPKErrorLegacyHeaderHashMissmatch // Header missmatch
+  KPKErrorLegacyHeaderHashMissmatch, // Header missmatch
+  KPKErrorCorruptTree // Tree sturcture is corrupted
 };
 
 #endif
