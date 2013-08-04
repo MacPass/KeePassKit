@@ -34,6 +34,7 @@
 #import "KPKErrors.h"
 
 #import "NSDate+Packed.h"
+#import "NSUUID+KeePassKit.h"
 
 @interface KPKLegacyTreeReader () {
   NSData *_data;
@@ -42,7 +43,7 @@
   NSMutableArray *_groupLevels;
   NSMutableArray *_groups;
   NSMutableArray *_entries;
-  
+  NSMutableDictionary *_groupIdToUUID;
 }
 
 @end
@@ -58,6 +59,7 @@
     _headerReader = (KPKLegacyHeaderReader *)headerReader;
     _groupLevels = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];
     _groups = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];
+    _groupIdToUUID = [[NSMutableDictionary alloc] initWithCapacity:_headerReader.numberOfGroups];
     _entries = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfEntries];
     
   }
@@ -72,6 +74,7 @@
   if(![self _readEntries:error]) {
     return nil;
   }
+  
   return [self _buildTree:error];
 }
 
@@ -104,12 +107,9 @@
           break;
           
         case KPKFieldTypeGroupId: {
-          /* Read the 4 bytes and fill the rest with zeros */
-          uint8 bytes[16] = { 0 };
-          [_dataStreamer readBytes:&bytes length:4];
-          group.uuid = [[NSUUID alloc] initWithUUIDBytes:bytes];
-          //group.groupId = [inputStream readInt32];
-          //group.groupId = CFSwapInt32LittleToHost(group.groupId);
+          uint32 groupId = CFSwapInt32LittleToHost([_dataStreamer read4Bytes]);
+          group.uuid = [NSUUID UUID];
+          _groupIdToUUID[@(groupId)] = group.uuid;
           break;
         }
           
@@ -179,6 +179,54 @@
   return YES;
 }
 
+/*
+ Keepass and KeepassX store additional information inside meta entries.
+ This information can be mapped to some of the attributes inside the KDBX
+ Metadata. Thus we need to try to parse those know meta entries, and store
+ the ones we do not know to not destroy the file on write
+ void CPwManager::_ParseMetaStream(PW_ENTRY *p, bool bAcceptUnknown)
+ {
+ ASSERT(_IsMetaStream(p) == TRUE);
+ 
+ else if(_tcscmp(p->pszAdditional, PMS_STREAM_DEFAULTUSER) == 0)
+ {
+ LPTSTR lpName = _UTF8ToString(p->pBinaryData);
+ m_strDefaultUserName = (LPCTSTR)lpName;
+ SAFE_DELETE_ARRAY(lpName);
+ }
+ else if(_tcscmp(p->pszAdditional, PMS_STREAM_DBCOLOR) == 0)
+ {
+ if(p->uBinaryDataLen >= sizeof(COLORREF))
+ memcpy(&m_clr, p->pBinaryData, sizeof(COLORREF));
+ }
+ else if(_tcscmp(p->pszAdditional, PMS_STREAM_SEARCHHISTORYITEM) == 0)
+ {
+ LPTSTR lpItem = _UTF8ToString(p->pBinaryData);
+ m_vSearchHistory.push_back(std::basic_string<TCHAR>((LPCTSTR)lpItem));
+ SAFE_DELETE_ARRAY(lpItem);
+ }
+ else if(_tcscmp(p->pszAdditional, PMS_STREAM_CUSTOMKVP) == 0)
+ {
+ CustomKvp kvp;
+ if(DeserializeCustomKvp(p->pBinaryData, kvp))
+ m_vCustomKVPs.push_back(kvp);
+ }
+ else // Unknown meta stream -- save it
+ {
+ if(bAcceptUnknown)
+ {
+ PWDB_META_STREAM msUnknown;
+ msUnknown.strName = p->pszAdditional;
+ msUnknown.vData.assign(p->pBinaryData, p->pBinaryData +
+ p->uBinaryDataLen);
+ 
+ if(_CanIgnoreUnknownMetaStream(msUnknown) == FALSE)
+ m_vUnknownMetaStreams.push_back(msUnknown);
+ }
+ }
+ }
+ */
+ 
 - (BOOL)_readEntries:(NSError **)error {
   
   uint16 fieldType;
@@ -220,9 +268,8 @@
           break;
           
         case KPKFieldTypeEntryGroupId: {
-          uint8 bytes[16] = { 0 };
-          [_dataStreamer readBytes:&bytes length:4];
-          groupUUID = [[NSUUID alloc] initWithUUIDBytes:bytes];
+          uint32 groupId = CFSwapInt32LittleToHost([_dataStreamer read4Bytes]);
+          groupUUID = _groupIdToUUID[@(groupId)];
           break;
         }
           
@@ -305,7 +352,6 @@
             KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
             return NO;
           }
-          
           for(KPKGroup *group in _groups) {
             if([group.uuid isEqual:groupUUID]) {
               [group addEntry:entry];
@@ -371,10 +417,103 @@
 	}
 }
 
+- (void)_parseMetaEntry:(KPKEntry *)entry metaData:(KPKMetaData *)metaData {
+  KPKBinary *binary = [entry.binaries lastObject];
+  NSData *data = binary.data;
+  if([data length] == 0) {
+    return;
+  }
+  if([entry.title isEqualToString:KPKMetaEntryCustomKVP]) {
+    // Custom KeyValueProvierd - unsupported!
+    return;
+  }
+  if([entry.title isEqualToString:KPKMetaEntryDatabaseColor]) {
+    [self _parseColorData:data metaData:metaData];
+    return;
+  }
+  if([entry.title isEqualToString:KPKMetaEntryDefaultUsername] ) {
+    metaData.defaultUserName = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return;
+  }
+  if([entry.title isEqualToString:KPKMetaEntryUIState]) {
+    [self _parseUIStateData:data metaData:metaData];
+    return;
+  }
+  
+}
+/*
+ Keepass Structure
+ typedef struct _PMS_SIMPLE_UI_STATE
+ {
+  DWORD uLastSelectedGroupId;
+  DWORD uLastTopVisibleGroupId;
+  BYTE aLastSelectedEntryUuid[16];
+  BYTE aLastTopVisibleEntryUuid[16];
+  DWORD dwReserved01;
+  .
+  .
+  .
+  DWORD dwReserved16;
+ } PMS_SIMPLE_UI_STATE;
+ */
+- (void)_parseUIStateData:(NSData *)data metaData:(KPKMetaData *)metaData {
+  NSUInteger length = [data length];
+  uint32 groupId = 0;
+
+  if(length >= 4) {
+    [data getBytes:&groupId range:NSMakeRange(0, 4)];
+    metaData.lastSelectedGroup = _groupIdToUUID[@(groupId)];
+  }
+  if(length >= 8 ) {
+    [data getBytes:&groupId range:NSMakeRange(4,4)];
+    metaData.lastTopVisibleGroup = _groupIdToUUID[@(groupId)];
+  }
+  NSData *uuidData;
+  NSUUID *lastSelectedEntryUUID;
+  if(length >= 24) {
+    uuidData = [data subdataWithRange:NSMakeRange(8, 16)];
+    lastSelectedEntryUUID = [[NSUUID alloc] initWithData:uuidData];
+    // right now this data is ignored.
+  }
+  NSUUID *lastVisibleEntryUUID;
+  if(length >= 40) {
+    uuidData = [data subdataWithRange:NSMakeRange(24, 16)];
+    lastVisibleEntryUUID = [[NSUUID alloc] initWithData:uuidData];
+  }
+  for(KPKGroup *group in _groups) {
+    if([group.uuid isEqual:metaData.lastSelectedGroup]) {
+      group.lastTopVisibleEntry = lastVisibleEntryUUID;
+      break;
+    }
+  }
+}
+
+- (void)_parseColorData:(NSData *)data metaData:(KPKMetaData *)metaData {
+  if([data length] == sizeof(uint32)) {
+    // Stored ad COLORREF 0x00bbggrr;
+    uint32 color;
+    [data getBytes:&color length:4];
+    metaData.color = nil;
+  }
+}
+
+- (void)_readMetaEntries:(KPKTree *)tree {
+  NSMutableArray *metaEntries = [[NSMutableArray alloc] initWithCapacity:[_entries count] / 2];
+  for(KPKEntry *entry in _entries) {
+    if([entry isMeta]) {
+      [metaEntries addObject:entry];
+      [self _parseMetaEntry:entry metaData:tree.metaData];
+    }
+  }
+  
+  [_entries removeObjectsInArray:metaEntries];
+}
+
 - (KPKTree *)_buildTree:(NSError **)error { 
   KPKTree *tree = [[KPKTree alloc] init];
   tree.metaData.rounds = _headerReader.rounds;
-  
+  [self _readMetaEntries:(KPKTree *)tree];
+
   NSInteger groupIndex;
   NSInteger parentIndex;
   NSUInteger groupLevel;
@@ -421,6 +560,5 @@
   
   return tree;
 }
-
 
 @end

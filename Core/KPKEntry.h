@@ -28,6 +28,23 @@
 @class KPKBinary;
 @class KPKAttribute;
 
+/* Entries declared as MetaEntries in KDB files
+ * contain information that is stored in meta data in KDBX file
+ */
+FOUNDATION_EXTERN NSString *const KPKMetaEntryBinaryDescription;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryTitle;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryUsername;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryURL;
+
+/* Commonly known meta entries */
+
+FOUNDATION_EXTERN NSString *const KPKMetaEntryUIState;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryDefaultUsername;
+FOUNDATION_EXTERN NSString *const KPKMetaEntrySearchHistoryItem;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryCustomKVP;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryDatabaseColor;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXCustomIcon;
+
 @interface KPKEntry : KPKNode <NSCopying, NSCoding>
 
 @property (nonatomic, assign) NSString *title;
@@ -46,6 +63,15 @@
 
 @property (nonatomic, strong) NSArray *history;
 
+/**
+ *	Additialn information is stores in MetaEntrie in KDB files.
+ *  This function determines wheter the entry is a meta entry or not.
+ *	@return	YES if this entry is a Meta Entry, NO if not
+ */
+- (BOOL)isMeta;
+/**
+ *	Removes the Entry from it's parent group
+ */
 - (void)remove;
 /**
  @param key String that identifies the attributes

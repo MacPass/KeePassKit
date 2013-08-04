@@ -43,7 +43,7 @@ typedef NS_ENUM(NSUInteger, KPKHeaderKey ) {
 };
 
 /**
- Field Types for KDB Filey
+ Field Types for KDB Files
  */
 typedef NS_ENUM(NSUInteger, KPKFieldType) {
   /* Common types */
@@ -75,6 +75,5 @@ typedef NS_ENUM(NSUInteger, KPKFieldType) {
   KPKFieldTypeEntryBinaryDescription,
   KPKFieldTypeEntryBinaryData,
 };
-
 
 #endif

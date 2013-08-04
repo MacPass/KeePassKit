@@ -55,6 +55,7 @@
 
 @property(nonatomic, strong, readonly) NSMutableArray *customData;
 @property(nonatomic, strong, readonly) NSMutableArray *customIcons;
+@property(nonatomic, strong, readonly) NSMutableArray *unknownMetaEntries; // Compatibility for KDB files
 
 @property(nonatomic, assign) BOOL updateTiming;
 @property(nonatomic, weak) NSUndoManager *undoManager;
@@ -62,5 +63,6 @@
 - (void)addCustomIcon:(KPKIcon *)icon;
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index;
 - (void)removeCustomIcon:(KPKIcon *)icon;
+
 
 @end

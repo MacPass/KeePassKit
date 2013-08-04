@@ -26,6 +26,18 @@
 #import "KPKAttribute.h"
 #import "KPKFormat.h"
 
+NSString *const KPKMetaEntryBinaryDescription   = @"bin-stream";
+NSString *const KPKMetaEntryTitle               = @"Meta-Info";
+NSString *const KPKMetaEntryUsername            = @"SYSTEM";
+NSString *const KPKMetaEntryURL                 = @"$";
+
+NSString *const KPKMetaEntryUIState             = @"Simple UI State";
+NSString *const KPKMetaEntryDefaultUsername     = @"Default User Name";
+NSString *const KPKMetaEntrySearchHistoryItem   = @"Search History Item";
+NSString *const KPKMetaEntryCustomKVP           = @"Custom KVP";
+NSString *const KPKMetaEntryDatabaseColor       = @"Database Color";
+NSString *const KPKMetaEntryKeePassXCustomIcon  = @"KPX_CUSTOM_ICONS_2";
+
 @interface KPKEntry () {
 @private
   NSMutableArray *_binaries;
@@ -107,6 +119,33 @@
   return;
 }
 
+- (BOOL)isMeta {
+  /* Meta entries always contain data */
+  KPKBinary *binary = [self.binaries lastObject];
+  if(!binary) {
+    return NO;
+  }
+  if([binary.data length] == 0) {
+    return NO;
+  }
+  if(![binary.name isEqualToString:KPKMetaEntryBinaryDescription]) {
+    return NO;
+  }
+  if(![self.title isEqualToString:KPKMetaEntryTitle]) {
+    return NO;
+  }
+  if(![self.username isEqualToString:KPKMetaEntryUsername]) {
+    return NO;
+  }
+  if(![self.url isEqualToString:KPKMetaEntryURL]) {
+    return NO;
+  }
+  /* The Name of the type is stored as the note attribute */
+  if([self.notes length] == 0) {
+    return NO;
+  }
+  return YES;
+}
 
 #pragma mark Default Attributes
 - (NSString *)title {
