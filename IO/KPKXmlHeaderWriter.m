@@ -22,21 +22,34 @@
 
 #import "KPKXmlHeaderWriter.h"
 #import "KPKTree.h"
+#import "KPKMetaData.h"
 #import "KPKDataStreamWriter.h"
 #import "KPKHeaderFields.h"
 #import "KPKFormat.h"
 
 #import "NSData+CommonCrypto.h"
+#import "NSData+Random.h"
 #import "NSUUID+KeePassKit.h"
 
 @interface KPKXmlHeaderWriter () {
   KPKDataStreamWriter *_writer;
+  KPKTree *_tree;
 }
 @end;
 
 @implementation KPKXmlHeaderWriter
 
 - (id)initWithTree:(KPKTree *)tree {
+  self = [super init];
+  if(self) {
+    _tree = tree;
+    _masterSeed = [NSData dataWithRandomBytes:32];
+    _transformSeed = [NSData dataWithRandomBytes:32];
+    _encryptionIv = [NSData dataWithRandomBytes:16];
+    _protectedStreamKey = [NSData dataWithRandomBytes:32];
+    _streamStartBytes = [NSData dataWithRandomBytes:32];
+    _randomStreamID = KPKRandomStreamSalsa20;
+  }
   return nil;
 }
 
@@ -46,41 +59,47 @@
 
 - (void)writeHeaderData:(NSMutableData *)data {
   _writer = [[KPKDataStreamWriter alloc] initWithData:data];
-
+  
   /* Version and Signature */
   [_writer write4Bytes:CFSwapInt32HostToLittle(KPKVersion2Signature1)];
   [_writer write4Bytes:CFSwapInt32HostToLittle(KPKVersion2Signature2)];
   [_writer write4Bytes:CFSwapInt32HostToLittle(KPKFileVersion2)];
   
-  uuid_t uuidBytes;
-  [[NSUUID AESUUID] getUUIDBytes:uuidBytes];
-  [self _writerHeaderField:KPKHeaderKeyCipherId data:uuidBytes length:16];
-  /*
-   i32 = CFSwapInt32HostToLittle(tree.compressionAlgorithm);
-   [self writeHeaderField:outputStream headerId:HEADER_COMPRESSION data:&i32 length:4];
-   
-   [self writeHeaderField:outputStream headerId:HEADER_MASTERSEED data:masterSeed.bytes length:masterSeed.length];
-   
-   [self writeHeaderField:outputStream headerId:HEADER_TRANSFORMSEED data:transformSeed.bytes length:transformSeed.length];
-   
-   i64 = CFSwapInt64HostToLittle(tree.rounds);
-   [self writeHeaderField:outputStream headerId:HEADER_TRANSFORMROUNDS data:&i64 length:8];
-   
-   [self writeHeaderField:outputStream headerId:HEADER_ENCRYPTIONIV data:encryptionIv.bytes length:encryptionIv.length];
-   
-   [self writeHeaderField:outputStream headerId:HEADER_PROTECTEDKEY data:protectedStreamKey.bytes length:protectedStreamKey.length];
-   
-   [self writeHeaderField:outputStream headerId:HEADER_STARTBYTES data:streamStartBytes.bytes length:streamStartBytes.length];
-   */
-  uint32 randomStreamId = CFSwapInt32HostToLittle(KPKRandomStreamSalsa20);
-  [self _writerHeaderField:KPKHeaderKeyRandomStreamId data:&randomStreamId length:4];
-  
-  uint8 endBuffer[] = { NSCarriageReturnCharacter, NSNewlineCharacter, NSCarriageReturnCharacter, NSNewlineCharacter };
-  [self _writerHeaderField:KPKHeaderKeyEndOfHeader data:endBuffer length:4];
-  
+  @autoreleasepool {
+    uuid_t uuidBytes;
+    [[NSUUID AESUUID] getUUIDBytes:uuidBytes];
+    NSData *headerData = [NSData dataWithBytesNoCopy:&uuidBytes length:sizeof(uuid_t) freeWhenDone:NO];
+    [self _writerHeaderField:KPKHeaderKeyCipherId data:headerData];
+    
+    uint32 compressionAlgorithm = CFSwapInt32HostToLittle(_tree.metaData.compressionAlgorithm);
+    headerData = [NSData dataWithBytesNoCopy:&compressionAlgorithm length:sizeof(uint32) freeWhenDone:NO];
+    [self _writerHeaderField:KPKHeaderKeyCompression data:headerData];
+    [self _writerHeaderField:KPKHeaderKeyMasterSeed data:_masterSeed];
+    [self _writerHeaderField:KPKHeaderKeyTransformSeed data:_transformSeed];
+    
+    uint64 rounds = CFSwapInt64HostToLittle(_tree.metaData.rounds);
+    headerData = [NSData dataWithBytesNoCopy:&rounds length:sizeof(uint64) freeWhenDone:NO];
+    [self _writerHeaderField:KPKHeaderKeyTransformRounds data:headerData];
+    [self _writerHeaderField:KPKHeaderKeyEncryptionIV data:_encryptionIv];
+    [self _writerHeaderField:KPKHeaderKeyProtectedKey data:_protectedStreamKey];
+    [self _writerHeaderField:KPKHeaderKeyStartBytes data:_streamStartBytes];
+    
+    uint32 randomStreamId = CFSwapInt32HostToLittle(_randomStreamID);
+    headerData = [NSData dataWithBytesNoCopy:&randomStreamId length:sizeof(uint32) freeWhenDone:NO];
+    [self _writerHeaderField:KPKHeaderKeyRandomStreamId data:headerData];
+    
+    uint8 endBuffer[] = { NSCarriageReturnCharacter, NSNewlineCharacter, NSCarriageReturnCharacter, NSNewlineCharacter };
+    headerData = [NSData dataWithBytesNoCopy:endBuffer length:4 freeWhenDone:NO];
+    [self _writerHeaderField:KPKHeaderKeyEndOfHeader data:headerData];
+  }
 }
 
-- (void)_writerHeaderField:(KPKHeaderKey)key data:(void *)buffer length:(NSUInteger)length {
+- (void)_writerHeaderField:(KPKHeaderKey)key data:(NSData *)data {
+  [_writer writeByte:key];
+  [_writer write2Bytes:CFSwapInt16HostToLittle([data length])];
+  if ([data length] > 0) {
+    [_writer writeData:data];
+  }
 }
 
 @end

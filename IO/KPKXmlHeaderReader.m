@@ -76,7 +76,7 @@
   uint32_t version = [format fileVersionForData:_data];
   
   if ((version & VERSION2_CRITICAL_MASK) > (VERSION2_CRITICAL_MAX_32 & VERSION2_CRITICAL_MASK)) {
-    KPKCreateError(error, KPKErrorDatabaseVersionUnsupported, @"ERROR_UNSUPPORTED_DATABASER_VERSION", "");
+    KPKCreateError(error, KPKErrorUnsupportedDatabaseVersion, @"ERROR_UNSUPPORTED_DATABASER_VERSION", "");
     return NO;
   }
   
@@ -114,21 +114,21 @@
           cipherOk = NO;
         }
         if(!cipherOk) {
-          KPKCreateError(error, KPKErrorChipherUnsupported, @"ERROR_UNSUPPORTED_CHIPHER", "");
+          KPKCreateError(error, KPKErrorUnsupportedCipher, @"ERROR_UNSUPPORTED_CHIPHER", "");
           return NO;
         }
         break;
       }
       case KPKHeaderKeyMasterSeed:
         if (fieldSize != 32) {
-          KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZED", "");
+          KPKCreateError(error, KPKErrorXMLInvalidHeaderFieldSize, @"ERROR_INVALID_HEADER_FIELD_SIZE", "");
           return NO;
         }
         _masterSeed = [_dataStreamer dataWithLength:fieldSize];
         break;
       case KPKHeaderKeyTransformSeed:
         if (fieldSize != 32) {
-          KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZED", "");
+          KPKCreateError(error, KPKErrorXMLInvalidHeaderFieldSize, @"ERROR_INVALID_HEADER_FIELD_SIZE", "");
           return NO;
         }
         _transformSeed =  [_dataStreamer dataWithLength:fieldSize];
@@ -168,7 +168,7 @@
         break;
         
       default:
-        KPKCreateError(error,KPKErrorHeaderCorrupted, @"ERROR_HEADER_CORRUPTED", "");
+        KPKCreateError(error,KPKErrorXMLInvalidHeaderFieldType, @"ERROR_INVALID_HEADER_FIELD_TYPE", "");
         return NO;
     }
   }

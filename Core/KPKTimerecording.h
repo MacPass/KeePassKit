@@ -15,7 +15,6 @@
 @protocol KPKTimerecording <NSObject>
 
 @required
-
 /**
  *	Tells the object to update it's timing information on mdofications
  *  Set to YES, all actions result in modifed times, NO modifes withou
@@ -24,7 +23,6 @@
 @property (nonatomic, assign) BOOL updateTiming;
 
 @optional
-
 /**
  *	Called to signal a modification
  */

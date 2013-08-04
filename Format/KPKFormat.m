@@ -80,6 +80,10 @@ const NSUInteger KPKVersion1HeaderSize = 124;
   uint32_t signature1;
   uint32_t signature2;
   
+  if([data length] < 7 ) {
+    return KPKUnknownVersion;
+  }
+  
   [data getBytes:&signature1 range:NSMakeRange(0, 4)];
   [data getBytes:&signature2 range:NSMakeRange(4, 4)];
   signature1 = CFSwapInt32LittleToHost(signature1);

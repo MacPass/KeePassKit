@@ -34,7 +34,7 @@
 @interface KPKTree : NSObject <KPKUndoing>
 
 @property(nonatomic, strong, readonly) NSMutableDictionary *deletedObjects;
-@property(nonatomic, strong) KPKMetaData *metadata;
+@property(nonatomic, strong) KPKMetaData *metaData;
 @property(nonatomic, weak) NSUndoManager *undoManager;
 
 @property (nonatomic, assign) KPKGroup *root;

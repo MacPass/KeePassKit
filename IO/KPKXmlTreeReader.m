@@ -71,13 +71,15 @@
   self = [super init];
   if(self) {
     _document = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
-    NSAssert([headerReader isKindOfClass:[KPKXmlHeaderReader class]], @"Headerreader needs to be XML header reader");
-    _headerReader = (KPKXmlHeaderReader *)headerReader;
-    if(![self _setupRandomStream]) {
-      _document = nil;
-      _headerReader = nil;
-      self = nil;
-      return nil;
+    if(headerReader) {
+      NSAssert([headerReader isKindOfClass:[KPKXmlHeaderReader class]], @"Headerreader needs to be XML header reader");
+      _headerReader = (KPKXmlHeaderReader *)headerReader;
+      if(![self _setupRandomStream]) {
+        _document = nil;
+        _headerReader = nil;
+        self = nil;
+        return nil;
+      }
     }
     _dateFormatter = [[NSDateFormatter alloc] init];
     _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
@@ -89,28 +91,34 @@
 
 - (KPKTree *)tree:(NSError *__autoreleasing *)error {
   if(!_document) {
+    KPKCreateError(error, KPKErrorNoData, @"ERROR_NO_DATA", "");
     return nil;
   }
   
   DDXMLElement *rootElement = [_document rootElement];
   if(![[rootElement name] isEqualToString:@"KeePassFile"]) {
-    KPKCreateError(error, KPKErrorXMLRootElementMissing, @"ERROR_KEEPASSFILE_ELEMENT_MISSING", "");
+    KPKCreateError(error, KPKErrorXMLKeePassFileElementMissing, @"ERROR_KEEPASSFILE_ELEMENT_MISSING", "");
+    return nil;
   }
   
-  [self _decodeProtected:rootElement];
+  if(_headerReader) {
+    [self _decodeProtected:rootElement];
+  }
   
   KPKTree *tree = [[KPKTree alloc] init];
   
-  tree.metadata.updateTiming = NO;
+  tree.metaData.updateTiming = NO;
   
   /* Set the information we got from the header */
-  tree.metadata.rounds = _headerReader.rounds;
-  tree.metadata.compressionAlgorithm = _headerReader.compressionAlgorithm;
+  tree.metaData.rounds = _headerReader.rounds;
+  tree.metaData.compressionAlgorithm = _headerReader.compressionAlgorithm;
   /* Parse the rest of the metadata from the file */
   DDXMLElement *meta = [rootElement elementForName:@"Meta"];
-  if (meta != nil) {
-    [self _parseMeta:meta metaData:tree.metadata];
+  if(!meta) {
+    KPKCreateError(error, KPKErrorXMLMetaElementMissing, @"ERROR_META_ELEMENT_MISSING", "");
+    return nil;
   }
+  [self _parseMeta:meta metaData:tree.metaData];
   
   DDXMLElement *root = [rootElement elementForName:@"Root"];
   if(!root) {
@@ -126,7 +134,7 @@
   
   tree.root = [self _parseGroup:element];
   
-  tree.metadata.updateTiming = YES;
+  tree.metaData.updateTiming = YES;
   
   return tree;
 }

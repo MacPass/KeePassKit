@@ -26,7 +26,9 @@
 #import "DDXMLDocument.h"
 #import "DDXMLElementAdditions.h"
 #import "NSUUID+KeePassKit.h"
+#import "NSMutableData+Base64.h"
 
+#import "KPKXmlHeaderWriter.h"
 #import "KPKFormat.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"
@@ -35,6 +37,10 @@
 #import "KPKDeletedNode.h"
 #import "KPKBinary.h"
 #import "KPKIcon.h"
+
+#import "RandomStream.h"
+#import "Salsa20RandomStream.h"
+#import "Arc4RandomStream.h"
 
 #define KPKAddElement(element, name, value) [element addChild:[DDXMLNode elementWithName:name stringValue:value]]
 #define KPKAddAttribute(element, name, value) [element addAttributeWithName:name stringValue:value];
@@ -46,6 +52,8 @@
   NSDateFormatter *_dateFormatter;
   NSMutableArray *_binaries;
   NSMutableDictionary *_entryToBinaryMap;
+  KPKXmlHeaderWriter *_headerWriter;
+  RandomStream *_randomStream;
 }
 
 @property (strong, readwrite) KPKTree *tree;
@@ -54,10 +62,14 @@
 
 @implementation KPKXmlTreeWriter
 
-- (id)initWithTree:(KPKTree *)tree {
+- (id)initWithTree:(KPKTree *)tree headerWriter:(id<KPKHeaderWriting>)headerWriter {
   self = [super init];
   if(self) {
     _tree = tree;
+    if(_headerWriter) {
+      NSAssert([_headerWriter isKindOfClass:[KPKXmlHeaderWriter class]], @"Header writer needs to be KPKXmlHeaderWriter");
+      _headerWriter = headerWriter;
+    }
     _dateFormatter = [[NSDateFormatter alloc] init];
     _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
     _dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
@@ -67,43 +79,47 @@
 
 - (DDXMLDocument *)xmlDocument {
   
+  if(_headerWriter && ![self _setupRandomStream]) {
+    return nil;
+  }
+  
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:@"<KeePassFile></KeePassFile>" options:0 error:nil];
   
   DDXMLElement *element = [DDXMLNode elementWithName:@"Meta"];
-  KPKAddElement(element, @"Generator", self.tree.metadata.generator);
-  KPKAddElement(element, @"DatabaseName", self.tree.metadata.databaseName);
-  KPKAddElement(element, @"DatabaseNameChanged", KPKFormattedDate(self.tree.metadata.databaseNameChanged));
-  KPKAddElement(element, @"DatabaseDescription", self.tree.metadata.databaseDescription);
-  KPKAddElement(element, @"DatabaseDescriptionChanged", KPKFormattedDate(self.tree.metadata.databaseDescriptionChanged));
-  KPKAddElement(element, @"DefaultUserName", self.tree.metadata.defaultUserName);
-  KPKAddElement(element, @"MaintenanceHistoryDays", KPKStringFromLong(self.tree.metadata.maintenanceHistoryDays));
-  KPKAddElement(element, @"Color", self.tree.metadata.color);
-  KPKAddElement(element, @"MasterKeyChanged", KPKFormattedDate(self.tree.metadata.masterKeyChanged));
-  KPKAddElement(element, @"MasterKeyChangeRec", KPKStringFromLong(self.tree.metadata.masterKeyChangeIsRequired));
-  KPKAddElement(element, @"MasterKeyChangeForce", KPKStringFromLong(self.tree.metadata.masterKeyChangeIsForced));
+  KPKAddElement(element, @"Generator", self.tree.metaData.generator);
+  KPKAddElement(element, @"DatabaseName", self.tree.metaData.databaseName);
+  KPKAddElement(element, @"DatabaseNameChanged", KPKFormattedDate(self.tree.metaData.databaseNameChanged));
+  KPKAddElement(element, @"DatabaseDescription", self.tree.metaData.databaseDescription);
+  KPKAddElement(element, @"DatabaseDescriptionChanged", KPKFormattedDate(self.tree.metaData.databaseDescriptionChanged));
+  KPKAddElement(element, @"DefaultUserName", self.tree.metaData.defaultUserName);
+  KPKAddElement(element, @"MaintenanceHistoryDays", KPKStringFromLong(self.tree.metaData.maintenanceHistoryDays));
+  KPKAddElement(element, @"Color", self.tree.metaData.color);
+  KPKAddElement(element, @"MasterKeyChanged", KPKFormattedDate(self.tree.metaData.masterKeyChanged));
+  KPKAddElement(element, @"MasterKeyChangeRec", KPKStringFromLong(self.tree.metaData.masterKeyChangeIsRequired));
+  KPKAddElement(element, @"MasterKeyChangeForce", KPKStringFromLong(self.tree.metaData.masterKeyChangeIsForced));
   
   DDXMLElement *memoryProtectionElement = [DDXMLElement elementWithName:@"MemoryProtection"];
-  KPKAddElement(memoryProtectionElement, @"ProtectTitle", KPKStringFromBool(self.tree.metadata.protectTitle));
-  KPKAddElement(memoryProtectionElement, @"ProtectUserName", KPKStringFromBool(self.tree.metadata.protectUserName));
-  KPKAddElement(memoryProtectionElement, @"ProtectPassword", KPKStringFromBool(self.tree.metadata.protectPassword));
-  KPKAddElement(memoryProtectionElement, @"ProtectURL", KPKStringFromBool(self.tree.metadata.protectUrl));
-  KPKAddElement(memoryProtectionElement, @"ProtectNotes", KPKStringFromBool(self.tree.metadata.protectNotes));
+  KPKAddElement(memoryProtectionElement, @"ProtectTitle", KPKStringFromBool(self.tree.metaData.protectTitle));
+  KPKAddElement(memoryProtectionElement, @"ProtectUserName", KPKStringFromBool(self.tree.metaData.protectUserName));
+  KPKAddElement(memoryProtectionElement, @"ProtectPassword", KPKStringFromBool(self.tree.metaData.protectPassword));
+  KPKAddElement(memoryProtectionElement, @"ProtectURL", KPKStringFromBool(self.tree.metaData.protectUrl));
+  KPKAddElement(memoryProtectionElement, @"ProtectNotes", KPKStringFromBool(self.tree.metaData.protectNotes));
   
   [element addChild:memoryProtectionElement];
   
-  if ([self.tree.metadata.customIcons count] > 0) {
+  if ([self.tree.metaData.customIcons count] > 0) {
     [element addChild:[self _xmlIcons]];
   }
   
-  KPKAddElement(element, @"RecycleBinEnabled", KPKStringFromBool(self.tree.metadata.recycleBinEnabled));
-  KPKAddElement(element, @"RecycleBinUUID", [self.tree.metadata.recycleBinUuid encodedString]);
-  KPKAddElement(element, @"RecycleBinChanged", KPKFormattedDate(self.tree.metadata.recycleBinChanged));
-  KPKAddElement(element, @"EntryTemplatesGroup", [self.tree.metadata.entryTemplatesGroup encodedString]);
-  KPKAddElement(element, @"EntryTemplatesGroupChanged", KPKFormattedDate(self.tree.metadata.entryTemplatesGroupChanged));
-  KPKAddElement(element, @"HistoryMaxItems", KPKStringFromLong(self.tree.metadata.historyMaxItems));
-  KPKAddElement(element, @"HistoryMaxSize", KPKStringFromLong(self.tree.metadata.historyMaxItems));
-  KPKAddElement(element, @"LastSelectedGroup", [self.tree.metadata.lastSelectedGroup encodedString]);
-  KPKAddElement(element, @"LastTopVisibleGroup", [self.tree.metadata.lastTopVisibleGroup encodedString]);
+  KPKAddElement(element, @"RecycleBinEnabled", KPKStringFromBool(self.tree.metaData.recycleBinEnabled));
+  KPKAddElement(element, @"RecycleBinUUID", [self.tree.metaData.recycleBinUuid encodedString]);
+  KPKAddElement(element, @"RecycleBinChanged", KPKFormattedDate(self.tree.metaData.recycleBinChanged));
+  KPKAddElement(element, @"EntryTemplatesGroup", [self.tree.metaData.entryTemplatesGroup encodedString]);
+  KPKAddElement(element, @"EntryTemplatesGroupChanged", KPKFormattedDate(self.tree.metaData.entryTemplatesGroupChanged));
+  KPKAddElement(element, @"HistoryMaxItems", KPKStringFromLong(self.tree.metaData.historyMaxItems));
+  KPKAddElement(element, @"HistoryMaxSize", KPKStringFromLong(self.tree.metaData.historyMaxItems));
+  KPKAddElement(element, @"LastSelectedGroup", [self.tree.metaData.lastSelectedGroup encodedString]);
+  KPKAddElement(element, @"LastTopVisibleGroup", [self.tree.metaData.lastTopVisibleGroup encodedString]);
   
   [element addChild:[self _xmlBinaries]];
   
@@ -124,7 +140,7 @@
   if([self.tree.deletedObjects count] > 0) {
     [element addChild:[self _xmlDeletedObjects]];
   }
-  
+  [self _encodeProtected:nil];
   return document;
 }
 
@@ -172,7 +188,7 @@
   [self _prepateAttachments];
   DDXMLElement *binaryElements = [DDXMLElement elementWithName:@"Binaries"];
   
-  BOOL compress = (self.tree.metadata.compressionAlgorithm == KPKCompressionGzip);
+  BOOL compress = (self.tree.metaData.compressionAlgorithm == KPKCompressionGzip);
   for(KPKBinary *attachment in _binaries) {
     DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
     KPKAddAttribute(binaryElement, @"ID", KPKStringFromLong([_binaries indexOfObject:attachment]));
@@ -185,7 +201,7 @@
 
 - (DDXMLElement *)_xmlIcons {
   DDXMLElement *customIconsElements = [DDXMLElement elementWithName:@"CustomIcons"];
-  for (KPKIcon *icon in self.tree.metadata.customIcons) {
+  for (KPKIcon *icon in self.tree.metaData.customIcons) {
     DDXMLElement *iconElement = [DDXMLNode elementWithName:@"Icon"];
     KPKAddElement(iconElement, @"UUID", [icon.uuid encodedString]);
     KPKAddElement(iconElement, @"Data", [icon encodedString]);
@@ -226,5 +242,43 @@
     _entryToBinaryMap[ entry.uuid ] = entry.binaries;
   }
 }
+
+- (void)_encodeProtected:(DDXMLElement *)root {
+  DDXMLNode *protectedAttribute = [root attributeForName:@"Protected"];
+  if([[protectedAttribute stringValue] isEqual:@"True"]) {
+    NSString *str = [root stringValue];
+    NSMutableData *data = [[str dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
+    
+    // Protect the password
+    [_randomStream xor:data];
+    
+    // Base64 encode the string
+    [data encodeBase64];
+    NSString *protected = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    [root setStringValue:protected];
+  }
+  
+  for(DDXMLNode *node in [root children]) {
+    if([node kind] == DDXMLElementKind) {
+      [self _encodeProtected:(DDXMLElement*)node];
+    }
+  }
+}
+
+- (BOOL)_setupRandomStream {
+  switch(_headerWriter.randomStreamID ) {
+    case KPKRandomStreamSalsa20:
+      _randomStream = [[Salsa20RandomStream alloc] init:_headerWriter.protectedStreamKey];
+      return YES;
+      
+    case KPKRandomStreamArc4:
+      _randomStream = [[Arc4RandomStream alloc] init:_headerWriter.protectedStreamKey];
+      return YES;
+      
+    default:
+      return NO;
+  }
+}
+
 
 @end

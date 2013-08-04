@@ -25,33 +25,38 @@
 
 #import <Foundation/Foundation.h>
 
+#ifndef KPKCreateError
 #define KPKCreateError(errorPtr,errorCode,localizedKey,comment) if(errorPtr != NULL) {\
 *errorPtr = [NSError errorWithDomain:KPKErrorDomain code:errorCode userInfo:@{ NSLocalizedDescriptionKey: NSLocalizedString(localizedKey, comment)}];\
-}\
-
-
+}
+#endif
 
 FOUNDATION_EXPORT NSString *const KPKErrorDomain;
 
 typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
-  KPKErrorUnknownFileFormat = -1000, // The file format is unknown
-  KPKErrorFileCorrupted, // The File is courruptes
+  KPKErrorNoData = 1000, // No data given
+  KPKErrorUnknownFileFormat, // The file format is unknown
   KPKErrorHeaderCorrupted, // The header is Corrupted
   KPKErrorWriteFailed, // Could write the File
+  KPKErrorDecryptionFaild, // Failed to decrypt the data stream
   KPKErrorDatabaseParsingFailed, // The XML-Database couldn be parsed
   KPKErrorKeyParsingFailed, // The XML-Keyfile file couldn be parsed
-  KPKErrorDatabaseVersionUnsupported, // The database version is to high/low
-  KPKErrorChipherUnsupported, // The header specifies a unsupported and/or wrong chipher methed
+  KPKErrorUnsupportedDatabaseVersion, // The database version is to high/low
+  KPKErrorUnsupportedCipher, // The header specifies a unsupported and/or wrong chipher methed
   KPKErrorUnsupportedCompressionAlgorithm, // The header specifies an unsupporte and/or wrong compressoing algorithm
   KPKErrorUnsupportedRandomStream, // The header specifies an unsupporte stream or it's corrupted
   KPKErrorIntegrityCheckFaild, // The startbytes in the header aren't matching the AES stream-start
-  KPKErrorXMLRootElementMissing, // The root Elemetn is missing;
   KPKErrorXMLKeePassFileElementMissing, // the Keepass root element is missing
+  KPKErrorXMLRootElementMissing, // The root Elemetn is missing;
+  KPKErrorXMLMetaElementMissing, // The root element has no meta entry
   KPKErrorXMLGroupElementMissing, // no Group element found
-  KPKErrorLegacyInvalidFieldType, // Invalid field type in Legacy format
-  KPKErrorLegacyInvalidFieldSize, // Invalid field size in Legacy format
+  KPKErrorXMLInvalidHeaderFieldSize, // KDBX Header field size missmatch
+  KPKErrorXMLInvalidHeaderFieldType, // KDBX Header field type unknown
+  KPKErrorLegacyInvalidFieldType, // KDB Invalid field type
+  KPKErrorLegacyInvalidFieldSize, // KDB Invalid field size
   KPKErrorLegacyHeaderHashMissmatch, // Header missmatch
-  KPKErrorCorruptTree // Tree sturcture is corrupted
+  KPKErrorLegacyCorruptTree, // Tree sturcture is corrupted
+
 };
 
 #endif

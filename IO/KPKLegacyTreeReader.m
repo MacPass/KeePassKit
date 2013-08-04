@@ -373,7 +373,7 @@
 
 - (KPKTree *)_buildTree:(NSError **)error { 
   KPKTree *tree = [[KPKTree alloc] init];
-  tree.metadata.rounds = _headerReader.rounds;
+  tree.metaData.rounds = _headerReader.rounds;
   
   NSInteger groupIndex;
   NSInteger parentIndex;
@@ -388,8 +388,7 @@
   // Find the parent for every group
   for (groupIndex = 0; groupIndex < [_groups count]; groupIndex++) {
     KPKGroup *group = _groups[groupIndex];
-
-    groupLevel = [_groupLevels[groupIndex] integer];
+    groupLevel = [_groupLevels[groupIndex] integerValue];
     
     if (groupLevel == 0) {
       [root addGroup:group];
@@ -397,10 +396,10 @@
     }
     // The first item with a lower level is the parent
     for (parentIndex = groupIndex - 1; parentIndex >= 0; parentIndex--) {
-      parentLevel = [_groupLevels[parentIndex] integer];
+      parentLevel = [_groupLevels[parentIndex] integerValue];
       if (parentLevel < groupLevel) {
         if (groupLevel - parentLevel != 1) {
-          KPKCreateError(error, KPKErrorCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
+          KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
           return nil;
         }
         else {
@@ -409,7 +408,7 @@
       }
       if (parentIndex == 0) {
         /*
-        KPKCreateError(error, KPKErrorCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
+        KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
         return nil;
          */
         [root addGroup:group];

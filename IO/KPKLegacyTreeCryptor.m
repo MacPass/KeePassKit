@@ -25,43 +25,46 @@
 #import "KPKLegacyTreeReader.h"
 #import "KPKPassword.h"
 #import "KPKVersion.h"
+#import "KPKErrors.h"
 
 #import "NSData+CommonCrypto.h"
 
 #import <CommonCrypto/CommonCryptor.h>
 
-@interface KPKLegacyTreeCryptor () {
-  KPKLegacyHeaderReader *_headerReader;
-}
-@end
-
 @implementation KPKLegacyTreeCryptor
 
-- (id)initWithData:(NSData *)data passwort:(KPKPassword *)password {
-  self = [super initWithData:data passwort:password];
-  if(self) {
++ (KPKTree *)decryptTreeData:(NSData *)data withPassword:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
+  KPKLegacyHeaderReader *headerReader = [[KPKLegacyHeaderReader alloc] initWithData:data error:error];
+  if(!headerReader) {
+    return nil;
   }
-  return self;
-}
-
-- (KPKTree *)decryptTree:(NSError *__autoreleasing *)error {
-  _headerReader = [[KPKLegacyHeaderReader alloc] initWithData:_data error:error];
+  
   
   // Create the final key and initialize the AES input stream
-  NSData *keyData = [_password finalDataForVersion:KPKVersion1
-                                        masterSeed:_headerReader.masterSeed
-                                     transformSeed:_headerReader.transformSeed
-                                            rounds:_headerReader.rounds];
+  NSData *keyData = [password finalDataForVersion:KPKVersion1
+                                        masterSeed:headerReader.masterSeed
+                                     transformSeed:headerReader.transformSeed
+                                            rounds:headerReader.rounds];
   
-  
-  NSData *aesDecrypted = [[_headerReader dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
+  CCCryptorStatus cryptoStatus;
+  NSData *aesDecrypted = [[headerReader dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
                                                                                         key:keyData
-                                                                       initializationVector:_headerReader.encryptionIV
+                                                                       initializationVector:headerReader.encryptionIV
                                                                                     options:kCCOptionPKCS7Padding
-                                                                                      error:NULL];
+                                                                                      error:&cryptoStatus];
+  if(cryptoStatus != kCCSuccess ) {
+    KPKCreateError(error, KPKErrorDecryptionFaild, @"ERROR_DECRYPTION_FAILED", "");
+    return nil;
+  }
   
-  KPKLegacyTreeReader *reader = [[KPKLegacyTreeReader alloc] initWithData:aesDecrypted headerReader:_headerReader];
+  KPKLegacyTreeReader *reader = [[KPKLegacyTreeReader alloc] initWithData:aesDecrypted headerReader:headerReader];
   return [reader tree:error];
 }
+
++ (NSData *)encryptTree:(KPKTree *)tree password:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
+  NSAssert(NO, @"Not implemented");
+  return nil;
+}
+
 
 @end

@@ -32,7 +32,7 @@
 - (id)init {
   self = [super init];
   if(self) {
-    _metadata = [[KPKMetaData alloc] init];
+    _metaData = [[KPKMetaData alloc] init];
     _deletedObjects = [[NSMutableDictionary alloc] init];
   }
   return self;
@@ -64,11 +64,11 @@
 }
 
 - (NSUndoManager *)undoManager {
-  return self.metadata.undoManager;
+  return self.metaData.undoManager;
 }
 
 - (void)setUndoManager:(NSUndoManager *)undoManager {
-  self.metadata.undoManager = undoManager;
+  self.metaData.undoManager = undoManager;
 }
 
 - (KPKGroup *)root {

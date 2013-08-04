@@ -20,10 +20,13 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKTreeCryptor.h"
+#import <Foundation/Foundation.h>
 
-@interface KPKXmlTreeCryptor : KPKTreeCryptor
+#import "KPKTreeCrypting.h"
 
-- (id)initWithData:(NSData *)data password:(KPKPassword *)password;
+@interface KPKXmlTreeCryptor : NSObject <KPKTreeCrypting>
+
++ (KPKTree *)decryptTreeData:(NSData *)data withPassword:(KPKPassword *)password error:(NSError *__autoreleasing *)error;
++ (NSData *)encryptTree:(KPKTree *)tree password:(KPKPassword *)password error:(NSError *__autoreleasing *)error;
 
 @end

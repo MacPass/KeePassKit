@@ -21,7 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "KPKHeaderWriting.h"
 @class KPKTree;
 @class DDXMLDocument;
 
@@ -29,7 +29,7 @@
 
 @property (strong, readonly) KPKTree *tree;
 
-- (id)initWithTree:(KPKTree *)tree;
+- (id)initWithTree:(KPKTree *)tree headerWriter:(id<KPKHeaderWriting>)headerWriter;
 - (DDXMLDocument *)xmlDocument;
 
 @end

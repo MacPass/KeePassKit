@@ -26,5 +26,11 @@
 @interface KPKXmlHeaderWriter : NSObject <KPKHeaderWriting>
 
 @property (nonatomic, readonly) NSData *headerHash;
+@property (nonatomic, readonly, strong) NSData *masterSeed;
+@property (nonatomic, readonly, strong) NSData *transformSeed;
+@property (nonatomic, readonly, strong) NSData *encryptionIv;
+@property (nonatomic, readonly, assign) uint32_t randomStreamID;
+@property (nonatomic, readonly, strong) NSData *streamStartBytes;
+@property (nonatomic, readonly, strong) NSData *protectedStreamKey;
 
 @end

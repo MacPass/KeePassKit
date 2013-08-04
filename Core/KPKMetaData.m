@@ -7,6 +7,7 @@
 //
 
 #import "KPKMetaData.h"
+#import "KPKFormat.h"
 #import "KPKIcon.h"
 
 @implementation KPKMetaData
@@ -16,8 +17,63 @@
   if(self){
     _customData = [[NSMutableArray alloc] init];
     _customIcons = [[NSMutableArray alloc] init];
+    _rounds = 6000;
+    _compressionAlgorithm = KPKCompressionGzip;
+    _protectNotes = NO;
+    _protectPassword = YES;
+    _protectTitle = NO;
+    _protectUrl = NO;
+    _protectUserName = NO;
+    _generator = [@"MacPass" copy];
   }
   return self;
+}
+
+#pragma mark -
+#pragma mark Custom Setter
+- (void)setDatabaseName:(NSString *)databaseName {
+  if(![_databaseName isEqualToString:databaseName]) {
+    _databaseName = [databaseName copy];
+    if(_updateTiming) {
+      self.databaseNameChanged = [NSDate date];
+    }
+  }
+}
+
+- (void)setDatabaseDescription:(NSString *)databaseDescription {
+  if(![_databaseDescription isEqualToString:databaseDescription]) {
+    _databaseDescription = [databaseDescription copy];
+    if(_updateTiming) {
+      self.databaseNameChanged = [NSDate date];
+    }
+  }
+}
+
+- (void)setDefaultUserName:(NSString *)defaultUserName {
+  if(![_defaultUserName isEqualToString:defaultUserName]) {
+    _defaultUserName = [defaultUserName copy];
+    if(_updateTiming) {
+      self.defaultUserNameChanged = [NSDate date];
+    }
+  }
+}
+
+- (void)setEntryTemplatesGroup:(NSUUID *)entryTemplatesGroup {
+  if(![_entryTemplatesGroup isEqual:entryTemplatesGroup]) {
+    _entryTemplatesGroup = entryTemplatesGroup;
+    if(_updateTiming) {
+      self.entryTemplatesGroupChanged = [NSDate date];
+    }
+  }
+}
+
+- (void)setRecycleBinUuid:(NSUUID *)recycleBinUuid {
+  if([_recycleBinUuid isEqual:recycleBinUuid]) {
+    _recycleBinUuid = recycleBinUuid;
+    if(_updateTiming) {
+      self.recycleBinChanged = [NSDate date];
+    }
+  }
 }
 
 - (void)addCustomIcon:(KPKIcon *)icon {
