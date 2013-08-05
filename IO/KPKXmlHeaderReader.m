@@ -88,8 +88,8 @@
   [_dataStreamer skipBytes:12];
   //NSUInteger location = 12;
   while (true) {
-    uint8 fieldType = [_dataStreamer readByte];
-    uint16 fieldSize = [_dataStreamer read2Bytes];
+    uint8_t fieldType = [_dataStreamer readByte];
+    uint16_t fieldSize = [_dataStreamer read2Bytes];
     fieldSize = CFSwapInt16LittleToHost(fieldSize);
   
     //NSRange readRange = NSMakeRange(location, fieldSize);

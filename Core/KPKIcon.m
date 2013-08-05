@@ -50,6 +50,15 @@
   return self;
 }
 
+- (id)initWithData:(NSData *)data {
+  self = [self init];
+  if(self) {
+    self.image =[[NSImage alloc] initWithData:data];
+  }
+  return self;
+}
+
+
 - (NSString *)encodedString {
   NSImageRep *imageRep = [[self.image representations] lastObject];
   if([imageRep isKindOfClass:[NSBitmapImageRep class]]) {

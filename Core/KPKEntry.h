@@ -44,6 +44,8 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntrySearchHistoryItem;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryCustomKVP;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryDatabaseColor;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXCustomIcon;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXCustomIcon2;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 
 @interface KPKEntry : KPKNode <NSCopying, NSCoding>
 

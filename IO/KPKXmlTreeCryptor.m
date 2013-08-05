@@ -61,11 +61,16 @@
   /*
    The datastream is AES encrypted. Decrypt using the supplied
    */
+  CCCryptorStatus cryptoError = kCCSuccess;
   NSData *aesDecrypted = [[headerReader dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
                                                                                    key:keyData
                                                                   initializationVector:headerReader.encryptionIV
                                                                                options:kCCOptionPKCS7Padding
-                                                                                 error:NULL];
+                                                                                 error:&cryptoError];
+  if(cryptoError != kCCSuccess) {
+    KPKCreateError(error, KPKErrorDecryptionFaild, @"ERROR_DECRYPTION_FAILED", "");
+    return nil;
+  }
   /*
    Compare the first Streambytes with the ones stores in the header
    */

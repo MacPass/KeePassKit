@@ -29,15 +29,16 @@
 - (NSData *)dataWithLength:(NSUInteger)length;
 - (NSString *)stringWithLenght:(NSUInteger)length encoding:(NSStringEncoding)encoding;
 - (void)readBytes:(void *)buffer length:(NSUInteger)length;
-- (uint8)readByte;
-- (uint16)read2Bytes;
-- (uint32)read4Bytes;
-- (uint64)read8Bytes;
+- (uint8_t)readByte;
+- (uint16_t)read2Bytes;
+- (uint32_t)read4Bytes;
+- (uint64_t)read8Bytes;
 - (NSUInteger)integer;
 
 - (NSUInteger)location;
 - (void)skipBytes:(NSUInteger)numberOfBytes;
 - (BOOL)endOfData;
+- (NSUInteger)countOfReadableBytes;
 - (void)reset;
 
 @end

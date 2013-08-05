@@ -46,7 +46,13 @@
                                      transformSeed:headerReader.transformSeed
                                             rounds:headerReader.rounds];
   
-  CCCryptorStatus cryptoStatus;
+
+  /*
+   The error doesn't get set to success on success
+   only get's filled on errors. Therefor initalize it
+   to be successfull
+   */
+  CCCryptorStatus cryptoStatus = kCCSuccess;
   NSData *aesDecrypted = [[headerReader dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
                                                                                         key:keyData
                                                                        initializationVector:headerReader.encryptionIV

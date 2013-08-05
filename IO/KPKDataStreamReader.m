@@ -61,26 +61,26 @@
   [self _getBytes:buffer length:length];
 }
 
-- (uint8)readByte {
-  uint8 buffer;
+- (uint8_t)readByte {
+  uint8_t buffer;
   [self _getBytes:&buffer length:1];
   return buffer;
 }
 
-- (uint16)read2Bytes {
-  uint16 buffer;
+- (uint16_t)read2Bytes {
+  uint16_t buffer;
   [self _getBytes:&buffer length:2];
   return buffer;
 }
 
-- (uint32)read4Bytes {
-  uint32 buffer;
+- (uint32_t)read4Bytes {
+  uint32_t buffer;
   [self _getBytes:&buffer length:4];
   return buffer;
 }
 
-- (uint64)read8Bytes {
-  uint64 buffer;
+- (uint64_t)read8Bytes {
+  uint64_t buffer;
   [self _getBytes:&buffer length:8];
   return buffer;
 }
@@ -98,6 +98,13 @@
 
 - (BOOL)endOfData {
   return (_location == [_data length] -1);
+}
+
+- (NSUInteger)countOfReadableBytes {
+  if([self endOfData]) {
+    return 0;
+  }
+  return  ([_data length] - _location) - 1;
 }
 
 - (void)reset {

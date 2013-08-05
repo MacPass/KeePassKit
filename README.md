@@ -32,6 +32,8 @@ KeePassKit uses code from the following projects
 
 [KeePass Database Library](https://github.com/mpowrie/KeePassLib) Copyright 2010 Qiang Yu. All rights reserved.
 
+[KeepassX](https://gitorious.org/~sergeidanilov/keepassx/gdrive-keepassx) Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
+
 [NSData Gzip Category](http://www.cocoadev.com/index.pl?NSDataCategory) from the [CocoaDev Wiki](http://www.cocoadev.com)
 
 [NSData Base64 Category](http://stackoverflow.com/questions/11386876/how-to-encode-and-decode-files-as-base64-in-cocoa-objective-c) from Stackoverflow user [deins2342](http://stackoverflow.com/users/200321/denis2342)

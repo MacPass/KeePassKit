@@ -31,12 +31,14 @@ NSString *const KPKMetaEntryTitle               = @"Meta-Info";
 NSString *const KPKMetaEntryUsername            = @"SYSTEM";
 NSString *const KPKMetaEntryURL                 = @"$";
 
-NSString *const KPKMetaEntryUIState             = @"Simple UI State";
-NSString *const KPKMetaEntryDefaultUsername     = @"Default User Name";
-NSString *const KPKMetaEntrySearchHistoryItem   = @"Search History Item";
-NSString *const KPKMetaEntryCustomKVP           = @"Custom KVP";
-NSString *const KPKMetaEntryDatabaseColor       = @"Database Color";
-NSString *const KPKMetaEntryKeePassXCustomIcon  = @"KPX_CUSTOM_ICONS_2";
+NSString *const KPKMetaEntryUIState                 = @"Simple UI State";
+NSString *const KPKMetaEntryDefaultUsername         = @"Default User Name";
+NSString *const KPKMetaEntrySearchHistoryItem       = @"Search History Item";
+NSString *const KPKMetaEntryCustomKVP               = @"Custom KVP";
+NSString *const KPKMetaEntryDatabaseColor           = @"Database Color";
+NSString *const KPKMetaEntryKeePassXCustomIcon      = @"KPX_CUSTOM_ICONS_2";
+NSString *const KPKMetaEntryKeePassXCustomIcon2     = @"KPX_CUSTOM_ICONS_4";
+NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 @interface KPKEntry () {
 @private

@@ -29,6 +29,7 @@
 
 - (id)initWithImageAtURL:(NSURL *)imageLocation;
 - (id)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString;
+- (id)initWithData:(NSData *)data;
 
 - (NSString *)encodedString;
 
