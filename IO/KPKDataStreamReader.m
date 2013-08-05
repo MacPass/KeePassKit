@@ -104,7 +104,7 @@
   if([self endOfData]) {
     return 0;
   }
-  return  ([_data length] - _location) - 1;
+  return ([_data length] - _location);
 }
 
 - (void)reset {

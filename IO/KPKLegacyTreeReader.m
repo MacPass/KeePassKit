@@ -427,27 +427,27 @@
   if([data length] == 0) {
     return;
   }
-  if([entry.title isEqualToString:KPKMetaEntryCustomKVP]) {
+  if([entry.notes isEqualToString:KPKMetaEntryCustomKVP]) {
     // Custom KeyValueProvierd - unsupported!
     return;
   }
-  if([entry.title isEqualToString:KPKMetaEntryDatabaseColor]) {
+  if([entry.notes isEqualToString:KPKMetaEntryDatabaseColor]) {
     [self _parseColorData:data metaData:metaData];
     return;
   }
-  if([entry.title isEqualToString:KPKMetaEntryDefaultUsername] ) {
+  if([entry.notes isEqualToString:KPKMetaEntryDefaultUsername] ) {
     metaData.defaultUserName = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return;
   }
-  if([entry.title isEqualToString:KPKMetaEntryUIState]) {
+  if([entry.notes isEqualToString:KPKMetaEntryUIState]) {
     [self _parseUIStateData:data metaData:metaData];
     return;
   }
-  if([entry.title isEqualToString:KPKMetaEntryKeePassXCustomIcon2]) {
+  if([entry.notes isEqualToString:KPKMetaEntryKeePassXCustomIcon2]) {
     [self _parseKPXCustomIcon:data metaData:metaData];
     return;
   }
-  if([entry.title isEqualToString:KPKMetaEntryKeePassXGroupTreeState]) {
+  if([entry.notes isEqualToString:KPKMetaEntryKeePassXGroupTreeState]) {
     [self _parseKPXTreeState:data];
     return;
   }
