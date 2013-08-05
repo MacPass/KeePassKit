@@ -12,6 +12,9 @@
 @implementation NSColor (KeePassKit)
 
 + (NSColor *)colorWithHexString:(NSString *)hex {
+  if([hex hasPrefix:@"#"]) {
+    hex = [hex substringFromIndex:1];
+  }
   NSData *hexData = [hex dataFromHexString];
   return [self colorWithData:hexData];
 }

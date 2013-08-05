@@ -94,7 +94,7 @@
   
   // Check the encryption algorithm
   _header.flags = CFSwapInt32LittleToHost(_header.flags);
-  if (!(_header.flags & KPKVersion1FlagRijndael)) {
+  if (!(_header.flags & KPKLegacyEncryptionRijndael)) {
     KPKCreateError(error, KPKErrorUnsupportedCipher, @"ERROR_UNSUPPORTED_CIPHER", "");
     @throw [NSException exceptionWithName:@"IOException" reason:@"Unsupported algorithm" userInfo:nil];
   }

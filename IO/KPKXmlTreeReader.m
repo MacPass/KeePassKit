@@ -29,6 +29,7 @@
 #import "KPKTimeInfo.h"
 #import "KPKGroup.h"
 #import "KPKNode.h"
+#import "KPKDeletedNode.h"
 #import "KPKEntry.h"
 #import "KPKBinary.h"
 #import "KPKAttribute.h"
@@ -47,6 +48,7 @@
 #import "DDXMLElementAdditions.h"
 
 #import "NSUUID+KeePassKit.h"
+#import "NSColor+KeePassKit.h"
 
 #define KPKYES(attribute) [[attribute stringValue] isEqualToString:@"True"]
 #define KPKNO(attribute) [[attribute stringValue] isEqualToString:@"False"]
@@ -112,6 +114,7 @@
   /* Set the information we got from the header */
   tree.metaData.rounds = _headerReader.rounds;
   tree.metaData.compressionAlgorithm = _headerReader.compressionAlgorithm;
+  
   /* Parse the rest of the metadata from the file */
   DDXMLElement *meta = [rootElement elementForName:@"Meta"];
   if(!meta) {
@@ -126,13 +129,14 @@
     return nil;
   }
   
-  DDXMLElement *element = [root elementForName:@"Group"];
-  if(!element) {
+  DDXMLElement *rootGroup = [root elementForName:@"Group"];
+  if(!rootGroup) {
     KPKCreateError(error, KPKErrorXMLGroupElementMissing, @"ERROR_GROUP_ELEMENT_MISSING", "");
     return nil;
   }
   
-  tree.root = [self _parseGroup:element];
+  tree.root = [self _parseGroup:rootGroup];
+  [self _parseDeletedObjects:root tree:tree];
   
   tree.metaData.updateTiming = YES;
   
@@ -173,7 +177,8 @@
   /*
    Color is HTML Hex code!
    */
-  data.color = KPKString(root, @"Color");
+  
+  data.color = [NSColor colorWithHexString:KPKString(root, @"Color")];
   data.masterKeyChanged = KPKDate(_dateFormatter, root, @"MasterKeyChanged");
   data.masterKeyChangeIsRequired = KPKInteger(root, @"MasterKeyChangeRec");
   data.masterKeyChangeIsForced = KPKInteger(root, @"MasterKeyChangeForce");
@@ -404,6 +409,24 @@
       KPKEntry *historyEntry = [self _createEntry:entryElement ignoreHistory:YES];
       [entry addHistoryEntry:historyEntry];
     }
+  }
+}
+
+- (void)_parseDeletedObjects:(DDXMLElement *)root tree:(KPKTree *)tree {
+  /*
+   <DeletedObjects>
+    <DeletedObject>
+      <UUID>-Base64EncodedUUID/UUID>
+      <DeletionTime>YYY-MM-DDTHH:MM:SSZ</DeletionTime>
+    </DeletedObject>
+  </DeletedObjects>
+   */
+  DDXMLElement *deletedObjects = [root elementForName:@"DeletedObjects"];
+  for(DDXMLElement *deletedObject in [deletedObjects elementsForName:@"DeletedObject"]) {
+    NSUUID *uuid = [[NSUUID alloc] initWithEncodedUUIDString:KPKString(deletedObject, @"UUID")];
+    NSDate *date = KPKDate(_dateFormatter, deletedObject, @"DeletionTime");
+    KPKDeletedNode *deletedNode = [[KPKDeletedNode alloc] initWithUUID:uuid date:date];
+    tree.deletedObjects[ deletedNode.uuid ] = deletedNode;
   }
 }
 

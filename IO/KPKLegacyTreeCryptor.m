@@ -38,8 +38,6 @@
   if(!headerReader) {
     return nil;
   }
-  
-  
   // Create the final key and initialize the AES input stream
   NSData *keyData = [password finalDataForVersion:KPKVersion1
                                         masterSeed:headerReader.masterSeed

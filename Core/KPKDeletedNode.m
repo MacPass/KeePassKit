@@ -20,4 +20,12 @@
   return self;
 }
 
+- (id)initWithUUID:(NSUUID *)uuid date:(NSDate *)date {
+  self = [super init];
+  if(self) {
+    _deletionDate = date;
+    _uuid = uuid;
+  }
+  return self;
+}
 @end

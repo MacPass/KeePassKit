@@ -28,7 +28,7 @@
 @property(nonatomic, assign) NSInteger maintenanceHistoryDays;
 
 /* Hexstring - #AA77FF */
-@property(nonatomic, copy) NSString *color;
+@property(nonatomic, copy) NSColor *color;
 
 @property(nonatomic, strong) NSDate *masterKeyChanged;
 @property(nonatomic, assign) NSInteger masterKeyChangeIsRequired;

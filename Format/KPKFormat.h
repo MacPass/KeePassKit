@@ -60,11 +60,11 @@ typedef NS_ENUM(NSUInteger, KPKSignatures) {
   KPKVersion2Signature2 = 0xB54BFB67,
 };
 
-typedef NS_OPTIONS(NSUInteger, KPKVersion1Flags) {
-  KPKVersion1FlagSHA2       = 1<<0,
-  KPKVersion1FlagRijndael   = 1<<1,
-  KPKVersion1FlagArcFour    = 1<<2,
-  KPKVersion1FlagTwoFish    = 1<<3
+typedef NS_OPTIONS(NSUInteger, KPKLegacyEncryptionFlags) {
+  KPKLegacyEncryptionSHA2       = 1<<0,
+  KPKLegacyEncryptionRijndael   = 1<<1,
+  KPKLegacyEncryptionArcFour    = 1<<2,
+  KPKLegacyEncryptionTwoFish    = 1<<3
 };
 
 typedef NS_ENUM(NSUInteger, KPKFileVersion) {
