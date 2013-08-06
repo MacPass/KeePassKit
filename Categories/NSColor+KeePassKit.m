@@ -39,4 +39,19 @@
   return [NSColor colorWithCalibratedRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];
 }
 
++ (NSString *)hexStringFromColor:(NSColor *)color {
+  return [color hexString];
+}
+
+- (NSString *)hexString {
+  NSColor *rgbColor = [self colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]];
+  if(!rgbColor) {
+    return nil;
+  }
+  return [NSString stringWithFormat:@"#%02X%02X%02X",
+          (int)([rgbColor redComponent] * 2550),
+          (int)([rgbColor greenComponent] * 255),
+          (int)([rgbColor blueComponent] * 255)];
+}
+
 @end

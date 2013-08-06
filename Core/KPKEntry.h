@@ -57,14 +57,18 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 
 @property (nonatomic, strong) NSArray *binaries;
 @property (nonatomic, copy) NSString *tags;
-@property (nonatomic, copy) NSString *foregroundColor;
-@property (nonatomic, copy) NSString *backgroundColor;
+@property (nonatomic, copy) NSColor *foregroundColor;
+@property (nonatomic, copy) NSColor *backgroundColor;
 @property (nonatomic, copy) NSString *overrideURL;
 
 @property (nonatomic, strong) NSArray *customAttributes;
 
 @property (nonatomic, strong) NSArray *history;
 
+/**
+ *	Retrieves a list of all defaultAttributes
+ */
+- (NSArray *)defaultAttributes;
 /**
  *	Additialn information is stores in MetaEntrie in KDB files.
  *  This function determines wheter the entry is a meta entry or not.
@@ -102,15 +106,20 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 - (void)removeCustomAttribute:(KPKAttribute *)attribute;
 
 /**
- Adds the given attachment
- @param attachment Attachment to add to the entry
- @param index The position at whicht to att the attachment
+ *  Adds a binary to the attachments of this entry
+ *	@param	binary	Binary to add
+ *	@param	index	Index to add the binary at
  */
 - (void)addBinary:(KPKBinary *)binary atIndex:(NSUInteger)index;
-- (void)addBinary:(KPKBinary *)binary;
 /**
- Removes the given attachment
- @param attachment The attachment to be removed
+ *	Adds the given Binary to the binaries of this entry
+ *	@param	binary	Binary to add
+ */
+- (void)addBinary:(KPKBinary *)binary;
+
+/**
+ *	Removes the provied Binary from the entry attachments
+ *	@param	binary	Binary to be removed
  */
 - (void)removeBinary:(KPKBinary *)binary;
 /**

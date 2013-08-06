@@ -272,8 +272,8 @@
     entry.iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
   }
   
-  entry.foregroundColor = KPKString(entryElement, @"ForegroundColor");
-  entry.backgroundColor = KPKString(entryElement, @"BackgroundColor");
+  entry.foregroundColor =  [NSColor colorWithHexString:KPKString(entryElement, @"ForegroundColor")];
+  entry.backgroundColor = [NSColor colorWithHexString:KPKString(entryElement, @"BackgroundColor")];
   entry.overrideURL = KPKString(entryElement, @"OverrideURL");
   entry.tags = KPKString(entryElement, @"Tags");
   

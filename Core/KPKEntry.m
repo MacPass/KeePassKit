@@ -96,12 +96,12 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
     _binaries = [aDecoder decodeObjectForKey:@"binaries"];
     _customAttributes = [aDecoder decodeObjectForKey:@"customAttributes"];
     _tags = [aDecoder decodeObjectForKey:@"tags"];
-
+    
     _titleAttribute.entry = self;
     _usernameAttribute.entry = self;
     _urlAttribute.entry = self;
     _notesAttribute.entry = self;
-
+    
     for(KPKAttribute *attribute in _customAttributes) {
       attribute.entry = self;
     }
@@ -119,6 +119,14 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   [aCoder encodeObject:self.customAttributes forKey:@"customAttributes"];
   [aCoder encodeObject:self.tags forKey:@"tags"];
   return;
+}
+
+- (NSArray *)defaultAttributes {
+  return @[ self.titleAttribute,
+            self.usernameAttribute,
+            self.urlAttribute,
+            self.notesAttribute
+            ];
 }
 
 - (BOOL)isMeta {

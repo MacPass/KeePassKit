@@ -506,7 +506,7 @@
     [data getBytes:&color length:4];
     color = CFSwapInt32(color);
     NSData *colorData = [NSData dataWithBytesNoCopy:&color length:sizeof(uint32_t) freeWhenDone:NO];
-    //metaData.color = [NSColor colorWithData:colorData];
+    metaData.color = [NSColor colorWithData:colorData];
   }
 }
 

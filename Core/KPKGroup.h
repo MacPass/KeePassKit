@@ -38,8 +38,8 @@
 @property(nonatomic, strong) NSUUID *lastTopVisibleEntry;
 @property(nonatomic, assign) BOOL isExpanded;
 @property(nonatomic, copy) NSString *defaultAutoTypeSequence;
-@property(nonatomic, assign) BOOL isAutoTypeEnabled;
-@property(nonatomic, assign) BOOL isSearchEnabled;
+@property(nonatomic, assign) KPKInheritBool isAutoTypeEnabled;
+@property(nonatomic, assign) KPKInheritBool isSearchEnabled;
 
 
 @property(nonatomic, assign) BOOL canAddEntries;

@@ -127,9 +127,10 @@
   NSData *encryptedData = [hashedData dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
                                                               key:key
                                              initializationVector:headerWriter.encryptionIv
-                                                          options:kCCOptionPKCS7Padding error:NULL];
+                                                          options:kCCOptionPKCS7Padding
+                                                            error:NULL];
   
-  
+  //FIXME Hash output stream
   //OutputStream *stream = [[HashedOutputStream alloc] initWithOutputStream:aesOutputStream blockSize:1024*1024];
   return encryptedData;
 }
