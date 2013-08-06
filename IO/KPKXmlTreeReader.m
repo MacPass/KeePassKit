@@ -57,6 +57,18 @@
 #define KPKBool(element,name) [[[element elementForName:name] stringValue] boolValue]
 #define KPKDate(formatter,element,name) [formatter dateFromString:[[element elementForName:name] stringValue]]
 
+KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
+  NSString *stringValue = [[element elementForName:name] stringValue];
+  if(NSOrderedSame == [stringValue compare:@"null" options:NSCaseInsensitiveSearch]) {
+    return KPKInherit;
+  }
+  NSUInteger intValue = [[[element elementForName:name] stringValue] integerValue];
+  if(intValue != -1 && intValue != 1) {
+    return KPKInherit;
+  }
+  return intValue;
+}
+
 @interface KPKXmlTreeReader () {
 @private
   DDXMLDocument *_document;
@@ -232,15 +244,12 @@
   
   group.defaultAutoTypeSequence = KPKString(groupElement, @"DefaultAutoTypeSequence");
   
-  NSString *enableAutoType = KPKString(groupElement, @"EnableAutoType");
-  NSString *enableSearching = KPKString(groupElement, @"EnableSearching");
-  
-  group.isAutoTypeEnabled = (NSOrderedSame == [enableAutoType compare:@"null" options:NSCaseInsensitiveSearch]);
-  group.isSearchEnabled = (NSOrderedSame == [enableSearching compare:@"null" options:NSCaseInsensitiveSearch]);
+  group.isAutoTypeEnabled = parseInheritBool(groupElement, @"EnableAutoType");
+  group.isSearchEnabled = parseInheritBool(groupElement, @"EnableSearching");
   group.lastTopVisibleEntry = [NSUUID uuidWithEncodedString:KPKString(groupElement, @"LastTopVisibleEntry")];
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Entry"]) {
-    KPKEntry *entry = [self _createEntry:element ignoreHistory:NO];
+    KPKEntry *entry = [self _parseEntry:element ignoreHistory:NO];
     entry.parent = group;
     [group addEntry:entry atIndex:[group.entries count]];
   }
@@ -255,7 +264,7 @@
   return group;
 }
 
-- (KPKEntry *)_createEntry:(DDXMLElement *)entryElement ignoreHistory:(BOOL)ignoreHistory {
+- (KPKEntry *)_parseEntry:(DDXMLElement *)entryElement ignoreHistory:(BOOL)ignoreHistory {
   KPKEntry *entry = [[KPKEntry alloc] init];
   
   entry.updateTiming = NO;
@@ -406,7 +415,7 @@
   DDXMLElement *historyElement = [entryElement elementForName:@"History"];
   if (historyElement != nil) {
     for (DDXMLElement *entryElement in [historyElement elementsForName:@"Entry"]) {
-      KPKEntry *historyEntry = [self _createEntry:entryElement ignoreHistory:YES];
+      KPKEntry *historyEntry = [self _parseEntry:entryElement ignoreHistory:YES];
       [entry addHistoryEntry:historyEntry];
     }
   }
