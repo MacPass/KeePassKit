@@ -25,7 +25,7 @@
 #import "KPKPassword.h"
 #import "KPKVersion.h"
 #import "KPKErrors.h"
-#import "KPKFormat.h"
+#import "KPKXmlFormat.h"
 #import "KPKTree.h"
 #import "KPKMetaData.h"
 

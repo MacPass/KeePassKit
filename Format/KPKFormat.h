@@ -39,45 +39,6 @@ FOUNDATION_EXTERN NSString *const KPKAccesTimeKey;
 FOUNDATION_EXTERN NSString *const KPKModifcationTimeKey;
 FOUNDATION_EXTERN NSString *const KPKExpiryDateKey;
 
-
-typedef NS_ENUM(NSUInteger, KPKCompression) {
-  KPKCompressionNone,
-  KPKCompressionGzip,
-  KPKCompressionCount,
-};
-
-typedef NS_ENUM(NSUInteger, KPKRandomStreamType) {
-  KPKRandomStreamNone,
-  KPKRandomStreamArc4,
-  KPKRandomStreamSalsa20,
-  KPKRandomStreamCount
-};
-
-typedef NS_ENUM(NSUInteger, KPKSignatures) {
-  KPKVersion1Signature1 = 0x9AA2D903,
-  KPKVersion1Signature2 = 0xB54BFB65,
-  KPKVersion2Signature1 = 0x9AA2D903,
-  KPKVersion2Signature2 = 0xB54BFB67,
-};
-
-typedef NS_OPTIONS(NSUInteger, KPKLegacyEncryptionFlags) {
-  KPKLegacyEncryptionSHA2       = 1<<0,
-  KPKLegacyEncryptionRijndael   = 1<<1,
-  KPKLegacyEncryptionArcFour    = 1<<2,
-  KPKLegacyEncryptionTwoFish    = 1<<3
-};
-
-typedef NS_ENUM(NSUInteger, KPKFileVersion) {
-  KPKFileVersion1 = 0x00030004,
-  KPKFileVersion2 = 0x00030000
-};
-
-FOUNDATION_EXPORT const NSUInteger KPKVersion1HeaderSize;
-
-#define VERSION2_CRITICAL_MAX_32 0x00030000
-#define VERSION2_CRITICAL_MASK 0xFFFF0000
-#define VERSION_OFFSET 12
-
 /**
  Format class.
  Holds all allowed keys for an element.

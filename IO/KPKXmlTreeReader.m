@@ -35,6 +35,7 @@
 #import "KPKAttribute.h"
 
 #import "KPKFormat.h"
+#import "KPKXmlFormat.h"
 #import "KPKErrors.h"
 
 #import "RandomStream.h"

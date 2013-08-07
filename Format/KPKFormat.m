@@ -21,6 +21,9 @@
 //
 
 #import "KPKFormat.h"
+#import "KPKLegacyFormat.h"
+#import "KPKXmlFormat.h"
+
 
 NSString *const KPKTitleKey     = @"Title";
 NSString *const KPKNameKey      = @"Name";
@@ -33,8 +36,6 @@ NSString *const KPKBinaryRefKey = @"BinaryRef";
 NSString *const KPKAutotypeKe   = @"Autotype";
 NSString *const KPKTagKey       = @"Tags";
 NSString *const KPKImageKey     = @"Image";
-
-const NSUInteger KPKVersion1HeaderSize = 124;
 
 @interface KPKFormat () {
   NSSet *_defaultKeys;
@@ -89,10 +90,10 @@ const NSUInteger KPKVersion1HeaderSize = 124;
   signature1 = CFSwapInt32LittleToHost(signature1);
   signature2 = CFSwapInt32LittleToHost(signature2);
   
-  if (signature1 == KPKVersion1Signature1 && signature2 == KPKVersion1Signature2) {
+  if (signature1 == KPK_LEGACY_SIGNATURE_2 && signature2 == KPK_LEGACY_SIGNATURE_2) {
     return KPKVersion1;
   }
-  if (signature1 == KPKVersion1Signature1 && signature2 == KPKVersion2Signature2 ) {
+  if (signature1 == KPK_XML_SIGNATURE_1 && signature2 == KPK_XML_SIGNATURE_2 ) {
     return KPKVersion2;
   }
   return KPKUnknownVersion;

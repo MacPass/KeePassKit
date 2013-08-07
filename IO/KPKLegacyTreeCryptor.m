@@ -22,7 +22,9 @@
 
 #import "KPKLegacyTreeCryptor.h"
 #import "KPKLegacyHeaderReader.h"
+#import "KPKLegacyHeaderWriter.h"
 #import "KPKLegacyTreeReader.h"
+#import "KPKLegacyTreeWriter.h"
 #import "KPKPassword.h"
 #import "KPKVersion.h"
 #import "KPKErrors.h"
@@ -67,7 +69,6 @@
 
 + (NSData *)encryptTree:(KPKTree *)tree password:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
 /*
- 
  TODO:
  1. create mutable data to write to
  2. create header writer and write header data
@@ -75,10 +76,31 @@
  4. encrypt serialized tree
  5. add encrypted data to output
  6. write data to file
- */  
-  NSAssert(NO, @"Not implemented");
-  return nil;
+ */
+  NSMutableData *fileData = [[NSMutableData alloc] init];
+  KPKLegacyHeaderWriter *headerWriter = [[KPKLegacyHeaderWriter alloc] initWithTree:tree];
+  [headerWriter writeHeaderData:fileData];
+  
+  KPKLegacyTreeWriter *treeWriter = [[KPKLegacyTreeWriter alloc] initWithTree:tree headerWriter:headerWriter];
+  
+  NSData *treeData = [treeWriter treeData];
+  
+  // Create the encryption output stream
+  NSData *passwordData = [password finalDataForVersion:KPKVersion1
+                                            masterSeed:headerWriter.masterSeed
+                                         transformSeed:headerWriter.transformSeed
+                                                rounds:headerWriter.transformationRounds];
+
+  CCCryptorStatus cryptoError = kCCSuccess;
+  NSData *encryptedTreeData = [treeData dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
+                                                                key:passwordData
+                                               initializationVector:headerWriter.encryptionIv
+                                                            options:kCCOptionPKCS7Padding
+                                                              error:&cryptoError];
+  
+  NSData *contentHash = [encryptedTreeData SHA256Hash];
+  [fileData replaceBytesInRange:NSMakeRange(56,32) withBytes:contentHash.bytes];
+  [fileData appendData:encryptedTreeData];
+  return fileData;
 }
-
-
 @end

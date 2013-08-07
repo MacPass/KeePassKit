@@ -24,7 +24,7 @@
 #import "KPKTree.h"
 #import "KPKMetaData.h"
 #import "KPKDataStreamWriter.h"
-#import "KPKHeaderFields.h"
+#import "KPKXmlFormat.h"
 #import "KPKFormat.h"
 
 #import "NSData+CommonCrypto.h"
@@ -61,9 +61,9 @@
   _writer = [[KPKDataStreamWriter alloc] initWithData:data];
   
   /* Version and Signature */
-  [_writer write4Bytes:CFSwapInt32HostToLittle(KPKVersion2Signature1)];
-  [_writer write4Bytes:CFSwapInt32HostToLittle(KPKVersion2Signature2)];
-  [_writer write4Bytes:CFSwapInt32HostToLittle(KPKFileVersion2)];
+  [_writer write4Bytes:CFSwapInt32HostToLittle(KPK_XML_SIGNATURE_1)];
+  [_writer write4Bytes:CFSwapInt32HostToLittle(KPK_XML_SIGNATURE_2)];
+  [_writer write4Bytes:CFSwapInt32HostToLittle(KPK_XML_FILE_VERSION)];
   
   @autoreleasepool {
     uuid_t uuidBytes;

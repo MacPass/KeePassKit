@@ -23,7 +23,7 @@
 #import "KPKXmlHeaderReader.h"
 #import "KPKFormat.h"
 #import "KPKErrors.h"
-#import "KPKHeaderFields.h"
+#import "KPKXmlFormat.h"
 #import "NSUUID+KeePassKit.h"
 
 #import "KPKDataStreamReader.h"
@@ -75,7 +75,7 @@
   KPKFormat *format = [KPKFormat sharedFormat];
   uint32_t version = [format fileVersionForData:_data];
   
-  if ((version & VERSION2_CRITICAL_MASK) > (VERSION2_CRITICAL_MAX_32 & VERSION2_CRITICAL_MASK)) {
+  if ((version & KPK_XML_VERSION_CRITICAL_MASK) > (KPK_XML_VERSION_CRITICAL_MAX_32 & KPK_XML_VERSION_CRITICAL_MASK)) {
     KPKCreateError(error, KPKErrorUnsupportedDatabaseVersion, @"ERROR_UNSUPPORTED_DATABASER_VERSION", "");
     return NO;
   }

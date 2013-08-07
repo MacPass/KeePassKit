@@ -21,7 +21,7 @@
 //
 
 #import "KPKLegacyHeaderReader.h"
-#import "KPKLegacyHeader.h"
+#import "KPKLegacyFormat.h"
 #import "KPKFormat.h"
 
 #import "KPKErrors.h"
@@ -88,7 +88,7 @@
  
   // Check the version
   _header.version = CFSwapInt32LittleToHost(_header.version);
-  if ((_header.version & 0xFFFFFF00) != (KPKFileVersion1 & 0xFFFFFF00)) {
+  if ((_header.version & 0xFFFFFF00) != (KPK_LEGACY_FILE_VERSION & 0xFFFFFF00)) {
     KPKCreateError(error, KPKErrorUnsupportedDatabaseVersion, @"ERROR_UNSUPPORTED_DATABASER_VERSION", "");
   }
   

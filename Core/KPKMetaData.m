@@ -7,7 +7,7 @@
 //
 
 #import "KPKMetaData.h"
-#import "KPKFormat.h"
+#import "KPKXmlFormat.h"
 #import "KPKIcon.h"
 
 @implementation KPKMetaData

@@ -42,38 +42,24 @@ typedef NS_ENUM(NSUInteger, KPKHeaderKey ) {
   KPKHeaderKeyRandomStreamId
 };
 
-/**
- Field Types for KDB Files
- */
-typedef NS_ENUM(NSUInteger, KPKFieldType) {
-  /* Common types */
-  KPKFieldTypeCommonSize = 0,
-  KPKFieldTypeCommonStop = 0xFFFF,
-  /* Groups Types */
-  KPKFieldTypeGroupId    = 1,
-  KPKFieldTypeGroupName,
-  KPKFieldTypeGroupCreationTime,
-  KPKFieldTypeGroupModificationTime,
-  KPKFieldTypeGroupAccessTime,
-  KPKFieldTypeGroupExpiryDate,
-  KPKFieldTypeGroupImage,
-  KPKFieldTypeGroupLevel,
-  KPKFieldTypeGroupFlags,
-  /* Entry Types */
-  KPKFieldTypeEntryUUID = 1,
-  KPKFieldTypeEntryGroupId,
-  KPKFieldTypeEntryImage,
-  KPKFieldTypeEntryTitle,
-  KPKFieldTypeEntryURL,
-  KPKFieldTypeEntryUsername,
-  KPKFieldTypeEntryPassword,
-  KPKFieldTypeEntryNotes,
-  KPKFieldTypeEntryCreationTime,
-  KPKFieldTypeEntryModificationTime,
-  KPKFieldTypeEntryAccessTime,
-  KPKFieldTypeEntryExpiryDate,
-  KPKFieldTypeEntryBinaryDescription,
-  KPKFieldTypeEntryBinaryData,
+typedef NS_ENUM(NSUInteger, KPKCompression) {
+  KPKCompressionNone,
+  KPKCompressionGzip,
+  KPKCompressionCount,
 };
+
+typedef NS_ENUM(NSUInteger, KPKRandomStreamType) {
+  KPKRandomStreamNone,
+  KPKRandomStreamArc4,
+  KPKRandomStreamSalsa20,
+  KPKRandomStreamCount
+};
+
+#define KPK_XML_FILE_VERSION 0x00030000
+#define KPK_XML_VERSION_CRITICAL_MAX_32 0x00030000
+#define KPK_XML_VERSION_CRITICAL_MASK 0xFFFF0000
+
+#define KPK_XML_SIGNATURE_1 0x9AA2D903
+#define KPK_XML_SIGNATURE_2 0xB54BFB65
 
 #endif

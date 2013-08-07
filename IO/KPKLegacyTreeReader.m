@@ -24,8 +24,8 @@
 //
 
 #import "KPKLegacyTreeReader.h"
+#import "KPKLegacyFormat.h"
 #import "KPKLegacyHeaderReader.h"
-#import "KPKHeaderFields.h"
 #import "KPKDataStreamReader.h"
 
 #import "KPKTree.h"

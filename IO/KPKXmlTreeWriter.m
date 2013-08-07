@@ -29,7 +29,7 @@
 #import "NSMutableData+Base64.h"
 
 #import "KPKXmlHeaderWriter.h"
-#import "KPKFormat.h"
+#import "KPKXmlFormat.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"
 #import "KPKMetaData.h"

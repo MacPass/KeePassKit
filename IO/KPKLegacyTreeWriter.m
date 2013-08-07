@@ -21,6 +21,15 @@
 //
 
 #import "KPKLegacyTreeWriter.h"
+#import "KPKDataStreamWriter.h"
+#import "KPKTree.h"
+#import "KPKMetaData.h"
+
+@interface KPKLegacyTreeWriter () {
+  KPKDataStreamWriter *_dataWriter;
+}
+
+@end
 
 @implementation KPKLegacyTreeWriter
 
@@ -33,15 +42,33 @@
 }
 
 - (NSData *)treeData {
-  /* KDB Files strore MetaEntries inside a root group. This root group
-     is not editable with KeePass only subgroups can be added hence the 
-     root group is never visible.
-     Currently when loading a KDB file, the rout group is ommited and the first
-     child group of this group is used as the root instead.
-     Writing should cohere to this standard.
-   */
-  NSAssert(NO, @"Not implemented.");
+  NSMutableData *data = [[NSMutableData alloc] init];
+  _dataWriter = [[KPKDataStreamWriter alloc] initWithData:data];
+
+  for(KPKGroup *group in [_tree allGroups]) {
+    [self _writeGroup:group];
+  }
+
+  for(KPKEntry *entry in [_tree allEntries]) {
+    [self _writeEntry:entry];
+  }
+  // Metadata can be converted to entries
+  [self _writeMetaData];
+  
   return nil;
+}
+
+- (void)_writeGroup:(KPKGroup *)group {
+  // TODO
+}
+
+- (void)_writeEntry:(KPKEntry *)entry {
+  // TODO
+}
+
+- (void)_writeMetaData {
+  // Write metadata based on tree metadata.
+  //[_tree.metaData.unknownMetaEntries];
 }
 
 @end
