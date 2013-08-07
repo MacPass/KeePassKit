@@ -53,9 +53,16 @@
 @property(nonatomic, strong) NSUUID *lastSelectedGroup;
 @property(nonatomic, strong) NSUUID *lastTopVisibleGroup;
 
+
 @property(nonatomic, strong, readonly) NSMutableArray *customData;
+/**
+ *	Array of KPKIcon objects
+ */
 @property(nonatomic, strong, readonly) NSMutableArray *customIcons;
-@property(nonatomic, strong, readonly) NSMutableArray *unknownMetaEntries; // Compatibility for KDB files
+/**
+ *	Array of KPKBinary objects - extracted from unknown meta entries. Notes is mapped to name, data to data
+ */
+@property(nonatomic, strong, readonly) NSMutableArray *unknownMetaEntries; // Array of KPKBinaries Compatibility for KDB files
 
 @property(nonatomic, assign) BOOL updateTiming;
 @property(nonatomic, weak) NSUndoManager *undoManager;

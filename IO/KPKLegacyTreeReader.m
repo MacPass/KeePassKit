@@ -82,6 +82,66 @@
   return [self _buildTree:error];
 }
 
+
+#pragma mark -
+#pragma mark Content Reading Groups/Entries/Tree
+
+- (KPKTree *)_buildTree:(NSError **)error {
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.metaData.rounds = _headerReader.rounds;
+  /* Read the meta entries after all groups
+     and entries are parsed to be able to search for them
+     since KeePassX Stores custom icons for entries and groups
+   */
+  [self _readMetaEntries:(KPKTree *)tree];
+  
+  NSInteger groupIndex;
+  NSInteger parentIndex;
+  NSUInteger groupLevel;
+  NSUInteger parentLevel;
+  
+  KPKGroup *rootGroup = [[KPKGroup alloc] init];
+  rootGroup.name = NSLocalizedString(@"DATABASE", "");
+  rootGroup.icon = 48;
+  tree.root = rootGroup;
+  
+  // Find the parent for every group
+  for (groupIndex = 0; groupIndex < [_groups count]; groupIndex++) {
+    KPKGroup *group = _groups[groupIndex];
+    groupLevel = [_groupLevels[groupIndex] integerValue];
+    
+    if (groupLevel == 0) {
+      [rootGroup addGroup:group];
+      continue;
+    }
+    // The first item with a lower level is the parent
+    for (parentIndex = groupIndex - 1; parentIndex >= 0; parentIndex--) {
+      parentLevel = [_groupLevels[parentIndex] integerValue];
+      if (parentLevel < groupLevel) {
+        if (groupLevel - parentLevel != 1) {
+          KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
+          return nil;
+        }
+        else {
+          break;
+        }
+      }
+      if (parentIndex == 0) {
+        /*
+         KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
+         return nil;
+         */
+        [tree.root addGroup:group];
+      }
+    }
+    
+    KPKGroup *parent = _groups[parentIndex];
+    [parent addGroup:group];
+  }
+  
+  return tree;
+}
+
 - (BOOL)_readGroups:(NSError **)error {
   
   uint16_t fieldType;
@@ -182,54 +242,6 @@
   }
   return YES;
 }
-
-/*
- Keepass and KeepassX store additional information inside meta entries.
- This information can be mapped to some of the attributes inside the KDBX
- Metadata. Thus we need to try to parse those know meta entries, and store
- the ones we do not know to not destroy the file on write
- void CPwManager::_ParseMetaStream(PW_ENTRY *p, bool bAcceptUnknown)
- {
- ASSERT(_IsMetaStream(p) == TRUE);
- 
- else if(_tcscmp(p->pszAdditional, PMS_STREAM_DEFAULTUSER) == 0)
- {
- LPTSTR lpName = _UTF8ToString(p->pBinaryData);
- m_strDefaultUserName = (LPCTSTR)lpName;
- SAFE_DELETE_ARRAY(lpName);
- }
- else if(_tcscmp(p->pszAdditional, PMS_STREAM_DBCOLOR) == 0)
- {
- if(p->uBinaryDataLen >= sizeof(COLORREF))
- memcpy(&m_clr, p->pBinaryData, sizeof(COLORREF));
- }
- else if(_tcscmp(p->pszAdditional, PMS_STREAM_SEARCHHISTORYITEM) == 0)
- {
- LPTSTR lpItem = _UTF8ToString(p->pBinaryData);
- m_vSearchHistory.push_back(std::basic_string<TCHAR>((LPCTSTR)lpItem));
- SAFE_DELETE_ARRAY(lpItem);
- }
- else if(_tcscmp(p->pszAdditional, PMS_STREAM_CUSTOMKVP) == 0)
- {
- CustomKvp kvp;
- if(DeserializeCustomKvp(p->pBinaryData, kvp))
- m_vCustomKVPs.push_back(kvp);
- }
- else // Unknown meta stream -- save it
- {
- if(bAcceptUnknown)
- {
- PWDB_META_STREAM msUnknown;
- msUnknown.strName = p->pszAdditional;
- msUnknown.vData.assign(p->pBinaryData, p->pBinaryData +
- p->uBinaryDataLen);
- 
- if(_CanIgnoreUnknownMetaStream(msUnknown) == FALSE)
- m_vUnknownMetaStreams.push_back(msUnknown);
- }
- }
- }
- */
 
 - (BOOL)_readEntries:(NSError **)error {
   
@@ -421,36 +433,64 @@
 	}
 }
 
-- (void)_parseMetaEntry:(KPKEntry *)entry metaData:(KPKMetaData *)metaData {
+#pragma mark -
+#pragma mark Meta Entries
+
+/*
+ Keepass and KeepassX store additional information inside meta entries.
+ This information can be mapped to some of the attributes inside the KDBX
+ Metadata. Thus we need to try to parse those know meta entries, and store
+ the ones we do not know to not destroy the file on write
+ */
+- (void)_readMetaEntries:(KPKTree *)tree {
+  NSMutableArray *metaEntries = [[NSMutableArray alloc] initWithCapacity:[_entries count] / 2];
+  for(KPKEntry *entry in _entries) {
+    if([entry isMeta]) {
+      [metaEntries addObject:entry];
+      if(![self _parseMetaEntry:entry metaData:tree.metaData]) {
+        /* We need to store unknown data to write it back out */
+        KPKBinary *binary = [entry.binaries lastObject];
+        if(binary) {
+          KPKBinary *metaBinary = [[KPKBinary alloc] init];
+          metaBinary.data = binary.data;
+          metaBinary.name = entry.title;
+          [tree.metaData.unknownMetaEntries addObject:metaBinary];
+        }
+      }
+    }
+  }
+  [_entries removeObjectsInArray:metaEntries];
+}
+
+- (BOOL)_parseMetaEntry:(KPKEntry *)entry metaData:(KPKMetaData *)metaData {
   KPKBinary *binary = [entry.binaries lastObject];
   NSData *data = binary.data;
   if([data length] == 0) {
-    return;
+    return NO;
   }
   if([entry.notes isEqualToString:KPKMetaEntryCustomKVP]) {
     // Custom KeyValueProvierd - unsupported!
-    return;
+    return NO;
   }
   if([entry.notes isEqualToString:KPKMetaEntryDatabaseColor]) {
     [self _parseColorData:data metaData:metaData];
-    return;
+    return YES;
   }
   if([entry.notes isEqualToString:KPKMetaEntryDefaultUsername] ) {
     metaData.defaultUserName = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return;
+    return YES;
   }
   if([entry.notes isEqualToString:KPKMetaEntryUIState]) {
     [self _parseUIStateData:data metaData:metaData];
-    return;
+    return YES;
   }
   if([entry.notes isEqualToString:KPKMetaEntryKeePassXCustomIcon2]) {
-    [self _parseKPXCustomIcon:data metaData:metaData];
-    return;
+    return [self _parseKPXCustomIcon:data metaData:metaData];
   }
   if([entry.notes isEqualToString:KPKMetaEntryKeePassXGroupTreeState]) {
-    [self _parseKPXTreeState:data];
-    return;
+    return [self _parseKPXTreeState:data];
   }
+  return NO;
 }
 /*
  Keepass Structure
@@ -468,27 +508,27 @@
  } PMS_SIMPLE_UI_STATE;
  */
 - (void)_parseUIStateData:(NSData *)data metaData:(KPKMetaData *)metaData {
-  NSUInteger length = [data length];
+  KPKDataStreamReader *dataReader = [[KPKDataStreamReader alloc] initWithData:data];
   uint32_t groupId = 0;
   
-  if(length >= 4) {
-    [data getBytes:&groupId range:NSMakeRange(0, 4)];
+  if([dataReader countOfReadableBytes] >= 4) {
+    groupId = [dataReader read4Bytes];
     metaData.lastSelectedGroup = _groupIdToUUID[@(groupId)];
   }
-  if(length >= 8 ) {
-    [data getBytes:&groupId range:NSMakeRange(4,4)];
+  if([dataReader countOfReadableBytes] >= 4) {
+    groupId = [dataReader read4Bytes];
     metaData.lastTopVisibleGroup = _groupIdToUUID[@(groupId)];
   }
   NSData *uuidData;
   NSUUID *lastSelectedEntryUUID;
-  if(length >= 24) {
-    uuidData = [data subdataWithRange:NSMakeRange(8, 16)];
+  if([dataReader countOfReadableBytes] >= 16) {
+    uuidData = [dataReader dataWithLength:16];
     lastSelectedEntryUUID = [[NSUUID alloc] initWithData:uuidData];
     // right now this data is ignored.
   }
   NSUUID *lastVisibleEntryUUID;
-  if(length >= 40) {
-    uuidData = [data subdataWithRange:NSMakeRange(24, 16)];
+  if([dataReader countOfReadableBytes] >= 16) {
+    uuidData = [dataReader dataWithLength:16];
     lastVisibleEntryUUID = [[NSUUID alloc] initWithData:uuidData];
   }
   for(KPKGroup *group in _groups) {
@@ -499,21 +539,25 @@
   }
 }
 
+/*
+ Stored as uint32_t (COLORREF)  0x00bbggrr;
+ */
 - (void)_parseColorData:(NSData *)data metaData:(KPKMetaData *)metaData {
   if([data length] == sizeof(uint32_t)) {
-    // Stored as COLORREF  0x00bbggrr;
+
     uint32_t color;
     [data getBytes:&color length:4];
-    color = CFSwapInt32(color);
-    NSData *colorData = [NSData dataWithBytesNoCopy:&color length:sizeof(uint32_t) freeWhenDone:NO];
+    color = CFSwapInt32LittleToHost(color);
+    /* Read only the first 3 bytes, leave the last one out */
+    NSData *colorData = [NSData dataWithBytesNoCopy:&color length:3 freeWhenDone:NO];
     metaData.color = [NSColor colorWithData:colorData];
   }
 }
 
-- (void)_parseKPXCustomIcon:(NSData *)data metaData:(KPKMetaData *)metaData {  
+- (BOOL)_parseKPXCustomIcon:(NSData *)data metaData:(KPKMetaData *)metaData {
   
   if([data length] < 12) {
-    return; // Data is truncated
+    return NO; // Data is truncated
   }
   
   KPKDataStreamReader *dataReader = [[KPKDataStreamReader alloc] initWithData:data];
@@ -525,11 +569,11 @@
   NSMutableArray *iconUUIDs = [[NSMutableArray alloc] initWithCapacity:numberOfIcons];
   for(NSUInteger index = 0; index < numberOfIcons; index++) {
     if([dataReader countOfReadableBytes] < 4) {
-      return; // Data is truncated
+      return NO; // Data is truncated
     }
     uint32_t iconDataSize = CFSwapInt32LittleToHost([dataReader read4Bytes]);
     if([dataReader countOfReadableBytes] < iconDataSize) {
-      return; // Data is truncated
+      return NO; // Data is truncated
     }
     KPKIcon *icon = [[KPKIcon alloc] initWithData:[dataReader dataWithLength:iconDataSize]];
     [metaData addCustomIcon:icon];
@@ -537,7 +581,7 @@
   }
   
   if([dataReader countOfReadableBytes] < (numberOfEntries * 20)) {
-    return; // Data truncated
+    return NO; // Data truncated
   }
   /* Read Entries */
   for(NSUInteger entryIndex = 0; entryIndex < numberOfEntries; entryIndex++) {
@@ -545,12 +589,12 @@
     uint32_t iconId = CFSwapInt32LittleToHost([dataReader read4Bytes]);
     KPKEntry *entry = [self _findEntryForUUID:entryUUID];
     if([iconUUIDs count] <= iconId) {
-      return;
+      return NO;
     }
     entry.iconUUID = iconUUIDs[iconId];
   }
   if([dataReader countOfReadableBytes] < (numberOfGroups * 8)) {
-    return; // Data truncated
+    return NO; // Data truncated
   }
   /* Read Groups */
   for(NSUInteger groupIndex = 0; groupIndex < numberOfGroups; groupIndex++) {
@@ -558,15 +602,15 @@
     uint32_t groupIconId = CFSwapInt32LittleToHost([dataReader read4Bytes]);
     NSUUID *groupUUID = _groupIdToUUID[ @(groupId) ];
     if( !groupUUID || groupIconId >= [iconUUIDs count]) {
-      return;
+      return NO;
     }
     KPKGroup *group = [self _findGroupForUUID:groupUUID];
     group.iconUUID = iconUUIDs[ groupIconId ];
   }
-  
+  return YES;
 }
 
-- (void)_parseKPXTreeState:(NSData *)data {
+- (BOOL)_parseKPXTreeState:(NSData *)data {
   
   /*
    struct KPXGroupState {
@@ -581,14 +625,14 @@
    */
   
   if([data length] < 4) {
-    return;
+    return NO;
   }
   
   KPKDataStreamReader *dataReader = [[KPKDataStreamReader alloc] initWithData:data];
   uint32_t count = CFSwapInt32LittleToHost([dataReader read4Bytes]);
   
   if([data length] - 4 != (count * 5)) {
-    return; // Data is truncated
+    return NO; // Data is truncated
   }
   
   for(NSUInteger index = 0; index < count; index++) {
@@ -601,71 +645,11 @@
     KPKGroup *group = [self _findGroupForUUID:groupUUID];
     group.isExpanded = isExpanded;
   }
+  return YES;
 }
 
-- (void)_readMetaEntries:(KPKTree *)tree {
-  NSMutableArray *metaEntries = [[NSMutableArray alloc] initWithCapacity:[_entries count] / 2];
-  for(KPKEntry *entry in _entries) {
-    if([entry isMeta]) {
-      [metaEntries addObject:entry];
-      [self _parseMetaEntry:entry metaData:tree.metaData];
-    }
-  }
-  
-  [_entries removeObjectsInArray:metaEntries];
-}
-
-- (KPKTree *)_buildTree:(NSError **)error {
-  KPKTree *tree = [[KPKTree alloc] init];
-  tree.metaData.rounds = _headerReader.rounds;
-  [self _readMetaEntries:(KPKTree *)tree];
-  
-  NSInteger groupIndex;
-  NSInteger parentIndex;
-  NSUInteger groupLevel;
-  NSUInteger parentLevel;
-  
-  KPKGroup *root = [[KPKGroup alloc] init];
-  root.name = @"Groups"; /* Modify this to use the database Name? */
-  root.parent = nil;
-  tree.root = root;
-  
-  // Find the parent for every group
-  for (groupIndex = 0; groupIndex < [_groups count]; groupIndex++) {
-    KPKGroup *group = _groups[groupIndex];
-    groupLevel = [_groupLevels[groupIndex] integerValue];
-    
-    if (groupLevel == 0) {
-      [root addGroup:group];
-      continue;
-    }
-    // The first item with a lower level is the parent
-    for (parentIndex = groupIndex - 1; parentIndex >= 0; parentIndex--) {
-      parentLevel = [_groupLevels[parentIndex] integerValue];
-      if (parentLevel < groupLevel) {
-        if (groupLevel - parentLevel != 1) {
-          KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
-          return nil;
-        }
-        else {
-          break;
-        }
-      }
-      if (parentIndex == 0) {
-        /*
-         KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
-         return nil;
-         */
-        [root addGroup:group];
-      }
-    }
-    
-    KPKGroup *parent = _groups[parentIndex];
-    [parent addGroup:group];
-  }
-  
-  return tree;
-}
+#pragma mark -
+#pragma mark Helper
 
 - (KPKGroup *)_findGroupForUUID:(NSUUID *)uuid {
   for(KPKGroup *group in _groups) {

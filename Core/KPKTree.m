@@ -53,6 +53,7 @@
 }
 
 - (void)setRoot:(KPKGroup *)root {
+  root.parent = nil;
   if(!_groups || [_groups count] == 0) {
     _groups = @[root];
     return;
@@ -72,7 +73,10 @@
 }
 
 - (KPKGroup *)root {
-  return _groups[0];
+  if(_groups) {
+    return _groups[0];
+  }
+  return nil;
 }
 
 - (NSArray *)allGroups {

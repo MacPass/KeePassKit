@@ -29,6 +29,10 @@
 
 @implementation KPKNode
 
++ (NSUInteger)defaultIcon {
+  return 0;
+}
+
 - (id)init {
   self = [super init];
   if (self) {
@@ -36,6 +40,7 @@
     _uuid = [NSUUID UUID];
     _minimumVersion = KPKVersion1;
     _timeInfo = [[KPKTimeInfo alloc] init];
+    _icon = [[self class] defaultIcon];
     /*
      Let the iconUUID be nil
      */

@@ -24,4 +24,24 @@
 
 @implementation KPKLegacyTreeWriter
 
+- (id)initWithTree:(KPKTree *)tree headerWriter:(id<KPKHeaderWriting>)headerWriter {
+  self = [super init];
+  if(self) {
+    _tree = tree;
+  }
+  return self;
+}
+
+- (NSData *)treeData {
+  /* KDB Files strore MetaEntries inside a root group. This root group
+     is not editable with KeePass only subgroups can be added hence the 
+     root group is never visible.
+     Currently when loading a KDB file, the rout group is ommited and the first
+     child group of this group is used as the root instead.
+     Writing should cohere to this standard.
+   */
+  NSAssert(NO, @"Not implemented.");
+  return nil;
+}
+
 @end

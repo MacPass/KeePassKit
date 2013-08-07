@@ -35,6 +35,10 @@
 
 @implementation KPKGroup
 
++ (NSUInteger)defaultIcon {
+  return 48;
+}
+
 - (id)init {
   self = [super init];
   if (self) {

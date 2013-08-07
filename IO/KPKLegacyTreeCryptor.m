@@ -66,6 +66,16 @@
 }
 
 + (NSData *)encryptTree:(KPKTree *)tree password:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
+/*
+ 
+ TODO:
+ 1. create mutable data to write to
+ 2. create header writer and write header data
+ 3. create legacy writer and serialize tree
+ 4. encrypt serialized tree
+ 5. add encrypted data to output
+ 6. write data to file
+ */  
   NSAssert(NO, @"Not implemented");
   return nil;
 }

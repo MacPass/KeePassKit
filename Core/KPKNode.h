@@ -54,6 +54,12 @@ typedef NS_ENUM(NSInteger, KPKInheritBool) {
 @property (nonatomic, assign) BOOL updateTiming;
 
 /**
+ *	Returns the default icon number for a Group
+ *	@return	default icon index for a group
+ */
++ (NSUInteger)defaultIcon;
+
+/**
  *	Returns the root group of the node by walking up the tree
  *	@return	root group of the node
  */
