@@ -53,7 +53,7 @@
    Create the Key
    Supply the Data found in the header
    */
-  NSData *keyData = [password finalDataForVersion:KPKVersion2
+  NSData *keyData = [password finalDataForVersion:KPKXmlVersion
                                        masterSeed:headerReader.masterSeed
                                     transformSeed:headerReader.transformSeed
                                            rounds:headerReader.rounds];
@@ -111,7 +111,7 @@
     return nil;
   }
   
-  NSData *key = [password finalDataForVersion:KPKVersion2
+  NSData *key = [password finalDataForVersion:KPKXmlVersion
                                    masterSeed:headerWriter.masterSeed
                                 transformSeed:headerWriter.transformSeed
                                        rounds:tree.metaData.rounds];
@@ -119,7 +119,7 @@
   
   NSMutableData *contentData = [[NSMutableData alloc] initWithData:headerWriter.streamStartBytes];
   [contentData appendData:xmlData];
-  NSData *hashedData = [contentData hashedData];
+  NSData *hashedData = [contentData hashedDataWithBlockSize:1024*1024];
   if(tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
     hashedData = [hashedData gzipDeflate];
   }

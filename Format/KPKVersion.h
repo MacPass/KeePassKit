@@ -28,8 +28,8 @@
 
 typedef NS_ENUM( NSUInteger, KPKVersion ) {
   KPKUnknownVersion,
-  KPKVersion1,
-  KPKVersion2
+  KPKLegacyVersion,
+  KPKXmlVersion
 };
 
 #endif

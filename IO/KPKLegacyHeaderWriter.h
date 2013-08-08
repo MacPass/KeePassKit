@@ -20,4 +20,6 @@
 - (id)initWithTree:(KPKTree *)tree;
 - (void)writeHeaderData:(NSMutableData *)data;
 
+- (void)setContentHash:(NSData *)hash;
+
 @end

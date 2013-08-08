@@ -7,8 +7,9 @@
 //
 
 #import "NSData+HashedData.h"
-#import <CommonCrypto/CommonDigest.h>
 
+#import <CommonCrypto/CommonDigest.h>
+#import "NSData+CommonCrypto.h"
 
 @implementation NSData (HashedData)
 
@@ -20,6 +21,7 @@
   uint8_t hash[32];
 
   NSMutableData *unhashed = [[NSMutableData alloc] initWithCapacity:[self length]];
+  
   
   while(true) {
 
@@ -62,7 +64,7 @@
     if([self length] < location + bufferLength) {
       return nil;
     }
-    uint8_t *rawData = malloc(sizeof(uint8_t)*bufferLength);
+    uint8_t rawData[bufferLength];
     [self getBytes:rawData range:NSMakeRange(location, bufferLength)];
     location +=bufferLength;
     
@@ -71,16 +73,34 @@
     if(!memcmp(verifyHash, hash, 32)) {
       [unhashed appendBytes:rawData length:bufferLength];
     }
-    free(rawData);
     if(location == [self length]) {
       return  unhashed;
     }
   }
 }
 
-- (NSData *)hashedData {
-  NSAssert(NO, @"Not implemented");
-  return nil;
+- (NSData *)hashedDataWithBlockSize:(NSUInteger)blockSize {
+  uint32_t blockCount = ceil((CGFloat)[self length] / (CGFloat)blockSize);
+  uint32_t location = 0;
+  NSMutableData *outputData = [[NSMutableData alloc] initWithCapacity:blockCount * blockSize + 33 ];
+  uint32_t blockIndex = 0;
+  uint32_t blockLength = 0;
+  for(; blockIndex < blockCount; blockIndex++) {
+    blockLength = MIN((uint32_t)[self length] - location, (uint32_t)blockSize);
+    NSData *slice = [self subdataWithRange:NSMakeRange(location,blockLength)];
+    [outputData appendBytes:&blockIndex length:4];
+    [outputData appendData:[slice SHA256Hash]];
+    [outputData appendBytes:&blockLength length:4];
+    [outputData appendData:slice];
+    location += blockLength;
+  }
+  /* Write the terminating 0-hash */
+  blockLength = 0;
+  uint8_t nullHash[32] = {0};
+  [outputData appendBytes:&blockIndex length:4];
+  [outputData appendBytes:&nullHash length:32];
+  [outputData appendBytes:&blockLength length:4];
+  return outputData;
 }
 
 @end

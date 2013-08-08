@@ -39,6 +39,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorHeaderCorrupted, // The header is Corrupted
   KPKErrorWriteFailed, // Could write the File
   KPKErrorDecryptionFaild, // Failed to decrypt the data stream
+  KPKErrorEncryptionFaild, // Faled to encrypt the data stream
   KPKErrorDatabaseParsingFailed, // The XML-Database couldn be parsed
   KPKErrorKeyParsingFailed, // The XML-Keyfile file couldn be parsed
   KPKErrorUnsupportedDatabaseVersion, // The database version is to high/low

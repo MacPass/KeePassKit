@@ -90,11 +90,11 @@ NSString *const KPKImageKey     = @"Image";
   signature1 = CFSwapInt32LittleToHost(signature1);
   signature2 = CFSwapInt32LittleToHost(signature2);
   
-  if (signature1 == KPK_LEGACY_SIGNATURE_2 && signature2 == KPK_LEGACY_SIGNATURE_2) {
-    return KPKVersion1;
+  if (signature1 == KPK_LEGACY_SIGNATURE_1 && signature2 == KPK_LEGACY_SIGNATURE_2) {
+    return KPKLegacyVersion;
   }
   if (signature1 == KPK_XML_SIGNATURE_1 && signature2 == KPK_XML_SIGNATURE_2 ) {
-    return KPKVersion2;
+    return KPKXmlVersion;
   }
   return KPKUnknownVersion;
 }
@@ -116,6 +116,6 @@ NSString *const KPKImageKey     = @"Image";
 
 - (KPKVersion)minimumVersionForKey:(NSString *)key {
   NSAssert(NO, @"Not implemented");
-  return KPKVersion1;
+  return KPKLegacyVersion;
 }
 @end

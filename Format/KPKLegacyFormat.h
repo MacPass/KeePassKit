@@ -72,6 +72,9 @@ typedef NS_ENUM(NSUInteger, KPKLegacyFieldType) {
   KPKFieldTypeEntryExpiryDate,
   KPKFieldTypeEntryBinaryDescription,
   KPKFieldTypeEntryBinaryData,
+  /* Header Hash */
+  KPKFieldTypeHeaderHash = 1,
+  KPKFieldTypeRandomData
 };
 
 typedef NS_OPTIONS(NSUInteger, KPKLegacyEncryptionFlags) {

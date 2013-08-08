@@ -34,9 +34,9 @@
 
 + (NSData *)dataWithWithContentsOfKeyFile:(NSURL *)url version:(KPKVersion)version error:(NSError *__autoreleasing *)error {
   switch (version) {
-    case KPKVersion1:
+    case KPKLegacyVersion:
       return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
-    case KPKVersion2:
+    case KPKXmlVersion:
       return [self _dataVersion2WithWithContentsOfKeyFile:url error:error];
     default:
       return nil;

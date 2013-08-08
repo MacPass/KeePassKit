@@ -85,7 +85,7 @@
   /*
    Signature Check was done by KPKFormat to determine the correct Cryptor
    */
- 
+  
   // Check the version
   _header.version = CFSwapInt32LittleToHost(_header.version);
   if ((_header.version & 0xFFFFFF00) != (KPK_LEGACY_FILE_VERSION & 0xFFFFFF00)) {

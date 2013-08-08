@@ -381,11 +381,11 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 #pragma mark Private Helper
 
 - (KPKVersion)_minimumVersionForCurrentAttachments {
-  return ([_binaries count] > 1 ? KPKVersion2 : KPKVersion1);
+  return ([_binaries count] > 1 ? KPKXmlVersion : KPKLegacyVersion);
 }
 
 - (KPKVersion)_minimumVersionForCurrentAttributes {
-  return ([_customAttributes count] > 0 ? KPKVersion2 : KPKVersion1);
+  return ([_customAttributes count] > 0 ? KPKXmlVersion : KPKLegacyVersion);
 }
 
 @end

@@ -64,9 +64,9 @@
 
 - (NSData *)encryptWithPassword:(KPKPassword *)password forVersion:(KPKVersion)version error:(NSError **)error {
   switch(version) {
-    case KPKVersion1:
+    case KPKLegacyVersion:
       return nil;
-    case KPKVersion2:
+    case KPKXmlVersion:
       return nil;
     default:
       KPKCreateError(error, KPKErrorUnknownFileFormat, @"ERROR_UNKNOWN_FILE_FORMAT", "");
@@ -93,10 +93,10 @@
 - (KPKTree *)_decryptorForData:(NSData *)data password:(KPKPassword *)password error:(NSError **)error {
   KPKVersion version = [[KPKFormat sharedFormat] databaseVersionForData:data];
   
-  if(version == KPKVersion1) {
+  if(version == KPKLegacyVersion) {
     return [KPKLegacyTreeCryptor decryptTreeData:data withPassword:password error:error];
   }
-  if(version == KPKVersion2) {
+  if(version == KPKXmlVersion) {
     return [KPKXmlTreeCryptor decryptTreeData:data withPassword:password error:error];
   }
   KPKCreateError(error, KPKErrorUnknownFileFormat, @"ERROR_UNKNOWN_FILE_FORMAT", "");

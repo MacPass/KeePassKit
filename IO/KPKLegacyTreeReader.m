@@ -390,10 +390,9 @@
 - (BOOL)_readExtendedData:(NSError **)error {
   uint16_t fieldType;
   uint32_t fieldSize;
-  uint8_t buffer[32];
+  NSData *headerHash;
 	
-  
-	while (YES) {
+  while(YES) {
     fieldType = [_dataStreamer read2Bytes];
     fieldSize = [_dataStreamer read4Bytes];
     
@@ -410,9 +409,8 @@
           KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
           return NO;
         }
-        [_dataStreamer readBytes:buffer length:fieldSize];
-        // Compare the header hash
-        if (memcmp(_headerReader.headerHash.bytes, buffer, fieldSize) != 0) {
+        headerHash = [_dataStreamer dataWithLength:fieldSize];
+        if(![headerHash isEqualToData:_headerReader.headerHash]) {
           KPKCreateError(error, KPKErrorLegacyHeaderHashMissmatch, @"ERROR_HEADER_HASH_MISSMATCH", "");
           return NO;
         }

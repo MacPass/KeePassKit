@@ -41,7 +41,7 @@
     return nil;
   }
   // Create the final key and initialize the AES input stream
-  NSData *keyData = [password finalDataForVersion:KPKVersion1
+  NSData *keyData = [password finalDataForVersion:KPKLegacyVersion
                                         masterSeed:headerReader.masterSeed
                                      transformSeed:headerReader.transformSeed
                                             rounds:headerReader.rounds];
@@ -68,38 +68,34 @@
 }
 
 + (NSData *)encryptTree:(KPKTree *)tree password:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
-/*
- TODO:
- 1. create mutable data to write to
- 2. create header writer and write header data
- 3. create legacy writer and serialize tree
- 4. encrypt serialized tree
- 5. add encrypted data to output
- 6. write data to file
- */
   NSMutableData *fileData = [[NSMutableData alloc] init];
   KPKLegacyHeaderWriter *headerWriter = [[KPKLegacyHeaderWriter alloc] initWithTree:tree];
-  [headerWriter writeHeaderData:fileData];
   
+  // Serialize the tree
   KPKLegacyTreeWriter *treeWriter = [[KPKLegacyTreeWriter alloc] initWithTree:tree headerWriter:headerWriter];
-  
   NSData *treeData = [treeWriter treeData];
   
-  // Create the encryption output stream
-  NSData *passwordData = [password finalDataForVersion:KPKVersion1
+  /* Create the key to encrypt the data stream from the password */
+  NSData *keyData = [password finalDataForVersion:KPKLegacyVersion
                                             masterSeed:headerWriter.masterSeed
                                          transformSeed:headerWriter.transformSeed
                                                 rounds:headerWriter.transformationRounds];
 
   CCCryptorStatus cryptoError = kCCSuccess;
   NSData *encryptedTreeData = [treeData dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
-                                                                key:passwordData
+                                                                key:keyData
                                                initializationVector:headerWriter.encryptionIv
                                                             options:kCCOptionPKCS7Padding
                                                               error:&cryptoError];
+  if(cryptoError != kCCSuccess) {
+    KPKCreateError(error, KPKErrorDecryptionFaild, @"ERROR_ENCRYPTION_FAILED", "");
+    return nil;
+  }
   
+  /* Calculate the content hash */
   NSData *contentHash = [encryptedTreeData SHA256Hash];
-  [fileData replaceBytesInRange:NSMakeRange(56,32) withBytes:contentHash.bytes];
+  [headerWriter setContentHash:contentHash];
+  [headerWriter writeHeaderData:fileData];
   [fileData appendData:encryptedTreeData];
   return fileData;
 }

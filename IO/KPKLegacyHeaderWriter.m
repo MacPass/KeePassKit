@@ -73,4 +73,10 @@
   [data appendBytes:&_header length:sizeof(_header)];
 }
 
+- (void)setContentHash:(NSData *)hash {
+  if([hash length] == 32) {
+    [hash getBytes:&_header.contentsHash length:32];
+  }
+}
+
 @end

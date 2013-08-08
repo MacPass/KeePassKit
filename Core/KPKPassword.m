@@ -51,10 +51,10 @@
                          rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
   uint8_t masterKey[KPK_KEYLENGTH];
-  if(version == KPKVersion1) {
+  if(version == KPKLegacyVersion) {
     [_compositeDataVersion1 getBytes:masterKey length:KPK_KEYLENGTH];
   }
-  else if(version == KPKVersion2) {
+  else if(version == KPKXmlVersion) {
     [_compositeDataVersion2 getBytes:masterKey length:KPK_KEYLENGTH];
   }
   else {
@@ -88,17 +88,17 @@
 - (bool)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version {
   NSData *data;
   switch(version) {
-    case KPKVersion1:
+    case KPKLegacyVersion:
       data = [self _createVersion1CompositeDataWithPassword:password key:key];
       break;
-    case KPKVersion2:
+    case KPKXmlVersion:
       data = [self _createVersion2CompositeDataWithPassword:password key:key];
       break;
     default:
       return NO;
   }
   if(data) {
-    NSData *compare = (version == KPKVersion1) ? _compositeDataVersion1 : _compositeDataVersion2;
+    NSData *compare = (version == KPKLegacyVersion) ? _compositeDataVersion1 : _compositeDataVersion2;
     return [data isEqualToData:compare];
   }
   return NO;
@@ -128,7 +128,7 @@
     
     // Get the bytes from the keyfile
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithWithContentsOfKeyFile:keyURL version:KPKVersion1 error:&error];
+    NSData *keyFileData = [NSData dataWithWithContentsOfKeyFile:keyURL version:KPKLegacyVersion error:&error];
     if( keyFileData == nil) {
       return nil;
     }
@@ -165,7 +165,7 @@
   if (keyURL) {
     // Get the bytes from the keyfile
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithWithContentsOfKeyFile:keyURL version:KPKVersion2 error:&error];
+    NSData *keyFileData = [NSData dataWithWithContentsOfKeyFile:keyURL version:KPKXmlVersion error:&error];
     if(!keyURL) {
       return nil;
     }

@@ -50,7 +50,7 @@
   [self writeData:[string dataUsingEncoding:encoding]];
 }
 
-- (void)writeBytes:(void *)buffer length:(NSUInteger)lenght {
+- (void)writeBytes:(const void *)buffer length:(NSUInteger)lenght {
   [self _writeBytes:buffer length:lenght];
 }
 - (void)writeByte:(uint8)byte {
@@ -79,7 +79,7 @@
   _location = 0;
 }
 
-- (NSUInteger)_writeBytes:(void *)buffer length:(NSUInteger)length {
+- (NSUInteger)_writeBytes:(const void *)buffer length:(NSUInteger)length {
   [_data appendBytes:buffer length:length];
   _location += length;
   return length;
