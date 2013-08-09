@@ -27,6 +27,7 @@
 #import "KPKMetaData.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"
+#import "KPKBinary.h"
 
 #import "KPKDataStreamWriter.h"
 
@@ -58,6 +59,15 @@
   NSMutableData *data = [[NSMutableData alloc] init];
   _dataWriter = [[KPKDataStreamWriter alloc] initWithData:data];
   
+  /*
+   The root Group doesn't get written out
+   
+   Keepass doesn't allow entries in the root group.
+   Only Meta-Entries are inside the root group.
+   If a Tree with entries in the root group is saved,
+   those groups should be placed inside another group,
+   or discarded.
+   */
   for(KPKGroup *group in [_tree allGroups]) {
     [self _writeGroup:group];
   }
@@ -72,7 +82,6 @@
 }
 
 - (void)_writeGroup:(KPKGroup *)group {
-  uint8_t packedDate[5];
   uint32_t tmp32;
   
   if(_firstGroup) {
@@ -84,47 +93,85 @@
   [_groupIds addObject:group.uuid];
   tmp32 = CFSwapInt32HostToLittle((uint32_t)[_groupIds count] - 1);
   [self _writeField:KPKFieldTypeEntryGroupId bytes:&tmp32 length:4];
-
+  
   if (![NSString isEmptyString:group.name]){
     const char *title = [group.name cStringUsingEncoding:NSUTF8StringEncoding];
     [self _writeField:KPKFieldTypeGroupName bytes:(void *)title length:strlen(title)+1];
   }
   
   /* Time Information */
-  [group.timeInfo.creationTime packToBytes:packedDate];
-  [self _writeField:KPKFieldTypeGroupCreationTime bytes:packedDate length:5];
-  [group.timeInfo.lastModificationTime packToBytes:packedDate];
-  [self _writeField:KPKFieldTypeGroupModificationTime bytes:packedDate length:5];
-  [group.timeInfo.lastAccessTime packToBytes:packedDate];
-  [self _writeField:KPKFieldTypeGroupAccessTime bytes:packedDate length:5];
-  [group.timeInfo.expiryTime packToBytes:packedDate];
-  [self _writeField:KPKFieldTypeGroupExpiryDate bytes:packedDate length:5];
+  [self _writeTimeInfo:group];
   
+  /* Icon */
   tmp32 = CFSwapInt32HostToLittle((uint32_t)group.icon);
   [self _writeField:KPKFieldTypeGroupImage bytes:&tmp32 length:4];
-  /*
-   // Get the level of the group
-   uint16_t level = -1;
-   for (KdbGroup *g = group; g.parent != nil; g = g.parent) {
-   level++;
-   }
-   
-   level = CFSwapInt16HostToLittle(level);
-   [self appendField:8 size:2 bytes:&level withOutputStream:outputStream];
-   
-   Flags shoudl be zeroed out
-   tmp32 = CFSwapInt32HostToLittle(group.flags);
-   [self appendField:9 size:4 bytes:&tmp32 withOutputStream:outputStream];
-   */
-  // End of the group
+  
+  /* Determin the Group level */
+  uint32_t level = -1;
+  for(KPKGroup *parent = group.parent; parent != nil; parent = parent.parent) {
+    level++;
+  }
+  level = CFSwapInt32HostToLittle(level);
+  [self _writeField:KPKFieldTypeGroupLevel bytes:&level length:4];
+  tmp32 = 0;
+  [self _writeField:KPKFieldTypeGroupFlags bytes:&tmp32 length:4];
+  
+  /* Mark End of Group */
   [self _writeField:KPKFieldTypeCommonStop bytes:NULL length:0];
 }
 
 - (void)_writeEntry:(KPKEntry *)entry {
-  // TODO
+  uint8_t dateBuffer[16];
+  uint32_t tmp32;
+  
+  [entry.uuid getUUIDBytes:dateBuffer];
+  [self _writeField:KPKFieldTypeEntryUUID bytes:dateBuffer length:16];
+  
+  
+  NSUInteger groupId = [_groupIds indexOfObject:entry.parent.uuid];
+  if(groupId == NSNotFound) {
+    /* TODO: Error since we are missing the group id */
+    return;
+  }
+  tmp32 = CFSwapInt32HostToLittle((uint32_t)groupId);
+  [self _writeField:KPKFieldTypeEntryGroupId bytes:&tmp32 length:4];
+  
+  tmp32 = CFSwapInt32HostToLittle((uint32_t)entry.icon);
+  [self _writeField:KPKFieldTypeEntryImage bytes:&tmp32 length:4];
+  
+  
+  [self _writeString:entry.title forField:KPKFieldTypeEntryTitle];
+  [self _writeString:entry.url forField:KPKFieldTypeEntryURL];
+  [self _writeString:entry.username forField:KPKFieldTypeEntryUsername];
+  [self _writeString:entry.password forField:KPKFieldTypeEntryPassword];
+  [self _writeString:entry.notes forField:KPKFieldTypeEntryNotes];
+  
+  [self _writeTimeInfo:entry];
+  
+  /* We only save the last binary if there is more than one */
+  KPKBinary *firstBinary = [entry.binaries lastObject];
+  [self _writeString:firstBinary.name forField:KPKFieldTypeEntryBinaryDescription];
+  if(firstBinary && [firstBinary.data length] > 0) {
+    [self _writeField:KPKFieldTypeEntryBinaryData data:firstBinary.data];
+  }
+  else {
+    [self _writeField:KPKFieldTypeEntryBinaryData bytes:NULL length:0];
+  }
+  /* Mark end of Entries */
+  [self _writeField:KPKFieldTypeCommonStop bytes:NULL length:0];
+  
 }
 
 - (void)_writeMetaData {
+  /*
+   Store metadat in entries:
+   
+   1. default username
+   2. tree state
+   3. database color
+   4. custom icons (KPX style)
+   5. treestate (KPX style?)
+   */
   // Write metadata based on tree metadata.
   //[_tree.metaData.unknownMetaEntries];
 }
@@ -140,6 +187,40 @@
   [self _writeField:KPKFieldTypeRandomData data:[NSData dataWithRandomBytes:32]];
   [self _writeField:KPKFieldTypeCommonStop bytes:NULL length:0];
 }
+
+- (void)_writeString:(NSString *)string forField:(KPKLegacyFieldType)type {
+  const char *bufferString = "";
+  if (![NSString isEmptyString:string]) {
+    bufferString = [string cStringUsingEncoding:NSUTF8StringEncoding];
+  }
+  [self _writeField:type bytes:bufferString length:strlen(bufferString) + 1];
+}
+
+- (void)_writeTimeInfo:(KPKNode *)node {
+  BOOL isEntry = [node isKindOfClass:[KPKEntry class]];
+  uint8_t dateBuffer[5];
+  
+  [node.timeInfo.creationTime packToBytes:dateBuffer];
+  [self _writeField:(isEntry ? KPKFieldTypeEntryCreationTime : KPKFieldTypeGroupCreationTime )
+              bytes:dateBuffer
+             length:5];
+  
+  [node.timeInfo.lastModificationTime packToBytes:dateBuffer];
+  [self _writeField:(isEntry ? KPKFieldTypeEntryModificationTime : KPKFieldTypeGroupModificationTime )
+              bytes:dateBuffer
+             length:5];
+  
+  [node.timeInfo.lastAccessTime packToBytes:dateBuffer];
+  [self _writeField:(isEntry ? KPKFieldTypeEntryAccessTime : KPKFieldTypeGroupAccessTime )
+              bytes:dateBuffer
+             length:5];
+  
+  [node.timeInfo.expiryTime packToBytes:dateBuffer];
+  [self _writeField:(isEntry ? KPKFieldTypeEntryExpiryDate : KPKFieldTypeGroupExpiryDate )
+              bytes:dateBuffer
+             length:5];
+}
+
 
 - (void)_writeField:(KPKLegacyFieldType)type data:(NSData *)data {
   [self _writeField:type bytes:data.bytes length:[data length]];
