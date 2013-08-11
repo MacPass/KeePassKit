@@ -59,7 +59,6 @@
     _data = [aDecoder decodeObjectForKey:@"data"];
   }
   return self;
-
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
@@ -74,6 +73,30 @@
     copy.data = _data;
   }
   return copy;
+}
+
+- (BOOL)isEqual:(id)object {
+  if(self == object) {
+    return YES;
+  }
+  if(![object isKindOfClass:[KPKBinary class]]) {
+    return NO;
+  }
+  return [self isEqualtoBinary:object];
+}
+
+- (BOOL)isEqualtoBinary:(KPKBinary *)binary {
+  return [self.name isEqualToString:binary.name] && [self.data isEqualToData:binary.data];
+}
+
+-(NSUInteger)hash {
+  NSUInteger result = 1;
+  NSUInteger prime = 37;
+  
+  result = prime * result + [self.name hash];
+  result = prime * result + [self.data hash];
+  
+  return result;
 }
 
 - (NSData *)_dataForEncodedString:(NSString *)string compressed:(BOOL)compressed {

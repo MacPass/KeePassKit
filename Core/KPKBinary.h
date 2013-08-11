@@ -43,4 +43,6 @@
 
 - (NSString *)encodedStringUsingCompression:(BOOL)compress;
 
+- (BOOL)isEqualtoBinary:(KPKBinary *)binary;
+
 @end

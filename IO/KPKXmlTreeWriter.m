@@ -54,7 +54,6 @@
 @interface KPKXmlTreeWriter () {
   NSDateFormatter *_dateFormatter;
   NSMutableArray *_binaries;
-  NSMutableDictionary *_entryToBinaryMap;
   KPKXmlHeaderWriter *_headerWriter;
   RandomStream *_randomStream;
 }
@@ -210,35 +209,36 @@
   for(KPKAttribute *attribute in entry.customAttributes) {
     [entryElement addChild:[self _xmlAttribute:attribute]];
   }
+  for(KPKBinary *binary in entry.binaries) {
+    [entryElement addChild:[self _xmlBinary:binary]];
+  }
   /*
    
-   FIXME: Add BinaryReferences
    FIXME: Add History
    FIXME: Add Autotype
    
-   // Add the binary references
-   for (BinaryRef *binaryRef in entry.binaries) {
-   [root addChild:[self persistBinaryRef:binaryRef]];
-   }
-   
    // Add the auto-type
    [root addChild:[self persistAutoType:entry.autoType]];
-   
-   // Add the history entries
-   if (includeHistory) {
-   DDXMLElement *historyElement = [DDXMLElement elementWithName:@"History"];
-   for (Kdb4Entry *oldEntry in entry.history) {
-   [historyElement addChild:[self persistEntry:oldEntry includeHistory:NO]];
-   }
-   [root addChild:historyElement];
-   }
    */
+  // Add the history entries
+  if(!skipHistory && [entry.history count] > 0) {
+    DDXMLElement *historyElement = [DDXMLElement elementWithName:@"History"];
+    for (KPKEntry *historyEntry in entry.history) {
+      [historyElement addChild:[self _xmlEntry:historyEntry skipHistory:YES]];
+    }
+    [entryElement addChild:historyElement];
+  }
+  
   return entryElement;
 }
 
 - (DDXMLElement *)_xmlAttribute:(KPKAttribute *)attribute {
   DDXMLElement *attributeElement = [DDXMLElement elementWithName:@"StringField"];
-  KPKAddAttribute(attributeElement, @"Proteced", KPKStringFromBool(attribute.isProtected));
+  if(attribute.isProtected) {
+    NSString *attributeName = _randomStream != nil ? @"Protected" : @"ProtectInMemory";
+    KPKAddAttribute(attributeElement, attributeName, @"True");
+  }
+  
   KPKAddElement(attributeElement, @"Key", attribute.key);
   KPKAddElement(attributeElement, @"Value", attribute.value);
   return attributeElement;
@@ -246,18 +246,29 @@
 
 - (DDXMLElement *)_xmlBinaries {
   
-  [self _prepateAttachments];
+  [self _prepateBinaries];
   DDXMLElement *binaryElements = [DDXMLElement elementWithName:@"Binaries"];
   
   BOOL compress = (self.tree.metaData.compressionAlgorithm == KPKCompressionGzip);
-  for(KPKBinary *attachment in _binaries) {
+  for(KPKBinary *binary in _binaries) {
     DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
-    KPKAddAttribute(binaryElement, @"ID", KPKStringFromLong([_binaries indexOfObject:attachment]));
+    KPKAddAttribute(binaryElement, @"ID", KPKStringFromLong([_binaries indexOfObject:binary]));
     KPKAddAttribute(binaryElement, @"Compressed", KPKStringFromBool(compress));
-    binaryElement.stringValue = [attachment encodedStringUsingCompression:compress];
+    binaryElement.stringValue = [binary encodedStringUsingCompression:compress];
     [binaryElements addChild:binaryElement];
   }
   return binaryElements;
+}
+
+- (DDXMLElement *)_xmlBinary:(KPKBinary *)binary {
+  DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
+  KPKAddElement(binaryElement, @"Key", binary.name);
+  DDXMLElement *valueElement = [DDXMLElement elementWithName:@"Value"];
+  [binaryElement addChild:valueElement];
+  NSUInteger reference = [_binaries indexOfObject:binary];
+  NSAssert(reference != NSNotFound, @"Binary has to be in binaries array");
+  KPKAddAttribute(valueElement, @"Ref", KPKStringFromLong(reference));
+  return binaryElement;
 }
 
 - (DDXMLElement *)_xmlIcons {
@@ -294,13 +305,15 @@
   return timesElement;
 }
 
-- (void)_prepateAttachments {
+- (void)_prepateBinaries {
   NSArray *entries = self.tree.allEntries;
-  _entryToBinaryMap = [[NSMutableDictionary alloc] initWithCapacity:[entries count] / 4];
-  _binaries = [[NSMutableArray alloc] initWithCapacity:[_entryToBinaryMap count]];
+  _binaries = [[NSMutableArray alloc] initWithCapacity:[entries count] / 4];
   for(KPKEntry *entry in entries) {
-    [_binaries addObjectsFromArray:entry.binaries];
-    _entryToBinaryMap[ entry.uuid ] = entry.binaries;
+    for(KPKBinary *binary in entry.binaries) {
+      if(![_binaries containsObject:binary]) {
+        [_binaries addObject:binary];
+      }
+    }
   }
 }
 

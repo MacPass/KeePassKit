@@ -293,9 +293,10 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
   for (DDXMLElement *element in [entryElement elementsForName:@"String"]) {
     DDXMLElement *valueElement = [element elementForName:@"Value"];
     DDXMLNode *protectedAttribute = [valueElement attributeForName:@"Protected"];
+    DDXMLNode *protectInMemoryAttribute = [valueElement attributeForName:@"ProtecteInMemory"];
     KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKString(element, @"Key")
                                                           value:[valueElement stringValue]
-                                                    isProtected:KPKYES(protectedAttribute)];
+                                                    isProtected:KPKYES(protectedAttribute) || KPKYES(protectInMemoryAttribute)];
     
     if([attribute.key isEqualToString:KPKTitleKey]) {
       entry.title = attribute.value;
