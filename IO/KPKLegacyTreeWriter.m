@@ -34,6 +34,7 @@
 #import "NSString+Empty.h"
 #import "NSData+Random.h"
 #import "NSDate+Packed.h"
+#import "NSColor+KeePassKit.h"
 
 @interface KPKLegacyTreeWriter () {
   KPKDataStreamWriter *_dataWriter;
@@ -164,7 +165,7 @@
 
 - (void)_writeMetaData {
   /*
-   Store metadat in entries:
+   Store metadata in entries:
    
    1. default username
    2. tree state
@@ -172,6 +173,13 @@
    4. custom icons (KPX style)
    5. treestate (KPX style?)
    */
+  if(![NSString isEmptyString:self.tree.metaData.defaultUserName]) {
+    NSData *defaultUsernameData = [self.tree.metaData.defaultUserName dataUsingEncoding:NSUTF8StringEncoding];
+    KPKEntry *defaultUsernameEntry = [KPKEntry metaEntryWithData:defaultUsernameData name:KPKMetaEntryDefaultUsername];
+    [self.tree.metaData.unknownMetaEntries addObject:defaultUsernameEntry];
+  }
+  if(self.tree.metaData.color != nil) {
+  }
   // Write metadata based on tree metadata.
   //[_tree.metaData.unknownMetaEntries];
 }

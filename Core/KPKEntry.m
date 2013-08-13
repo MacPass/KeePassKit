@@ -57,6 +57,21 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 @implementation KPKEntry
 
++ (KPKEntry *)metaEntryWithData:(NSData *)data name:(NSString *)name {
+  KPKEntry *metaEntry = [[KPKEntry alloc] init];
+  metaEntry.title = KPKMetaEntryTitle;
+  metaEntry.username = KPKMetaEntryUsername;
+  metaEntry.url = KPKMetaEntryURL;
+  /* Name is stored in the notes attribute of the entry */
+  metaEntry.notes = name;
+  KPKBinary *binary = [[KPKBinary alloc] init];
+  binary.name = KPKMetaEntryBinaryDescription;
+  binary.data = data;
+  [metaEntry addBinary:binary];
+
+  return metaEntry;
+}
+
 - (id)init {
   self = [super init];
   if (self) {

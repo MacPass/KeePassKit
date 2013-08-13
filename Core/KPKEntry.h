@@ -66,6 +66,13 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, strong) NSArray *history;
 
 /**
+ *	Creates KDB meta entry with the given data and name
+ *	@param	data	data to store in the entry
+ *  @param  name  the name of the metaentry
+ *	@return	a meta entry that can be serailized
+ */
++ (KPKEntry *)metaEntryWithData:(NSData *)data name:(NSString *)name;
+/**
  *	Retrieves a list of all defaultAttributes
  */
 - (NSArray *)defaultAttributes;

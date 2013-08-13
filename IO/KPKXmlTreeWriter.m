@@ -123,19 +123,15 @@
   KPKAddElement(metaElement, @"LastSelectedGroup", [self.tree.metaData.lastSelectedGroup encodedString]);
   KPKAddElement(metaElement, @"LastTopVisibleGroup", [self.tree.metaData.lastTopVisibleGroup encodedString]);
   
+  /* Custom Data is stored as KPKBinaries in the meta object */
   [metaElement addChild:[self _xmlBinaries]];
-  
-  /*
-   DDXMLElement *customDataElements = [DDXMLElement elementWithName:@"CustomData"];
-   for (CustomItem *customItem in self.tree.customData) {
-   [customDataElements addChild:[self persistCustomItem:customItem]];
-   }
-   [element addChild:customDataElements];
-   
-   [document.rootElement addChild:element];
-   */
+  DDXMLElement *customDataElement = [DDXMLElement elementWithName:@"CustomData"];
+  for (KPKBinary *binary in self.tree.metaData.customData) {
+    [customDataElement addChild:[self _xmlCustomData:binary]];
+  }
   DDXMLElement *rootElement = [DDXMLNode elementWithName:@"Root"];
-  
+  [rootElement addChild:customDataElement];
+
   /* Create XML nodes for all Groups and Entries */
   [rootElement addChild:[self _xmlGroup:self.tree.root]];
   
@@ -280,6 +276,13 @@
     [customIconsElements addChild:iconElement];
   }
   return customIconsElements;
+}
+
+- (DDXMLElement *)_xmlCustomData:(KPKBinary *)customData {
+  DDXMLElement *itemElement = [DDXMLElement elementWithName:@"Item"];
+  KPKAddElement(itemElement, @"Key", customData.name);
+  KPKAddElement(itemElement, @"Value", [customData encodedStringUsingCompression:NO]);
+  return itemElement;
 }
 
 - (DDXMLElement *)_xmlDeletedObjects {
