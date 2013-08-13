@@ -128,7 +128,7 @@
     
     // Get the bytes from the keyfile
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithWithContentsOfKeyFile:keyURL version:KPKLegacyVersion error:&error];
+    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKLegacyVersion error:&error];
     if( keyFileData == nil) {
       return nil;
     }
@@ -165,7 +165,7 @@
   if (keyURL) {
     // Get the bytes from the keyfile
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithWithContentsOfKeyFile:keyURL version:KPKXmlVersion error:&error];
+    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKXmlVersion error:&error];
     if(!keyURL) {
       return nil;
     }

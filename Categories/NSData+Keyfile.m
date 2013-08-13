@@ -22,17 +22,18 @@
 
 
 #import "NSData+Keyfile.h"
-
 #import <CommonCrypto/CommonCrypto.h>
+
+#import "KPKErrors.h"
 
 #import "DDXMLElementAdditions.h"
 #import "NSMutableData+Base64.h"
 #import "NSString+Hexdata.h"
-#import "KPKErrors.h"
+#import "NSData+Random.h"
 
 @implementation NSData (Keyfile)
 
-+ (NSData *)dataWithWithContentsOfKeyFile:(NSURL *)url version:(KPKVersion)version error:(NSError *__autoreleasing *)error {
++ (NSData *)dataWithContentsOfKeyFile:(NSURL *)url version:(KPKVersion)version error:(NSError *__autoreleasing *)error {
   switch (version) {
     case KPKLegacyVersion:
       return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
@@ -41,6 +42,29 @@
     default:
       return nil;
   }
+}
+
++ (NSData *)generateKeyfiledataForVersion:(KPKVersion)version {
+  NSData *data = [NSData dataWithRandomBytes:32];
+  switch(version) {
+    case KPKLegacyVersion:
+      return [[NSString hexstringFromData:data] dataUsingEncoding:NSUTF8StringEncoding];
+      
+    case KPKXmlVersion:
+      return [self _xmlKeyForData:data];
+    
+    default:
+      return nil;
+  }
+}
+
++ (NSData *)_xmlKeyForData:(NSData *)data {
+  NSMutableData *encodedData = [data mutableCopy];
+  [encodedData encodeBase64];
+  NSString *dataString = [[NSString alloc] initWithData:encodedData  encoding:NSUTF8StringEncoding];
+  NSString *xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>1.00</Version></Meta><Key><Data>%@</Data></Key></KeyFile>", dataString];
+  DDXMLDocument *keyDocument = [[DDXMLDocument alloc] initWithXMLString:xmlString options:0 error:NULL];
+  return [keyDocument XMLDataWithOptions:DDXMLNodePrettyPrint];
 }
 
 + (NSData *)_dataVersion1WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
@@ -74,12 +98,23 @@
 }
 
 + (NSData *)_dataWithContentOfXMLKeyFile:(NSURL *)fileURL error:(NSError *__autoreleasing *)error {
-  NSString *xmlString = [NSString stringWithContentsOfURL:fileURL encoding:NSUTF8StringEncoding error:error];
-  if (xmlString == nil) {
+  /*
+   Format of the Keyfile
+   <KeyFile>
+   <Meta>
+   <Version>1.00</Version>
+   </Meta>
+   <Key>
+   <Data>L8JyIjlAd3SowrQPm6ZaR9mMolm/7iL6T1GJRGBNrAE=</Data>
+   </Key>
+   </KeyFile>
+   */
+  NSData *xmlData = [NSData dataWithContentsOfURL:fileURL options:NSDataReadingUncached error:error];
+  if(!xmlData) {
+    // eror is already filled
     return nil;
   }
-  
-  DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:xmlString options:0 error:error];
+  DDXMLDocument *document = [[DDXMLDocument alloc] initWithData:xmlData options:0 error:error];
   if (document == nil) {
     return nil;
   }
@@ -87,28 +122,35 @@
   // Get the root document element
   DDXMLElement *rootElement = [document rootElement];
   
+  DDXMLElement *metaElement = [rootElement elementForName:@"Meta"];
+  if(metaElement) {
+    DDXMLElement *versionElement = [metaElement elementForName:@"Version"];
+    NSScanner *versionScanner = [[NSScanner alloc] initWithString:[versionElement stringValue]];
+    double version = 1;
+    if(![versionScanner scanDouble:&version] || version > 1) {
+      KPKCreateError(error, KPKerrorXMLKeyUnsupportedVersion, @"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION", "");
+      return nil;
+    }
+  }
+  
   DDXMLElement *keyElement = [rootElement elementForName:@"Key"];
   if (keyElement == nil) {
-    document = nil;
-    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: NSLocalizedStringFromTable(@"ERROR_KEYFILE_NO_KEY_XML_ELEMENT", @"LocalizeableErrors", "")};
-    if(error != NULL) {
-      *error = [NSError errorWithDomain:KPKErrorDomain code:KPKErrorKeyParsingFailed userInfo:userInfo];
-    }
+    KPKCreateError(error, KPKErrorXMLKeyKeyElementMissing, @"ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT", "");
     return nil;
   }
   
   DDXMLElement *dataElement = [keyElement elementForName:@"Data"];
   if (dataElement == nil) {
-    document = nil;
-    @throw [NSException exceptionWithName:@"ParseError" reason:@"Failed to parse keyfile" userInfo:nil];
+    KPKCreateError(error, KPKErrorXMLKeyDataElementMissing, @"ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT", "");
+    return nil;
+    
   }
   
   NSString *dataString = [dataElement stringValue];
   if (dataString == nil) {
-    document = nil;
-    @throw [NSException exceptionWithName:@"ParseError" reason:@"Failed to parse keyfile" userInfo:nil];
+    KPKCreateError(error, KPKErrorXMLKeyDataParsingError, @"ERROR_XML_KEYFILE_DATA_PARSING_ERROR", "");
+    return nil;
   }
-  
   return [NSMutableData mutableDataWithBase64DecodedData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
