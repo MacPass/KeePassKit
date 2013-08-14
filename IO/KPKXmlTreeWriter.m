@@ -51,6 +51,19 @@
 #define KPKFormattedDate(date) [_dateFormatter stringFromDate:date]
 #define KPKStringFromBool(bool) (bool ? @"True" : @"False" )
 
+static NSString *stringFromInhertiBool(KPKInheritBool value) {
+  switch(value) {
+    case KPKInherit:
+      return @"null";
+      
+    case KPKInheritYES:
+      return @"True";
+      
+    case KPKInheritNO:
+      return @"False";
+  }
+}
+
 @interface KPKXmlTreeWriter () {
   NSDateFormatter *_dateFormatter;
   NSMutableArray *_binaries;
@@ -166,8 +179,8 @@
   
   KPKAddElement(groupElement, @"IsExpanded", KPKStringFromBool(group.isExpanded));
   KPKAddElement(groupElement, @"DefaultAutoTypeSequence", group.defaultAutoTypeSequence);
-  KPKAddElement(groupElement, @"EnableAutoType", KPKStringFromLong(group.isAutoTypeEnabled));
-  KPKAddElement(groupElement, @"EnableSearching", KPKStringFromLong(group.isSearchEnabled));
+  KPKAddElement(groupElement, @"EnableAutoType", stringFromInhertiBool(group.isAutoTypeEnabled));
+  KPKAddElement(groupElement, @"EnableSearching", stringFromInhertiBool(group.isSearchEnabled));
   KPKAddElement(groupElement, @"LastTopVisibleEntry", [group.lastTopVisibleEntry encodedString]);
   
   for(KPKEntry *entry in group.entries) {

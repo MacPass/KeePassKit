@@ -104,4 +104,19 @@
   return nil;
 }
 
+- (NSString *)evaluatePlaceholderWithEntry:(KPKEntry *)entry {
+  NSCharacterSet *bracketsSet = [NSCharacterSet characterSetWithCharactersInString:@"{}"];
+  NSArray *tokens = [self componentsSeparatedByCharactersInSet:bracketsSet];
+  if([tokens count] == 0) {
+    return nil;
+  }
+  for(NSString *token in tokens) {
+    if([token length] == 0) {
+      continue; // Skip emtpy stirng
+    }
+  }
+  return nil;
+}
+
+
 @end

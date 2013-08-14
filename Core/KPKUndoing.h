@@ -20,6 +20,6 @@
  
  The Model does NOT set any names on undo/redo.
  */
-@property(nonatomic, weak) NSUndoManager *undoManager;
+@property (nonatomic, weak) NSUndoManager *undoManager;
 
 @end

@@ -68,7 +68,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   binary.name = KPKMetaEntryBinaryDescription;
   binary.data = data;
   [metaEntry addBinary:binary];
-
+  
   return metaEntry;
 }
 
@@ -369,8 +369,9 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 - (void)removeObjectFromBinariesAtIndex:(NSUInteger)index {
-  index = MIN([_binaries count], index);
-  [_binaries removeObjectAtIndex:index];
+  if(index < [_binaries count]) {
+    [_binaries removeObjectAtIndex:index];
+  }
 }
 
 /* History */
@@ -384,8 +385,9 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 - (void)removeObjectFromHistoryAtIndex:(NSUInteger)index {
-  index = MIN([_history count], index);
-  [_history removeObjectAtIndex:index];
+  if(index < [_history count]) {
+    [_history removeObjectAtIndex:index];
+  }
 }
 
 - (void)removeHistory:(NSSet *)objects {

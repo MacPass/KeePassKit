@@ -51,8 +51,8 @@
 #import "NSUUID+KeePassKit.h"
 #import "NSColor+KeePassKit.h"
 
-#define KPKYES(attribute) [[attribute stringValue] isEqualToString:@"True"]
-#define KPKNO(attribute) [[attribute stringValue] isEqualToString:@"False"]
+#define KPKYES(attribute) (NSOrderedSame == [[attribute stringValue] caseInsensitiveCompare:@"True"])
+#define KPKNO(attribute) (NSOrderedSame == [[attribute stringValue] caseInsensitiveCompare:@"False"])
 #define KPKString(element,name) [[element elementForName:name] stringValue]
 #define KPKInteger(element,name) [[[element elementForName:name] stringValue] integerValue]
 #define KPKBool(element,name) [[[element elementForName:name] stringValue] boolValue]
@@ -60,14 +60,17 @@
 
 KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
   NSString *stringValue = [[element elementForName:name] stringValue];
-  if(NSOrderedSame == [stringValue compare:@"null" options:NSCaseInsensitiveSearch]) {
+  if(NSOrderedSame == [stringValue caseInsensitiveCompare:@"null"]) {
     return KPKInherit;
   }
-  NSUInteger intValue = [[[element elementForName:name] stringValue] integerValue];
-  if(intValue != -1 && intValue != 1) {
+  
+  if(KPKYES(element)) {
+    return KPKInheritYES;
+  }
+  if(KPKNO(element)) {
     return KPKInherit;
   }
-  return intValue;
+  return KPKInherit;
 }
 
 @interface KPKXmlTreeReader () {
@@ -319,6 +322,7 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
   }
   [self _parseEntryBinaries:entryElement entry:entry];
   [self _parseEntryAutotype:entryElement entry:entry];
+  
   if(!ignoreHistory) {
     [self _parseHistory:entryElement entry:entry];
   }
@@ -407,6 +411,21 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
 }
 
 - (void)_parseEntryAutotype:(DDXMLElement *)entryElement entry:(KPKEntry *)entry {
+  /*
+   <AutoType>
+    <Enabled>True</Enabled>
+    <DataTransferObfuscation>0</DataTransferObfuscation>
+    <DefaultSequence>{TAB}{Username}{TAB}{Password}</DefaultSequence>
+    <Association>
+     <Window>WindowTitle</Window>
+     <KeystrokeSequence></KeystrokeSequence>
+    </Association>
+    <Association>
+     <Window>WindowWithCustomSequence</Window>
+     <KeystrokeSequence>{TAB}{Username}{TAB}{Password}{TAB}{Password}</KeystrokeSequence>
+    </Association>
+  </AutoType>
+  */
   //
   //  entry.autoType = [self parseAutoType:[root elementForName:@"AutoType"]];
   //
@@ -426,11 +445,11 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
 - (void)_parseDeletedObjects:(DDXMLElement *)root tree:(KPKTree *)tree {
   /*
    <DeletedObjects>
-    <DeletedObject>
-      <UUID>-Base64EncodedUUID/UUID>
-      <DeletionTime>YYY-MM-DDTHH:MM:SSZ</DeletionTime>
-    </DeletedObject>
-  </DeletedObjects>
+   <DeletedObject>
+   <UUID>-Base64EncodedUUID/UUID>
+   <DeletionTime>YYY-MM-DDTHH:MM:SSZ</DeletionTime>
+   </DeletedObject>
+   </DeletedObjects>
    */
   DDXMLElement *deletedObjects = [root elementForName:@"DeletedObjects"];
   for(DDXMLElement *deletedObject in [deletedObjects elementsForName:@"DeletedObject"]) {

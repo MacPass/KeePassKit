@@ -57,7 +57,6 @@
  {URL:QUERY}	Query information of the entry URL.
  
  */
-
 @implementation KPKAttribute
 /**
  Designeted initalizer
@@ -142,6 +141,11 @@
 }
 
 - (NSString *)placeholderValue {
+  
+  
+  
+  
+  
   return nil;
 }
 

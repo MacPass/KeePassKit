@@ -33,8 +33,8 @@
 
 typedef NS_ENUM(NSInteger, KPKInheritBool) {
   KPKInherit = -1,
-  KPKNO = 0,
-  KPKYES = 1,
+  KPKInheritNO = NO,
+  KPKInheritYES = YES,
 };
 
 /**

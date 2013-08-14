@@ -21,6 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
+@class KPKEntry;
 
 @interface NSString (CommandString)
 
@@ -48,5 +49,11 @@
  @returns the value for this placeholderstring, nil if nothing can be found
  */
 - (NSString *)placeholderValue;
+/**
+ *	Evaluates all placeholders inside the string an replaces them with values found in the entry
+ *	@param	entry	The enty to use a source
+ *	@return	NSString with all found placeholder filled
+ */
+- (NSString *)evaluatePlaceholderWithEntry:(KPKEntry *)entry;
 
 @end
