@@ -70,22 +70,6 @@
   return dict;
 }
 
-+ (NSArray *)_simplePlaceholder {
-  static NSArray *placeholder = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    placeholder = @[
-                    @"title",
-                    @"username",
-                    @"url",
-                    @"password",
-                    @"notes"
-                    ];
-  });
-  return placeholder;
-  
-}
-
 - (BOOL)isCommandString {
   return ( [self hasPrefix:@"{"] && [self hasSuffix:@"}"] );
 }
@@ -104,79 +88,9 @@
   return nil;
 }
 
-- (BOOL)isPlaceholder {
-  if([self isCommandString]) {
-    
-  }
-  return NO;
-}
-
 - (NSString *)_removeBraces {
   return [self substringWithRange:NSMakeRange(1, [self length] - 2)];
 }
-
-- (NSString *)placeholderValueForEntry:(KPKEntry *)entry {
-  /*
-   {TITLE}
-   {USERNAME}
-   {URL}	URL
-   {PASSWORD}
-   {NOTES}
-   */
-  NSString *lowercased = [self lowercaseString];
-  BOOL simplePlaceholder = [[[self class] _simplePlaceholder] containsObject:lowercased];
-  if(simplePlaceholder) {
-    SEL selector = NSSelectorFromString(lowercased);
-    NSMethodSignature *signatur = [entry methodSignatureForSelector:selector];
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signatur];
-    [invocation setSelector:selector];
-    [invocation setTarget:entry];
-    [invocation invoke];
-    NSString *value = nil;
-    [invocation getReturnValue:&value];
-    return value;
-  }
-  else if( [lowercased hasPrefix:@"url"]) {
-    /*
-     {URL:RMVSCM}	Entry URL without scheme name.
-     {URL:SCM}	Scheme name of the entry URL.
-     {URL:HOST}	Host component of the entry URL.
-     {URL:PORT}	Port number of the entry URL.
-     {URL:PATH}	Path component of the entry URL.
-     {URL:QUERY}	Query information of the entry URL.
-     */
-  }
-  else if([lowercased hasPrefix:@"s:"]) {
-    NSString *key = [self substringFromIndex:2];
-    NSString *value = [entry valueForCustomAttributeWithKey:key];
-    return value;
-  }
-  return nil;
-}
-
-- (NSString *)evaluatePlaceholderWithEntry:(KPKEntry *)entry {
-  NSMutableString *substituedString = [[NSMutableString alloc] initWithCapacity:[self length]];
-  NSCharacterSet *bracketsSet = [NSCharacterSet characterSetWithCharactersInString:@"{}"];
-  NSArray *tokens = [self componentsSeparatedByCharactersInSet:bracketsSet];
-  if([tokens count] == 0) {
-    return nil;
-  }
-  for(NSString *token in tokens) {
-    if([token length] == 0) {
-      continue; // Skip emtpy string
-    }
-    NSString *evaluated = [token placeholderValueForEntry:entry];
-    if(evaluated) {
-      [substituedString appendString:evaluated];
-    }
-    else {
-      [substituedString appendFormat:@"{%@}", token];
-    }
-  
-  }
-  return substituedString;
-}
-
 
 
 @end
