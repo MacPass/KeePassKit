@@ -48,7 +48,7 @@
 /**
  @returns the value for this placeholderstring, nil if nothing can be found
  */
-- (NSString *)placeholderValue;
+- (NSString *)placeholderValueForEntry:(KPKEntry *)entry;
 /**
  *	Evaluates all placeholders inside the string an replaces them with values found in the entry
  *	@param	entry	The enty to use a source

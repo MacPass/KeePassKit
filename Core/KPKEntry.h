@@ -66,6 +66,16 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, strong) NSArray *history;
 
 /**
+ *	Retrieves a list of all defaultAttributes
+ */
+- (NSArray *)defaultAttributes;
+/**
+ *	Removes the Entry from it's parent group
+ */
+- (void)remove;
+
+#pragma mark MetaEntries
+/**
  *	Creates KDB meta entry with the given data and name
  *	@param	data	data to store in the entry
  *  @param  name  the name of the metaentry
@@ -73,24 +83,20 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 + (KPKEntry *)metaEntryWithData:(NSData *)data name:(NSString *)name;
 /**
- *	Retrieves a list of all defaultAttributes
- */
-- (NSArray *)defaultAttributes;
-/**
  *	Additialn information is stores in MetaEntrie in KDB files.
  *  This function determines wheter the entry is a meta entry or not.
  *	@return	YES if this entry is a Meta Entry, NO if not
  */
 - (BOOL)isMeta;
-/**
- *	Removes the Entry from it's parent group
- */
-- (void)remove;
+
+#pragma mark Custom Attributes
+
 /**
  @param key String that identifies the attributes
  @returns the attribute with the given key
  */
 - (KPKAttribute *)customAttributeForKey:(NSString *)key;
+- (NSString *)valueForCustomAttributeWithKey:(NSString *)key;
 /**
  @returns YES, if the supplied key is a key in the attributes of this entry
  */
@@ -112,6 +118,8 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 - (void)removeCustomAttribute:(KPKAttribute *)attribute;
 
+#pragma mark Binaries
+
 /**
  *  Adds a binary to the attachments of this entry
  *	@param	binary	Binary to add
@@ -129,6 +137,9 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *	@param	binary	Binary to be removed
  */
 - (void)removeBinary:(KPKBinary *)binary;
+
+#pragma mark History
+
 /**
  *	Adds an Item to the Entries history
  *	@param	entry	Entry element to be added as history
@@ -141,4 +152,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 - (void)clearHistory;
 
+#pragma mark Placeholder
+
 @end
+

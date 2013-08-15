@@ -234,6 +234,11 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   return [filterdAttributes lastObject];
 }
 
+- (NSString *)valueForCustomAttributeWithKey:(NSString *)key {
+  KPKAttribute *attribute = [self customAttributeForKey:key];
+  return attribute.value;
+}
+
 - (BOOL)hasAttributeWithKey:(NSString *)key {
   // test for default keys;
   NSPredicate *filter = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
