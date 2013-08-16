@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKUndoing.h"
 
-@interface KPKWindowAssociation : NSObject <KPKUndoing>
+@class KPKAutotype;
+
+@interface KPKWindowAssociation : NSObject <NSCopying, NSCoding>
 
 @property (nonatomic, copy) NSString *windowTitle;
 @property (nonatomic, copy) NSString *keystrokeSequence;
-
-@property (nonatomic, weak) NSUndoManager *undoManager;
+@property (weak) KPKAutotype *autotype;
 
 @end

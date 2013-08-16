@@ -24,7 +24,9 @@
 #import "KPKGroup.h"
 #import "KPKBinary.h"
 #import "KPKAttribute.h"
+#import "KPKAutotype.h"
 #import "KPKFormat.h"
+
 
 NSString *const KPKMetaEntryBinaryDescription   = @"bin-stream";
 NSString *const KPKMetaEntryTitle               = @"Meta-Info";
@@ -83,6 +85,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
     _customAttributes = [[NSMutableArray alloc] initWithCapacity:2];
     _binaries = [[NSMutableArray alloc] initWithCapacity:2];
     _history = [[NSMutableArray alloc] initWithCapacity:5];
+    _autotype = [[KPKAutotype alloc] init];
   }
   return self;
 }
@@ -96,7 +99,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   entry->_binaries = [self.binaries copyWithZone:zone];
   entry->_customAttributes = [self.customAttributes copyWithZone:zone];
   entry->_tags = [self.tags copyWithZone:zone];
-  
+  entry->_autotype = [self.autotype copyWithZone:zone];
   return entry;
 }
 
@@ -111,11 +114,14 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
     _binaries = [aDecoder decodeObjectForKey:@"binaries"];
     _customAttributes = [aDecoder decodeObjectForKey:@"customAttributes"];
     _tags = [aDecoder decodeObjectForKey:@"tags"];
+    _history = [aDecoder decodeObjectForKey:@"history"];
+    _autotype = [aDecoder decodeObjectForKey:@"autotype"];
     
     _titleAttribute.entry = self;
     _usernameAttribute.entry = self;
     _urlAttribute.entry = self;
     _notesAttribute.entry = self;
+    _autotype.entry = self;
     
     for(KPKAttribute *attribute in _customAttributes) {
       attribute.entry = self;
@@ -133,6 +139,8 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   [aCoder encodeObject:self.binaries forKey:@"binaries"];
   [aCoder encodeObject:self.customAttributes forKey:@"customAttributes"];
   [aCoder encodeObject:self.tags forKey:@"tags"];
+  [aCoder encodeObject:self.history forKey:@"history"];
+  [aCoder encodeObject:self.autotype forKey:@"autotype"];
   return;
 }
 
@@ -199,10 +207,12 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 - (void)setUsername:(NSString *)username {
+  [self.undoManager registerUndoWithTarget:self selector:@selector(setUsername:) object:self.username];
   self.usernameAttribute.value = username;
 }
 
 - (void)setPassword:(NSString *)password {
+  [self.undoManager registerUndoWithTarget:self selector:@selector(setPassword:) object:self.password];
   self.passwordAttribute.value = password;
 }
 
@@ -324,8 +334,6 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 - (void)addHistoryEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
-  /* Possible better to not register these action with the undomanager */
-  [self.undoManager registerUndoWithTarget:self selector:@selector(removeHistoryEntry:) object:entry];
   [self insertObject:entry inHistoryAtIndex:[_history count]];
   // Update Minimum Version?
 }
@@ -333,7 +341,6 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (void)removeHistoryEntry:(KPKEntry *)entry {
   NSUInteger index = [self.history indexOfObject:entry];
   if(index != NSNotFound) {
-    [[self.undoManager prepareWithInvocationTarget:self] addHistoryEntry:entry atIndex:index];
     [self removeObjectFromHistoryAtIndex:index];
   }
 }

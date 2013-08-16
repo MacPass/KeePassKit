@@ -27,6 +27,7 @@
 @class KPKGroup;
 @class KPKBinary;
 @class KPKAttribute;
+@class KPKAutotype;
 
 /* Entries declared as MetaEntries in KDB files
  * contain information that is stored in meta data in KDBX file
@@ -62,7 +63,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy) NSString *overrideURL;
 
 @property (nonatomic, strong) NSArray *customAttributes;
-
+@property (nonatomic, strong) KPKAutotype *autotype;
 @property (nonatomic, strong) NSArray *history;
 
 /**

@@ -7,6 +7,8 @@
 //
 
 #import "KPKAutotype.h"
+#import "KPKEntry.h"
+#import "KPKWindowAssociation.h"
 
 @interface KPKAutotype () {
   NSMutableArray *_associations;
@@ -26,16 +28,48 @@
   return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+  self = [self init];
+  if(self) {
+    _isEnabled = [aDecoder decodeBoolForKey:@"isEnabled"];
+    _obfuscateDataTransfer = [aDecoder decodeBoolForKey:@"obfuscateDataTransfer"];
+    _associations = [aDecoder decodeObjectForKey:@"associations"];
+    for(KPKWindowAssociation *association in _associations) {
+      association.autotype = self;
+    }
+  }
+  return nil;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+  [aCoder encodeBool:self.isEnabled forKey:@"isEnabled"];
+  [aCoder encodeBool:self.obfuscateDataTransfer forKey:@"obfuscateDataTransfer"];
+  [aCoder encodeObject:self.associations forKey:@"associations"];
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+  KPKAutotype *copy = [[KPKAutotype alloc] init];
+  copy->_isEnabled = _isEnabled;
+  copy->_obfuscateDataTransfer = _obfuscateDataTransfer;
+  copy->_associations = [_associations copyWithZone:zone];
+  copy->_entry = _entry;
+  for(KPKWindowAssociation *association in copy->_associations) {
+    association.autotype = copy;
+  }
+  return copy;
+}
+
+
 - (void)setIsEnabled:(BOOL)isEnabled {
   if(self.isEnabled != isEnabled) {
-    [[self.undoManager prepareWithInvocationTarget:self] setIsEnabled:self.isEnabled];
+    [[self.entry.undoManager prepareWithInvocationTarget:self] setIsEnabled:self.isEnabled];
     self.isEnabled = isEnabled;
   }
 }
 
 - (void)setObfuscateDataTransfer:(BOOL)obfuscateDataTransfer {
   if(self.obfuscateDataTransfer != obfuscateDataTransfer) {
-    [[self.undoManager prepareWithInvocationTarget:self] setObfuscateDataTransfer:self.obfuscateDataTransfer];
+    [[self.entry.undoManager prepareWithInvocationTarget:self] setObfuscateDataTransfer:self.obfuscateDataTransfer];
     self.obfuscateDataTransfer = obfuscateDataTransfer;
   }
 }
@@ -45,14 +79,16 @@
 }
 
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index {
-  [self.undoManager registerUndoWithTarget:self selector:@selector(removeAssociation:) object:association];
+  [self.entry.undoManager registerUndoWithTarget:self selector:@selector(removeAssociation:) object:association];
+  association.autotype = self;
   [self insertObject:association inAssociationsAtIndex:index];
 }
 
-- (void)removeAssociation:(KPKWindowAssociation *)associtaions {
-  NSUInteger index = [_associations indexOfObject:associtaions];
+- (void)removeAssociation:(KPKWindowAssociation *)association {
+  NSUInteger index = [_associations indexOfObject:association];
   if(index != NSNotFound) {
-    [[self.undoManager prepareWithInvocationTarget:self] addAssociation:associtaions atIndex:index];
+    [[self.entry.undoManager prepareWithInvocationTarget:self] addAssociation:association atIndex:index];
+    association.autotype = nil;
     [self removeObjectFromAssociationsAtIndex:index];
   }
 }

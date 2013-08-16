@@ -311,6 +311,7 @@
           
         case KPKFieldTypeEntryNotes:
           entry.notes = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          [self _parseNotes:entry];
           break;
           
         case KPKFieldTypeEntryCreationTime:
@@ -429,6 +430,14 @@
         return NO;
 		}
 	}
+}
+
+- (void)_parseNotes:(KPKEntry *)notes {
+  /*
+   Notes contain Autotype information.
+   Parse notes and extract any exsisting
+   autotype info
+   */
 }
 
 #pragma mark -

@@ -51,6 +51,31 @@
 }
 
 #pragma mark -
+#pragma mark Properties
+
+- (void)setExpires:(BOOL)expires {
+  [[self.undoManager prepareWithInvocationTarget:self] setExpires:_expires];
+  self.expires = expires;
+  [self wasModified];
+}
+
+- (void)setName:(NSString *)name {
+  if(![_name isEqualToString:name]) {
+    [self.undoManager registerUndoWithTarget:self selector:@selector(setName:) object:self.name];
+    _name = [name copy];
+    [self wasModified];
+  }
+}
+
+- (void)setNotes:(NSString *)notes {
+  if(![_notes isEqualToString:notes]) {
+    [self.undoManager registerUndoWithTarget:self selector:@selector(setName:) object:self.notes];
+    _notes = [notes copy];
+    [self wasModified];
+  }
+}
+
+#pragma mark -
 #pragma mark Accessors
 - (NSArray *)childEntries {
   NSMutableArray *childEntries = [NSMutableArray arrayWithArray:_entries];
@@ -87,6 +112,7 @@
   /* Remove entries that might have been added to the deleted objects */
   [self.tree.deletedObjects removeObjectForKey:group.uuid];
   [self insertObject:group inGroupsAtIndex:index];
+  [self wasModified];
 }
 
 - (void)removeGroup:(KPKGroup *)group {
@@ -97,6 +123,7 @@
     /* Add group to deleted objects */
     self.tree.deletedObjects[ group.uuid ] = [[KPKDeletedNode alloc] initWithNode:group];
     [self removeObjectFromGroupsAtIndex:index];
+    [self wasModified];
   }
 }
 
@@ -113,6 +140,8 @@
   if(wasEnabled) {
     [self.undoManager enableUndoRegistration];
   }
+  [self wasModified];
+  [self wasMoved];
 }
 
 - (void)addEntry:(KPKEntry *)entry {
