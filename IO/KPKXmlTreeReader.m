@@ -33,6 +33,8 @@
 #import "KPKEntry.h"
 #import "KPKBinary.h"
 #import "KPKAttribute.h"
+#import "KPKAutotype.h"
+#import "KPKWindowAssociation.h"
 
 #import "KPKFormat.h"
 #import "KPKXmlFormat.h"
@@ -57,6 +59,7 @@
 #define KPKInteger(element,name) [[[element elementForName:name] stringValue] integerValue]
 #define KPKBool(element,name) [[[element elementForName:name] stringValue] boolValue]
 #define KPKDate(formatter,element,name) [formatter dateFromString:[[element elementForName:name] stringValue]]
+
 
 KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
   NSString *stringValue = [[element elementForName:name] stringValue];
@@ -396,7 +399,7 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
 
 - (void)_parseCustomData:(DDXMLElement *)root meta:(KPKMetaData *)metaData {
   DDXMLElement *customDataElement = [root elementForName:@"CustomData"];
-  for (DDXMLElement *dataElement in [customDataElement elementsForName:@"Item"]) {
+  for(DDXMLElement *dataElement in [customDataElement elementsForName:@"Item"]) {
     /*
      <CustomData>
      <Item>
@@ -413,22 +416,37 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
 - (void)_parseEntryAutotype:(DDXMLElement *)entryElement entry:(KPKEntry *)entry {
   /*
    <AutoType>
-    <Enabled>True</Enabled>
-    <DataTransferObfuscation>0</DataTransferObfuscation>
-    <DefaultSequence>{TAB}{Username}{TAB}{Password}</DefaultSequence>
-    <Association>
-     <Window>WindowTitle</Window>
-     <KeystrokeSequence></KeystrokeSequence>
-    </Association>
-    <Association>
-     <Window>WindowWithCustomSequence</Window>
-     <KeystrokeSequence>{TAB}{Username}{TAB}{Password}{TAB}{Password}</KeystrokeSequence>
-    </Association>
-  </AutoType>
-  */
-  //
-  //  entry.autoType = [self parseAutoType:[root elementForName:@"AutoType"]];
-  //
+   <Enabled>True</Enabled>
+   <DataTransferObfuscation>0</DataTransferObfuscation>
+   <DefaultSequence>{TAB}{Username}{TAB}{Password}</DefaultSequence>
+   <Association>
+   <Window>WindowTitle</Window>
+   <KeystrokeSequence></KeystrokeSequence>
+   </Association>
+   <Association>
+   <Window>WindowWithCustomSequence</Window>
+   <KeystrokeSequence>{TAB}{Username}{TAB}{Password}{TAB}{Password}</KeystrokeSequence>
+   </Association>
+   </AutoType>
+   */
+  
+  DDXMLElement *autotypeElement = [entryElement elementForName:@"AutoType"];
+  if(!autotypeElement) {
+    return;
+  }
+  KPKAutotype *autotype = [[KPKAutotype alloc] init];
+  autotype.isEnabled = KPKBool(autotypeElement, @"Enabled");
+  autotype.defaultSequence = KPKString(autotypeElement, @"DefaultSequence");
+  NSInteger obfuscate = KPKInteger(autotypeElement, @"DataTransferObfuscation");
+  autotype.obfuscateDataTransfer = obfuscate > 0;
+  autotype.entry = entry;
+  
+  for(DDXMLElement *associationElement in [autotypeElement elementsForName:@"Association"]) {
+    KPKWindowAssociation *association = [[KPKWindowAssociation alloc] initWithWindow:KPKString(associationElement, @"Window")
+                                                                   keystrokeSequence:KPKString(associationElement, @"KeystrokeSequence")];
+    [autotype addAssociation:association];
+  }
+  entry.autotype = autotype;
 }
 
 - (void)_parseHistory:(DDXMLElement *)entryElement entry:(KPKEntry *)entry {

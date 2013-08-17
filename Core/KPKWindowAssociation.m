@@ -12,6 +12,15 @@
 
 @implementation KPKWindowAssociation
 
+- (id)initWithWindow:(NSString *)window keystrokeSequence:(NSString *)strokes {
+  self = [super init];
+  if(self) {
+    _windowTitle = [window copy];
+    _keystrokeSequence = [strokes copy];
+  }
+  return self;
+}
+
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
@@ -29,12 +38,7 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-  KPKWindowAssociation *copy = [[KPKWindowAssociation alloc] init];
-  /* Properties are all copy */
-  copy.keystrokeSequence = [self.keystrokeSequence copy];
-  copy.windowTitle = [self.windowTitle copy];
-  copy.autotype = self.autotype;
-  return copy;
+  return [[KPKWindowAssociation alloc] initWithWindow:self.windowTitle keystrokeSequence:self.keystrokeSequence];
 }
 
 - (void)setWindowTitle:(NSString *)windowTitle {
@@ -52,7 +56,7 @@
 }
 
 - (NSString *)evaluatedKeystrokeSequenceForEntry:(KPKEntry *)enty {
-  // parse for placeholder
+  NSAssert(NO, @"Not implemented!");
   return nil;
 }
 

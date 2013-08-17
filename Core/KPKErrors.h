@@ -49,6 +49,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorUnsupportedCipher, // The header specifies a unsupported and/or wrong chipher methed
   KPKErrorUnsupportedCompressionAlgorithm, // The header specifies an unsupporte and/or wrong compressoing algorithm
   KPKErrorUnsupportedRandomStream, // The header specifies an unsupporte stream or it's corrupted
+  KPKErrorPasswordAndOrKeyfileWrong, // Password and or keyfile is wrong
   KPKErrorIntegrityCheckFaild, // The startbytes in the header aren't matching the AES stream-start
   KPKErrorXMLKeePassFileElementMissing, // the Keepass root element is missing
   KPKErrorXMLRootElementMissing, // The root Elemetn is missing;

@@ -38,6 +38,8 @@
 #import "KPKAttribute.h"
 #import "KPKBinary.h"
 #import "KPKIcon.h"
+#import "KPKAutotype.h"
+#import "KPKWindowAssociation.h"
 
 #import "NSColor+KeePassKit.h"
 
@@ -221,14 +223,9 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   for(KPKBinary *binary in entry.binaries) {
     [entryElement addChild:[self _xmlBinary:binary]];
   }
-  /*
-   
-   FIXME: Add History
-   FIXME: Add Autotype
-   
-   // Add the auto-type
-   [root addChild:[self persistAutoType:entry.autoType]];
-   */
+  
+  [entryElement addChild:[self _xmlAutotype:entry.autotype]];
+  
   // Add the history entries
   if(!skipHistory && [entry.history count] > 0) {
     DDXMLElement *historyElement = [DDXMLElement elementWithName:@"History"];
@@ -239,6 +236,40 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   }
   
   return entryElement;
+}
+
+- (DDXMLElement *)_xmlAutotype:(KPKAutotype *)autotype {
+  /*
+   <AutoType>
+  <Enabled>True</Enabled>
+  <DataTransferObfuscation>0</DataTransferObfuscation>
+  <DefaultSequence>{TAB}{Username}{TAB}{Password}</DefaultSequence>
+  <Association>
+  <Window>WindowTitle</Window>
+  <KeystrokeSequence></KeystrokeSequence>
+  </Association>
+  <Association>
+  <Window>WindowWithCustomSequence</Window>
+  <KeystrokeSequence>{TAB}{Username}{TAB}{Password}{TAB}{Password}</KeystrokeSequence>
+  </Association>
+  </AutoType>
+  */
+  DDXMLElement *autotypeElement = [DDXMLElement elementWithName:@"AutoType"];
+  KPKAddElement(autotypeElement, @"Enabled", KPKStringFromBool(autotype.isEnabled));
+  NSString *obfuscate = autotype.obfuscateDataTransfer ? @"0" : @"1";
+  KPKAddElement(autotypeElement, @"DataTransferObfuscation", obfuscate);
+  KPKAddElement(autotypeElement, @"DefaultSequence", autotype.defaultSequence);
+  
+  if([autotype.associations count] > 0) {
+    DDXMLElement *associationsElement = [DDXMLElement elementWithName:@"Association"];
+    for(KPKWindowAssociation *association in autotype.associations) {
+      KPKAddElement(associationsElement, @"Window", association.windowTitle);
+      KPKAddElement(associationsElement, @"KeystrokeSequence", association.keystrokeSequence);
+    }
+    [autotypeElement addChild:associationsElement];
+  }
+  
+  return autotypeElement;
 }
 
 - (DDXMLElement *)_xmlAttribute:(KPKAttribute *)attribute {

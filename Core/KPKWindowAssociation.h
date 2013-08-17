@@ -16,4 +16,6 @@
 @property (nonatomic, copy) NSString *keystrokeSequence;
 @property (weak) KPKAutotype *autotype;
 
+- (id)initWithWindow:(NSString *)window keystrokeSequence:(NSString *)strokes;
+
 @end

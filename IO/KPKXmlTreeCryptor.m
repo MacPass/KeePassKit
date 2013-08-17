@@ -76,7 +76,7 @@
    */
   NSData *startBytes = [aesDecrypted subdataWithRange:NSMakeRange(0, 32)];
   if(![headerReader.streamStartBytes isEqualToData:startBytes]) {
-    KPKCreateError(error, KPKErrorIntegrityCheckFaild, @"ERROR_INTEGRITY_CHECK_FAILED", "");
+    KPKCreateError(error, KPKErrorPasswordAndOrKeyfileWrong, @"ERROR_PASSWORD_OR_KEYFILE_WRONG", "");
     return nil;
   }
   /*
