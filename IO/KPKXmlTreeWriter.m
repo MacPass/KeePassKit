@@ -202,8 +202,8 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   // Add the standard properties
   KPKAddElement(entryElement, @"UUID", [entry.uuid encodedString]);
   KPKAddElement(entryElement, @"IconID", KPKStringFromLong(entry.icon));
-  if(entry.iconUUID) {
-    KPKAddElement(entryElement, @"CustomIconUUID", [entry.iconUUID encodedString]);
+  if(entry.customIcon) {
+    KPKAddElement(entryElement, @"CustomIconUUID", [entry.customIcon.uuid encodedString]);
   }
   KPKAddElement(entryElement, @"ForegroundColor", [entry.foregroundColor hexString]);
   KPKAddElement(entryElement, @"BackgroundColor", [entry.backgroundColor hexString]);

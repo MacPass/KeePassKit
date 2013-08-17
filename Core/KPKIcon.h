@@ -32,5 +32,6 @@
 - (id)initWithData:(NSData *)data;
 
 - (NSString *)encodedString;
+- (NSData *)pngData;
 
 @end

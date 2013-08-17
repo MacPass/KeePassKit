@@ -83,6 +83,7 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
   RandomStream *_randomStream;
   NSDateFormatter *_dateFormatter;
   NSMutableDictionary *_binaryMap;
+  NSMutableDictionary *_iconMap;
 }
 @end
 
@@ -241,7 +242,8 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
   
   DDXMLElement *customIconUuidElement = [groupElement elementForName:@"CustomIconUUID"];
   if (customIconUuidElement != nil) {
-    group.iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
+    NSUUID *iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
+    group.customIcon = _iconMap[ iconUUID ];
   }
   
   DDXMLElement *timesElement = [groupElement elementForName:@"Times"];
@@ -285,7 +287,8 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
   
   DDXMLElement *customIconUuidElement = [entryElement elementForName:@"CustomIconUUID"];
   if (customIconUuidElement != nil) {
-    entry.iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
+    NSUUID *iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
+    entry.customIcon = _iconMap[iconUUID];
   }
   
   entry.foregroundColor =  [NSColor colorWithHexString:KPKString(entryElement, @"ForegroundColor")];
@@ -354,11 +357,13 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
    </Icon>
    </CustomIcons>
    */
+  _iconMap = [[NSMutableDictionary alloc] init];
   DDXMLElement *customIconsElement = [root elementForName:@"CustomIcons"];
   for (DDXMLElement *iconElement in [customIconsElement elementsForName:@"Icon"]) {
     NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKString(iconElement, @"UUID")];
     KPKIcon *icon = [[KPKIcon alloc] initWithUUID:uuid encodedString:KPKString(iconElement, @"Data")];
     [metaData.customIcons addObject:icon];
+    _iconMap[ icon.uuid ] = icon;
   }
 }
 

@@ -48,6 +48,7 @@
   NSMutableArray *_groups;
   NSMutableArray *_entries;
   NSMutableDictionary *_groupIdToUUID;
+  NSMutableDictionary *_iconUUIDMap;
 }
 
 @end
@@ -563,6 +564,33 @@
 
 - (BOOL)_parseKPXCustomIcon:(NSData *)data metaData:(KPKMetaData *)metaData {
   
+  /* Theoretica structures, variabel data sizes are mapped to fixed arrays with size 1
+   
+  struct KPXCustomIconData {
+    uint32_t dataSize;
+    uint8_t data[1];
+  };
+
+  struct KPXEntryIconInfo {
+    uint8_t  uuidBytes[16];
+    uint32_t iconId;
+  };
+  
+  struct KPXGroupIconInfo {
+    uint32_t groupId;
+    uint32_t icondId;
+  };
+  
+  struct KPXCustomIcons {
+    uint32_t iconCount;
+    uint32_t entryCount;
+    uint32_t groupCount;
+    struct KPXCustomIconData data[1]; // 1 -> iconCount
+    struct KPXEntryIconInfo entryIcon[1]; // 1 -> entryCount
+    struct KPXGroupIconInfo groupIcon[1]; // 1 -> groupCount
+  };
+  */
+  
   if([data length] < 12) {
     return NO; // Data is truncated
   }
@@ -574,6 +602,7 @@
   
   /* Read Icons */
   NSMutableArray *iconUUIDs = [[NSMutableArray alloc] initWithCapacity:numberOfIcons];
+  _iconUUIDMap = [[NSMutableDictionary  alloc] initWithCapacity:numberOfIcons];
   for(NSUInteger index = 0; index < numberOfIcons; index++) {
     if([dataReader countOfReadableBytes] < 4) {
       return NO; // Data is truncated
@@ -585,6 +614,7 @@
     KPKIcon *icon = [[KPKIcon alloc] initWithData:[dataReader dataWithLength:iconDataSize]];
     [metaData addCustomIcon:icon];
     [iconUUIDs addObject:icon.uuid];
+    _iconUUIDMap[ icon.uuid ] = icon;
   }
   
   if([dataReader countOfReadableBytes] < (numberOfEntries * 20)) {
@@ -598,7 +628,8 @@
     if([iconUUIDs count] <= iconId) {
       return NO;
     }
-    entry.iconUUID = iconUUIDs[iconId];
+    NSUUID *iconUUID = iconUUIDs[iconId];
+    entry.customIcon = _iconUUIDMap[iconUUID];
   }
   if([dataReader countOfReadableBytes] < (numberOfGroups * 8)) {
     return NO; // Data truncated
@@ -612,7 +643,8 @@
       return NO;
     }
     KPKGroup *group = [self _findGroupForUUID:groupUUID];
-    group.iconUUID = iconUUIDs[ groupIconId ];
+    NSUUID *iconUUID = iconUUIDs[groupIconId];
+    group.customIcon = _iconUUIDMap[iconUUID];
   }
   return YES;
 }

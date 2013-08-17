@@ -40,6 +40,8 @@
   KPKDataStreamWriter *_dataWriter;
   NSMutableArray *_groupIds;
   BOOL _firstGroup;
+  NSArray *_allEntries;
+  NSArray *_allGroups;
 }
 
 @end
@@ -69,11 +71,12 @@
    those groups should be placed inside another group,
    or discarded.
    */
-  for(KPKGroup *group in [_tree allGroups]) {
+  _allGroups = [_tree allGroups];
+  for(KPKGroup *group in _allGroups) {
     [self _writeGroup:group];
   }
-  
-  for(KPKEntry *entry in [_tree allEntries]) {
+  _allEntries = [_tree allEntries];
+  for(KPKEntry *entry in _allEntries) {
     [self _writeEntry:entry];
   }
   // Metadata can be converted to entries
@@ -167,21 +170,90 @@
   /*
    Store metadata in entries:
    
-   1. default username
-   2. tree state
-   3. database color
-   4. custom icons (KPX style)
-   5. treestate (KPX style?)
+   - tree state
+   - treestate (KPX style?)
    */
+  NSMutableArray *metaEntries = [[NSMutableArray alloc] initWithArray:self.tree.metaData.unknownMetaEntries];
   if(![NSString isEmptyString:self.tree.metaData.defaultUserName]) {
     NSData *defaultUsernameData = [self.tree.metaData.defaultUserName dataUsingEncoding:NSUTF8StringEncoding];
     KPKEntry *defaultUsernameEntry = [KPKEntry metaEntryWithData:defaultUsernameData name:KPKMetaEntryDefaultUsername];
-    [self.tree.metaData.unknownMetaEntries addObject:defaultUsernameEntry];
+    [metaEntries addObject:defaultUsernameEntry];
   }
   if(self.tree.metaData.color != nil) {
+    KPKEntry *treeColorEntry = [KPKEntry metaEntryWithData:[self.tree.metaData.copy colorData] name:KPKMetaEntryDatabaseColor];
+    [metaEntries addObject:treeColorEntry];
   }
-  // Write metadata based on tree metadata.
-  //[_tree.metaData.unknownMetaEntries];
+  if([self.tree.metaData.customIcons  count] > 0) {
+    KPKEntry *customIconEntry = [KPKEntry metaEntryWithData:[self _customIconData] name:KPKMetaEntryKeePassXCustomIcon2];
+    [metaEntries addObject:customIconEntry];
+  }
+  
+  for(KPKEntry *metaEntry in metaEntries) {
+    [self _writeEntry:metaEntry];
+  }
+}
+
+- (NSData *)_customIconData {
+  /* Theoretica structures, variabel data sizes are mapped to fixed arrays with size 1
+   
+   struct KPXCustomIconData {
+   uint32_t dataSize;
+   uint8_t data[1];
+   };
+   
+   struct KPXEntryIconInfo {
+   uint8_t  uuidBytes[16];
+   uint32_t iconId;
+   };
+   
+   struct KPXGroupIconInfo {
+   uint32_t groupId;
+   uint32_t icondId;
+   };
+   
+   struct KPXCustomIcons {
+   uint32_t iconCount;
+   uint32_t entryCount;
+   uint32_t groupCount;
+   struct KPXCustomIconData data[1]; // 1 -> iconCount
+   struct KPXEntryIconInfo entryIcon[1]; // 1 -> entryCount
+   struct KPXGroupIconInfo groupIcon[1]; // 1 -> groupCount
+   };
+   */
+  NSMutableArray *_iconEntries = [[NSMutableArray alloc] initWithCapacity:[_allEntries count]];
+  NSMutableArray *_groupEntries = [[NSMutableArray alloc] initWithCapacity:[_allGroups count]];
+  [_allEntries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    KPKNode *node = obj;
+    if(node.customIcon) {
+      [_iconEntries addObject:node];
+    }
+  }];
+  [_allGroups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    KPKNode *node = obj;
+    if(node.customIcon) {
+      [_groupEntries addObject:node];
+    }
+  }];
+  
+  NSArray *icons = self.tree.metaData.customIcons;
+  NSMutableData *iconData = [[NSMutableData alloc] initWithCapacity:1024*1024];
+  KPKDataStreamWriter *dataWriter = [[KPKDataStreamWriter alloc] initWithData:iconData];
+  [dataWriter write4Bytes:(uint32_t)[icons count]];
+  [dataWriter write4Bytes:(uint32)[_iconEntries count]];
+  [dataWriter write4Bytes:(uint32)[_groupEntries count]];
+  
+  
+  for(KPKIcon *icon in icons) {
+    NSData *pngData = [icon pngData];
+    [dataWriter write4Bytes:(uint32_t)[pngData length]];
+    [dataWriter writeData:pngData];
+  }
+  
+  for(KPKEntry *entryNode in _allEntries) {
+  
+  }
+  
+  return iconData;
 }
 
 - (void)_writeHeaderHash {

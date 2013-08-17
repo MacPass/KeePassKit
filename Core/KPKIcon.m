@@ -58,12 +58,9 @@
   return self;
 }
 
-
 - (NSString *)encodedString {
-  NSImageRep *imageRep = [[self.image representations] lastObject];
-  if([imageRep isKindOfClass:[NSBitmapImageRep class]]) {
-    NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
-    NSData *data = [bitmapRep representationUsingType:NSPNGFileType properties:nil];
+  NSData *data = [self pngData];
+  if(data) {
     NSData *encoded = [NSMutableData mutableDataWithBase64EncodedData:data];
     return [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
   }
@@ -71,6 +68,15 @@
     /* Wrong representation */
     return nil;
   }
+}
+
+- (NSData *)pngData {
+  NSImageRep *imageRep = [[self.image representations] lastObject];
+  if([imageRep isKindOfClass:[NSBitmapImageRep class]]) {
+    NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
+    return [bitmapRep representationUsingType:NSPNGFileType properties:nil];
+  }
+  return nil;
 }
 
 - (NSImage *)_decodeString:(NSString *)imageString {
