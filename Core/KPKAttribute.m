@@ -26,7 +26,8 @@
 #import "KPKGroup.h"
 
 #import "NSString+CommandString.h"
-
+#import "NSData+Random.h"
+#import "NSMutableData+KeePassKit.h"
 /*
  References are formatted as follows:
  T	Title
@@ -39,52 +40,43 @@
  
  {REF:P@I:46C9B1FFBD4ABC4BBB260C6190BAD20C}
  {REF:<WantedField>@<SearchIn>:<Text>}
- 
- Placeholder
- 
- {TITLE}	Title
- {USERNAME}	User name
- {URL}	URL
- {PASSWORD}	Password
- {NOTES}	Notes
- {S:Name} CustomString Name
- 
- {URL:RMVSCM}	Entry URL without scheme name.
- {URL:SCM}	Scheme name of the entry URL.
- {URL:HOST}	Host component of the entry URL.
- {URL:PORT}	Port number of the entry URL.
- {URL:PATH}	Path component of the entry URL.
- {URL:QUERY}	Query information of the entry URL.
- 
- */
+*/
+
+@interface KPKAttribute () {
+  NSUInteger _lenght;
+  NSData *_xorPad;
+  NSMutableData *_protectedData;
+}
+@end
+
 @implementation KPKAttribute
-/**
- Designeted initalizer
- */
-- (id)initWithKey:(NSString *)key value:(NSString *)value isProtected:(BOOL)protected {
+
+- (instancetype)initWithKey:(NSString *)key value:(NSString *)value isProtected:(BOOL)protected {
   self = [super init];
   if(self) {
+    [self _encodeValue:value];
     _key = [key copy];
-    _value = [value copy];
     _isProtected = protected;
   }
   return self;
 }
 
-- (id)initWithKey:(NSString *)key value:(NSString *)value {
+- (instancetype)initWithKey:(NSString *)key value:(NSString *)value {
   return [self initWithKey:key value:value isProtected:NO];
 }
 
-- (id)init {
-  return  [self initWithKey:@"" value:@"" isProtected:NO];
+- (instancetype)init {
+  return [self initWithKey:@"" value:@"" isProtected:NO];
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
     _key = [aDecoder decodeObjectForKey:@"key"];
-    _value = [aDecoder decodeObjectForKey:@"value"];
+    _xorPad = [aDecoder decodeObjectForKey:@"xorPad"];
+    _protectedData = [aDecoder decodeObjectForKey:@"protectedData"];
     _isProtected = [aDecoder decodeBoolForKey:@"isProtected"];
+    _lenght = [aDecoder decodeIntegerForKey:@"lenght"];
   }
   return self;
 }
@@ -92,10 +84,12 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeBool:self.isProtected forKey:@"isProtected"];
   [aCoder encodeObject:self.key forKey:@"key"];
-  [aCoder encodeObject:self.value forKey:@"value"];
+  [aCoder encodeObject:_xorPad forKey:@"xorPad"];
+  [aCoder encodeObject:_protectedData forKey:@"protectedData"];
+  [aCoder encodeInteger:_lenght forKey:@"lenght"];
 }
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
   return [[KPKAttribute allocWithZone:zone] initWithKey:self.key value:self.value isProtected:self.isProtected];
 }
 
@@ -108,11 +102,13 @@
   return YES;
 }
 
+- (NSString *)value {
+  return [self _decodedValue];
+}
+
 - (void)setValue:(NSString *)value {
-  if(![_value isEqualToString:value]) {
-    _value = [value copy];
-    [self.entry wasModified];
-  }
+  /* Add test for equality ? */
+  [self _encodeValue:value];
 }
 
 - (void)setKey:(NSString *)key {
@@ -141,12 +137,31 @@
 }
 
 - (NSString *)placeholderValue {
-  
-  
-  
-  
-  
   return nil;
+}
+
+- (void)_encodeValue:(NSString *)string {
+  NSMutableData *stringData = [[string dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
+  _lenght = [stringData length];
+  if([_xorPad length] < _lenght) {
+    _xorPad = [NSData dataWithRandomBytes:_lenght];
+  }
+  [stringData xorWithKey:_xorPad];
+  if(!_protectedData) {
+    _protectedData = stringData;
+  }
+  else {
+    [_protectedData setData:stringData];
+  }
+}
+
+- (NSString *)_decodedValue {
+  if(_lenght == 0) {
+    return @"";
+  }
+  NSMutableData *stringData = [_protectedData mutableCopy];
+  [stringData xorWithKey:_xorPad];
+  return [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
 }
 
 @end

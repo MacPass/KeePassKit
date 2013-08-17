@@ -27,9 +27,7 @@
 @interface KPKAttribute : NSObject <NSCopying, NSCoding>
 
 @property (nonatomic, copy) NSString *key;
-@property (nonatomic, copy) NSString *value;
-@property (nonatomic, copy) NSData *xorPad;
-@property (nonatomic, copy) NSData *protectedData;
+@property (nonatomic, assign) NSString *value;
 @property (nonatomic, assign) BOOL isProtected;
 @property (nonatomic, readonly) BOOL isReference;
 @property (nonatomic, readonly) BOOL isPlaceholder;
@@ -39,8 +37,8 @@
 
 @property (weak) KPKEntry *entry; /// Reference to entry to be able to validate keys
 
-- (id)initWithKey:(NSString *)key value:(NSString *)value isProtected:(BOOL)protected;
-- (id)initWithKey:(NSString *)key value:(NSString *)value;
+- (instancetype)initWithKey:(NSString *)key value:(NSString *)value isProtected:(BOOL)protected;
+- (instancetype)initWithKey:(NSString *)key value:(NSString *)value;
 - (BOOL)isDefault;
 
 @end
