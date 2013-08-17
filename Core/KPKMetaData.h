@@ -62,7 +62,7 @@
 /**
  *	Array of KPKBinary objects - extracted from unknown meta entries. Notes is mapped to name, data to data
  */
-@property(nonatomic, strong, readonly) NSMutableArray *unknownMetaEntries; // Array of KPKBinaries Compatibility for KDB files
+@property(nonatomic, strong, readonly) NSMutableArray *unknownMetaEntryData; // Array of KPKBinaries Compatibility for KDB files
 
 @property(nonatomic, assign) BOOL updateTiming;
 @property(nonatomic, weak) NSUndoManager *undoManager;

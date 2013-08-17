@@ -462,7 +462,7 @@
           KPKBinary *metaBinary = [[KPKBinary alloc] init];
           metaBinary.data = binary.data;
           metaBinary.name = entry.title;
-          [tree.metaData.unknownMetaEntries addObject:metaBinary];
+          [tree.metaData.unknownMetaEntryData addObject:metaBinary];
         }
       }
     }

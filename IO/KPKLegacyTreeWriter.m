@@ -167,29 +167,36 @@
 }
 
 - (void)_writeMetaData {
+  
   /*
    Store metadata in entries:
    
    - tree state
    - treestate (KPX style?)
    */
-  NSMutableArray *metaEntries = [[NSMutableArray alloc] initWithArray:self.tree.metaData.unknownMetaEntries];
-  if(![NSString isEmptyString:self.tree.metaData.defaultUserName]) {
-    NSData *defaultUsernameData = [self.tree.metaData.defaultUserName dataUsingEncoding:NSUTF8StringEncoding];
-    KPKEntry *defaultUsernameEntry = [KPKEntry metaEntryWithData:defaultUsernameData name:KPKMetaEntryDefaultUsername];
-    [metaEntries addObject:defaultUsernameEntry];
-  }
-  if(self.tree.metaData.color != nil) {
-    KPKEntry *treeColorEntry = [KPKEntry metaEntryWithData:[self.tree.metaData.copy colorData] name:KPKMetaEntryDatabaseColor];
-    [metaEntries addObject:treeColorEntry];
-  }
-  if([self.tree.metaData.customIcons  count] > 0) {
-    KPKEntry *customIconEntry = [KPKEntry metaEntryWithData:[self _customIconData] name:KPKMetaEntryKeePassXCustomIcon2];
-    [metaEntries addObject:customIconEntry];
-  }
-  
-  for(KPKEntry *metaEntry in metaEntries) {
-    [self _writeEntry:metaEntry];
+  @autoreleasepool {
+    NSMutableArray *metaEntries = [[NSMutableArray alloc] init];
+    if(![NSString isEmptyString:self.tree.metaData.defaultUserName]) {
+      NSData *defaultUsernameData = [self.tree.metaData.defaultUserName dataUsingEncoding:NSUTF8StringEncoding];
+      KPKEntry *defaultUsernameEntry = [KPKEntry metaEntryWithData:defaultUsernameData name:KPKMetaEntryDefaultUsername];
+      [metaEntries addObject:defaultUsernameEntry];
+    }
+    if(self.tree.metaData.color != nil) {
+      KPKEntry *treeColorEntry = [KPKEntry metaEntryWithData:[self.tree.metaData.copy colorData] name:KPKMetaEntryDatabaseColor];
+      [metaEntries addObject:treeColorEntry];
+    }
+    if([self.tree.metaData.customIcons  count] > 0) {
+      KPKEntry *customIconEntry = [KPKEntry metaEntryWithData:[self _customIconData] name:KPKMetaEntryKeePassXCustomIcon2];
+      [metaEntries addObject:customIconEntry];
+    }
+    
+    for(KPKEntry *metaEntry in metaEntries) {
+      [self _writeEntry:metaEntry];
+    }
+    for(KPKBinary *metaBinary in self.tree.metaData.unknownMetaEntryData) {
+      KPKEntry *metaEntry = [KPKEntry metaEntryWithData:metaBinary.data name:metaBinary.name];
+      [self _writeEntry:metaEntry];
+    }
   }
 }
 
@@ -250,7 +257,7 @@
   }
   
   for(KPKEntry *entryNode in _allEntries) {
-  
+    
   }
   
   return iconData;
