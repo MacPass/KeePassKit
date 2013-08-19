@@ -59,7 +59,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorXMLInvalidHeaderFieldType, // KDBX Header field type unknown
   KPKErrorLegacyInvalidFieldType, // KDB Invalid field type
   KPKErrorLegacyInvalidFieldSize, // KDB Invalid field size
-  KPKErrorLegacyHeaderHashMissmatch, // Header missmatch
+  KPKErrorLegacyHeaderHashCorrupted, // Header missmatch
   KPKErrorLegacyCorruptTree, // Tree sturcture is corrupted
 
 };

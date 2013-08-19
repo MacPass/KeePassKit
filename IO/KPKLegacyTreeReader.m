@@ -72,6 +72,7 @@
 }
 
 - (KPKTree *)tree:(NSError *__autoreleasing *)error {
+  
   if(![self _readGroups:error]) {
     return nil;
   }
@@ -163,9 +164,9 @@
       fieldSize = CFSwapInt32LittleToHost(fieldSize);
       
       switch (fieldType) {
-        case KPKFieldTypeCommonSize:
-          if (fieldSize > 0) {
-            if(![self _readExtendedData:error]) {
+        case KPKFieldTypeCommonHash:
+          if(fieldSize > 0) {
+            if(![self _readHashData:error]) {
               return NO;
             }
           }
@@ -267,9 +268,9 @@
       fieldSize = CFSwapInt32LittleToHost(fieldSize);
       
       switch (fieldType) {
-        case KPKFieldTypeCommonSize:
-          if (fieldSize > 0) {
-            if(![self _readExtendedData:error]){
+        case KPKFieldTypeCommonHash:
+          if(fieldSize > 0) {
+            if(![self _readHashData:error]) {
               return NO;
             }
           }
@@ -389,7 +390,7 @@
   return YES;
 }
 
-- (BOOL)_readExtendedData:(NSError **)error {
+- (BOOL)_readHashData:(NSError **)error {
   uint16_t fieldType;
   uint32_t fieldSize;
   NSData *headerHash;
@@ -398,32 +399,31 @@
     fieldType = [_dataStreamer read2Bytes];
     fieldSize = [_dataStreamer read4Bytes];
     
-    fieldSize = CFSwapInt32LittleToHost(fieldSize);
     fieldType = CFSwapInt16LittleToHost(fieldType);
+    fieldSize = CFSwapInt32LittleToHost(fieldSize);
 		switch (fieldType) {
-      case 0x0000:
-        // Ignore field
+      case KPKFieldTypeCommonHash:
         [_dataStreamer skipBytes:fieldSize];
         break;
         
-      case 0x0001:
+      case KPKHeaderHashFieldTypeHeaderHash:
         if (fieldSize != 32) {
           KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
           return NO;
         }
         headerHash = [_dataStreamer dataWithLength:fieldSize];
         if(![headerHash isEqualToData:_headerReader.headerHash]) {
-          KPKCreateError(error, KPKErrorLegacyHeaderHashMissmatch, @"ERROR_HEADER_HASH_MISSMATCH", "");
+          KPKCreateError(error, KPKErrorPasswordAndOrKeyfileWrong, @"ERROR_PASSWORD_OR_KEYFILE_WRONG", "");
           return NO;
         }
         break;
         
-      case 0x0002:
+      case KPKHeaderHashFieldTypeRandomData:
         // Ignore random data
         [_dataStreamer skipBytes:fieldSize];
         break;
         
-      case 0xFFFF:
+      case KPKFieldTypeCommonStop:
         return YES;
         
       default:

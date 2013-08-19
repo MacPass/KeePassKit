@@ -45,7 +45,7 @@ typedef struct {
 
 typedef NS_ENUM(NSUInteger, KPKLegacyFieldType) {
   /* Common types */
-  KPKFieldTypeCommonSize = 0,
+  KPKFieldTypeCommonHash = 0,
   KPKFieldTypeCommonStop = 0xFFFF,
   /* Groups Types */
   KPKFieldTypeGroupId    = 1,
@@ -73,8 +73,8 @@ typedef NS_ENUM(NSUInteger, KPKLegacyFieldType) {
   KPKFieldTypeEntryBinaryDescription,
   KPKFieldTypeEntryBinaryData,
   /* Header Hash */
-  KPKFieldTypeHeaderHash = 1,
-  KPKFieldTypeRandomData
+  KPKHeaderHashFieldTypeHeaderHash = 1,
+  KPKHeaderHashFieldTypeRandomData
 };
 
 typedef NS_OPTIONS(NSUInteger, KPKLegacyEncryptionFlags) {

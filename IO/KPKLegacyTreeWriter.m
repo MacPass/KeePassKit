@@ -22,6 +22,7 @@
 
 #import "KPKLegacyTreeWriter.h"
 #import "KPKLegacyFormat.h"
+#import "KPKLegacyHeaderWriter.h"
 #import "KPKTree.h"
 #import "KPKTimeInfo.h"
 #import "KPKMetaData.h"
@@ -38,6 +39,7 @@
 
 @interface KPKLegacyTreeWriter () {
   KPKDataStreamWriter *_dataWriter;
+  KPKLegacyHeaderWriter *_headerWriter;
   NSMutableArray *_groupIds;
   BOOL _firstGroup;
   NSArray *_allEntries;
@@ -50,7 +52,11 @@
 
 - (id)initWithTree:(KPKTree *)tree headerWriter:(id<KPKHeaderWriting>)headerWriter {
   self = [super init];
+  if(![headerWriter isKindOfClass:[KPKLegacyHeaderWriter class]]) {
+    self = nil;
+  }
   if(self) {
+    _headerWriter = (KPKLegacyHeaderWriter *)headerWriter;
     _tree = tree;
     _firstGroup = YES;
     _groupIds = [[NSMutableArray alloc] initWithCapacity:[[tree allGroups] count]];
@@ -89,8 +95,18 @@
   uint32_t tmp32;
   
   if(_firstGroup) {
-    [_dataWriter write4Bytes:KPKFieldTypeCommonSize];
-    [_dataWriter write4Bytes:88]; // Size of the hash information
+    [_dataWriter write4Bytes:KPKFieldTypeCommonHash];
+    /*
+     2 byte hash field type
+     4 byte hash field lenght
+     32 byte hash
+     2 byte random filed type
+     4 byte random field length
+     32 byte random data
+     2 byte stop field type
+     4 byte stop field length (0)
+     */
+    [_dataWriter write4Bytes:82];
     [self _writeHeaderHash];
     _firstGroup = NO;
   }
@@ -167,7 +183,6 @@
 }
 
 - (void)_writeMetaData {
-  
   /*
    Store metadata in entries:
    
@@ -264,14 +279,11 @@
 }
 
 - (void)_writeHeaderHash {
-  
   /* Compute a sha256 hash of the header up to but not including the contentsHash */
-  //
-  NSData *headerHash;// = [Kdb3Utils hashHeader:&header];
-  [self _writeField:KPKFieldTypeHeaderHash data:headerHash];
+  [self _writeField:KPKHeaderHashFieldTypeHeaderHash data:[_headerWriter headerHash]];
   
   /* Generate some random data to prevent guessing attacks that use the content hash */
-  [self _writeField:KPKFieldTypeRandomData data:[NSData dataWithRandomBytes:32]];
+  [self _writeField:KPKHeaderHashFieldTypeRandomData data:[NSData dataWithRandomBytes:32]];
   [self _writeField:KPKFieldTypeCommonStop bytes:NULL length:0];
 }
 
@@ -314,7 +326,7 @@
 }
 
 - (void)_writeField:(KPKLegacyFieldType)type bytes:(const void *)bytes length:(NSUInteger)length {
-  [_dataWriter write4Bytes:(uint32_t)type];
+  [_dataWriter write2Bytes:(uint16_t)type];
   [_dataWriter write4Bytes:(uint32_t)length];
   if(length > 0) {
     [_dataWriter writeBytes:bytes length:length];

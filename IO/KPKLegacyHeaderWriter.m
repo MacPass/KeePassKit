@@ -7,6 +7,7 @@
 //
 
 #import "KPKLegacyHeaderWriter.h"
+#import "KPKLegacyHeaderUtility.h"
 #import "KPKLegacyFormat.h"
 #import "KPKTree.h"
 #import "KPKMetaData.h"
@@ -77,6 +78,10 @@
   if([hash length] == 32) {
     [hash getBytes:&_header.contentsHash length:32];
   }
+}
+
+- (NSData *)headerHash {
+  return [KPKLegacyHeaderUtility hashForHeader:&_header];
 }
 
 @end

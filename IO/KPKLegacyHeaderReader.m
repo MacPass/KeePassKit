@@ -22,11 +22,10 @@
 
 #import "KPKLegacyHeaderReader.h"
 #import "KPKLegacyFormat.h"
+#import "KPKLegacyHeaderUtility.h"
 #import "KPKFormat.h"
 
 #import "KPKErrors.h"
-
-#import <CommonCrypto/CommonDigest.h>
 
 @interface KPKLegacyHeaderReader () {
   KPKLegacyHeader _header;
@@ -40,7 +39,7 @@
 - (id)init {
   self = [super init];
   if(self) {
-  
+    
   }
   return self;
 }
@@ -72,6 +71,7 @@
 }
 
 - (void)writeHeaderData:(NSMutableData *)data {
+  NSAssert(NO, @"Not implemented");
   return;
 }
 
@@ -111,23 +111,8 @@
   _rounds = CFSwapInt32LittleToHost(_header.keyEncRounds);
   
   // Compute a sha256 hash of the header up to but not including the contentsHash
-  _headerHash = [self _hashHeader];
+  _headerHash = [KPKLegacyHeaderUtility hashForHeader:&_header];;
   return YES;
-}
-
-- (NSData *)_hashHeader {
-    uint8_t *buffer = (uint8_t*)&_header;
-    size_t endCount = sizeof(_header.masterSeed2) + sizeof(_header.keyEncRounds);
-    size_t startCount = sizeof(KPKLegacyHeader) - sizeof(_header.contentsHash) - endCount;
-    uint8_t hash[32];
-    
-    CC_SHA256_CTX ctx;
-    CC_SHA256_Init(&ctx);
-    CC_SHA256_Update(&ctx, buffer, (CC_LONG)startCount);
-    CC_SHA256_Update(&ctx, buffer + (sizeof(KPKLegacyHeader) - endCount), (CC_LONG)endCount);
-    CC_SHA256_Final(hash, &ctx);
-    
-    return [NSData dataWithBytes:hash length:sizeof(hash)];
 }
 
 @end

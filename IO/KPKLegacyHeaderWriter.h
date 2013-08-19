@@ -21,5 +21,6 @@
 - (void)writeHeaderData:(NSMutableData *)data;
 
 - (void)setContentHash:(NSData *)hash;
+- (NSData *)headerHash;
 
 @end
