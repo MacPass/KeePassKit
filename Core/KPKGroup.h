@@ -41,41 +41,49 @@
 @property(nonatomic, assign) KPKInheritBool isAutoTypeEnabled;
 @property(nonatomic, assign) KPKInheritBool isSearchEnabled;
 
-
-@property(nonatomic, assign) BOOL canAddEntries;
-
 /**
  All actions register with the undomanager and
  thus are undoable.
  Action names aren't set by the model
  */
+#pragma mark Group manipulation
 - (void)remove;
 - (void)addGroup:(KPKGroup *)group;
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 - (void)removeGroup:(KPKGroup *)group;
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 
+#pragma mark Entry manipulation
 - (void)addEntry:(KPKEntry *)entry;
 - (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index;
 - (void)removeEntry:(KPKEntry *)entry;
 - (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup atIndex:(NSUInteger)index;
 
+#pragma mark Search
+/**
+ *	Determines if a given group is contained inside this group
+ *  The search works recursively that is, it finds groups that are inside subgroups as well
+ *  as direct child groups
+ *
+ *	@param	group	the group that should be searched for
+ *	@return	YES if the group is contained inside this group, NO otherwise
+ */
 - (BOOL)containsGroup:(KPKGroup *)group;
 
 /**
- Looks for a entry with the supplied UUID.
- If the UUID is not unique, the first hit will be returned.
- 
- @param uuid The UUID to locate entry for;
- @returns Entry that was found, nil if non was found
+ *	Searches the group for an entry with the supplied NSUUID.
+ *  The search does work recursively and searches inside all subgroups
+ *
+ *	@param	uuid	The UUID of the entry that needs to be found
+ *	@return	The entry associated with the UUID or nil if not found
  */
 - (KPKEntry *)entryForUUID:(NSUUID *)uuid;
 /**
- Looks for a group with the supplied UUID.
- If the UUID is not unique, the first hit will be returned.
- 
- @param uuid The UUID of the group to locate
- @returns Group that matches the uuid, nil if none was found.
+ *	Searches all childgroups to find the group for the supplied UUID
+ *
+ *	@param	uuid	UUID of the group to look for
+ *	@return	group with the matching UUID.
+ *  @note   if more than one Group matches, the resutl is the first match.
  */
 - (KPKGroup *)groupForUUID:(NSUUID *)uuid;
 
