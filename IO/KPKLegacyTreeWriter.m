@@ -41,7 +41,6 @@
   KPKDataStreamWriter *_dataWriter;
   KPKLegacyHeaderWriter *_headerWriter;
   NSMutableArray *_groupIds;
-  BOOL _firstGroup;
   NSArray *_allEntries;
   NSArray *_allGroups;
 }
@@ -58,7 +57,6 @@
   if(self) {
     _headerWriter = (KPKLegacyHeaderWriter *)headerWriter;
     _tree = tree;
-    _firstGroup = YES;
     _groupIds = [[NSMutableArray alloc] initWithCapacity:[[tree allGroups] count]];
   }
   return self;
@@ -67,6 +65,21 @@
 - (NSData *)treeData {
   NSMutableData *data = [[NSMutableData alloc] init];
   _dataWriter = [[KPKDataStreamWriter alloc] initWithData:data];
+  
+  [_dataWriter write4Bytes:KPKFieldTypeCommonHash];
+  /*
+   2 byte hash field type
+   4 byte hash field lenght
+   32 byte hash
+   2 byte random filed type
+   4 byte random field length
+   32 byte random data
+   2 byte stop field type
+   4 byte stop field length (0)
+   */
+  [_dataWriter write4Bytes:82];
+  [self _writeHeaderHash];
+  
   
   /*
    The root Group doesn't get written out
@@ -93,23 +106,6 @@
 
 - (void)_writeGroup:(KPKGroup *)group {
   uint32_t tmp32;
-  
-  if(_firstGroup) {
-    [_dataWriter write4Bytes:KPKFieldTypeCommonHash];
-    /*
-     2 byte hash field type
-     4 byte hash field lenght
-     32 byte hash
-     2 byte random filed type
-     4 byte random field length
-     32 byte random data
-     2 byte stop field type
-     4 byte stop field length (0)
-     */
-    [_dataWriter write4Bytes:82];
-    [self _writeHeaderHash];
-    _firstGroup = NO;
-  }
   [_groupIds addObject:group.uuid];
   tmp32 = CFSwapInt32HostToLittle((uint32_t)[_groupIds count] - 1);
   [self _writeField:KPKFieldTypeEntryGroupId bytes:&tmp32 length:4];
