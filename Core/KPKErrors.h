@@ -25,13 +25,9 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef KPKCreateError
-#define KPKCreateError(errorPtr,errorCode,localizedKey,comment) if(errorPtr != NULL) {\
-*errorPtr = [NSError errorWithDomain:KPKErrorDomain code:errorCode userInfo:@{ NSLocalizedDescriptionKey: NSLocalizedString(localizedKey, comment)}];\
-}
-#endif
-
 FOUNDATION_EXPORT NSString *const KPKErrorDomain;
+
+FOUNDATION_EXTERN_INLINE void KPKCreateError( NSError **errorPtr, NSInteger errorCode, NSString *localizedKey, char *comment);
 
 typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorNoData = 1000, // No data given

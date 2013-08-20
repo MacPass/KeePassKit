@@ -21,6 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "KPKTypes.h"
 #import "KPKNode.h"
 
 @class KPKEntry;

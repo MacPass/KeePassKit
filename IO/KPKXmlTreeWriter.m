@@ -47,24 +47,7 @@
 #import "Salsa20RandomStream.h"
 #import "Arc4RandomStream.h"
 
-#define KPKAddElement(element, name, value) [element addChild:[DDXMLNode elementWithName:name stringValue:value]]
-#define KPKAddAttribute(element, name, value) [element addAttributeWithName:name stringValue:value];
-#define KPKStringFromLong(integer) [NSString stringWithFormat:@"%ld", integer]
-#define KPKFormattedDate(date) [_dateFormatter stringFromDate:date]
-#define KPKStringFromBool(bool) (bool ? @"True" : @"False" )
-
-static NSString *stringFromInhertiBool(KPKInheritBool value) {
-  switch(value) {
-    case KPKInherit:
-      return @"null";
-      
-    case KPKInheritYES:
-      return @"True";
-      
-    case KPKInheritNO:
-      return @"False";
-  }
-}
+#import "KPKXmlUtilities.h"
 
 @interface KPKXmlTreeWriter () {
   NSDateFormatter *_dateFormatter;
@@ -104,30 +87,30 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   
   KPKMetaData *metaData = self.tree.metaData;
   DDXMLElement *metaElement = [DDXMLNode elementWithName:@"Meta"];
-  KPKAddElement(metaElement, @"Generator", metaData.generator);
+  KPKAddXmlElement(metaElement, @"Generator", metaData.generator);
   if(_headerWriter.headerHash) {
     NSString *headerHash = [[NSString alloc] initWithData:[NSMutableData mutableDataWithBase64EncodedData:_headerWriter.headerHash] encoding:NSUTF8StringEncoding];
-    KPKAddElement(metaElement, @"HeaderHash", headerHash);
+    KPKAddXmlElement(metaElement, @"HeaderHash", headerHash);
   }
   
-  KPKAddElement(metaElement, @"DatabaseName", metaData.databaseName);
-  KPKAddElement(metaElement, @"DatabaseNameChanged", KPKFormattedDate(metaData.databaseNameChanged));
-  KPKAddElement(metaElement, @"DatabaseDescription", metaData.databaseDescription);
-  KPKAddElement(metaElement, @"DatabaseDescriptionChanged", KPKFormattedDate(metaData.databaseDescriptionChanged));
-  KPKAddElement(metaElement, @"DefaultUserName", metaData.defaultUserName);
-  KPKAddElement(metaElement, @"DefaultUserNameChanged", KPKFormattedDate(metaData.defaultUserNameChanged));
-  KPKAddElement(metaElement, @"MaintenanceHistoryDays", KPKStringFromLong(metaData.maintenanceHistoryDays));
-  KPKAddElement(metaElement, @"Color", [metaData.color hexString]);
-  KPKAddElement(metaElement, @"MasterKeyChanged", KPKFormattedDate(metaData.masterKeyChanged));
-  KPKAddElement(metaElement, @"MasterKeyChangeRec", KPKStringFromLong(metaData.masterKeyChangeIsRequired));
-  KPKAddElement(metaElement, @"MasterKeyChangeForce", KPKStringFromLong(metaData.masterKeyChangeIsForced));
+  KPKAddXmlElement(metaElement, @"DatabaseName", metaData.databaseName);
+  KPKAddXmlElement(metaElement, @"DatabaseNameChanged", KPKStringFromDate(_dateFormatter, metaData.databaseNameChanged));
+  KPKAddXmlElement(metaElement, @"DatabaseDescription", metaData.databaseDescription);
+  KPKAddXmlElement(metaElement, @"DatabaseDescriptionChanged", KPKStringFromDate(_dateFormatter, metaData.databaseDescriptionChanged));
+  KPKAddXmlElement(metaElement, @"DefaultUserName", metaData.defaultUserName);
+  KPKAddXmlElement(metaElement, @"DefaultUserNameChanged", KPKStringFromDate(_dateFormatter, metaData.defaultUserNameChanged));
+  KPKAddXmlElement(metaElement, @"MaintenanceHistoryDays", KPKStringFromLong(metaData.maintenanceHistoryDays));
+  KPKAddXmlElement(metaElement, @"Color", [metaData.color hexString]);
+  KPKAddXmlElement(metaElement, @"MasterKeyChanged", KPKStringFromDate(_dateFormatter, metaData.masterKeyChanged));
+  KPKAddXmlElement(metaElement, @"MasterKeyChangeRec", KPKStringFromLong(metaData.masterKeyChangeIsRequired));
+  KPKAddXmlElement(metaElement, @"MasterKeyChangeForce", KPKStringFromLong(metaData.masterKeyChangeIsForced));
   
   DDXMLElement *memoryProtectionElement = [DDXMLElement elementWithName:@"MemoryProtection"];
-  KPKAddElement(memoryProtectionElement, @"ProtectTitle", KPKStringFromBool(metaData.protectTitle));
-  KPKAddElement(memoryProtectionElement, @"ProtectUserName", KPKStringFromBool(metaData.protectUserName));
-  KPKAddElement(memoryProtectionElement, @"ProtectPassword", KPKStringFromBool(metaData.protectPassword));
-  KPKAddElement(memoryProtectionElement, @"ProtectURL", KPKStringFromBool(metaData.protectUrl));
-  KPKAddElement(memoryProtectionElement, @"ProtectNotes", KPKStringFromBool(metaData.protectNotes));
+  KPKAddXmlElement(memoryProtectionElement, @"ProtectTitle", KPKStringFromBool(metaData.protectTitle));
+  KPKAddXmlElement(memoryProtectionElement, @"ProtectUserName", KPKStringFromBool(metaData.protectUserName));
+  KPKAddXmlElement(memoryProtectionElement, @"ProtectPassword", KPKStringFromBool(metaData.protectPassword));
+  KPKAddXmlElement(memoryProtectionElement, @"ProtectURL", KPKStringFromBool(metaData.protectUrl));
+  KPKAddXmlElement(memoryProtectionElement, @"ProtectNotes", KPKStringFromBool(metaData.protectNotes));
   
   [metaElement addChild:memoryProtectionElement];
   
@@ -135,15 +118,15 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
     [metaElement addChild:[self _xmlIcons]];
   }
   
-  KPKAddElement(metaElement, @"RecycleBinEnabled", KPKStringFromBool(metaData.recycleBinEnabled));
-  KPKAddElement(metaElement, @"RecycleBinUUID", [metaData.recycleBinUuid encodedString]);
-  KPKAddElement(metaElement, @"RecycleBinChanged", KPKFormattedDate(metaData.recycleBinChanged));
-  KPKAddElement(metaElement, @"EntryTemplatesGroup", [metaData.entryTemplatesGroup encodedString]);
-  KPKAddElement(metaElement, @"EntryTemplatesGroupChanged", KPKFormattedDate(metaData.entryTemplatesGroupChanged));
-  KPKAddElement(metaElement, @"HistoryMaxItems", KPKStringFromLong(metaData.historyMaxItems));
-  KPKAddElement(metaElement, @"HistoryMaxSize", KPKStringFromLong(metaData.historyMaxItems));
-  KPKAddElement(metaElement, @"LastSelectedGroup", [metaData.lastSelectedGroup encodedString]);
-  KPKAddElement(metaElement, @"LastTopVisibleGroup", [metaData.lastTopVisibleGroup encodedString]);
+  KPKAddXmlElement(metaElement, @"RecycleBinEnabled", KPKStringFromBool(metaData.recycleBinEnabled));
+  KPKAddXmlElement(metaElement, @"RecycleBinUUID", [metaData.recycleBinUuid encodedString]);
+  KPKAddXmlElement(metaElement, @"RecycleBinChanged", KPKStringFromDate(_dateFormatter, metaData.recycleBinChanged));
+  KPKAddXmlElement(metaElement, @"EntryTemplatesGroup", [metaData.entryTemplatesGroup encodedString]);
+  KPKAddXmlElement(metaElement, @"EntryTemplatesGroupChanged", KPKStringFromDate(_dateFormatter, metaData.entryTemplatesGroupChanged));
+  KPKAddXmlElement(metaElement, @"HistoryMaxItems", KPKStringFromLong(metaData.historyMaxItems));
+  KPKAddXmlElement(metaElement, @"HistoryMaxSize", KPKStringFromLong(metaData.historyMaxItems));
+  KPKAddXmlElement(metaElement, @"LastSelectedGroup", [metaData.lastSelectedGroup encodedString]);
+  KPKAddXmlElement(metaElement, @"LastTopVisibleGroup", [metaData.lastTopVisibleGroup encodedString]);
   
   /* Custom Data is stored as KPKBinaries in the meta object */
   [metaElement addChild:[self _xmlBinaries]];
@@ -180,19 +163,19 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
   
   // Add the standard properties
-  KPKAddElement(groupElement, @"UUID", [group.uuid encodedString]);
-  KPKAddElement(groupElement, @"Name", group.name);
-  KPKAddElement(groupElement, @"Notes", group.notes);
-  KPKAddElement(groupElement, @"IconId", KPKStringFromLong(group.icon));
+  KPKAddXmlElement(groupElement, @"UUID", [group.uuid encodedString]);
+  KPKAddXmlElement(groupElement, @"Name", group.name);
+  KPKAddXmlElement(groupElement, @"Notes", group.notes);
+  KPKAddXmlElement(groupElement, @"IconId", KPKStringFromLong(group.icon));
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:group.timeInfo];
   [groupElement addChild:timesElement];
   
-  KPKAddElement(groupElement, @"IsExpanded", KPKStringFromBool(group.isExpanded));
-  KPKAddElement(groupElement, @"DefaultAutoTypeSequence", group.defaultAutoTypeSequence);
-  KPKAddElement(groupElement, @"EnableAutoType", stringFromInhertiBool(group.isAutoTypeEnabled));
-  KPKAddElement(groupElement, @"EnableSearching", stringFromInhertiBool(group.isSearchEnabled));
-  KPKAddElement(groupElement, @"LastTopVisibleEntry", [group.lastTopVisibleEntry encodedString]);
+  KPKAddXmlElement(groupElement, @"IsExpanded", KPKStringFromBool(group.isExpanded));
+  KPKAddXmlElement(groupElement, @"DefaultAutoTypeSequence", group.defaultAutoTypeSequence);
+  KPKAddXmlElement(groupElement, @"EnableAutoType", stringFromInhertiBool(group.isAutoTypeEnabled));
+  KPKAddXmlElement(groupElement, @"EnableSearching", stringFromInhertiBool(group.isSearchEnabled));
+  KPKAddXmlElement(groupElement, @"LastTopVisibleEntry", [group.lastTopVisibleEntry encodedString]);
   
   for(KPKEntry *entry in group.entries) {
     [groupElement addChild:[self _xmlEntry:entry skipHistory:YES]];
@@ -209,15 +192,15 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   DDXMLElement *entryElement = [DDXMLNode elementWithName:@"Entry"];
   
   // Add the standard properties
-  KPKAddElement(entryElement, @"UUID", [entry.uuid encodedString]);
-  KPKAddElement(entryElement, @"IconID", KPKStringFromLong(entry.icon));
+  KPKAddXmlElement(entryElement, @"UUID", [entry.uuid encodedString]);
+  KPKAddXmlElement(entryElement, @"IconID", KPKStringFromLong(entry.icon));
   if(entry.customIcon) {
-    KPKAddElement(entryElement, @"CustomIconUUID", [entry.customIcon.uuid encodedString]);
+    KPKAddXmlElement(entryElement, @"CustomIconUUID", [entry.customIcon.uuid encodedString]);
   }
-  KPKAddElement(entryElement, @"ForegroundColor", [entry.foregroundColor hexString]);
-  KPKAddElement(entryElement, @"BackgroundColor", [entry.backgroundColor hexString]);
-  KPKAddElement(entryElement, @"OverrideURL", entry.overrideURL);
-  KPKAddElement(entryElement, @"Tags", entry.tags);
+  KPKAddXmlElement(entryElement, @"ForegroundColor", [entry.foregroundColor hexString]);
+  KPKAddXmlElement(entryElement, @"BackgroundColor", [entry.backgroundColor hexString]);
+  KPKAddXmlElement(entryElement, @"OverrideURL", entry.overrideURL);
+  KPKAddXmlElement(entryElement, @"Tags", entry.tags);
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:entry.timeInfo];
   [entryElement addChild:timesElement];
@@ -264,16 +247,16 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
    </AutoType>
    */
   DDXMLElement *autotypeElement = [DDXMLElement elementWithName:@"AutoType"];
-  KPKAddElement(autotypeElement, @"Enabled", KPKStringFromBool(autotype.isEnabled));
-  NSString *obfuscate = autotype.obfuscateDataTransfer ? @"0" : @"1";
-  KPKAddElement(autotypeElement, @"DataTransferObfuscation", obfuscate);
-  KPKAddElement(autotypeElement, @"DefaultSequence", autotype.defaultSequence);
+  KPKAddXmlElement(autotypeElement, @"Enabled", KPKStringFromBool(autotype.isEnabled));
+  NSString *obfuscate = autotype.obfuscateDataTransfer ? @"1" : @"0";
+  KPKAddXmlElement(autotypeElement, @"DataTransferObfuscation", obfuscate);
+  KPKAddXmlElement(autotypeElement, @"DefaultSequence", autotype.defaultSequence);
   
   if([autotype.associations count] > 0) {
     DDXMLElement *associationsElement = [DDXMLElement elementWithName:@"Association"];
     for(KPKWindowAssociation *association in autotype.associations) {
-      KPKAddElement(associationsElement, @"Window", association.windowTitle);
-      KPKAddElement(associationsElement, @"KeystrokeSequence", association.keystrokeSequence);
+      KPKAddXmlElement(associationsElement, @"Window", association.windowTitle);
+      KPKAddXmlElement(associationsElement, @"KeystrokeSequence", association.keystrokeSequence);
     }
     [autotypeElement addChild:associationsElement];
   }
@@ -285,11 +268,11 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   DDXMLElement *attributeElement = [DDXMLElement elementWithName:@"String"];
   if(attribute.isProtected) {
     NSString *attributeName = _randomStream != nil ? @"Protected" : @"ProtectInMemory";
-    KPKAddAttribute(attributeElement, attributeName, @"True");
+    KPKAddXmlAttribute(attributeElement, attributeName, @"True");
   }
   
-  KPKAddElement(attributeElement, @"Key", attribute.key);
-  KPKAddElement(attributeElement, @"Value", attribute.value);
+  KPKAddXmlElement(attributeElement, @"Key", attribute.key);
+  KPKAddXmlElement(attributeElement, @"Value", attribute.value);
   return attributeElement;
 }
 
@@ -301,8 +284,8 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   BOOL compress = (self.tree.metaData.compressionAlgorithm == KPKCompressionGzip);
   for(KPKBinary *binary in _binaries) {
     DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
-    KPKAddAttribute(binaryElement, @"ID", KPKStringFromLong([_binaries indexOfObject:binary]));
-    KPKAddAttribute(binaryElement, @"Compressed", KPKStringFromBool(compress));
+    KPKAddXmlAttribute(binaryElement, @"ID", KPKStringFromLong([_binaries indexOfObject:binary]));
+    KPKAddXmlAttribute(binaryElement, @"Compressed", KPKStringFromBool(compress));
     binaryElement.stringValue = [binary encodedStringUsingCompression:compress];
     [binaryElements addChild:binaryElement];
   }
@@ -311,12 +294,12 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
 
 - (DDXMLElement *)_xmlBinary:(KPKBinary *)binary {
   DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
-  KPKAddElement(binaryElement, @"Key", binary.name);
+  KPKAddXmlElement(binaryElement, @"Key", binary.name);
   DDXMLElement *valueElement = [DDXMLElement elementWithName:@"Value"];
   [binaryElement addChild:valueElement];
   NSUInteger reference = [_binaries indexOfObject:binary];
   NSAssert(reference != NSNotFound, @"Binary has to be in binaries array");
-  KPKAddAttribute(valueElement, @"Ref", KPKStringFromLong(reference));
+  KPKAddXmlAttribute(valueElement, @"Ref", KPKStringFromLong(reference));
   return binaryElement;
 }
 
@@ -324,8 +307,8 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   DDXMLElement *customIconsElements = [DDXMLElement elementWithName:@"CustomIcons"];
   for (KPKIcon *icon in self.tree.metaData.customIcons) {
     DDXMLElement *iconElement = [DDXMLNode elementWithName:@"Icon"];
-    KPKAddElement(iconElement, @"UUID", [icon.uuid encodedString]);
-    KPKAddElement(iconElement, @"Data", [icon encodedString]);
+    KPKAddXmlElement(iconElement, @"UUID", [icon.uuid encodedString]);
+    KPKAddXmlElement(iconElement, @"Data", [icon encodedString]);
     [customIconsElements addChild:iconElement];
   }
   return customIconsElements;
@@ -333,8 +316,8 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
 
 - (DDXMLElement *)_xmlCustomData:(KPKBinary *)customData {
   DDXMLElement *itemElement = [DDXMLElement elementWithName:@"Item"];
-  KPKAddElement(itemElement, @"Key", customData.name);
-  KPKAddElement(itemElement, @"Value", [customData encodedStringUsingCompression:NO]);
+  KPKAddXmlElement(itemElement, @"Key", customData.name);
+  KPKAddXmlElement(itemElement, @"Value", [customData encodedStringUsingCompression:NO]);
   return itemElement;
 }
 
@@ -342,8 +325,8 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   DDXMLElement *deletedObjectsElement = [DDXMLElement elementWithName:@"DeletedObjects"];
   for(KPKDeletedNode *node in self.tree.deletedObjects) {
     DDXMLElement *deletedElement = [DDXMLNode elementWithName:@"DeletedObject"];
-    KPKAddElement(deletedElement, @"UUID",[node.uuid encodedString]);
-    KPKAddElement(deletedElement, @"DeletionTime", KPKFormattedDate(node.deletionDate));
+    KPKAddXmlElement(deletedElement, @"UUID",[node.uuid encodedString]);
+    KPKAddXmlElement(deletedElement, @"DeletionTime", KPKStringFromDate(_dateFormatter, node.deletionDate));
     [deletedObjectsElement addChild:deletedElement];
   }
   return deletedObjectsElement;
@@ -351,13 +334,13 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
 
 - (DDXMLElement *)_xmlTimeinfo:(KPKTimeInfo *)timeInfo {
   DDXMLElement *timesElement = [DDXMLNode elementWithName:@"Times"];
-  KPKAddElement(timesElement, @"LastModificationTime", KPKFormattedDate(timeInfo.lastModificationTime));
-  KPKAddElement(timesElement, @"dateFormatter", KPKFormattedDate(timeInfo.creationTime));
-  KPKAddElement(timesElement, @"LastAccessTime", KPKFormattedDate(timeInfo.lastAccessTime));
-  KPKAddElement(timesElement, @"ExpiryTime", KPKFormattedDate(timeInfo.expiryTime));
-  KPKAddElement(timesElement, @"Expires", KPKStringFromBool(timeInfo.expires));
-  KPKAddElement(timesElement, @"UsageCount", KPKStringFromLong(timeInfo.usageCount));
-  KPKAddElement(timesElement, @"LocationChanged", KPKFormattedDate(timeInfo.locationChanged));
+  KPKAddXmlElement(timesElement, @"LastModificationTime", KPKStringFromDate(_dateFormatter, timeInfo.lastModificationTime));
+  KPKAddXmlElement(timesElement, @"dateFormatter", KPKStringFromDate(_dateFormatter, timeInfo.creationTime));
+  KPKAddXmlElement(timesElement, @"LastAccessTime", KPKStringFromDate(_dateFormatter, timeInfo.lastAccessTime));
+  KPKAddXmlElement(timesElement, @"ExpiryTime", KPKStringFromDate(_dateFormatter, timeInfo.expiryTime));
+  KPKAddXmlElement(timesElement, @"Expires", KPKStringFromBool(timeInfo.expires));
+  KPKAddXmlElement(timesElement, @"UsageCount", KPKStringFromLong(timeInfo.usageCount));
+  KPKAddXmlElement(timesElement, @"LocationChanged", KPKStringFromDate(_dateFormatter, timeInfo.locationChanged));
   return timesElement;
 }
 

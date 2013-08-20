@@ -70,7 +70,7 @@
 - (void)setObfuscateDataTransfer:(BOOL)obfuscateDataTransfer {
   if(self.obfuscateDataTransfer != obfuscateDataTransfer) {
     [[self.entry.undoManager prepareWithInvocationTarget:self] setObfuscateDataTransfer:self.obfuscateDataTransfer];
-    self.obfuscateDataTransfer = obfuscateDataTransfer;
+    _obfuscateDataTransfer = obfuscateDataTransfer;
   }
 }
 

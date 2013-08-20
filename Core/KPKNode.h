@@ -31,12 +31,6 @@
 @class KPKIcon;
 @class KPKTimeInfo;
 
-typedef NS_ENUM(NSInteger, KPKInheritBool) {
-  KPKInherit = -1,
-  KPKInheritNO = NO,
-  KPKInheritYES = YES,
-};
-
 /**
  *	Baseclass for all Nodes in a Tree.
  */

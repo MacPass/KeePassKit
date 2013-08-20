@@ -23,3 +23,11 @@
 #import "KPKErrors.h"
 
 NSString *const KPKErrorDomain = @"com.hicknhack.keepasskit";
+
+void KPKCreateError( NSError **errorPtr, NSInteger errorCode, NSString *localizedKey, char *comment) {
+  if(errorPtr != NULL) {
+    *errorPtr = [NSError errorWithDomain:KPKErrorDomain
+                                    code:errorCode
+                                userInfo:@{ NSLocalizedDescriptionKey: NSLocalizedString(localizedKey, comment)}];
+  }
+}
