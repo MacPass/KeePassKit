@@ -136,12 +136,17 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
   tree.metaData.compressionAlgorithm = _headerReader.compressionAlgorithm;
   
   /* Parse the rest of the metadata from the file */
-  DDXMLElement *meta = [rootElement elementForName:@"Meta"];
-  if(!meta) {
+  DDXMLElement *metaElement = [rootElement elementForName:@"Meta"];
+  if(!metaElement) {
     KPKCreateError(error, KPKErrorXMLMetaElementMissing, @"ERROR_META_ELEMENT_MISSING", "");
     return nil;
   }
-  [self _parseMeta:meta metaData:tree.metaData];
+  NSString *headerHash = KPKString(metaElement, @"HeaderHash");
+  if(headerHash) {
+    // test headerhash;
+  }
+  
+  [self _parseMeta:metaElement metaData:tree.metaData];
   
   DDXMLElement *root = [rootElement elementForName:@"Root"];
   if(!root) {
@@ -184,26 +189,25 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
   }
 }
 
-- (void)_parseMeta:(DDXMLElement *)root metaData:(KPKMetaData *)data {
+- (void)_parseMeta:(DDXMLElement *)metaElement metaData:(KPKMetaData *)data {
   
-  data.generator = KPKString(root, @"Generator");
-  data.databaseName = KPKString(root, @"DatabaseName");
-  data.databaseNameChanged = KPKDate(_dateFormatter, root, @"DatabaseNameChanged");
-  data.databaseDescription = KPKString(root, @"DatabaseDescription");
-  data.databaseNameChanged = KPKDate(_dateFormatter, root, @"DatabaseDescriptionChanged");
-  data.defaultUserName = KPKString(root, @"DefaultUserName");
-  data.defaultUserNameChanged = KPKDate(_dateFormatter, root, @"DefaultUserNameChanged");
-  data.maintenanceHistoryDays = KPKInteger(root, @"MaintenanceHistoryDays");
+  data.generator = KPKString(metaElement, @"Generator");
+  data.databaseName = KPKString(metaElement, @"DatabaseName");
+  data.databaseNameChanged = KPKDate(_dateFormatter, metaElement, @"DatabaseNameChanged");
+  data.databaseDescription = KPKString(metaElement, @"DatabaseDescription");
+  data.databaseNameChanged = KPKDate(_dateFormatter, metaElement, @"DatabaseDescriptionChanged");
+  data.defaultUserName = KPKString(metaElement, @"DefaultUserName");
+  data.defaultUserNameChanged = KPKDate(_dateFormatter, metaElement, @"DefaultUserNameChanged");
+  data.maintenanceHistoryDays = KPKInteger(metaElement, @"MaintenanceHistoryDays");
   /*
-   Color is HTML Hex code!
+   Color is coded in Hex #001122
    */
+  data.color = [NSColor colorWithHexString:KPKString(metaElement, @"Color")];
+  data.masterKeyChanged = KPKDate(_dateFormatter, metaElement, @"MasterKeyChanged");
+  data.masterKeyChangeIsRequired = KPKInteger(metaElement, @"MasterKeyChangeRec");
+  data.masterKeyChangeIsForced = KPKInteger(metaElement, @"MasterKeyChangeForce");
   
-  data.color = [NSColor colorWithHexString:KPKString(root, @"Color")];
-  data.masterKeyChanged = KPKDate(_dateFormatter, root, @"MasterKeyChanged");
-  data.masterKeyChangeIsRequired = KPKInteger(root, @"MasterKeyChangeRec");
-  data.masterKeyChangeIsForced = KPKInteger(root, @"MasterKeyChangeForce");
-  
-  DDXMLElement *memoryProtectionElement = [root elementForName:@"MemoryProtection"];
+  DDXMLElement *memoryProtectionElement = [metaElement elementForName:@"MemoryProtection"];
   
   data.protectTitle = KPKBool(memoryProtectionElement, @"ProtectTitle");
   data.protectUserName = KPKBool(memoryProtectionElement, @"ProtectUserName");
@@ -211,19 +215,19 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
   data.protectUserName = KPKBool(memoryProtectionElement, @"ProtectURL");
   data.protectUserName = KPKBool(memoryProtectionElement, @"ProtectNotes");
   
-  data.recycleBinEnabled = KPKBool(root, @"RecycleBinEnabled");
-  data.recycleBinUuid = [NSUUID uuidWithEncodedString:KPKString(root, @"RecycleBinUUID")];
-  data.recycleBinChanged = KPKDate(_dateFormatter, root, @"RecycleBinChanged");
-  data.entryTemplatesGroup = [NSUUID uuidWithEncodedString:KPKString(root, @"EntryTemplatesGroup")];
-  data.entryTemplatesGroupChanged = KPKDate(_dateFormatter, root, @"EntryTemplatesGroupChanged");
-  data.historyMaxItems = KPKInteger(root, @"HistoryMaxItems");
-  data.historyMaxSize = KPKInteger(root, @"HistoryMaxSize");
-  data.lastSelectedGroup = [NSUUID uuidWithEncodedString:KPKString(root, @"LastSelectedGroup")];
-  data.lastTopVisibleGroup = [NSUUID uuidWithEncodedString:KPKString(root, @"LastTopVisibleGroup")];
+  data.recycleBinEnabled = KPKBool(metaElement, @"RecycleBinEnabled");
+  data.recycleBinUuid = [NSUUID uuidWithEncodedString:KPKString(metaElement, @"RecycleBinUUID")];
+  data.recycleBinChanged = KPKDate(_dateFormatter, metaElement, @"RecycleBinChanged");
+  data.entryTemplatesGroup = [NSUUID uuidWithEncodedString:KPKString(metaElement, @"EntryTemplatesGroup")];
+  data.entryTemplatesGroupChanged = KPKDate(_dateFormatter, metaElement, @"EntryTemplatesGroupChanged");
+  data.historyMaxItems = KPKInteger(metaElement, @"HistoryMaxItems");
+  data.historyMaxSize = KPKInteger(metaElement, @"HistoryMaxSize");
+  data.lastSelectedGroup = [NSUUID uuidWithEncodedString:KPKString(metaElement, @"LastSelectedGroup")];
+  data.lastTopVisibleGroup = [NSUUID uuidWithEncodedString:KPKString(metaElement, @"LastTopVisibleGroup")];
   
-  [self _parseCustomIcons:root meta:data];
-  [self _parseBinaries:root meta:data];
-  [self _parseCustomData:root meta:data];
+  [self _parseCustomIcons:metaElement meta:data];
+  [self _parseBinaries:metaElement meta:data];
+  [self _parseCustomData:metaElement meta:data];
 }
 
 - (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement {
@@ -388,7 +392,10 @@ KPKInheritBool static parseInheritBool(DDXMLElement *element, NSString *name) {
 
 - (void)_parseEntryBinaries:(DDXMLElement *)entryElement entry:(KPKEntry *)entry {
   /*
-   
+   <Binary>
+   <Key></Key>
+   <Value Ref="1"></Value>
+   </Binary>
    */
   
   for (DDXMLElement *binaryElement in [entryElement elementsForName:@"Binary"]) {

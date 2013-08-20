@@ -87,4 +87,15 @@
   return [self.root childEntries];
 }
 
+- (KPKVersion)minimumVersion {
+  KPKVersion minimumVersion = KPKUnknownVersion;
+  for (KPKNode *node in self.allEntries) {
+    minimumVersion = MAX(node.minimumVersion, minimumVersion);
+  }
+  for(KPKNode *node in self.allGroups) {
+    minimumVersion = MAX(node.minimumVersion, minimumVersion);
+  }
+  return minimumVersion;
+}
+
 @end

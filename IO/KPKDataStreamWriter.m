@@ -41,6 +41,10 @@
   return _data;
 }
 
+- (NSData *)writtenData {
+  return [_data subdataWithRange:NSMakeRange(0, _location)];
+}
+
 - (void)writeData:(NSData *)data {
   [_data appendData:data];
   _location += [data length];

@@ -10,6 +10,8 @@
 #import "KPKXmlFormat.h"
 #import "KPKIcon.h"
 
+#import "NSUUID+KeePassKit.h"
+
 @implementation KPKMetaData
 
 - (id)init {
@@ -25,6 +27,15 @@
     _protectUrl = NO;
     _protectUserName = NO;
     _generator = [@"MacPass" copy];
+    _databaseNameChanged = [NSDate date];
+    _databaseDescriptionChanged = [NSDate date];
+    _defaultUserNameChanged = [NSDate date];
+    _entryTemplatesGroupChanged = [NSDate date];
+    _entryTemplatesGroup = [NSUUID nullUUID];
+    _recycleBinChanged = [NSDate date];
+    _recycleBinUuid = [NSUUID nullUUID];
+    _lastSelectedGroup = [NSUUID nullUUID];
+    _lastTopVisibleGroup = [NSUUID nullUUID];
   }
   return self;
 }

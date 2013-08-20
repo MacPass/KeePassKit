@@ -35,6 +35,9 @@
   KPKDataStreamWriter *_writer;
   KPKTree *_tree;
 }
+
+@property (nonatomic, readwrite, strong) NSData *headerHash;
+
 @end;
 
 @implementation KPKXmlHeaderWriter
@@ -50,11 +53,7 @@
     _streamStartBytes = [NSData dataWithRandomBytes:32];
     _randomStreamID = KPKRandomStreamSalsa20;
   }
-  return nil;
-}
-
-- (NSData *)headerHash {
-  return [[_writer data] SHA256Hash];
+  return self;
 }
 
 - (void)writeHeaderData:(NSMutableData *)data {
@@ -92,6 +91,7 @@
     headerData = [NSData dataWithBytesNoCopy:endBuffer length:4 freeWhenDone:NO];
     [self _writerHeaderField:KPKHeaderKeyEndOfHeader data:headerData];
   }
+  self.headerHash = [[_writer writtenData] SHA256Hash];
 }
 
 - (void)_writerHeaderField:(KPKHeaderKey)key data:(NSData *)data {

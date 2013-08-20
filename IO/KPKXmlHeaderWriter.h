@@ -25,7 +25,7 @@
 
 @interface KPKXmlHeaderWriter : NSObject <KPKHeaderWriting>
 
-@property (nonatomic, readonly) NSData *headerHash;
+@property (nonatomic, readonly, strong) NSData *headerHash;
 @property (nonatomic, readonly, strong) NSData *masterSeed;
 @property (nonatomic, readonly, strong) NSData *transformSeed;
 @property (nonatomic, readonly, strong) NSData *encryptionIv;

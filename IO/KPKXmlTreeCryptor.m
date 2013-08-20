@@ -118,21 +118,18 @@
   
   
   NSMutableData *contentData = [[NSMutableData alloc] initWithData:headerWriter.streamStartBytes];
-  [contentData appendData:xmlData];
-  NSData *hashedData = [contentData hashedDataWithBlockSize:1024*1024];
   if(tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
-    hashedData = [hashedData gzipDeflate];
+    xmlData = [xmlData gzipDeflate];
   }
-  
-  NSData *encryptedData = [hashedData dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
+  NSData *hashedData = [xmlData hashedDataWithBlockSize:1024*1024];
+  [contentData appendData:hashedData];
+  NSData *encryptedData = [contentData dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
                                                               key:key
                                              initializationVector:headerWriter.encryptionIv
                                                           options:kCCOptionPKCS7Padding
                                                             error:NULL];
-  
-  //FIXME Hash output stream
-  //OutputStream *stream = [[HashedOutputStream alloc] initWithOutputStream:aesOutputStream blockSize:1024*1024];
-  return encryptedData;
+  [data appendData:encryptedData];
+  return data;
 }
 
 @end

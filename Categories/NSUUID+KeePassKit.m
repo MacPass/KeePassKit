@@ -63,7 +63,7 @@ static NSUUID *aesUUID = nil;
 }
 
 - (NSData *)getUUIDData {
-  uint8_t *bytes = NULL;
+  uint8_t bytes[16] = {0};
   [self getUUIDBytes:bytes];
   
   return [NSData dataWithBytes:bytes length:sizeof(bytes)];

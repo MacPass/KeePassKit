@@ -35,6 +35,7 @@
 - (void)writeInteger:(NSUInteger)integer;
 
 - (NSData *)data;
+- (NSData *)writtenData;
 - (NSUInteger)location;
 - (void)reset;
 

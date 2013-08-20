@@ -44,10 +44,7 @@
 }
 
 - (id)initWithData:(NSData *)data password:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
-  self = [self init];
-  if(self) {
-    self = [self _decryptorForData:data password:password error:error];
-  }
+  self = [self _decryptorForData:data password:password error:error];
   return self;
 }
 
@@ -65,9 +62,9 @@
 - (NSData *)encryptWithPassword:(KPKPassword *)password forVersion:(KPKVersion)version error:(NSError **)error {
   switch(version) {
     case KPKLegacyVersion:
-      return nil;
+      return [KPKLegacyTreeCryptor encryptTree:self password:password error:error];
     case KPKXmlVersion:
-      return nil;
+      return [KPKXmlTreeCryptor encryptTree:self password:password error:error];
     default:
       KPKCreateError(error, KPKErrorUnknownFileFormat, @"ERROR_UNKNOWN_FILE_FORMAT", "");
       return nil;
@@ -78,16 +75,6 @@
 - (NSString *)XmlString {
   KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self headerWriter:nil];
   return [[treeWriter xmlDocument] XMLStringWithOptions:DDXMLNodeCompactEmptyElement|DDXMLNodePrettyPrint];
-}
-
-- (NSData *)_serializeVersion1WithPassword:(KPKPassword *)password error:(NSError *)error {
-  NSAssert(NO, @"Not implemented");
-  return nil;
-}
-
-- (NSData *)_serializeVersion2WithPassword:(KPKPassword *)password error:(NSError *)error {
-  NSAssert(NO, @"Not implemented");
-  return nil;
 }
 
 - (KPKTree *)_decryptorForData:(NSData *)data password:(KPKPassword *)password error:(NSError **)error {

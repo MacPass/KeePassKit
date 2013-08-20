@@ -83,8 +83,8 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   self = [super init];
   if(self) {
     _tree = tree;
-    if(_headerWriter) {
-      NSAssert([_headerWriter isKindOfClass:[KPKXmlHeaderWriter class]], @"Header writer needs to be KPKXmlHeaderWriter");
+    if(headerWriter) {
+      NSAssert([headerWriter isKindOfClass:[KPKXmlHeaderWriter class]], @"Header writer needs to be KPKXmlHeaderWriter");
       _headerWriter = headerWriter;
     }
     _dateFormatter = [[NSDateFormatter alloc] init];
@@ -102,51 +102,60 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
   
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:@"<KeePassFile></KeePassFile>" options:0 error:nil];
   
+  KPKMetaData *metaData = self.tree.metaData;
   DDXMLElement *metaElement = [DDXMLNode elementWithName:@"Meta"];
-  KPKAddElement(metaElement, @"Generator", self.tree.metaData.generator);
-  KPKAddElement(metaElement, @"DatabaseName", self.tree.metaData.databaseName);
-  KPKAddElement(metaElement, @"DatabaseNameChanged", KPKFormattedDate(self.tree.metaData.databaseNameChanged));
-  KPKAddElement(metaElement, @"DatabaseDescription", self.tree.metaData.databaseDescription);
-  KPKAddElement(metaElement, @"DatabaseDescriptionChanged", KPKFormattedDate(self.tree.metaData.databaseDescriptionChanged));
-  KPKAddElement(metaElement, @"DefaultUserName", self.tree.metaData.defaultUserName);
-  KPKAddElement(metaElement, @"MaintenanceHistoryDays", KPKStringFromLong(self.tree.metaData.maintenanceHistoryDays));
-  KPKAddElement(metaElement, @"Color", [self.tree.metaData.color hexString]);
-  KPKAddElement(metaElement, @"MasterKeyChanged", KPKFormattedDate(self.tree.metaData.masterKeyChanged));
-  KPKAddElement(metaElement, @"MasterKeyChangeRec", KPKStringFromLong(self.tree.metaData.masterKeyChangeIsRequired));
-  KPKAddElement(metaElement, @"MasterKeyChangeForce", KPKStringFromLong(self.tree.metaData.masterKeyChangeIsForced));
+  KPKAddElement(metaElement, @"Generator", metaData.generator);
+  if(_headerWriter.headerHash) {
+    NSString *headerHash = [[NSString alloc] initWithData:[NSMutableData mutableDataWithBase64EncodedData:_headerWriter.headerHash] encoding:NSUTF8StringEncoding];
+    KPKAddElement(metaElement, @"HeaderHash", headerHash);
+  }
+  
+  KPKAddElement(metaElement, @"DatabaseName", metaData.databaseName);
+  KPKAddElement(metaElement, @"DatabaseNameChanged", KPKFormattedDate(metaData.databaseNameChanged));
+  KPKAddElement(metaElement, @"DatabaseDescription", metaData.databaseDescription);
+  KPKAddElement(metaElement, @"DatabaseDescriptionChanged", KPKFormattedDate(metaData.databaseDescriptionChanged));
+  KPKAddElement(metaElement, @"DefaultUserName", metaData.defaultUserName);
+  KPKAddElement(metaElement, @"DefaultUserNameChanged", KPKFormattedDate(metaData.defaultUserNameChanged));
+  KPKAddElement(metaElement, @"MaintenanceHistoryDays", KPKStringFromLong(metaData.maintenanceHistoryDays));
+  KPKAddElement(metaElement, @"Color", [metaData.color hexString]);
+  KPKAddElement(metaElement, @"MasterKeyChanged", KPKFormattedDate(metaData.masterKeyChanged));
+  KPKAddElement(metaElement, @"MasterKeyChangeRec", KPKStringFromLong(metaData.masterKeyChangeIsRequired));
+  KPKAddElement(metaElement, @"MasterKeyChangeForce", KPKStringFromLong(metaData.masterKeyChangeIsForced));
   
   DDXMLElement *memoryProtectionElement = [DDXMLElement elementWithName:@"MemoryProtection"];
-  KPKAddElement(memoryProtectionElement, @"ProtectTitle", KPKStringFromBool(self.tree.metaData.protectTitle));
-  KPKAddElement(memoryProtectionElement, @"ProtectUserName", KPKStringFromBool(self.tree.metaData.protectUserName));
-  KPKAddElement(memoryProtectionElement, @"ProtectPassword", KPKStringFromBool(self.tree.metaData.protectPassword));
-  KPKAddElement(memoryProtectionElement, @"ProtectURL", KPKStringFromBool(self.tree.metaData.protectUrl));
-  KPKAddElement(memoryProtectionElement, @"ProtectNotes", KPKStringFromBool(self.tree.metaData.protectNotes));
+  KPKAddElement(memoryProtectionElement, @"ProtectTitle", KPKStringFromBool(metaData.protectTitle));
+  KPKAddElement(memoryProtectionElement, @"ProtectUserName", KPKStringFromBool(metaData.protectUserName));
+  KPKAddElement(memoryProtectionElement, @"ProtectPassword", KPKStringFromBool(metaData.protectPassword));
+  KPKAddElement(memoryProtectionElement, @"ProtectURL", KPKStringFromBool(metaData.protectUrl));
+  KPKAddElement(memoryProtectionElement, @"ProtectNotes", KPKStringFromBool(metaData.protectNotes));
   
   [metaElement addChild:memoryProtectionElement];
   
-  if ([self.tree.metaData.customIcons count] > 0) {
+  if ([metaData.customIcons count] > 0) {
     [metaElement addChild:[self _xmlIcons]];
   }
   
-  KPKAddElement(metaElement, @"RecycleBinEnabled", KPKStringFromBool(self.tree.metaData.recycleBinEnabled));
-  KPKAddElement(metaElement, @"RecycleBinUUID", [self.tree.metaData.recycleBinUuid encodedString]);
-  KPKAddElement(metaElement, @"RecycleBinChanged", KPKFormattedDate(self.tree.metaData.recycleBinChanged));
-  KPKAddElement(metaElement, @"EntryTemplatesGroup", [self.tree.metaData.entryTemplatesGroup encodedString]);
-  KPKAddElement(metaElement, @"EntryTemplatesGroupChanged", KPKFormattedDate(self.tree.metaData.entryTemplatesGroupChanged));
-  KPKAddElement(metaElement, @"HistoryMaxItems", KPKStringFromLong(self.tree.metaData.historyMaxItems));
-  KPKAddElement(metaElement, @"HistoryMaxSize", KPKStringFromLong(self.tree.metaData.historyMaxItems));
-  KPKAddElement(metaElement, @"LastSelectedGroup", [self.tree.metaData.lastSelectedGroup encodedString]);
-  KPKAddElement(metaElement, @"LastTopVisibleGroup", [self.tree.metaData.lastTopVisibleGroup encodedString]);
+  KPKAddElement(metaElement, @"RecycleBinEnabled", KPKStringFromBool(metaData.recycleBinEnabled));
+  KPKAddElement(metaElement, @"RecycleBinUUID", [metaData.recycleBinUuid encodedString]);
+  KPKAddElement(metaElement, @"RecycleBinChanged", KPKFormattedDate(metaData.recycleBinChanged));
+  KPKAddElement(metaElement, @"EntryTemplatesGroup", [metaData.entryTemplatesGroup encodedString]);
+  KPKAddElement(metaElement, @"EntryTemplatesGroupChanged", KPKFormattedDate(metaData.entryTemplatesGroupChanged));
+  KPKAddElement(metaElement, @"HistoryMaxItems", KPKStringFromLong(metaData.historyMaxItems));
+  KPKAddElement(metaElement, @"HistoryMaxSize", KPKStringFromLong(metaData.historyMaxItems));
+  KPKAddElement(metaElement, @"LastSelectedGroup", [metaData.lastSelectedGroup encodedString]);
+  KPKAddElement(metaElement, @"LastTopVisibleGroup", [metaData.lastTopVisibleGroup encodedString]);
   
   /* Custom Data is stored as KPKBinaries in the meta object */
   [metaElement addChild:[self _xmlBinaries]];
   DDXMLElement *customDataElement = [DDXMLElement elementWithName:@"CustomData"];
-  for (KPKBinary *binary in self.tree.metaData.customData) {
+  for (KPKBinary *binary in metaData.customData) {
     [customDataElement addChild:[self _xmlCustomData:binary]];
   }
+  [metaElement addChild:customDataElement];
+  /* Add meta Element to XML root */
+  [[document rootElement] addChild:metaElement];
+  
   DDXMLElement *rootElement = [DDXMLNode elementWithName:@"Root"];
-  [rootElement addChild:customDataElement];
-
   /* Create XML nodes for all Groups and Entries */
   [rootElement addChild:[self _xmlGroup:self.tree.root]];
   
@@ -241,19 +250,19 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
 - (DDXMLElement *)_xmlAutotype:(KPKAutotype *)autotype {
   /*
    <AutoType>
-  <Enabled>True</Enabled>
-  <DataTransferObfuscation>0</DataTransferObfuscation>
-  <DefaultSequence>{TAB}{Username}{TAB}{Password}</DefaultSequence>
-  <Association>
-  <Window>WindowTitle</Window>
-  <KeystrokeSequence></KeystrokeSequence>
-  </Association>
-  <Association>
-  <Window>WindowWithCustomSequence</Window>
-  <KeystrokeSequence>{TAB}{Username}{TAB}{Password}{TAB}{Password}</KeystrokeSequence>
-  </Association>
-  </AutoType>
-  */
+   <Enabled>True</Enabled>
+   <DataTransferObfuscation>0</DataTransferObfuscation>
+   <DefaultSequence>{TAB}{Username}{TAB}{Password}</DefaultSequence>
+   <Association>
+   <Window>WindowTitle</Window>
+   <KeystrokeSequence></KeystrokeSequence>
+   </Association>
+   <Association>
+   <Window>WindowWithCustomSequence</Window>
+   <KeystrokeSequence>{TAB}{Username}{TAB}{Password}{TAB}{Password}</KeystrokeSequence>
+   </Association>
+   </AutoType>
+   */
   DDXMLElement *autotypeElement = [DDXMLElement elementWithName:@"AutoType"];
   KPKAddElement(autotypeElement, @"Enabled", KPKStringFromBool(autotype.isEnabled));
   NSString *obfuscate = autotype.obfuscateDataTransfer ? @"0" : @"1";
@@ -273,7 +282,7 @@ static NSString *stringFromInhertiBool(KPKInheritBool value) {
 }
 
 - (DDXMLElement *)_xmlAttribute:(KPKAttribute *)attribute {
-  DDXMLElement *attributeElement = [DDXMLElement elementWithName:@"StringField"];
+  DDXMLElement *attributeElement = [DDXMLElement elementWithName:@"String"];
   if(attribute.isProtected) {
     NSString *attributeName = _randomStream != nil ? @"Protected" : @"ProtectInMemory";
     KPKAddAttribute(attributeElement, attributeName, @"True");

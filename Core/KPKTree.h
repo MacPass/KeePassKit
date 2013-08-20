@@ -45,6 +45,7 @@
 @property (nonatomic, readonly) NSArray *groups;
 @property (nonatomic, readonly) NSArray *allGroups;
 @property (nonatomic, readonly) NSArray *allEntries;
+@property (nonatomic, readonly) KPKVersion minimumVersion;
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent;
 - (KPKEntry *)createEntry:(KPKGroup *)parent;
