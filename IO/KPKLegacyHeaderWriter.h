@@ -15,6 +15,8 @@
 @property (nonatomic, strong, readonly) NSData *encryptionIv;
 @property (nonatomic, strong, readonly) NSData *transformSeed;
 @property (nonatomic, readonly) uint32_t transformationRounds;
+@property (nonatomic, assign) NSUInteger groupCount;
+@property (nonatomic, assign) NSUInteger entryCount;
 
 #pragma mark KPKHeaderWriting
 - (id)initWithTree:(KPKTree *)tree;

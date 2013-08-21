@@ -69,22 +69,21 @@
 
 + (NSData *)encryptTree:(KPKTree *)tree password:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
   NSMutableData *fileData = [[NSMutableData alloc] init];
-  KPKLegacyHeaderWriter *headerWriter = [[KPKLegacyHeaderWriter alloc] initWithTree:tree];
   
   // Serialize the tree
-  KPKLegacyTreeWriter *treeWriter = [[KPKLegacyTreeWriter alloc] initWithTree:tree headerWriter:headerWriter];
+  KPKLegacyTreeWriter *treeWriter = [[KPKLegacyTreeWriter alloc] initWithTree:tree];
   NSData *treeData = [treeWriter treeData];
   
   /* Create the key to encrypt the data stream from the password */
   NSData *keyData = [password finalDataForVersion:KPKLegacyVersion
-                                            masterSeed:headerWriter.masterSeed
-                                         transformSeed:headerWriter.transformSeed
-                                                rounds:headerWriter.transformationRounds];
+                                            masterSeed:treeWriter.headerWriter.masterSeed
+                                         transformSeed:treeWriter.headerWriter.transformSeed
+                                                rounds:treeWriter.headerWriter.transformationRounds];
 
   CCCryptorStatus cryptoError = kCCSuccess;
   NSData *encryptedTreeData = [treeData dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
                                                                 key:keyData
-                                               initializationVector:headerWriter.encryptionIv
+                                               initializationVector:treeWriter.headerWriter.encryptionIv
                                                             options:kCCOptionPKCS7Padding
                                                               error:&cryptoError];
   if(cryptoError != kCCSuccess) {
@@ -94,8 +93,8 @@
   
   /* Calculate the content hash */
   NSData *contentHash = [encryptedTreeData SHA256Hash];
-  [headerWriter setContentHash:contentHash];
-  [headerWriter writeHeaderData:fileData];
+  [treeWriter.headerWriter setContentHash:contentHash];
+  [treeWriter.headerWriter writeHeaderData:fileData];
   [fileData appendData:encryptedTreeData];
   return fileData;
 }

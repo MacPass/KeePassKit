@@ -16,9 +16,8 @@
 
 @interface KPKLegacyHeaderWriter () {
   KPKLegacyHeader _header;
-  KPKTree *_tree;
 }
-
+@property (weak) KPKTree *tree;
 @end
 
 @implementation KPKLegacyHeaderWriter
@@ -30,6 +29,8 @@
     _masterSeed = [NSData dataWithRandomBytes:16];
     _encryptionIv = [NSData dataWithRandomBytes:16];
     _transformSeed = [NSData dataWithRandomBytes:32];
+    _groupCount = -1;
+    _entryCount = -1;
   }
   return self;
 }
@@ -39,6 +40,8 @@
 }
 
 - (void)writeHeaderData:(NSMutableData *)data {
+  NSAssert(_groupCount != -1, @"Group count needs to be initalized");
+  NSAssert(_entryCount != -1, @"Entry count needs to be initalized");
   _header.signature1 = CFSwapInt32HostToLittle(KPK_LEGACY_SIGNATURE_1);
   _header.signature2 = CFSwapInt32HostToLittle(KPK_LEGACY_SIGNATURE_2);
   _header.flags = CFSwapInt32HostToLittle( KPKLegacyEncryptionSHA2 | KPKLegacyEncryptionRijndael );
@@ -48,13 +51,11 @@
   [_masterSeed getBytes:_header.masterSeed length:sizeof(_header.masterSeed)];
   [_encryptionIv getBytes:_header.encryptionIv length:sizeof(_header.encryptionIv)];
   
-  /* Number of groups (minus the root) */
-  uint32_t numberOfGroups = (uint32_t)[[_tree allGroups] count] - 1;
-  _header.groups = CFSwapInt32HostToLittle(numberOfGroups);
+  /* Number of groups */
+  _header.groups = CFSwapInt32HostToLittle((uint32_t)_groupCount);
   
   /* Number of entries */
-  uint32_t numberOfEntries = (uint32_t)[[_tree allEntries] count] - 1;
-  _header.entries = CFSwapInt32HostToLittle(numberOfEntries);
+  _header.entries = CFSwapInt32HostToLittle((uint32_t)_entryCount);
   
   /* Skip the content hash for now, it will get filled in after the content is written */
   
@@ -78,6 +79,16 @@
   if([hash length] == 32) {
     [hash getBytes:&_header.contentsHash length:32];
   }
+}
+
+- (void)setGroupCount:(NSUInteger)count {
+  NSAssert(count <= UINT32_MAX, @"Count greater than UINT32_MAX");
+  _entryCount = count;
+}
+
+- (void)setEntryCount:(NSUInteger)count {
+  NSAssert(count <= UINT32_MAX, @"Count greater than UINT32_MAX");
+  _groupCount = count;
 }
 
 - (NSData *)headerHash {

@@ -39,24 +39,22 @@
 
 @interface KPKLegacyTreeWriter () {
   KPKDataStreamWriter *_dataWriter;
-  KPKLegacyHeaderWriter *_headerWriter;
   NSMutableArray *_groupIds;
   NSArray *_allEntries;
   NSArray *_allGroups;
 }
 
+@property (nonatomic, strong, readwrite) KPKLegacyHeaderWriter *headerWriter;
+
 @end
 
 @implementation KPKLegacyTreeWriter
 
-- (id)initWithTree:(KPKTree *)tree headerWriter:(id<KPKHeaderWriting>)headerWriter {
+- (instancetype)initWithTree:(KPKTree *)tree {
   self = [super init];
-  if(![headerWriter isKindOfClass:[KPKLegacyHeaderWriter class]]) {
-    self = nil;
-  }
   if(self) {
-    _headerWriter = (KPKLegacyHeaderWriter *)headerWriter;
     _tree = tree;
+    _headerWriter = [[KPKLegacyHeaderWriter alloc] initWithTree:_tree];
     _groupIds = [[NSMutableArray alloc] initWithCapacity:[[tree allGroups] count]];
   }
   return self;
@@ -91,10 +89,19 @@
    or discarded.
    */
   _allGroups = [_tree allGroups];
+  _allEntries = [_tree allEntries];
+  if([_allGroups count] == 0 && [_allEntries count] > 0) {
+    /*
+     Store the root group
+     Another problem might be the use of meta entries
+     */
+  }
   for(KPKGroup *group in _allGroups) {
     [self _writeGroup:group];
   }
-  _allEntries = [_tree allEntries];
+  /*
+   Rearrange the entries to fit KDB structure
+   */
   for(KPKEntry *entry in _allEntries) {
     [self _writeEntry:entry];
   }

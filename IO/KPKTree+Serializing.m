@@ -73,7 +73,7 @@
 }
 
 - (NSString *)XmlString {
-  KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self headerWriter:nil];
+  KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self];
   return [[treeWriter xmlDocument] XMLStringWithOptions:DDXMLNodeCompactEmptyElement|DDXMLNodePrettyPrint];
 }
 

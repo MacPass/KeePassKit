@@ -89,6 +89,9 @@
 
 - (KPKVersion)minimumVersion {
   KPKVersion minimumVersion = KPKUnknownVersion;
+  if([self.root.entries count] > 0) {
+    return KPKXmlVersion;
+  }
   for (KPKNode *node in self.allEntries) {
     minimumVersion = MAX(node.minimumVersion, minimumVersion);
   }

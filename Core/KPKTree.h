@@ -43,8 +43,19 @@
  to offer a bindiable interface for a tree
  */
 @property (nonatomic, readonly) NSArray *groups;
+/**
+ *	NSArray of KPKGroup objects. Contains all child groups in a tree.
+ *  @note The root group is missing from this array
+ */
 @property (nonatomic, readonly) NSArray *allGroups;
+/**
+ *	NSArray of KPKEntries. Contains all entries of the tree
+ */
 @property (nonatomic, readonly) NSArray *allEntries;
+/**
+ *	The minimum Version of the tree. If any node uses higher
+ *  featuers, the whole tree needs to have the highest version
+ */
 @property (nonatomic, readonly) KPKVersion minimumVersion;
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent;

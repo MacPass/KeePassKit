@@ -33,9 +33,9 @@
 
 @interface KPKXmlHeaderWriter () {
   KPKDataStreamWriter *_writer;
-  KPKTree *_tree;
 }
 
+@property (readwrite, weak) KPKTree *tree;
 @property (nonatomic, readwrite, strong) NSData *headerHash;
 
 @end;

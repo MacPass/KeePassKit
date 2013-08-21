@@ -21,15 +21,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKHeaderWriting.h"
 @class KPKTree;
 @class DDXMLDocument;
+@class KPKXmlHeaderWriter;
 
 @interface KPKXmlTreeWriter : NSObject
 
 @property (strong, readonly) KPKTree *tree;
+@property (strong, readonly) KPKXmlHeaderWriter *headerWriter;
 
-- (id)initWithTree:(KPKTree *)tree headerWriter:(id<KPKHeaderWriting>)headerWriter;
+- (id)initWithTree:(KPKTree *)tree;
 - (DDXMLDocument *)xmlDocument;
+- (DDXMLDocument *)protectedXmlDocument;
 
 @end

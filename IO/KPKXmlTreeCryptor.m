@@ -100,24 +100,19 @@
   
   NSMutableData *data = [[NSMutableData alloc] init];
   
-  KPKXmlHeaderWriter *headerWriter = [[KPKXmlHeaderWriter alloc] initWithTree:tree];
-  [headerWriter writeHeaderData:data];
-  
-  
-  KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:tree headerWriter:headerWriter];
-  NSData *xmlData = [[treeWriter xmlDocument] XMLData];
+  KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:tree];
+  NSData *xmlData = [[treeWriter protectedXmlDocument] XMLData];
   if(!xmlData) {
     // create Error
     return nil;
   }
-  
   NSData *key = [password finalDataForVersion:KPKXmlVersion
-                                   masterSeed:headerWriter.masterSeed
-                                transformSeed:headerWriter.transformSeed
-                                       rounds:tree.metaData.rounds];
+                                   masterSeed:treeWriter.headerWriter.masterSeed
+                                transformSeed:treeWriter.headerWriter.transformSeed
+                                       rounds:treeWriter.tree.metaData.rounds];
   
   
-  NSMutableData *contentData = [[NSMutableData alloc] initWithData:headerWriter.streamStartBytes];
+  NSMutableData *contentData = [[NSMutableData alloc] initWithData:treeWriter.headerWriter.streamStartBytes];
   if(tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
     xmlData = [xmlData gzipDeflate];
   }
@@ -125,9 +120,10 @@
   [contentData appendData:hashedData];
   NSData *encryptedData = [contentData dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
                                                               key:key
-                                             initializationVector:headerWriter.encryptionIv
+                                             initializationVector:treeWriter.headerWriter.encryptionIv
                                                           options:kCCOptionPKCS7Padding
                                                             error:NULL];
+  [treeWriter.headerWriter writeHeaderData:data];
   [data appendData:encryptedData];
   return data;
 }

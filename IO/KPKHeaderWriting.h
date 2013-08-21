@@ -25,9 +25,14 @@
 
 @protocol KPKHeaderWriting <NSObject>
 /**
+ *	Creates a header writer for the given tree.
+ *	@param	tree	Tree to write the header for
+ *	@return	A header writer
+ */
+- (instancetype)initWithTree:(KPKTree *)tree;
+/**
  Writes the data to the header
  */
-- (id)initWithTree:(KPKTree *)tree;
 - (void)writeHeaderData:(NSMutableData *)data;
 
 @end

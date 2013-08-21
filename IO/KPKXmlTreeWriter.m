@@ -21,6 +21,7 @@
 //
 
 #import "KPKXmlTreeWriter.h"
+#import "KPKXmlHeaderWriter.h"
 #import "KPKTree.h"
 
 #import "DDXMLDocument.h"
@@ -52,24 +53,20 @@
 @interface KPKXmlTreeWriter () {
   NSDateFormatter *_dateFormatter;
   NSMutableArray *_binaries;
-  KPKXmlHeaderWriter *_headerWriter;
   RandomStream *_randomStream;
 }
-
+@property (strong, readwrite) KPKXmlHeaderWriter *headerWriter;
 @property (strong, readwrite) KPKTree *tree;
 
 @end
 
 @implementation KPKXmlTreeWriter
 
-- (id)initWithTree:(KPKTree *)tree headerWriter:(id<KPKHeaderWriting>)headerWriter {
+- (id)initWithTree:(KPKTree *)tree {
   self = [super init];
   if(self) {
     _tree = tree;
-    if(headerWriter) {
-      NSAssert([headerWriter isKindOfClass:[KPKXmlHeaderWriter class]], @"Header writer needs to be KPKXmlHeaderWriter");
-      _headerWriter = headerWriter;
-    }
+    _headerWriter = [[KPKXmlHeaderWriter alloc] initWithTree:_tree];
     _dateFormatter = [[NSDateFormatter alloc] init];
     _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
     _dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
@@ -77,11 +74,15 @@
   return self;
 }
 
+- (DDXMLDocument *)protectedXmlDocument {
+  return [self _xmlDocumentUsingRandomStream:YES];
+}
+
 - (DDXMLDocument *)xmlDocument {
-  
-  if(_headerWriter && ![self _setupRandomStream]) {
-    return nil;
-  }
+  return  [self _xmlDocumentUsingRandomStream:NO];
+}
+
+- (DDXMLDocument *)_xmlDocumentUsingRandomStream:(BOOL)useRandomStream {
   
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:@"<KeePassFile></KeePassFile>" options:0 error:nil];
   
@@ -151,7 +152,12 @@
   /*
    Encode all Data that is marked protetected
    */
-  [self _encodeProtected:[document rootElement]];
+  if(useRandomStream) {
+    if(![self _setupRandomStream]) {
+      return nil;
+    }
+    [self _encodeProtected:[document rootElement]];
+  }
   return document;
 }
 
@@ -357,6 +363,7 @@
 }
 
 - (void)_encodeProtected:(DDXMLElement *)root {
+  
   DDXMLNode *protectedAttribute = [root attributeForName:@"Protected"];
   if([[protectedAttribute stringValue] isEqual:@"True"]) {
     NSString *str = [root stringValue];
@@ -379,6 +386,9 @@
 }
 
 - (BOOL)_setupRandomStream {
+  if(_headerWriter == nil) {
+    return NO;
+  }
   switch(_headerWriter.randomStreamID ) {
     case KPKRandomStreamSalsa20:
       _randomStream = [[Salsa20RandomStream alloc] init:_headerWriter.protectedStreamKey];
