@@ -62,9 +62,27 @@
 
 - (NSData *)treeData {
   NSMutableData *data = [[NSMutableData alloc] init];
-  _dataWriter = [[KPKDataStreamWriter alloc] initWithData:data];
+  /*
+   The root Group doesn't get written out
+   
+   Keepass doesn't allow entries in the root group.
+   Only Meta-Entries are inside the root group.
+   If a Tree with entries in the root group is saved,
+   those groups should be placed inside another group,
+   or discarded.
+   */
+  _allEntries = [_tree allEntries];
+  BOOL writeRootGroup = ([_tree.root.entries count] > 0 && [_tree.root.groups count] == 0);
+  _allGroups = writeRootGroup ? @[_tree.root] : [_tree allGroups];
   
-  [_dataWriter write4Bytes:KPKFieldTypeCommonHash];
+  
+  NSArray *metaEntries = [self _collectMetaEntries];
+  self.headerWriter.groupCount = [_allGroups count];
+  self.headerWriter.entryCount =  [_allEntries count] + [metaEntries count];
+  
+  /* Having calculated all entries, we can now write the header hash */
+  _dataWriter = [[KPKDataStreamWriter alloc] initWithData:data];
+  [_dataWriter write2Bytes:KPKFieldTypeCommonHash];
   /*
    2 byte hash field type
    4 byte hash field lenght
@@ -78,44 +96,39 @@
   [_dataWriter write4Bytes:82];
   [self _writeHeaderHash];
   
+  if(writeRootGroup) {
+    [self _writeGroups:@[self.tree.root]];
+  }
+  else {
+    [self _writeGroups:self.tree.root.groups];
+  }
   
-  /*
-   The root Group doesn't get written out
-   
-   Keepass doesn't allow entries in the root group.
-   Only Meta-Entries are inside the root group.
-   If a Tree with entries in the root group is saved,
-   those groups should be placed inside another group,
-   or discarded.
-   */
-  _allGroups = [_tree allGroups];
-  _allEntries = [_tree allEntries];
-  if([_allGroups count] == 0 && [_allEntries count] > 0) {
-    /*
-     Store the root group
-     Another problem might be the use of meta entries
-     */
-  }
-  for(KPKGroup *group in _allGroups) {
-    [self _writeGroup:group];
-  }
-  /*
-   Rearrange the entries to fit KDB structure
-   */
   for(KPKEntry *entry in _allEntries) {
     [self _writeEntry:entry];
   }
-  // Metadata can be converted to entries
-  [self _writeMetaData];
+  for(KPKEntry *metaEntry in metaEntries){
+    [self _writeEntry:metaEntry];
+  }
   
-  return nil;
+  return [data copy];
+}
+
+- (void)_writeGroups:(NSArray *)groups {
+  /*
+   The groups need to be written depth-first.
+   Since allGroups goes broadth first, we have to iterate diffently
+   */
+  for(KPKGroup *group in groups) {
+    [self _writeGroup:group];
+    [self _writeGroups:group.groups];
+  }
 }
 
 - (void)_writeGroup:(KPKGroup *)group {
   uint32_t tmp32;
   [_groupIds addObject:group.uuid];
   tmp32 = CFSwapInt32HostToLittle((uint32_t)[_groupIds count] - 1);
-  [self _writeField:KPKFieldTypeEntryGroupId bytes:&tmp32 length:4];
+  [self _writeField:KPKFieldTypeGroupId bytes:&tmp32 length:4];
   
   if (![NSString isEmptyString:group.name]){
     const char *title = [group.name cStringUsingEncoding:NSUTF8StringEncoding];
@@ -130,7 +143,7 @@
   [self _writeField:KPKFieldTypeGroupImage bytes:&tmp32 length:4];
   
   /* Determin the Group level */
-  uint32_t level = -1;
+  uint32_t level = 0;
   for(KPKGroup *parent = group.parent; parent != nil; parent = parent.parent) {
     level++;
   }
@@ -150,8 +163,12 @@
   [entry.uuid getUUIDBytes:dateBuffer];
   [self _writeField:KPKFieldTypeEntryUUID bytes:dateBuffer length:16];
   
-  
   NSUInteger groupId = [_groupIds indexOfObject:entry.parent.uuid];
+  /* Shift all entries in the root group inside the first group */
+  if([_tree.root.entries containsObject:entry]) {
+    KPKGroup *firstGroup = _allGroups[0];
+    groupId = [_groupIds indexOfObject:firstGroup.uuid];
+  }
   if(groupId == NSNotFound) {
     /* TODO: Error since we are missing the group id */
     return;
@@ -185,37 +202,38 @@
   
 }
 
-- (void)_writeMetaData {
+- (NSArray *)_collectMetaEntries {
   /*
    Store metadata in entries:
    
    - tree state
    - treestate (KPX style?)
    */
-  @autoreleasepool {
-    NSMutableArray *metaEntries = [[NSMutableArray alloc] init];
-    if(![NSString isEmptyString:self.tree.metaData.defaultUserName]) {
-      NSData *defaultUsernameData = [self.tree.metaData.defaultUserName dataUsingEncoding:NSUTF8StringEncoding];
-      KPKEntry *defaultUsernameEntry = [KPKEntry metaEntryWithData:defaultUsernameData name:KPKMetaEntryDefaultUsername];
-      [metaEntries addObject:defaultUsernameEntry];
-    }
-    if(self.tree.metaData.color != nil) {
-      KPKEntry *treeColorEntry = [KPKEntry metaEntryWithData:[self.tree.metaData.copy colorData] name:KPKMetaEntryDatabaseColor];
-      [metaEntries addObject:treeColorEntry];
-    }
-    if([self.tree.metaData.customIcons  count] > 0) {
-      KPKEntry *customIconEntry = [KPKEntry metaEntryWithData:[self _customIconData] name:KPKMetaEntryKeePassXCustomIcon2];
-      [metaEntries addObject:customIconEntry];
-    }
-    
-    for(KPKEntry *metaEntry in metaEntries) {
-      [self _writeEntry:metaEntry];
-    }
-    for(KPKBinary *metaBinary in self.tree.metaData.unknownMetaEntryData) {
-      KPKEntry *metaEntry = [KPKEntry metaEntryWithData:metaBinary.data name:metaBinary.name];
-      [self _writeEntry:metaEntry];
-    }
+  NSMutableArray *metaEntries = [[NSMutableArray alloc] init];
+  if(![NSString isEmptyString:self.tree.metaData.defaultUserName]) {
+    NSData *defaultUsernameData = [self.tree.metaData.defaultUserName dataUsingEncoding:NSUTF8StringEncoding];
+    KPKEntry *defaultUsernameEntry = [KPKEntry metaEntryWithData:defaultUsernameData name:KPKMetaEntryDefaultUsername];
+    [metaEntries addObject:defaultUsernameEntry];
   }
+  if(self.tree.metaData.color != nil) {
+    KPKEntry *treeColorEntry = [KPKEntry metaEntryWithData:[self.tree.metaData.copy colorData] name:KPKMetaEntryDatabaseColor];
+    [metaEntries addObject:treeColorEntry];
+  }
+  if([self.tree.metaData.customIcons  count] > 0) {
+    KPKEntry *customIconEntry = [KPKEntry metaEntryWithData:[self _customIconData] name:KPKMetaEntryKeePassXCustomIcon2];
+    [metaEntries addObject:customIconEntry];
+  }
+  for(KPKBinary *metaBinary in self.tree.metaData.unknownMetaEntryData) {
+    KPKEntry *metaEntry = [KPKEntry metaEntryWithData:metaBinary.data name:metaBinary.name];
+    [metaEntries addObject:metaEntry];
+  }
+  KPKGroup *firstGroup = _allGroups[0];
+  NSAssert(firstGroup != nil, @"Cannot write tree without any groups");
+  [metaEntries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    KPKEntry *entry = obj;
+    entry.parent = firstGroup;
+  }];
+  return metaEntries;
 }
 
 - (NSData *)_customIconData {

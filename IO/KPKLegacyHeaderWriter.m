@@ -16,7 +16,9 @@
 
 @interface KPKLegacyHeaderWriter () {
   KPKLegacyHeader _header;
+  BOOL _headerValid;
 }
+@property (nonatomic, assign, readonly) KPKLegacyHeader header;
 @property (weak) KPKTree *tree;
 @end
 
@@ -25,6 +27,7 @@
 - (id)initWithTree:(KPKTree *)tree {
   self = [super init];
   if(self) {
+    _headerValid = NO;
     _tree = tree;
     _masterSeed = [NSData dataWithRandomBytes:16];
     _encryptionIv = [NSData dataWithRandomBytes:16];
@@ -40,6 +43,42 @@
 }
 
 - (void)writeHeaderData:(NSMutableData *)data {
+  // Write out the header
+  KPKLegacyHeader header = self.header;
+  [data appendBytes:&header length:sizeof(header)];
+}
+
+- (void)setContentHash:(NSData *)hash {
+  if([hash length] == 32) {
+    [hash getBytes:&_header.contentsHash length:32];
+  }
+}
+
+- (void)setGroupCount:(NSUInteger)count {
+  NSAssert(count <= UINT32_MAX, @"Count greater than UINT32_MAX");
+  _groupCount = count;
+  _headerValid = NO;
+}
+
+- (void)setEntryCount:(NSUInteger)count {
+  NSAssert(count <= UINT32_MAX, @"Count greater than UINT32_MAX");
+  _entryCount = count;
+  _headerValid = NO;
+}
+
+- (NSData *)headerHash {
+  KPKLegacyHeader header = self.header;
+  return [KPKLegacyHeaderUtility hashForHeader:&header];
+}
+
+- (KPKLegacyHeader)header {
+  if(!_headerValid) {
+    [self _updateHeader];
+  }
+  return _header;
+}
+
+- (void)_updateHeader {
   NSAssert(_groupCount != -1, @"Group count needs to be initalized");
   NSAssert(_entryCount != -1, @"Entry count needs to be initalized");
   _header.signature1 = CFSwapInt32HostToLittle(KPK_LEGACY_SIGNATURE_1);
@@ -70,29 +109,6 @@
    */
   uint32_t rounds = (uint32_t)MIN(_tree.metaData.rounds, UINT32_MAX);
   _header.keyEncRounds = CFSwapInt32HostToLittle(rounds);
-  
-  // Write out the header
-  [data appendBytes:&_header length:sizeof(_header)];
-}
-
-- (void)setContentHash:(NSData *)hash {
-  if([hash length] == 32) {
-    [hash getBytes:&_header.contentsHash length:32];
-  }
-}
-
-- (void)setGroupCount:(NSUInteger)count {
-  NSAssert(count <= UINT32_MAX, @"Count greater than UINT32_MAX");
-  _entryCount = count;
-}
-
-- (void)setEntryCount:(NSUInteger)count {
-  NSAssert(count <= UINT32_MAX, @"Count greater than UINT32_MAX");
-  _groupCount = count;
-}
-
-- (NSData *)headerHash {
-  return [KPKLegacyHeaderUtility hashForHeader:&_header];
 }
 
 @end
