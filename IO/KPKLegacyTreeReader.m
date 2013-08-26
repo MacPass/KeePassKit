@@ -184,31 +184,55 @@
           break;
           
         case KPKFieldTypeGroupCreationTime:
+          if(fieldSize != 5) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
           group.timeInfo.creationTime = [NSDate dateFromPackedBytes:dateBuffer];
           break;
           
         case KPKFieldTypeGroupModificationTime:
+          if(fieldSize != 5) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
           group.timeInfo.lastModificationTime = [NSDate dateFromPackedBytes:dateBuffer];
           break;
           
         case KPKFieldTypeGroupAccessTime:
+          if(fieldSize != 5) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
           group.timeInfo.lastAccessTime = [NSDate dateFromPackedBytes:dateBuffer];
           break;
           
         case KPKFieldTypeGroupExpiryDate:
+          if(fieldSize != 5) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
           group.timeInfo.expiryTime = [NSDate dateFromPackedBytes:dateBuffer];
           break;
           
         case KPKFieldTypeGroupImage:
+          if(fieldSize != 4) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
           group.icon = [_dataStreamer read4Bytes];
           group.icon = CFSwapInt32LittleToHost(group.icon);
           break;
           
         case KPKFieldTypeGroupLevel: {
+          if(fieldSize != 2) {
+            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
+          }
           uint16_t level = [_dataStreamer read2Bytes];
           level = CFSwapInt16LittleToHost(level);
           NSAssert(group.uuid != nil, @"UUDI needs to be present");

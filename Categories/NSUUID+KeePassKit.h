@@ -28,6 +28,7 @@
 + (NSUUID *)AESUUID;
 + (NSUUID *)uuidWithEncodedString:(NSString *)string;
 
+- (NSData *)uuidData;
 - (NSString *)encodedString;
 - (id)initWithEncodedUUIDString:(NSString *)string;
 - (id)initWithData:(NSData *)data;

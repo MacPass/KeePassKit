@@ -37,6 +37,8 @@
 #import "NSDate+Packed.h"
 #import "NSColor+KeePassKit.h"
 
+#import "NSUUID+KeePassKit.h"
+
 @interface KPKLegacyTreeWriter () {
   KPKDataStreamWriter *_dataWriter;
   NSMutableArray *_groupIds;
@@ -143,12 +145,12 @@
   [self _writeField:KPKFieldTypeGroupImage bytes:&tmp32 length:4];
   
   /* Determin the Group level */
-  uint32_t level = 0;
+  uint16_t level = 0;
   for(KPKGroup *parent = group.parent; parent != nil; parent = parent.parent) {
     level++;
   }
-  level = CFSwapInt32HostToLittle(level);
-  [self _writeField:KPKFieldTypeGroupLevel bytes:&level length:4];
+  level = CFSwapInt16HostToLittle(level);
+  [self _writeField:KPKFieldTypeGroupLevel bytes:&level length:2];
   tmp32 = 0;
   [self _writeField:KPKFieldTypeGroupFlags bytes:&tmp32 length:4];
   
@@ -157,11 +159,7 @@
 }
 
 - (void)_writeEntry:(KPKEntry *)entry {
-  uint8_t dateBuffer[16];
-  uint32_t tmp32;
-  
-  [entry.uuid getUUIDBytes:dateBuffer];
-  [self _writeField:KPKFieldTypeEntryUUID bytes:dateBuffer length:16];
+  [self _writeField:KPKFieldTypeEntryUUID data:[entry.uuid uuidData]];
   
   NSUInteger groupId = [_groupIds indexOfObject:entry.parent.uuid];
   /* Shift all entries in the root group inside the first group */
@@ -173,6 +171,7 @@
     /* TODO: Error since we are missing the group id */
     return;
   }
+  uint32_t tmp32;
   tmp32 = CFSwapInt32HostToLittle((uint32_t)groupId);
   [self _writeField:KPKFieldTypeEntryGroupId bytes:&tmp32 length:4];
   

@@ -71,20 +71,20 @@
     [self _writerHeaderField:KPKHeaderKeyCipherId data:headerData];
     
     uint32_t compressionAlgorithm = CFSwapInt32HostToLittle(_tree.metaData.compressionAlgorithm);
-    headerData = [NSData dataWithBytesNoCopy:&compressionAlgorithm length:sizeof(uint32) freeWhenDone:NO];
+    headerData = [NSData dataWithBytesNoCopy:&compressionAlgorithm length:sizeof(uint32_t) freeWhenDone:NO];
     [self _writerHeaderField:KPKHeaderKeyCompression data:headerData];
     [self _writerHeaderField:KPKHeaderKeyMasterSeed data:_masterSeed];
     [self _writerHeaderField:KPKHeaderKeyTransformSeed data:_transformSeed];
     
     uint64_t rounds = CFSwapInt64HostToLittle(_tree.metaData.rounds);
-    headerData = [NSData dataWithBytesNoCopy:&rounds length:sizeof(uint64) freeWhenDone:NO];
+    headerData = [NSData dataWithBytesNoCopy:&rounds length:sizeof(uint64_t) freeWhenDone:NO];
     [self _writerHeaderField:KPKHeaderKeyTransformRounds data:headerData];
     [self _writerHeaderField:KPKHeaderKeyEncryptionIV data:_encryptionIv];
     [self _writerHeaderField:KPKHeaderKeyProtectedKey data:_protectedStreamKey];
     [self _writerHeaderField:KPKHeaderKeyStartBytes data:_streamStartBytes];
     
     uint32_t randomStreamId = CFSwapInt32HostToLittle(_randomStreamID);
-    headerData = [NSData dataWithBytesNoCopy:&randomStreamId length:sizeof(uint32) freeWhenDone:NO];
+    headerData = [NSData dataWithBytesNoCopy:&randomStreamId length:sizeof(uint32_t) freeWhenDone:NO];
     [self _writerHeaderField:KPKHeaderKeyRandomStreamId data:headerData];
     
     uint8_t endBuffer[] = { NSCarriageReturnCharacter, NSNewlineCharacter, NSCarriageReturnCharacter, NSNewlineCharacter };

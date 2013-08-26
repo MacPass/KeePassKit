@@ -51,21 +51,20 @@ static NSUUID *aesUUID = nil;
 }
 
 - (id)initWithData:(NSData *)data {
-  unsigned char uuidData[16];
-  [data getBytes:&uuidData length:16];
-  self = [self initWithUUIDBytes:uuidData];
+  uuid_t uuidBuffer;
+  [data getBytes:&uuidBuffer length:sizeof(uuid_t)];
+  self = [self initWithUUIDBytes:uuidBuffer];
   return self;
 }
 
 - (NSString *)encodedString {
-  NSData *data = [NSMutableData mutableDataWithBase64EncodedData:[self getUUIDData]];
+  NSData *data = [NSMutableData mutableDataWithBase64EncodedData:[self uuidData]];
   return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (NSData *)getUUIDData {
-  uint8_t bytes[16] = {0};
+- (NSData *)uuidData {
+  uuid_t bytes;
   [self getUUIDBytes:bytes];
-  
   return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
 
