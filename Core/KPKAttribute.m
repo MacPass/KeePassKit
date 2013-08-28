@@ -25,7 +25,7 @@
 #import "KPKFormat.h"
 #import "KPKGroup.h"
 
-#import "NSString+CommandString.h"
+#import "NSString+Reference.h"
 #import "NSData+Random.h"
 #import "NSMutableData+KeePassKit.h"
 /*

@@ -41,7 +41,6 @@
 
 @interface KPKLegacyTreeWriter () {
   KPKDataStreamWriter *_dataWriter;
-  NSMutableArray *_groupIds;
   NSArray *_allEntries;
   NSArray *_allGroups;
 }
@@ -57,13 +56,11 @@
   if(self) {
     _tree = tree;
     _headerWriter = [[KPKLegacyHeaderWriter alloc] initWithTree:_tree];
-    _groupIds = [[NSMutableArray alloc] initWithCapacity:[[tree allGroups] count]];
   }
   return self;
 }
 
 - (NSData *)treeData {
-  NSMutableData *data = [[NSMutableData alloc] init];
   /*
    The root Group doesn't get written out
    
@@ -83,7 +80,7 @@
   self.headerWriter.entryCount =  [_allEntries count] + [metaEntries count];
   
   /* Having calculated all entries, we can now write the header hash */
-  _dataWriter = [[KPKDataStreamWriter alloc] initWithData:data];
+  _dataWriter = [KPKDataStreamWriter streamWriter];
   [_dataWriter write2Bytes:KPKFieldTypeCommonHash];
   /*
    2 byte hash field type
@@ -112,8 +109,10 @@
     [self _writeEntry:metaEntry];
   }
   
-  return [data copy];
+  return [_dataWriter data];
 }
+
+#pragma mark Group/Entry Writing
 
 - (void)_writeGroups:(NSArray *)groups {
   /*
@@ -128,8 +127,12 @@
 
 - (void)_writeGroup:(KPKGroup *)group {
   uint32_t tmp32;
-  [_groupIds addObject:group.uuid];
-  tmp32 = CFSwapInt32HostToLittle((uint32_t)[_groupIds count] - 1);
+  NSUInteger groupId = [_allGroups indexOfObject:group];
+  if(groupId == NSNotFound) {
+    // Create error?
+    return;
+  }
+  tmp32 = CFSwapInt32HostToLittle((uint32_t)groupId);
   [self _writeField:KPKFieldTypeGroupId bytes:&tmp32 length:4];
   
   if (![NSString isEmptyString:group.name]){
@@ -161,11 +164,11 @@
 - (void)_writeEntry:(KPKEntry *)entry {
   [self _writeField:KPKFieldTypeEntryUUID data:[entry.uuid uuidData]];
   
-  NSUInteger groupId = [_groupIds indexOfObject:entry.parent.uuid];
+  NSUInteger groupId = [_allGroups indexOfObject:entry.parent];
   /* Shift all entries in the root group inside the first group */
   if([_tree.root.entries containsObject:entry]) {
     KPKGroup *firstGroup = _allGroups[0];
-    groupId = [_groupIds indexOfObject:firstGroup.uuid];
+    groupId = [_allGroups indexOfObject:firstGroup];
   }
   if(groupId == NSNotFound) {
     /* TODO: Error since we are missing the group id */
@@ -201,13 +204,10 @@
   
 }
 
+#pragma mark Meta Entries
+
 - (NSArray *)_collectMetaEntries {
-  /*
-   Store metadata in entries:
-   
-   - tree state
-   - treestate (KPX style?)
-   */
+  /* Store metadata in entries */
   NSMutableArray *metaEntries = [[NSMutableArray alloc] init];
   if(![NSString isEmptyString:self.tree.metaData.defaultUserName]) {
     NSData *defaultUsernameData = [self.tree.metaData.defaultUserName dataUsingEncoding:NSUTF8StringEncoding];
@@ -222,6 +222,11 @@
     KPKEntry *customIconEntry = [KPKEntry metaEntryWithData:[self _customIconData] name:KPKMetaEntryKeePassXCustomIcon2];
     [metaEntries addObject:customIconEntry];
   }
+  KPKEntry *uiStateEntry = [KPKEntry metaEntryWithData:[self _uiStateData] name:KPKMetaEntryUIState];
+  [metaEntries addObject:uiStateEntry];
+  KPKEntry *treeStateEntry = [KPKEntry metaEntryWithData:[self _kpxTreeStateData] name:KPKMetaEntryKeePassXGroupTreeState];
+  [metaEntries addObject:treeStateEntry]; 
+  
   for(KPKBinary *metaBinary in self.tree.metaData.unknownMetaEntryData) {
     KPKEntry *metaEntry = [KPKEntry metaEntryWithData:metaBinary.data name:metaBinary.name];
     [metaEntries addObject:metaEntry];
@@ -234,6 +239,8 @@
   }];
   return metaEntries;
 }
+
+#pragma mark Metadata Helper
 
 - (NSData *)_customIconData {
   /* Theoretica structures, variabel data sizes are mapped to fixed arrays with size 1
@@ -298,6 +305,61 @@
   return iconData;
 }
 
+- (NSData *)_uiStateData {
+  KPKSimpleUiState uiState;
+  /*
+   NSUInteger lastSelectedGroupId = [_groupIds indexOfObject:self.tree.metaData.lastSelectedGroup];
+   NSUInteger lastTopVisibleGroupId = [_groupIds indexOfObject:self.tree.metaData.lastTopVisibleGroup];
+  uiState.uLastSelectedGroupId = (lastSelectedGroupId == NSNotFound) ? 0 : (uint32_t)lastSelectedGroupId;
+  uiState.uLastTopVisibleGroupId = (lastTopVisibleGroupId == NSNotFound) ? 0 : (uint32_t)lastTopVisibleGroupId;
+  */
+   uuid_t nullBytes = {0};
+  memcpy(uiState.aLastSelectedEntryUuid, nullBytes, 16);
+  memcpy(uiState.aLastTopVisibleEntryUuid, nullBytes, 16);
+  uiState.dwReserved01 = 0;
+  uiState.dwReserved02 = 0;
+  uiState.dwReserved03 = 0;
+  uiState.dwReserved04 = 0;
+  uiState.dwReserved05 = 0;
+  uiState.dwReserved06 = 0;
+  uiState.dwReserved07 = 0;
+  uiState.dwReserved08 = 0;
+  uiState.dwReserved09 = 0;
+  uiState.dwReserved10 = 0;
+  uiState.dwReserved11 = 0;
+  uiState.dwReserved12 = 0;
+  uiState.dwReserved13 = 0;
+  uiState.dwReserved14 = 0;
+  uiState.dwReserved15 = 0;
+  uiState.dwReserved16 = 0;
+  
+  return [NSData dataWithBytes:&uiState length:sizeof(uiState)];
+}
+
+- (NSData *)_kpxTreeStateData {
+  /*
+   struct KPXGroupState {
+   uint32 groupId;
+   BOOL isExpanded;
+   };
+   
+   struct KPXTreeState {
+   uint32 numerOfEntries;
+   struct KPXGroupState states[];
+   };
+   */
+  KPKDataStreamWriter *writer = [KPKDataStreamWriter streamWriter];
+  [writer write4Bytes:(uint32_t)[_allGroups count]];
+  for(KPKGroup *group in _allGroups) {
+    NSUInteger groupId = [_allGroups indexOfObject:group];
+    [writer write4Bytes:(uint32_t)groupId];
+    [writer writeByte:group.isExpanded];
+  }
+  return  [writer data];
+}
+
+#pragma mark Header
+
 - (void)_writeHeaderHash {
   /* Compute a sha256 hash of the header up to but not including the contentsHash */
   [self _writeField:KPKHeaderHashFieldTypeHeaderHash data:[_headerWriter headerHash]];
@@ -306,6 +368,8 @@
   [self _writeField:KPKHeaderHashFieldTypeRandomData data:[NSData dataWithRandomBytes:32]];
   [self _writeField:KPKFieldTypeCommonStop bytes:NULL length:0];
 }
+
+#pragma mark Writing Helper
 
 - (void)_writeString:(NSString *)string forField:(KPKLegacyFieldType)type {
   const char *bufferString = "";

@@ -43,6 +43,29 @@ typedef struct {
 	uint32_t keyEncRounds;
 } KPKLegacyHeader;
 
+typedef struct {
+  uint32_t uLastSelectedGroupId;
+  uint32_t uLastTopVisibleGroupId;
+  uint8_t aLastSelectedEntryUuid[16];
+  uint8_t aLastTopVisibleEntryUuid[16];
+  uint32_t dwReserved01;
+  uint32_t dwReserved02;
+  uint32_t dwReserved03;
+  uint32_t dwReserved04;
+  uint32_t dwReserved05;
+  uint32_t dwReserved06;
+  uint32_t dwReserved07;
+  uint32_t dwReserved08;
+  uint32_t dwReserved09;
+  uint32_t dwReserved10;
+  uint32_t dwReserved11;
+  uint32_t dwReserved12;
+  uint32_t dwReserved13;
+  uint32_t dwReserved14;
+  uint32_t dwReserved15;
+  uint32_t dwReserved16;
+} KPKSimpleUiState;
+
 typedef NS_ENUM(NSUInteger, KPKLegacyFieldType) {
   /* Common types */
   KPKFieldTypeCommonHash = 0,

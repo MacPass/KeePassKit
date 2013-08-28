@@ -23,12 +23,8 @@
 #import <Foundation/Foundation.h>
 @class KPKEntry;
 
-@interface NSString (CommandString)
+@interface NSString (Reference)
 
-/**
- @returns YES if the string is enclosed in curly braces {STRING}
- */
-- (BOOL)isCommandString;
 /**
  @returns YES if the string is a reference String
  */

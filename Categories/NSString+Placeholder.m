@@ -76,7 +76,7 @@
   /*
    {TITLE}
    {USERNAME}
-   {URL}	URL
+   {URL}
    {PASSWORD}
    {NOTES}
    */
@@ -102,6 +102,30 @@
      {URL:PATH}	Path component of the entry URL.
      {URL:QUERY}	Query information of the entry URL.
      */
+    
+    NSString *urlOption = [lowercased substringFromIndex:4];
+    NSURL *url = [[NSURL alloc] initWithString:entry.url];
+    
+    if([urlOption hasPrefix:@"rmvscm"]) {
+      NSMutableString *mutableURL = [entry.url mutableCopy];
+      [mutableURL replaceOccurrencesOfString:[url scheme] withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableURL length])];
+      return [mutableURL copy];
+    }
+    if([urlOption hasPrefix:@"scm"]) {
+      return [url scheme];
+    }
+    if([urlOption hasPrefix:@"host"]) {
+      return [url host];
+    }
+    if([urlOption hasPrefix:@"port"]) {
+      return [[url port] stringValue];
+    }
+    if([urlOption hasPrefix:@"path"]) {
+      return [url path];
+    }
+    if([urlOption hasPrefix:@"query"]) {
+      return [url query];
+    }
   }
   else if([lowercased hasPrefix:@"s:"]) {
     NSString *key = [self substringFromIndex:2];

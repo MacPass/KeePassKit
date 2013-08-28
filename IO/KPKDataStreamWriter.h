@@ -23,7 +23,10 @@
 
 @interface KPKDataStreamWriter : NSObject
 
-- (id)initWithData:(NSMutableData *)data;
++ (instancetype)streamWriterWithData:(NSMutableData *)data;
++ (instancetype)streamWriter;
+
+- (instancetype)initWithData:(NSMutableData *)data;
 
 - (void)writeData:(NSData *)data;
 - (void)writeString:(NSString *)string encoding:(NSStringEncoding)encoding;

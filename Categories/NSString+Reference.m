@@ -20,7 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSString+CommandString.h"
+#import "NSString+Reference.h"
 #import "KPKEntry.h"
 
 /*
@@ -35,23 +35,7 @@
  
  {REF:P@I:46C9B1FFBD4ABC4BBB260C6190BAD20C}
  {REF:<WantedField>@<SearchIn>:<Text>}
- 
- Placeholder
- 
- {TITLE}	Title
- {USERNAME}	User name
- {URL}	URL
- {PASSWORD}	Password
- {NOTES}	Notes
- {S:Name} CustomString Name
- 
- {URL:RMVSCM}	Entry URL without scheme name.
- {URL:SCM}	Scheme name of the entry URL.
- {URL:HOST}	Host component of the entry URL.
- {URL:PORT}	Port number of the entry URL.
- {URL:PATH}	Path component of the entry URL.
- {URL:QUERY}	Query information of the entry URL.
- */
+*/
 @implementation NSString (CommandString)
 
 + (NSDictionary *)_tokenMap {
@@ -70,10 +54,6 @@
   return dict;
 }
 
-- (BOOL)isCommandString {
-  return ( [self hasPrefix:@"{"] && [self hasSuffix:@"}"] );
-}
-
 - (BOOL)isRefernce {
   return [self hasPrefix:@"{REF:"] && [self hasPrefix:@"}"];
 }
@@ -89,8 +69,13 @@
 }
 
 - (NSString *)_removeBraces {
-  return [self substringWithRange:NSMakeRange(1, [self length] - 2)];
+  NSUInteger start = [self hasPrefix:@"{"] ? 1 : 0;
+  NSUInteger end = [self hasSuffix:@"}"] ? 1 : 0;
+  return [self substringWithRange:NSMakeRange(start, [self length] - start - end)];
 }
 
+- (BOOL)_isValidCommand {
+  return ( [self hasPrefix:@"{"] && [self hasSuffix:@"}"] );
+}
 
 @end
