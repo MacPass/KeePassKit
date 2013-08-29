@@ -164,18 +164,20 @@
 - (void)_writeEntry:(KPKEntry *)entry {
   [self _writeField:KPKFieldTypeEntryUUID data:[entry.uuid uuidData]];
   
-  NSUInteger groupId = [_allGroups indexOfObject:entry.parent];
+  uint32_t groupId = [self _groupIdForGroup:entry.parent];
+  if(groupId == 0) {
+    return; // Error
+  }
   /* Shift all entries in the root group inside the first group */
   if([_tree.root.entries containsObject:entry]) {
     KPKGroup *firstGroup = _allGroups[0];
-    groupId = [_allGroups indexOfObject:firstGroup];
-  }
-  if(groupId == NSNotFound) {
-    /* TODO: Error since we are missing the group id */
-    return;
+    groupId = [self _groupIdForGroup:firstGroup];
+    if(groupId == 0) {
+      return; // Error
+    }
   }
   uint32_t tmp32;
-  tmp32 = CFSwapInt32HostToLittle((uint32_t)groupId);
+  tmp32 = CFSwapInt32HostToLittle(groupId);
   [self _writeField:KPKFieldTypeEntryGroupId bytes:&tmp32 length:4];
   
   tmp32 = CFSwapInt32HostToLittle((uint32_t)entry.icon);
@@ -415,6 +417,19 @@
   if(length > 0) {
     [_dataWriter writeBytes:bytes length:length];
   }
+}
+
+- (uint32_t)_groupIdForGroup:(KPKGroup *)group {
+  if(nil == group) {
+    return 0;
+  }
+  NSUInteger groupId = [_allGroups indexOfObject:group];
+  if(groupId == NSNotFound) {
+    return 0;
+  }
+  NSAssert(groupId < UINT32_MAX, @"Group count should not exceed uint32");
+  /* Shift the index up once, since Keepass doesn't like 0 as group Ids */
+  return (uint32_t)(groupId + 1);
 }
 
 @end
