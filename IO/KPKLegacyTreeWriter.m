@@ -227,7 +227,7 @@
   KPKEntry *uiStateEntry = [KPKEntry metaEntryWithData:[self _uiStateData] name:KPKMetaEntryUIState];
   [metaEntries addObject:uiStateEntry];
   KPKEntry *treeStateEntry = [KPKEntry metaEntryWithData:[self _kpxTreeStateData] name:KPKMetaEntryKeePassXGroupTreeState];
-  [metaEntries addObject:treeStateEntry]; 
+  [metaEntries addObject:treeStateEntry];
   
   for(KPKBinary *metaBinary in self.tree.metaData.unknownMetaEntryData) {
     KPKEntry *metaEntry = [KPKEntry metaEntryWithData:metaBinary.data name:metaBinary.name];
@@ -312,10 +312,10 @@
   /*
    NSUInteger lastSelectedGroupId = [_groupIds indexOfObject:self.tree.metaData.lastSelectedGroup];
    NSUInteger lastTopVisibleGroupId = [_groupIds indexOfObject:self.tree.metaData.lastTopVisibleGroup];
-  uiState.uLastSelectedGroupId = (lastSelectedGroupId == NSNotFound) ? 0 : (uint32_t)lastSelectedGroupId;
-  uiState.uLastTopVisibleGroupId = (lastTopVisibleGroupId == NSNotFound) ? 0 : (uint32_t)lastTopVisibleGroupId;
-  */
-   uuid_t nullBytes = {0};
+   uiState.uLastSelectedGroupId = (lastSelectedGroupId == NSNotFound) ? 0 : (uint32_t)lastSelectedGroupId;
+   uiState.uLastTopVisibleGroupId = (lastTopVisibleGroupId == NSNotFound) ? 0 : (uint32_t)lastTopVisibleGroupId;
+   */
+  uuid_t nullBytes = {0};
   memcpy(uiState.aLastSelectedEntryUuid, nullBytes, 16);
   memcpy(uiState.aLastTopVisibleEntryUuid, nullBytes, 16);
   uiState.dwReserved01 = 0;
@@ -383,27 +383,18 @@
 
 - (void)_writeTimeInfo:(KPKNode *)node {
   BOOL isEntry = [node isKindOfClass:[KPKEntry class]];
-  uint8_t dateBuffer[5];
   
-  [node.timeInfo.creationTime packToBytes:dateBuffer];
   [self _writeField:(isEntry ? KPKFieldTypeEntryCreationTime : KPKFieldTypeGroupCreationTime )
-              bytes:dateBuffer
-             length:5];
+               data:[NSDate packedBytesFromDate:node.timeInfo.creationTime]]; 
   
-  [node.timeInfo.lastModificationTime packToBytes:dateBuffer];
   [self _writeField:(isEntry ? KPKFieldTypeEntryModificationTime : KPKFieldTypeGroupModificationTime )
-              bytes:dateBuffer
-             length:5];
+               data:[NSDate packedBytesFromDate:node.timeInfo.lastModificationTime]];
   
-  [node.timeInfo.lastAccessTime packToBytes:dateBuffer];
   [self _writeField:(isEntry ? KPKFieldTypeEntryAccessTime : KPKFieldTypeGroupAccessTime )
-              bytes:dateBuffer
-             length:5];
+               data:[NSDate packedBytesFromDate:node.timeInfo.lastAccessTime]];
   
-  [node.timeInfo.expiryTime packToBytes:dateBuffer];
   [self _writeField:(isEntry ? KPKFieldTypeEntryExpiryDate : KPKFieldTypeGroupExpiryDate )
-              bytes:dateBuffer
-             length:5];
+               data:[NSDate packedBytesFromDate:node.timeInfo.expiryTime]];
 }
 
 
