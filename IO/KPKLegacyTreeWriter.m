@@ -127,12 +127,12 @@
 
 - (void)_writeGroup:(KPKGroup *)group {
   uint32_t tmp32;
-  NSUInteger groupId = [_allGroups indexOfObject:group];
-  if(groupId == NSNotFound) {
+  uint32_t groupId = [self _groupIdForGroup:group];
+  if(groupId == 0 ) {
     // Create error?
     return;
   }
-  tmp32 = CFSwapInt32HostToLittle((uint32_t)groupId);
+  tmp32 = CFSwapInt32HostToLittle(groupId);
   [self _writeField:KPKFieldTypeGroupId bytes:&tmp32 length:4];
   
   if (![NSString isEmptyString:group.name]){
@@ -353,7 +353,7 @@
   KPKDataStreamWriter *writer = [KPKDataStreamWriter streamWriter];
   [writer write4Bytes:(uint32_t)[_allGroups count]];
   for(KPKGroup *group in _allGroups) {
-    NSUInteger groupId = [_allGroups indexOfObject:group];
+    uint32_t groupId = [self _groupIdForGroup:group];
     [writer write4Bytes:(uint32_t)groupId];
     [writer writeByte:group.isExpanded];
   }
@@ -393,8 +393,13 @@
   [self _writeField:(isEntry ? KPKFieldTypeEntryAccessTime : KPKFieldTypeGroupAccessTime )
                data:[NSDate packedBytesFromDate:node.timeInfo.lastAccessTime]];
   
+  /*
+   Keepass stores only the date. If the date is set, expire is true.
+   If no date is set the entry does not expire
+   */
+  NSDate *expiryDate = node.timeInfo.expires ? node.timeInfo.expiryTime : nil;
   [self _writeField:(isEntry ? KPKFieldTypeEntryExpiryDate : KPKFieldTypeGroupExpiryDate )
-               data:[NSDate packedBytesFromDate:node.timeInfo.expiryTime]];
+               data:[NSDate packedBytesFromDate:expiryDate]];
 }
 
 
@@ -410,6 +415,7 @@
   }
 }
 
+/* Returns the group index for the searched group. 0 indicates an error */
 - (uint32_t)_groupIdForGroup:(KPKGroup *)group {
   if(nil == group) {
     return 0;
