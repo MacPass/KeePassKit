@@ -210,7 +210,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (void)setTitle:(NSString *)title {
   [self.undoManager registerUndoWithTarget:self selector:@selector(setTitle:) object:self.title];
-  [self.usernameAttribute setValueWithoutUndoRegistration:title];
+  [self.titleAttribute setValueWithoutUndoRegistration:title];
 }
 
 - (void)setUsername:(NSString *)username {

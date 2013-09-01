@@ -281,6 +281,7 @@
   // Parse the entries
   for (NSUInteger iEntryIndex = 0; iEntryIndex < _headerReader.numberOfEntries; iEntryIndex++) {
     KPKEntry *entry = [[KPKEntry alloc] init];
+    KPKBinary *binary; // placeholder for binary reading
     
     // Parse the entry
     endOfStream = NO;
@@ -377,16 +378,16 @@
           break;
           
         case KPKFieldTypeEntryBinaryDescription: {
-          KPKBinary *binary = [[KPKBinary alloc] init];
-          
+          binary = [[KPKBinary alloc] init];
+  
           binary.name = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
-          [entry addBinary:binary];
           break;
         }
         case KPKFieldTypeEntryBinaryData:
+          NSAssert(binary != nil, @"Description field has to be read fist");
           if (fieldSize > 0) {
-            KPKBinary *binary = [entry.binaries lastObject];
-            binary.data = [_dataStreamer dataWithLength:fieldSize];;
+            binary.data = [_dataStreamer dataWithLength:fieldSize];
+            [entry addBinary:binary];
           }
           break;
           
@@ -395,9 +396,12 @@
             KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
             return NO;
           }
-          for(KPKGroup *group in _groups) {
-            if([group.uuid isEqual:groupUUID]) {
-              [group addEntry:entry];
+          /* Only add non-meta entries to the groups as the other are stored separately */
+          if(![entry isMeta]) {
+            for(KPKGroup *group in _groups) {
+              if([group.uuid isEqual:groupUUID]) {
+                [group addEntry:entry];
+              }
             }
           }
           [_entries addObject:entry];

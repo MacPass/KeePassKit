@@ -55,7 +55,7 @@
  *	The minimum Version of the tree. If any node uses higher
  *  featuers, the whole tree needs to have the highest version
  */
-@property (nonatomic, readonly) KPKVersion minimumVersion;
+@property (nonatomic, assign) KPKVersion minimumVersion;
 
 + (KPKTree *)templateTree;
 
