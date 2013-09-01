@@ -7,11 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKUndoing.h"
 #import "KPKTimerecording.h"
 #import "KPKIcon.h"
 
-@interface KPKMetaData : NSObject <KPKUndoing, KPKTimerecording>
+@class KPKTree;
+
+@interface KPKMetaData : NSObject <KPKTimerecording>
+
+@property (nonatomic, weak) KPKTree *tree;
 
 @property(nonatomic, assign) uint64_t rounds;
 @property(nonatomic, assign) uint32_t compressionAlgorithm;
@@ -65,7 +68,6 @@
 @property(nonatomic, strong, readonly) NSMutableArray *unknownMetaEntryData; // Array of KPKBinaries Compatibility for KDB files
 
 @property(nonatomic, assign) BOOL updateTiming;
-@property(nonatomic, weak) NSUndoManager *undoManager;
 
 - (void)addCustomIcon:(KPKIcon *)icon;
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index;

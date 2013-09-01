@@ -9,6 +9,7 @@
 #import "KPKMetaData.h"
 #import "KPKXmlFormat.h"
 #import "KPKIcon.h"
+#import "KPKTree.h"
 
 #import "NSUUID+KeePassKit.h"
 
@@ -27,8 +28,11 @@
     _protectUrl = NO;
     _protectUserName = NO;
     _generator = [@"MacPass" copy];
+    _databaseName = [NSLocalizedString(@"DATABASE", "") copy];
     _databaseNameChanged = [NSDate date];
+    _databaseDescription = [@"" copy];
     _databaseDescriptionChanged = [NSDate date];
+    _defaultUserName = [@"" copy];
     _defaultUserNameChanged = [NSDate date];
     _entryTemplatesGroupChanged = [NSDate date];
     _entryTemplatesGroup = [NSUUID nullUUID];
@@ -36,6 +40,9 @@
     _recycleBinUuid = [NSUUID nullUUID];
     _lastSelectedGroup = [NSUUID nullUUID];
     _lastTopVisibleGroup = [NSUUID nullUUID];
+    _historyMaxItems = 10;
+    _historyMaxSize = 6 * 1024 * 1024; // 6 MB
+    _maintenanceHistoryDays = 365;
   }
   return self;
 }
@@ -94,14 +101,14 @@
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index {
   /* Use undomanager ? */
   index = MIN([_customIcons count], index);
-  [[self.undoManager prepareWithInvocationTarget:self] removeCustomIcon:icon];
+  [[self.tree.undoManager prepareWithInvocationTarget:self] removeCustomIcon:icon];
   [self insertObject:icon inCustomIconsAtIndex:index];
 }
 
 - (void)removeCustomIcon:(KPKIcon *)icon {
   NSUInteger index = [_customIcons indexOfObject:icon];
   if(index != NSNotFound) {
-    [[self.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
+    [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
     [self removeObjectFromCustomIconsAtIndex:index];
   }
 }

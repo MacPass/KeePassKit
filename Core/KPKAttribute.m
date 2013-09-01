@@ -106,13 +106,20 @@
   return [self _decodedValue];
 }
 
-- (void)setValue:(NSString *)value {
-  /* Add test for equality ? */
+- (void)setValueWithoutUndoRegistration:(NSString *)value {
   [self _encodeValue:value];
+  [self.entry wasModified];
+}
+
+- (void)setValue:(NSString *)value {
+  [self.entry.undoManager registerUndoWithTarget:self selector:@selector(setValue:) object:self.value];
+  [self _encodeValue:value];
+  [self.entry wasModified];
 }
 
 - (void)setKey:(NSString *)key {
   if(![_key isEqualToString:key]) {
+    [self.entry.undoManager registerUndoWithTarget:self selector:@selector(setKey:) object:self.key];
     _key = [key copy];
     [self.entry wasModified];
   }

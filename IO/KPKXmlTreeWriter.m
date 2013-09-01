@@ -44,16 +44,16 @@
 
 #import "NSColor+KeePassKit.h"
 
-#import "RandomStream.h"
-#import "Salsa20RandomStream.h"
-#import "Arc4RandomStream.h"
+#import "KPKRandomStream.h"
+#import "KPKSalsa20RandomStream.h"
+#import "KPKArc4RandomStream.h"
 
 #import "KPKXmlUtilities.h"
 
 @interface KPKXmlTreeWriter () {
   NSDateFormatter *_dateFormatter;
   NSMutableArray *_binaries;
-  RandomStream *_randomStream;
+  KPKRandomStream *_randomStream;
 }
 @property (strong, readwrite) KPKXmlHeaderWriter *headerWriter;
 @property (strong, readwrite) KPKTree *tree;
@@ -391,11 +391,11 @@
   }
   switch(_headerWriter.randomStreamID ) {
     case KPKRandomStreamSalsa20:
-      _randomStream = [[Salsa20RandomStream alloc] init:_headerWriter.protectedStreamKey];
+      _randomStream = [[KPKSalsa20RandomStream alloc] init:_headerWriter.protectedStreamKey];
       return YES;
       
     case KPKRandomStreamArc4:
-      _randomStream = [[Arc4RandomStream alloc] init:_headerWriter.protectedStreamKey];
+      _randomStream = [[KPKArc4RandomStream alloc] init:_headerWriter.protectedStreamKey];
       return YES;
       
     default:

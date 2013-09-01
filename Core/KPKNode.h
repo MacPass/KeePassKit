@@ -24,7 +24,6 @@
 #import <Foundation/Foundation.h>
 #import "KPKVersion.h"
 #import "KPKTimerecording.h"
-#import "KPKUndoing.h"
 
 @class KPKGroup;
 @class KPKTree;
@@ -34,7 +33,7 @@
 /**
  *	Baseclass for all Nodes in a Tree.
  */
-@interface KPKNode : NSObject <NSCoding, KPKTimerecording, KPKUndoing, NSPasteboardWriting>
+@interface KPKNode : NSObject <NSCoding, KPKTimerecording, NSPasteboardWriting>
 
 @property(nonatomic, weak) KPKTree *tree;
 @property(nonatomic, assign) NSInteger icon;
@@ -46,6 +45,7 @@
 @property(nonatomic, strong) KPKTimeInfo *timeInfo;
 
 @property (nonatomic, assign) BOOL updateTiming;
+@property (nonatomic, weak, readonly) NSUndoManager *undoManager;
 
 /**
  *	Returns the default icon number for a Group
@@ -62,8 +62,5 @@
 - (void)wasModified;
 - (void)wasAccessed;
 - (void)wasMoved;
-
-#pragma mark KPKUndoing
-@property(nonatomic, weak) NSUndoManager *undoManager;
 
 @end

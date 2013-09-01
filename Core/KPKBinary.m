@@ -41,10 +41,15 @@
   if(self) {
     if(url) {
       NSError *error = nil;
+      NSDictionary *resourceKeys = [url resourceValuesForKeys:@[NSURLIsDirectoryKey] error:&error];
+      if([resourceKeys[ NSURLIsDirectoryKey ] boolValue] == YES ) {
+        self = nil;
+        return nil; // no valid url
+      }
       _data = [NSData dataWithContentsOfURL:url options:0 error:&error];
       if(!_data) {
         self = nil;
-        return self;
+        return self; // unable to read data
       }
       _name = [url lastPathComponent];
     }
@@ -99,8 +104,17 @@
   return result;
 }
 
+- (BOOL)saveToLocation:(NSURL *)location {
+  NSError *error;
+  if(![self.data writeToURL:location options:NSDataWritingAtomic error:&error]) {
+    [NSApp presentError:error];
+    return NO;
+  }
+  return YES;
+}
+
 - (NSData *)_dataForEncodedString:(NSString *)string compressed:(BOOL)compressed {
-  NSData *data = [NSMutableData mutableDataWithBase64EncodedData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  NSData *data = [NSMutableData mutableDataWithBase64DecodedData:[string dataUsingEncoding:NSUTF8StringEncoding]];
   if(data && compressed) {
     data = [data gzipInflate];
   }

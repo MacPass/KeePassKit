@@ -23,7 +23,6 @@
 #import <Foundation/Foundation.h>
 #import "KPKVersion.h"
 #import "KPKNode.h"
-#import "KPKUndoing.h"
 
 @class KPKGroup;
 @class KPKEntry;
@@ -31,7 +30,7 @@
 @class KPKIcon;
 @class KPKMetaData;
 
-@interface KPKTree : NSObject <KPKUndoing>
+@interface KPKTree : NSObject
 
 @property(nonatomic, strong, readonly) NSMutableDictionary *deletedObjects;
 @property(nonatomic, strong) KPKMetaData *metaData;
@@ -57,6 +56,8 @@
  *  featuers, the whole tree needs to have the highest version
  */
 @property (nonatomic, readonly) KPKVersion minimumVersion;
+
++ (KPKTree *)templateTree;
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent;
 - (KPKEntry *)createEntry:(KPKGroup *)parent;

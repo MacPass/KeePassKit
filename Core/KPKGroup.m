@@ -106,6 +106,7 @@
 
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   group.parent = self;
+  group.tree = self.tree;
   index = MIN([_entries count], index);
   [[self.undoManager prepareWithInvocationTarget:self] removeGroup:group];
   /* Remove entries that might have been added to the deleted objects */
@@ -216,6 +217,31 @@
   return  [filteredGroups lastObject];
 }
 
+
+- (BOOL)isAnchestorOfGroup:(KPKGroup *)group {
+  if(group == nil) {
+    return NO;
+  }
+  KPKGroup *ancestor = group.parent;
+  while(ancestor) {
+    if(ancestor == self) {
+      return YES;
+    }
+    ancestor = ancestor.parent;
+  }
+  return NO;
+}
+
+- (void)clear {
+  NSUInteger groupCount = [_groups count];
+  for(NSInteger index = (groupCount - 1); index > -1; index--) {
+    [self removeObjectFromGroupsAtIndex:index];
+  }
+  NSUInteger entryCount = [_entries count];
+  for(NSInteger index = (entryCount - 1); index > -1; index--) {
+    [self removeObjectFromEntriesAtIndex:index];
+  }
+}
 
 #pragma mark -
 #pragma mark KVC

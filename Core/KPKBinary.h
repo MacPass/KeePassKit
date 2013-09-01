@@ -44,5 +44,6 @@
 - (NSString *)encodedStringUsingCompression:(BOOL)compress;
 
 - (BOOL)isEqualtoBinary:(KPKBinary *)binary;
+- (BOOL)saveToLocation:(NSURL *)location;
 
 @end

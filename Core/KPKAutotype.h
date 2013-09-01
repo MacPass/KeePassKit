@@ -8,7 +8,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKUndoing.h"
 
 @class KPKEntry;
 @class KPKWindowAssociation;

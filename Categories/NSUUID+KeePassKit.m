@@ -22,6 +22,7 @@
 
 #import "NSUUID+KeePassKit.h"
 #import "NSMutableData+Base64.h"
+#import "KPKUTIs.h"
 
 static NSUUID *aesUUID = nil;
 
@@ -66,6 +67,34 @@ static NSUUID *aesUUID = nil;
   uuid_t bytes;
   [self getUUIDBytes:bytes];
   return [NSData dataWithBytes:bytes length:sizeof(bytes)];
+}
+
+@end
+
+@implementation NSUUID (Pasteboarding)
+
+
+#pragma mark -
+#pragma mark NSPasteboardReading
+
++ (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
+  return @[ KPKUUIDUTI ];
+}
+
++ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
+  NSAssert([type isEqualToString:KPKUUIDUTI], @"Only MPUUID type is supported");
+  return NSPasteboardReadingAsKeyedArchive;
+}
+#pragma mark -
+#pragma mark NSPasteboardWriting
+
+- (id)pasteboardPropertyListForType:(NSString *)type {
+  NSAssert([type isEqualToString:KPKUUIDUTI], @"Only MPUUID type is supported");
+  return [NSKeyedArchiver archivedDataWithRootObject:self];
+}
+
+- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
+  return @[ KPKUUIDUTI ];
 }
 
 @end

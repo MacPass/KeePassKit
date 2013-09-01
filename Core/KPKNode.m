@@ -24,6 +24,7 @@
 #import "KPKNode.h"
 #import "KPKGroup.h"
 #import "KPKTimeInfo.h"
+#import "KPKTree.h"
 
 #import "NSUUID+KeePassKit.h"
 
@@ -74,6 +75,10 @@
     rootGroup = rootGroup.parent;
   }
   return rootGroup;
+}
+
+- (NSUndoManager *)undoManager {
+  return self.tree.undoManager;
 }
 
 - (void)wasModified {

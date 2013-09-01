@@ -27,7 +27,6 @@
 #import "KPKAutotype.h"
 #import "KPKFormat.h"
 
-
 NSString *const KPKMetaEntryBinaryDescription   = @"bin-stream";
 NSString *const KPKMetaEntryTitle               = @"Meta-Info";
 NSString *const KPKMetaEntryUsername            = @"SYSTEM";
@@ -86,6 +85,13 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
     _binaries = [[NSMutableArray alloc] initWithCapacity:2];
     _history = [[NSMutableArray alloc] initWithCapacity:5];
     _autotype = [[KPKAutotype alloc] init];
+    
+    _titleAttribute.entry = self;
+    _passwordAttribute.entry = self;
+    _usernameAttribute.entry = self;
+    _urlAttribute.entry = self;
+    _notesAttribute.entry = self;
+    _autotype.entry = self;
   }
   return self;
 }
@@ -118,6 +124,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
     _autotype = [aDecoder decodeObjectForKey:@"autotype"];
     
     _titleAttribute.entry = self;
+    _passwordAttribute.entry = self;
     _usernameAttribute.entry = self;
     _urlAttribute.entry = self;
     _notesAttribute.entry = self;
@@ -203,27 +210,27 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (void)setTitle:(NSString *)title {
   [self.undoManager registerUndoWithTarget:self selector:@selector(setTitle:) object:self.title];
-  self.titleAttribute.value = title;
+  [self.usernameAttribute setValueWithoutUndoRegistration:title];
 }
 
 - (void)setUsername:(NSString *)username {
   [self.undoManager registerUndoWithTarget:self selector:@selector(setUsername:) object:self.username];
-  self.usernameAttribute.value = username;
+  [self.usernameAttribute setValueWithoutUndoRegistration:username];
 }
 
 - (void)setPassword:(NSString *)password {
   [self.undoManager registerUndoWithTarget:self selector:@selector(setPassword:) object:self.password];
-  self.passwordAttribute.value = password;
+  [self.passwordAttribute setValueWithoutUndoRegistration:password];
 }
 
 - (void)setNotes:(NSString *)notes {
   [self.undoManager registerUndoWithTarget:self selector:@selector(setNotes) object:self.notes];
-  self.notesAttribute.value = notes;
+  [self.notesAttribute setValueWithoutUndoRegistration:notes];
 }
 
 - (void)setUrl:(NSString *)url {
   [self.undoManager registerUndoWithTarget:self selector:@selector(setUrl:) object:self.url];
-  self.urlAttribute.value = url;
+  [self.urlAttribute setValueWithoutUndoRegistration:url];
 }
 
 - (void)remove {
@@ -231,6 +238,10 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
    Undo is handelded in the groups implementation of entry removal
    */
   [self.parent removeEntry:self];
+}
+
+- (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
+  [self.parent moveEntry:self toGroup:group atIndex:index];
 }
 
 #pragma mark CustomAttributes
@@ -304,6 +315,9 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 - (void)addBinary:(KPKBinary *)binary atIndex:(NSUInteger)index {
+  if(nil == binary) {
+    return; // nil not allowed
+  }
   index = MIN([_binaries count], index);
   [self.undoManager registerUndoWithTarget:self selector:@selector(removeAttachment:) object:binary];
   [self insertObject:binary inBinariesAtIndex:index];

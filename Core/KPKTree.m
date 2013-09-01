@@ -29,18 +29,99 @@
 
 @implementation KPKTree
 
-- (id)init {
++ (KPKTree *)templateTree {
+
+  KPKTree *tree = [[KPKTree alloc] init];
+  KPKGroup *parentGroup = [tree createGroup:nil];
+  
+  parentGroup.name = NSLocalizedString(@"GENERAL", "General");
+  parentGroup.icon = 48;
+  tree.root = parentGroup;
+  
+  KPKGroup *group = [tree createGroup:parentGroup];
+  group.name = NSLocalizedString(@"WINDOWS", "Windows");
+  group.icon = 38;
+  [parentGroup addGroup:group];
+  
+  group = [tree createGroup:parentGroup];
+  group.name = NSLocalizedString(@"NETWORK", "Network");
+  group.icon = 3;
+  [parentGroup addGroup:group];
+  
+  group = [tree createGroup:parentGroup];
+  group.name = NSLocalizedString(@"INTERNET", "Internet");
+  group.icon = 1;
+  [parentGroup addGroup:group];
+  
+  group = [tree createGroup:parentGroup];
+  group.name = NSLocalizedString(@"EMAIL", "EMail");
+  group.icon = 19;
+  [parentGroup addGroup:group];
+  
+  group = [tree createGroup:parentGroup];
+  group.name = NSLocalizedString(@"HOMEBANKING", "Homebanking");
+  group.icon = 37;
+  [parentGroup addGroup:group];
+  
+  return tree;
+}
+
+/*
+ Kdb3Tree *tree = [[Kdb3Tree alloc] init];
+ 
+ Kdb3Group *rootGroup = [[Kdb3Group alloc] init];
+ rootGroup.name = @"%ROOT%";
+ tree.root = rootGroup;
+ 
+ KdbGroup *parentGroup = [tree createGroup:rootGroup];
+ parentGroup.name = NSLocalizedString(@"GENERAL", "General");
+ parentGroup.image = 48;
+ [rootGroup addGroup:parentGroup];
+ 
+ KdbGroup *group = [tree createGroup:parentGroup];
+ group.name = NSLocalizedString(@"WINDOWS", "Windows");
+ group.image = 38;
+ [parentGroup addGroup:group];
+ 
+ group = [tree createGroup:parentGroup];
+ group.name = NSLocalizedString(@"NETWORK", "Network");
+ group.image = 3;
+ [parentGroup addGroup:group];
+ 
+ group = [tree createGroup:parentGroup];
+ group.name = NSLocalizedString(@"INTERNET", "Internet");
+ group.image = 1;
+ [parentGroup addGroup:group];
+ 
+ group = [tree createGroup:parentGroup];
+ group.name = NSLocalizedString(@"EMAIL", "EMail");
+ group.image = 19;
+ [parentGroup addGroup:group];
+ 
+ group = [tree createGroup:parentGroup];
+ group.name = NSLocalizedString(@"HOMEBANKING", "Homebanking");
+ group.image = 37;
+ [parentGroup addGroup:group];
+ */
+
+
+- (instancetype)init {
   self = [super init];
   if(self) {
     _metaData = [[KPKMetaData alloc] init];
     _deletedObjects = [[NSMutableDictionary alloc] init];
+    _metaData.tree = self;
   }
   return self;
 }
 
+- (id)parent {
+  return nil;
+}
+
 - (KPKGroup *)createGroup:(KPKGroup *)parent {
   KPKGroup *group = [[KPKGroup alloc] init];
-  group.undoManager = self.undoManager;
+  group.tree = self;
   group.parent = parent;
   return group;
 }
@@ -48,7 +129,7 @@
 - (KPKEntry *)createEntry:(KPKGroup *)parent {
   KPKEntry *entry = [[KPKEntry alloc] init];
   entry.parent = parent;
-  entry.undoManager = self.undoManager;
+  entry.tree = self;
   return entry;
 }
 
@@ -62,14 +143,6 @@
   if(group != root) {
     _groups = @[root];
   }
-}
-
-- (NSUndoManager *)undoManager {
-  return self.metaData.undoManager;
-}
-
-- (void)setUndoManager:(NSUndoManager *)undoManager {
-  self.metaData.undoManager = undoManager;
 }
 
 - (KPKGroup *)root {

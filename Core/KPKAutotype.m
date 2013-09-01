@@ -8,6 +8,7 @@
 
 #import "KPKAutotype.h"
 #import "KPKEntry.h"
+#import "KPKTree.h"
 #import "KPKWindowAssociation.h"
 
 @interface KPKAutotype () {
@@ -63,7 +64,7 @@
 - (void)setIsEnabled:(BOOL)isEnabled {
   if(self.isEnabled != isEnabled) {
     [[self.entry.undoManager prepareWithInvocationTarget:self] setIsEnabled:self.isEnabled];
-    self.isEnabled = isEnabled;
+    _isEnabled = isEnabled;
   }
 }
 
@@ -79,7 +80,7 @@
 }
 
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index {
-  [self.entry.undoManager registerUndoWithTarget:self selector:@selector(removeAssociation:) object:association];
+  [self.entry.tree.undoManager registerUndoWithTarget:self selector:@selector(removeAssociation:) object:association];
   association.autotype = self;
   [self insertObject:association inAssociationsAtIndex:index];
 }
@@ -87,7 +88,7 @@
 - (void)removeAssociation:(KPKWindowAssociation *)association {
   NSUInteger index = [_associations indexOfObject:association];
   if(index != NSNotFound) {
-    [[self.entry.undoManager prepareWithInvocationTarget:self] addAssociation:association atIndex:index];
+    [[self.entry.tree.undoManager prepareWithInvocationTarget:self] addAssociation:association atIndex:index];
     association.autotype = nil;
     [self removeObjectFromAssociationsAtIndex:index];
   }

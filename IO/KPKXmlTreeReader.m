@@ -40,9 +40,9 @@
 #import "KPKXmlFormat.h"
 #import "KPKErrors.h"
 
-#import "RandomStream.h"
-#import "Arc4RandomStream.h"
-#import "Salsa20RandomStream.h"
+#import "KPKRandomStream.h"
+#import "KPKArc4RandomStream.h"
+#import "KPKSalsa20RandomStream.h"
 
 #import "NSMutableData+Base64.h"
 #import "KPKIcon.h"
@@ -58,7 +58,7 @@
 @private
   DDXMLDocument *_document;
   KPKXmlHeaderReader *_headerReader;
-  RandomStream *_randomStream;
+  KPKRandomStream *_randomStream;
   NSDateFormatter *_dateFormatter;
   NSMutableDictionary *_binaryMap;
   NSMutableDictionary *_iconMap;
@@ -138,7 +138,7 @@
     return nil;
   }
   
-  tree.root = [self _parseGroup:rootGroup];
+  tree.root = [self _parseGroup:rootGroup forTree:tree];
   [self _parseDeletedObjects:root tree:tree];
   
   tree.metaData.updateTiming = YES;
@@ -208,10 +208,11 @@
   [self _parseCustomData:metaElement meta:data];
 }
 
-- (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement {
+- (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement forTree:(KPKTree *)tree{
   KPKGroup *group = [[KPKGroup alloc] init];
-  
+
   group.updateTiming = NO;
+  group.tree = tree;
   
   group.uuid = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, @"UUID")];
   if (group.uuid == nil) {
@@ -240,13 +241,13 @@
   group.lastTopVisibleEntry = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, @"LastTopVisibleEntry")];
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Entry"]) {
-    KPKEntry *entry = [self _parseEntry:element ignoreHistory:NO];
+    KPKEntry *entry = [self _parseEntry:element forTree:tree ignoreHistory:NO];
     entry.parent = group;
     [group addEntry:entry atIndex:[group.entries count]];
   }
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Group"]) {
-    KPKGroup *subGroup = [self _parseGroup:element];
+    KPKGroup *subGroup = [self _parseGroup:element forTree:tree];
     subGroup.parent = group;
     [group addGroup:subGroup atIndex:[group.groups count]];
   }
@@ -255,10 +256,11 @@
   return group;
 }
 
-- (KPKEntry *)_parseEntry:(DDXMLElement *)entryElement ignoreHistory:(BOOL)ignoreHistory {
+- (KPKEntry *)_parseEntry:(DDXMLElement *)entryElement forTree:(KPKTree *)tree ignoreHistory:(BOOL)ignoreHistory {
   KPKEntry *entry = [[KPKEntry alloc] init];
   
   entry.updateTiming = NO;
+  entry.tree = tree;
   
   entry.uuid = [NSUUID uuidWithEncodedString:KPKXmlString(entryElement, @"UUID")];
   if (entry.uuid == nil) {
@@ -357,6 +359,8 @@
    </Binaries>
    */
   DDXMLElement *binariesElement = [root elementForName:@"Binaries"];
+  NSUInteger binaryCount = [[binariesElement elementsForName:@"Binary"] count];
+  _binaryMap = [[NSMutableDictionary alloc] initWithCapacity:binaryCount];
   for (DDXMLElement *element in [binariesElement elementsForName:@"Binary"]) {
     DDXMLNode *idAttribute = [element attributeForName:@"ID"];
     
@@ -442,7 +446,7 @@
   DDXMLElement *historyElement = [entryElement elementForName:@"History"];
   if (historyElement != nil) {
     for (DDXMLElement *entryElement in [historyElement elementsForName:@"Entry"]) {
-      KPKEntry *historyEntry = [self _parseEntry:entryElement ignoreHistory:YES];
+      KPKEntry *historyEntry = [self _parseEntry:entryElement forTree:entry.tree ignoreHistory:YES];
       [entry addHistoryEntry:historyEntry];
     }
   }
@@ -469,11 +473,11 @@
 - (BOOL)_setupRandomStream {
   switch(_headerReader.randomStreamID ) {
     case KPKRandomStreamSalsa20:
-      _randomStream = [[Salsa20RandomStream alloc] init:_headerReader.protectedStreamKey];
+      _randomStream = [[KPKSalsa20RandomStream alloc] init:_headerReader.protectedStreamKey];
       return YES;
       
     case KPKRandomStreamArc4:
-      _randomStream = [[Arc4RandomStream alloc] init:_headerReader.protectedStreamKey];
+      _randomStream = [[KPKArc4RandomStream alloc] init:_headerReader.protectedStreamKey];
       return YES;
       
     default:

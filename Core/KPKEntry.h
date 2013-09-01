@@ -75,6 +75,8 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 - (void)remove;
 
+- (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
+
 #pragma mark MetaEntries
 /**
  *	Creates KDB meta entry with the given data and name

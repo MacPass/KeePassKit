@@ -72,7 +72,12 @@
   return nil;
 }
 
-- (NSString *)XmlString {
+- (NSData *)xmlData {
+  KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self];
+  return [[treeWriter xmlDocument] XMLDataWithOptions:DDXMLNodeCompactEmptyElement|DDXMLNodePrettyPrint];
+}
+
+- (NSString *)xmlString {
   KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self];
   return [[treeWriter xmlDocument] XMLStringWithOptions:DDXMLNodeCompactEmptyElement|DDXMLNodePrettyPrint];
 }

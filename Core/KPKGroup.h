@@ -26,6 +26,8 @@
 
 @class KPKEntry;
 
+FOUNDATION_EXPORT NSString *const KPKGroupUTI;
+
 @interface KPKGroup : KPKNode
 
 @property(nonatomic, copy) NSString *name;
@@ -87,6 +89,18 @@
  *  @note   if more than one Group matches, the resutl is the first match.
  */
 - (KPKGroup *)groupForUUID:(NSUUID *)uuid;
+
+/**
+ *	Determines if the receiving group is an ancestor of the supplied group
+ *	@param	group	group to test ancestorship for
+ *	@return	YES if reveiver is ancestor of group, NO otherwise
+ */
+- (BOOL)isAnchestorOfGroup:(KPKGroup *)group;
+
+/**
+ *	Removes alle Subentries and Subgroups
+ */
+- (void)clear;
 
 @end
 

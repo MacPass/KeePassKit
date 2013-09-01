@@ -40,5 +40,6 @@
 - (instancetype)initWithKey:(NSString *)key value:(NSString *)value isProtected:(BOOL)protected;
 - (instancetype)initWithKey:(NSString *)key value:(NSString *)value;
 - (BOOL)isDefault;
+- (void)setValueWithoutUndoRegistration:(NSString *)value;
 
 @end

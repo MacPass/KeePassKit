@@ -1,9 +1,9 @@
 //
-//  NSUUID+KeePassKit.h
+//  KPKArc4RandomStream.h
 //  KeePassKit
 //
-//  Created by Michael Starke on 25.06.13.
-//  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
+//  Created by Qiang Yu on 2/28/10 for KeePass2
+//  Copyright 2010 Qiang Yu. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,20 +21,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "KPKRandomStream.h"
 
-@interface NSUUID (KeePassKit)
+@interface KPKArc4RandomStream : KPKRandomStream 
 
-+ (NSUUID *)nullUUID;
-+ (NSUUID *)AESUUID;
-+ (NSUUID *)uuidWithEncodedString:(NSString *)string;
-
-- (NSData *)uuidData;
-- (NSString *)encodedString;
-- (id)initWithEncodedUUIDString:(NSString *)string;
-- (id)initWithData:(NSData *)data;
-
-@end
-
-@interface NSUUID (Pasteboarding) <NSPasteboardReading, NSPasteboardWriting>
+- (id)init;
+- (id)init:(NSData*)key;
 
 @end
