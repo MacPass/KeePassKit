@@ -135,8 +135,8 @@
   [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:oldIndex];
   BOOL wasEnabled = [self.undoManager isUndoRegistrationEnabled];
   [self.undoManager disableUndoRegistration];
-  [self.parent removeGroup:group];
-  [group addGroup:group atIndex:index];
+  [self remove];
+  [group addGroup:self atIndex:index];
   if(wasEnabled) {
     [self.undoManager enableUndoRegistration];
   }

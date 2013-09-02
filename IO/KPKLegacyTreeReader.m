@@ -140,6 +140,15 @@
     KPKGroup *parent = _groups[parentIndex];
     [parent addGroup:group];
   }
+  for(KPKEntry *entry in tree.root.entries) {
+    entry.tree = tree;
+  }
+  for(KPKGroup *group in [tree allGroups]) {
+    group.tree = tree;
+    for(KPKEntry *entry in group.entries) {
+      entry.tree = tree;
+    }
+  }
   
   return tree;
 }
