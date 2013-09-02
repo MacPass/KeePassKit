@@ -107,7 +107,7 @@
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   group.parent = self;
   group.tree = self.tree;
-  index = MIN([_entries count], index);
+  index = MIN([_groups count], index);
   [[self.undoManager prepareWithInvocationTarget:self] removeGroup:group];
   /* Remove entries that might have been added to the deleted objects */
   [self.tree.deletedObjects removeObjectForKey:group.uuid];

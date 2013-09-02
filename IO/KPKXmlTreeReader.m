@@ -242,14 +242,12 @@
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Entry"]) {
     KPKEntry *entry = [self _parseEntry:element forTree:tree ignoreHistory:NO];
-    entry.parent = group;
-    [group addEntry:entry atIndex:[group.entries count]];
+    [group addEntry:entry];
   }
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Group"]) {
     KPKGroup *subGroup = [self _parseGroup:element forTree:tree];
-    subGroup.parent = group;
-    [group addGroup:subGroup atIndex:[group.groups count]];
+    [group addGroup:subGroup];
   }
   
   group.updateTiming = YES;
