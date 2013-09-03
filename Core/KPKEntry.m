@@ -319,7 +319,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
     return; // nil not allowed
   }
   index = MIN([_binaries count], index);
-  [self.undoManager registerUndoWithTarget:self selector:@selector(removeAttachment:) object:binary];
+  [self.undoManager registerUndoWithTarget:self selector:@selector(removeBinary:) object:binary];
   [self insertObject:binary inBinariesAtIndex:index];
   [self wasModified];
   self.minimumVersion = [self _minimumVersionForCurrentAttachments];
