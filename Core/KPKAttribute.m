@@ -95,7 +95,13 @@
 
 - (BOOL)validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey error:(out NSError *__autoreleasing *)outError {
   if([inKey isEqualToString:@"key"]) {
-    if([self.entry hasAttributeWithKey:[*ioValue stringValue]]) {
+    if(ioValue == NULL) {
+      return NO; // No IO value, hence nothing to do
+    }
+    if(![*ioValue isKindOfClass:[NSString class]] ) {
+      return NO; // No string, so we cannot process it further
+    }
+    if([self.entry hasAttributeWithKey:*ioValue]) {
       *ioValue = [self.entry proposedKeyForAttributeKey:@"Untitled"];
     }
   }

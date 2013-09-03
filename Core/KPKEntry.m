@@ -271,11 +271,11 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 -(NSString *)proposedKeyForAttributeKey:(NSString *)key {
   /*
-   FIXME: Introduce some cachin behaviour. We iterate over after every single edit
+   FIXME: Introduce some caching behaviour. We iterate over after every single edit
    */
   NSMutableSet *keys = [[NSMutableSet alloc] initWithCapacity:[_customAttributes count]];
   for(KPKAttribute *attribute in _customAttributes) {
-    [keys addObject:_customAttributes.key];
+    [keys addObject:attribute.key];
   }
   NSUInteger counter = 1;
   NSString *base = key;
