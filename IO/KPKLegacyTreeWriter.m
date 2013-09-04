@@ -148,7 +148,7 @@
   [self _writeField:KPKFieldTypeGroupImage bytes:&tmp32 length:4];
   
   /* Determin the Group level */
-  uint16_t level = 0;
+  uint16_t level = -1;
   for(KPKGroup *parent = group.parent; parent != nil; parent = parent.parent) {
     level++;
   }
