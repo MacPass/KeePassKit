@@ -93,11 +93,11 @@
 
 - (void)skipBytes:(NSUInteger)numberOfBytes {
   _location += numberOfBytes;
-  _location = MIN([_data length] - 1, _location);
+  _location = MIN([_data length], _location);
 }
 
 - (BOOL)endOfData {
-  return (_location == [_data length] -1);
+  return (_location == [_data length]);
 }
 
 - (NSUInteger)countOfReadableBytes {

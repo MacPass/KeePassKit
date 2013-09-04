@@ -57,7 +57,6 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorLegacyInvalidFieldSize, // KDB Invalid field size
   KPKErrorLegacyHeaderHashCorrupted, // Header missmatch
   KPKErrorLegacyCorruptTree, // Tree sturcture is corrupted
-
 };
 
 #endif

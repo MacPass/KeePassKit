@@ -296,6 +296,10 @@
     // Parse the entry
     endOfStream = NO;
     while (!endOfStream) {
+      if([_dataStreamer countOfReadableBytes] == 0) {
+        KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_CORRUPT_DATA", "");
+        return NO;
+      }
       fieldType = [_dataStreamer read2Bytes];
       fieldSize = [_dataStreamer read4Bytes];
       
@@ -434,6 +438,10 @@
   NSData *headerHash;
 	
   while(YES) {
+    if([_dataStreamer countOfReadableBytes] == 0) {
+      KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_CORRUPT_DATA", "");
+      return NO;
+    }
     fieldType = [_dataStreamer read2Bytes];
     fieldSize = [_dataStreamer read4Bytes];
     
