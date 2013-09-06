@@ -92,8 +92,8 @@
   KPKTree *tree = [[KPKTree alloc] init];
   tree.metaData.rounds = _headerReader.rounds;
   /* Read the meta entries after all groups
-     and entries are parsed to be able to search for them
-     since KeePassX Stores custom icons for entries and groups
+   and entries are parsed to be able to search for them
+   since KeePassX Stores custom icons for entries and groups
    */
   [self _readMetaEntries:(KPKTree *)tree];
   
@@ -111,7 +111,7 @@
   for(groupIndex = 0; groupIndex < [_groups count]; groupIndex++) {
     KPKGroup *group = _groups[groupIndex];
     groupLevel = [_groupLevels[groupIndex] integerValue];
-    
+    BOOL foundLostGroup = NO;
     if (groupLevel == 0) {
       [rootGroup addGroup:group];
       continue;
@@ -133,12 +133,13 @@
          KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
          return nil;
          */
+        foundLostGroup = YES;
         [tree.root addGroup:group];
       }
-      else {
-        KPKGroup *parent = _groups[parentIndex];
-        [parent addGroup:group];
-      }
+    }
+    if(!foundLostGroup) {
+      KPKGroup *parent = _groups[parentIndex];
+      [parent addGroup:group];
     }
   }
   for(KPKEntry *entry in tree.root.entries) {
@@ -393,7 +394,7 @@
           
         case KPKFieldTypeEntryBinaryDescription: {
           binary = [[KPKBinary alloc] init];
-  
+          
           binary.name = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
           break;
         }
@@ -598,7 +599,7 @@
  */
 - (void)_parseColorData:(NSData *)data metaData:(KPKMetaData *)metaData {
   if([data length] == sizeof(uint32_t)) {
-
+    
     uint32_t color;
     [data getBytes:&color length:4];
     color = CFSwapInt32LittleToHost(color);
@@ -612,30 +613,30 @@
   
   /* Theoretica structures, variabel data sizes are mapped to fixed arrays with size 1
    
-  struct KPXCustomIconData {
-    uint32_t dataSize;
-    uint8_t data[1];
-  };
-
-  struct KPXEntryIconInfo {
-    uint8_t  uuidBytes[16];
-    uint32_t iconId;
-  };
-  
-  struct KPXGroupIconInfo {
-    uint32_t groupId;
-    uint32_t icondId;
-  };
-  
-  struct KPXCustomIcons {
-    uint32_t iconCount;
-    uint32_t entryCount;
-    uint32_t groupCount;
-    struct KPXCustomIconData data[1]; // 1 -> iconCount
-    struct KPXEntryIconInfo entryIcon[1]; // 1 -> entryCount
-    struct KPXGroupIconInfo groupIcon[1]; // 1 -> groupCount
-  };
-  */
+   struct KPXCustomIconData {
+   uint32_t dataSize;
+   uint8_t data[1];
+   };
+   
+   struct KPXEntryIconInfo {
+   uint8_t  uuidBytes[16];
+   uint32_t iconId;
+   };
+   
+   struct KPXGroupIconInfo {
+   uint32_t groupId;
+   uint32_t icondId;
+   };
+   
+   struct KPXCustomIcons {
+   uint32_t iconCount;
+   uint32_t entryCount;
+   uint32_t groupCount;
+   struct KPXCustomIconData data[1]; // 1 -> iconCount
+   struct KPXEntryIconInfo entryIcon[1]; // 1 -> entryCount
+   struct KPXGroupIconInfo groupIcon[1]; // 1 -> groupCount
+   };
+   */
   
   if([data length] < 12) {
     return NO; // Data is truncated
