@@ -58,6 +58,46 @@
   return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+  self = [[KPKIcon alloc] init];
+  if(self) {
+    _image = [aDecoder decodeObjectForKey:@"image"];
+    _uuid = [aDecoder decodeObjectForKey:@"uuid"];
+  }
+  return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+  if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
+    [aCoder encodeObject:self.image forKey:@"image"];
+    [aCoder encodeObject:self.uuid forKey:@"uuid"];
+  }
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+  KPKIcon *copy = [[KPKIcon alloc] init];
+  copy.image = [self.image copyWithZone:zone];
+  copy.uuid = [self.uuid copyWithZone:zone];
+  return copy;
+}
+
+- (BOOL)isEqual:(id)object {
+  if([object isKindOfClass:[KPKIcon class]]) {
+    return [self isEqualToIcon:object];
+  }
+  return NO;
+}
+
+- (BOOL)isEqualToIcon:(KPKIcon *)icon {
+  NSAssert([icon isKindOfClass:[KPKIcon class]], @"icon needs to be of class KPKIcon");
+  BOOL equal = [self.uuid isEqual:icon.uuid] && [[self encodedString] isEqualToString:[icon encodedString]];
+  return equal;
+}
+
+- (NSUInteger)hash {
+  return([self.uuid hash] ^ [self.encodedString hash]);
+}
+
 - (NSString *)encodedString {
   NSData *data = [self pngData];
   if(data) {

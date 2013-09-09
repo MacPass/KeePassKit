@@ -26,6 +26,8 @@
 #import "KPKAttribute.h"
 #import "KPKAutotype.h"
 #import "KPKFormat.h"
+#import "KPKTimeInfo.h"
+#import "KPKUTIs.h"
 
 NSString *const KPKMetaEntryBinaryDescription   = @"bin-stream";
 NSString *const KPKMetaEntryTitle               = @"Meta-Info";
@@ -98,6 +100,15 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (id)copyWithZone:(NSZone *)zone {
   KPKEntry *entry = [[KPKEntry allocWithZone:zone] init];
+  entry.updateTiming = NO;
+  entry.icon = self.icon;
+  entry.tree = self.tree;
+  entry.customIcon = self.customIcon;
+  entry.parent = self.parent;
+  entry.uuid = [self.uuid copyWithZone:zone];
+  entry.timeInfo = [self.timeInfo copyWithZone:zone];
+  entry.minimumVersion = self.minimumVersion;
+  
   entry.title = self.title;
   entry.username = self.username;
   entry.url = self.url;
@@ -106,6 +117,8 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   entry->_customAttributes = [self.customAttributes copyWithZone:zone];
   entry->_tags = [self.tags copyWithZone:zone];
   entry->_autotype = [self.autotype copyWithZone:zone];
+
+  entry.updateTiming = self.updateTiming;
   return entry;
 }
 
@@ -139,17 +152,45 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [super encodeWithCoder:aCoder];
-  [aCoder encodeObject:self.titleAttribute forKey:@"titleAttribute"];
-  [aCoder encodeObject:self.usernameAttribute forKey:@"usernameAttribute"];
-  [aCoder encodeObject:self.urlAttribute forKey:@"urlAttribute"];
-  [aCoder encodeObject:self.notesAttribute forKey:@"notesAttribute"];
-  [aCoder encodeObject:self.binaries forKey:@"binaries"];
-  [aCoder encodeObject:self.customAttributes forKey:@"customAttributes"];
-  [aCoder encodeObject:self.tags forKey:@"tags"];
-  [aCoder encodeObject:self.history forKey:@"history"];
-  [aCoder encodeObject:self.autotype forKey:@"autotype"];
+  [aCoder encodeObject:_titleAttribute forKey:@"titleAttribute"];
+  [aCoder encodeObject:_usernameAttribute forKey:@"usernameAttribute"];
+  [aCoder encodeObject:_urlAttribute forKey:@"urlAttribute"];
+  [aCoder encodeObject:_notesAttribute forKey:@"notesAttribute"];
+  [aCoder encodeObject:_binaries forKey:@"binaries"];
+  [aCoder encodeObject:_customAttributes forKey:@"customAttributes"];
+  [aCoder encodeObject:_tags forKey:@"tags"];
+  [aCoder encodeObject:_history forKey:@"history"];
+  [aCoder encodeObject:_autotype forKey:@"autotype"];
   return;
 }
+
+#pragma mark NSPasteBoardWriting/Readin
+
++ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
+  NSAssert([type isEqualToString:KPKEntryUTI], @"Only KPKEntryUTI type is supported");
+  return NSPasteboardReadingAsKeyedArchive;
+}
+
++ (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
+  if([[pasteboard types] containsObject:KPKEntryUTI]) {
+    return @[KPKEntryUTI];
+  }
+  return @[];
+  
+}
+
+- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
+  return @[KPKEntryUTI];
+}
+
+- (id)pasteboardPropertyListForType:(NSString *)type {
+  if([type isEqualToString:KPKEntryUTI]) {
+    return [NSKeyedArchiver archivedDataWithRootObject:self];
+  }
+  return nil;
+}
+
+#pragma mark -
 
 - (NSArray *)defaultAttributes {
   return @[ self.titleAttribute,

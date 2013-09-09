@@ -45,7 +45,7 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeBool:self.isEnabled forKey:@"isEnabled"];
   [aCoder encodeBool:self.obfuscateDataTransfer forKey:@"obfuscateDataTransfer"];
-  [aCoder encodeObject:self.associations forKey:@"associations"];
+  [aCoder encodeObject:_associations forKey:@"associations"];
 }
 
 - (id)copyWithZone:(NSZone *)zone {

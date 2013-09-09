@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KPKTimeInfo : NSObject <NSCoding>
+@interface KPKTimeInfo : NSObject <NSCoding, NSCopying>
 
 @property(nonatomic, strong) NSDate *creationTime;
 @property(nonatomic, strong) NSDate *lastModificationTime;

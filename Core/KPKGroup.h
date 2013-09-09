@@ -28,7 +28,7 @@
 
 FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 
-@interface KPKGroup : KPKNode
+@interface KPKGroup : KPKNode <NSCoding, NSCopying>
 
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, copy) NSString *notes;
@@ -97,6 +97,20 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  */
 - (BOOL)isAnchestorOfGroup:(KPKGroup *)group;
 
+/**
+ *	Returns an array containing all entries inside searchable groups.
+ *	@return	NSArray of KPKEntries contained in searchable groups
+ */
+- (NSArray *)searchableChildEntries;
+
+/**
+ *	Returns YES if the group is seachable, NO otherwise. The value is determined by the isSeacheEnabled settings
+ *  If the settings is KPKInherit, the parent is asked. If the root has set KPKInhertig, YES is assumed
+ *	@return	YES if enabled, NO otherwise
+ */
+- (BOOL)isSearchable;
+
+#pragma mark Delete
 /**
  *	Removes alle Subentries and Subgroups
  */

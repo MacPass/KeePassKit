@@ -49,6 +49,18 @@
   }
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+  KPKTimeInfo *timeInfo = [[KPKTimeInfo alloc] init];
+  timeInfo.creationTime = [self.creationTime copyWithZone:zone];
+  timeInfo.lastAccessTime = [self.lastAccessTime copyWithZone:zone];
+  timeInfo.lastModificationTime = [self.lastModificationTime copyWithZone:zone];
+  timeInfo.expiryTime = [self.expiryTime copyWithZone:zone];
+  timeInfo.expires = self.expires;
+  timeInfo.locationChanged = [self.locationChanged copyWithZone:zone];
+  timeInfo.usageCount = self.usageCount; // reset?
+  return timeInfo;
+}
+
 - (NSString *)description {
   return [NSString stringWithFormat:@"creationTime=%@, modificationTime=%@, accessTime=%@, expiryTime=%@, moved=%@, used=%ld",
           self.creationTime,

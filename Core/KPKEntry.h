@@ -48,7 +48,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXCustomIcon;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXCustomIcon2;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 
-@interface KPKEntry : KPKNode <NSCopying, NSCoding>
+@interface KPKEntry : KPKNode <NSCopying, NSCoding, NSPasteboardWriting, NSPasteboardReading>
 
 @property (nonatomic, assign) NSString *title;
 @property (nonatomic, assign) NSString *password;

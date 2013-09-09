@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KPKIcon : NSObject
+@interface KPKIcon : NSObject <NSCopying, NSCoding>
 
 @property (nonatomic, strong) NSUUID *uuid;
 @property (nonatomic, strong) NSImage *image;
@@ -31,6 +31,7 @@
 - (id)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString;
 - (id)initWithData:(NSData *)data;
 
+- (BOOL)isEqualToIcon:(KPKIcon *)icon;
 - (NSString *)encodedString;
 - (NSData *)pngData;
 

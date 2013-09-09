@@ -23,6 +23,7 @@
 #import "KPKGroup.h"
 #import "KPKEntry.h"
 #import "KPKTree.h"
+#import "KPKTimeInfo.h"
 #import "KPKDeletedNode.h"
 
 @interface KPKGroup () {
@@ -39,7 +40,7 @@
   return 48;
 }
 
-- (id)init {
+- (instancetype)init {
   self = [super init];
   if (self) {
     _groups = [[NSMutableArray alloc] initWithCapacity:8];
@@ -49,6 +50,42 @@
     self.updateTiming = YES;
   }
   return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+  self = [super initWithCoder:aDecoder];
+  if(self) {
+    self.updateTiming = NO;
+    _groups = [aDecoder decodeObjectForKey:@"groups"];
+    _entries = [aDecoder decodeObjectForKey:@"entries"];
+    self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:@"isAutoTypeEnabled"];
+    self.isSearchEnabled = [aDecoder decodeIntegerForKey:@"isSearchEnabled"];
+    self.isExpanded = [aDecoder decodeBoolForKey:@"isExpanded"];
+    self.updateTiming = YES;
+  }
+  return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+  [super encodeWithCoder:aCoder];
+  [aCoder encodeObject:_groups forKey:@"groups"];
+  [aCoder encodeObject:_entries forKey:@"entries"];
+  [aCoder encodeInteger:_isAutoTypeEnabled forKey:@"isAutoTypeEnabled"];
+  [aCoder encodeInteger:_isSearchEnabled forKey:@"isSearchEnabled"];
+  [aCoder encodeBool:_isExpanded forKey:@"isExpanded"];
+}
+
+- (instancetype)copyWithZone:(NSZone *)zone {
+  KPKGroup *copy = [[KPKGroup alloc] init];
+  copy.updateTiming = NO;
+  copy.timeInfo = [self.timeInfo copyWithZone:zone];
+  copy.uuid = [self.uuid copyWithZone:zone];
+  copy->_entries = [[NSMutableArray alloc] initWithArray:_entries copyItems:YES];
+  copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
+  copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
+  copy.isSearchEnabled = self.isSearchEnabled;
+  copy.updateTiming = self.updateTiming;
+  return copy;
 }
 
 #pragma mark -
@@ -233,6 +270,35 @@
   }
   return NO;
 }
+
+- (NSArray *)searchableChildEntries {
+  NSMutableArray *searchableEntries;
+  if(self.isSearchable) {
+    searchableEntries = [NSMutableArray arrayWithArray:_entries];
+  }
+  else {
+    searchableEntries = [[NSMutableArray alloc] init];
+  }
+  for(KPKGroup *group in _groups) {
+    [searchableEntries addObjectsFromArray:[group searchableChildEntries]];
+  }
+  return searchableEntries;
+}
+
+- (BOOL)isSearchable {
+  switch(self.isSearchEnabled) {
+    case KPKInherit:
+      return self.parent ? [self.parent isSearchable] : YES;
+      
+    case KPKInheritNO:
+      return NO;
+      
+    case KPKInheritYES:
+      return YES;
+  }
+}
+
+#pragma mark Delete
 
 - (void)clear {
   NSUInteger groupCount = [_groups count];

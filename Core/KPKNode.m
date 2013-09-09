@@ -56,6 +56,7 @@
     _uuid = [aDecoder decodeObjectForKey:@"uuid"];
     _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:@"minimumVersion"];
     _icon = [aDecoder decodeIntegerForKey:@"icon"];
+    /* preserve custom icon */
   }
   return self;
 }
@@ -65,8 +66,6 @@
   [aCoder encodeObject:self.uuid forKey:@"uuid"];
   [aCoder encodeInteger:self.minimumVersion forKey:@"minimumVersion"];
   [aCoder encodeInteger:self.icon forKey:@"icon"];
-  
-  return;
 }
 
 - (KPKGroup *)rootGroup {
