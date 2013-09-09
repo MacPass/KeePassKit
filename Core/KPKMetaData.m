@@ -86,7 +86,7 @@
 }
 
 - (void)setRecycleBinUuid:(NSUUID *)recycleBinUuid {
-  if([_recycleBinUuid isEqual:recycleBinUuid]) {
+  if(![_recycleBinUuid isEqual:recycleBinUuid]) {
     _recycleBinUuid = recycleBinUuid;
     if(_updateTiming) {
       self.recycleBinChanged = [NSDate date];
