@@ -26,6 +26,8 @@
 
 @interface KPKPassword : NSObject
 
++ (void)benchmarkTransformationRounds:(NSUInteger)seconds completionHandler:(void(^)(NSUInteger rounds))completionHandler;
+
 /*
  The password class to be able to decrypt and encrypt databses
  Neither the password nor the keyfile are stored and just read
@@ -33,7 +35,6 @@
  
  The Final key is then created before a write or read gets performend
  */
-
 - (id)initWithPassword:(NSString *)password key:(NSURL *)url;
 /*
  @return the final Data to use to en/decrypt the database
@@ -47,5 +48,6 @@
  @return YES if the password and/or key are correct for this composite key
  */
 - (bool)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version;
+
 
 @end
