@@ -33,7 +33,7 @@
 /**
  *	Baseclass for all Nodes in a Tree.
  */
-@interface KPKNode : NSObject <NSCoding, KPKTimerecording, NSPasteboardWriting>
+@interface KPKNode : NSObject <NSCoding, KPKTimerecording>
 
 @property(nonatomic, weak) KPKTree *tree;
 @property(nonatomic, assign) NSInteger icon;

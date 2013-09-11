@@ -28,11 +28,10 @@
 
 FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 
-@interface KPKGroup : KPKNode <NSCoding, NSCopying>
+@interface KPKGroup : KPKNode <NSCoding, NSCopying, NSPasteboardReading, NSPasteboardWriting>
 
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, copy) NSString *notes;
-@property(nonatomic, assign) BOOL expires;
 @property(nonatomic, readonly) NSArray *groups;
 @property(nonatomic, readonly) NSArray *entries;
 @property(nonatomic, readonly) NSArray *childEntries;

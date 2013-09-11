@@ -39,7 +39,7 @@
       association.autotype = self;
     }
   }
-  return nil;
+  return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {

@@ -52,15 +52,27 @@
   return self;
 }
 
+#pragma mark NSCoding
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if(self) {
     self.updateTiming = NO;
+    self.name = [aDecoder decodeObjectForKey:@"name"];
+    self.notes = [aDecoder decodeObjectForKey:@"notes"];
     _groups = [aDecoder decodeObjectForKey:@"groups"];
     _entries = [aDecoder decodeObjectForKey:@"entries"];
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:@"isAutoTypeEnabled"];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:@"isSearchEnabled"];
     self.isExpanded = [aDecoder decodeBoolForKey:@"isExpanded"];
+    
+    for(KPKGroup *group in self.groups) {
+      group.parent = self;
+    }
+    for(KPKEntry *entry in self.entries) {
+      entry.parent = self;
+    }
+    
     self.updateTiming = YES;
   }
   return self;
@@ -68,12 +80,16 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [super encodeWithCoder:aCoder];
+  [aCoder encodeObject:_name forKey:@"name"];
+  [aCoder encodeObject:_notes forKey:@"notes"];
   [aCoder encodeObject:_groups forKey:@"groups"];
   [aCoder encodeObject:_entries forKey:@"entries"];
   [aCoder encodeInteger:_isAutoTypeEnabled forKey:@"isAutoTypeEnabled"];
   [aCoder encodeInteger:_isSearchEnabled forKey:@"isSearchEnabled"];
   [aCoder encodeBool:_isExpanded forKey:@"isExpanded"];
 }
+
+#pragma mark NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
   KPKGroup *copy = [[KPKGroup alloc] init];
@@ -88,14 +104,30 @@
   return copy;
 }
 
+#pragma mark NSPasteboardWriting/Reading
+
+- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
+  return @[KPKGroupUTI];
+}
+
++ (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
+  return @[KPKGroupUTI];
+}
+
++ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
+  NSAssert([type isEqualToString:KPKGroupUTI], @"Type needs to be KPKGroupUTI");
+  return NSPasteboardReadingAsKeyedArchive;
+}
+
+- (id)pasteboardPropertyListForType:(NSString *)type {
+  if([type isEqualToString:KPKGroupUTI]) {
+    return [NSKeyedArchiver archivedDataWithRootObject:self];
+  }
+  return nil;
+}
+
 #pragma mark -
 #pragma mark Properties
-
-- (void)setExpires:(BOOL)expires {
-  [[self.undoManager prepareWithInvocationTarget:self] setExpires:_expires];
-  self.expires = expires;
-  [self wasModified];
-}
 
 - (void)setName:(NSString *)name {
   if(![_name isEqualToString:name]) {

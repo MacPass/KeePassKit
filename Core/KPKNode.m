@@ -98,15 +98,4 @@
   }
 }
 
-#pragma mark -
-#pragma mark Pastboard support
-
-- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
-  return @[];
-}
-
-- (id)pasteboardPropertyListForType:(NSString *)type {
-  return nil;
-}
-
 @end

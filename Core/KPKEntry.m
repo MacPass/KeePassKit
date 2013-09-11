@@ -172,11 +172,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 + (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
-  if([[pasteboard types] containsObject:KPKEntryUTI]) {
-    return @[KPKEntryUTI];
-  }
-  return @[];
-  
+  return @[KPKEntryUTI];
 }
 
 - (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
