@@ -38,7 +38,6 @@
 @property(nonatomic, weak) KPKTree *tree;
 @property(nonatomic, assign) NSInteger icon;
 @property(nonatomic, weak) KPKIcon *customIcon;
-//@property(nonatomic, readonly, weak) KPKIcon *customIcon; // Refernce to the Tree Icons
 @property(nonatomic, weak) KPKGroup *parent;
 @property(nonatomic, strong) NSUUID *uuid;
 @property(nonatomic, assign) KPKVersion minimumVersion;
