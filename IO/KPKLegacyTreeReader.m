@@ -102,10 +102,15 @@
   NSUInteger groupLevel;
   NSUInteger parentLevel;
   
+  /*
+   Root Group does not get stored inside KDB file
+   initalize it with sane defaults
+   */
   KPKGroup *rootGroup = [[KPKGroup alloc] init];
   rootGroup.name = NSLocalizedString(@"DATABASE", "");
   rootGroup.icon = 48;
   tree.root = rootGroup;
+  rootGroup.isExpanded = YES;
   
   // Find the parent for every group
   for(groupIndex = 0; groupIndex < [_groups count]; groupIndex++) {
