@@ -219,6 +219,7 @@
 
 - (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
   entry.parent = self;
+  entry.tree = self.tree;
   index = MIN([_entries count], index);
   [[self.undoManager prepareWithInvocationTarget:self] removeEntry:entry];
   /* Remove the deleted Object */

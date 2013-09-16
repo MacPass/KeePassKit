@@ -109,6 +109,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   entry.timeInfo = [self.timeInfo copyWithZone:zone];
   entry.minimumVersion = self.minimumVersion;
   
+  entry.password = self.password;
   entry.title = self.title;
   entry.username = self.username;
   entry.url = self.url;
@@ -126,6 +127,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if(self) {
+    _passwordAttribute = [aDecoder decodeObjectForKey:@"passwordAttribute"];
     _titleAttribute= [aDecoder decodeObjectForKey:@"titleAttribute"];
     _usernameAttribute = [aDecoder decodeObjectForKey:@"usernameAttribute"];
     _urlAttribute = [aDecoder decodeObjectForKey:@"urlAttribute"];
@@ -152,6 +154,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [super encodeWithCoder:aCoder];
+  [aCoder encodeObject:_passwordAttribute forKey:@"passwordAttribute"];
   [aCoder encodeObject:_titleAttribute forKey:@"titleAttribute"];
   [aCoder encodeObject:_usernameAttribute forKey:@"usernameAttribute"];
   [aCoder encodeObject:_urlAttribute forKey:@"urlAttribute"];
