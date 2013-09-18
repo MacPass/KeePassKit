@@ -264,7 +264,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 - (void)setNotes:(NSString *)notes {
-  [self.undoManager registerUndoWithTarget:self selector:@selector(setNotes) object:self.notes];
+  [self.undoManager registerUndoWithTarget:self selector:@selector(setNotes:) object:self.notes];
   [self.notesAttribute setValueWithoutUndoRegistration:notes];
 }
 
