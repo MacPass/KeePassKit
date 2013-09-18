@@ -13,17 +13,30 @@
 #import "NSMutableData+Base64.h"
 #include <Security/Security.h>
 
-static NSData *base64helper(NSData *input, SecTransformRef transform)
+typedef NS_ENUM(NSUInteger, KPKTransformMethod) {
+  KPKEncode,
+  KPKDecode
+};
+
+static NSData *base64helper(NSData *input, KPKTransformMethod method)
 {
   NSData *output = nil;
+  SecTransformRef transformRef;
+  switch (method) {
+    case KPKEncode:
+      transformRef = SecEncodeTransformCreate(kSecBase64Encoding, NULL);
+      break;
+    case KPKDecode:
+      transformRef = SecDecodeTransformCreate(kSecBase64Encoding, NULL);
+      break;
+      
+    default:
+      return nil;
+  }
+  if (SecTransformSetAttribute(transformRef, kSecTransformInputAttributeName, (__bridge CFTypeRef)(input), NULL))
+    output = (NSData *)CFBridgingRelease(SecTransformExecute(transformRef, NULL));
   
-  if (!transform)
-    return nil;
-  
-  if (SecTransformSetAttribute(transform, kSecTransformInputAttributeName, (__bridge CFTypeRef)(input), NULL))
-    output = (NSData *)CFBridgingRelease(SecTransformExecute(transform, NULL));
-  
-  CFRelease(transform);
+  CFRelease(transformRef);
   
   return output;
 }
@@ -32,24 +45,19 @@ static NSData *base64helper(NSData *input, SecTransformRef transform)
 
 
 + (NSMutableData *)mutableDataWithBase64EncodedData:(NSData *)inputData {
-  SecTransformRef transform = SecEncodeTransformCreate(kSecBase64Encoding, NULL);
-
-  return [[NSMutableData alloc] initWithData:base64helper(inputData, transform)];
+  return [[NSMutableData alloc] initWithData:base64helper(inputData, KPKEncode)];
 }
 
 + (NSMutableData *)mutableDataWithBase64DecodedData:(NSData *)inputData {
-  SecTransformRef transform = SecDecodeTransformCreate(kSecBase64Encoding, NULL);
-  return [[NSMutableData  alloc] initWithData:base64helper(inputData, transform)];
+  return [[NSMutableData  alloc] initWithData:base64helper(inputData, KPKDecode)];
 }
 
 - (void)encodeBase64 {
-  SecTransformRef transform = SecEncodeTransformCreate(kSecBase64Encoding, NULL);
-  [self setData:base64helper(self, transform)];
+  [self setData:base64helper(self, KPKEncode)];
 }
 
 - (void)decodeBase64 {
-  SecTransformRef transform = SecDecodeTransformCreate(kSecBase64Encoding, NULL);
-  [self setData:base64helper(self, transform)];
+  [self setData:base64helper(self, KPKDecode)];
 }
 
 + (NSData *)dataFromBase64EncodedString:(NSString *)string encoding:(NSStringEncoding)encoding {

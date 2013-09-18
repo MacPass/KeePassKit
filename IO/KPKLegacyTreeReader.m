@@ -270,6 +270,7 @@
           if (fieldSize != 0) {
             group = nil;
             KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            return NO;
           }
           [_groups addObject:group];
           done = YES;
