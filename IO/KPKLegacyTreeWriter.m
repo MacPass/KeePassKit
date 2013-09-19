@@ -147,11 +147,16 @@
   tmp32 = CFSwapInt32HostToLittle((uint32_t)group.icon);
   [self _writeField:KPKFieldTypeGroupImage bytes:&tmp32 length:4];
   
-  /* Determin the Group level */
-  uint16_t level = -1;
+  /*
+   Determin the Group level
+   since we might write the root group,
+   that has no parent, we need to correct the level
+   */
+  uint16_t level = (group.parent != nil) ? -1 : 0;
   for(KPKGroup *parent = group.parent; parent != nil; parent = parent.parent) {
     level++;
   }
+  
   level = CFSwapInt16HostToLittle(level);
   [self _writeField:KPKFieldTypeGroupLevel bytes:&level length:2];
   tmp32 = 0;
@@ -385,7 +390,7 @@
   BOOL isEntry = [node isKindOfClass:[KPKEntry class]];
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryCreationTime : KPKFieldTypeGroupCreationTime )
-               data:[NSDate packedBytesFromDate:node.timeInfo.creationTime]]; 
+               data:[NSDate packedBytesFromDate:node.timeInfo.creationTime]];
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryModificationTime : KPKFieldTypeGroupModificationTime )
                data:[NSDate packedBytesFromDate:node.timeInfo.lastModificationTime]];
