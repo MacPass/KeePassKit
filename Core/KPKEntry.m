@@ -189,6 +189,42 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   return nil;
 }
 
+- (BOOL)isEqualTo:(id)object {
+  if([object isKindOfClass:[KPKEntry class]]) {
+    return [self isEqualToEntry:object];
+  }
+  return NO;
+}
+
+- (BOOL)isEqualToEntry:(KPKEntry *)entry {
+  NSAssert([entry isKindOfClass:[KPKEntry class]], @"Test onyl allowed with KPKEntry classes");
+
+  if([self.customAttributes count] != [entry.customAttributes count]) {
+    return NO;
+  }
+  
+  NSArray *otherAttributes = [entry defaultAttributes];
+  NSArray *defaultAttributes = [self defaultAttributes];
+  NSAssert([otherAttributes count] == [defaultAttributes count], @"Defautl Attributes have to match size");
+  for(NSUInteger index = 0; index < [defaultAttributes count]; index++) {
+    KPKAttribute *attribute = defaultAttributes[index];
+    KPKAttribute *other = otherAttributes[index];
+    if(![other isEqualToAttribute:attribute]) {
+      return NO;
+    }
+  }
+  for(KPKAttribute *attribute in self.customAttributes) {
+    KPKAttribute *otherAttribute = [entry customAttributeForKey:attribute.key];
+    if(!otherAttributes) {
+      return NO;
+    }
+    if(![otherAttribute isEqualToAttribute:attribute]) {
+      return NO;
+    }
+  }
+  return YES;
+}
+
 #pragma mark -
 
 - (NSArray *)defaultAttributes {

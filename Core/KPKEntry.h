@@ -67,6 +67,12 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, strong) NSArray *history;
 
 /**
+ *  Test for Equality
+ *  @param entry entry to test for equality
+ *  @return YES if receiver is equal to entry based on all attributes
+ */
+- (BOOL)isEqualToEntry:(KPKEntry *)entry;
+/**
  *	Retrieves a list of all defaultAttributes
  */
 - (NSArray *)defaultAttributes;

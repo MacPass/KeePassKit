@@ -93,6 +93,19 @@
   return [[KPKAttribute allocWithZone:zone] initWithKey:self.key value:self.value isProtected:self.isProtected];
 }
 
+- (BOOL)isEqualTo:(id)object {
+  if([object isKindOfClass:[self class]]) {
+    return [self isEqualToAttribute:object];
+  }
+  return NO;
+}
+
+- (BOOL)isEqualToAttribute:(KPKAttribute *)attribtue {
+  NSAssert([attribtue isKindOfClass:[self class]], @"Only KPKAttributes are allowed in this test");
+  return ([self.value isEqualToString:attribtue.value]
+          && [self.key isEqualToString:attribtue.key]);
+}
+
 - (BOOL)validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey error:(out NSError *__autoreleasing *)outError {
   if([inKey isEqualToString:@"key"]) {
     if(ioValue == NULL) {
