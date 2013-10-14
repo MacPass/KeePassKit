@@ -42,6 +42,7 @@
     _minimumVersion = KPKLegacyVersion;
     _timeInfo = [[KPKTimeInfo alloc] init];
     _icon = [[self class] defaultIcon];
+    _updateTiming = YES;
     /*
      Let the iconUUID be nil
      */

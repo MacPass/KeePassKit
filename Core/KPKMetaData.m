@@ -49,6 +49,16 @@
 
 #pragma mark -
 #pragma mark Custom Setter
+- (void)setColor:(NSColor *)color {
+  if(![_color isEqual:color]) {
+    /*
+     The color for databases does not support a alpha componentet
+     thus we just stripp it
+     */
+    _color = [[color colorWithAlphaComponent:1.0] copy];
+  }
+}
+
 - (void)setDatabaseName:(NSString *)databaseName {
   if(![_databaseName isEqualToString:databaseName]) {
     _databaseName = [databaseName copy];
