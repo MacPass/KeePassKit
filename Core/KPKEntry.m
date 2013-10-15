@@ -263,7 +263,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   return YES;
 }
 
-#pragma mark Default Attributes
+#pragma mark Properties
 - (NSString *)title {
   return self.titleAttribute.value;
 }
