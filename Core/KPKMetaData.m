@@ -48,7 +48,12 @@
 }
 
 #pragma mark -
-#pragma mark Custom Setter
+#pragma mark Properties
+
+- (BOOL)isHistoryEnabled {
+  return (self.historyMaxItems != -1);
+}
+
 - (void)setColor:(NSColor *)color {
   if(![_color isEqual:color]) {
     /*
@@ -124,6 +129,14 @@
 }
 
 #pragma mark KVO
+
++ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
+  NSSet *keyPathSet = [super keyPathsForValuesAffectingValueForKey:key];
+  if([key isEqualToString:@"isHistoryEnabled"]) {
+    keyPathSet = [keyPathSet setByAddingObject:@"historyMaxItems"];
+  }
+  return keyPathSet;
+}
 
 - (NSUInteger)countOfCustomIcons {
   return [_customIcons count];

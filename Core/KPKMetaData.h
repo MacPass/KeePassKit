@@ -50,6 +50,7 @@
 @property(nonatomic, strong) NSUUID *entryTemplatesGroup;
 @property(nonatomic, strong) NSDate *entryTemplatesGroupChanged;
 
+@property(nonatomic, readonly) BOOL isHistoryEnabled;
 @property(nonatomic, assign) NSInteger historyMaxItems;
 @property(nonatomic, assign) NSInteger historyMaxSize; // Megabytes
 
