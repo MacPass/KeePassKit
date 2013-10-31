@@ -26,7 +26,7 @@
 
 @class KPKGroup;
 @class KPKEntry;
-@class KPKPassword;
+@class KPKCompositeKey;
 @class KPKIcon;
 @class KPKMetaData;
 

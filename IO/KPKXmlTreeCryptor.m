@@ -22,7 +22,7 @@
 
 #import "KPKXmlTreeCryptor.h"
 #import "KPKXmlHeaderReader.h"
-#import "KPKPassword.h"
+#import "KPKCompositeKey.h"
 #import "KPKVersion.h"
 #import "KPKErrors.h"
 #import "KPKXmlFormat.h"
@@ -43,7 +43,7 @@
 
 @implementation KPKXmlTreeCryptor
 
-+ (KPKTree *)decryptTreeData:(NSData *)data withPassword:(KPKPassword *)password error:(NSError **)error {
++ (KPKTree *)decryptTreeData:(NSData *)data withPassword:(KPKCompositeKey *)password error:(NSError **)error {
   KPKXmlHeaderReader *headerReader = [[KPKXmlHeaderReader alloc] initWithData:data error:error];
   if(!headerReader) {
     return nil;
@@ -96,7 +96,7 @@
   return [reader tree:error];
 }
 
-+ (NSData *)encryptTree:(KPKTree *)tree password:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
++ (NSData *)encryptTree:(KPKTree *)tree password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
   
   NSMutableData *data = [[NSMutableData alloc] init];
   

@@ -29,12 +29,12 @@
 #import "KPKXmlTreeWriter.h"
 #import "KPKXmlTreeReader.h"
 #import "DDXMLDocument.h"
-#import "KPKPassword.h"
+#import "KPKCompositeKey.h"
 #import "KPKErrors.h"
 
 @implementation KPKTree (Serializing)
 
-- (id)initWithContentsOfUrl:(NSURL *)url password:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
+- (id)initWithContentsOfUrl:(NSURL *)url password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
   NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:error];
   if(!data) {
     return nil;
@@ -43,7 +43,7 @@
   return self;
 }
 
-- (id)initWithData:(NSData *)data password:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
+- (id)initWithData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
   self = [self _decryptorForData:data password:password error:error];
   return self;
 }
@@ -59,7 +59,7 @@
   return self;
 }
 
-- (NSData *)encryptWithPassword:(KPKPassword *)password forVersion:(KPKVersion)version error:(NSError **)error {
+- (NSData *)encryptWithPassword:(KPKCompositeKey *)password forVersion:(KPKVersion)version error:(NSError **)error {
   switch(version) {
     case KPKLegacyVersion:
       return [KPKLegacyTreeCryptor encryptTree:self password:password error:error];
@@ -82,7 +82,7 @@
   return [[treeWriter xmlDocument] XMLStringWithOptions:DDXMLNodeCompactEmptyElement|DDXMLNodePrettyPrint];
 }
 
-- (KPKTree *)_decryptorForData:(NSData *)data password:(KPKPassword *)password error:(NSError **)error {
+- (KPKTree *)_decryptorForData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError **)error {
   KPKVersion version = [[KPKFormat sharedFormat] databaseVersionForData:data];
   
   if(version == KPKLegacyVersion) {

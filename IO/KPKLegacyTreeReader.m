@@ -488,9 +488,16 @@
 
 - (void)_parseNotes:(KPKEntry *)notes {
   /*
+   TODO
+   
    Notes contain Autotype information.
    Parse notes and extract any exsisting
    autotype info
+   
+   Autotype on KeePass1 Files workd with different values,
+   need to be converted!
+   
+   See http://keepass.info/help/base/autotype.html for references!
    */
 }
 

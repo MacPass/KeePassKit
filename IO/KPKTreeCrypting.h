@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class KPKTree;
-@class KPKPassword;
+@class KPKCompositeKey;
 
 /**
  *	Protocoll to adhere to to enable encryption and decryption of trees
@@ -17,7 +17,7 @@
 @protocol KPKTreeCrypting <NSObject>
 
 @required
-+ (KPKTree *)decryptTreeData:(NSData *)data withPassword:(KPKPassword *)password error:(NSError **)error;
-+ (NSData *)encryptTree:(KPKTree *)tree password:(KPKPassword *)password error:(NSError **)error;
++ (KPKTree *)decryptTreeData:(NSData *)data withPassword:(KPKCompositeKey *)password error:(NSError **)error;
++ (NSData *)encryptTree:(KPKTree *)tree password:(KPKCompositeKey *)password error:(NSError **)error;
 
 @end

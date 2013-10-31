@@ -23,8 +23,14 @@
 
 #import <Foundation/Foundation.h>
 #import "KPKVersion.h"
+/**
+ *  The Composite Key to be used for encryption and decryption of databases
+ *  It does not store key  nor password strings rather creates a composite key
+ *  every time the password or keyfile is set.
+ */
+@interface KPKCompositeKey : NSObject
 
-@interface KPKPassword : NSObject
+@property (nonatomic, readonly, assign) BOOL hasPasswordOrKeyFile;
 
 + (void)benchmarkTransformationRounds:(NSUInteger)seconds completionHandler:(void(^)(NSUInteger rounds))completionHandler;
 
@@ -49,5 +55,6 @@
  */
 - (bool)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version;
 
+- (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key;
 
 @end

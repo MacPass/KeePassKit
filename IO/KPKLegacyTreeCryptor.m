@@ -25,7 +25,7 @@
 #import "KPKLegacyHeaderWriter.h"
 #import "KPKLegacyTreeReader.h"
 #import "KPKLegacyTreeWriter.h"
-#import "KPKPassword.h"
+#import "KPKCompositeKey.h"
 #import "KPKVersion.h"
 #import "KPKErrors.h"
 
@@ -35,7 +35,7 @@
 
 @implementation KPKLegacyTreeCryptor
 
-+ (KPKTree *)decryptTreeData:(NSData *)data withPassword:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
++ (KPKTree *)decryptTreeData:(NSData *)data withPassword:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
   KPKLegacyHeaderReader *headerReader = [[KPKLegacyHeaderReader alloc] initWithData:data error:error];
   if(!headerReader) {
     return nil;
@@ -67,7 +67,7 @@
   return [reader tree:error];
 }
 
-+ (NSData *)encryptTree:(KPKTree *)tree password:(KPKPassword *)password error:(NSError *__autoreleasing *)error {
++ (NSData *)encryptTree:(KPKTree *)tree password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
   NSMutableData *fileData = [[NSMutableData alloc] init];
   
   // Serialize the tree
