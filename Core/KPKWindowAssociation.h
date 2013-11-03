@@ -10,10 +10,22 @@
 
 @class KPKAutotype;
 
+/**
+ *  Association for Autotype to a given window title
+ */
 @interface KPKWindowAssociation : NSObject <NSCopying, NSCoding>
 
+/**
+ *  The title of the window for this autotype sequence
+ */
 @property (nonatomic, copy) NSString *windowTitle;
+/**
+ *  The autotype sequence to use for this window association
+ */
 @property (nonatomic, copy) NSString *keystrokeSequence;
+/**
+ *  Reference to the parent autotype for undo/redo capability
+ */
 @property (weak) KPKAutotype *autotype;
 
 - (id)initWithWindow:(NSString *)window keystrokeSequence:(NSString *)strokes;
