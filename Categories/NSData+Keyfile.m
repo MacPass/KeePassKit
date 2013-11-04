@@ -70,7 +70,7 @@
 + (NSData *)_dataVersion1WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
   // Open the keyfile
   NSData *fileData = [NSData dataWithContentsOfURL:url options:0 error:error];
-  if(error || !fileData) {
+  if(!fileData) {
     return nil;
   }
   
