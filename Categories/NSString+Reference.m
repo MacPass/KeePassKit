@@ -38,33 +38,11 @@
 */
 @implementation NSString (CommandString)
 
-+ (NSDictionary *)_tokenMap {
-  static NSDictionary *dict = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    dict = @{ @"T" : @"title",
-              @"U" : @"username",
-              @"P" : @"password",
-              @"A" : @"url",
-              @"N" : @"notes",
-              @"I" : @"uuid",
-              @"O" : @"valueForKey:",
-              };
-  });
-  return dict;
-}
-
 - (BOOL)isRefernce {
-  return [self hasPrefix:@"{REF:"] && [self hasPrefix:@"}"];
+  return [self hasPrefix:@"{REF:"] && [self hasSuffix:@"}"];
 }
 
-- (SEL)referenceSelector {
-  //NSString *clean = [self substringWithRange:NSMakeRange(5, [self length] - 5)];
-  //NSArray *tokens = [clean componentsSeparatedByString:@":"];
-  return NULL;
-}
-
-- (NSPredicate *)referencePredicate {
+- (NSString *)resolveReferenceWithTree:(KPKTree *)tree {
   return nil;
 }
 

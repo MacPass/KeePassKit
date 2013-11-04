@@ -173,7 +173,7 @@
   data.databaseName = KPKXmlString(metaElement, @"DatabaseName");
   data.databaseNameChanged = KPKXmlDate(_dateFormatter, metaElement, @"DatabaseNameChanged");
   data.databaseDescription = KPKXmlString(metaElement, @"DatabaseDescription");
-  data.databaseNameChanged = KPKXmlDate(_dateFormatter, metaElement, @"DatabaseDescriptionChanged");
+  data.databaseDescriptionChanged = KPKXmlDate(_dateFormatter, metaElement, @"DatabaseDescriptionChanged");
   data.defaultUserName = KPKXmlString(metaElement, @"DefaultUserName");
   data.defaultUserNameChanged = KPKXmlDate(_dateFormatter, metaElement, @"DefaultUserNameChanged");
   data.maintenanceHistoryDays = KPKXmlInteger(metaElement, @"MaintenanceHistoryDays");

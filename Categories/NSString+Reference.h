@@ -22,6 +22,7 @@
 
 #import <Foundation/Foundation.h>
 @class KPKEntry;
+@class KPKTree;
 
 @interface NSString (Reference)
 
@@ -29,13 +30,7 @@
  @returns YES if the string is a reference String
  */
 - (BOOL)isRefernce;
-/**
- @returns the selector to be called to look for a matching reference
- */
-- (SEL)referenceSelector;
-/**
- @returns the predicate to filter the return value by the referenceSelector
- */
-- (NSPredicate *)referencePredicate;
+
+- (NSString *)resolveReferenceWithTree:(KPKTree *)tree;
 
 @end

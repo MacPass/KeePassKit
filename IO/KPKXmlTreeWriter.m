@@ -125,7 +125,7 @@
   KPKAddXmlElement(metaElement, @"EntryTemplatesGroup", [metaData.entryTemplatesGroup encodedString]);
   KPKAddXmlElement(metaElement, @"EntryTemplatesGroupChanged", KPKStringFromDate(_dateFormatter, metaData.entryTemplatesGroupChanged));
   KPKAddXmlElement(metaElement, @"HistoryMaxItems", KPKStringFromLong(metaData.historyMaxItems));
-  KPKAddXmlElement(metaElement, @"HistoryMaxSize", KPKStringFromLong(metaData.historyMaxItems));
+  KPKAddXmlElement(metaElement, @"HistoryMaxSize", KPKStringFromLong(metaData.historyMaxSize));
   KPKAddXmlElement(metaElement, @"LastSelectedGroup", [metaData.lastSelectedGroup encodedString]);
   KPKAddXmlElement(metaElement, @"LastTopVisibleGroup", [metaData.lastTopVisibleGroup encodedString]);
   
@@ -329,7 +329,8 @@
 
 - (DDXMLElement *)_xmlDeletedObjects {
   DDXMLElement *deletedObjectsElement = [DDXMLElement elementWithName:@"DeletedObjects"];
-  for(KPKDeletedNode *node in self.tree.deletedObjects) {
+  for(NSUUID *uuid in self.tree.deletedObjects) {
+    KPKDeletedNode *node = self.tree.deletedObjects[ uuid ];
     DDXMLElement *deletedElement = [DDXMLNode elementWithName:@"DeletedObject"];
     KPKAddXmlElement(deletedElement, @"UUID",[node.uuid encodedString]);
     KPKAddXmlElement(deletedElement, @"DeletionTime", KPKStringFromDate(_dateFormatter, node.deletionDate));
