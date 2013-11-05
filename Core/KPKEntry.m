@@ -230,6 +230,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (NSArray *)defaultAttributes {
   return @[ self.titleAttribute,
             self.usernameAttribute,
+            self.passwordAttribute,
             self.urlAttribute,
             self.notesAttribute
             ];
