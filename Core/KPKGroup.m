@@ -302,7 +302,7 @@
 
 - (NSArray *)searchableChildEntries {
   NSMutableArray *searchableEntries;
-  if(self.isSearchable) {
+  if([self isSearchable]) {
     searchableEntries = [NSMutableArray arrayWithArray:_entries];
   }
   else {
@@ -316,6 +316,33 @@
 
 - (BOOL)isSearchable {
   switch(self.isSearchEnabled) {
+    case KPKInherit:
+      return self.parent ? [self.parent isSearchable] : YES;
+      
+    case KPKInheritNO:
+      return NO;
+      
+    case KPKInheritYES:
+      return YES;
+  }
+}
+
+- (NSArray *)autotypeableChildEntries {
+  NSMutableArray *autotypeEntries;
+  if([self isAutotypeable]) {
+    autotypeEntries = [NSMutableArray arrayWithArray:_entries];
+  }
+  else {
+    autotypeEntries = [[NSMutableArray alloc] init];
+  }
+  for(KPKGroup *group in _groups) {
+    [autotypeEntries addObjectsFromArray:[group autotypeableChildEntries]];
+  }
+  return autotypeEntries;
+}
+
+- (BOOL)isAutotypeable {
+  switch(self.isAutoTypeEnabled) {
     case KPKInherit:
       return self.parent ? [self.parent isSearchable] : YES;
       

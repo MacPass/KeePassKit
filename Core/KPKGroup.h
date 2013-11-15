@@ -109,6 +109,14 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  */
 - (BOOL)isSearchable;
 
+- (NSArray *)autotypeableChildEntries;
+/**
+ *  Returns YES if the entries for this group use Autotype. The value is determined by the isAutotypeEnabled settings
+ *  If the setting is KPKInherit, the parent is aksed. If th eroot has KPKInhert, YES is assumed
+ *  @return YES if autotype can be used, otherwise NO
+ */
+- (BOOL)isAutotypeable;
+
 #pragma mark Delete
 /**
  *	Removes alle Subentries and Subgroups

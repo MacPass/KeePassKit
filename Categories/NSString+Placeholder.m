@@ -102,7 +102,6 @@
      {URL:PATH}	Path component of the entry URL.
      {URL:QUERY}	Query information of the entry URL.
      */
-    
     NSString *urlOption = [lowercased substringFromIndex:4];
     NSURL *url = [[NSURL alloc] initWithString:entry.url];
     

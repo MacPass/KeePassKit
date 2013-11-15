@@ -94,6 +94,13 @@
   }
 }
 
+- (KPKWindowAssociation *)windowAssociationMatchingWindowTitle:(NSString *)windowTitle {
+  for(KPKWindowAssociation *association in self.associations) {
+    //[association.windowTitle matchesWindowTitle:windowTitle
+  }
+  return nil;
+}
+
 #pragma mark -
 #pragma mark KVO Compliance
 
