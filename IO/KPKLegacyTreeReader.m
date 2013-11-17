@@ -148,11 +148,14 @@
     }
   }
   for(KPKEntry *entry in tree.root.entries) {
+    entry.updateTiming = YES;
     entry.tree = tree;
   }
   for(KPKGroup *group in [tree allGroups]) {
     group.tree = tree;
+    group.updateTiming = YES;
     for(KPKEntry *entry in group.entries) {
+      entry.updateTiming = YES;
       entry.tree = tree;
     }
   }
@@ -169,6 +172,7 @@
   // Parse the groups
   for (NSUInteger groupIndex = 0; groupIndex < _headerReader.numberOfGroups; groupIndex++) {
     KPKGroup *group = [[KPKGroup alloc] init];
+    group.updateTiming = NO;
     
     // Parse the fields
     BOOL done = NO;
@@ -298,6 +302,7 @@
   // Parse the entries
   for (NSUInteger iEntryIndex = 0; iEntryIndex < _headerReader.numberOfEntries; iEntryIndex++) {
     KPKEntry *entry = [[KPKEntry alloc] init];
+    entry.updateTiming = NO;
     KPKBinary *binary; // placeholder for binary reading
     
     // Parse the entry
