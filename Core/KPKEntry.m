@@ -310,6 +310,14 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   [self.urlAttribute setValueWithoutUndoRegistration:url];
 }
 
+- (void)setTags:(NSString *)tags {
+  if([self.tags isEqualToString:tags]) {
+    return; // Nothing to change
+  }
+  [self.undoManager registerUndoWithTarget:self selector:@selector(setTags:) object:self.tags];
+  _tags = [tags copy];
+}
+
 - (void)remove {
   /*
    Undo is handelded in the groups implementation of entry removal
