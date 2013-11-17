@@ -140,11 +140,13 @@
          */
         foundLostGroup = YES;
         [tree.root addGroup:group];
+        group.updateTiming = NO;
       }
     }
     if(!foundLostGroup) {
       KPKGroup *parent = _groups[parentIndex];
       [parent addGroup:group];
+      group.updateTiming = NO;
     }
   }
   for(KPKEntry *entry in tree.root.entries) {
@@ -153,7 +155,6 @@
   }
   for(KPKGroup *group in [tree allGroups]) {
     group.tree = tree;
-    group.updateTiming = YES;
     for(KPKEntry *entry in group.entries) {
       entry.updateTiming = YES;
       entry.tree = tree;
