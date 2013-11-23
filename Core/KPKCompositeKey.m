@@ -33,7 +33,9 @@
   NSData *_compositeDataVersion2;
 }
 
-@property (nonatomic, readwrite, assign) BOOL hasPasswordOrKeyFile;
+@property (nonatomic, assign) BOOL hasPasswordOrKeyFile;
+@property (nonatomic, assign) BOOL hasPassword;
+@property (nonatomic, assign) NSTimeInterval modifactionTimeStamp;
 
 @end
 
@@ -73,15 +75,14 @@
 }
 
 - (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key {
+  self.hasPassword = ([password length] > 0);
+  self.hasPasswordOrKeyFile = (self.hasPassword || key != nil);
+  self.modifactionTimeStamp = [NSDate timeIntervalSinceReferenceDate];
   _compositeDataVersion1 = [self _createVersion1CompositeDataWithPassword:password keyFile:key];
   _compositeDataVersion2 = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
-  self.hasPasswordOrKeyFile = ([password length] > 0 || key != nil);
 }
 
-- (NSData *)finalDataForVersion:(KPKVersion)version
-                     masterSeed:(NSData *)masterSeed
-                  transformSeed:(NSData *)transformSeed
-                         rounds:(NSUInteger)rounds {
+- (NSData *)finalDataForVersion:(KPKVersion)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
   uint8_t masterKey[KPK_KEYLENGTH];
   if(version == KPKLegacyVersion) {
@@ -91,10 +92,10 @@
     [_compositeDataVersion2 getBytes:masterKey length:KPK_KEYLENGTH];
   }
   else {
-    return nil; // Wrong version
+    return nil; // Wrong Version
   }
   
-  // Transform the key
+  /* Transform the key */
   CCCryptorRef cryptorRef;
   CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES128, kCCOptionECBMode, transformSeed.bytes, kCCKeySizeAES256, nil, &cryptorRef);
   
@@ -107,7 +108,7 @@
   uint8_t transformedKey[KPK_KEYLENGTH];
   CC_SHA256(masterKey, KPK_KEYLENGTH, transformedKey);
   
-  // Hash the master seed with the transformed key into the final key
+  /* Hash the master seed with the transformed key into the final key */
   uint8_t finalKey[KPK_KEYLENGTH];
   CC_SHA256_CTX ctx;
   CC_SHA256_Init(&ctx);
@@ -118,7 +119,7 @@
   return [NSData dataWithBytes:finalKey length:KPK_KEYLENGTH];
 }
 
-- (bool)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version {
+- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version {
   NSData *data;
   switch(version) {
     case KPKLegacyVersion:
@@ -140,33 +141,34 @@
 - (NSData *)_createVersion1CompositeDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
   uint8_t masterKey[KPK_KEYLENGTH];
   if(password && !keyURL) {
-    // Hash the password into the master key
-    // FIXME: PasswordEncoding!
+    /* Hash the password into the master key FIXME: PasswordEncoding! */
     NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
     CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, masterKey);
   }
   else if(!password && keyURL) {
-    // Get the bytes from the keyfile
-    NSData *keyFileData;// = [self loadKeyFileV3:keyURL];
+    /* Get the bytes from the keyfile */
+    NSError *error = nil;
+    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKLegacyVersion error:&error];
     if(!keyFileData) {
+      NSLog(@"Error while trying to load keyfile:%@", [error localizedDescription]);
       return nil;
     }
     [keyFileData getBytes:masterKey length:32];
   }
   else {
-    // Hash the password
+    /* Hash the password */
     uint8_t passwordHash[32];
     NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
     CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, passwordHash);
     
-    // Get the bytes from the keyfile
+    /* Get the bytes from the keyfile */
     NSError *error = nil;
     NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKLegacyVersion error:&error];
     if( keyFileData == nil) {
       return nil;
     }
     
-    // Hash the password and keyfile into the master key
+    /* Hash the password and keyfile into the master key */
     CC_SHA256_CTX ctx;
     CC_SHA256_Init(&ctx);
     CC_SHA256_Update(&ctx, passwordHash, 32);

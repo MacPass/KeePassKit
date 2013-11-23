@@ -30,7 +30,15 @@
  */
 @interface KPKCompositeKey : NSObject
 
+/**
+ *  YES if the composite key has a password or keyfile set - that is, it's considered usable
+ */
 @property (nonatomic, readonly, assign) BOOL hasPasswordOrKeyFile;
+/**
+ *  YES if the composite key has a password set.
+ */
+@property (nonatomic, readonly, assign) BOOL hasPassword;
+@property (nonatomic, readonly, assign) NSTimeInterval modifactionTimeStamp;
 
 + (void)benchmarkTransformationRounds:(NSUInteger)seconds completionHandler:(void(^)(NSUInteger rounds))completionHandler;
 
@@ -45,16 +53,19 @@
 /*
  @return the final Data to use to en/decrypt the database
  */
-- (NSData *)finalDataForVersion:(KPKVersion )version
-                     masterSeed:(NSData *)masterSeed
-                  transformSeed:(NSData *)transformSeed
-                         rounds:(NSUInteger )rounds;
+- (NSData *)finalDataForVersion:(KPKVersion )version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger )rounds;
+
+/**
+ *  Updates the password and keyfile for the composite key
+ *  @param password the new password, can be nil
+ *  @param key      the new key file URL, can be nil
+ */
+- (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key;
 
 /*
  @return YES if the password and/or key are correct for this composite key
  */
-- (bool)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version;
+- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version;
 
-- (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key;
 
 @end
