@@ -10,6 +10,14 @@
 #import "KPKEntry.h"
 #import "KPKAutotype.h"
 
+@interface KPKWindowAssociation () {
+  BOOL _regularExpressionIsValid;
+}
+
+@property (nonatomic, retain) NSRegularExpression *windowTitleRegularExpression;
+
+@end
+
 @implementation KPKWindowAssociation
 
 - (id)initWithWindow:(NSString *)window keystrokeSequence:(NSString *)strokes {
@@ -17,6 +25,7 @@
   if(self) {
     _windowTitle = [window copy];
     _keystrokeSequence = [strokes copy];
+    _regularExpressionIsValid = NO;
   }
   return self;
 }
@@ -45,6 +54,7 @@
   if(![self.windowTitle isEqualToString:windowTitle]) {
     [self.autotype.entry.undoManager registerUndoWithTarget:self selector:@selector(setWindowTitle:) object:self.windowTitle];
     _windowTitle = [windowTitle copy];
+    _regularExpressionIsValid = NO;
   }
 }
 
@@ -55,9 +65,27 @@
   }
 }
 
-- (NSString *)evaluatedKeystrokeSequenceForEntry:(KPKEntry *)enty {
-  NSAssert(NO, @"Not implemented!");
-  return nil;
+- (BOOL)matchesWindowTitle:(NSString *)windowTitle {
+  if(NSOrderedSame == [self.windowTitle caseInsensitiveCompare:windowTitle]) { return YES; }
+  /* Only update the cached expression, if we need to */
+  if(!_regularExpressionIsValid) {
+    NSString *pattern;
+    if([self.windowTitle hasPrefix:@"//"] && [self.windowTitle hasSuffix:@"//"]) {
+      pattern = [self.windowTitle substringWithRange:NSMakeRange(2, [self.windowTitle length] - 4)];
+    }
+    else {
+      pattern = [self.windowTitle stringByReplacingOccurrencesOfString:@"*" withString:@"*." options:NSCaseInsensitiveSearch range:NSMakeRange(0, [self.windowTitle length])];
+    }
+    NSError *error;
+    self.windowTitleRegularExpression = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:&error];
+    if(!self.windowTitleRegularExpression) {
+      NSLog(@"Error while trying to evaluate regular expression %@: %@", pattern, [error localizedDescription]);
+      return NO;
+    }
+    _regularExpressionIsValid = YES;
+  }
+  NSUInteger matches = [self.windowTitleRegularExpression numberOfMatchesInString:windowTitle options:0 range:NSMakeRange(0, [windowTitle length])];
+  return (matches == 1);
 }
 
 @end

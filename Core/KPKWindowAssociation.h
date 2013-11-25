@@ -29,5 +29,13 @@
 @property (weak) KPKAutotype *autotype;
 
 - (id)initWithWindow:(NSString *)window keystrokeSequence:(NSString *)strokes;
+/**
+ *  Returns YES if the supplied window title is matched by the association
+ *
+ *  @param windowTitle the title of the window to test for matching
+ *
+ *  @return YES on successful match, no otherwise
+ */
+- (BOOL)matchesWindowTitle:(NSString *)windowTitle;
 
 @end
