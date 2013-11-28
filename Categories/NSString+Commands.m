@@ -10,26 +10,14 @@
 
 @implementation NSString (Commands)
 
-- (NSArray *)extractCommands {
-  NSUInteger commandIndex = 0;
-  while(commandIndex < [self length]) {
-    
-  }
+- (BOOL)isReference {
+  NSAssert(NO, @"Not implemented yet!");
+  return NO;
+}
+
+- (NSString *)resolveReferenceWithTree:(KPKTree *)tree {
+  NSAssert(NO, @"Not implemented yet!");
   return nil;
-}
-
-- (NSString *)nextCommandFromIndex:(NSUInteger)startIndex {
-  return nil;
-}
-
-- (NSString *)extractSingleCommand {
-  NSUInteger start = [self hasPrefix:@"{"] ? 1 : 0;
-  NSUInteger end = [self hasSuffix:@"}"] ? 1 : 0;
-  return [self substringWithRange:NSMakeRange(start, [self length] - start - end)];
-}
-
-- (BOOL)isSingleCommand {
-  return ( [self hasPrefix:@"{"] && [self hasSuffix:@"}"] );
 }
 
 @end

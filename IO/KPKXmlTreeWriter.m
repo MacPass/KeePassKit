@@ -87,6 +87,8 @@
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:@"<KeePassFile></KeePassFile>" options:0 error:nil];
   
   KPKMetaData *metaData = self.tree.metaData;
+  /* Update the Metadata since MacPass did generate the File */
+  metaData.generator = @"MacPass";
   DDXMLElement *metaElement = [DDXMLNode elementWithName:@"Meta"];
   KPKAddXmlElement(metaElement, @"Generator", metaData.generator);
   if(_headerWriter.headerHash) {
