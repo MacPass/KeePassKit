@@ -33,11 +33,15 @@
 /**
  *  YES if the composite key has a password or keyfile set - that is, it's considered usable
  */
-@property (nonatomic, readonly, assign) BOOL hasPasswordOrKeyFile;
+@property (nonatomic, readonly) BOOL hasPasswordOrKeyFile;
+
 /**
- *  YES if the composite key has a password set.
+ *  YES if the composite key has a password with a lenght longer than 0.
+ *  Since a composite key can be created with am empty string as password or without one,
+ *  this property considers both ways as no password given, although technically and emptry string is a password
  */
 @property (nonatomic, readonly, assign) BOOL hasPassword;
+@property (nonatomic, readonly, assign) BOOL hasKeyFile;
 @property (nonatomic, readonly, assign) NSTimeInterval modifactionTimeStamp;
 
 + (void)benchmarkTransformationRounds:(NSUInteger)seconds completionHandler:(void(^)(NSUInteger rounds))completionHandler;

@@ -33,7 +33,7 @@
   NSData *_compositeDataVersion2;
 }
 
-@property (nonatomic, assign) BOOL hasPasswordOrKeyFile;
+@property (nonatomic, assign) BOOL hasKeyFile;
 @property (nonatomic, assign) BOOL hasPassword;
 @property (nonatomic, assign) NSTimeInterval modifactionTimeStamp;
 
@@ -74,9 +74,14 @@
   return self;
 }
 
+#pragma mark Properties
+- (BOOL)hasPasswordOrKeyFile {
+  return (self.hasPassword || self.hasKeyFile);
+}
+
 - (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key {
   self.hasPassword = ([password length] > 0);
-  self.hasPasswordOrKeyFile = (self.hasPassword || key != nil);
+  self.hasKeyFile = (key != nil);
   self.modifactionTimeStamp = [NSDate timeIntervalSinceReferenceDate];
   _compositeDataVersion1 = [self _createVersion1CompositeDataWithPassword:password keyFile:key];
   _compositeDataVersion2 = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
