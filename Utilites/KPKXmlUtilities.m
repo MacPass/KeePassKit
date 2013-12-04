@@ -30,6 +30,12 @@ void KPKAddXmlElement(DDXMLElement *element, NSString *name, NSString *value) {
   [element addChild:[DDXMLNode elementWithName:name stringValue:value]];
 }
 
+void KPKAddXmlElementIfNotNil(DDXMLElement *element, NSString *name, NSString *value) {
+  if(nil != value) {
+    KPKAddXmlElement(element, name, value);
+  }
+}
+
 void KPKAddXmlAttribute(DDXMLElement *element, NSString *name, NSString *value) {
   [element addAttributeWithName:name stringValue:value];
 }

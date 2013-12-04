@@ -25,6 +25,7 @@
 #import "KPKTree.h"
 #import "KPKTimeInfo.h"
 #import "KPKDeletedNode.h"
+#import "NSUUID+KeePassKit.h"
 
 @interface KPKGroup () {
 @private
@@ -47,6 +48,7 @@
     _entries = [[NSMutableArray alloc] initWithCapacity:16];
     _isAutoTypeEnabled = KPKInherit;
     _isSearchEnabled = KPKInherit;
+    _lastTopVisibleEntry = [NSUUID nullUUID];
     self.updateTiming = YES;
   }
   return self;

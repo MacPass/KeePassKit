@@ -29,6 +29,7 @@
 
 #pragma mark Writing Helper
 FOUNDATION_EXTERN_INLINE void KPKAddXmlElement(DDXMLElement *element, NSString *name, NSString *value);
+FOUNDATION_EXTERN_INLINE void KPKAddXmlElementIfNotNil(DDXMLElement *element, NSString *name, NSString *value);
 FOUNDATION_EXTERN_INLINE void KPKAddXmlAttribute(DDXMLElement *element, NSString *name, NSString *value);
 FOUNDATION_EXTERN_INLINE NSString * KPKStringFromLong(NSInteger integer);
 FOUNDATION_EXTERN_INLINE NSString *KPKStringFromDate(NSDateFormatter *dateFormatter, NSDate *date);

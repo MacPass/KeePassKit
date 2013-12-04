@@ -32,6 +32,7 @@
     _lastModificationTime = now;
     _lastAccessTime = now;
     _expiryTime = [NSDate distantFuture];
+    _locationChanged = now;
     _expires = NO;
     _usageCount = 0;
   }
