@@ -344,7 +344,7 @@
 - (DDXMLElement *)_xmlTimeinfo:(KPKTimeInfo *)timeInfo {
   DDXMLElement *timesElement = [DDXMLNode elementWithName:@"Times"];
   KPKAddXmlElement(timesElement, @"LastModificationTime", KPKStringFromDate(_dateFormatter, timeInfo.lastModificationTime));
-  KPKAddXmlElement(timesElement, @"dateFormatter", KPKStringFromDate(_dateFormatter, timeInfo.creationTime));
+  KPKAddXmlElement(timesElement, @"CreationTime", KPKStringFromDate(_dateFormatter, timeInfo.creationTime));
   KPKAddXmlElement(timesElement, @"LastAccessTime", KPKStringFromDate(_dateFormatter, timeInfo.lastAccessTime));
   KPKAddXmlElement(timesElement, @"ExpiryTime", KPKStringFromDate(_dateFormatter, timeInfo.expiryTime));
   KPKAddXmlElement(timesElement, @"Expires", KPKStringFromBool(timeInfo.expires));
