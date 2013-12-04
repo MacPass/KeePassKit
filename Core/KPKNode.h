@@ -36,7 +36,7 @@
 @interface KPKNode : NSObject <NSCoding, KPKTimerecording>
 
 @property(nonatomic, weak) KPKTree *tree;
-@property(nonatomic, assign) NSInteger icon;
+@property(nonatomic, assign) NSInteger iconId;
 @property(nonatomic, weak) KPKIcon *customIcon;
 @property(nonatomic, weak) KPKGroup *parent;
 @property(nonatomic, strong) NSUUID *uuid;

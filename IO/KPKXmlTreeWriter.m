@@ -174,7 +174,7 @@
   KPKAddXmlElement(groupElement, @"UUID", [group.uuid encodedString]);
   KPKAddXmlElement(groupElement, @"Name", group.name);
   KPKAddXmlElement(groupElement, @"Notes", group.notes);
-  KPKAddXmlElement(groupElement, @"IconID", KPKStringFromLong(group.icon));
+  KPKAddXmlElement(groupElement, @"IconID", KPKStringFromLong(group.iconId));
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:group.timeInfo];
   [groupElement addChild:timesElement];
@@ -201,7 +201,7 @@
   
   // Add the standard properties
   KPKAddXmlElement(entryElement, @"UUID", [entry.uuid encodedString]);
-  KPKAddXmlElement(entryElement, @"IconID", KPKStringFromLong(entry.icon));
+  KPKAddXmlElement(entryElement, @"IconID", KPKStringFromLong(entry.iconId));
   if(entry.customIcon) {
     KPKAddXmlElement(entryElement, @"CustomIconUUID", [entry.customIcon.uuid encodedString]);
   }

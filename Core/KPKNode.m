@@ -37,11 +37,11 @@
 - (id)init {
   self = [super init];
   if (self) {
-    _icon = 0;
+    _iconId = 0;
     _uuid = [NSUUID UUID];
     _minimumVersion = KPKLegacyVersion;
     _timeInfo = [[KPKTimeInfo alloc] init];
-    _icon = [[self class] defaultIcon];
+    _iconId = [[self class] defaultIcon];
     _updateTiming = YES;
     /*
      Let the iconUUID be nil
@@ -56,7 +56,7 @@
     _timeInfo = [aDecoder decodeObjectForKey:@"timeInfo"];
     _uuid = [aDecoder decodeObjectForKey:@"uuid"];
     _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:@"minimumVersion"];
-    _icon = [aDecoder decodeIntegerForKey:@"icon"];
+    _iconId = [aDecoder decodeIntegerForKey:@"iconId"];
     /* preserve custom icon */
   }
   return self;
@@ -66,7 +66,15 @@
   [aCoder encodeObject:self.timeInfo forKey:@"timeInfo"];
   [aCoder encodeObject:self.uuid forKey:@"uuid"];
   [aCoder encodeInteger:self.minimumVersion forKey:@"minimumVersion"];
-  [aCoder encodeInteger:self.icon forKey:@"icon"];
+  [aCoder encodeInteger:self.iconId forKey:@"iconId"];
+}
+
+#pragma mark Properties
+- (void)setIconId:(NSInteger)iconId {
+  if(iconId != _iconId) {
+    [[self.undoManager prepareWithInvocationTarget:self] setIconId:_iconId];
+    _iconId = iconId;
+  }
 }
 
 - (KPKGroup *)rootGroup {

@@ -261,7 +261,7 @@
 - (NSString*)description {
   return [NSString stringWithFormat:@"%@ [image=%ld, name=%@, %@]",
           [self class],
-          self.icon,
+          self.iconId,
           self.name,
           self.timeInfo];
 }

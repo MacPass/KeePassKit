@@ -108,7 +108,7 @@
    */
   KPKGroup *rootGroup = [[KPKGroup alloc] init];
   rootGroup.name = NSLocalizedString(@"DATABASE", "");
-  rootGroup.icon = 48;
+  rootGroup.iconId = 48;
   tree.root = rootGroup;
   rootGroup.isExpanded = YES;
   
@@ -245,8 +245,8 @@
             KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
             return NO;
           }
-          group.icon = [_dataStreamer read4Bytes];
-          group.icon = CFSwapInt32LittleToHost(group.icon);
+          group.iconId = [_dataStreamer read4Bytes];
+          group.iconId = CFSwapInt32LittleToHost(group.iconId);
           break;
           
         case KPKFieldTypeGroupLevel: {
@@ -344,7 +344,7 @@
         }
           
         case KPKFieldTypeEntryImage:
-          entry.icon = CFSwapInt32LittleToHost([_dataStreamer read4Bytes]);
+          entry.iconId = CFSwapInt32LittleToHost([_dataStreamer read4Bytes]);
           break;
           
         case KPKFieldTypeEntryTitle:

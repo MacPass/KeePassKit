@@ -101,7 +101,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (id)copyWithZone:(NSZone *)zone {
   KPKEntry *entry = [[KPKEntry allocWithZone:zone] init];
   entry.updateTiming = NO;
-  entry.icon = self.icon;
+  entry.iconId = self.iconId;
   entry.tree = self.tree;
   entry.customIcon = self.customIcon;
   entry.parent = self.parent;

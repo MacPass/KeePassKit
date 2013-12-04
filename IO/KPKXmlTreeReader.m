@@ -221,7 +221,7 @@
   
   group.name = KPKXmlString(groupElement, @"Name");
   group.notes = KPKXmlString(groupElement, @"Notes");
-  group.icon = KPKXmlInteger(groupElement, @"IconID");
+  group.iconId = KPKXmlInteger(groupElement, @"IconID");
   
   DDXMLElement *customIconUuidElement = [groupElement elementForName:@"CustomIconUUID"];
   if (customIconUuidElement != nil) {
@@ -265,7 +265,7 @@
     entry.uuid = [NSUUID UUID];
   }
   
-  entry.icon = KPKXmlInteger(entryElement, @"IconID");
+  entry.iconId = KPKXmlInteger(entryElement, @"IconID");
   
   DDXMLElement *customIconUuidElement = [entryElement elementForName:@"CustomIconUUID"];
   if (customIconUuidElement != nil) {

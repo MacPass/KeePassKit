@@ -144,7 +144,7 @@
   [self _writeTimeInfo:group];
   
   /* Icon */
-  tmp32 = CFSwapInt32HostToLittle((uint32_t)group.icon);
+  tmp32 = CFSwapInt32HostToLittle((uint32_t)group.iconId);
   [self _writeField:KPKFieldTypeGroupImage bytes:&tmp32 length:4];
   
   /*
@@ -185,7 +185,7 @@
   tmp32 = CFSwapInt32HostToLittle(groupId);
   [self _writeField:KPKFieldTypeEntryGroupId bytes:&tmp32 length:4];
   
-  tmp32 = CFSwapInt32HostToLittle((uint32_t)entry.icon);
+  tmp32 = CFSwapInt32HostToLittle((uint32_t)entry.iconId);
   [self _writeField:KPKFieldTypeEntryImage bytes:&tmp32 length:4];
   
   

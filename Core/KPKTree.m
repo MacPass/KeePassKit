@@ -35,32 +35,32 @@
   KPKGroup *parentGroup = [tree createGroup:nil];
   
   parentGroup.name = NSLocalizedString(@"GENERAL", "General");
-  parentGroup.icon = 48;
+  parentGroup.iconId = 48;
   tree.root = parentGroup;
   
   KPKGroup *group = [tree createGroup:parentGroup];
   group.name = NSLocalizedString(@"WINDOWS", "Windows");
-  group.icon = 38;
+  group.iconId = 38;
   [parentGroup addGroup:group];
   
   group = [tree createGroup:parentGroup];
   group.name = NSLocalizedString(@"NETWORK", "Network");
-  group.icon = 3;
+  group.iconId = 3;
   [parentGroup addGroup:group];
   
   group = [tree createGroup:parentGroup];
   group.name = NSLocalizedString(@"INTERNET", "Internet");
-  group.icon = 1;
+  group.iconId = 1;
   [parentGroup addGroup:group];
   
   group = [tree createGroup:parentGroup];
   group.name = NSLocalizedString(@"EMAIL", "EMail");
-  group.icon = 19;
+  group.iconId = 19;
   [parentGroup addGroup:group];
   
   group = [tree createGroup:parentGroup];
   group.name = NSLocalizedString(@"HOMEBANKING", "Homebanking");
-  group.icon = 37;
+  group.iconId = 37;
   [parentGroup addGroup:group];
   
   return tree;
