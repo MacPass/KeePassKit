@@ -210,7 +210,7 @@
 
 - (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement forTree:(KPKTree *)tree{
   KPKGroup *group = [[KPKGroup alloc] init];
-
+  
   group.updateTiming = NO;
   group.tree = tree;
   
@@ -283,7 +283,7 @@
   
   for (DDXMLElement *element in [entryElement elementsForName:@"String"]) {
     DDXMLElement *valueElement = [element elementForName:@"Value"];
-    BOOL isProtected = KPKXmlBoolAttribute(valueElement, @"Protected") || KPKXmlBoolAttribute(valueElement, @"ProtecteInMemory");
+    BOOL isProtected = KPKXmlBoolAttribute(valueElement, @"Protected") || KPKXmlBoolAttribute(valueElement, @"ProtectInMemory");
     KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKXmlString(element, @"Key")
                                                           value:[valueElement stringValue]
                                                     isProtected:isProtected];

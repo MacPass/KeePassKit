@@ -91,10 +91,12 @@
   metaData.generator = @"MacPass";
   DDXMLElement *metaElement = [DDXMLNode elementWithName:@"Meta"];
   KPKAddXmlElement(metaElement, @"Generator", metaData.generator);
+  
   if(_headerWriter.headerHash) {
     NSString *headerHash = [[NSString alloc] initWithData:[NSMutableData mutableDataWithBase64EncodedData:_headerWriter.headerHash] encoding:NSUTF8StringEncoding];
     KPKAddXmlElement(metaElement, @"HeaderHash", headerHash);
   }
+  
   
   KPKAddXmlElement(metaElement, @"DatabaseName", metaData.databaseName);
   KPKAddXmlElement(metaElement, @"DatabaseNameChanged", KPKStringFromDate(_dateFormatter, metaData.databaseNameChanged));
@@ -146,9 +148,7 @@
   [rootElement addChild:[self _xmlGroup:self.tree.root]];
   
   /* Add Deleted Objects */
-  if([self.tree.deletedObjects count] > 0) {
-    [rootElement addChild:[self _xmlDeletedObjects]];
-  }
+  [rootElement addChild:[self _xmlDeletedObjects]];
   [[document rootElement] addChild:rootElement];
   
   /*
@@ -258,7 +258,7 @@
   KPKAddXmlElement(autotypeElement, @"Enabled", KPKStringFromBool(autotype.isEnabled));
   NSString *obfuscate = autotype.obfuscateDataTransfer ? @"1" : @"0";
   KPKAddXmlElement(autotypeElement, @"DataTransferObfuscation", obfuscate);
-  KPKAddXmlElement(autotypeElement, @"DefaultSequence", autotype.defaultSequence);
+  KPKAddXmlElementIfNotNil(autotypeElement, @"DefaultSequence", autotype.defaultSequence);
   
   if([autotype.associations count] > 0) {
     DDXMLElement *associationsElement = [DDXMLElement elementWithName:@"Association"];
@@ -286,7 +286,7 @@
 
 - (DDXMLElement *)_xmlBinaries {
   
-  [self _prepateBinaries];
+  [self _prepareBinaries];
   DDXMLElement *binaryElements = [DDXMLElement elementWithName:@"Binaries"];
   
   BOOL compress = (self.tree.metaData.compressionAlgorithm == KPKCompressionGzip);
@@ -353,7 +353,7 @@
   return timesElement;
 }
 
-- (void)_prepateBinaries {
+- (void)_prepareBinaries {
   NSArray *entries = self.tree.allEntries;
   _binaries = [[NSMutableArray alloc] initWithCapacity:[entries count] / 4];
   for(KPKEntry *entry in entries) {
@@ -366,7 +366,6 @@
 }
 
 - (void)_encodeProtected:(DDXMLElement *)root {
-  
   DDXMLNode *protectedAttribute = [root attributeForName:@"Protected"];
   if([[protectedAttribute stringValue] isEqual:@"True"]) {
     NSString *str = [root stringValue];

@@ -59,7 +59,6 @@
  *	Serializes the tree into the KeePass xml file
  *	@return	XML file string. Pretty printed
  */
-- (NSString *)xmlString;
 - (NSData *)xmlData;
 
 @end
