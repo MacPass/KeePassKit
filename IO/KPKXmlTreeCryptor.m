@@ -101,7 +101,7 @@
   NSMutableData *data = [[NSMutableData alloc] init];
   
   KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:tree];
-  NSData *xmlData = [[treeWriter protectedXmlDocument] XMLData];
+  NSData *xmlData = [[treeWriter protectedXmlDocument] XMLDataWithOptions:DDXMLNodeCompactEmptyElement];
   if(!xmlData) {
     // create Error
     return nil;
