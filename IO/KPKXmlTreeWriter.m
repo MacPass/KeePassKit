@@ -356,8 +356,9 @@
 
 - (void)_prepareBinaries {
   NSArray *entries = self.tree.allEntries;
+  NSArray *allEntries = [entries arrayByAddingObjectsFromArray:self.tree.allHistoryEntries];
   _binaries = [[NSMutableArray alloc] initWithCapacity:[entries count] / 4];
-  for(KPKEntry *entry in entries) {
+  for(KPKEntry *entry in allEntries) {
     for(KPKBinary *binary in entry.binaries) {
       if(![_binaries containsObject:binary]) {
         [_binaries addObject:binary];

@@ -160,6 +160,19 @@
   return [self.root childEntries];
 }
 
+- (NSArray *)allHistoryEntries {
+  NSArray *allEntries = [self allEntries];
+  if([allEntries count] == 0) {
+    return nil;
+  }
+  NSMutableArray *historyEntries = [[NSMutableArray alloc] initWithCapacity:[allEntries count] * self.metaData.historyMaxItems];
+  for(KPKEntry *entry in allEntries) {
+    NSAssert(entry.history != nil, @"History object cannot be nil");
+    [historyEntries addObjectsFromArray:entry.history];
+  }
+  return historyEntries;
+}
+
 - (KPKVersion)minimumVersion {
   KPKVersion minimumVersion = KPKUnknownVersion;
   if([self.root.entries count] > 0) {

@@ -52,6 +52,10 @@
  */
 @property (nonatomic, readonly) NSArray *allEntries;
 /**
+ *  NSArray of KPKEntries that are History elements
+ */
+@property (nonatomic, readonly) NSArray *allHistoryEntries;
+/**
  *	The minimum Version of the tree. If any node uses higher
  *  featuers, the whole tree needs to have the highest version
  */
