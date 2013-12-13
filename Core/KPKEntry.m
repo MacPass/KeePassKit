@@ -25,6 +25,7 @@
 #import "KPKBinary.h"
 #import "KPKAttribute.h"
 #import "KPKAutotype.h"
+#import "KPKWindowAssociation.h"
 #import "KPKFormat.h"
 #import "KPKTimeInfo.h"
 #import "KPKUTIs.h"
@@ -447,6 +448,51 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (void)clearHistory {
   NSSet *set = [NSSet setWithArray:_history];
   [self removeHistory:set];
+}
+
+- (NSUInteger)calculateByteSize {
+  
+  NSUInteger __block size = 128; // KeePass suggest this as the inital size
+  
+  void (^attributeBlock)(id obj, NSUInteger idx, BOOL *stop) = ^(id obj, NSUInteger idx, BOOL *stop) {
+    KPKAttribute *attribute = obj;
+    size += [attribute.value length];
+    size += [attribute.key length];
+  };
+  
+  /* Default attributes */
+  [[self defaultAttributes] enumerateObjectsUsingBlock:attributeBlock];
+  
+  /* Custom attributes */
+  [[self customAttributes] enumerateObjectsUsingBlock:attributeBlock];
+  
+  /* Binaries */
+  [[self binaries] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    KPKBinary *binary = obj;
+    size += [binary.key length];
+    size += [binary.data length];
+  }];
+  
+  /* Autotype */
+  size += [self.autotype.defaultSequence length];
+  [self.autotype.associations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    KPKWindowAssociation *association = obj;
+    size += [association.windowTitle length];
+    size += [association.keystrokeSequence length];
+  }];
+  
+  /* Misc */
+  size += [self.overrideURL length];
+  size += [self.tags length];
+  
+  /* History */
+  [[self history] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    KPKEntry *entry = obj;
+    size += [entry calculateByteSize];
+  }];
+  
+  /* Color? */
+  return size;
 }
 
 #pragma mark -

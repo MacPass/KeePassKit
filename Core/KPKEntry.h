@@ -57,6 +57,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, assign) NSString *notes;
 
 @property (nonatomic, strong) NSArray *binaries;
+// TODO: change Tags to an String array!
 @property (nonatomic, copy) NSString *tags;
 @property (nonatomic, copy) NSColor *foregroundColor;
 @property (nonatomic, copy) NSColor *backgroundColor;
@@ -160,6 +161,14 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *	Clears the history and removes all entries
  */
 - (void)clearHistory;
+
+#pragma mark Maintainance
+/**
+ *  Calcualtes the size of this entry. Included are all attributes for this entry
+ *
+ *  @return Size of this entry in bytes
+ */
+- (NSUInteger)calculateByteSize;
 
 #pragma mark Placeholder
 
