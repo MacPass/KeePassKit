@@ -86,4 +86,12 @@
           self.usageCount];
 }
 
+- (void)touch {
+  NSDate *now = [NSDate date];
+  self.creationTime = now;
+  self.lastModificationTime = now;
+  self.lastAccessTime = now;
+  self.locationChanged = now;
+  self.usageCount = 0;
+}
 @end

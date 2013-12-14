@@ -34,4 +34,6 @@
 @property(nonatomic, strong) NSDate *locationChanged;
 @property(nonatomic, assign) NSUInteger usageCount;
 
+- (void)touch;
+
 @end
