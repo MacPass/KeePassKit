@@ -103,6 +103,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   KPKEntry *entry = [[KPKEntry allocWithZone:zone] init];
   entry.updateTiming = NO;
   entry.iconId = self.iconId;
+  entry.customIcon = self.customIcon;
   entry.tree = self.tree;
   entry.customIcon = self.customIcon;
   entry.parent = self.parent;
@@ -119,7 +120,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   entry->_customAttributes = [self.customAttributes copyWithZone:zone];
   entry->_tags = [self.tags copyWithZone:zone];
   entry->_autotype = [self.autotype copyWithZone:zone];
-
+  
   entry.updateTiming = self.updateTiming;
   return entry;
 }
@@ -190,6 +191,8 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   return nil;
 }
 
+#pragma mark Equality
+
 - (BOOL)isEqualTo:(id)object {
   if([object isKindOfClass:[KPKEntry class]]) {
     return [self isEqualToEntry:object];
@@ -199,7 +202,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (BOOL)isEqualToEntry:(KPKEntry *)entry {
   NSAssert([entry isKindOfClass:[KPKEntry class]], @"Test onyl allowed with KPKEntry classes");
-
+  
   if([self.customAttributes count] != [entry.customAttributes count]) {
     return NO;
   }
@@ -319,6 +322,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   _tags = [tags copy];
 }
 
+#pragma mark move/remove/copy
 - (void)remove {
   /*
    Undo is handelded in the groups implementation of entry removal
@@ -330,8 +334,25 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   [self.parent moveEntry:self toGroup:group atIndex:index];
 }
 
-#pragma mark CustomAttributes
+- (KPKEntry *)copyWithTitle:(NSString *)title options:(KPKNodCopyOptions)options {
+  KPKEntry *copy = [self copy];
+  if(!title) {
+    title = NSLocalizedString(@"KPK_NODE_COPY_%1", "");
+  }
+  /* Disbale the undomanager since we do not want the updated title to be registered */
+  [copy.undoManager disableUndoRegistration];
+  copy.title = title;
+  [copy.undoManager enableUndoRegistration];
+  if(0 != (options & KPKNodeCopyTimeOption)) {
+    [copy.timeInfo touch];
+  }
+  if(0 != (options & KPKNodeCopyUUIDOption)) {
+    copy.uuid = [[NSUUID alloc] init];
+  }
+  return copy;
+}
 
+#pragma mark CustomAttributes
 - (KPKAttribute *)customAttributeForKey:(NSString *)key {
   // test for default keys;
   NSPredicate *filter = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {

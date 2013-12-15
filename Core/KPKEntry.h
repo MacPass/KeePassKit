@@ -81,8 +81,22 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *	Removes the Entry from it's parent group
  */
 - (void)remove;
-
+/**
+ *  Moves the Entry the the new group at the given index
+ *
+ *  @param group The new group that should contain the entry
+ *  @param index The index at which to sort the entry into the existing entries of the group
+ */
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
+/**
+ *  Creates a copy of the entry, using NSCopying but updates the copy according to the supplied options
+ *
+ *  @param title   The new Title for the copy. If you leave this blank, a default title will be generated
+ *  @param options The options to use when creating the copy
+ *
+ *  @return The copied KPKEntry
+ */
+- (KPKEntry *)copyWithTitle:(NSString *)title options:(KPKNodCopyOptions)options;
 
 #pragma mark MetaEntries
 /**
@@ -100,7 +114,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 - (BOOL)isMeta;
 
 #pragma mark Custom Attributes
-
 /**
  @param key String that identifies the attributes
  @returns the attribute with the given key

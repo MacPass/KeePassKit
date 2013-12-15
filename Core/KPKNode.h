@@ -30,6 +30,11 @@
 @class KPKIcon;
 @class KPKTimeInfo;
 
+typedef NS_OPTIONS(NSUInteger, KPKNodCopyOptions) {
+  KPKNodeCopyUUIDOption = (1 << 0),
+  KPKNodeCopyTimeOption = (1 << 1)
+};
+
 /**
  *	Baseclass for all Nodes in a Tree.
  */

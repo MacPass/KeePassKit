@@ -38,7 +38,7 @@
   self = [super init];
   if (self) {
     _iconId = 0;
-    _uuid = [NSUUID UUID];
+    _uuid = [[NSUUID alloc] init];
     _minimumVersion = KPKLegacyVersion;
     _timeInfo = [[KPKTimeInfo alloc] init];
     _iconId = [[self class] defaultIcon];
