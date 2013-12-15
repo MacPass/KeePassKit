@@ -42,7 +42,7 @@ typedef NS_OPTIONS(NSUInteger, KPKNodCopyOptions) {
 
 @property(nonatomic, weak) KPKTree *tree;
 @property(nonatomic, assign) NSInteger iconId;
-@property(nonatomic, weak) KPKIcon *customIcon;
+@property(nonatomic, strong) NSUUID *iconUUID;
 @property(nonatomic, weak) KPKGroup *parent;
 @property(nonatomic, strong) NSUUID *uuid;
 @property(nonatomic, assign) KPKVersion minimumVersion;

@@ -27,6 +27,12 @@
 
 #import "NSUUID+KeePassKit.h"
 
+@interface KPKMetaData () {
+  NSMutableDictionary *_customIconCache;
+}
+
+@end
+
 @implementation KPKMetaData
 
 - (id)init {
@@ -34,6 +40,7 @@
   if(self){
     _customData = [[NSMutableArray alloc] init];
     _customIcons = [[NSMutableArray alloc] init];
+    _customIconCache = [[NSMutableDictionary alloc] init];
     _rounds = 6000;
     _compressionAlgorithm = KPKCompressionGzip;
     _protectNotes = NO;
@@ -142,6 +149,10 @@
   }
 }
 
+- (KPKIcon *)findIcon:(NSUUID *)uuid {
+  return _customIconCache[uuid];
+}
+
 #pragma mark KVO
 
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
@@ -159,11 +170,16 @@
 - (void)insertObject:(KPKIcon *)icon inCustomIconsAtIndex:(NSUInteger)index {
   index = MIN([_customIcons count], index);
   [_customIcons insertObject:icon atIndex:index];
+  _customIconCache[icon.uuid] = icon;
 }
 
 - (void)removeObjectFromCustomIconsAtIndex:(NSUInteger)index {
   index = MIN([_customIcons count], index);
+  KPKIcon *icon = _customIcons[index];
   [_customIcons removeObjectAtIndex:index];
+  if(icon) {
+    [_customIconCache removeObjectForKey:icon.uuid];
+  }
 }
 
 @end

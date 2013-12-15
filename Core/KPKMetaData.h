@@ -84,6 +84,8 @@
 
 @property(nonatomic, assign) BOOL updateTiming;
 
+- (KPKIcon *)findIcon:(NSUUID *)uuid;
+
 - (void)addCustomIcon:(KPKIcon *)icon;
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index;
 - (void)removeCustomIcon:(KPKIcon *)icon;

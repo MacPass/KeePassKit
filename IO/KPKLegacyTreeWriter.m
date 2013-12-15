@@ -280,13 +280,13 @@
   NSMutableArray *_groupEntries = [[NSMutableArray alloc] initWithCapacity:[_allGroups count]];
   [_allEntries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKNode *node = obj;
-    if(node.customIcon) {
+    if(node.iconUUID) {
       [_iconEntries addObject:node];
     }
   }];
   [_allGroups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKNode *node = obj;
-    if(node.customIcon) {
+    if(node.iconUUID) {
       [_groupEntries addObject:node];
     }
   }];

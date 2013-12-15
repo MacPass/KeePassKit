@@ -226,8 +226,7 @@
   
   DDXMLElement *customIconUuidElement = [groupElement elementForName:@"CustomIconUUID"];
   if (customIconUuidElement != nil) {
-    NSUUID *iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
-    group.customIcon = _iconMap[ iconUUID ];
+    group.iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
   }
   
   DDXMLElement *timesElement = [groupElement elementForName:@"Times"];
@@ -270,8 +269,7 @@
   
   DDXMLElement *customIconUuidElement = [entryElement elementForName:@"CustomIconUUID"];
   if (customIconUuidElement != nil) {
-    NSUUID *iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
-    entry.customIcon = _iconMap[iconUUID];
+    entry.iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
   }
   
   entry.foregroundColor =  [NSColor colorWithHexString:KPKXmlString(entryElement, @"ForegroundColor")];

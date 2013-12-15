@@ -694,8 +694,7 @@
     if([iconUUIDs count] <= iconId) {
       return NO;
     }
-    NSUUID *iconUUID = iconUUIDs[iconId];
-    entry.customIcon = _iconUUIDMap[iconUUID];
+    entry.iconUUID = iconUUIDs[iconId];
   }
   if([dataReader countOfReadableBytes] < (numberOfGroups * 8)) {
     return NO; // Data truncated
@@ -709,8 +708,7 @@
       return NO;
     }
     KPKGroup *group = [self _findGroupForUUID:groupUUID];
-    NSUUID *iconUUID = iconUUIDs[groupIconId];
-    group.customIcon = _iconUUIDMap[iconUUID];
+    group.iconUUID = iconUUIDs[groupIconId];
   }
   return YES;
 }

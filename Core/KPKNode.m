@@ -43,9 +43,7 @@
     _timeInfo = [[KPKTimeInfo alloc] init];
     _iconId = [[self class] defaultIcon];
     _updateTiming = YES;
-    /*
-     Let the iconUUID be nil
-     */
+    _iconUUID = nil;
   }
   return self;
 }
@@ -57,7 +55,7 @@
     _uuid = [aDecoder decodeObjectForKey:@"uuid"];
     _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:@"minimumVersion"];
     _iconId = [aDecoder decodeIntegerForKey:@"iconId"];
-    /* preserve custom icon */
+    _iconUUID = [aDecoder decodeObjectForKey:@"iconUUID"];
   }
   return self;
 }
@@ -67,6 +65,7 @@
   [aCoder encodeObject:self.uuid forKey:@"uuid"];
   [aCoder encodeInteger:self.minimumVersion forKey:@"minimumVersion"];
   [aCoder encodeInteger:self.iconId forKey:@"iconId"];
+  [aCoder encodeObject:self.iconUUID forKey:@"iconUUID"];
 }
 
 #pragma mark Properties
@@ -74,6 +73,13 @@
   if(iconId != _iconId) {
     [[self.undoManager prepareWithInvocationTarget:self] setIconId:_iconId];
     _iconId = iconId;
+  }
+}
+
+- (void)setIconUUID:(NSUUID *)iconUUID {
+  if(![self.iconUUID isEqual:iconUUID]) {
+    [[self.undoManager prepareWithInvocationTarget:self] setIconUUID:self.iconUUID];
+    _iconUUID = iconUUID;
   }
 }
 

@@ -203,8 +203,8 @@
   // Add the standard properties
   KPKAddXmlElement(entryElement, @"UUID", [entry.uuid encodedString]);
   KPKAddXmlElement(entryElement, @"IconID", KPKStringFromLong(entry.iconId));
-  if(entry.customIcon) {
-    KPKAddXmlElement(entryElement, @"CustomIconUUID", [entry.customIcon.uuid encodedString]);
+  if(entry.iconUUID) {
+    KPKAddXmlElement(entryElement, @"CustomIconUUID", [entry.iconUUID encodedString]);
   }
   KPKAddXmlElement(entryElement, @"ForegroundColor", [entry.foregroundColor hexString]);
   KPKAddXmlElement(entryElement, @"BackgroundColor", [entry.backgroundColor hexString]);
