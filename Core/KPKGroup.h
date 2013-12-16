@@ -48,6 +48,9 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  thus are undoable.
  Action names aren't set by the model
  */
+
+- (instancetype)copyWithName:(NSString *)name options:(KPKNodeCopyOptions)options;
+
 #pragma mark Group manipulation
 - (void)remove;
 - (void)addGroup:(KPKGroup *)group;

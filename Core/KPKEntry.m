@@ -168,6 +168,25 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   return;
 }
 
+- (KPKEntry *)copyWithTitle:(NSString *)title options:(KPKNodeCopyOptions)options {
+  KPKEntry *copy = [self copy];
+  if(!title) {
+    NSString *format = NSLocalizedString(@"KPK_NODE_COPY_%@", "");
+    title = [[NSString alloc] initWithFormat:format, self.title];
+  }
+  /* Disbale the undomanager since we do not want the updated title to be registered */
+  [copy.undoManager disableUndoRegistration];
+  copy.title = title;
+  [copy.undoManager enableUndoRegistration];
+  if(0 != (options & KPKNodeCopyTimeOption)) {
+    [copy.timeInfo touch];
+  }
+  if(0 != (options & KPKNodeCopyUUIDOption)) {
+    copy.uuid = [[NSUUID alloc] init];
+  }
+  return copy;
+}
+
 #pragma mark NSPasteBoardWriting/Readin
 
 + (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
@@ -331,24 +350,6 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   [self.parent moveEntry:self toGroup:group atIndex:index];
-}
-
-- (KPKEntry *)copyWithTitle:(NSString *)title options:(KPKNodCopyOptions)options {
-  KPKEntry *copy = [self copy];
-  if(!title) {
-    title = NSLocalizedString(@"KPK_NODE_COPY_%1", "");
-  }
-  /* Disbale the undomanager since we do not want the updated title to be registered */
-  [copy.undoManager disableUndoRegistration];
-  copy.title = title;
-  [copy.undoManager enableUndoRegistration];
-  if(0 != (options & KPKNodeCopyTimeOption)) {
-    [copy.timeInfo touch];
-  }
-  if(0 != (options & KPKNodeCopyUUIDOption)) {
-    copy.uuid = [[NSUUID alloc] init];
-  }
-  return copy;
 }
 
 #pragma mark CustomAttributes

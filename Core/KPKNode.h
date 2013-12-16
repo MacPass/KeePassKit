@@ -30,7 +30,7 @@
 @class KPKIcon;
 @class KPKTimeInfo;
 
-typedef NS_OPTIONS(NSUInteger, KPKNodCopyOptions) {
+typedef NS_OPTIONS(NSUInteger, KPKNodeCopyOptions) {
   KPKNodeCopyUUIDOption = (1 << 0),
   KPKNodeCopyTimeOption = (1 << 1)
 };

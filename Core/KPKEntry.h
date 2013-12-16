@@ -96,7 +96,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *
  *  @return The copied KPKEntry
  */
-- (KPKEntry *)copyWithTitle:(NSString *)title options:(KPKNodCopyOptions)options;
+- (KPKEntry *)copyWithTitle:(NSString *)title options:(KPKNodeCopyOptions)options;
 
 #pragma mark MetaEntries
 /**

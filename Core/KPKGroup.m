@@ -106,6 +106,24 @@
   return copy;
 }
 
+- (instancetype)copyWithName:(NSString *)name options:(KPKNodeCopyOptions)options {
+  KPKGroup *copy = [self copy];
+  if(nil == name) {
+    NSString *format = NSLocalizedString(@"KPK_GROUP_COPY_%@", "");
+    name = [[NSString alloc] initWithFormat:format, self.name];
+  }
+  if(0 != (options & KPKNodeCopyUUIDOption)) {
+    copy.uuid = [[NSUUID alloc] init];
+  }
+  if(0 != (options & KPKNodeCopyTimeOption)) {
+    [copy.timeInfo touch];
+  }
+  [self.undoManager disableUndoRegistration];
+  copy.name = name;
+  [self.undoManager enableUndoRegistration];
+  return copy;
+}
+
 #pragma mark NSPasteboardWriting/Reading
 
 - (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
