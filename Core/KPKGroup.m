@@ -102,26 +102,57 @@
   copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.isSearchEnabled = self.isSearchEnabled;
+  copy.isExpanded = self.isExpanded;
   copy.updateTiming = self.updateTiming;
+  copy.notes = self.notes;
+  copy.iconId = self.iconId;
+  copy.iconUUID = self.iconUUID;
+  copy.parent = self.parent;
+  
+  [copy _updateParents];
+  
   return copy;
 }
 
 - (instancetype)copyWithName:(NSString *)name options:(KPKNodeCopyOptions)options {
   KPKGroup *copy = [self copy];
+
+  /* update entry uuids */
+  /* update child uuids */
   if(nil == name) {
     NSString *format = NSLocalizedString(@"KPK_GROUP_COPY_%@", "");
     name = [[NSString alloc] initWithFormat:format, self.name];
   }
-  if(0 != (options & KPKNodeCopyUUIDOption)) {
-    copy.uuid = [[NSUUID alloc] init];
+  if(0 == (options & KPKNodeCopyUUIDOption)) {
+    [copy _updateUUIDs];
   }
-  if(0 != (options & KPKNodeCopyTimeOption)) {
+  if(0 == (options & KPKNodeCopyTimeOption)) {
     [copy.timeInfo touch];
   }
   [self.undoManager disableUndoRegistration];
   copy.name = name;
   [self.undoManager enableUndoRegistration];
   return copy;
+}
+
+- (void)_updateUUIDs {
+  self.uuid = [[NSUUID alloc] init];
+  for(KPKEntry *entry in self.entries) {
+    entry.uuid = [[NSUUID alloc] init];
+  }
+  for(KPKGroup *group in self.groups) {
+    [group _updateUUIDs];
+  }
+}
+
+- (void)_updateParents {
+  for(KPKGroup *childGroup in self.groups) {
+    childGroup.parent = self;
+    [childGroup _updateParents];
+  }
+  for(KPKEntry *childEntry in self.entries) {
+    childEntry.parent = self;
+  }
 }
 
 #pragma mark NSPasteboardWriting/Reading
