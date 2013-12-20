@@ -89,14 +89,13 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 /**
- *  Creates a copy of the entry, using NSCopying but updates the copy according to the supplied options
+ *  Creates a duplicate of the Entry updating references and UUIDs
  *
  *  @param title   The new Title for the copy. If you leave this blank, a default title will be generated
- *  @param options The options to use when creating the copy
  *
  *  @return The copied KPKEntry
  */
-- (KPKEntry *)copyWithTitle:(NSString *)title options:(KPKNodeCopyOptions)options;
+- (instancetype)copyWithTitle:(NSString *)title;
 
 #pragma mark MetaEntries
 /**

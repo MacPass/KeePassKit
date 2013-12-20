@@ -114,21 +114,17 @@
   return copy;
 }
 
-- (instancetype)copyWithName:(NSString *)name options:(KPKNodeCopyOptions)options {
+- (instancetype)copyWithName:(NSString *)name {
   KPKGroup *copy = [self copy];
 
   /* update entry uuids */
   /* update child uuids */
   if(nil == name) {
-    NSString *format = NSLocalizedString(@"KPK_GROUP_COPY_%@", "");
+    NSString *format = NSLocalizedStringFromTable(@"KPKLocalizable", @"KPK_GROUP_COPY_%@", "");
     name = [[NSString alloc] initWithFormat:format, self.name];
   }
-  if(0 == (options & KPKNodeCopyUUIDOption)) {
-    [copy _updateUUIDs];
-  }
-  if(0 == (options & KPKNodeCopyTimeOption)) {
-    [copy.timeInfo touch];
-  }
+  [copy _updateUUIDs];
+  [copy.timeInfo touch];
   [self.undoManager disableUndoRegistration];
   copy.name = name;
   [self.undoManager enableUndoRegistration];

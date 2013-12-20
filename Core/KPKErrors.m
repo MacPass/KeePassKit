@@ -28,6 +28,6 @@ void KPKCreateError( NSError **errorPtr, NSInteger errorCode, NSString *localize
   if(errorPtr != NULL) {
     *errorPtr = [NSError errorWithDomain:KPKErrorDomain
                                     code:errorCode
-                                userInfo:@{ NSLocalizedDescriptionKey: NSLocalizedString(localizedKey, comment)}];
+                                userInfo:@{ NSLocalizedDescriptionKey:NSLocalizedStringFromTable(localizedKey, @"KPKLocalizeable", comment)}];
   }
 }

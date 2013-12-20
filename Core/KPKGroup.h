@@ -49,7 +49,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  Action names aren't set by the model
  */
 
-- (instancetype)copyWithName:(NSString *)name options:(KPKNodeCopyOptions)options;
+- (instancetype)copyWithName:(NSString *)name;
 
 #pragma mark Group manipulation
 - (void)remove;
