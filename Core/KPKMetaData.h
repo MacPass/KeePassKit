@@ -76,7 +76,7 @@
 /**
  *	Array of KPKIcon objects
  */
-@property(nonatomic, strong, readonly) NSMutableArray *customIcons;
+@property(nonatomic, strong, readonly) NSArray *customIcons;
 /**
  *	Array of KPKBinary objects - extracted from unknown meta entries. Notes is mapped to name, data to data
  */

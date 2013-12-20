@@ -29,7 +29,9 @@
 
 @interface KPKMetaData () {
   NSMutableDictionary *_customIconCache;
+  NSMutableArray *_customIcons;
 }
+
 
 @end
 

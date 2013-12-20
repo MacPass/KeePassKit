@@ -342,7 +342,7 @@
   for (DDXMLElement *iconElement in [customIconsElement elementsForName:@"Icon"]) {
     NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKXmlString(iconElement, @"UUID")];
     KPKIcon *icon = [[KPKIcon alloc] initWithUUID:uuid encodedString:KPKXmlString(iconElement, @"Data")];
-    [metaData.customIcons addObject:icon];
+    [metaData addCustomIcon:icon];
     _iconMap[ icon.uuid ] = icon;
   }
 }
