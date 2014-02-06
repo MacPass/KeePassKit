@@ -26,11 +26,5 @@
 
 @interface NSString (Reference)
 
-/**
- @returns YES if the string is a reference String
- */
-- (BOOL)isRefernce;
-
-- (NSString *)resolveReferenceWithTree:(KPKTree *)tree;
 
 @end

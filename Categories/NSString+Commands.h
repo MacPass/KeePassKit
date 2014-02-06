@@ -22,11 +22,30 @@
 
 #import <Foundation/Foundation.h>
 
+@class KPKEntry;
 @class KPKTree;
 
 @interface NSString (Commands)
 
 - (BOOL)isReference;
+
 - (NSString *)resolveReferenceWithTree:(KPKTree *)tree;
+/**
+ @returns YES if the string is a simple placeholder
+ */
+- (BOOL)isPlaceholder;
+/**
+ @returns the value for this placeholderstring, nil if nothing can be found
+ */
+- (NSString *)placeholderValueForEntry:(KPKEntry *)entry;
+/**
+ *	Evaluates all placeholders inside the string an replaces them with values found in the entry
+ *	@param	entry	The enty to use a source
+ *  @param  didReplace YES if any replacement occured, NO otherwise (hence no placeholder was valid)
+ *	@return	NSString with all found placeholder filled
+ */
+- (NSString *)evaluatePlaceholderWithEntry:(KPKEntry *)entry didReplace:(BOOL *)didReplace;
+
+- (NSArray *)tokenzieSequence:(NSString *)sequence;
 
 @end
