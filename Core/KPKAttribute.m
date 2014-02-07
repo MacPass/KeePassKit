@@ -25,7 +25,7 @@
 #import "KPKFormat.h"
 #import "KPKGroup.h"
 
-#import "NSString+Reference.h"
+#import "NSString+Commands.h"
 #import "NSData+Random.h"
 #import "NSMutableData+KeePassKit.h"
 /*
@@ -149,7 +149,7 @@
 }
 
 - (BOOL)isReference {
-  return [self.value isRefernce];
+  return [self.value isReference];
 }
 
 - (BOOL)isPlaceholder {

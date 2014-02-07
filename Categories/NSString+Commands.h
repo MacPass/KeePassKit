@@ -25,11 +25,13 @@
 @class KPKEntry;
 @class KPKTree;
 
-@interface NSString (Commands)
+@interface NSString (Reference)
 
 - (BOOL)isReference;
-
 - (NSString *)resolveReferenceWithTree:(KPKTree *)tree;
+@end
+
+@interface NSString (Placeholder)
 /**
  @returns YES if the string is a simple placeholder
  */

@@ -24,17 +24,32 @@
 #import "KPKEntry.h"
 #import "KPKTree.h"
 
-@implementation NSString (Commands)
+@implementation NSString (Reference)
 
+/*
+ References are formatted as follows:
+ T	Title
+ U	User name
+ P	Password
+ A	URL
+ N	Notes
+ I	UUID
+ O	Other custom strings (KeePass 2.x only)
+ 
+ {REF:P@I:46C9B1FFBD4ABC4BBB260C6190BAD20C}
+ {REF:<WantedField>@<SearchIn>:<Text>}
+ */
 - (BOOL)isReference {
-  NSAssert(NO, @"Not implemented yet!");
-  return NO;
+  return [self hasPrefix:@"{REF:"] && [self hasSuffix:@"}"];
 }
 
 - (NSString *)resolveReferenceWithTree:(KPKTree *)tree {
   NSAssert(NO, @"Not implemented yet!");
   return nil;
 }
+@end
+
+@implementation NSString (Placeholder)
 
 + (NSArray *)_simplePlaceholder {
   static NSArray *placeholder = nil;
@@ -171,11 +186,6 @@
   }
   return substituedString;
 }
-
-- (BOOL)isRefernce {
-  return [self hasPrefix:@"{REF:"] && [self hasSuffix:@"}"];
-}
-
 - (NSString *)_removeBraces {
   NSUInteger start = [self hasPrefix:@"{"] ? 1 : 0;
   NSUInteger end = [self hasSuffix:@"}"] ? 1 : 0;
