@@ -67,6 +67,7 @@
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:@"isAutoTypeEnabled"];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:@"isSearchEnabled"];
     self.isExpanded = [aDecoder decodeBoolForKey:@"isExpanded"];
+    self.defaultAutoTypeSequence = [aDecoder decodeObjectForKey:@"defaultAutoTypeSequence"];
     
     for(KPKGroup *group in self.groups) {
       group.parent = self;
@@ -89,6 +90,7 @@
   [aCoder encodeInteger:_isAutoTypeEnabled forKey:@"isAutoTypeEnabled"];
   [aCoder encodeInteger:_isSearchEnabled forKey:@"isSearchEnabled"];
   [aCoder encodeBool:_isExpanded forKey:@"isExpanded"];
+  [aCoder encodeObject:_defaultAutoTypeSequence forKey:@"defaultAutoTypeSequence"];
 }
 
 #pragma mark NSCopying
@@ -101,6 +103,7 @@
   copy->_entries = [[NSMutableArray alloc] initWithArray:_entries copyItems:YES];
   copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
+  copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
   copy.isExpanded = self.isExpanded;
   copy.updateTiming = self.updateTiming;
@@ -190,6 +193,17 @@
     _notes = [notes copy];
     [self wasModified];
   }
+}
+
+- (NSString *)defaultAutoTypeSequence {
+  if(!_defaultAutoTypeSequence) {
+    if(self.parent) {
+      return self.parent.defaultAutoTypeSequence;
+    }
+    /* TODO add default autotype sequence */
+    return @"{USERNAME}{TAB}{PASSWORD}{TAB}{ENTER}";
+  }
+  return _defaultAutoTypeSequence;
 }
 
 #pragma mark -

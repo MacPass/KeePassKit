@@ -88,7 +88,7 @@
       pattern = [self.windowTitle substringWithRange:NSMakeRange(2, [self.windowTitle length] - 4)];
     }
     else {
-      pattern = [self.windowTitle stringByReplacingOccurrencesOfString:@"*" withString:@"*." options:NSCaseInsensitiveSearch range:NSMakeRange(0, [self.windowTitle length])];
+      pattern = [self.windowTitle stringByReplacingOccurrencesOfString:@"*" withString:@".*" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [self.windowTitle length])];
     }
     NSError *error;
     self.windowTitleRegularExpression = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:&error];

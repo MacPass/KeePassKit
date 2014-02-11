@@ -22,6 +22,7 @@
 
 #import "KPKAutotype.h"
 #import "KPKEntry.h"
+#import "KPKGroup.h"
 #import "KPKTree.h"
 #import "KPKWindowAssociation.h"
 
@@ -74,6 +75,13 @@
   return copy;
 }
 
+- (NSString *)defaultSequence {
+  /* The default sequence is inherited, so just bubble up */
+  if(!_defaultSequence) {
+    return self.entry.parent.defaultAutoTypeSequence;
+  }
+  return _defaultSequence;
+}
 
 - (void)setIsEnabled:(BOOL)isEnabled {
   if(self.isEnabled != isEnabled) {
