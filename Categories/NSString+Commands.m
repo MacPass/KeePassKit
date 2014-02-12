@@ -114,9 +114,15 @@
     [invocation setSelector:selector];
     [invocation setTarget:entry];
     [invocation invoke];
-    NSString *value = nil;
-    [invocation getReturnValue:&value];
-    return value;
+    
+    CFTypeRef result;
+    [invocation getReturnValue:&result];
+    if (result) {
+      CFRetain(result);
+      NSString *string = (NSString *)CFBridgingRelease(result);
+      return string;
+    }
+    return nil;
   }
   else if( [lowercased hasPrefix:@"url"]) {
     /*
