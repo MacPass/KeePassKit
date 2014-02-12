@@ -83,6 +83,10 @@
   return _defaultSequence;
 }
 
+- (NSArray *)associations {
+  return [_associations copy];
+}
+
 - (void)setIsEnabled:(BOOL)isEnabled {
   if(self.isEnabled != isEnabled) {
     [[self.entry.undoManager prepareWithInvocationTarget:self] setIsEnabled:self.isEnabled];

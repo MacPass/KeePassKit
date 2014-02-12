@@ -72,6 +72,9 @@
 
 #pragma mark -
 #pragma mark Properties
+- (NSArray *)customIcons {
+  return [_customIcons copy];
+}
 
 - (BOOL)isHistoryEnabled {
   return (self.historyMaxItems != -1);

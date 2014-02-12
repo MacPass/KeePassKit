@@ -123,7 +123,7 @@
   /* update entry uuids */
   /* update child uuids */
   if(nil == name) {
-    NSString *format = NSLocalizedStringFromTable(@"KPKLocalizable", @"KPK_GROUP_COPY_%@", "");
+    NSString *format = NSLocalizedStringFromTable(@"KPK_GROUP_COPY_%@", @"KPKLocalizeable", "");
     name = [[NSString alloc] initWithFormat:format, self.name];
   }
   [copy _updateUUIDs];
@@ -178,6 +178,13 @@
 
 #pragma mark -
 #pragma mark Properties
+- (NSArray *)groups {
+  return [_groups copy];
+}
+
+- (NSArray *)entries {
+  return  [_entries copy];
+}
 
 - (void)setName:(NSString *)name {
   if(![_name isEqualToString:name]) {

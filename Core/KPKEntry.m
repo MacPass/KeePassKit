@@ -171,7 +171,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (instancetype)copyWithTitle:(NSString *)title {
   KPKEntry *copy = [self copy];
   if(!title) {
-    NSString *format = NSLocalizedStringFromTable(@"KPKLocalizable", @"KPK_ENTRY_COPY_%@", "");
+    NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKLocalizeable", "");
     title = [[NSString alloc] initWithFormat:format, self.title];
   }
   /* Disbale the undomanager since we do not want the updated title to be registered */
@@ -284,6 +284,18 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 #pragma mark Properties
+- (NSArray *)binaries {
+  return [_binaries copy];
+}
+
+- (NSArray *)customAttributes {
+  return [_customAttributes copy];
+}
+
+- (NSArray *)history {
+  return  [_history copy];
+}
+
 - (NSString *)title {
   return self.titleAttribute.value;
 }
