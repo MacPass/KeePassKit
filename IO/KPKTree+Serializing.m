@@ -34,7 +34,7 @@
 
 @implementation KPKTree (Serializing)
 
-- (id)initWithContentsOfUrl:(NSURL *)url password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
+- (instancetype)initWithContentsOfUrl:(NSURL *)url password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
   NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:error];
   if(!data) {
     return nil;
@@ -43,12 +43,12 @@
   return self;
 }
 
-- (id)initWithData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
+- (instancetype)initWithData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
   self = [self _decryptorForData:data password:password error:error];
   return self;
 }
 
-- (id)initWithXmlContentsOfURL:(NSURL *)url error:(NSError *__autoreleasing *)error {
+- (instancetype)initWithXmlContentsOfURL:(NSURL *)url error:(NSError *__autoreleasing *)error {
   NSAssert(NO, @"Not implemented");
   NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:error];
   if(!data) {

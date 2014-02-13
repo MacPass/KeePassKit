@@ -25,13 +25,13 @@
 @interface KPKTree (Serializing)
 
 /**
- *	Initalizes the Tree with the data contained int he given url
+ *	Initalizes the Tree with the data contained in the given url
  *	@param	url	URL to load the tree data from
  *	@param	password	Password to decrpyt the tree with
  *  @param  error Error if initalization doesnt work
  *	@return	Newly created tree
  */
-- (id)initWithContentsOfUrl:(NSURL *)url password:(KPKCompositeKey *)password error:(NSError **)error;
+- (instancetype)initWithContentsOfUrl:(NSURL *)url password:(KPKCompositeKey *)password error:(NSError **)error;
 /**
  *	Initalizes a tree with the given data. The data is the raw encrypted file data
  *	@param	data	Data to load the tree from. Supply raw undecrypted file data
@@ -39,14 +39,14 @@
  *  @param  error Error if initalization doesnt work
  *	@return	Tree with contents of data
  */
-- (id)initWithData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError **)error;
+- (instancetype)initWithData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError **)error;
 /**
  *	Creates the tree with the contents of the xml file
  *	@param	url	URL to the xml file to load
  *  @param  error the error object returned on failure
  *	@return	Tree created from the xml data
  */
-- (id)initWithXmlContentsOfURL:(NSURL *)url error:(NSError **)error;
+- (instancetype)initWithXmlContentsOfURL:(NSURL *)url error:(NSError **)error;
 /**
  *	Encrypts the tree with the given password and the version. This operation is possibly lossy
  *	@param	password	The password used to encrypt the tree
