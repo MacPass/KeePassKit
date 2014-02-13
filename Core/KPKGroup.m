@@ -207,8 +207,8 @@
     if(self.parent) {
       return self.parent.defaultAutoTypeSequence;
     }
-    /* TODO add default autotype sequence */
-    return @"{USERNAME}{TAB}{PASSWORD}{TAB}{ENTER}";
+    NSString *defaultSequence = [self.tree defaultAutotypeSequence];
+    return defaultSequence ? defaultSequence : @"{TAB}{USERNAME}{TAB}{PASSWORD}{TAB}{ENTER}";
   }
   return _defaultAutoTypeSequence;
 }

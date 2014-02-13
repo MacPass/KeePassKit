@@ -30,8 +30,21 @@
 @class KPKIcon;
 @class KPKMetaData;
 
+@protocol KPKTreeDelegate <NSObject>
+
+@optional
+/**
+ *  Allows the delegate to return a default autotype sequence
+ *
+ *  @return the default autotype sequence to be used
+ */
+- (NSString *)defaultAutotypeSequenceForTree:(KPKTree *)tree;
+
+@end
+
 @interface KPKTree : NSObject
 
+@property(nonatomic, weak) id<KPKTreeDelegate> delegate;
 @property(nonatomic, strong, readonly) NSMutableDictionary *deletedObjects;
 @property(nonatomic, strong) KPKMetaData *metaData;
 @property(nonatomic, weak) NSUndoManager *undoManager;
@@ -66,4 +79,10 @@
 - (KPKGroup *)createGroup:(KPKGroup *)parent;
 - (KPKEntry *)createEntry:(KPKGroup *)parent;
 
+/**
+ *  Returns the defautl autotype squence for this tree. If a delegate is set, it is asked for the sequence.
+ *
+ *  @return defautl sequence, or nil if none is set
+ */
+- (NSString *)defaultAutotypeSequence;
 @end

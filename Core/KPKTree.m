@@ -187,4 +187,11 @@
   return minimumVersion;
 }
 
+- (NSString *)defaultAutotypeSequence {
+  if([self.delegate respondsToSelector:@selector(defaultAutotypeSequenceForTree:)]) {
+    return [self.delegate defaultAutotypeSequenceForTree:self];
+  }
+  return nil;
+}
+
 @end
