@@ -23,6 +23,7 @@
 #import "KPKWindowAssociation.h"
 #import "KPKEntry.h"
 #import "KPKAutotype.h"
+#import "KPKErrors.h"
 
 @interface KPKWindowAssociation () {
   BOOL _regularExpressionIsValid;
@@ -33,6 +34,9 @@
 @end
 
 @implementation KPKWindowAssociation
+
+#pragma mark -
+#pragma mark Lifecylce
 
 - (id)initWithWindow:(NSString *)window keystrokeSequence:(NSString *)strokes {
   self = [super init];
@@ -64,6 +68,19 @@
   return [[KPKWindowAssociation alloc] initWithWindow:self.windowTitle keystrokeSequence:self.keystrokeSequence];
 }
 
+#pragma mark -
+#pragma mark Validation
+
+- (BOOL)validateWindowTitle:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError {
+  if(![*ioValue isKindOfClass:[NSString class]]) {
+    KPKCreateError(outError, KPKErrorWindowTitleFormatValidationFailed, @"ERROR_WINDOW_TITLE_VALIDATION_FAILED", "");
+    return NO;
+  }
+  return YES;
+}
+
+#pragma mark -
+#pragma mark Properties
 - (void)setWindowTitle:(NSString *)windowTitle {
   if(![self.windowTitle isEqualToString:windowTitle]) {
     [self.autotype.entry.undoManager registerUndoWithTarget:self selector:@selector(setWindowTitle:) object:self.windowTitle];

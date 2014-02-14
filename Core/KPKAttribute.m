@@ -24,6 +24,7 @@
 #import "KPKEntry.h"
 #import "KPKFormat.h"
 #import "KPKGroup.h"
+#import "KPKErrors.h"
 
 #import "NSString+Commands.h"
 #import "NSData+Random.h"
@@ -106,17 +107,14 @@
           && [self.key isEqualToString:attribtue.key]);
 }
 
-- (BOOL)validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey error:(out NSError *__autoreleasing *)outError {
-  if([inKey isEqualToString:@"key"]) {
-    if(ioValue == NULL) {
-      return NO; // No IO value, hence nothing to do
-    }
-    if(![*ioValue isKindOfClass:[NSString class]] ) {
-      return NO; // No string, so we cannot process it further
-    }
-    if([self.entry hasAttributeWithKey:*ioValue]) {
-      *ioValue = [self.entry proposedKeyForAttributeKey:@"Untitled"];
-    }
+- (BOOL)validateKey:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError {
+  if(![*ioValue isKindOfClass:[NSString class]] ) {
+    KPKCreateError(outError, KPKErrorAttributeKeyValidationFailed, @"ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED", "");
+    return NO; // No string, so we cannot process it further
+  }
+  if([self.entry hasAttributeWithKey:*ioValue]) {
+    NSString *copy = [*ioValue copy];
+    *ioValue = [self.entry proposedKeyForAttributeKey:copy];
   }
   return YES;
 }

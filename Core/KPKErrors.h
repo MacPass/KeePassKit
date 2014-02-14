@@ -57,6 +57,10 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorLegacyInvalidFieldSize, // KDB Invalid field size
   KPKErrorLegacyHeaderHashCorrupted, // Header missmatch
   KPKErrorLegacyCorruptTree, // Tree sturcture is corrupted
+  /* Validation error */
+  KPKErrorAttributeKeyValidationFailed, // Validation of attribute key failed
+  KPKErrorWindowTitleFormatValidationFailed, // The Window title for autotype is not supported
+  KPKErrorAutotypeSequenceValidationFailed // The autotype sequence wasn't valid
 };
 
 #endif
