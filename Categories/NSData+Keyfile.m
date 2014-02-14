@@ -25,6 +25,7 @@
 #import <CommonCrypto/CommonCrypto.h>
 
 #import "KPKErrors.h"
+#import "KPKXmlElements.h"
 
 #import "DDXMLElementAdditions.h"
 #import "NSMutableData+Base64.h"
@@ -133,7 +134,7 @@
     }
   }
   
-  DDXMLElement *keyElement = [rootElement elementForName:@"Key"];
+  DDXMLElement *keyElement = [rootElement elementForName:kKPKXmlKey];
   if (keyElement == nil) {
     KPKCreateError(error, KPKErrorXMLKeyKeyElementMissing, @"ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT", "");
     return nil;

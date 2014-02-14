@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #pragma mark Nodes
-
 extern NSString *const kKPKXmlKeePassFile;
 extern NSString *const kKPKXmlRoot;
 extern NSString *const kKPKXmlHeaderHash;
@@ -47,8 +46,33 @@ extern NSString *const kKPKXmlHistoryMaxSize;
 extern NSString *const kKPKXmlLastSelectedGroup;
 extern NSString *const kKPKXmlLastTopVisibleGroup;
 
-#pragma mark Attributes
+extern NSString *const kKPKXmlIsExpanded;
+extern NSString *const kKPKXmlDefaultAutpTypeSequence;
+extern NSString *const kKPKXmlEnableAutoType;
+extern NSString *const kKPKXmlEnableSearching;
+extern NSString *const kKPKXmlLastTopVisibleEntry;
 
+extern NSString *const kKPKXmlUUID;
+extern NSString *const kKPKXmlName;
+extern NSString *const kKPKXmlNotes;
+extern NSString *const kKPKXmlIconId;
+
+#pragma mark Time
+extern NSString *const kKPKXmlTimes;
+extern NSString *const kKPKXmlLastModificationTime;
+extern NSString *const kKPKXmlCreationTime;
+extern NSString *const kKPKXmlLastAccessTime;
+extern NSString *const kKPKXmlExpiryTime;
+extern NSString *const kKPKXmlExpires;
+extern NSString *const kKPKXmlUsageCount;
+extern NSString *const kKPKXmlLocationChanged;
+
+#pragma mark Generic
+extern NSString *const kKPKXmlKey;
+extern NSString *const kKPKXmlValue;
+extern NSString *const kKPKXmlData;
+
+#pragma mark Attributes
 extern NSString *const kKPKXmlProtected;
 extern NSString *const kKPKXmlTrue;
 extern NSString *const kKPKXmlFalse;

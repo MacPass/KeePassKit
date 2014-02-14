@@ -172,19 +172,19 @@
   dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
   
   // Add the standard properties
-  KPKAddXmlElement(groupElement, @"UUID", [group.uuid encodedString]);
-  KPKAddXmlElement(groupElement, @"Name", group.name);
-  KPKAddXmlElement(groupElement, @"Notes", group.notes);
-  KPKAddXmlElement(groupElement, @"IconID", KPKStringFromLong(group.iconId));
+  KPKAddXmlElement(groupElement, kKPKXmlUUID, [group.uuid encodedString]);
+  KPKAddXmlElement(groupElement, kKPKXmlName, group.name);
+  KPKAddXmlElement(groupElement, kKPKXmlNotes, group.notes);
+  KPKAddXmlElement(groupElement, kKPKXmlIconId, KPKStringFromLong(group.iconId));
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:group.timeInfo];
   [groupElement addChild:timesElement];
   
-  KPKAddXmlElement(groupElement, @"IsExpanded", KPKStringFromBool(group.isExpanded));
-  KPKAddXmlElement(groupElement, @"DefaultAutoTypeSequence", group.defaultAutoTypeSequence);
-  KPKAddXmlElement(groupElement, @"EnableAutoType", stringFromInhertiBool(group.isAutoTypeEnabled));
-  KPKAddXmlElement(groupElement, @"EnableSearching", stringFromInhertiBool(group.isSearchEnabled));
-  KPKAddXmlElement(groupElement, @"LastTopVisibleEntry", [group.lastTopVisibleEntry encodedString]);
+  KPKAddXmlElement(groupElement, kKPKXmlIsExpanded, KPKStringFromBool(group.isExpanded));
+  KPKAddXmlElement(groupElement, kKPKXmlDefaultAutpTypeSequence, group.defaultAutoTypeSequence);
+  KPKAddXmlElement(groupElement, kKPKXmlEnableAutoType, stringFromInhertiBool(group.isAutoTypeEnabled));
+  KPKAddXmlElement(groupElement, kKPKXmlEnableSearching, stringFromInhertiBool(group.isSearchEnabled));
+  KPKAddXmlElement(groupElement, kKPKXmlLastTopVisibleEntry, [group.lastTopVisibleEntry encodedString]);
   
   for(KPKEntry *entry in group.entries) {
     [groupElement addChild:[self _xmlEntry:entry skipHistory:NO]];
@@ -201,8 +201,8 @@
   DDXMLElement *entryElement = [DDXMLNode elementWithName:@"Entry"];
   
   // Add the standard properties
-  KPKAddXmlElement(entryElement, @"UUID", [entry.uuid encodedString]);
-  KPKAddXmlElement(entryElement, @"IconID", KPKStringFromLong(entry.iconId));
+  KPKAddXmlElement(entryElement, kKPKXmlUUID, [entry.uuid encodedString]);
+  KPKAddXmlElement(entryElement, kKPKXmlIconId, KPKStringFromLong(entry.iconId));
   if(entry.iconUUID) {
     KPKAddXmlElement(entryElement, @"CustomIconUUID", [entry.iconUUID encodedString]);
   }
@@ -277,11 +277,11 @@
   DDXMLElement *attributeElement = [DDXMLElement elementWithName:@"String"];
   if(attribute.isProtected) {
     NSString *attributeName = _randomStream != nil ? @"Protected" : @"ProtectInMemory";
-    KPKAddXmlAttribute(attributeElement, attributeName, @"True");
+    KPKAddXmlAttribute(attributeElement, attributeName, kKPKXmlTrue);
   }
   
-  KPKAddXmlElement(attributeElement, @"Key", attribute.key);
-  KPKAddXmlElement(attributeElement, @"Value", attribute.value);
+  KPKAddXmlElement(attributeElement, kKPKXmlKey, attribute.key);
+  KPKAddXmlElement(attributeElement, kKPKXmlValue, attribute.value);
   return attributeElement;
 }
 
@@ -303,8 +303,8 @@
 
 - (DDXMLElement *)_xmlBinary:(KPKBinary *)binary {
   DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
-  KPKAddXmlElement(binaryElement, @"Key", binary.name);
-  DDXMLElement *valueElement = [DDXMLElement elementWithName:@"Value"];
+  KPKAddXmlElement(binaryElement, kKPKXmlKey, binary.name);
+  DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue];
   [binaryElement addChild:valueElement];
   NSUInteger reference = [_binaries indexOfObject:binary];
   NSAssert(reference != NSNotFound, @"Binary has to be in binaries array");
@@ -316,8 +316,8 @@
   DDXMLElement *customIconsElements = [DDXMLElement elementWithName:@"CustomIcons"];
   for (KPKIcon *icon in self.tree.metaData.customIcons) {
     DDXMLElement *iconElement = [DDXMLNode elementWithName:@"Icon"];
-    KPKAddXmlElement(iconElement, @"UUID", [icon.uuid encodedString]);
-    KPKAddXmlElement(iconElement, @"Data", [icon encodedString]);
+    KPKAddXmlElement(iconElement, kKPKXmlUUID, [icon.uuid encodedString]);
+    KPKAddXmlElement(iconElement, kKPKXmlData, [icon encodedString]);
     [customIconsElements addChild:iconElement];
   }
   return customIconsElements;
@@ -325,8 +325,8 @@
 
 - (DDXMLElement *)_xmlCustomData:(KPKBinary *)customData {
   DDXMLElement *itemElement = [DDXMLElement elementWithName:@"Item"];
-  KPKAddXmlElement(itemElement, @"Key", customData.name);
-  KPKAddXmlElement(itemElement, @"Value", [customData encodedStringUsingCompression:NO]);
+  KPKAddXmlElement(itemElement, kKPKXmlKey, customData.name);
+  KPKAddXmlElement(itemElement, kKPKXmlValue, [customData encodedStringUsingCompression:NO]);
   return itemElement;
 }
 
@@ -335,7 +335,7 @@
   for(NSUUID *uuid in self.tree.deletedObjects) {
     KPKDeletedNode *node = self.tree.deletedObjects[ uuid ];
     DDXMLElement *deletedElement = [DDXMLNode elementWithName:@"DeletedObject"];
-    KPKAddXmlElement(deletedElement, @"UUID",[node.uuid encodedString]);
+    KPKAddXmlElement(deletedElement, kKPKXmlUUID,[node.uuid encodedString]);
     KPKAddXmlElement(deletedElement, @"DeletionTime", KPKStringFromDate(_dateFormatter, node.deletionDate));
     [deletedObjectsElement addChild:deletedElement];
   }
@@ -343,14 +343,14 @@
 }
 
 - (DDXMLElement *)_xmlTimeinfo:(KPKTimeInfo *)timeInfo {
-  DDXMLElement *timesElement = [DDXMLNode elementWithName:@"Times"];
-  KPKAddXmlElementIfNotNil(timesElement, @"LastModificationTime", KPKStringFromDate(_dateFormatter, timeInfo.lastModificationTime));
-  KPKAddXmlElementIfNotNil(timesElement, @"CreationTime", KPKStringFromDate(_dateFormatter, timeInfo.creationTime));
-  KPKAddXmlElementIfNotNil(timesElement, @"LastAccessTime", KPKStringFromDate(_dateFormatter, timeInfo.lastAccessTime));
-  KPKAddXmlElementIfNotNil(timesElement, @"ExpiryTime", KPKStringFromDate(_dateFormatter, timeInfo.expiryTime));
-  KPKAddXmlElement(timesElement, @"Expires", KPKStringFromBool(timeInfo.expires));
-  KPKAddXmlElement(timesElement, @"UsageCount", KPKStringFromLong(timeInfo.usageCount));
-  KPKAddXmlElementIfNotNil(timesElement, @"LocationChanged", KPKStringFromDate(_dateFormatter, timeInfo.locationChanged));
+  DDXMLElement *timesElement = [DDXMLNode elementWithName:kKPKXmlTimes];
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastModificationTime, KPKStringFromDate(_dateFormatter, timeInfo.lastModificationTime));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlCreationTime, KPKStringFromDate(_dateFormatter, timeInfo.creationTime));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastAccessTime, KPKStringFromDate(_dateFormatter, timeInfo.lastAccessTime));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlExpiryTime, KPKStringFromDate(_dateFormatter, timeInfo.expiryTime));
+  KPKAddXmlElement(timesElement, kKPKXmlExpires, KPKStringFromBool(timeInfo.expires));
+  KPKAddXmlElement(timesElement, kKPKXmlUsageCount, KPKStringFromLong(timeInfo.usageCount));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLocationChanged, KPKStringFromDate(_dateFormatter, timeInfo.locationChanged));
   return timesElement;
 }
 

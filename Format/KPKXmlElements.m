@@ -44,6 +44,32 @@ NSString *const kKPKXmlHistoryMaxSize = @"HistoryMaxSize";
 NSString *const kKPKXmlLastSelectedGroup = @"LastSelectedGroup";
 NSString *const kKPKXmlLastTopVisibleGroup = @"LastTopVisibleGroup";
 
+NSString *const kKPKXmlIsExpanded = @"IsExpanded";
+NSString *const kKPKXmlDefaultAutpTypeSequence = @"DefaultAutoTypeSequence";
+NSString *const kKPKXmlEnableAutoType = @"EnableAutoType";
+NSString *const kKPKXmlEnableSearching = @"EnableSearching";
+NSString *const kKPKXmlLastTopVisibleEntry = @"LastTopVisibleEntry";
+
+NSString *const kKPKXmlUUID = @"UUID";
+NSString *const kKPKXmlName = @"Name";
+NSString *const kKPKXmlNotes = @"Notes";
+NSString *const kKPKXmlIconId = @"IconID";
+
+#pragma mark Time
+NSString *const kKPKXmlTimes = @"Times";
+NSString *const kKPKXmlLastModificationTime = @"LastModificationTime";
+NSString *const kKPKXmlCreationTime = @"CreationTime";
+NSString *const kKPKXmlLastAccessTime = @"LastAccessTime";
+NSString *const kKPKXmlExpiryTime = @"ExpiryTime";
+NSString *const kKPKXmlExpires = @"Expires";
+NSString *const kKPKXmlUsageCount = @"UsageCount";
+NSString *const kKPKXmlLocationChanged = @"LocationChanged";
+
+
+#pragma mark Generic
+NSString *const kKPKXmlKey = @"Key";
+NSString *const kKPKXmlValue = @"Value";
+NSString *const kKPKXmlData = @"Data";
 
 #pragma mark Attributes
 NSString *const kKPKXmlProtected    = @"Protected";

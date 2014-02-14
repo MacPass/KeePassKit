@@ -215,7 +215,7 @@
   group.updateTiming = NO;
   group.tree = tree;
   
-  group.uuid = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, @"UUID")];
+  group.uuid = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlUUID)];
   if (group.uuid == nil) {
     group.uuid = [NSUUID UUID];
   }
@@ -232,13 +232,13 @@
   DDXMLElement *timesElement = [groupElement elementForName:@"Times"];
   [self _parseTimes:group.timeInfo element:timesElement];
   
-  group.isExpanded =  KPKXmlBool(groupElement, @"IsExpanded");
+  group.isExpanded =  KPKXmlBool(groupElement, kKPKXmlIsExpanded);
   
-  group.defaultAutoTypeSequence = KPKXmlString(groupElement, @"DefaultAutoTypeSequence");
+  group.defaultAutoTypeSequence = KPKXmlString(groupElement, kKPKXmlDefaultAutpTypeSequence);
   
-  group.isAutoTypeEnabled = parseInheritBool(groupElement, @"EnableAutoType");
-  group.isSearchEnabled = parseInheritBool(groupElement, @"EnableSearching");
-  group.lastTopVisibleEntry = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, @"LastTopVisibleEntry")];
+  group.isAutoTypeEnabled = parseInheritBool(groupElement, kKPKXmlEnableAutoType);
+  group.isSearchEnabled = parseInheritBool(groupElement, kKPKXmlEnableSearching);
+  group.lastTopVisibleEntry = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlLastTopVisibleEntry)];
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Entry"]) {
     KPKEntry *entry = [self _parseEntry:element forTree:tree ignoreHistory:NO];
@@ -260,12 +260,12 @@
   entry.updateTiming = NO;
   entry.tree = tree;
   
-  entry.uuid = [NSUUID uuidWithEncodedString:KPKXmlString(entryElement, @"UUID")];
+  entry.uuid = [NSUUID uuidWithEncodedString:KPKXmlString(entryElement, kKPKXmlUUID)];
   if (entry.uuid == nil) {
     entry.uuid = [NSUUID UUID];
   }
   
-  entry.iconId = KPKXmlInteger(entryElement, @"IconID");
+  entry.iconId = KPKXmlInteger(entryElement, kKPKXmlIconId);
   
   DDXMLElement *customIconUuidElement = [entryElement elementForName:@"CustomIconUUID"];
   if (customIconUuidElement != nil) {
@@ -283,7 +283,7 @@
   for (DDXMLElement *element in [entryElement elementsForName:@"String"]) {
     DDXMLElement *valueElement = [element elementForName:@"Value"];
     BOOL isProtected = KPKXmlBoolAttribute(valueElement, @"Protected") || KPKXmlBoolAttribute(valueElement, @"ProtectInMemory");
-    KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKXmlString(element, @"Key")
+    KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKXmlString(element, kKPKXmlKey)
                                                           value:[valueElement stringValue]
                                                     isProtected:isProtected];
     
@@ -319,13 +319,13 @@
 }
 
 - (void)_parseTimes:(KPKTimeInfo *)timeInfo element:(DDXMLElement *)nodeElement {
-  timeInfo.lastModificationTime = KPKXmlDate(_dateFormatter, nodeElement, @"LastModificationTime");
-  timeInfo.creationTime = KPKXmlDate(_dateFormatter, nodeElement, @"CreationTime");
-  timeInfo.lastAccessTime = KPKXmlDate(_dateFormatter, nodeElement, @"LastAccessTime");
-  timeInfo.expiryTime = KPKXmlDate(_dateFormatter, nodeElement, @"ExpiryTime");
-  timeInfo.expires = KPKXmlBool(nodeElement, @"Expires");
-  timeInfo.usageCount = KPKXmlInteger(nodeElement, @"UsageCount");
-  timeInfo.locationChanged = KPKXmlDate(_dateFormatter, nodeElement, @"LocationChanged");
+  timeInfo.lastModificationTime = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLastModificationTime);
+  timeInfo.creationTime = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlCreationTime);
+  timeInfo.lastAccessTime = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLastAccessTime);
+  timeInfo.expiryTime = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlExpiryTime);
+  timeInfo.expires = KPKXmlBool(nodeElement, kKPKXmlExpires);
+  timeInfo.usageCount = KPKXmlInteger(nodeElement, kKPKXmlUsageCount);
+  timeInfo.locationChanged = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLocationChanged);
 }
 
 - (void)_parseCustomIcons:(DDXMLElement *)root meta:(KPKMetaData *)metaData {
@@ -340,7 +340,7 @@
   _iconMap = [[NSMutableDictionary alloc] init];
   DDXMLElement *customIconsElement = [root elementForName:@"CustomIcons"];
   for (DDXMLElement *iconElement in [customIconsElement elementsForName:@"Icon"]) {
-    NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKXmlString(iconElement, @"UUID")];
+    NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKXmlString(iconElement, kKPKXmlUUID)];
     KPKIcon *icon = [[KPKIcon alloc] initWithUUID:uuid encodedString:KPKXmlString(iconElement, @"Data")];
     [metaData addCustomIcon:icon];
     _iconMap[ icon.uuid ] = icon;
@@ -381,7 +381,7 @@
     NSUInteger index = [[refAttribute stringValue] integerValue];
     
     KPKBinary *binary = _binaryMap[ @(index) ];
-    binary.name = KPKXmlString(binaryElement, @"Key");
+    binary.name = KPKXmlString(binaryElement, kKPKXmlKey);
     [entry addBinary:binary];
   }
 }
@@ -397,7 +397,7 @@
      </Item>
      </CustomData>
      */
-    KPKBinary *customData = [[KPKBinary alloc] initWithName:KPKXmlString(dataElement, @"Key") value:KPKXmlString(dataElement, @"Value") compressed:NO];
+    KPKBinary *customData = [[KPKBinary alloc] initWithName:KPKXmlString(dataElement, kKPKXmlKey) value:KPKXmlString(dataElement, @"Value") compressed:NO];
     [metaData.customData addObject:customData];
   }
 }
@@ -460,7 +460,7 @@
    */
   DDXMLElement *deletedObjects = [root elementForName:@"DeletedObjects"];
   for(DDXMLElement *deletedObject in [deletedObjects elementsForName:@"DeletedObject"]) {
-    NSUUID *uuid = [[NSUUID alloc] initWithEncodedUUIDString:KPKXmlString(deletedObject, @"UUID")];
+    NSUUID *uuid = [[NSUUID alloc] initWithEncodedUUIDString:KPKXmlString(deletedObject, kKPKXmlUUID)];
     NSDate *date = KPKXmlDate(_dateFormatter, deletedObject, @"DeletionTime");
     KPKDeletedNode *deletedNode = [[KPKDeletedNode alloc] initWithUUID:uuid date:date];
     tree.deletedObjects[ deletedNode.uuid ] = deletedNode;
