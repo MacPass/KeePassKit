@@ -1,5 +1,5 @@
-//
 //  NSString+Commands.m
+//
 //  MacPass
 //
 //  Created by Michael Starke on 10/11/13.
@@ -22,6 +22,7 @@
 
 #import "NSString+Commands.h"
 #import "KPKEntry.h"
+#import "KPKAttribute.h"
 #import "KPKTree.h"
 
 @implementation NSString (Reference)
@@ -44,153 +45,64 @@
 }
 
 - (NSString *)resolveReferenceWithTree:(KPKTree *)tree {
-  NSAssert(NO, @"Not implemented yet!");
-  return nil;
+  NSRange referenceRange = [self rangeOfString:@"{REF:" options:NSCaseInsensitiveSearch];
+  if(referenceRange.location != NSNotFound && referenceRange.length > 0) {
+    NSRange endOfReference = [self rangeOfString:@"}"
+                                         options:NSCaseInsensitiveSearch
+                                           range:NSMakeRange(referenceRange.location, [self length] - referenceRange.location)];
+    if(endOfReference.location != NSNotFound && endOfReference.length > 0) {
+      NSString *reference = [self substringWithRange:NSMakeRange(referenceRange.location + 5, referenceRange.location + 5 - endOfReference.location)];
+      
+      /* Evaluate the reference */
+    }
+  }
+  return self;
 }
 @end
 
 @implementation NSString (Placeholder)
 
-+ (NSArray *)_simplePlaceholder {
-  static NSArray *placeholder = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    placeholder = @[
-                    @"title",
-                    @"username",
-                    @"url",
-                    @"password",
-                    @"notes"
-                    ];
-  });
-  return placeholder;
-}
-
-+ (NSArray *)_urlPlaceholder {
-  static NSArray *urlPlaceholder = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    urlPlaceholder = @[
-                       @"URL:RMVSCM",
-                       @"URL:SCM",
-                       @"URL:HOST",
-                       @"URL:PORT",
-                       @"URL:PATH",
-                       @"URL:QUERY"
-                       ];
-  });
-  return urlPlaceholder;
-}
-
-- (BOOL)isPlaceholder {
-  /* TODO: Test for correct brackets */
-  NSArray *placeholders = [[[self class] _simplePlaceholder] arrayByAddingObjectsFromArray:[[self class] _urlPlaceholder]];
-  NSRange range;
-  for(NSString *placeholder in placeholders) {
-    range = [self rangeOfString:placeholder options:NSCaseInsensitiveSearch];
-    if(range.location != NSNotFound) {
-      return YES;
-    }
+- (NSString *)evaluatePlaceholderWithEntry:(KPKEntry *)entry {
+  /* build mapping for all default fields */
+  NSMutableDictionary *mappings = [[NSMutableDictionary alloc] initWithCapacity:0];
+  for(KPKAttribute *defaultAttribute in [entry defaultAttributes]) {
+    NSString *keyString = [[NSString alloc] initWithFormat:@"{%@}", defaultAttribute.key];
+    mappings[keyString] = defaultAttribute.value;
   }
-  
-  range = [self rangeOfString:@"{S:}" options:NSCaseInsensitiveSearch];
-  return (range.location != NSNotFound);
-}
-
-- (NSString *)placeholderValueForEntry:(KPKEntry *)entry {
   /*
-   {TITLE}
-   {USERNAME}
-   {URL}
-   {PASSWORD}
-   {NOTES}
+   Custom String fields {S:<Key>}
    */
-  NSString *lowercased = [self lowercaseString];
-  BOOL simplePlaceholder = [[[self class] _simplePlaceholder] containsObject:lowercased];
-  if(simplePlaceholder) {
-    SEL selector = NSSelectorFromString(lowercased);
-    NSMethodSignature *signatur = [entry methodSignatureForSelector:selector];
-    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signatur];
-    [invocation setSelector:selector];
-    [invocation setTarget:entry];
-    [invocation invoke];
-    
-    CFTypeRef result;
-    [invocation getReturnValue:&result];
-    if (result) {
-      CFRetain(result);
-      NSString *string = (NSString *)CFBridgingRelease(result);
-      return string;
-    }
-    return nil;
+  for(KPKAttribute *customAttribute in [entry customAttributes]) {
+    NSString *keyString = [[NSString alloc] initWithFormat:@"{S:%@}", customAttribute.key ];
+    mappings[keyString] = customAttribute.value;
   }
-  else if( [lowercased hasPrefix:@"url"]) {
-    /*
-     {URL:RMVSCM}	Entry URL without scheme name.
-     {URL:SCM}	Scheme name of the entry URL.
-     {URL:HOST}	Host component of the entry URL.
-     {URL:PORT}	Port number of the entry URL.
-     {URL:PATH}	Path component of the entry URL.
-     {URL:QUERY}	Query information of the entry URL.
-     */
-    NSString *urlOption = [lowercased substringFromIndex:4];
+  /*  url mappings */
+  if([entry.url length] > 0) {
     NSURL *url = [[NSURL alloc] initWithString:entry.url];
-    
-    if([urlOption hasPrefix:@"rmvscm"]) {
+    if([url scheme]) {
       NSMutableString *mutableURL = [entry.url mutableCopy];
       [mutableURL replaceOccurrencesOfString:[url scheme] withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableURL length])];
-      return [mutableURL copy];
-    }
-    if([urlOption hasPrefix:@"scm"]) {
-      return [url scheme];
-    }
-    if([urlOption hasPrefix:@"host"]) {
-      return [url host];
-    }
-    if([urlOption hasPrefix:@"port"]) {
-      return [[url port] stringValue];
-    }
-    if([urlOption hasPrefix:@"path"]) {
-      return [url path];
-    }
-    if([urlOption hasPrefix:@"query"]) {
-      return [url query];
-    }
-  }
-  else if([lowercased hasPrefix:@"s:"]) {
-    NSString *key = [self substringFromIndex:2];
-    NSString *value = [entry valueForCustomAttributeWithKey:key];
-    return value;
-  }
-  return nil;
-}
-
-- (NSString *)evaluatePlaceholderWithEntry:(KPKEntry *)entry didReplace:(BOOL *)didReplace {
-  if(didReplace != NULL) {
-    *didReplace = NO;
-  }
-  NSMutableString *substituedString = [[NSMutableString alloc] initWithCapacity:[self length]];
-  NSCharacterSet *bracketsSet = [NSCharacterSet characterSetWithCharactersInString:@"{}"];
-  NSArray *tokens = [self componentsSeparatedByCharactersInSet:bracketsSet];
-  if([tokens count] == 0) {
-    return nil;
-  }
-  for(NSString *token in tokens) {
-    if([token length] == 0) {
-      continue; // Skip emtpy string
-    }
-    NSString *evaluated = [token placeholderValueForEntry:entry];
-    if(evaluated) {
-      if(didReplace != NULL) {
-        *didReplace = YES;
-      }
-      [substituedString appendString:evaluated];
+      mappings[@"{URL:RMVSCM}"] = [mutableURL copy];
+      mappings[@"{URL:SCM}"] = [url scheme];
     }
     else {
-      [substituedString appendFormat:@"{%@}", token];
+      mappings[@"{URL:RMVSCM}"] = entry.url;
+      mappings[@"{URL:SCM}"] = @"";
     }
+    mappings[@"{URL:HOST}"] = [url host] ? [url host] : @"";
+    mappings[@"{URL:PORT}"] = [url port] ? [[url port]stringValue] : @"";
+    mappings[@"{URL:PATH}"] = [url path] ? [url path] : @"";
+    mappings[@"{URL:QUERY}"] = [url query] ? [url query] : @"";
   }
-  return substituedString;
+  NSMutableString *supstitudedString = [self mutableCopy];
+  for(NSString *placeholderKey in mappings) {
+    [supstitudedString replaceOccurrencesOfString:placeholderKey
+                                       withString:mappings[placeholderKey]
+                                          options:NSCaseInsensitiveSearch
+                                            range:NSMakeRange(0, [supstitudedString length])];
+  }
+  // TODO Missing recursion!
+  return [supstitudedString copy];
 }
 - (NSString *)_removeBraces {
   NSUInteger start = [self hasPrefix:@"{"] ? 1 : 0;
