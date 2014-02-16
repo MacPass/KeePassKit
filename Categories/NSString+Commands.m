@@ -24,6 +24,9 @@
 #import "KPKEntry.h"
 #import "KPKAttribute.h"
 #import "KPKTree.h"
+#import "KPKGroup.h"
+
+static NSDictionary *_selectorForReference;
 
 @implementation NSString (Reference)
 
@@ -41,18 +44,81 @@
  {REF:<WantedField>@<SearchIn>:<Text>}
  */
 - (NSString *)resolveReferencesWithTree:(KPKTree *)tree {
-  NSError *error;
-  NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:@"\\{REF:(T|U|A|N|I|O){1}@(T|U|A|N|I|O){1}:([^\\}]*)\\}"
+  NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:@"\\{REF:(T|U|A|N|I|O){1}@(T|U|A|N|I){1}:([^\\}]*)\\}"
                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                            error:&error];
-  NSString *searchString = [self copy];
-  [regexp enumerateMatchesInString:self options:NSMatchingReportCompletion range:NSMakeRange(0, [self length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-    NSString *searchAttribute = [searchString substringWithRange:[result rangeAtIndex:1]];
-    NSString *replaceAttribute = [searchString substringWithRange:[result rangeAtIndex:2]];
-    NSString *searchCriteria = [searchString substringWithRange:[result rangeAtIndex:3]];
-    NSLog(@"Match Search in %@ to mathc %@ replace with %@", searchAttribute, searchCriteria, replaceAttribute);
+                                                                            error:NULL];
+  NSMutableString *substitutedString = [self mutableCopy];
+  [regexp enumerateMatchesInString:self options:0 range:NSMakeRange(0, [self length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    NSString *valueField = [self substringWithRange:[result rangeAtIndex:1]];
+    NSString *searchField = [self substringWithRange:[result rangeAtIndex:2]];
+    NSString *criteria = [self substringWithRange:[result rangeAtIndex:3]];
+    NSString *substitue = [self _retrieveValueOfKey:valueField
+                                            withKey:searchField
+                                           matching:criteria
+                                           withTree:tree];
+    
   }];
   return self;
+}
+- (NSString *)_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match withTree:(KPKTree *)tree {
+  _selectorForReference = @{
+                            @"T" : @"title",
+                            @"U" : @"username",
+                            @"P" : @"password",
+                            @"A" : @"url",
+                            @"N" : @"notes",
+                            @"I" : @"uuid"
+                            };
+  NSString *valueSelectorString = _selectorForReference[valueKey];
+  if(!valueSelectorString) {
+    return nil; // Wrong valueKey
+  }
+  __block KPKEntry *matchingEntry;
+  /* Custom Attribute search */
+  if([searchKey isEqualToString:@"O"]) {
+    [tree.allEntries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+      KPKEntry *entry = obj;
+      for(KPKAttribute *attribute in entry.customAttributes) {
+        if([attribute.value isEqualToString:match]) {
+          matchingEntry = obj;
+          *stop = YES;
+        }
+      }
+    }];
+  }
+  /* Direct UUID search */
+  else if([searchKey isEqualToString:@"I"]) {
+    NSUUID *uuid;
+    if([match length] == 32) {
+      //@"E621E1F8-C36C-495A-93FC-0C247A3E6E5F"
+    }
+    uuid = [[NSUUID alloc] initWithUUIDString:match];
+    matchingEntry = [tree.root entryForUUID:uuid];
+  }
+  /* Defautl attribute search */
+  else {
+    NSString *predicateFormat = [[NSString alloc] initWithFormat:@"SELF.%@ LIKE %@", valueSelectorString, match];
+    NSPredicate *searchPredicat = [NSPredicate predicateWithFormat:predicateFormat];
+    matchingEntry = [tree.allEntries filteredArrayUsingPredicate:searchPredicat][0];
+  }
+  if(!matchingEntry) {
+    return nil;
+  }
+  SEL selector = NSSelectorFromString(valueSelectorString);
+  NSMethodSignature *signatur = [matchingEntry methodSignatureForSelector:selector];
+  NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signatur];
+  [invocation setSelector:selector];
+  [invocation setTarget:matchingEntry];
+  [invocation invoke];
+  
+  CFTypeRef result;
+  [invocation getReturnValue:&result];
+  if (result) {
+    CFRetain(result);
+    NSString *string = (NSString *)CFBridgingRelease(result);
+    return string;
+  }
+  return nil;
 }
 
 @end
@@ -101,14 +167,4 @@
   // TODO Missing recursion!
   return [supstitudedString copy];
 }
-- (NSString *)_removeBraces {
-  NSUInteger start = [self hasPrefix:@"{"] ? 1 : 0;
-  NSUInteger end = [self hasSuffix:@"}"] ? 1 : 0;
-  return [self substringWithRange:NSMakeRange(start, [self length] - start - end)];
-}
-
-- (BOOL)_isValidCommand {
-  return ( [self hasPrefix:@"{"] && [self hasSuffix:@"}"] );
-}
-
 @end
