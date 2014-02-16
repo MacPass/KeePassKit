@@ -119,6 +119,10 @@
   return YES;
 }
 
+- (NSString *)description {
+  return [NSString stringWithFormat:@"Key:%@ Value:%@", self.key, self.value];
+}
+
 - (NSString *)value {
   return [self _decodedValue];
 }

@@ -44,22 +44,33 @@ static NSDictionary *_selectorForReference;
  {REF:<WantedField>@<SearchIn>:<Text>}
  */
 - (NSString *)resolveReferencesWithTree:(KPKTree *)tree {
+  return [self _resolveReferencesWithTree:tree recursionLevel:0];
+}
+
+- (NSString *)_resolveReferencesWithTree:(KPKTree *)tree recursionLevel:(NSUInteger)level {
+  /* Stop endless recurstion at 10 substitions */
+  if(level > 10) {
+    return self;
+  }
   NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:@"\\{REF:(T|U|A|N|I|O){1}@(T|U|A|N|I){1}:([^\\}]*)\\}"
                                                                           options:NSRegularExpressionCaseInsensitive
                                                                             error:NULL];
-  NSMutableString *substitutedString = [self mutableCopy];
+  __block NSMutableString *mutableSelf = [self mutableCopy];
+  __block BOOL didReplace = NO;
   [regexp enumerateMatchesInString:self options:0 range:NSMakeRange(0, [self length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
     NSString *valueField = [self substringWithRange:[result rangeAtIndex:1]];
     NSString *searchField = [self substringWithRange:[result rangeAtIndex:2]];
     NSString *criteria = [self substringWithRange:[result rangeAtIndex:3]];
-    NSString *substitue = [self _retrieveValueOfKey:valueField
-                                            withKey:searchField
-                                           matching:criteria
-                                           withTree:tree];
-    
+    NSString *substitute = [self _retrieveValueOfKey:valueField
+                                             withKey:searchField
+                                            matching:criteria
+                                            withTree:tree];
+    didReplace = YES;
+    [mutableSelf replaceCharactersInRange:result.range withString:substitute];
   }];
-  return self;
+  return (didReplace ? [mutableSelf _resolveReferencesWithTree:tree recursionLevel:level+1] : self);
 }
+
 - (NSString *)_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match withTree:(KPKTree *)tree {
   _selectorForReference = @{
                             @"T" : @"title",
@@ -97,7 +108,7 @@ static NSDictionary *_selectorForReference;
   }
   /* Defautl attribute search */
   else {
-    NSString *predicateFormat = [[NSString alloc] initWithFormat:@"SELF.%@ LIKE %@", valueSelectorString, match];
+    NSString *predicateFormat = [[NSString alloc] initWithFormat:@"SELF.%@ CONTAINS[cd] %@", valueSelectorString, match];
     NSPredicate *searchPredicat = [NSPredicate predicateWithFormat:predicateFormat];
     matchingEntry = [tree.allEntries filteredArrayUsingPredicate:searchPredicat][0];
   }
