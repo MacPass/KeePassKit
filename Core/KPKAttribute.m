@@ -146,14 +146,6 @@
   return [[KPKFormat sharedFormat] isDefautlKey:self.key];
 }
 
-- (BOOL)isReference {
-  return [self.value isReference];
-}
-
-- (BOOL)isPlaceholder {
-  return NO;
-}
-
 - (NSString *)referencedValue {
   //KPKGroup *rootGroup = [self.entry rootGroup];
   // Determin what type to look for

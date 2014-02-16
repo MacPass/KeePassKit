@@ -27,8 +27,8 @@
 
 @interface NSString (Reference)
 
-- (BOOL)isReference;
-- (NSString *)resolveReferenceWithTree:(KPKTree *)tree;
+- (NSString *)resolveReferencesWithTree:(KPKTree *)tree;
+
 @end
 
 @interface NSString (Placeholder)

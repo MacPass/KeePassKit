@@ -40,24 +40,21 @@
  {REF:P@I:46C9B1FFBD4ABC4BBB260C6190BAD20C}
  {REF:<WantedField>@<SearchIn>:<Text>}
  */
-- (BOOL)isReference {
-  return [self hasPrefix:@"{REF:"] && [self hasSuffix:@"}"];
-}
-
-- (NSString *)resolveReferenceWithTree:(KPKTree *)tree {
-  NSRange referenceRange = [self rangeOfString:@"{REF:" options:NSCaseInsensitiveSearch];
-  if(referenceRange.location != NSNotFound && referenceRange.length > 0) {
-    NSRange endOfReference = [self rangeOfString:@"}"
-                                         options:NSCaseInsensitiveSearch
-                                           range:NSMakeRange(referenceRange.location, [self length] - referenceRange.location)];
-    if(endOfReference.location != NSNotFound && endOfReference.length > 0) {
-      NSString *reference = [self substringWithRange:NSMakeRange(referenceRange.location + 5, referenceRange.location + 5 - endOfReference.location)];
-      
-      /* Evaluate the reference */
-    }
-  }
+- (NSString *)resolveReferencesWithTree:(KPKTree *)tree {
+  NSError *error;
+  NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:@"\\{REF:(T|U|A|N|I|O){1}@(T|U|A|N|I|O){1}:([^\\}]*)\\}"
+                                                                          options:NSRegularExpressionCaseInsensitive
+                                                                            error:&error];
+  NSString *searchString = [self copy];
+  [regexp enumerateMatchesInString:self options:NSMatchingReportCompletion range:NSMakeRange(0, [self length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    NSString *searchAttribute = [searchString substringWithRange:[result rangeAtIndex:1]];
+    NSString *replaceAttribute = [searchString substringWithRange:[result rangeAtIndex:2]];
+    NSString *searchCriteria = [searchString substringWithRange:[result rangeAtIndex:3]];
+    NSLog(@"Match Search in %@ to mathc %@ replace with %@", searchAttribute, searchCriteria, replaceAttribute);
+  }];
   return self;
 }
+
 @end
 
 @implementation NSString (Placeholder)
