@@ -30,8 +30,10 @@
 
 - (NSData *)uuidData;
 - (NSString *)encodedString;
-- (id)initWithEncodedUUIDString:(NSString *)string;
-- (id)initWithData:(NSData *)data;
+- (instancetype)initWithEncodedUUIDString:(NSString *)string;
+- (instancetype)initWithData:(NSData *)data;
+/* Initsalizes with a UUID string missing any - */
+- (instancetype)initWithUndelemittedUUIDString:(NSString *)string;
 
 @end
 

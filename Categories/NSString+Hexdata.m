@@ -41,9 +41,7 @@
   if([string hasPrefix:@"0x"]) {
     string = [self substringFromIndex:2];
   }
-  NSCharacterSet *hexCharactes = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789AaBbCcDdEeFf"] invertedSet];
-  BOOL isValid = (NSNotFound == [string rangeOfCharacterFromSet:hexCharactes].location);
-  if(!isValid) {
+  if(![string isValidHexString]) {
     return nil;
   }
   const char *chars = [string UTF8String];
@@ -63,6 +61,11 @@
   }
   
   return data;
+}
+
+- (BOOL)isValidHexString {
+  NSCharacterSet *hexCharactes = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789AaBbCcDdEeFf"] invertedSet];
+  return (NSNotFound == [self rangeOfCharacterFromSet:hexCharactes].location);
 }
 
 @end

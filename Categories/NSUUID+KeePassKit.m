@@ -23,6 +23,7 @@
 #import "NSUUID+KeePassKit.h"
 #import "NSMutableData+Base64.h"
 #import "KPKUTIs.h"
+#import "NSString+Hexdata.h"
 
 static NSUUID *aesUUID = nil;
 
@@ -44,17 +45,37 @@ static NSUUID *aesUUID = nil;
   return [[NSUUID alloc] initWithEncodedUUIDString:string];
 }
 
-- (id)initWithEncodedUUIDString:(NSString *)string {
+- (instancetype)initWithEncodedUUIDString:(NSString *)string {
   NSMutableData *data = [[string dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
   [data decodeBase64];
   self = [self initWithData:data];
   return self;
 }
 
-- (id)initWithData:(NSData *)data {
+- (instancetype)initWithData:(NSData *)data {
   uuid_t uuidBuffer;
   [data getBytes:&uuidBuffer length:sizeof(uuid_t)];
   self = [self initWithUUIDBytes:uuidBuffer];
+  return self;
+}
+
+- (instancetype)initWithUndelemittedUUIDString:(NSString *)string {
+  if(![string isValidHexString]) {
+    return nil; // invalid characters
+  }
+  if([string length] != 32) {
+    return nil; // invalid lenght
+  }
+  @autoreleasepool {
+    NSString *fixedFormat = [NSString stringWithFormat:@"%@-%@-%@-%@-%@",
+                             [string substringWithRange:NSMakeRange(0, 8)],
+                             [string substringWithRange:NSMakeRange(8, 4)],
+                             [string substringWithRange:NSMakeRange(12, 4)],
+                             [string substringWithRange:NSMakeRange(16, 4)],
+                             [string substringWithRange:NSMakeRange(20, 12)]
+                             ];
+    self = [self initWithUUIDString:fixedFormat];
+  }
   return self;
 }
 

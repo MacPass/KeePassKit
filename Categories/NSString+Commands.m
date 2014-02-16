@@ -25,6 +25,7 @@
 #import "KPKAttribute.h"
 #import "KPKTree.h"
 #import "KPKGroup.h"
+#import "NSUUID+KeePassKit.h"
 
 static NSDictionary *_selectorForReference;
 
@@ -101,9 +102,11 @@ static NSDictionary *_selectorForReference;
   else if([searchKey isEqualToString:@"I"]) {
     NSUUID *uuid;
     if([match length] == 32) {
-      //@"E621E1F8-C36C-495A-93FC-0C247A3E6E5F"
+      uuid = [[NSUUID alloc] initWithUndelemittedUUIDString:match];
     }
-    uuid = [[NSUUID alloc] initWithUUIDString:match];
+    else {
+      uuid = [[NSUUID alloc] initWithUUIDString:match];
+    }
     matchingEntry = [tree.root entryForUUID:uuid];
   }
   /* Defautl attribute search */

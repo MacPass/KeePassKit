@@ -26,5 +26,6 @@
 
 + (NSString *)hexstringFromData:(NSData *)data;
 - (NSData *)dataFromHexString;
+- (BOOL)isValidHexString;
 
 @end
