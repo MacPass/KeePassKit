@@ -281,7 +281,7 @@
   [self _parseTimes:entry.timeInfo element:timesElement];
   
   for (DDXMLElement *element in [entryElement elementsForName:@"String"]) {
-    DDXMLElement *valueElement = [element elementForName:@"Value"];
+    DDXMLElement *valueElement = [element elementForName:kKPKXmlValue];
     BOOL isProtected = KPKXmlBoolAttribute(valueElement, @"Protected") || KPKXmlBoolAttribute(valueElement, @"ProtectInMemory");
     KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKXmlString(element, kKPKXmlKey)
                                                           value:[valueElement stringValue]
@@ -376,7 +376,7 @@
    */
   
   for (DDXMLElement *binaryElement in [entryElement elementsForName:@"Binary"]) {
-    DDXMLElement *valueElement = [binaryElement elementForName:@"Value"];
+    DDXMLElement *valueElement = [binaryElement elementForName:kKPKXmlValue];
     DDXMLNode *refAttribute = [valueElement attributeForName:@"Ref"];
     NSUInteger index = [[refAttribute stringValue] integerValue];
     
@@ -397,7 +397,7 @@
      </Item>
      </CustomData>
      */
-    KPKBinary *customData = [[KPKBinary alloc] initWithName:KPKXmlString(dataElement, kKPKXmlKey) value:KPKXmlString(dataElement, @"Value") compressed:NO];
+    KPKBinary *customData = [[KPKBinary alloc] initWithName:KPKXmlString(dataElement, kKPKXmlKey) value:KPKXmlString(dataElement, kKPKXmlValue) compressed:NO];
     [metaData.customData addObject:customData];
   }
 }

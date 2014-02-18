@@ -365,7 +365,7 @@
           
         case KPKFieldTypeEntryNotes:
           entry.notes = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
-          [self _parseNotes:entry];
+          [self _parseAutotype:entry];
           break;
           
         case KPKFieldTypeEntryCreationTime:
@@ -492,7 +492,7 @@
 	}
 }
 
-- (void)_parseNotes:(KPKEntry *)notes {
+- (void)_parseAutotype:(KPKEntry *)notes {
   /*
    TODO
    
