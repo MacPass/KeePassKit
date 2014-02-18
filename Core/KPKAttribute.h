@@ -27,7 +27,7 @@
 @interface KPKAttribute : NSObject <NSCopying, NSCoding>
 
 @property (nonatomic, copy) NSString *key;
-@property (nonatomic, assign) NSString *value;
+@property (nonatomic, copy) NSString *value;
 @property (nonatomic, assign) BOOL isProtected;
 @property (nonatomic, readonly) NSString *referencedValue;
 @property (nonatomic, readonly) NSString *placeholderValue;

@@ -52,7 +52,7 @@
 @property (nonatomic, assign) KPKGroup *root;
 /**
  Acces to the root group via the groups property
- to offer a bindiable interface for a tree
+ to offer a bindable interface for a tree
  */
 @property (nonatomic, readonly) NSArray *groups;
 /**

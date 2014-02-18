@@ -50,11 +50,11 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 
 @interface KPKEntry : KPKNode <NSCopying, NSCoding, NSPasteboardWriting, NSPasteboardReading>
 
-@property (nonatomic, assign) NSString *title;
-@property (nonatomic, assign) NSString *password;
-@property (nonatomic, assign) NSString *username;
-@property (nonatomic, assign) NSString *url;
-@property (nonatomic, assign) NSString *notes;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *password;
+@property (nonatomic, copy) NSString *username;
+@property (nonatomic, copy) NSString *url;
+@property (nonatomic, copy) NSString *notes;
 
 @property (nonatomic, strong) NSArray *binaries;
 // TODO: change Tags to an String array!
