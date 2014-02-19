@@ -93,6 +93,20 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   return shortFormats;
 }
 
+- (NSDictionary *)unsafeShortFormats {
+  static NSDictionary *unsafeShortFormats;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    unsafeShortFormats = @{
+                           kKPKAutotypeShortAlt : kKPKAutotypeAlt,
+                           kKPKAutotypeShortControl : kKPKAutotypeControl,
+                           kKPKAutotypeShortEnter : kKPKAutotypeEnter,
+                           kKPKAutotypeShortShift : kKPKAutotypeShift,
+                           };
+  });
+  return unsafeShortFormats;
+}
+
 - (NSString *)findCommand:(NSString *)command {
   /*
    Caches the entries in a NSDictionary with a maxium entry count
@@ -100,8 +114,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
    */
   static NSUInteger const kMPMaximumCacheEntries = 50;
   static NSUInteger const kMPCacheLifeTime = 60*60*60; // 1h
-  static NSMutableDictionary *cache;
-  if(cache) {
+  static NSMutableDictionary *cache = nil;
+  if(nil == cache) {
     cache = [[NSMutableDictionary alloc] initWithCapacity:kMPMaximumCacheEntries];
   }
   KPKCommandCacheEntry *cacheHit = cache[command];
@@ -127,13 +141,20 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 }
 
 - (NSString *)_normalizeCommand:(NSString *)command {
-  NSMutableString *mutableCommand = [command mutableCopy];
   
   NSError *error;
-  NSString *match = [[NSString alloc] initWithFormat:@".*([^\\{%@^\\}]^\\{%@^\\}|^\\{%@^\\}|^\\{%@^\\}]).*", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
-  NSRegularExpression *shortRegExp = [[NSRegularExpression alloc] initWithPattern:match options:0 error:&error];
-  [shortRegExp enumerateMatchesInString:command options:0 range:NSMakeRange(0, 0) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-    *stop = YES;
+  NSString *modifierMatch = [[NSString alloc] initWithFormat:@"(?<!\\{)([\\%@|\\%@|\\%@|%@])(?!\\})", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
+  NSRegularExpression *modifierRegExp = [[NSRegularExpression alloc] initWithPattern:modifierMatch options:NSRegularExpressionCaseInsensitive error:&error];
+  __block NSMutableIndexSet *matchinIndices = [[NSMutableIndexSet alloc] init];
+  [modifierRegExp enumerateMatchesInString:command options:0 range:NSMakeRange(0, [command length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [matchinIndices addIndex:result.range.location];
+  }];
+  // Backwards enumeration
+  NSDictionary *unsafeShortForats = [self unsafeShortFormats];
+  __block NSMutableString *mutableCommand = [command mutableCopy];
+  [matchinIndices enumerateIndexesInRange:NSMakeRange(0, [command length]) options:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *stop) {
+    NSString *shortFormatKey = [mutableCommand substringWithRange:NSMakeRange(idx, 1)];
+    [mutableCommand replaceCharactersInRange:NSMakeRange(idx, 1) withString:unsafeShortForats[shortFormatKey]];
   }];
   
   NSDictionary *shortFormats = [self shortFormats];
