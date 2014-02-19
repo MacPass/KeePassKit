@@ -28,6 +28,7 @@
 
 @interface KPKAutotype () {
   NSMutableArray *_associations;
+  NSString *_defaultSequence;
 }
 
 @end
@@ -81,6 +82,13 @@
     return self.entry.parent.defaultAutoTypeSequence;
   }
   return _defaultSequence;
+}
+
+- (void)setDefaultSequence:(NSString *)defaultSequence {
+  if(![self.defaultSequence isEqualToString:defaultSequence]) {
+    [[self.entry.undoManager prepareWithInvocationTarget:self] setDefaultSequence:self.defaultSequence];
+  }
+  _defaultSequence = [defaultSequence length]  > 0 ? [defaultSequence copy] : nil;
 }
 
 - (NSArray *)associations {
