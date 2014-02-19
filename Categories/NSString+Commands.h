@@ -27,7 +27,13 @@
 
 @interface NSString (Autotype)
 
-- (NSString *)normalizedCommand;
+/**
+ *  Normalizes the Autotype sequence by using only the long-format for all Entries.
+ *  @note The sequence is not in valid Keepass format, as curly braches are substitudet and modifier keys are mapped to custom commands
+ *
+ *  @return NSString with all sequences normalized to internal state
+ */
+- (NSString *)normalizedAutotypeSequence;
 
 @end
 

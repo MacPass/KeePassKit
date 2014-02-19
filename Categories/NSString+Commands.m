@@ -76,6 +76,9 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   return _sharedKPKCommandCacheInstance;
 }
 
+/**
+ *  Safe short-formats than can directly be repalced with theri long versions
+ */
 - (NSDictionary *)shortFormats {
   static NSDictionary *shortFormats;
   static dispatch_once_t onceToken;
@@ -92,7 +95,9 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   });
   return shortFormats;
 }
-
+/**
+ *  Short formats that contain modifier and cannot have to be considered spearately when replacing modifer
+ */
 - (NSDictionary *)unsafeShortFormats {
   static NSDictionary *unsafeShortFormats;
   static dispatch_once_t onceToken;
@@ -105,6 +110,20 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                            };
   });
   return unsafeShortFormats;
+}
+/**
+ *  Commands that are using a number, but do not allow a repeat
+ */
+- (NSArray *)valueCommands {
+  static NSArray *valueCommands;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    valueCommands = @[ kKPKAutotypeDelay,
+                       kKPKAutotypeVirtualExtendedKey,
+                       kKPKAutotypeVirtualKey,
+                       kKPKAutotypeVirtualNonExtendedKey ];
+  });
+  return valueCommands;
 }
 
 - (NSString *)findCommand:(NSString *)command {
@@ -141,21 +160,64 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 }
 
 - (NSString *)_normalizeCommand:(NSString *)command {
-  
-  NSError *error;
-  NSString *modifierMatch = [[NSString alloc] initWithFormat:@"(?<!\\{)([\\%@|\\%@|\\%@|%@])(?!\\})", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
-  NSRegularExpression *modifierRegExp = [[NSRegularExpression alloc] initWithPattern:modifierMatch options:NSRegularExpressionCaseInsensitive error:&error];
-  __block NSMutableIndexSet *matchinIndices = [[NSMutableIndexSet alloc] init];
+  /*
+   Since modifer keys can be used in curly brackets,
+   we only can replace the non-braceds ones with ourt own modifer commands
+   */
+  NSString *modifierMatch = [[NSString alloc] initWithFormat:@"(?<!\\{)([\\%@|\\%@|%@|\\%@])(?!\\})", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
+  NSRegularExpression *modifierRegExp = [[NSRegularExpression alloc] initWithPattern:modifierMatch options:NSRegularExpressionCaseInsensitive error:0];
+  NSAssert(modifierRegExp, @"Modifier RegExp should be correct!");
+  NSMutableIndexSet __block *matchingIndices = [[NSMutableIndexSet alloc] init];
   [modifierRegExp enumerateMatchesInString:command options:0 range:NSMakeRange(0, [command length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-    [matchinIndices addIndex:result.range.location];
+    [matchingIndices addIndex:result.range.location];
   }];
-  // Backwards enumeration
+  /* Enumerate the indices backwards, to not invalidate them by replacing strings */
   NSDictionary *unsafeShortForats = [self unsafeShortFormats];
-  __block NSMutableString *mutableCommand = [command mutableCopy];
-  [matchinIndices enumerateIndexesInRange:NSMakeRange(0, [command length]) options:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *stop) {
+  NSMutableString __block *mutableCommand = [command mutableCopy];
+  [matchingIndices enumerateIndexesInRange:NSMakeRange(0, [command length]) options:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *stop) {
     NSString *shortFormatKey = [mutableCommand substringWithRange:NSMakeRange(idx, 1)];
     [mutableCommand replaceCharactersInRange:NSMakeRange(idx, 1) withString:unsafeShortForats[shortFormatKey]];
   }];
+  /*
+   It's possible to extend commands by a mulitpyer,
+   Simply just repeat the commands n-times
+   
+   Format is {<KEY> <Repeat>}
+   
+   Special versions are:
+   {DELAY X}	Delays X milliseconds.
+   {VKEY X}
+   {VKEY-NX X}
+   {VKEY-EX X}
+   */
+  NSString *repeaterMatch = [[NSString alloc] initWithFormat:@"\\{([a-z]+|\\%@|\\%@|%@|\\%@)\\ ([0-9]*)\\}", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
+  NSRegularExpression *repeaterRegExp = [[NSRegularExpression alloc] initWithPattern:repeaterMatch options:NSRegularExpressionCaseInsensitive error:0];
+  NSAssert(repeaterRegExp, @"Repeater RegExp should be corret!");
+  NSMutableDictionary __block *repeaterValues = [[NSMutableDictionary alloc] init];
+  [repeaterRegExp enumerateMatchesInString:mutableCommand options:0 range:NSMakeRange(0, [mutableCommand length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    @autoreleasepool {
+      NSString *key = [mutableCommand substringWithRange:result.range];
+      NSString *command = [mutableCommand substringWithRange:[result rangeAtIndex:1]];
+      if([[self valueCommands] containsObject:command]) {
+        return; // Commands is not a repeat command
+      }
+      NSScanner *numberScanner = [[NSScanner alloc] initWithString:[mutableCommand substringWithRange:[result rangeAtIndex:2]]];
+      NSInteger repeatCounter = 0;
+      if(![numberScanner scanInteger:&repeatCounter]) {
+        *stop = YES; // Abort!
+      }
+      NSMutableString *rolledOutRepeat = [[NSMutableString alloc] initWithCapacity:([command length] + 2) * repeatCounter];
+      command = [NSString stringWithFormat:@"{%@}", command];
+      while(repeatCounter-- > 0) {
+        [rolledOutRepeat appendString:command];
+      }
+      repeaterValues[key] = rolledOutRepeat;
+    }
+  }];
+  
+  for(NSString *needle in repeaterValues) {
+    [mutableCommand replaceOccurrencesOfString:needle withString:repeaterValues[needle] options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableCommand length])];
+  }
   
   NSDictionary *shortFormats = [self shortFormats];
   for(NSString *needle in shortFormats) {
@@ -170,7 +232,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 
 @implementation NSString (Autotype)
 
-- (NSString *)normalizedCommand {
+- (NSString *)normalizedAutotypeSequence {
   return [[KPKCommandCache sharedCache] findCommand:self];
 }
 

@@ -101,7 +101,7 @@ NSString *const kKPKAutotypeHelp = @"{HELP}";
 NSString *const kKPKAutotypeNumlock = @"{NUMLOCK}";
 NSString *const kKPKAutotypePrintScreen = @"{PRTSC}";
 NSString *const kKPKAutotypeScrollLock = @"{SCROLLLOCK}";
-NSString *const kKPKAutotypeFunctionMask = @"{F}"; //1-16
+NSString *const kKPKAutotypeFunctionMaskRegularExpression = @"\\{F([1]?[0-9])\\}"; //1-16
 
 
 /* Keypad */
@@ -109,7 +109,7 @@ NSString *const kKPKAutotypeKeypaddAdd = @"{ADD}";
 NSString *const kKPKAutotypeKeypaddSubtract = @"{SUBTRACT}";
 NSString *const kKPKAutotypeKeypaddMultiply = @"{MULTIPLY}";
 NSString *const kKPKAutotypeKeypaddDivide = @"{DIVIDE}";
-NSString *const kKPKAutotypeKeypaddNumberMask = @"{NUMPAD}"; // 0-9
+NSString *const kKPKAutotypeKeypaddNumberMask = @"\\{NUMPAD[0-9]\\}"; // 0-9
 
 /* Symbols */
 NSString *const kKPKAutotypePlus = @"{+}";
@@ -122,6 +122,12 @@ NSString *const kKPKAutotypeSquareBracketLeft = @"{[}";
 NSString *const kKPKAutotypeSquareBracketRight = @"{]}";
 NSString *const kKPKAutotypeCurlyBracketLeft = @"{CURLYLEFT}";
 NSString *const kKPKAutotypeCurlyBracketRight = @"{CURLYRIGHT}";
+
+/* Value Commands without Brackets to use in Matches */
+NSString *const kKPKAutotypeDelay = @"DELAY";
+NSString *const kKPKAutotypeVirtualKey = @"VKEY X";
+NSString *const kKPKAutotypeVirtualNonExtendedKey = @"VKEY-NX";
+NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
 
 /*
  Windows Key	{WIN} (equ. to {LWIN})

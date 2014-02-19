@@ -50,7 +50,7 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeHelp;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeNumlock;
 FOUNDATION_EXTERN NSString *const kKPKAutotypePrintScreen;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeScrollLock;
-FOUNDATION_EXTERN NSString *const kKPKAutotypeFunctionMask; //1-16
+FOUNDATION_EXTERN NSString *const kKPKAutotypeFunctionMaskRegularExpression; //1-16
 
 /* Keypad */
 FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddAdd;
@@ -72,3 +72,9 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeShortCurlyBracketLeft;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeShortCurlyBracketRight;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeCurlyBracketLeft;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeCurlyBracketRight;
+
+/* Value-Commands*/
+FOUNDATION_EXTERN NSString *const kKPKAutotypeDelay;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualKey;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualNonExtendedKey;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualExtendedKey;
