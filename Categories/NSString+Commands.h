@@ -25,6 +25,12 @@
 @class KPKEntry;
 @class KPKTree;
 
+@interface NSString (Autotype)
+
+- (NSString *)normalizedCommand;
+
+@end
+
 @interface NSString (Reference)
 
 - (NSString *)resolveReferencesWithTree:(KPKTree *)tree;

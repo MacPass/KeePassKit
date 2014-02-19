@@ -25,9 +25,135 @@
 #import "KPKAttribute.h"
 #import "KPKTree.h"
 #import "KPKGroup.h"
+#import "KPKAutotypeCommands.h"
 #import "NSUUID+KeePassKit.h"
 
 static NSDictionary *_selectorForReference;
+
+/**
+ *  Cache Entry for Autotype Commands
+ */
+@interface KPKCommandCacheEntry : NSObject
+
+@property (strong) NSDate *lastUsed;
+@property (copy) NSString *command;
+
+- (instancetype)initWithCommand:(NSString *)command;
+
+@end
+
+@implementation KPKCommandCacheEntry
+
+- (instancetype)initWithCommand:(NSString *)command {
+  self = [super init];
+  if(self) {
+    _lastUsed = [NSDate date];
+    _command = [command copy];
+  }
+  return self;
+}
+
+@end
+
+@interface KPKCommandCache : NSObject
+
++ (instancetype)sharedCache;
+
+@end
+
+/**
+ *  Cache to store normalized Autoype command sequences
+ */
+static KPKCommandCache *_sharedKPKCommandCacheInstance;
+
+@implementation KPKCommandCache
+
++ (instancetype)sharedCache {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    _sharedKPKCommandCacheInstance = [[KPKCommandCache alloc] init];
+  });
+  return _sharedKPKCommandCacheInstance;
+}
+
+- (NSDictionary *)shortFormats {
+  static NSDictionary *shortFormats;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    shortFormats = @{
+                     kKPKAutotypeShortBackspace : kKPKAutotypeBackspace,
+                     kKPKAutotypeShortBackspace2 : kKPKAutotypeBackspace,
+                     kKPKAutotypeShortCurlyBracketLeft : kKPKAutotypeCurlyBracketLeft,
+                     kKPKAutotypeShortCurlyBracketRight : kKPKAutotypeCurlyBracketRight,
+                     kKPKAutotypeShortDelete : kKPKAutotypeDelete,
+                     kKPKAutotypeShortInsert : kKPKAutotypeInsert,
+                     kKPKAutotypeShortSpace : kKPKAutotypeSpace
+                     };
+  });
+  return shortFormats;
+}
+
+- (NSString *)findCommand:(NSString *)command {
+  /*
+   Caches the entries in a NSDictionary with a maxium entry count
+   If the maxium count is reached, the entries older than lifetime are removed
+   */
+  static NSUInteger const kMPMaximumCacheEntries = 50;
+  static NSUInteger const kMPCacheLifeTime = 60*60*60; // 1h
+  static NSMutableDictionary *cache;
+  if(cache) {
+    cache = [[NSMutableDictionary alloc] initWithCapacity:kMPMaximumCacheEntries];
+  }
+  KPKCommandCacheEntry *cacheHit = cache[command];
+  if(!cacheHit) {
+    cacheHit = [[KPKCommandCacheEntry alloc] initWithCommand:[self _normalizeCommand:command]];
+    if([cache count] > kMPMaximumCacheEntries) {
+      __block NSMutableArray *keysToRemove = [[NSMutableArray alloc] init];
+      [cache enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        KPKCommandCacheEntry *entry = obj;
+        if([entry.lastUsed timeIntervalSinceNow] > kMPCacheLifeTime) {
+          [keysToRemove addObject:key];
+        }
+      }];
+      [cache removeObjectsForKeys:keysToRemove];
+    }
+    cache[command] = cacheHit;
+  }
+  else {
+    /* Update the cahce date since we hit it */
+    cacheHit.lastUsed = [NSDate date];
+  }
+  return cacheHit.command;
+}
+
+- (NSString *)_normalizeCommand:(NSString *)command {
+  NSMutableString *mutableCommand = [command mutableCopy];
+  
+  NSError *error;
+  NSString *match = [[NSString alloc] initWithFormat:@".*([^\\{%@^\\}]^\\{%@^\\}|^\\{%@^\\}|^\\{%@^\\}]).*", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
+  NSRegularExpression *shortRegExp = [[NSRegularExpression alloc] initWithPattern:match options:0 error:&error];
+  [shortRegExp enumerateMatchesInString:command options:0 range:NSMakeRange(0, 0) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    *stop = YES;
+  }];
+  
+  NSDictionary *shortFormats = [self shortFormats];
+  for(NSString *needle in shortFormats) {
+    NSString *replace = shortFormats[needle];
+    [mutableCommand replaceOccurrencesOfString:needle withString:replace options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableCommand length])];
+  }
+  return [[NSString alloc] initWithString:mutableCommand];
+}
+
+@end
+
+
+@implementation NSString (Autotype)
+
+- (NSString *)normalizedCommand {
+  return [[KPKCommandCache sharedCache] findCommand:self];
+}
+
+@end
 
 @implementation NSString (Reference)
 

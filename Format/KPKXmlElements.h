@@ -9,70 +9,70 @@
 #import <Foundation/Foundation.h>
 
 #pragma mark Nodes
-extern NSString *const kKPKXmlKeePassFile;
-extern NSString *const kKPKXmlRoot;
-extern NSString *const kKPKXmlHeaderHash;
-extern NSString *const kKPKXmlMeta;
-extern NSString *const kKPKXmlGroup;
+FOUNDATION_EXTERN NSString *const kKPKXmlKeePassFile;
+FOUNDATION_EXTERN NSString *const kKPKXmlRoot;
+FOUNDATION_EXTERN NSString *const kKPKXmlHeaderHash;
+FOUNDATION_EXTERN NSString *const kKPKXmlMeta;
+FOUNDATION_EXTERN NSString *const kKPKXmlGroup;
 /* Meta */
-extern NSString *const kKPKXmlGenerator;
-extern NSString *const kKPKXmlDatabaseName;
-extern NSString *const kKPKXmlDatabaseNameChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlGenerator;
+FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseName;
+FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseNameChanged;
 
-extern NSString *const kKPKXmlDatabaseDescription;
-extern NSString *const kKPKXmlDatabaseDescriptionChanged;
-extern NSString *const kKPKXmlDefaultUserName;
-extern NSString *const kKPKXmlDefaultUserNameChanged;
-extern NSString *const kKPKXmlMaintenanceHistoryDays;
-extern NSString *const kKPKXmlColor;
-extern NSString *const kKPKXmlMasterKeyChanged;
-extern NSString *const kKPKXmlMasterKeyChangeRec;
-extern NSString *const kKPKXmlMasterKeyChangeForce;
+FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseDescription;
+FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseDescriptionChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlDefaultUserName;
+FOUNDATION_EXTERN NSString *const kKPKXmlDefaultUserNameChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlMaintenanceHistoryDays;
+FOUNDATION_EXTERN NSString *const kKPKXmlColor;
+FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeRec;
+FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeForce;
 
-extern NSString *const kKPKXmlMemoryProtection;
-extern NSString *const kKPKXmlProtectTitle;
-extern NSString *const kKPKXmlProtectUserName;
-extern NSString *const kKPKXmlProtectPassword;
-extern NSString *const kKPKXmlProtectURL;
-extern NSString *const kKPKXmlProtectNotes;
+FOUNDATION_EXTERN NSString *const kKPKXmlMemoryProtection;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectTitle;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectUserName;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectPassword;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectURL;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectNotes;
 
-extern NSString *const kKPKXmlRecycleBinEnabled;
-extern NSString *const kKPKXmlRecycleBinUUID;
-extern NSString *const kKPKXmlRecycleBinChanged;
-extern NSString *const kKPKXmlEntryTemplatesGroup;
-extern NSString *const kKPKXmlEntryTemplatesGroupChanged;
-extern NSString *const kKPKXmlHistoryMaxItems;
-extern NSString *const kKPKXmlHistoryMaxSize;
-extern NSString *const kKPKXmlLastSelectedGroup;
-extern NSString *const kKPKXmlLastTopVisibleGroup;
+FOUNDATION_EXTERN NSString *const kKPKXmlRecycleBinEnabled;
+FOUNDATION_EXTERN NSString *const kKPKXmlRecycleBinUUID;
+FOUNDATION_EXTERN NSString *const kKPKXmlRecycleBinChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlEntryTemplatesGroup;
+FOUNDATION_EXTERN NSString *const kKPKXmlEntryTemplatesGroupChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlHistoryMaxItems;
+FOUNDATION_EXTERN NSString *const kKPKXmlHistoryMaxSize;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastSelectedGroup;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastTopVisibleGroup;
 
-extern NSString *const kKPKXmlIsExpanded;
-extern NSString *const kKPKXmlDefaultAutpTypeSequence;
-extern NSString *const kKPKXmlEnableAutoType;
-extern NSString *const kKPKXmlEnableSearching;
-extern NSString *const kKPKXmlLastTopVisibleEntry;
+FOUNDATION_EXTERN NSString *const kKPKXmlIsExpanded;
+FOUNDATION_EXTERN NSString *const kKPKXmlDefaultAutpTypeSequence;
+FOUNDATION_EXTERN NSString *const kKPKXmlEnableAutoType;
+FOUNDATION_EXTERN NSString *const kKPKXmlEnableSearching;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastTopVisibleEntry;
 
-extern NSString *const kKPKXmlUUID;
-extern NSString *const kKPKXmlName;
-extern NSString *const kKPKXmlNotes;
-extern NSString *const kKPKXmlIconId;
+FOUNDATION_EXTERN NSString *const kKPKXmlUUID;
+FOUNDATION_EXTERN NSString *const kKPKXmlName;
+FOUNDATION_EXTERN NSString *const kKPKXmlNotes;
+FOUNDATION_EXTERN NSString *const kKPKXmlIconId;
 
 #pragma mark Time
-extern NSString *const kKPKXmlTimes;
-extern NSString *const kKPKXmlLastModificationTime;
-extern NSString *const kKPKXmlCreationTime;
-extern NSString *const kKPKXmlLastAccessTime;
-extern NSString *const kKPKXmlExpiryTime;
-extern NSString *const kKPKXmlExpires;
-extern NSString *const kKPKXmlUsageCount;
-extern NSString *const kKPKXmlLocationChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlTimes;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastModificationTime;
+FOUNDATION_EXTERN NSString *const kKPKXmlCreationTime;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastAccessTime;
+FOUNDATION_EXTERN NSString *const kKPKXmlExpiryTime;
+FOUNDATION_EXTERN NSString *const kKPKXmlExpires;
+FOUNDATION_EXTERN NSString *const kKPKXmlUsageCount;
+FOUNDATION_EXTERN NSString *const kKPKXmlLocationChanged;
 
 #pragma mark Generic
-extern NSString *const kKPKXmlKey;
-extern NSString *const kKPKXmlValue;
-extern NSString *const kKPKXmlData;
+FOUNDATION_EXTERN NSString *const kKPKXmlKey;
+FOUNDATION_EXTERN NSString *const kKPKXmlValue;
+FOUNDATION_EXTERN NSString *const kKPKXmlData;
 
 #pragma mark Attributes
-extern NSString *const kKPKXmlProtected;
-extern NSString *const kKPKXmlTrue;
-extern NSString *const kKPKXmlFalse;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtected;
+FOUNDATION_EXTERN NSString *const kKPKXmlTrue;
+FOUNDATION_EXTERN NSString *const kKPKXmlFalse;

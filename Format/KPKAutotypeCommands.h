@@ -9,19 +9,66 @@
 #import <Foundation/Foundation.h>
 
 /* Short Formats */
-extern NSString *const kMPAutotypeShortShift;
-extern NSString *const kMPAutotypeShortControl;
-extern NSString *const kMPAutotypeShortAlt;
-extern NSString *const kMPAutotypeShortEnter;
-extern NSString *const kMPAutotypeShortInsert;
-extern NSString *const kMPAutotypeShortDelete;
-extern NSString *const kMPAutotypeShortBackspace;
-extern NSString *const kMPAutotypeShortBackspace2;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortShift;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortControl;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortAlt;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortEnter;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortInsert;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortDelete;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortBackspace;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortBackspace2;
+FOUNDATION_EXPORT NSString *const kKPKAutotypeShortSpace;
 
 /* Normalized */
-extern NSString *const kMPAutotypeEnter;
-extern NSString *const kMPAutotypeShift;
-extern NSString *const kMPAutotypeControl;
-extern NSString *const kMPAutotypeAlt;
-extern NSString *const kMPAutotypeInsert;
-extern NSString *const kMPAutotypeDelete;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeEnter;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShift;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeControl;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeAlt;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeInsert;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeDelete;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeBackspace;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeSpace;
+
+/* Other Keys */
+FOUNDATION_EXTERN NSString *const kKPKAutotypeTab;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeUp;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeDown;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeLeft;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeRight;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeHome;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeEnd;
+FOUNDATION_EXTERN NSString *const kKPKAutotypePageUp;
+FOUNDATION_EXTERN NSString *const kKPKAutotypePageDown;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeBreak;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeCapsLock;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeEscape;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeWindows;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeLeftWindows;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeRightWindows;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeApps;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeHelp;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeNumlock;
+FOUNDATION_EXTERN NSString *const kKPKAutotypePrintScreen;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeScrollLock;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeFunctionMask; //1-16
+
+/* Keypad */
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddAdd;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddSubtract;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddMultiply;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddDivide;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddNumberMask; // 0-9
+
+/* Symbols */
+FOUNDATION_EXTERN NSString *const kKPKAutotypePlus;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeOr;
+FOUNDATION_EXTERN NSString *const kKPKAutotypePercent;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeTilde;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeRoundBracketLeft;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeRoundBracketRight;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeSquareBracketLeft;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeSquareBracketRight;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortCurlyBracketLeft;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortCurlyBracketRight;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeCurlyBracketLeft;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeCurlyBracketRight;

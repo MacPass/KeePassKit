@@ -30,7 +30,7 @@ KeePassKit uses code from the following projects
 
 [MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) Copyright 2011 Jason Rush and John Flanagan. All rights reserved.
 
-[KeePass Database Library](https://github.com/mpowrie/KeePassLib) Copyright 2010 Qiang Yu. All rights reserved.
+[KeePass Database Library](https://github.com/mykeepass/KeePassLib) Copyright 2010 Qiang Yu. All rights reserved.
 
 [KeepassX](https://gitorious.org/~sergeidanilov/keepassx/gdrive-keepassx) Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
 

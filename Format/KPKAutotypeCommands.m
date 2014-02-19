@@ -58,68 +58,70 @@
  */
 
 /* Shorts */
-NSString *const kMPAutotypeShortShift = @"+";
-NSString *const kMPAutotypeShortControl = @"^";
-NSString *const kMPAutotypeShortAlt = @"%";
-NSString *const kMPAutotypeShortEnter = @"~";
-NSString *const kMPAutotypeShortInsert = @"INS";
-NSString *const kMPAutotypeShortDelete = @"DEL";
-NSString *const kMPAutotypeShortBackspace = @"BS";
-NSString *const kMPAutotypeShortBackspace2 = @"BKSP";
+NSString *const kKPKAutotypeShortShift = @"+";
+NSString *const kKPKAutotypeShortControl = @"^";
+NSString *const kKPKAutotypeShortAlt = @"%";
+NSString *const kKPKAutotypeShortEnter = @"~";
+NSString *const kKPKAutotypeShortInsert = @"{INS}";
+NSString *const kKPKAutotypeShortDelete = @"{DEL}";
+NSString *const kKPKAutotypeShortBackspace = @"{BS}";
+NSString *const kKPKAutotypeShortBackspace2 = @"{BKSP}";
+NSString *const kKPKAutotypeShortCurlyBracketLeft = @"{{}";
+NSString *const kKPKAutotypeShortCurlyBracketRight = @"{}}";
+NSString *const kKPKAutotypeShortSpace = @" ";
 
 /* Extended Formats*/
-NSString *const kMPAutotypeShift = @"SHIFT";
-NSString *const kMPAutotypeControl = @"CONTROL";
-NSString *const kMPAutotypeAlt = @"ALT";
-NSString *const kMPAutotypeEnter = @"ENTER";
-NSString *const kMPAutotypeInsert = @"INSERT";
-NSString *const kMPAutotypeDelete = @"DELETE";
-NSString *const kMPAutotypeBackspace = @"BACKSPACE";
+NSString *const kKPKAutotypeShift = @"{SHIFT}";
+NSString *const kKPKAutotypeControl = @"{CONTROL}";
+NSString *const kKPKAutotypeAlt = @"{ALT}";
+NSString *const kKPKAutotypeEnter = @"{ENTER}";
+NSString *const kKPKAutotypeInsert = @"{INSERT}";
+NSString *const kKPKAutotypeDelete = @"{DELETE}";
+NSString *const kKPKAutotypeBackspace = @"{BACKSPACE}";
+NSString *const kKPKAutotypeSpace = @"{SPACE}";
 
 /* Other Keys */
-NSString *const kMPAutotypeTab = @"TAB";
-NSString *const kMPAutotypeUp = @"UP";
-NSString *const kMPAutotypeDown = @"DOWN";
-NSString *const kMPAutotypeLeft = @"LEFT";
-NSString *const kMPAutotypeRight = @"RIGHT";
-NSString *const kMPAutotypeHome = @"HOME";
-NSString *const kMPAutotypeEnd = @"END";
-NSString *const kMPAutotypePageUp = @"PGUP";
-NSString *const kMPAutotypePageDown = @"PGDOWN";
-NSString *const kMPAutotypeBreak = @"BREAK";
-NSString *const kMPAutotypeCapsLock = @"CAPSLOCK";
-NSString *const kMPAutotypeEscape = @"ESC";
-NSString *const kMPAutotypeWindows = @"WIN";
-NSString *const kMPAutotypeLeftWindows = @"LWIN";
-NSString *const kMPAutotypeRightWindows = @"RWIN";
-NSString *const kMPAutotypeApps = @"APPS";
-NSString *const kMPAutotypeHelp = @"HELP";
-NSString *const kMPAutotypeNumlock = @"NUMLOCK";
-NSString *const kMPAutotypePrintScreen = @"PRTSC";
-NSString *const kMPAutotypeScrollLock = @"SCROLLLOCK";
-NSString *const kMPAutotypeFunctionMask = @"F"; //1-16
+NSString *const kKPKAutotypeTab = @"{TAB}";
+NSString *const kKPKAutotypeUp = @"{UP}";
+NSString *const kKPKAutotypeDown = @"{DOWN}";
+NSString *const kKPKAutotypeLeft = @"{LEFT}";
+NSString *const kKPKAutotypeRight = @"{RIGHT}";
+NSString *const kKPKAutotypeHome = @"{HOME}";
+NSString *const kKPKAutotypeEnd = @"{END}";
+NSString *const kKPKAutotypePageUp = @"{PGUP}";
+NSString *const kKPKAutotypePageDown = @"{PGDOWN}";
+NSString *const kKPKAutotypeBreak = @"{BREAK}";
+NSString *const kKPKAutotypeCapsLock = @"{CAPSLOCK}";
+NSString *const kKPKAutotypeEscape = @"{ESC}";
+NSString *const kKPKAutotypeWindows = @"{WIN}";
+NSString *const kKPKAutotypeLeftWindows = @"{LWIN}";
+NSString *const kKPKAutotypeRightWindows = @"{RWIN}";
+NSString *const kKPKAutotypeApps = @"{APPS}";
+NSString *const kKPKAutotypeHelp = @"{HELP}";
+NSString *const kKPKAutotypeNumlock = @"{NUMLOCK}";
+NSString *const kKPKAutotypePrintScreen = @"{PRTSC}";
+NSString *const kKPKAutotypeScrollLock = @"{SCROLLLOCK}";
+NSString *const kKPKAutotypeFunctionMask = @"{F}"; //1-16
 
 
 /* Keypad */
-NSString *const kMPAutotypeKeypaddAdd = @"ADD";
-NSString *const kMPAutotypeKeypaddSubtract = @"SUBTRACT";
-NSString *const kMPAutotypeKeypaddMultiply = @"MULTIPLY";
-NSString *const kMPAutotypeKeypaddDivide = @"DIVIDE";
-NSString *const kMPAutotypeKeypaddNumberMask = @"NUMPAD"; // 0-9
+NSString *const kKPKAutotypeKeypaddAdd = @"{ADD}";
+NSString *const kKPKAutotypeKeypaddSubtract = @"{SUBTRACT}";
+NSString *const kKPKAutotypeKeypaddMultiply = @"{MULTIPLY}";
+NSString *const kKPKAutotypeKeypaddDivide = @"{DIVIDE}";
+NSString *const kKPKAutotypeKeypaddNumberMask = @"{NUMPAD}"; // 0-9
 
 /* Symbols */
-NSString *const kMPAutotypePlus = @"+";
-NSString *const kMPAutotypeOr = @"^";
-NSString *const kMPAutotypePercent = @"%";
-NSString *const kMPAutotypeTilde = @"~";
-NSString *const kMPAutotypeRoundBracketLeft = @"(";
-NSString *const kMPAutotypeRoundBracketRight = @")";
-NSString *const kMPAutotypeSquareBracketLeft = @"[";
-NSString *const kMPAutotypeSquareBracketRight = @"]";
-NSString *const kMPAutotypeShortCurlyBracketLeft = @"{";
-NSString *const kMPAutotypeShortCurlyBracketRight = @"}";
-NSString *const kMPAutotypeCurlyBracketLeft = @"CURLYLEFT";
-NSString *const kMPAutotypeCurlyBracketRight = @"CURLYRIGHT";
+NSString *const kKPKAutotypePlus = @"{+}";
+NSString *const kKPKAutotypeOr = @"{^}";
+NSString *const kKPKAutotypePercent = @"{%}";
+NSString *const kKPKAutotypeTilde = @"{~}";
+NSString *const kKPKAutotypeRoundBracketLeft = @"{(}";
+NSString *const kKPKAutotypeRoundBracketRight = @"{)}";
+NSString *const kKPKAutotypeSquareBracketLeft = @"{[}";
+NSString *const kKPKAutotypeSquareBracketRight = @"{]}";
+NSString *const kKPKAutotypeCurlyBracketLeft = @"{CURLYLEFT}";
+NSString *const kKPKAutotypeCurlyBracketRight = @"{CURLYRIGHT}";
 
 /*
  Windows Key	{WIN} (equ. to {LWIN})
