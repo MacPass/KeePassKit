@@ -34,6 +34,12 @@
  *  @return NSString with all sequences normalized to internal state
  */
 - (NSString *)normalizedAutotypeSequence;
+/**
+ *  Determines if the command is valid. Currently is only bracket-missmatch aware.
+ *
+ *  @return YES, if the command is valid, NO otherweise.
+ */
+- (BOOL)validateCommmand;
 
 @end
 

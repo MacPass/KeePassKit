@@ -159,15 +159,14 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 
 - (NSString *)_normalizeCommand:(NSString *)command {
   /* Replace Curly brackest with our interal command so we can quickly find bracket missatches */
+  if(!command) {
+    return nil;
+  }
   NSMutableString __block *mutableCommand = [command mutableCopy];
   [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketLeft withString:kKPKAutotypeCurlyBracketLeft options:0 range:NSMakeRange(0, [mutableCommand length])];
   [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketRight withString:kKPKAutotypeCurlyBracketRight options:0 range:NSMakeRange(0, [mutableCommand length])];
-
-  /* Test for missmatching brackets - this means we got an invalid sequence */
-  NSMutableString *countCopy = [mutableCommand mutableCopy];
-  NSInteger openingBracetCount = [countCopy replaceOccurrencesOfString:@"{" withString:@"{" options:0 range:NSMakeRange(0, [countCopy length])];
-  NSInteger closingBracetCount = [countCopy replaceOccurrencesOfString:@"}" withString:@"}" options:0 range:NSMakeRange(0, [countCopy length])];
-  if(openingBracetCount != closingBracetCount) {
+  
+  if(![mutableCommand validateCommmand]) {
     return nil;
   }
   /*
@@ -243,6 +242,39 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 
 - (NSString *)normalizedAutotypeSequence {
   return [[KPKCommandCache sharedCache] findCommand:self];
+}
+
+- (BOOL)validateCommmand {
+  if([self length] == 0) {
+    return NO;
+  }
+  NSUInteger index = 0;
+  BOOL isBracketOpen = NO;
+  while(YES) {
+    if(index >= [self length]) {
+      /* At the end all brackests should be closed */
+      return !isBracketOpen;
+    }
+    NSUInteger openingBracketIndex = [self rangeOfString:@"{" options:0 range:NSMakeRange(index, [self length] - index)].location;
+    NSUInteger closingBracketIndex = [self rangeOfString:@"}" options:0 range:NSMakeRange(index, [self length] - index)].location;
+    if(isBracketOpen) {
+      if(closingBracketIndex != NSNotFound && closingBracketIndex < openingBracketIndex) {
+        isBracketOpen = NO;
+        index = (1 + closingBracketIndex);
+        continue;
+      }
+      return NO; // Missing closing or we got another opening one before the next closing one
+    }
+    else if(openingBracketIndex != NSNotFound ) {
+      if( openingBracketIndex < closingBracketIndex ) {
+        isBracketOpen = YES;
+        index = (1 + openingBracketIndex);
+        continue;
+      }
+      return NO; // There is another closing braket before the opening one
+    }
+    return (closingBracketIndex == NSNotFound);
+  }
 }
 
 @end
