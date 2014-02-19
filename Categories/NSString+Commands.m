@@ -86,8 +86,6 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     shortFormats = @{
                      kKPKAutotypeShortBackspace : kKPKAutotypeBackspace,
                      kKPKAutotypeShortBackspace2 : kKPKAutotypeBackspace,
-                     kKPKAutotypeShortCurlyBracketLeft : kKPKAutotypeCurlyBracketLeft,
-                     kKPKAutotypeShortCurlyBracketRight : kKPKAutotypeCurlyBracketRight,
                      kKPKAutotypeShortDelete : kKPKAutotypeDelete,
                      kKPKAutotypeShortInsert : kKPKAutotypeInsert,
                      kKPKAutotypeShortSpace : kKPKAutotypeSpace
@@ -160,6 +158,18 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 }
 
 - (NSString *)_normalizeCommand:(NSString *)command {
+  /* Replace Curly brackest with our interal command so we can quickly find bracket missatches */
+  NSMutableString __block *mutableCommand = [command mutableCopy];
+  [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketLeft withString:kKPKAutotypeCurlyBracketLeft options:0 range:NSMakeRange(0, [mutableCommand length])];
+  [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketRight withString:kKPKAutotypeCurlyBracketRight options:0 range:NSMakeRange(0, [mutableCommand length])];
+
+  /* Test for missmatching brackets - this means we got an invalid sequence */
+  NSMutableString *countCopy = [mutableCommand mutableCopy];
+  NSInteger openingBracetCount = [countCopy replaceOccurrencesOfString:@"{" withString:@"{" options:0 range:NSMakeRange(0, [countCopy length])];
+  NSInteger closingBracetCount = [countCopy replaceOccurrencesOfString:@"}" withString:@"}" options:0 range:NSMakeRange(0, [countCopy length])];
+  if(openingBracetCount != closingBracetCount) {
+    return nil;
+  }
   /*
    Since modifer keys can be used in curly brackets,
    we only can replace the non-braceds ones with ourt own modifer commands
@@ -173,7 +183,6 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }];
   /* Enumerate the indices backwards, to not invalidate them by replacing strings */
   NSDictionary *unsafeShortForats = [self unsafeShortFormats];
-  NSMutableString __block *mutableCommand = [command mutableCopy];
   [matchingIndices enumerateIndexesInRange:NSMakeRange(0, [command length]) options:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *stop) {
     NSString *shortFormatKey = [mutableCommand substringWithRange:NSMakeRange(idx, 1)];
     [mutableCommand replaceCharactersInRange:NSMakeRange(idx, 1) withString:unsafeShortForats[shortFormatKey]];
