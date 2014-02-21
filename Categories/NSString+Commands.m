@@ -198,6 +198,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
    {VKEY-NX X}
    {VKEY-EX X}
    */
+  /* TODO: - not matched */
   NSString *repeaterMatch = [[NSString alloc] initWithFormat:@"\\{([a-z]+|\\%@|\\%@|%@|\\%@)\\ ([0-9]*)\\}", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
   NSRegularExpression *repeaterRegExp = [[NSRegularExpression alloc] initWithPattern:repeaterMatch options:NSRegularExpressionCaseInsensitive error:0];
   NSAssert(repeaterRegExp, @"Repeater RegExp should be corret!");
