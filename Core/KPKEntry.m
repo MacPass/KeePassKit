@@ -56,6 +56,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 @property (nonatomic, strong) KPKAttribute *usernameAttribute;
 @property (nonatomic, strong) KPKAttribute *urlAttribute;
 @property (nonatomic, strong) KPKAttribute *notesAttribute;
+@property (nonatomic, assign) BOOL isHistory;
 
 @end
 
@@ -99,6 +100,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
     _urlAttribute.entry = self;
     _notesAttribute.entry = self;
     _autotype.entry = self;
+    _isHistory = NO;
   }
   return self;
 }
@@ -123,6 +125,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   entry->_customAttributes = [self.customAttributes copyWithZone:zone];
   entry->_tags = [self.tags copyWithZone:zone];
   entry->_autotype = [self.autotype copyWithZone:zone];
+  entry->_isHistory = self.isHistory;
   
   entry.updateTiming = self.updateTiming;
   return entry;
@@ -142,6 +145,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
     _tags = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"tags"];
     _history = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"history"];
     _autotype = [aDecoder decodeObjectOfClass:[KPKAutotype class] forKey:@"autotype"];
+    _isHistory = [aDecoder decodeBoolForKey:@"isHistory"];
     
     _titleAttribute.entry = self;
     _passwordAttribute.entry = self;
@@ -169,6 +173,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   [aCoder encodeObject:_tags forKey:@"tags"];
   [aCoder encodeObject:_history forKey:@"history"];
   [aCoder encodeObject:_autotype forKey:@"autotype"];
+  [aCoder encodeBool:_isHistory forKey:@"isHistory"];
   return;
 }
 
@@ -480,8 +485,9 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 - (void)clearHistory {
-  NSSet *set = [NSSet setWithArray:_history];
-  [self removeHistory:set];
+  for(KPKEntry *historyEntry in self.history) {
+    [self removeHistoryEntry:historyEntry];
+  }
 }
 
 - (NSUInteger)calculateByteSize {
@@ -572,17 +578,17 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (void)insertObject:(KPKEntry *)entry inHistoryAtIndex:(NSUInteger)index {
   index = MIN([_history count], index);
+  entry.isHistory = YES;
   [_history insertObject:entry atIndex:index];
 }
 
 - (void)removeObjectFromHistoryAtIndex:(NSUInteger)index {
   if(index < [_history count]) {
+    KPKEntry *historyEntry = self.history[index];
+    NSAssert(historyEntry != nil, @"");
+    historyEntry.isHistory = NO;
     [_history removeObjectAtIndex:index];
   }
-}
-
-- (void)removeHistory:(NSSet *)objects {
-  [_history removeObjectsInArray:[objects allObjects]];
 }
 
 #pragma mark -
