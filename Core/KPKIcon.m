@@ -65,7 +65,8 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [[KPKIcon alloc] init];
   if(self) {
-    _image = [aDecoder decodeObjectOfClass:[NSImage class] forKey:@"image"];
+    NSData *imageData = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"image"];
+    _image = [[NSImage alloc] initWithData:imageData];
     _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:@"uuid"];
   }
   return self;
@@ -73,7 +74,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
-    [aCoder encodeObject:self.image forKey:@"image"];
+    [aCoder encodeObject:[self.image TIFFRepresentation] forKey:@"image"];
     [aCoder encodeObject:self.uuid forKey:@"uuid"];
   }
 }
