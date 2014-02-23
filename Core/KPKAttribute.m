@@ -52,6 +52,10 @@
 
 @implementation KPKAttribute
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 - (instancetype)initWithKey:(NSString *)key value:(NSString *)value isProtected:(BOOL)protected {
   self = [super init];
   if(self) {
@@ -73,9 +77,9 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
-    _key = [aDecoder decodeObjectForKey:@"key"];
-    _xorPad = [aDecoder decodeObjectForKey:@"xorPad"];
-    _protectedData = [aDecoder decodeObjectForKey:@"protectedData"];
+    _key = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"key"];
+    _xorPad = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"xorPad"];
+    _protectedData = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"protectedData"];
     _isProtected = [aDecoder decodeBoolForKey:@"isProtected"];
     _lenght = [aDecoder decodeIntegerForKey:@"lenght"];
   }

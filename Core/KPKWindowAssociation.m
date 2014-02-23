@@ -35,6 +35,10 @@
 
 @implementation KPKWindowAssociation
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 #pragma mark -
 #pragma mark Lifecylce
 
@@ -51,8 +55,8 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
-    _windowTitle = [aDecoder decodeObjectForKey:@"windowTitle"];
-    _keystrokeSequence = [aDecoder decodeObjectForKey:@"keystrokeSequence"];
+    _windowTitle = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"windowTitle"];
+    _keystrokeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"keystrokeSequence"];
   }
   return self;
 }

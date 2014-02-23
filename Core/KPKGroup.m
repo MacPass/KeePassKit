@@ -60,14 +60,14 @@
   self = [super initWithCoder:aDecoder];
   if(self) {
     self.updateTiming = NO;
-    self.name = [aDecoder decodeObjectForKey:@"name"];
-    self.notes = [aDecoder decodeObjectForKey:@"notes"];
-    _groups = [aDecoder decodeObjectForKey:@"groups"];
-    _entries = [aDecoder decodeObjectForKey:@"entries"];
+    self.name = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"name"];
+    self.notes = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"notes"];
+    _groups = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"groups"];
+    _entries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"entries"];
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:@"isAutoTypeEnabled"];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:@"isSearchEnabled"];
     self.isExpanded = [aDecoder decodeBoolForKey:@"isExpanded"];
-    self.defaultAutoTypeSequence = [aDecoder decodeObjectForKey:@"defaultAutoTypeSequence"];
+    self.defaultAutoTypeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"defaultAutoTypeSequence"];
     
     for(KPKGroup *group in self.groups) {
       group.parent = self;

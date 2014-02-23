@@ -24,6 +24,10 @@
 
 @implementation KPKTimeInfo
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 - (id)init {
   self = [super init];
   if(self) {
@@ -42,12 +46,12 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
-    _creationTime = [aDecoder decodeObjectForKey:@"creationTime"];
-    _lastModificationTime = [aDecoder decodeObjectForKey:@"lastModificationTime"];
-    _lastAccessTime = [aDecoder decodeObjectForKey:@"lastAccessTime"];
-    _expiryTime = [aDecoder decodeObjectForKey:@"expiryTime"];
+    _creationTime = [aDecoder decodeObjectOfClass:[NSDate class] forKey:@"creationTime"];
+    _lastModificationTime = [aDecoder decodeObjectOfClass:[NSDate class] forKey:@"lastModificationTime"];
+    _lastAccessTime = [aDecoder decodeObjectOfClass:[NSDate class] forKey:@"lastAccessTime"];
+    _expiryTime = [aDecoder decodeObjectOfClass:[NSDate class] forKey:@"expiryTime"];
     _expires = [aDecoder decodeBoolForKey:@"expires"];
-    _locationChanged = [aDecoder decodeObjectForKey:@"locationChanged"];
+    _locationChanged = [aDecoder decodeObjectOfClass:[NSDate class] forKey:@"locationChanged"];
     _usageCount = [aDecoder decodeIntegerForKey:@"usageCount"];
   }
   return self;

@@ -30,6 +30,10 @@
 
 @implementation KPKNode
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 + (NSUInteger)defaultIcon {
   return 0;
 }
@@ -51,11 +55,11 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
-    _timeInfo = [aDecoder decodeObjectForKey:@"timeInfo"];
-    _uuid = [aDecoder decodeObjectForKey:@"uuid"];
+    _timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:@"timeInfo"];
+    _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:@"uuid"];
     _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:@"minimumVersion"];
     _iconId = [aDecoder decodeIntegerForKey:@"iconId"];
-    _iconUUID = [aDecoder decodeObjectForKey:@"iconUUID"];
+    _iconUUID = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:@"iconUUID"];
   }
   return self;
 }

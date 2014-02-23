@@ -35,6 +35,10 @@
 
 @implementation KPKAutotype
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 - (id)init {
   self = [super init];
   if(self) {
@@ -50,7 +54,7 @@
   if(self) {
     _isEnabled = [aDecoder decodeBoolForKey:@"isEnabled"];
     _obfuscateDataTransfer = [aDecoder decodeBoolForKey:@"obfuscateDataTransfer"];
-    _associations = [aDecoder decodeObjectForKey:@"associations"];
+    _associations = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"associations"];
     for(KPKWindowAssociation *association in _associations) {
       association.autotype = self;
     }

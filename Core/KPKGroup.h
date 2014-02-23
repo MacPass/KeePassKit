@@ -28,7 +28,7 @@
 
 FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 
-@interface KPKGroup : KPKNode <NSCoding, NSCopying, NSPasteboardReading, NSPasteboardWriting>
+@interface KPKGroup : KPKNode <NSSecureCoding, NSCopying, NSPasteboardReading, NSPasteboardWriting>
 
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, copy) NSString *notes;

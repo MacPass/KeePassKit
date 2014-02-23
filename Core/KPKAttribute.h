@@ -24,7 +24,7 @@
 
 @class KPKEntry;
 
-@interface KPKAttribute : NSObject <NSCopying, NSCoding>
+@interface KPKAttribute : NSObject <NSCopying, NSSecureCoding>
 
 @property (nonatomic, copy) NSString *key;
 @property (nonatomic, copy) NSString *value;

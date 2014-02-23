@@ -25,7 +25,7 @@
 @class KPKEntry;
 @class KPKWindowAssociation;
 
-@interface KPKAutotype : NSObject <NSCopying, NSCoding>
+@interface KPKAutotype : NSObject <NSCopying, NSSecureCoding>
 
 @property (nonatomic, assign) BOOL isEnabled;
 @property (nonatomic, assign) BOOL obfuscateDataTransfer;

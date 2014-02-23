@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KPKIcon : NSObject <NSCopying, NSCoding>
+@interface KPKIcon : NSObject <NSCopying, NSSecureCoding>
 
 @property (nonatomic, strong) NSUUID *uuid;
 @property (nonatomic, strong) NSImage *image;

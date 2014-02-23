@@ -61,6 +61,10 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 @implementation KPKEntry
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 + (KPKEntry *)metaEntryWithData:(NSData *)data name:(NSString *)name {
   KPKEntry *metaEntry = [[KPKEntry alloc] init];
   metaEntry.title = KPKMetaEntryTitle;
@@ -128,16 +132,16 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if(self) {
-    _passwordAttribute = [aDecoder decodeObjectForKey:@"passwordAttribute"];
-    _titleAttribute= [aDecoder decodeObjectForKey:@"titleAttribute"];
-    _usernameAttribute = [aDecoder decodeObjectForKey:@"usernameAttribute"];
-    _urlAttribute = [aDecoder decodeObjectForKey:@"urlAttribute"];
-    _notesAttribute = [aDecoder decodeObjectForKey:@"notesAttribute"];
-    _binaries = [aDecoder decodeObjectForKey:@"binaries"];
-    _customAttributes = [aDecoder decodeObjectForKey:@"customAttributes"];
-    _tags = [aDecoder decodeObjectForKey:@"tags"];
-    _history = [aDecoder decodeObjectForKey:@"history"];
-    _autotype = [aDecoder decodeObjectForKey:@"autotype"];
+    _passwordAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:@"passwordAttribute"];
+    _titleAttribute= [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:@"titleAttribute"];
+    _usernameAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:@"usernameAttribute"];
+    _urlAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:@"urlAttribute"];
+    _notesAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:@"notesAttribute"];
+    _binaries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"binaries"];
+    _customAttributes = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"customAttributes"];
+    _tags = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"tags"];
+    _history = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"history"];
+    _autotype = [aDecoder decodeObjectOfClass:[KPKAutotype class] forKey:@"autotype"];
     
     _titleAttribute.entry = self;
     _passwordAttribute.entry = self;

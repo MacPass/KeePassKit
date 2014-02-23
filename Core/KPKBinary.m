@@ -27,6 +27,10 @@
 
 @implementation KPKBinary
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 - (id)initWithName:(NSString *)name value:(NSString *)value compressed:(BOOL)compressed {
   self = [super init];
   if(self) {
@@ -60,8 +64,8 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
-    _name = [aDecoder decodeObjectForKey:@"name"];
-    _data = [aDecoder decodeObjectForKey:@"data"];
+    _name = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"name"];
+    _data = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"data"];
   }
   return self;
 }

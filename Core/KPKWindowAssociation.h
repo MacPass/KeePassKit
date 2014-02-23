@@ -27,7 +27,7 @@
 /**
  *  Association for Autotype to a given window title
  */
-@interface KPKWindowAssociation : NSObject <NSCopying, NSCoding>
+@interface KPKWindowAssociation : NSObject <NSCopying, NSSecureCoding>
 
 /**
  *  The title of the window for this autotype sequence

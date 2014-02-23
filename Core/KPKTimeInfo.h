@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KPKTimeInfo : NSObject <NSCoding, NSCopying>
+@interface KPKTimeInfo : NSObject <NSSecureCoding, NSCopying>
 
 @property(nonatomic, strong) NSDate *creationTime;
 @property(nonatomic, strong) NSDate *lastModificationTime;

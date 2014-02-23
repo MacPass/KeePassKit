@@ -25,6 +25,10 @@
 
 @implementation KPKIcon
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 - (id)init {
   self = [super init];
   if(self) {
@@ -61,8 +65,8 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [[KPKIcon alloc] init];
   if(self) {
-    _image = [aDecoder decodeObjectForKey:@"image"];
-    _uuid = [aDecoder decodeObjectForKey:@"uuid"];
+    _image = [aDecoder decodeObjectOfClass:[NSImage class] forKey:@"image"];
+    _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:@"uuid"];
   }
   return self;
 }
