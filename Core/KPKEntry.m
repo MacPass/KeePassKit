@@ -135,17 +135,17 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if(self) {
-    _passwordAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:@"passwordAttribute"];
-    _titleAttribute= [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:@"titleAttribute"];
-    _usernameAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:@"usernameAttribute"];
-    _urlAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:@"urlAttribute"];
-    _notesAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:@"notesAttribute"];
-    _binaries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"binaries"];
-    _customAttributes = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"customAttributes"];
-    _tags = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"tags"];
-    _history = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"history"];
-    _autotype = [aDecoder decodeObjectOfClass:[KPKAutotype class] forKey:@"autotype"];
-    _isHistory = [aDecoder decodeBoolForKey:@"isHistory"];
+    _passwordAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(passwordAttribute))];
+    _titleAttribute= [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(titleAttribute))];
+    _usernameAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(usernameAttribute))];
+    _urlAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(urlAttribute))];
+    _notesAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(notesAttribute))];
+    _binaries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(binaries))];
+    _customAttributes = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(customAttributes))];
+    _tags = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(tags))];
+    _history = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(history))];
+    _autotype = [aDecoder decodeObjectOfClass:[KPKAutotype class] forKey:NSStringFromSelector(@selector(autotype))];
+    _isHistory = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isHistory))];
     
     _titleAttribute.entry = self;
     _passwordAttribute.entry = self;
@@ -163,17 +163,17 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [super encodeWithCoder:aCoder];
-  [aCoder encodeObject:_passwordAttribute forKey:@"passwordAttribute"];
-  [aCoder encodeObject:_titleAttribute forKey:@"titleAttribute"];
-  [aCoder encodeObject:_usernameAttribute forKey:@"usernameAttribute"];
-  [aCoder encodeObject:_urlAttribute forKey:@"urlAttribute"];
-  [aCoder encodeObject:_notesAttribute forKey:@"notesAttribute"];
-  [aCoder encodeObject:_binaries forKey:@"binaries"];
-  [aCoder encodeObject:_customAttributes forKey:@"customAttributes"];
-  [aCoder encodeObject:_tags forKey:@"tags"];
-  [aCoder encodeObject:_history forKey:@"history"];
-  [aCoder encodeObject:_autotype forKey:@"autotype"];
-  [aCoder encodeBool:_isHistory forKey:@"isHistory"];
+  [aCoder encodeObject:_passwordAttribute forKey:NSStringFromSelector(@selector(passwordAttribute))];
+  [aCoder encodeObject:_titleAttribute forKey:NSStringFromSelector(@selector(titleAttribute))];
+  [aCoder encodeObject:_usernameAttribute forKey:NSStringFromSelector(@selector(usernameAttribute))];
+  [aCoder encodeObject:_urlAttribute forKey:NSStringFromSelector(@selector(urlAttribute))];
+  [aCoder encodeObject:_notesAttribute forKey:NSStringFromSelector(@selector(notesAttribute))];
+  [aCoder encodeObject:_binaries forKey:NSStringFromSelector(@selector(binaries))];
+  [aCoder encodeObject:_customAttributes forKey:NSStringFromSelector(@selector(customAttributes))];
+  [aCoder encodeObject:_tags forKey:NSStringFromSelector(@selector(tags))];
+  [aCoder encodeObject:_history forKey:NSStringFromSelector(@selector(history))];
+  [aCoder encodeObject:_autotype forKey:NSStringFromSelector(@selector(autotype))];
+  [aCoder encodeBool:_isHistory forKey:NSStringFromSelector(@selector(isHistory))];
   return;
 }
 
