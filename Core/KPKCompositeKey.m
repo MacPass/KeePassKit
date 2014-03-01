@@ -144,6 +144,9 @@
 }
 
 - (NSData *)_createVersion1CompositeDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
+  if(!password && !keyURL) {
+    return nil;
+  }
   uint8_t masterKey[KPK_KEYLENGTH];
   if(password && !keyURL) {
     /* Hash the password into the master key FIXME: PasswordEncoding! */
@@ -184,6 +187,10 @@
 }
 
 - (NSData *)_createVersion2CompositeDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
+  if(!password && !keyURL) {
+    return nil;
+  }
+
   // Initialize the master hash
   CC_SHA256_CTX ctx;
   CC_SHA256_Init(&ctx);
