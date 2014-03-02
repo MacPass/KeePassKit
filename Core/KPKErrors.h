@@ -37,7 +37,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorDecryptionFaild, // Failed to decrypt the data stream
   KPKErrorEncryptionFaild, // Faled to encrypt the data stream
   KPKErrorDatabaseParsingFailed, // The XML-Database couldn be parsed
-  KPKerrorXMLKeyUnsupportedVersion, // The XML-Keyfile is an usupported version
+  KPKErrorXMLKeyUnsupportedVersion, // The XML-Keyfile is an usupported version
   KPKErrorXMLKeyKeyElementMissing, // The XML-Keyfile has no key element
   KPKErrorXMLKeyDataElementMissing, // The XML-Keyfile has no data element
   KPKErrorXMLKeyDataParsingError, // The XML-data element couldn't be parsed

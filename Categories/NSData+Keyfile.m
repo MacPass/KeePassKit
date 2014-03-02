@@ -129,7 +129,7 @@
     NSScanner *versionScanner = [[NSScanner alloc] initWithString:[versionElement stringValue]];
     double version = 1;
     if(![versionScanner scanDouble:&version] || version > 1) {
-      KPKCreateError(error, KPKerrorXMLKeyUnsupportedVersion, @"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION", "");
+      KPKCreateError(error, KPKErrorXMLKeyUnsupportedVersion, @"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION", "");
       return nil;
     }
   }
