@@ -27,6 +27,7 @@
 
 @interface KPKWindowAssociation () {
   BOOL _regularExpressionIsValid;
+  NSString *_keystrokeSequence;
 }
 
 @property (nonatomic, retain) NSRegularExpression *windowTitleRegularExpression;
@@ -85,6 +86,13 @@
 
 #pragma mark -
 #pragma mark Properties
+- (NSString *)keystrokeSequence {
+  if(_keystrokeSequence) {
+    return _keystrokeSequence;
+  }
+  return self.autotype.defaultSequence;
+}
+
 - (void)setWindowTitle:(NSString *)windowTitle {
   if(![self.windowTitle isEqualToString:windowTitle]) {
     [self.autotype.entry.undoManager registerUndoWithTarget:self selector:@selector(setWindowTitle:) object:self.windowTitle];
