@@ -72,7 +72,7 @@
   KPKAutotype *copy = [[KPKAutotype alloc] init];
   copy->_isEnabled = _isEnabled;
   copy->_obfuscateDataTransfer = _obfuscateDataTransfer;
-  copy->_associations = [_associations copyWithZone:zone];
+  copy->_associations = [[NSMutableArray alloc] initWithArray:self.associations copyItems:YES];
   copy->_entry = _entry;
   for(KPKWindowAssociation *association in copy->_associations) {
     association.autotype = copy;

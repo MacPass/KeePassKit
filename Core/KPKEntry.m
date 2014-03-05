@@ -121,11 +121,12 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   entry.username = self.username;
   entry.url = self.url;
   entry.notes = self.notes;
-  entry->_binaries = [self.binaries copyWithZone:zone];
-  entry->_customAttributes = [self.customAttributes copyWithZone:zone];
+  entry->_binaries = [[NSMutableArray alloc] initWithArray:self.binaries copyItems:YES];
+  entry->_customAttributes = [[NSMutableArray alloc] initWithArray:self.customAttributes copyItems:YES];
   entry->_tags = [self.tags copyWithZone:zone];
   entry->_autotype = [self.autotype copyWithZone:zone];
-  entry->_isHistory = self.isHistory;
+  entry->_history = [[NSMutableArray alloc] initWithArray:self.history copyItems:YES];
+  entry->_isHistory = self->_isHistory;
   
   entry.updateTiming = self.updateTiming;
   return entry;
