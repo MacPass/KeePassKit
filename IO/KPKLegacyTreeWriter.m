@@ -95,42 +95,38 @@
   [_dataWriter write4Bytes:82];
   [self _writeHeaderHash];
   
-  if(writeRootGroup) {
-    [self _writeGroups:@[self.tree.root]];
-  }
-  else {
-    [self _writeGroups:self.tree.root.groups];
-  }
+  BOOL success = writeRootGroup ? [self _writeGroups:@[self.tree.root]] : [self _writeGroups:self.tree.root.groups];
   
   for(KPKEntry *entry in _allEntries) {
-    [self _writeEntry:entry];
+    success &= [self _writeEntry:entry];
   }
   for(KPKEntry *metaEntry in metaEntries){
-    [self _writeEntry:metaEntry];
+    success &= [self _writeEntry:metaEntry];
   }
-  
-  return [_dataWriter data];
+  return success ? [_dataWriter data] : nil;
 }
 
 #pragma mark Group/Entry Writing
 
-- (void)_writeGroups:(NSArray *)groups {
+- (BOOL)_writeGroups:(NSArray *)groups {
   /*
    The groups need to be written depth-first.
    Since allGroups goes broadth first, we have to iterate diffently
    */
+  BOOL success = YES;
   for(KPKGroup *group in groups) {
-    [self _writeGroup:group];
-    [self _writeGroups:group.groups];
+    success &= [self _writeGroup:group];
+    success &= [self _writeGroups:group.groups];
   }
+  return success;
 }
 
-- (void)_writeGroup:(KPKGroup *)group {
+- (BOOL)_writeGroup:(KPKGroup *)group {
   uint32_t tmp32;
   uint32_t groupId = [self _groupIdForGroup:group];
   if(groupId == 0 ) {
     // Create error?
-    return;
+    return NO;
   }
   tmp32 = CFSwapInt32HostToLittle(groupId);
   [self _writeField:KPKFieldTypeGroupId bytes:&tmp32 length:4];
@@ -164,22 +160,21 @@
   
   /* Mark End of Group */
   [self _writeField:KPKFieldTypeCommonStop bytes:NULL length:0];
+
+  return YES;
 }
 
-- (void)_writeEntry:(KPKEntry *)entry {
+- (BOOL)_writeEntry:(KPKEntry *)entry {
   [self _writeField:KPKFieldTypeEntryUUID data:[entry.uuid uuidData]];
   
-  uint32_t groupId = [self _groupIdForGroup:entry.parent];
-  if(groupId == 0) {
-    return; // Error
-  }
   /* Shift all entries in the root group inside the first group */
+  uint32_t groupId = [self _groupIdForGroup:entry.parent];
   if([_tree.root.entries containsObject:entry]) {
     KPKGroup *firstGroup = _allGroups[0];
     groupId = [self _groupIdForGroup:firstGroup];
-    if(groupId == 0) {
-      return; // Error
-    }
+  }
+  if(groupId == 0) {
+    return NO; // Error
   }
   uint32_t tmp32;
   tmp32 = CFSwapInt32HostToLittle(groupId);
@@ -209,6 +204,7 @@
   /* Mark end of Entries */
   [self _writeField:KPKFieldTypeCommonStop bytes:NULL length:0];
   
+  return YES;
 }
 
 #pragma mark Meta Entries
