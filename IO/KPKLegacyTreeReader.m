@@ -246,7 +246,7 @@
             return NO;
           }
           group.iconId = [_dataStreamer read4Bytes];
-          group.iconId = CFSwapInt32LittleToHost(group.iconId);
+          group.iconId = CFSwapInt32LittleToHost((uint32_t)group.iconId);
           break;
           
         case KPKFieldTypeGroupLevel: {

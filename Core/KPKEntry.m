@@ -352,6 +352,9 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 - (void)setTags:(NSString *)tags {
+  if([tags isKindOfClass:[NSArray class]]) {
+    tags = [(NSArray *)tags componentsJoinedByString:@","];
+  }
   if([self.tags isEqualToString:tags]) {
     return; // Nothing to change
   }

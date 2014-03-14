@@ -28,22 +28,22 @@
 #import "DDXMLElement.h"
 
 #pragma mark Writing Helper
-FOUNDATION_EXTERN_INLINE void KPKAddXmlElement(DDXMLElement *element, NSString *name, NSString *value);
-FOUNDATION_EXTERN_INLINE void KPKAddXmlElementIfNotNil(DDXMLElement *element, NSString *name, NSString *value);
-FOUNDATION_EXTERN_INLINE void KPKAddXmlAttribute(DDXMLElement *element, NSString *name, NSString *value);
-FOUNDATION_EXTERN_INLINE NSString * KPKStringFromLong(NSInteger integer);
-FOUNDATION_EXTERN_INLINE NSString *KPKStringFromDate(NSDateFormatter *dateFormatter, NSDate *date);
-FOUNDATION_EXTERN_INLINE NSString *KPKStringFromBool(BOOL value);
-FOUNDATION_EXTERN NSString *stringFromInhertiBool(KPKInheritBool value);
+void KPKAddXmlElement(DDXMLElement *element, NSString *name, NSString *value);
+void KPKAddXmlElementIfNotNil(DDXMLElement *element, NSString *name, NSString *value);
+void KPKAddXmlAttribute(DDXMLElement *element, NSString *name, NSString *value);
+NSString * KPKStringFromLong(NSInteger integer);
+NSString *KPKStringFromDate(NSDateFormatter *dateFormatter, NSDate *date);
+NSString *KPKStringFromBool(BOOL value);
+NSString *stringFromInhertiBool(KPKInheritBool value);
 
 #pragma mark Reading Helper
-FOUNDATION_EXTERN_INLINE BOOL KPKXmlTrue(DDXMLNode *attribute);
-FOUNDATION_EXTERN_INLINE BOOL KPKXmlFalse(DDXMLNode *attribute);
-FOUNDATION_EXTERN_INLINE NSString *KPKXmlString(DDXMLElement *element, NSString *name);
-FOUNDATION_EXTERN_INLINE NSInteger KPKXmlInteger(DDXMLElement *element, NSString *name);
-FOUNDATION_EXTERN_INLINE BOOL KPKXmlBool(DDXMLElement *element, NSString *name);
-FOUNDATION_EXTERN_INLINE BOOL KPKXmlBoolAttribute(DDXMLElement *element, NSString *attribute);
-FOUNDATION_EXTERN_INLINE NSDate *KPKXmlDate(NSDateFormatter *dateFormatter, DDXMLElement *element, NSString *name);
-FOUNDATION_EXTERN KPKInheritBool parseInheritBool(DDXMLElement *element, NSString *name);
+BOOL KPKXmlTrue(DDXMLNode *attribute);
+BOOL KPKXmlFalse(DDXMLNode *attribute);
+NSString *KPKXmlString(DDXMLElement *element, NSString *name);
+NSInteger KPKXmlInteger(DDXMLElement *element, NSString *name);
+BOOL KPKXmlBool(DDXMLElement *element, NSString *name);
+BOOL KPKXmlBoolAttribute(DDXMLElement *element, NSString *attribute);
+NSDate *KPKXmlDate(NSDateFormatter *dateFormatter, DDXMLElement *element, NSString *name);
+KPKInheritBool parseInheritBool(DDXMLElement *element, NSString *name);
 
 #endif
