@@ -73,6 +73,10 @@
  *  featuers, the whole tree needs to have the highest version
  */
 @property (nonatomic, assign) KPKVersion minimumVersion;
+/**
+ *  Tags on this tree. This is a aggregation of all Tags of entries
+ */
+@property (nonatomic, strong, readonly) NSArray *tags;
 
 + (KPKTree *)templateTree;
 
@@ -85,4 +89,7 @@
  *  @return defautl sequence, or nil if none is set
  */
 - (NSString *)defaultAutotypeSequence;
+
+- (void)registerTags:(NSString *)tags forEntry:(KPKEntry *)entry;
+- (void)deregisterTags:(NSString *)tags forEntry:(KPKEntry *)entry;
 @end

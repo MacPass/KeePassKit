@@ -25,9 +25,20 @@
 #import "KPKEntry.h"
 #import "KPKMetaData.h"
 
+@interface KPKTree () {
+  NSMutableDictionary *_tagsMap;
+  NSArray *_groups;
+}
+
+@end
+
 @class KPKIcon;
 
 @implementation KPKTree
+
++ (NSSet *)keyPathsForValuesAffectingGroups {
+  return [NSSet setWithObjects:@"root", nil];
+}
 
 + (KPKTree *)templateTree {
 
@@ -66,51 +77,13 @@
   return tree;
 }
 
-/*
- Kdb3Tree *tree = [[Kdb3Tree alloc] init];
- 
- Kdb3Group *rootGroup = [[Kdb3Group alloc] init];
- rootGroup.name = @"%ROOT%";
- tree.root = rootGroup;
- 
- KdbGroup *parentGroup = [tree createGroup:rootGroup];
- parentGroup.name = NSLocalizedString(@"GENERAL", "General");
- parentGroup.image = 48;
- [rootGroup addGroup:parentGroup];
- 
- KdbGroup *group = [tree createGroup:parentGroup];
- group.name = NSLocalizedString(@"WINDOWS", "Windows");
- group.image = 38;
- [parentGroup addGroup:group];
- 
- group = [tree createGroup:parentGroup];
- group.name = NSLocalizedString(@"NETWORK", "Network");
- group.image = 3;
- [parentGroup addGroup:group];
- 
- group = [tree createGroup:parentGroup];
- group.name = NSLocalizedString(@"INTERNET", "Internet");
- group.image = 1;
- [parentGroup addGroup:group];
- 
- group = [tree createGroup:parentGroup];
- group.name = NSLocalizedString(@"EMAIL", "EMail");
- group.image = 19;
- [parentGroup addGroup:group];
- 
- group = [tree createGroup:parentGroup];
- group.name = NSLocalizedString(@"HOMEBANKING", "Homebanking");
- group.image = 37;
- [parentGroup addGroup:group];
- */
-
-
 - (instancetype)init {
   self = [super init];
   if(self) {
     _metaData = [[KPKMetaData alloc] init];
     _deletedObjects = [[NSMutableDictionary alloc] init];
     _metaData.tree = self;
+    _tagsMap = [[NSMutableDictionary alloc] init];
   }
   return self;
 }
@@ -133,23 +106,10 @@
   return entry;
 }
 
-- (void)setRoot:(KPKGroup *)root {
-  root.parent = nil;
-  if(!_groups || [_groups count] == 0) {
-    _groups = @[root];
-    return;
-  }
-  id group = _groups[0];
-  if(group != root) {
-    _groups = @[root];
-  }
-}
+#pragma mark Properties
 
-- (KPKGroup *)root {
-  if(_groups) {
-    return _groups[0];
-  }
-  return nil;
+- (NSArray *)groups {
+  return @[self.root];
 }
 
 - (NSArray *)allGroups {
@@ -192,6 +152,13 @@
     return [self.delegate defaultAutotypeSequenceForTree:self];
   }
   return nil;
+}
+
+- (void)registerTags:(NSString *)tags forEntry:(KPKEntry *)entry {
+}
+
+- (void)deregisterTags:(NSString *)tags forEntry:(KPKEntry *)entry {
+  
 }
 
 @end
