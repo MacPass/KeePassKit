@@ -218,7 +218,7 @@
     [metaEntries addObject:defaultUsernameEntry];
   }
   if(self.tree.metaData.color != nil) {
-    KPKEntry *treeColorEntry = [KPKEntry metaEntryWithData:[self.tree.metaData.copy colorData] name:KPKMetaEntryDatabaseColor];
+    KPKEntry *treeColorEntry = [KPKEntry metaEntryWithData:[self.tree.metaData.color colorData] name:KPKMetaEntryDatabaseColor];
     [metaEntries addObject:treeColorEntry];
   }
   if([self.tree.metaData.customIcons  count] > 0) {
