@@ -49,7 +49,7 @@
 @property(nonatomic, strong) KPKMetaData *metaData;
 @property(nonatomic, weak) NSUndoManager *undoManager;
 
-@property (nonatomic, assign) KPKGroup *root;
+@property (nonatomic, strong) KPKGroup *root;
 /**
  Acces to the root group via the groups property
  to offer a bindable interface for a tree

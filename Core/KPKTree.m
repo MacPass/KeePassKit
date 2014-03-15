@@ -109,7 +109,10 @@
 #pragma mark Properties
 
 - (NSArray *)groups {
-  return @[self.root];
+  if(self.root) {
+    return @[self.root];
+  }
+  return @[];
 }
 
 - (NSArray *)allGroups {
