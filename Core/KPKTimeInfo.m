@@ -21,6 +21,9 @@
 //
 
 #import "KPKTimeInfo.h"
+#import "KPKNode.h"
+#import "KPKTree.h"
+
 
 @implementation KPKTimeInfo
 
@@ -89,6 +92,24 @@
           self.locationChanged,
           self.usageCount];
 }
+
+#pragma mark -
+#pragma mark Properties
+- (void)setExpires:(BOOL)expires {
+  if(self.expires != expires) {
+    [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpires:self.expires];
+    _expires = expires;
+  }
+}
+
+- (void)setExpiryTime:(NSDate *)expiryTime {
+  if(self.expiryTime != expiryTime) {
+    [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpiryTime:self.expiryTime];
+    _expiryTime = expiryTime;
+    [self touch];
+  }
+}
+
 
 - (void)touch {
   NSDate *now = [NSDate date];

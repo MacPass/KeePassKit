@@ -22,6 +22,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class KPKNode;
+
 @interface KPKTimeInfo : NSObject <NSSecureCoding, NSCopying>
 
 @property(nonatomic, strong) NSDate *creationTime;
@@ -33,6 +35,8 @@
 
 @property(nonatomic, strong) NSDate *locationChanged;
 @property(nonatomic, assign) NSUInteger usageCount;
+
+@property(weak) KPKNode *node;
 
 - (void)touch;
 
