@@ -106,7 +106,14 @@
   return entry;
 }
 
+#pragma mark -
 #pragma mark Properties
+- (void)setRoot:(KPKGroup *)root {
+  if(_root != root) {
+    _root = root;
+    _root.tree = self;
+  }
+}
 
 - (NSArray *)groups {
   if(self.root) {

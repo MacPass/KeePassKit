@@ -668,7 +668,6 @@
   
   /* Read Icons */
   NSMutableArray *iconUUIDs = [[NSMutableArray alloc] initWithCapacity:numberOfIcons];
-  _iconUUIDMap = [[NSMutableDictionary  alloc] initWithCapacity:numberOfIcons];
   for(NSUInteger index = 0; index < numberOfIcons; index++) {
     if([dataReader countOfReadableBytes] < 4) {
       return NO; // Data is truncated
@@ -680,7 +679,6 @@
     KPKIcon *icon = [[KPKIcon alloc] initWithData:[dataReader dataWithLength:iconDataSize]];
     [metaData addCustomIcon:icon];
     [iconUUIDs addObject:icon.uuid];
-    _iconUUIDMap[ icon.uuid ] = icon;
   }
   
   if([dataReader countOfReadableBytes] < (numberOfEntries * 20)) {

@@ -273,7 +273,7 @@
    };
    */
   NSMutableArray *_iconEntries = [[NSMutableArray alloc] initWithCapacity:[_allEntries count]];
-  NSMutableArray *_groupEntries = [[NSMutableArray alloc] initWithCapacity:[_allGroups count]];
+  NSMutableArray *_iconGroups = [[NSMutableArray alloc] initWithCapacity:[_allGroups count]];
   [_allEntries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKNode *node = obj;
     if(node.iconUUID) {
@@ -283,7 +283,7 @@
   [_allGroups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKNode *node = obj;
     if(node.iconUUID) {
-      [_groupEntries addObject:node];
+      [_iconGroups addObject:node];
     }
   }];
   
@@ -292,7 +292,7 @@
   KPKDataStreamWriter *dataWriter = [[KPKDataStreamWriter alloc] initWithData:iconData];
   [dataWriter write4Bytes:(uint32_t)[icons count]];
   [dataWriter write4Bytes:(uint32)[_iconEntries count]];
-  [dataWriter write4Bytes:(uint32)[_groupEntries count]];
+  [dataWriter write4Bytes:(uint32)[_iconGroups count]];
   
   
   for(KPKIcon *icon in icons) {
@@ -301,8 +301,26 @@
     [dataWriter writeData:pngData];
   }
   
-  for(KPKEntry *entryNode in _allEntries) {
-    
+  for(KPKEntry *entry in _iconEntries) {
+    KPKIcon *entryIcon = [self.tree.metaData findIcon:entry.iconUUID];
+    if(entryIcon) {
+      [dataWriter writeData:[entry.uuid uuidData]];
+      NSInteger index = [icons indexOfObject:entryIcon];
+      NSAssert(index != NSNotFound, @"Icon cannot be missing");
+      [dataWriter write4Bytes:(uint32_t)index];
+    }
+  }
+  
+  for(KPKGroup *group in _iconGroups) {
+    KPKIcon *groupIcon = [self.tree.metaData findIcon:group.iconUUID];
+    if(groupIcon) {
+      uint32_t groupId = [self _groupIdForGroup:group];
+      NSAssert(groupId != 0, @"Group has to have Id != 0");
+      [dataWriter write4Bytes:groupId];
+      NSInteger index = [icons indexOfObject:groupIcon];
+      NSAssert(index != NSNotFound, @"Icon cannot be missing");
+      [dataWriter write4Bytes:(uint32_t)index];
+    }
   }
   
   return iconData;
