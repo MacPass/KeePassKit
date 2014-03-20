@@ -56,22 +56,24 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
-    _timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:@"timeInfo"];
-    _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:@"uuid"];
-    _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:@"minimumVersion"];
-    _iconId = [aDecoder decodeIntegerForKey:@"iconId"];
-    _iconUUID = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:@"iconUUID"];
+    _timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
+    _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))];
+    _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(minimumVersion))];
+    _iconId = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(iconId))];
+    _iconUUID = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))];
   }
   return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  [aCoder encodeObject:self.timeInfo forKey:@"timeInfo"];
-  [aCoder encodeObject:self.uuid forKey:@"uuid"];
-  [aCoder encodeInteger:self.minimumVersion forKey:@"minimumVersion"];
-  [aCoder encodeInteger:self.iconId forKey:@"iconId"];
-  [aCoder encodeObject:self.iconUUID forKey:@"iconUUID"];
+  [aCoder encodeObject:self.timeInfo forKey:NSStringFromSelector(@selector(timeInfo))];
+  [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
+  [aCoder encodeInteger:self.minimumVersion forKey:NSStringFromSelector(@selector(minimumVersion))];
+  [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
+  [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
 }
+
+- ise
 
 #pragma mark Properties
 - (void)setIconId:(NSInteger)iconId {

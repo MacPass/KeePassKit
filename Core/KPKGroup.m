@@ -60,14 +60,14 @@
   self = [super initWithCoder:aDecoder];
   if(self) {
     self.updateTiming = NO;
-    self.name = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"name"];
-    self.notes = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"notes"];
-    _groups = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"groups"];
-    _entries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"entries"];
-    self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:@"isAutoTypeEnabled"];
-    self.isSearchEnabled = [aDecoder decodeIntegerForKey:@"isSearchEnabled"];
-    self.isExpanded = [aDecoder decodeBoolForKey:@"isExpanded"];
-    self.defaultAutoTypeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"defaultAutoTypeSequence"];
+    self.name = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(name))];
+    self.notes = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(notes))];
+    _groups = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))];
+    _entries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))];
+    self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
+    self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
+    self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
+    self.defaultAutoTypeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultAutoTypeSequence))];
     
     for(KPKGroup *group in self.groups) {
       group.parent = self;
@@ -83,14 +83,14 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [super encodeWithCoder:aCoder];
-  [aCoder encodeObject:_name forKey:@"name"];
-  [aCoder encodeObject:_notes forKey:@"notes"];
-  [aCoder encodeObject:_groups forKey:@"groups"];
-  [aCoder encodeObject:_entries forKey:@"entries"];
-  [aCoder encodeInteger:_isAutoTypeEnabled forKey:@"isAutoTypeEnabled"];
-  [aCoder encodeInteger:_isSearchEnabled forKey:@"isSearchEnabled"];
-  [aCoder encodeBool:_isExpanded forKey:@"isExpanded"];
-  [aCoder encodeObject:_defaultAutoTypeSequence forKey:@"defaultAutoTypeSequence"];
+  [aCoder encodeObject:_name forKey:NSStringFromSelector(@selector(name))];
+  [aCoder encodeObject:_notes forKey:NSStringFromSelector(@selector(notes))];
+  [aCoder encodeObject:_groups forKey:NSStringFromSelector(@selector(groups))];
+  [aCoder encodeObject:_entries forKey:NSStringFromSelector(@selector(entries))];
+  [aCoder encodeInteger:_isAutoTypeEnabled forKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
+  [aCoder encodeInteger:_isSearchEnabled forKey:NSStringFromSelector(@selector(isSearchEnabled))];
+  [aCoder encodeBool:_isExpanded forKey:NSStringFromSelector(@selector(isExpanded))];
+  [aCoder encodeObject:_defaultAutoTypeSequence forKey:NSStringFromSelector(@selector(defaultAutoTypeSequence))];
 }
 
 #pragma mark NSCopying

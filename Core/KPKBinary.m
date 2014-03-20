@@ -64,15 +64,15 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
-    _name = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"name"];
-    _data = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"data"];
+    _name = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(name))];
+    _data = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(data))];
   }
   return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  [aCoder encodeObject:self.name forKey:@"name"];
-  [aCoder encodeObject:self.data forKey:@"data"];
+  [aCoder encodeObject:self.name forKey:NSStringFromSelector(@selector(name))];
+  [aCoder encodeObject:self.data forKey:NSStringFromSelector(@selector(data))];
 }
 
 - (id)copyWithZone:(NSZone *)zone {
