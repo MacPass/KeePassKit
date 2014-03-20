@@ -73,8 +73,6 @@
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
 }
 
-- ise
-
 #pragma mark Properties
 - (void)setIconId:(NSInteger)iconId {
   if(iconId != _iconId) {

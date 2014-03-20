@@ -171,7 +171,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }
   /*
    Since modifer keys can be used in curly brackets,
-   we only can replace the non-braceds ones with ourt own modifer commands
+   we only can replace the non-braceds ones with our own modifer commands
    */
   NSString *modifierMatch = [[NSString alloc] initWithFormat:@"(?<!\\{)([\\%@|\\%@|%@|\\%@])(?!\\})", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
   NSRegularExpression *modifierRegExp = [[NSRegularExpression alloc] initWithPattern:modifierMatch options:NSRegularExpressionCaseInsensitive error:0];
@@ -187,7 +187,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     [mutableCommand replaceCharactersInRange:NSMakeRange(idx, 1) withString:unsafeShortForats[shortFormatKey]];
   }];
   /*
-   It's possible to extend commands by a mulitpyer,
+   It's possible to extend commands by a multiplier,
    Simply just repeat the commands n-times
    
    Format is {<KEY> <Repeat>}
@@ -300,6 +300,10 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 }
 
 - (NSString *)_resolveReferencesWithTree:(KPKTree *)tree recursionLevel:(NSUInteger)level {
+  /* No tree, no real references */
+  if(!tree) {
+    return self;
+  }
   /* Stop endless recurstion at 10 substitions */
   if(level > 10) {
     return self;
