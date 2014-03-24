@@ -208,7 +208,7 @@
       return self.parent.defaultAutoTypeSequence;
     }
     NSString *defaultSequence = [self.tree defaultAutotypeSequence];
-    return defaultSequence ? defaultSequence : @"{TAB}{USERNAME}{TAB}{PASSWORD}{ENTER}";
+    return defaultSequence ? defaultSequence : @"{USERNAME}{TAB}{PASSWORD}{ENTER}";
   }
   return _defaultAutoTypeSequence;
 }
