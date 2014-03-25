@@ -119,7 +119,7 @@
 
 - (instancetype)copyWithName:(NSString *)name {
   KPKGroup *copy = [self copy];
-
+  
   /* update entry uuids */
   /* update child uuids */
   if(nil == name) {
@@ -203,14 +203,20 @@
 }
 
 - (NSString *)defaultAutoTypeSequence {
-  if(!_defaultAutoTypeSequence) {
-    if(self.parent) {
-      return self.parent.defaultAutoTypeSequence;
-    }
-    NSString *defaultSequence = [self.tree defaultAutotypeSequence];
-    return defaultSequence ? defaultSequence : @"{USERNAME}{TAB}{PASSWORD}{ENTER}";
+  if(![self hasDefaultAutotypeSequence]) {
+    return _defaultAutoTypeSequence;
   }
-  return _defaultAutoTypeSequence;
+  if(self.parent) {
+    return self.parent.defaultAutoTypeSequence;
+  }
+  NSString *defaultSequence = [self.tree defaultAutotypeSequence];
+  BOOL hasDefault = [defaultSequence length] > 0;
+  return hasDefault ? defaultSequence : @"{USERNAME}{TAB}{PASSWORD}{ENTER}";
+  
+}
+
+- (BOOL)hasDefaultAutotypeSequence {
+  return !([_defaultAutoTypeSequence length] > 0);
 }
 
 #pragma mark -

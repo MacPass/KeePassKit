@@ -120,6 +120,8 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  */
 - (BOOL)isAutotypeable;
 
+- (BOOL)hasDefaultAutotypeSequence;
+
 #pragma mark Delete
 /**
  *	Removes alle Subentries and Subgroups

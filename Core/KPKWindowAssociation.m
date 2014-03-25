@@ -90,7 +90,7 @@
   if(_keystrokeSequence) {
     return _keystrokeSequence;
   }
-  return self.autotype.defaultSequence;
+  return self.autotype.defaultKeystrokeSequence;
 }
 
 - (void)setWindowTitle:(NSString *)windowTitle {
@@ -129,6 +129,10 @@
   }
   NSUInteger matches = [self.windowTitleRegularExpression numberOfMatchesInString:windowTitle options:0 range:NSMakeRange(0, [windowTitle length])];
   return (matches == 1);
+}
+
+- (BOOL)hasDefaultKeystrokeSequence {
+  return !([_keystrokeSequence length] > 0);
 }
 
 @end

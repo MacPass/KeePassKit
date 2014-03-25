@@ -234,7 +234,7 @@
   
   group.isExpanded =  KPKXmlBool(groupElement, kKPKXmlIsExpanded);
   
-  group.defaultAutoTypeSequence = KPKXmlString(groupElement, kKPKXmlDefaultAutpTypeSequence);
+  group.defaultAutoTypeSequence = KPKXmlNonEmptyString(groupElement, kKPKXmlDefaultAutoTypeSequence);
   
   group.isAutoTypeEnabled = parseInheritBool(groupElement, kKPKXmlEnableAutoType);
   group.isSearchEnabled = parseInheritBool(groupElement, kKPKXmlEnableSearching);
@@ -425,14 +425,14 @@
   }
   KPKAutotype *autotype = [[KPKAutotype alloc] init];
   autotype.isEnabled = KPKXmlBool(autotypeElement, @"Enabled");
-  autotype.defaultSequence = KPKXmlString(autotypeElement, @"DefaultSequence");
+  autotype.defaultKeystrokeSequence = KPKXmlNonEmptyString(autotypeElement, @"DefaultSequence");
   NSInteger obfuscate = KPKXmlInteger(autotypeElement, @"DataTransferObfuscation");
   autotype.obfuscateDataTransfer = obfuscate > 0;
   autotype.entry = entry;
   
   for(DDXMLElement *associationElement in [autotypeElement elementsForName:@"Association"]) {
     KPKWindowAssociation *association = [[KPKWindowAssociation alloc] initWithWindow:KPKXmlString(associationElement, @"Window")
-                                                                   keystrokeSequence:KPKXmlString(associationElement, @"KeystrokeSequence")];
+                                                                   keystrokeSequence:KPKXmlNonEmptyString(associationElement, @"KeystrokeSequence")];
     [autotype addAssociation:association];
   }
   entry.autotype = autotype;

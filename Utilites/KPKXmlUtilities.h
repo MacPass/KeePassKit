@@ -30,6 +30,7 @@
 #pragma mark Writing Helper
 void KPKAddXmlElement(DDXMLElement *element, NSString *name, NSString *value);
 void KPKAddXmlElementIfNotNil(DDXMLElement *element, NSString *name, NSString *value);
+void KPKAddXmlElementIfNotEmtpy(DDXMLElement *element, NSString *name, NSString *value);
 void KPKAddXmlAttribute(DDXMLElement *element, NSString *name, NSString *value);
 NSString * KPKStringFromLong(NSInteger integer);
 NSString *KPKStringFromDate(NSDateFormatter *dateFormatter, NSDate *date);
@@ -40,6 +41,7 @@ NSString *stringFromInhertiBool(KPKInheritBool value);
 BOOL KPKXmlTrue(DDXMLNode *attribute);
 BOOL KPKXmlFalse(DDXMLNode *attribute);
 NSString *KPKXmlString(DDXMLElement *element, NSString *name);
+NSString *KPKXmlNonEmptyString(DDXMLElement *element, NSString *name);
 NSInteger KPKXmlInteger(DDXMLElement *element, NSString *name);
 BOOL KPKXmlBool(DDXMLElement *element, NSString *name);
 BOOL KPKXmlBoolAttribute(DDXMLElement *element, NSString *attribute);

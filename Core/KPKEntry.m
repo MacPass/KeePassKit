@@ -518,7 +518,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   }];
   
   /* Autotype */
-  size += [self.autotype.defaultSequence length];
+  size += [self.autotype.defaultKeystrokeSequence length];
   [self.autotype.associations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKWindowAssociation *association = obj;
     size += [association.windowTitle length];

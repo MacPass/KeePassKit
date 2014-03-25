@@ -28,7 +28,7 @@
 
 @interface KPKAutotype () {
   NSMutableArray *_associations;
-  NSString *_defaultSequence;
+  NSString *_defaultKeystrokeSequence;
 }
 
 @end
@@ -52,9 +52,10 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
-    _isEnabled = [aDecoder decodeBoolForKey:@"isEnabled"];
-    _obfuscateDataTransfer = [aDecoder decodeBoolForKey:@"obfuscateDataTransfer"];
-    _associations = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:@"associations"];
+    _isEnabled = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isEnabled))];
+    _obfuscateDataTransfer = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(obfuscateDataTransfer))];
+    _defaultKeystrokeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
+    _associations = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(associations))];
     for(KPKWindowAssociation *association in _associations) {
       association.autotype = self;
     }
@@ -63,36 +64,38 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  [aCoder encodeBool:self.isEnabled forKey:@"isEnabled"];
-  [aCoder encodeBool:self.obfuscateDataTransfer forKey:@"obfuscateDataTransfer"];
-  [aCoder encodeObject:_associations forKey:@"associations"];
+  [aCoder encodeBool:self.isEnabled forKey:NSStringFromSelector(@selector(isEnabled))];
+  [aCoder encodeBool:self.obfuscateDataTransfer forKey:NSStringFromSelector(@selector(obfuscateDataTransfer))];
+  [aCoder encodeObject:_associations forKey:NSStringFromSelector(@selector(associations))];
+  [aCoder encodeObject:self.defaultKeystrokeSequence forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
 }
 
 - (id)copyWithZone:(NSZone *)zone {
   KPKAutotype *copy = [[KPKAutotype alloc] init];
-  copy->_isEnabled = _isEnabled;
-  copy->_obfuscateDataTransfer = _obfuscateDataTransfer;
+  copy.isEnabled = _isEnabled;
+  copy.obfuscateDataTransfer = _obfuscateDataTransfer;
   copy->_associations = [[NSMutableArray alloc] initWithArray:self.associations copyItems:YES];
-  copy->_entry = _entry;
+  copy.defaultKeystrokeSequence = _defaultKeystrokeSequence;
+  copy.entry = _entry;
   for(KPKWindowAssociation *association in copy->_associations) {
     association.autotype = copy;
   }
   return copy;
 }
 
-- (NSString *)defaultSequence {
+- (NSString *)defaultKeystrokeSequence {
   /* The default sequence is inherited, so just bubble up */
-  if(!_defaultSequence) {
+  if([self hasDefaultKeystrokeSequence]) {
     return self.entry.parent.defaultAutoTypeSequence;
   }
-  return _defaultSequence;
+  return _defaultKeystrokeSequence;
 }
 
-- (void)setDefaultSequence:(NSString *)defaultSequence {
-  if(![self.defaultSequence isEqualToString:defaultSequence]) {
-    [[self.entry.undoManager prepareWithInvocationTarget:self] setDefaultSequence:self.defaultSequence];
+- (void)setDefaultKeystrokeSequence:(NSString *)defaultSequence {
+  if(![self.defaultKeystrokeSequence isEqualToString:defaultSequence]) {
+    [[self.entry.undoManager prepareWithInvocationTarget:self] setDefaultKeystrokeSequence:self.defaultKeystrokeSequence];
   }
-  _defaultSequence = [defaultSequence length]  > 0 ? [defaultSequence copy] : nil;
+  _defaultKeystrokeSequence = [defaultSequence length]  > 0 ? [defaultSequence copy] : nil;
 }
 
 - (NSArray *)associations {
@@ -137,6 +140,10 @@
     //[association.windowTitle matchesWindowTitle:windowTitle
   }
   return nil;
+}
+
+- (BOOL)hasDefaultKeystrokeSequence {
+  return ! [_defaultKeystrokeSequence length] > 0;
 }
 
 #pragma mark -

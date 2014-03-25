@@ -47,7 +47,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlLastSelectedGroup;
 FOUNDATION_EXTERN NSString *const kKPKXmlLastTopVisibleGroup;
 
 FOUNDATION_EXTERN NSString *const kKPKXmlIsExpanded;
-FOUNDATION_EXTERN NSString *const kKPKXmlDefaultAutpTypeSequence;
+FOUNDATION_EXTERN NSString *const kKPKXmlDefaultAutoTypeSequence;
 FOUNDATION_EXTERN NSString *const kKPKXmlEnableAutoType;
 FOUNDATION_EXTERN NSString *const kKPKXmlEnableSearching;
 FOUNDATION_EXTERN NSString *const kKPKXmlLastTopVisibleEntry;

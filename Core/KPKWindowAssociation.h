@@ -52,4 +52,6 @@
  */
 - (BOOL)matchesWindowTitle:(NSString *)windowTitle;
 
+- (BOOL)hasDefaultKeystrokeSequence;
+
 @end

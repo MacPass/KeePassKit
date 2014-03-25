@@ -45,7 +45,7 @@ NSString *const kKPKXmlLastSelectedGroup = @"LastSelectedGroup";
 NSString *const kKPKXmlLastTopVisibleGroup = @"LastTopVisibleGroup";
 
 NSString *const kKPKXmlIsExpanded = @"IsExpanded";
-NSString *const kKPKXmlDefaultAutpTypeSequence = @"DefaultAutoTypeSequence";
+NSString *const kKPKXmlDefaultAutoTypeSequence = @"DefaultAutoTypeSequence";
 NSString *const kKPKXmlEnableAutoType = @"EnableAutoType";
 NSString *const kKPKXmlEnableSearching = @"EnableSearching";
 NSString *const kKPKXmlLastTopVisibleEntry = @"LastTopVisibleEntry";

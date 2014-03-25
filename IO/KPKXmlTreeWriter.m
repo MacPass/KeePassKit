@@ -181,7 +181,8 @@
   [groupElement addChild:timesElement];
   
   KPKAddXmlElement(groupElement, kKPKXmlIsExpanded, KPKStringFromBool(group.isExpanded));
-  KPKAddXmlElement(groupElement, kKPKXmlDefaultAutpTypeSequence, group.defaultAutoTypeSequence);
+  NSString *keystrokes = (group.hasDefaultAutotypeSequence ? nil : group.defaultAutoTypeSequence);
+  KPKAddXmlElement(groupElement, kKPKXmlDefaultAutoTypeSequence, keystrokes);
   KPKAddXmlElement(groupElement, kKPKXmlEnableAutoType, stringFromInhertiBool(group.isAutoTypeEnabled));
   KPKAddXmlElement(groupElement, kKPKXmlEnableSearching, stringFromInhertiBool(group.isSearchEnabled));
   KPKAddXmlElement(groupElement, kKPKXmlLastTopVisibleEntry, [group.lastTopVisibleEntry encodedString]);
@@ -259,13 +260,15 @@
   KPKAddXmlElement(autotypeElement, @"Enabled", KPKStringFromBool(autotype.isEnabled));
   NSString *obfuscate = autotype.obfuscateDataTransfer ? @"1" : @"0";
   KPKAddXmlElement(autotypeElement, @"DataTransferObfuscation", obfuscate);
-  KPKAddXmlElementIfNotNil(autotypeElement, @"DefaultSequence", autotype.defaultSequence);
+  NSString *keystrokes = autotype.hasDefaultKeystrokeSequence ? nil : autotype.defaultKeystrokeSequence;
+  KPKAddXmlElementIfNotNil(autotypeElement, @"DefaultSequence", keystrokes);
   
   if([autotype.associations count] > 0) {
     DDXMLElement *associationsElement = [DDXMLElement elementWithName:@"Association"];
     for(KPKWindowAssociation *association in autotype.associations) {
       KPKAddXmlElement(associationsElement, @"Window", association.windowTitle);
-      KPKAddXmlElement(associationsElement, @"KeystrokeSequence", association.keystrokeSequence);
+      NSString *keyStrokes = (association.hasDefaultKeystrokeSequence ? nil : association.keystrokeSequence);
+      KPKAddXmlElement(associationsElement, @"KeystrokeSequence", keyStrokes);
     }
     [autotypeElement addChild:associationsElement];
   }
