@@ -31,6 +31,7 @@
 @private
   NSMutableArray *_groups;
   NSMutableArray *_entries;
+  NSString *_defaultAutoTypeSequence;
 }
 
 @end
@@ -199,6 +200,13 @@
     [self.undoManager registerUndoWithTarget:self selector:@selector(setName:) object:self.notes];
     _notes = [notes copy];
     [self wasModified];
+  }
+}
+
+- (void)setDefaultAutoTypeSequence:(NSString *)defaultAutoTypeSequence {
+  if(![self.defaultAutoTypeSequence isEqualToString:defaultAutoTypeSequence]) {
+    [[self.undoManager prepareWithInvocationTarget:self] setDefaultAutoTypeSequence:self.defaultAutoTypeSequence];
+    _defaultAutoTypeSequence = [defaultAutoTypeSequence copy];
   }
 }
 
