@@ -99,6 +99,9 @@
   if(self.expires != expires) {
     [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpires:self.expires];
     _expires = expires;
+    if(self.node.updateTiming) {
+      self.lastModificationTime = [NSDate date];
+    }
   }
 }
 
@@ -106,12 +109,17 @@
   if(self.expiryTime != expiryTime) {
     [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpiryTime:self.expiryTime];
     _expiryTime = expiryTime;
-    [self touch];
+    if(self.node.updateTiming) {
+      self.lastModificationTime = [NSDate date];
+    }
   }
 }
 
 
 - (void)touch {
+  if(!self.node.updateTiming) {
+    return;
+  }
   NSDate *now = [NSDate date];
   self.creationTime = now;
   self.lastModificationTime = now;
