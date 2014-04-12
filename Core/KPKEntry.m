@@ -123,10 +123,16 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   entry->_customAttributes = [[NSMutableArray alloc] initWithArray:self.customAttributes copyItems:YES];
   entry->_tags = [self.tags copyWithZone:zone];
   entry->_autotype = [self.autotype copyWithZone:zone];
-  entry->_autotype.entry = self;
   entry->_history = [[NSMutableArray alloc] initWithArray:self.history copyItems:YES];
   entry->_isHistory = self->_isHistory;
+  
   entry.timeInfo = [self.timeInfo copyWithZone:zone];
+  
+  /* fix entry references */
+  entry->_autotype.entry = self;
+  for(KPKAttribute *attribute in _customAttributes) {
+    attribute.entry = self;
+  }
   return entry;
 }
 
