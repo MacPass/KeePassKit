@@ -27,6 +27,8 @@
 
 @implementation KPKTimeInfo
 
+@synthesize updateTiming = _updateTiming;
+
 + (BOOL)supportsSecureCoding {
   return YES;
 }
@@ -42,6 +44,7 @@
     _locationChanged = now;
     _expires = NO;
     _usageCount = 0;
+    _updateTiming = NO;
   }
   return self;
 }
@@ -99,7 +102,7 @@
   if(self.expires != expires) {
     [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpires:self.expires];
     _expires = expires;
-    if(self.node.updateTiming) {
+    if(self.updateTiming) {
       self.lastModificationTime = [NSDate date];
     }
   }
@@ -109,17 +112,13 @@
   if(self.expiryTime != expiryTime) {
     [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpiryTime:self.expiryTime];
     _expiryTime = expiryTime;
-    if(self.node.updateTiming) {
+    if(self.updateTiming) {
       self.lastModificationTime = [NSDate date];
     }
   }
 }
 
-
-- (void)touch {
-  if(!self.node.updateTiming) {
-    return;
-  }
+- (void)reset {
   NSDate *now = [NSDate date];
   self.creationTime = now;
   self.lastModificationTime = now;
@@ -127,4 +126,27 @@
   self.locationChanged = now;
   self.usageCount = 0;
 }
+
+- (void)wasModified {
+  if(!self.updateTiming) {
+    return;
+  }
+  self.lastModificationTime = [NSDate date];
+}
+
+- (void)wasAccessed {
+  if(!self.updateTiming) {
+    return;
+  }
+
+  self.lastAccessTime = [NSDate date];
+}
+
+- (void)wasMoved {
+  if(!self.updateTiming) {
+    return;
+  }
+  self.locationChanged = [NSDate date];
+}
+
 @end

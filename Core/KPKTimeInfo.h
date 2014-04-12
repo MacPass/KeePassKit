@@ -21,10 +21,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "KPKModificationRecording.h"
 
 @class KPKNode;
 
-@interface KPKTimeInfo : NSObject <NSSecureCoding, NSCopying>
+@interface KPKTimeInfo : NSObject <NSSecureCoding, NSCopying, KPKModificationRecording>
 
 @property(nonatomic, strong) NSDate *creationTime;
 @property(nonatomic, strong) NSDate *lastModificationTime;
@@ -38,6 +39,9 @@
 
 @property(weak) KPKNode *node;
 
-- (void)touch;
+- (void)reset;
+- (void)wasModified;
+- (void)wasAccessed;
+- (void)wasMoved;
 
 @end

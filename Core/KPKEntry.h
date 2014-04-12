@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import "KPKNode.h"
-#import "KPKTimerecording.h"
+#import "KPKModificationRecording.h"
 
 @class KPKGroup;
 @class KPKBinary;

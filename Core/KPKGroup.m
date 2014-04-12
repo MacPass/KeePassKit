@@ -98,8 +98,6 @@
 
 - (instancetype)copyWithZone:(NSZone *)zone {
   KPKGroup *copy = [[KPKGroup alloc] init];
-  copy.updateTiming = NO;
-  copy.timeInfo = [self.timeInfo copyWithZone:zone];
   copy.uuid = [self.uuid copyWithZone:zone];
   copy->_entries = [[NSMutableArray alloc] initWithArray:_entries copyItems:YES];
   copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
@@ -115,6 +113,9 @@
   
   [copy _updateParents];
   
+  /* Copy time info at last to ensure valid times */
+  copy.timeInfo = [self.timeInfo copyWithZone:zone];
+  
   return copy;
 }
 
@@ -128,7 +129,7 @@
     name = [[NSString alloc] initWithFormat:format, self.name];
   }
   [copy _updateUUIDs];
-  [copy.timeInfo touch];
+  [copy.timeInfo reset];
   [self.undoManager disableUndoRegistration];
   copy.name = name;
   [self.undoManager enableUndoRegistration];

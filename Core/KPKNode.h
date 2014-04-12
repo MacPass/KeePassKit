@@ -23,7 +23,7 @@
 
 #import <Foundation/Foundation.h>
 #import "KPKVersion.h"
-#import "KPKTimerecording.h"
+#import "KPKModificationRecording.h"
 
 @class KPKGroup;
 @class KPKTree;
@@ -33,7 +33,7 @@
 /**
  *	Baseclass for all Nodes in a Tree.
  */
-@interface KPKNode : NSObject <NSSecureCoding, KPKTimerecording>
+@interface KPKNode : NSObject <NSSecureCoding, KPKModificationRecording>
 
 @property(nonatomic, weak) KPKTree *tree;
 @property(nonatomic, assign) NSInteger iconId;
@@ -43,7 +43,6 @@
 @property(nonatomic, assign) KPKVersion minimumVersion;
 @property(nonatomic, strong) KPKTimeInfo *timeInfo;
 
-@property (nonatomic, assign) BOOL updateTiming;
 @property (nonatomic, weak, readonly) NSUndoManager *undoManager;
 
 /**
@@ -57,9 +56,5 @@
  *	@return	root group of the node
  */
 - (KPKGroup *)rootGroup;
-
-- (void)wasModified;
-- (void)wasAccessed;
-- (void)wasMoved;
 
 @end

@@ -47,7 +47,6 @@
     _timeInfo = [[KPKTimeInfo alloc] init];
     _timeInfo.node = self;
     _iconId = [[self class] defaultIcon];
-    _updateTiming = YES;
     _iconUUID = nil;
   }
   return self;
@@ -56,11 +55,12 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
-    _timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
     _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))];
     _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(minimumVersion))];
     _iconId = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(iconId))];
     _iconUUID = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))];
+    /* decode time info at last */
+    _timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
   }
   return self;
 }
@@ -100,22 +100,25 @@
   return self.tree.undoManager;
 }
 
+#pragma mark KPKTimerecording
+- (void)setUpdateTiming:(BOOL)updateTiming {
+  self.timeInfo.updateTiming = updateTiming;
+}
+
+- (BOOL)updateTiming {
+  return self.timeInfo.updateTiming;
+}
+
 - (void)wasModified {
-  if(self.updateTiming) {
-    self.timeInfo.lastModificationTime = [NSDate date];
-  }
+  [self.timeInfo wasModified];
 }
 
 - (void)wasAccessed {
-  if(self.updateTiming) {
-    self.timeInfo.lastAccessTime = [NSDate date];
-  }
+  [self.timeInfo wasAccessed];
 }
 
 - (void)wasMoved {
-  if(self.updateTiming) {
-    self.timeInfo.locationChanged = [NSDate date];
-  }
+  [self.timeInfo wasMoved];
 }
 
 @end

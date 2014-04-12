@@ -107,13 +107,11 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (id)copyWithZone:(NSZone *)zone {
   KPKEntry *entry = [[KPKEntry allocWithZone:zone] init];
-  entry.updateTiming = NO;
   entry.iconId = self.iconId;
   entry.iconUUID = self.iconUUID;
   entry.tree = self.tree;
   entry.parent = self.parent;
   entry.uuid = [self.uuid copyWithZone:zone];
-  entry.timeInfo = [self.timeInfo copyWithZone:zone];
   entry.minimumVersion = self.minimumVersion;
   
   entry.password = self.password;
@@ -125,10 +123,10 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   entry->_customAttributes = [[NSMutableArray alloc] initWithArray:self.customAttributes copyItems:YES];
   entry->_tags = [self.tags copyWithZone:zone];
   entry->_autotype = [self.autotype copyWithZone:zone];
+  entry->_autotype.entry = self;
   entry->_history = [[NSMutableArray alloc] initWithArray:self.history copyItems:YES];
   entry->_isHistory = self->_isHistory;
-  
-  entry.updateTiming = self.updateTiming;
+  entry.timeInfo = [self.timeInfo copyWithZone:zone];
   return entry;
 }
 
@@ -136,6 +134,8 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if(self) {
+    /* Disable timing since we init via coder */
+    self.updateTiming = NO;
     _passwordAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(passwordAttribute))];
     _titleAttribute= [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(titleAttribute))];
     _usernameAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(usernameAttribute))];
@@ -158,6 +158,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
     for(KPKAttribute *attribute in _customAttributes) {
       attribute.entry = self;
     }
+    self.updateTiming = YES;
   }
   return self;
 }
@@ -188,7 +189,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   [copy.undoManager disableUndoRegistration];
   copy.title = title;
   [copy.undoManager enableUndoRegistration];
-  [copy.timeInfo touch];
+  //[copy.timeInfo reset];
   copy.uuid = [[NSUUID alloc] init];
 
   return copy;

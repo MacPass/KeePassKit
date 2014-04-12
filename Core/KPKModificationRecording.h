@@ -26,7 +26,7 @@
  *	Items implementing this protocoll are trackabale in changes,
  *  Access and move.
  */
-@protocol KPKTimerecording <NSObject>
+@protocol KPKModificationRecording <NSObject>
 
 @required
 /**

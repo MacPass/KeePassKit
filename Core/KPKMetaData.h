@@ -21,12 +21,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKTimerecording.h"
+#import "KPKModificationRecording.h"
 #import "KPKIcon.h"
 
 @class KPKTree;
 
-@interface KPKMetaData : NSObject <KPKTimerecording>
+@interface KPKMetaData : NSObject <KPKModificationRecording>
 
 @property (nonatomic, weak) KPKTree *tree;
 
