@@ -129,9 +129,9 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   entry.timeInfo = [self.timeInfo copyWithZone:zone];
   
   /* fix entry references */
-  entry->_autotype.entry = self;
+  entry.autotype.entry = entry;
   for(KPKAttribute *attribute in _customAttributes) {
-    attribute.entry = self;
+    attribute.entry = entry;
   }
   return entry;
 }
