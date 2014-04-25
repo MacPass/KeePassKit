@@ -43,7 +43,7 @@
     _customData = [[NSMutableArray alloc] init];
     _customIcons = [[NSMutableArray alloc] init];
     _customIconCache = [[NSMutableDictionary alloc] init];
-    _rounds = 6000;
+    _rounds = 50000;
     _compressionAlgorithm = KPKCompressionGzip;
     _protectNotes = NO;
     _protectPassword = YES;
