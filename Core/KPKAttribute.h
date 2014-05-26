@@ -31,6 +31,10 @@
 @property (nonatomic, assign) BOOL isProtected;
 @property (nonatomic, readonly) NSString *referencedValue;
 @property (nonatomic, readonly) NSString *placeholderValue;
+/**
+ *  @return Value evaluated with references and replaced placeholders
+ */
+@property (nonatomic, readonly) NSString *evaluatedValue;
 
 
 @property (weak) KPKEntry *entry; /// Reference to entry to be able to validate keys

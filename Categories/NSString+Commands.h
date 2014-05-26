@@ -58,3 +58,9 @@
 - (NSString *)evaluatePlaceholderWithEntry:(KPKEntry *)entry;
 
 @end
+
+@interface NSString (Evaluation)
+
+- (NSString *)finalValueForEntry:(KPKEntry *)entry;
+
+@end

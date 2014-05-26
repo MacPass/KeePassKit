@@ -225,7 +225,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 #pragma mark Equality
 
-- (BOOL)isEqualTo:(id)object {
+- (BOOL)isEqual:(id)object {
   if([object isKindOfClass:[KPKEntry class]]) {
     return [self isEqualToEntry:object];
   }

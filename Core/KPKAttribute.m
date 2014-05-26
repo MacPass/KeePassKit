@@ -98,7 +98,7 @@
   return [[KPKAttribute allocWithZone:zone] initWithKey:self.key value:self.value isProtected:self.isProtected];
 }
 
-- (BOOL)isEqualTo:(id)object {
+- (BOOL)isEqual:(id)object {
   if([object isKindOfClass:[self class]]) {
     return [self isEqualToAttribute:object];
   }
@@ -129,6 +129,10 @@
 
 - (NSString *)value {
   return [self _decodedValue];
+}
+
+- (NSString *)evaluatedValue {
+  return [self.value finalValueForEntry:self.entry];
 }
 
 - (void)setValueWithoutUndoRegistration:(NSString *)value {

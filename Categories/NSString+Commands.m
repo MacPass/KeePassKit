@@ -28,6 +28,7 @@
 #import "KPKAutotypeCommands.h"
 #import "NSUUID+KeePassKit.h"
 
+static NSUInteger const _KPKMaxiumRecursionLevel = 10;
 static NSDictionary *_selectorForReference;
 
 /**
@@ -296,7 +297,11 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
  {REF:<WantedField>@<SearchIn>:<Text>}
  */
 - (NSString *)resolveReferencesWithTree:(KPKTree *)tree {
-  return [self _resolveReferencesWithTree:tree recursionLevel:0];
+  NSString *resolved;
+  @autoreleasepool {
+    resolved = [self _resolveReferencesWithTree:tree recursionLevel:0];
+  }
+  return resolved;
 }
 
 - (NSString *)_resolveReferencesWithTree:(KPKTree *)tree recursionLevel:(NSUInteger)level {
@@ -305,7 +310,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     return self;
   }
   /* Stop endless recurstion at 10 substitions */
-  if(level > 10) {
+  if(level > _KPKMaxiumRecursionLevel) {
     return self;
   }
   NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:@"\\{REF:(T|U|A|N|I|O){1}@(T|U|A|N|I){1}:([^\\}]*)\\}"
@@ -324,7 +329,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     didReplace = YES;
     [mutableSelf replaceCharactersInRange:result.range withString:substitute];
   }];
-  return (didReplace ? [mutableSelf _resolveReferencesWithTree:tree recursionLevel:level+1] : self);
+  return (didReplace ? [mutableSelf _resolveReferencesWithTree:tree recursionLevel:level+1] : [self copy]);
 }
 
 - (NSString *)_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match withTree:(KPKTree *)tree {
@@ -395,6 +400,17 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 @implementation NSString (Placeholder)
 
 - (NSString *)evaluatePlaceholderWithEntry:(KPKEntry *)entry {
+  NSString *evaluated;
+  @autoreleasepool {
+    evaluated = [self _evaluatePlaceholderWithEntry:entry recursionLevel:0];
+  }
+  return evaluated;
+}
+
+- (NSString *)_evaluatePlaceholderWithEntry:(KPKEntry *)entry recursionLevel:(NSUInteger)recursion {
+  if(recursion > _KPKMaxiumRecursionLevel) {
+    return [self copy];
+  }
   /* build mapping for all default fields */
   NSMutableDictionary *mappings = [[NSMutableDictionary alloc] initWithCapacity:0];
   for(KPKAttribute *defaultAttribute in [entry defaultAttributes]) {
@@ -433,7 +449,19 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                                           options:NSCaseInsensitiveSearch
                                             range:NSMakeRange(0, [supstitudedString length])];
   }
-  // TODO Missing recursion!
-  return [supstitudedString copy];
+  if([supstitudedString isEqualToString:self]) {
+    return [self copy];
+  }
+  return [supstitudedString _evaluatePlaceholderWithEntry:entry recursionLevel:recursion + 1];
 }
+
+
+@end
+
+@implementation NSString (Evaluation)
+
+- (NSString *)finalValueForEntry:(KPKEntry *)entry {
+  return[[self resolveReferencesWithTree:entry.tree] evaluatePlaceholderWithEntry:entry];
+}
+
 @end
