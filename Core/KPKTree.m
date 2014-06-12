@@ -135,7 +135,7 @@
   if([allEntries count] == 0) {
     return nil;
   }
-  NSMutableArray *historyEntries = [[NSMutableArray alloc] initWithCapacity:[allEntries count] * self.metaData.historyMaxItems];
+  NSMutableArray *historyEntries = [[NSMutableArray alloc] init];
   for(KPKEntry *entry in allEntries) {
     NSAssert(entry.history != nil, @"History object cannot be nil");
     [historyEntries addObjectsFromArray:entry.history];
