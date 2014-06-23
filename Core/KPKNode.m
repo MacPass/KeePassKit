@@ -121,4 +121,8 @@
   [self.timeInfo wasMoved];
 }
 
+- (void)updateTo:(KPKNode *)node {
+  /* Update content*/
+}
+
 @end

@@ -57,4 +57,6 @@
  */
 - (KPKGroup *)rootGroup;
 
+- (void)updateTo:(KPKNode *)node;
+
 @end

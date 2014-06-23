@@ -183,7 +183,5 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 - (NSUInteger)calculateByteSize;
 
-#pragma mark Placeholder
-
 @end
 
