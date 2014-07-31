@@ -62,10 +62,10 @@
     _data = data;
     _dataStreamer = [[KPKDataStreamReader alloc] initWithData:_data];
     _headerReader = (KPKLegacyHeaderReader *)headerReader;
-    _groupLevels = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];
-    _groups = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfGroups];
-    _groupIdToUUID = [[NSMutableDictionary alloc] initWithCapacity:_headerReader.numberOfGroups];
-    _entries = [[NSMutableArray alloc] initWithCapacity:_headerReader.numberOfEntries];
+    _groupLevels = [[NSMutableArray alloc] initWithCapacity:MAX(1,_headerReader.numberOfGroups)];
+    _groups = [[NSMutableArray alloc] initWithCapacity:MAX(1,_headerReader.numberOfGroups)];
+    _groupIdToUUID = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,_headerReader.numberOfGroups)];
+    _entries = [[NSMutableArray alloc] initWithCapacity:MAX(1,_headerReader.numberOfEntries)];
     
   }
   return self;
@@ -517,7 +517,7 @@
  the ones we do not know to not destroy the file on write
  */
 - (void)_readMetaEntries:(KPKTree *)tree {
-  NSMutableArray *metaEntries = [[NSMutableArray alloc] initWithCapacity:[_entries count] / 2];
+  NSMutableArray *metaEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,[_entries count] / 2)];
   for(KPKEntry *entry in _entries) {
     if([entry isMeta]) {
       [metaEntries addObject:entry];
@@ -667,7 +667,7 @@
   uint32_t numberOfGroups = CFSwapInt32LittleToHost([dataReader read4Bytes]);
   
   /* Read Icons */
-  NSMutableArray *iconUUIDs = [[NSMutableArray alloc] initWithCapacity:numberOfIcons];
+  NSMutableArray *iconUUIDs = [[NSMutableArray alloc] initWithCapacity:MAX(1,numberOfIcons)];
   for(NSUInteger index = 0; index < numberOfIcons; index++) {
     if([dataReader countOfReadableBytes] < 4) {
       return NO; // Data is truncated

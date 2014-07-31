@@ -357,7 +357,7 @@
    */
   DDXMLElement *binariesElement = [root elementForName:@"Binaries"];
   NSUInteger binaryCount = [[binariesElement elementsForName:@"Binary"] count];
-  _binaryMap = [[NSMutableDictionary alloc] initWithCapacity:binaryCount];
+  _binaryMap = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,binaryCount)];
   for (DDXMLElement *element in [binariesElement elementsForName:@"Binary"]) {
     DDXMLNode *idAttribute = [element attributeForName:@"ID"];
     
