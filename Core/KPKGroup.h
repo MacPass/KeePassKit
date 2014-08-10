@@ -116,11 +116,26 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 /**
  *  Returns YES if the entries for this group use Autotype. The value is determined by the isAutotypeEnabled settings
  *  If the setting is KPKInherit, the parent is aksed. If th eroot has KPKInhert, YES is assumed
+ *
  *  @return YES if autotype can be used, otherwise NO
  */
 - (BOOL)isAutotypeable;
-
+/**
+ *  @return YES if the group has a default autotype sequence. That is none set. NO otherwise
+ */
 - (BOOL)hasDefaultAutotypeSequence;
+/**
+ *  @return The breadcrumb of this group separated by dots.
+ */
+- (NSString *)breadcrumb;
+/**
+ *  Retursn the path of groups this group is under. The group names a separated by the given separator
+ *
+ *  @param separator a string that is used as group name separator
+ *  @return NSString of the groups breadcrumb.
+ */
+- (NSString *)breadcrumbWithSeparator:(NSString *)separator;
+
 
 #pragma mark Delete
 /**

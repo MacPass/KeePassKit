@@ -437,6 +437,17 @@
   }
 }
 
+- (NSString *)breadcrumb {
+  return [self breadcrumbWithSeparator:@"."];
+}
+
+- (NSString *)breadcrumbWithSeparator:(NSString *)separator {
+  if(self.parent && (self.rootGroup != self.parent)) {
+    return [[self.parent breadcrumb] stringByAppendingFormat:@" > %@", self.name];
+  }
+  return self.name;
+}
+
 #pragma mark Delete
 
 - (void)clear {

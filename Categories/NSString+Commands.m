@@ -438,10 +438,33 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
       mappings[@"{URL:SCM}"] = @"";
     }
     mappings[@"{URL:HOST}"] = [url host] ? [url host] : @"";
-    mappings[@"{URL:PORT}"] = [url port] ? [[url port]stringValue] : @"";
+    mappings[@"{URL:PORT}"] = [url port] ? [[url port] stringValue] : @"";
     mappings[@"{URL:PATH}"] = [url path] ? [url path] : @"";
     mappings[@"{URL:QUERY}"] = [url query] ? [url query] : @"";
+    mappings[@"{URL:USERNAME}"] = [url user] ? [url user] : @"";
+    mappings[@"{URL:PASSWORD}"] = [url password] ? [url password] : @"";
+    if( [url user] && [url password]) {
+      mappings[@"{URL:USERINFO}"] = [[NSString alloc] initWithFormat:@"%@:%@", [url user], [url password]];
+    }
+    else {
+      mappings[@"{URL:USERINFO}"] = [[NSString alloc] initWithFormat:@"%@%@", mappings[@"{URL:USERNAME}"], mappings[@"{URL:PASSWORD}"]];
+    }
+    
   }
+  /* mis mappings */
+  //mappings[@"{APPDIR}"] = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
+  mappings[@"{GROUP}"] = entry.parent.name;
+  mappings[@"{GROUPPATH}"] = [entry.parent breadcrumb];
+  mappings[@"{ENV_DIRSEP}"] = @"/";
+  /*
+   {ENV_PROGRAMFILES_X86}	This is %ProgramFiles(x86)%, if it exists, otherwise %ProgramFiles%.
+   {DB_PATH} Full path of the current database.
+   {DB_DIR} Directory of the current database.
+   {DB_NAME}	File name (including extension) of the current database.
+   {DB_BASENAME}	File name (excluding extension) of the current database.
+   {DB_EXT} File name extension of the current database.
+  */
+  
   NSMutableString *supstitudedString = [self mutableCopy];
   for(NSString *placeholderKey in mappings) {
     [supstitudedString replaceOccurrencesOfString:placeholderKey
