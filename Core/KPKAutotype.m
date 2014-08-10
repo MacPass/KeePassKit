@@ -137,7 +137,9 @@
 
 - (KPKWindowAssociation *)windowAssociationMatchingWindowTitle:(NSString *)windowTitle {
   for(KPKWindowAssociation *association in self.associations) {
-    //[association.windowTitle matchesWindowTitle:windowTitle
+    if([association matchesWindowTitle:windowTitle]) {
+      return association;
+    }
   }
   return nil;
 }
