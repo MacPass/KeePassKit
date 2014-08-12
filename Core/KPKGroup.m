@@ -410,6 +410,8 @@
   }
 }
 
+#pragma mark Autotype
+
 - (NSArray *)autotypeableChildEntries {
   NSMutableArray *autotypeEntries;
   if([self isAutotypeable]) {
@@ -437,6 +439,8 @@
   }
 }
 
+#pragma mark Hierarchy
+
 - (NSString *)breadcrumb {
   return [self breadcrumbWithSeparator:@"."];
 }
@@ -446,6 +450,17 @@
     return [[self.parent breadcrumb] stringByAppendingFormat:@" > %@", self.name];
   }
   return self.name;
+}
+
+- (NSIndexPath *)indexPath {
+  if(self.parent) {
+    NSUInteger myIndex = [self.parent.groups indexOfObject:self];
+    NSIndexPath *parentIndexPath = [self.parent indexPath];
+    NSAssert( nil != parentIndexPath, @"existing parents should always yield a indexPath");
+    return [parentIndexPath indexPathByAddingIndex:myIndex];
+  }
+  NSUInteger indexes[] = {0,0};
+  return [[NSIndexPath alloc] initWithIndexes:indexes length:(sizeof(indexes)/sizeof(NSUInteger))];
 }
 
 #pragma mark Delete

@@ -112,6 +112,8 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  */
 - (BOOL)isSearchable;
 
+#pragma mark Autotype
+
 - (NSArray *)autotypeableChildEntries;
 /**
  *  Returns YES if the entries for this group use Autotype. The value is determined by the isAutotypeEnabled settings
@@ -124,6 +126,8 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  *  @return YES if the group has a default autotype sequence. That is none set. NO otherwise
  */
 - (BOOL)hasDefaultAutotypeSequence;
+
+#pragma mark Hierarchy
 /**
  *  @return The breadcrumb of this group separated by dots.
  */
@@ -136,6 +140,12 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  */
 - (NSString *)breadcrumbWithSeparator:(NSString *)separator;
 
+/**
+ *  The index path in the Tree to this group
+ *
+ *  @return NSIndexPath starting at the root group of the tree
+ */
+- (NSIndexPath *)indexPath;
 
 #pragma mark Delete
 /**
