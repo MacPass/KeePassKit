@@ -333,6 +333,16 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   return self.urlAttribute.value;
 }
 
+- (void)setParent:(KPKGroup *)parent {
+  [super setParent:parent];
+  if(self.isHistory) {
+    return; // History entries should not propagate set parent;
+  }
+  for(KPKEntry *historyEntry in self.history) {
+    historyEntry.parent = self.parent;
+  }
+}
+
 - (void)setTitle:(NSString *)title {
   [self.undoManager registerUndoWithTarget:self selector:@selector(setTitle:) object:self.title];
   [self.titleAttribute setValueWithoutUndoRegistration:title];
@@ -590,6 +600,8 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (void)insertObject:(KPKEntry *)entry inHistoryAtIndex:(NSUInteger)index {
   index = MIN([_history count], index);
   entry.isHistory = YES;
+  entry.parent = self.parent;
+  NSAssert([entry.history count] == 0, @"History entries cannot hold a history of their own!");
   [_history insertObject:entry atIndex:index];
 }
 
