@@ -182,10 +182,10 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     [matchingIndices addIndex:result.range.location];
   }];
   /* Enumerate the indices backwards, to not invalidate them by replacing strings */
-  NSDictionary *unsafeShortForats = [self unsafeShortFormats];
+  NSDictionary *unsafeShortFormats = [self unsafeShortFormats];
   [matchingIndices enumerateIndexesInRange:NSMakeRange(0, [command length]) options:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *stop) {
     NSString *shortFormatKey = [mutableCommand substringWithRange:NSMakeRange(idx, 1)];
-    [mutableCommand replaceCharactersInRange:NSMakeRange(idx, 1) withString:unsafeShortForats[shortFormatKey]];
+    [mutableCommand replaceCharactersInRange:NSMakeRange(idx, 1) withString:unsafeShortFormats[shortFormatKey]];
   }];
   /*
    It's possible to extend commands by a multiplier,
@@ -254,7 +254,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   BOOL isBracketOpen = NO;
   while(YES) {
     if(index >= [self length]) {
-      /* At the end all brackests should be closed */
+      /* At the end all brackets should be closed */
       return !isBracketOpen;
     }
     NSUInteger openingBracketIndex = [self rangeOfString:@"{" options:0 range:NSMakeRange(index, [self length] - index)].location;
@@ -453,8 +453,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }
   /* mis mappings */
   //mappings[@"{APPDIR}"] = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
-  mappings[@"{GROUP}"] = entry.parent.name;
-  mappings[@"{GROUPPATH}"] = [entry.parent breadcrumb];
+  mappings[@"{GROUP}"] = entry.parent.name ? entry.parent.name : @"";
+  mappings[@"{GROUPPATH}"] = entry.parent ? [entry.parent breadcrumb] : @"";
   mappings[@"{ENV_DIRSEP}"] = @"/";
   /*
    {ENV_PROGRAMFILES_X86}	This is %ProgramFiles(x86)%, if it exists, otherwise %ProgramFiles%.
