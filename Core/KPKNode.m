@@ -74,6 +74,10 @@
 }
 
 #pragma mark Properties
+- (BOOL)isEditable {
+  return YES;
+}
+
 - (void)setIconId:(NSInteger)iconId {
   if(iconId != _iconId) {
     [[self.undoManager prepareWithInvocationTarget:self] setIconId:_iconId];

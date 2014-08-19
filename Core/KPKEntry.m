@@ -81,6 +81,10 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   return metaEntry;
 }
 
++ (NSSet *)keyPathsForValuesAffectingIsEditable {
+  return [[NSSet alloc] initWithObjects:NSStringFromSelector(@selector(isHistory)), nil];
+}
+
 - (id)init {
   self = [super init];
   if (self) {
@@ -301,6 +305,10 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 #pragma mark Properties
+- (BOOL)isEditable {
+  return !self.isHistory;
+}
+
 - (NSArray *)binaries {
   return [_binaries copy];
 }

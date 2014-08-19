@@ -44,6 +44,7 @@
 @property(nonatomic, strong) KPKTimeInfo *timeInfo;
 
 @property (nonatomic, weak, readonly) NSUndoManager *undoManager;
+@property (nonatomic, readonly, assign) BOOL isEditable;
 
 /**
  *	Returns the default icon number for a Group
