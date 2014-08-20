@@ -73,6 +73,9 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeShortCurlyBracketRight;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeCurlyBracketLeft;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeCurlyBracketRight;
 
+/* Special Commands */
+FOUNDATION_EXPORT NSString *const kKPKAutotypeClearField;
+
 /* Value-Commands*/
 FOUNDATION_EXTERN NSString *const kKPKAutotypeDelay;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualKey;

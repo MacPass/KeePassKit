@@ -103,7 +103,6 @@ NSString *const kKPKAutotypePrintScreen = @"{PRTSC}";
 NSString *const kKPKAutotypeScrollLock = @"{SCROLLLOCK}";
 NSString *const kKPKAutotypeFunctionMaskRegularExpression = @"\\{F([1]?[0-9])\\}"; //1-16
 
-
 /* Keypad */
 NSString *const kKPKAutotypeKeypaddAdd = @"{ADD}";
 NSString *const kKPKAutotypeKeypaddSubtract = @"{SUBTRACT}";
@@ -123,9 +122,12 @@ NSString *const kKPKAutotypeSquareBracketRight = @"{]}";
 NSString *const kKPKAutotypeCurlyBracketLeft = @"{CURLYLEFT}";
 NSString *const kKPKAutotypeCurlyBracketRight = @"{CURLYRIGHT}";
 
+/* Special Commands */
+NSString *const kKPKAutotypeClearField = @"{CLEARFIELD}";
+
 /* Value Commands without Brackets to use in Matches */
 NSString *const kKPKAutotypeDelay = @"DELAY";
-NSString *const kKPKAutotypeVirtualKey = @"VKEY X";
+NSString *const kKPKAutotypeVirtualKey = @"VKEY";
 NSString *const kKPKAutotypeVirtualNonExtendedKey = @"VKEY-NX";
 NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
 

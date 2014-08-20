@@ -208,10 +208,13 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     @autoreleasepool {
       NSString *key = [mutableCommand substringWithRange:result.range];
       NSString *command = [mutableCommand substringWithRange:[result rangeAtIndex:1]];
+      NSString *value = [mutableCommand substringWithRange:[result rangeAtIndex:2]];
       if([[self valueCommands] containsObject:command]) {
+        /* Replace space with : to be save with space replacing */
+        repeaterValues[key] = [NSString stringWithFormat:@"{%@:%@}", command, value];
         return; // Commands is not a repeat command
       }
-      NSScanner *numberScanner = [[NSScanner alloc] initWithString:[mutableCommand substringWithRange:[result rangeAtIndex:2]]];
+      NSScanner *numberScanner = [[NSScanner alloc] initWithString:value];
       NSInteger repeatCounter = 0;
       if(![numberScanner scanInteger:&repeatCounter]) {
         *stop = YES; // Abort!
@@ -456,8 +459,10 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   mappings[@"{GROUP}"] = entry.parent.name ? entry.parent.name : @"";
   mappings[@"{GROUPPATH}"] = entry.parent ? [entry.parent breadcrumb] : @"";
   mappings[@"{ENV_DIRSEP}"] = @"/";
+  NSURL *appDirURL = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask][0];
+  mappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  [appDirURL path] : @"";
   /*
-   {ENV_PROGRAMFILES_X86}	This is %ProgramFiles(x86)%, if it exists, otherwise %ProgramFiles%.
+   These mappings require access to the mpdocument.
    {DB_PATH} Full path of the current database.
    {DB_DIR} Directory of the current database.
    {DB_NAME}	File name (including extension) of the current database.
