@@ -469,6 +469,28 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
    {DB_BASENAME}	File name (excluding extension) of the current database.
    {DB_EXT} File name extension of the current database.
   */
+  /* Dates
+   {DT_SIMPLE}	Current local date/time as a simple, sortable string. For example, for 2012-07-25 17:05:34 the value is 20120725170534.
+   {DT_YEAR}	Year component of the current local date/time.
+   {DT_MONTH}	Month component of the current local date/time.
+   {DT_DAY}	Day component of the current local date/time.
+   {DT_HOUR}	Hour component of the current local date/time.
+   {DT_MINUTE}	Minute component of the current local date/time.
+   {DT_SECOND}	Seconds component of the current local date/time.
+   {DT_UTC_SIMPLE}	Current UTC date/time as a simple, sortable string.
+   {DT_UTC_YEAR}	Year component of the current UTC date/time.
+   {DT_UTC_MONTH}	Month component of the current UTC date/time.
+   {DT_UTC_DAY}	Day component of the current UTC date/time.
+   {DT_UTC_HOUR}	Hour component of the current UTC date/time.
+   {DT_UTC_MINUTE}	Minute component of the current UTC date/time.
+   {DT_UTC_SECOND}	Seconds component of the current UTC date/time.
+  
+   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:@"YYYYMMddHHmmss" allowNaturalLanguage:NO];
+  [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+  NSDate *currentDate = [NSDate date];
+  [dateFormatter stringFromDate:currentDate];
+  NSCalendar *currentCalender = [NSCalendar currentCalendar];
+   */
   
   NSMutableString *supstitudedString = [self mutableCopy];
   for(NSString *placeholderKey in mappings) {
