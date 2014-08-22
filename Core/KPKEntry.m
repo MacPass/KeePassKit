@@ -192,7 +192,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 - (instancetype)copyWithTitle:(NSString *)title {
   KPKEntry *copy = [self copy];
   if(!title) {
-    NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKLocalizeable", "");
+    NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKlocalizable", "");
     title = [[NSString alloc] initWithFormat:format, self.title];
   }
   /* Disbale the undomanager since we do not want the updated title to be registered */
