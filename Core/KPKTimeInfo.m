@@ -33,6 +33,11 @@
   return YES;
 }
 
++ (NSSet *)keyPathsForValuesAffectingIsExpired {
+  return [NSSet setWithArray:@[ NSStringFromSelector(@selector(expires)),
+                                NSStringFromSelector(@selector(expiryTime))]];
+}
+
 - (id)init {
   self = [super init];
   if(self) {
@@ -64,6 +69,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+  /* TODO update to NSStringFromSelector */
   if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
     [aCoder encodeObject:self.creationTime forKey:@"creationTime"];
     [aCoder encodeObject:self.lastAccessTime forKey:@"lastAccessTime"];
@@ -116,6 +122,12 @@
       self.lastModificationTime = [NSDate date];
     }
   }
+}
+
+- (BOOL)isExpired {
+  //TODO: Mechanism to update isExpired when expiry date is reached
+  BOOL reachedExpiredDate = (0 < [[NSDate date] timeIntervalSinceDate:self.expiryTime]);
+  return self.expires && reachedExpiredDate;
 }
 
 - (void)reset {

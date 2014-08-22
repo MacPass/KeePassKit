@@ -33,6 +33,7 @@
 
 @property(nonatomic, strong) NSDate *expiryTime;
 @property(nonatomic, assign) BOOL expires;
+@property(readonly, assign) BOOL isExpired;
 
 @property(nonatomic, strong) NSDate *locationChanged;
 @property(nonatomic, assign) NSUInteger usageCount;
