@@ -66,7 +66,8 @@
     _historyMaxItems = 10;
     _historyMaxSize = 6 * 1024 * 1024; // 6 MB
     _maintenanceHistoryDays = 365;
-    _masterKeyChangeIsRequired=-1
+    _masterKeyChangeIsRequired=-1;
+    _masterKeyChangeIsForced=-1;
   }
   return self;
 }
