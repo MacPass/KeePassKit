@@ -32,10 +32,25 @@
   NSMutableArray *_customIcons;
 }
 
-
 @end
 
 @implementation KPKMetaData
+
++ (NSSet *)keyPathsForValuesAffectingEnforceMasterKeyChange {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(masterKeyChangeEnforcementInterval))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingRecommendMasterKeyChange {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(masterKeyChangeRecommendationInterval))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingMasterKeyChangeEnforcementInterval {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(enforceMasterKeyChange))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingMasterKeyChangeRecommendationInterval {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(recommendMasterKeyChange))];
+}
 
 - (id)init {
   self = [super init];
@@ -66,8 +81,9 @@
     _historyMaxItems = 10;
     _historyMaxSize = 6 * 1024 * 1024; // 6 MB
     _maintenanceHistoryDays = 365;
-    _masterKeyChangeIsRequired=-1;
-    _masterKeyChangeIsForced=-1;
+    /* No Key change recommandation or enforcement */
+    _masterKeyChangeRecommendationInterval=-1;
+    _masterKeyChangeEnforcementInterval=-1;
   }
   return self;
 }
@@ -80,6 +96,22 @@
 
 - (BOOL)isHistoryEnabled {
   return (self.historyMaxItems != -1);
+}
+
+- (BOOL)enforceMasterKeyChange {
+  return  self.masterKeyChangeEnforcementInterval > -1;
+}
+
+- (BOOL)recommendMasterKeyChange {
+  return self.masterKeyChangeRecommendationInterval > -1;
+}
+
+- (void)setEnforceMasterKeyChange:(BOOL)enforceMasterKeyChange {
+  self.masterKeyChangeEnforcementInterval = enforceMasterKeyChange ? 0 : -1;
+}
+
+- (void)setRecommendMasterKeyChange:(BOOL)recommendMasterKeyChange {
+  self.masterKeyChangeRecommendationInterval = recommendMasterKeyChange ? 0 : -1;
 }
 
 - (void)setColor:(NSColor *)color {

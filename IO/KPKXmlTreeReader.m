@@ -181,8 +181,8 @@
    */
   data.color = [NSColor colorWithHexString:KPKXmlString(metaElement, kKPKXmlColor)];
   data.masterKeyChanged = KPKXmlDate(_dateFormatter, metaElement, kKPKXmlMasterKeyChanged);
-  data.masterKeyChangeIsRequired = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeRec);
-  data.masterKeyChangeIsForced = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeForce);
+  data.masterKeyChangeRecommendationInterval = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeRecommendationInterval);
+  data.masterKeyChangeEnforcementInterval = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeForceInterval);
   
   DDXMLElement *memoryProtectionElement = [metaElement elementForName:kKPKXmlMemoryProtection];
   

@@ -48,8 +48,10 @@
 @property(nonatomic, copy) NSColor *color;
 
 @property(nonatomic, strong) NSDate *masterKeyChanged;
-@property(nonatomic, assign) NSInteger masterKeyChangeIsRequired;
-@property(nonatomic, assign) NSInteger masterKeyChangeIsForced;
+@property(nonatomic, assign) BOOL recommendMasterKeyChange;
+@property(nonatomic, assign) NSInteger masterKeyChangeRecommendationInterval;
+@property(nonatomic, assign) BOOL enforceMasterKeyChange;
+@property(nonatomic, assign) NSInteger masterKeyChangeEnforcementInterval;
 
 @property(nonatomic, assign) BOOL protectTitle;
 @property(nonatomic, assign) BOOL protectUserName;

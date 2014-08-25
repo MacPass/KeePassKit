@@ -26,8 +26,8 @@ FOUNDATION_EXTERN NSString *const kKPKXmlDefaultUserNameChanged;
 FOUNDATION_EXTERN NSString *const kKPKXmlMaintenanceHistoryDays;
 FOUNDATION_EXTERN NSString *const kKPKXmlColor;
 FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChanged;
-FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeRec;
-FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeForce;
+FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeRecommendationInterval;
+FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeForceInterval;
 
 FOUNDATION_EXTERN NSString *const kKPKXmlMemoryProtection;
 FOUNDATION_EXTERN NSString *const kKPKXmlProtectTitle;

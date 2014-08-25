@@ -24,8 +24,8 @@ NSString *const kKPKXmlDefaultUserNameChanged = @"DefaultUserNameChanged";
 NSString *const kKPKXmlMaintenanceHistoryDays = @"MaintenanceHistoryDays";
 NSString *const kKPKXmlColor = @"Color";
 NSString *const kKPKXmlMasterKeyChanged = @"MasterKeyChanged";
-NSString *const kKPKXmlMasterKeyChangeRec = @"MasterKeyChangeRec";
-NSString *const kKPKXmlMasterKeyChangeForce = @"MasterKeyChangeForce";
+NSString *const kKPKXmlMasterKeyChangeRecommendationInterval = @"MasterKeyChangeRec";
+NSString *const kKPKXmlMasterKeyChangeForceInterval = @"MasterKeyChangeForce";
 
 NSString *const kKPKXmlMemoryProtection = @"MemoryProtection";
 NSString *const kKPKXmlProtectTitle = @"ProtectTitle";

@@ -108,8 +108,8 @@
   KPKAddXmlElement(metaElement, kKPKXmlMaintenanceHistoryDays, KPKStringFromLong(metaData.maintenanceHistoryDays));
   KPKAddXmlElement(metaElement, kKPKXmlColor, [metaData.color hexString]);
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChanged, KPKStringFromDate(_dateFormatter, metaData.masterKeyChanged));
-  KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeRec, KPKStringFromLong(metaData.masterKeyChangeIsRequired));
-  KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeForce, KPKStringFromLong(metaData.masterKeyChangeIsForced));
+  KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeRecommendationInterval, KPKStringFromLong(metaData.masterKeyChangeRecommendationInterval));
+  KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeForceInterval, KPKStringFromLong(metaData.masterKeyChangeEnforcementInterval));
   
   DDXMLElement *memoryProtectionElement = [DDXMLElement elementWithName:kKPKXmlMemoryProtection];
   KPKAddXmlElement(memoryProtectionElement, kKPKXmlProtectTitle, KPKStringFromBool(metaData.protectTitle));
