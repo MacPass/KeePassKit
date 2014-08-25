@@ -35,7 +35,6 @@
 
 @property (nonatomic, assign) BOOL hasKeyFile;
 @property (nonatomic, assign) BOOL hasPassword;
-@property (nonatomic, assign) NSTimeInterval modifactionTimeStamp;
 
 @end
 
@@ -82,7 +81,6 @@
 - (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key {
   self.hasPassword = ([password length] > 0);
   self.hasKeyFile = (key != nil);
-  self.modifactionTimeStamp = [NSDate timeIntervalSinceReferenceDate];
   _compositeDataVersion1 = [self _createVersion1CompositeDataWithPassword:password keyFile:key];
   _compositeDataVersion2 = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
 }

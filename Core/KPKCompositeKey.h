@@ -42,7 +42,6 @@
  */
 @property (nonatomic, readonly, assign) BOOL hasPassword;
 @property (nonatomic, readonly, assign) BOOL hasKeyFile;
-@property (nonatomic, readonly, assign) NSTimeInterval modifactionTimeStamp;
 
 + (void)benchmarkTransformationRounds:(NSUInteger)seconds completionHandler:(void(^)(NSUInteger rounds))completionHandler;
 
