@@ -44,14 +44,6 @@
   return [NSSet setWithObject:NSStringFromSelector(@selector(masterKeyChangeRecommendationInterval))];
 }
 
-+ (NSSet *)keyPathsForValuesAffectingMasterKeyChangeEnforcementInterval {
-  return [NSSet setWithObject:NSStringFromSelector(@selector(enforceMasterKeyChange))];
-}
-
-+ (NSSet *)keyPathsForValuesAffectingMasterKeyChangeRecommendationInterval {
-  return [NSSet setWithObject:NSStringFromSelector(@selector(recommendMasterKeyChange))];
-}
-
 - (id)init {
   self = [super init];
   if(self){
@@ -104,14 +96,6 @@
 
 - (BOOL)recommendMasterKeyChange {
   return self.masterKeyChangeRecommendationInterval > -1;
-}
-
-- (void)setEnforceMasterKeyChange:(BOOL)enforceMasterKeyChange {
-  self.masterKeyChangeEnforcementInterval = enforceMasterKeyChange ? 0 : -1;
-}
-
-- (void)setRecommendMasterKeyChange:(BOOL)recommendMasterKeyChange {
-  self.masterKeyChangeRecommendationInterval = recommendMasterKeyChange ? 0 : -1;
 }
 
 - (void)setColor:(NSColor *)color {
