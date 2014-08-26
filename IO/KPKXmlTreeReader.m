@@ -82,7 +82,8 @@
         return nil;
       }
     }
-    _dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'" allowNaturalLanguage:NO];
+    _dateFormatter = [[NSDateFormatter alloc] init];
+    [_dateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"];
     [_dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
   }
   return self;
