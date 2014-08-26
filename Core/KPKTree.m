@@ -24,6 +24,7 @@
 #import "KPKGroup.h"
 #import "KPKEntry.h"
 #import "KPKMetaData.h"
+#import "KPKTimeInfo.h"
 
 @interface KPKTree () {
   NSMutableDictionary *_tagsMap;
@@ -165,10 +166,11 @@
 }
 
 - (void)registerTags:(NSString *)tags forEntry:(KPKEntry *)entry {
+  NSAssert(NO, @"registerTags:forEntry: not implemented");
 }
 
 - (void)deregisterTags:(NSString *)tags forEntry:(KPKEntry *)entry {
-  
+  NSAssert(NO, @"deregisterTags:forEntry: not implemented");
 }
 
 @end

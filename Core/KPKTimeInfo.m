@@ -24,10 +24,10 @@
 #import "KPKNode.h"
 #import "KPKTree.h"
 
-
 @implementation KPKTimeInfo
 
 @synthesize updateTiming = _updateTiming;
+@synthesize isExpired = _isExpired;
 
 + (BOOL)supportsSecureCoding {
   return YES;
@@ -37,6 +37,7 @@
   return [NSSet setWithArray:@[ NSStringFromSelector(@selector(expires)),
                                 NSStringFromSelector(@selector(expiryTime))]];
 }
+
 
 - (id)init {
   self = [super init];
@@ -50,6 +51,7 @@
     _expires = NO;
     _usageCount = 0;
     _updateTiming = NO;
+    _isExpired = NO;
   }
   return self;
 }
@@ -104,6 +106,18 @@
 
 #pragma mark -
 #pragma mark Properties
+- (BOOL)isExpired {
+  BOOL oldValue = _isExpired;
+  BOOL reachedExpiredDate = (0 < [[NSDate date] timeIntervalSinceDate:self.expiryTime]);
+  BOOL newValue = self.expires && reachedExpiredDate;
+  if(oldValue != newValue) {
+    [self willChangeValueForKey:NSStringFromSelector(@selector(isExpired))];
+    _isExpired = newValue;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(isExpired))];
+  }
+  return _isExpired;
+}
+
 - (void)setExpires:(BOOL)expires {
   if(self.expires != expires) {
     [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpires:self.expires];
@@ -122,12 +136,6 @@
       self.lastModificationTime = [NSDate date];
     }
   }
-}
-
-- (BOOL)isExpired {
-  //TODO: Mechanism to update isExpired when expiry date is reached
-  BOOL reachedExpiredDate = (0 < [[NSDate date] timeIntervalSinceDate:self.expiryTime]);
-  return self.expires && reachedExpiredDate;
 }
 
 - (void)reset {
@@ -150,7 +158,7 @@
   if(!self.updateTiming) {
     return;
   }
-
+  
   self.lastAccessTime = [NSDate date];
 }
 

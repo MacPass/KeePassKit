@@ -153,6 +153,21 @@
   }
 }
 
+- (void)setMasterKeyChangeEnforcementInterval:(NSInteger)masterKeyChangeEnforcementInterval {
+  if(_masterKeyChangeEnforcementInterval != masterKeyChangeEnforcementInterval) {
+    [[self.tree.undoManager prepareWithInvocationTarget:self] setMasterKeyChangeEnforcementInterval:_masterKeyChangeEnforcementInterval];
+    _masterKeyChangeEnforcementInterval = masterKeyChangeEnforcementInterval;
+  }
+}
+
+- (void)setMasterKeyChangeRecommendationInterval:(NSInteger)masterKeyChangeRecommendationInterval {
+  if(_masterKeyChangeRecommendationInterval != masterKeyChangeRecommendationInterval) {
+    [[self.tree.undoManager prepareWithInvocationTarget:self] setMasterKeyChangeRecommendationInterval:_masterKeyChangeRecommendationInterval];
+    _masterKeyChangeRecommendationInterval = masterKeyChangeRecommendationInterval;
+  }
+}
+
+
 - (void)addCustomIcon:(KPKIcon *)icon {
   [self addCustomIcon:icon atIndex:[_customIcons count]];
 }
