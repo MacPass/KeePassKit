@@ -75,6 +75,9 @@
 
 #pragma mark Properties
 - (BOOL)isEditable {
+  if(self.tree) {
+    return self.tree.isEditable;
+  }
   return YES;
 }
 
