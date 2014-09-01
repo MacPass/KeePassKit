@@ -39,6 +39,14 @@
  *  @return the default autotype sequence to be used
  */
 - (NSString *)defaultAutotypeSequenceForTree:(KPKTree *)tree;
+/**
+ *  Is called whenever the tree wants to issue a modification
+ *
+ *  @param tree Tree asking if it can be modified
+ *
+ *  @return YES if the tree can be modified, otherwise NO
+ */
+- (BOOL)shouldEditTree:(KPKTree *)tree;
 
 @end
 
@@ -48,6 +56,8 @@
 @property(nonatomic, strong, readonly) NSMutableDictionary *deletedObjects;
 @property(nonatomic, strong) KPKMetaData *metaData;
 @property(nonatomic, weak) NSUndoManager *undoManager;
+
+@property(nonatomic, readonly, assign) BOOL isEditable;
 
 @property (nonatomic, strong) KPKGroup *root;
 /**

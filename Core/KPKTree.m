@@ -109,6 +109,13 @@
 
 #pragma mark -
 #pragma mark Properties
+- (BOOL)isEditable {
+  if([self.delegate respondsToSelector:@selector(shouldEditTree:)]) {
+    return  [self.delegate shouldEditTree:self];
+  }
+  return YES;
+}
+
 - (void)setRoot:(KPKGroup *)root {
   if(_root != root) {
     _root = root;
