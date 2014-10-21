@@ -246,6 +246,10 @@
   return childGroups;
 }
 
+- (KPKGroup *)asGroup {
+  return self;
+}
+
 #pragma mark -
 #pragma mark Group/Entry editing
 

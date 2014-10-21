@@ -132,4 +132,12 @@
   /* Update content*/
 }
 
+- (KPKGroup *)asGroup {
+  return nil;
+}
+
+- (KPKEntry *)asEntry {
+  return nil;
+}
+
 @end

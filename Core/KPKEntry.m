@@ -387,6 +387,10 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   _tags = [tags copy];
 }
 
+- (KPKEntry *)asEntry {
+  return self;
+}
+
 #pragma mark move/remove/copy
 - (void)remove {
   /*

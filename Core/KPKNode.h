@@ -25,10 +25,11 @@
 #import "KPKVersion.h"
 #import "KPKModificationRecording.h"
 
+@class KPKEntry;
 @class KPKGroup;
-@class KPKTree;
 @class KPKIcon;
 @class KPKTimeInfo;
+@class KPKTree;
 
 /**
  *	Baseclass for all Nodes in a Tree.
@@ -59,5 +60,8 @@
 - (KPKGroup *)rootGroup;
 
 - (void)updateTo:(KPKNode *)node;
+
+- (KPKGroup *)asGroup;
+- (KPKEntry *)asEntry;
 
 @end
