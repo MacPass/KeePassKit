@@ -344,7 +344,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                             @"N" : @"notes",
                             @"I" : @"uuid"
                             };
-  NSString *valueSelectorString = _selectorForReference[valueKey];
+  searchKey = [searchKey uppercaseString];
+  NSString *valueSelectorString = _selectorForReference[[valueKey uppercaseString]];
   if(!valueSelectorString) {
     return nil; // Wrong valueKey
   }
@@ -372,7 +373,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     }
     matchingEntry = [tree.root entryForUUID:uuid];
   }
-  /* Defautl attribute search */
+  /* Default attribute search */
   else {
     NSString *predicateFormat = [[NSString alloc] initWithFormat:@"SELF.%@ CONTAINS[cd] %@", valueSelectorString, match];
     NSPredicate *searchPredicat = [NSPredicate predicateWithFormat:predicateFormat];
