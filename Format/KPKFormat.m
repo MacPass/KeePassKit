@@ -45,7 +45,7 @@ NSString *const KPKImageKey     = @"Image";
 
 @implementation KPKFormat
 
-+ (id)sharedFormat {
++ (instancetype)sharedFormat {
   static id formatInstance = nil;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
@@ -54,7 +54,7 @@ NSString *const KPKImageKey     = @"Image";
   return formatInstance;
 }
 
-- (id)_init {
+- (instancetype)_init {
   self = [super init];
   if (self) {
     NSArray *keys = @[ KPKTitleKey,
@@ -69,11 +69,11 @@ NSString *const KPKImageKey     = @"Image";
   return self;
 }
 
-+ (id)_alloc {
++ (instancetype)_alloc {
   return [super allocWithZone:nil];
 }
 
-+ (id)allocWithZone:(NSZone *)zone {
++ (instancetype)allocWithZone:(NSZone *)zone {
   return [self sharedFormat];
 }
 

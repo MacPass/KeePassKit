@@ -47,7 +47,7 @@ FOUNDATION_EXTERN NSString *const KPKExpiryDateKey;
 /**
  @returns The shared format instance
  */
-+ (id)sharedFormat;
++ (instancetype)sharedFormat;
 
 /**
  @param data The input data to read
