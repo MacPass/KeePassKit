@@ -125,7 +125,7 @@
   /* update entry uuids */
   /* update child uuids */
   if(nil == name) {
-    NSString *format = NSLocalizedStringFromTable(@"KPK_GROUP_COPY_%@", @"KPKlocalizable", "");
+    NSString *format = NSLocalizedStringFromTable(@"KPK_GROUP_COPY_%@", @"KPKLocalizable", "");
     name = [[NSString alloc] initWithFormat:format, self.name];
   }
   [copy _updateUUIDs];
