@@ -316,7 +316,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   if(level > _KPKMaxiumRecursionLevel) {
     return self;
   }
-  NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:@"\\{REF:(T|U|A|N|I|O){1}@(T|U|A|N|I){1}:([^\\}]*)\\}"
+  NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:@"\\{REF:(T|U|A|P|N|I|O){1}@(T|U|A|P|N|I){1}:([^\\}]*)\\}"
                                                                           options:NSRegularExpressionCaseInsensitive
                                                                             error:NULL];
   __block NSMutableString *mutableSelf = [self mutableCopy];
@@ -375,8 +375,11 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }
   /* Default attribute search */
   else {
-    NSString *predicateFormat = [[NSString alloc] initWithFormat:@"SELF.%@ CONTAINS[cd] %@", valueSelectorString, match];
-    NSPredicate *searchPredicat = [NSPredicate predicateWithFormat:predicateFormat];
+    NSString *searchSelectorString = _selectorForReference[searchKey];
+    if(!searchSelectorString) {
+      return nil; // Selector to search is wrong!
+    }
+    NSPredicate *searchPredicat = [NSPredicate predicateWithFormat:@"%K CONTAINS[cd] %@", searchSelectorString, match];
     matchingEntry = [tree.allEntries filteredArrayUsingPredicate:searchPredicat][0];
   }
   if(!matchingEntry) {
