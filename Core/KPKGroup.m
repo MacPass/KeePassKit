@@ -433,7 +433,8 @@
 - (BOOL)isAutotypeable {
   switch(self.isAutoTypeEnabled) {
     case KPKInherit:
-      return self.parent ? [self.parent isSearchable] : YES;
+      /* Default is YES, so fall back to YES if no parent is set, aplies to root node as well */
+      return self.parent ? self.parent.isAutoTypeEnabled : YES;
       
     case KPKInheritNO:
       return NO;
