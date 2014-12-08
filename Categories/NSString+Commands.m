@@ -419,17 +419,20 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     return [self copy];
   }
   /* build mapping for all default fields */
-  NSMutableDictionary *mappings = [[NSMutableDictionary alloc] initWithCapacity:0];
+  NSMutableDictionary *caseInsensitiveMappings = [[NSMutableDictionary alloc] initWithCapacity:30];
+  NSMutableDictionary *caseSensitiviveMappings = [[NSMutableDictionary alloc] initWithCapacity:entry.customAttributes.count];
   for(KPKAttribute *defaultAttribute in [entry defaultAttributes]) {
     NSString *keyString = [[NSString alloc] initWithFormat:@"{%@}", defaultAttribute.key];
-    mappings[keyString] = defaultAttribute.value;
+    caseInsensitiveMappings[keyString] = defaultAttribute.value;
   }
   /*
    Custom String fields {S:<Key>}
    */
   for(KPKAttribute *customAttribute in [entry customAttributes]) {
-    NSString *keyString = [[NSString alloc] initWithFormat:@"{S:%@}", customAttribute.key ];
-    mappings[keyString] = customAttribute.value;
+    NSString *upperCaseKey = [[NSString alloc] initWithFormat:@"{S:%@}", customAttribute.key ];
+    NSString *lowerCaseKey = [[NSString alloc] initWithFormat:@"{s:%@}", customAttribute.key ];
+    caseSensitiviveMappings[upperCaseKey] = customAttribute.value;
+    caseSensitiviveMappings[lowerCaseKey] = customAttribute.value;
   }
   /*  url mappings */
   if([entry.url length] > 0) {
@@ -437,34 +440,34 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     if([url scheme]) {
       NSMutableString *mutableURL = [entry.url mutableCopy];
       [mutableURL replaceOccurrencesOfString:[url scheme] withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableURL length])];
-      mappings[@"{URL:RMVSCM}"] = [mutableURL copy];
-      mappings[@"{URL:SCM}"] = [url scheme];
+      caseInsensitiveMappings[@"{URL:RMVSCM}"] = [mutableURL copy];
+      caseInsensitiveMappings[@"{URL:SCM}"] = [url scheme];
     }
     else {
-      mappings[@"{URL:RMVSCM}"] = entry.url;
-      mappings[@"{URL:SCM}"] = @"";
+      caseInsensitiveMappings[@"{URL:RMVSCM}"] = entry.url;
+      caseInsensitiveMappings[@"{URL:SCM}"] = @"";
     }
-    mappings[@"{URL:HOST}"] = [url host] ? [url host] : @"";
-    mappings[@"{URL:PORT}"] = [url port] ? [[url port] stringValue] : @"";
-    mappings[@"{URL:PATH}"] = [url path] ? [url path] : @"";
-    mappings[@"{URL:QUERY}"] = [url query] ? [url query] : @"";
-    mappings[@"{URL:USERNAME}"] = [url user] ? [url user] : @"";
-    mappings[@"{URL:PASSWORD}"] = [url password] ? [url password] : @"";
+    caseInsensitiveMappings[@"{URL:HOST}"] = [url host] ? [url host] : @"";
+    caseInsensitiveMappings[@"{URL:PORT}"] = [url port] ? [[url port] stringValue] : @"";
+    caseInsensitiveMappings[@"{URL:PATH}"] = [url path] ? [url path] : @"";
+    caseInsensitiveMappings[@"{URL:QUERY}"] = [url query] ? [url query] : @"";
+    caseInsensitiveMappings[@"{URL:USERNAME}"] = [url user] ? [url user] : @"";
+    caseInsensitiveMappings[@"{URL:PASSWORD}"] = [url password] ? [url password] : @"";
     if( [url user] && [url password]) {
-      mappings[@"{URL:USERINFO}"] = [[NSString alloc] initWithFormat:@"%@:%@", [url user], [url password]];
+      caseInsensitiveMappings[@"{URL:USERINFO}"] = [[NSString alloc] initWithFormat:@"%@:%@", [url user], [url password]];
     }
     else {
-      mappings[@"{URL:USERINFO}"] = [[NSString alloc] initWithFormat:@"%@%@", mappings[@"{URL:USERNAME}"], mappings[@"{URL:PASSWORD}"]];
+      caseInsensitiveMappings[@"{URL:USERINFO}"] = [[NSString alloc] initWithFormat:@"%@%@", caseInsensitiveMappings[@"{URL:USERNAME}"], caseInsensitiveMappings[@"{URL:PASSWORD}"]];
     }
     
   }
   /* mis mappings */
   //mappings[@"{APPDIR}"] = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
-  mappings[@"{GROUP}"] = entry.parent.name ? entry.parent.name : @"";
-  mappings[@"{GROUPPATH}"] = entry.parent ? [entry.parent breadcrumb] : @"";
-  mappings[@"{ENV_DIRSEP}"] = @"/";
+  caseInsensitiveMappings[@"{GROUP}"] = entry.parent.name ? entry.parent.name : @"";
+  caseInsensitiveMappings[@"{GROUPPATH}"] = entry.parent ? [entry.parent breadcrumb] : @"";
+  caseInsensitiveMappings[@"{ENV_DIRSEP}"] = @"/";
   NSURL *appDirURL = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask][0];
-  mappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  [appDirURL path] : @"";
+  caseInsensitiveMappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  [appDirURL path] : @"";
   /*
    These mappings require access to the mpdocument.
    {DB_PATH} Full path of the current database.
@@ -497,10 +500,18 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
    */
   
   NSMutableString *supstitudedString = [self mutableCopy];
-  for(NSString *placeholderKey in mappings) {
+  /* defaults and standars should be mapped case insensitively */
+  for(NSString *placeholderKey in caseInsensitiveMappings) {
     [supstitudedString replaceOccurrencesOfString:placeholderKey
-                                       withString:mappings[placeholderKey]
+                                       withString:caseInsensitiveMappings[placeholderKey]
                                           options:NSCaseInsensitiveSearch
+                                            range:NSMakeRange(0, [supstitudedString length])];
+  }
+  /* Custom keys should be mapped case senstiviely */
+  for(NSString *placeholderKey in caseSensitiviveMappings) {
+    [supstitudedString replaceOccurrencesOfString:placeholderKey
+                                       withString:caseSensitiviveMappings[placeholderKey]
+                                          options:0
                                             range:NSMakeRange(0, [supstitudedString length])];
   }
   if([supstitudedString isEqualToString:self]) {
