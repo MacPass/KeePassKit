@@ -448,6 +448,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 - (void)addCustomAttribute:(KPKAttribute *)attribute atIndex:(NSUInteger)index {
+  /* TODO: sanity check if attribute has unique key */
   index = MIN([_customAttributes count], index);
   [self.undoManager registerUndoWithTarget:self selector:@selector(removeCustomAttribute:) object:attribute];
   [self insertObject:attribute inCustomAttributesAtIndex:index];
