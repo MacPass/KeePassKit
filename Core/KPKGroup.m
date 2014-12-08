@@ -228,6 +228,20 @@
   return !([_defaultAutoTypeSequence length] > 0);
 }
 
+- (void)setIsAutoTypeEnabled:(KPKInheritBool)isAutoTypeEnabled {
+  if(_isAutoTypeEnabled != isAutoTypeEnabled) {
+    [[self.undoManager prepareWithInvocationTarget:self] setIsAutoTypeEnabled:self.isAutoTypeEnabled];
+    _isAutoTypeEnabled = isAutoTypeEnabled;
+  }
+}
+
+- (void)setIsSearchEnabled:(KPKInheritBool)isSearchEnabled {
+  if(_isSearchEnabled != isSearchEnabled) {
+    [[self.undoManager prepareWithInvocationTarget:self] setIsSearchEnabled:self.isSearchEnabled];
+    _isSearchEnabled = isSearchEnabled;
+  }
+}
+
 #pragma mark -
 #pragma mark Accessors
 - (NSArray *)childEntries {
