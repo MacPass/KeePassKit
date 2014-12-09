@@ -316,7 +316,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   if(level > _KPKMaxiumRecursionLevel) {
     return self;
   }
-  NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:@"\\{REF:(T|U|A|P|N|I|O){1}@(T|U|A|P|N|I){1}:([^\\}]*)\\}"
+  NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:@"\\{REF:(T|U|A|P|N|I){1}@(T|U|A|P|N|I|O){1}:([^\\}]*)\\}"
                                                                           options:NSRegularExpressionCaseInsensitive
                                                                             error:NULL];
   __block NSMutableString *mutableSelf = [self mutableCopy];
@@ -355,7 +355,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     [tree.allEntries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
       KPKEntry *entry = obj;
       for(KPKAttribute *attribute in entry.customAttributes) {
-        if([attribute.value isEqualToString:match]) {
+        NSRange matchRange = [attribute.value rangeOfString:match];
+        if(matchRange.location != NSNotFound && matchRange.length > 0) {
           matchingEntry = obj;
           *stop = YES;
         }
