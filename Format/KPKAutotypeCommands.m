@@ -101,7 +101,7 @@ NSString *const kKPKAutotypeHelp = @"{HELP}";
 NSString *const kKPKAutotypeNumlock = @"{NUMLOCK}";
 NSString *const kKPKAutotypePrintScreen = @"{PRTSC}";
 NSString *const kKPKAutotypeScrollLock = @"{SCROLLLOCK}";
-NSString *const kKPKAutotypeFunctionMaskRegularExpression = @"\\{F([1]?[0-9])\\}"; //1-16
+NSString *const kKPKAutotypeFunctionMaskRegularExpression = @"\\{F(1?[0-9])\\}"; //1-16
 
 /* Keypad */
 NSString *const kKPKAutotypeKeypaddAdd = @"{ADD}";

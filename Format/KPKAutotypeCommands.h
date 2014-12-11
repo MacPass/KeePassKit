@@ -50,14 +50,14 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeHelp;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeNumlock;
 FOUNDATION_EXTERN NSString *const kKPKAutotypePrintScreen;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeScrollLock;
-FOUNDATION_EXTERN NSString *const kKPKAutotypeFunctionMaskRegularExpression; //1-16
+FOUNDATION_EXTERN NSString *const kKPKAutotypeFunctionMaskRegularExpression; //1-16 
 
 /* Keypad */
 FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddAdd;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddSubtract;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddMultiply;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddDivide;
-FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddNumberMask; // 0-9
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddNumberMaskRegularExpression; // 0-9
 
 /* Symbols */
 FOUNDATION_EXTERN NSString *const kKPKAutotypePlus;
