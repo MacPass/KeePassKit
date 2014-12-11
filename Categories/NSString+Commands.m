@@ -30,6 +30,7 @@
 
 static NSUInteger const _KPKMaxiumRecursionLevel = 10;
 static NSDictionary *_selectorForReference;
+static NSString *const _KPKSpaceSaveGuard = @"{KPK_LITERAL_SPACE}";
 
 /**
  *  Cache Entry for Autotype Commands
@@ -200,7 +201,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
    {VKEY-EX X}
    */
   /* TODO: - not matched */
-  NSString *repeaterMatch = [[NSString alloc] initWithFormat:@"\\{([a-z]+|\\%@|\\%@|%@|\\%@)\\ ([0-9]*)\\}", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
+  NSString *repeaterMatch = [[NSString alloc] initWithFormat:@"\\{((s:)?[a-z]+|\\%@|\\%@|%@|\\%@)\\ ([0-9]*)\\}", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
   NSRegularExpression *repeaterRegExp = [[NSRegularExpression alloc] initWithPattern:repeaterMatch options:NSRegularExpressionCaseInsensitive error:0];
   NSAssert(repeaterRegExp, @"Repeater RegExp should be corret!");
   NSMutableDictionary __block *repeaterValues = [[NSMutableDictionary alloc] init];
@@ -208,11 +209,13 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     @autoreleasepool {
       NSString *key = [mutableCommand substringWithRange:result.range];
       NSString *command = [mutableCommand substringWithRange:[result rangeAtIndex:1]];
-      NSString *value = [mutableCommand substringWithRange:[result rangeAtIndex:2]];
-      if([[self valueCommands] containsObject:command]) {
-        /* Replace space with : to be save with space replacing */
-        repeaterValues[key] = [NSString stringWithFormat:@"{%@:%@}", command, value];
-        return; // Commands is not a repeat command
+      NSString *value = [mutableCommand substringWithRange:[result rangeAtIndex:3]];
+      BOOL isCustomPlaceholder = ([result rangeAtIndex:2].location != NSNotFound);
+      BOOL isValueCommand = [[self valueCommands] containsObject:command.uppercaseString];
+      if(isCustomPlaceholder || isValueCommand) {
+        /* Spaces need to be masked to be replaced to actual spaces again */
+        repeaterValues[key] = [NSString stringWithFormat:@"{%@%@%@}", command, _KPKSpaceSaveGuard, value];
+        return; // Commands is schould not be repeated
       }
       NSScanner *numberScanner = [[NSScanner alloc] initWithString:value];
       NSInteger repeatCounter = 0;
@@ -237,6 +240,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     NSString *replace = shortFormats[needle];
     [mutableCommand replaceOccurrencesOfString:needle withString:replace options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableCommand length])];
   }
+  [mutableCommand replaceOccurrencesOfString:_KPKSpaceSaveGuard withString:kKPKAutotypeShortSpace options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableCommand length])];
   return [[NSString alloc] initWithString:mutableCommand];
 }
 
