@@ -145,6 +145,14 @@
   [[document rootElement] addChild:metaElement];
   
   DDXMLElement *rootElement = [DDXMLNode elementWithName:kKPKXmlRoot];
+  
+  /* Before storing, we need to setup the random stream */
+  if(useRandomStream) {
+    if(![self _setupRandomStream]) {
+      return nil;
+    }
+  }
+  
   /* Create XML nodes for all Groups and Entries */
   [rootElement addChild:[self _xmlGroup:self.tree.root]];
   
@@ -155,12 +163,10 @@
   /*
    Encode all Data that is marked protetected
    */
-  if(useRandomStream) {
-    if(![self _setupRandomStream]) {
-      return nil;
-    }
+  if(_randomStream) {
     [self _encodeProtected:[document rootElement]];
   }
+  
   return document;
 }
 
@@ -278,13 +284,15 @@
 
 - (DDXMLElement *)_xmlAttribute:(KPKAttribute *)attribute {
   DDXMLElement *attributeElement = [DDXMLElement elementWithName:@"String"];
+  KPKAddXmlElement(attributeElement, kKPKXmlKey, attribute.key);
+  /* set protection for the value element */
+  DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue stringValue:attribute.value];
   if(attribute.isProtected) {
     NSString *attributeName = _randomStream != nil ? @"Protected" : @"ProtectInMemory";
-    KPKAddXmlAttribute(attributeElement, attributeName, kKPKXmlTrue);
+    KPKAddXmlAttribute(valueElement, attributeName, kKPKXmlTrue);
   }
+  [attributeElement addChild:valueElement];
   
-  KPKAddXmlElement(attributeElement, kKPKXmlKey, attribute.key);
-  KPKAddXmlElement(attributeElement, kKPKXmlValue, attribute.value);
   return attributeElement;
 }
 
@@ -371,8 +379,8 @@
 }
 
 - (void)_encodeProtected:(DDXMLElement *)root {
-  DDXMLNode *protectedAttribute = [root attributeForName:@"Protected"];
-  if([[protectedAttribute stringValue] isEqual:@"True"]) {
+  DDXMLNode *protectedAttribute = [root attributeForName:kKPKXmlProtected];
+  if([[protectedAttribute stringValue] isEqualToString:kKPKXmlTrue]) {
     NSString *str = [root stringValue];
     NSMutableData *data = [[str dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
     
