@@ -67,7 +67,7 @@ FOUNDATION_EXTERN NSString *const KPKExpiryDateKey;
  @param key The key to test for defaultness
  @returns YES, if the key is a default key, NO otherwise
  */
-- (BOOL)isDefautlKey:(NSString *)key;
+- (BOOL)isDefaultKey:(NSString *)key;
 
 /**
  @param key The key to determine the minimum version for

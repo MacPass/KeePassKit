@@ -155,7 +155,7 @@
 }
 
 - (BOOL)isDefault {
-  return [[KPKFormat sharedFormat] isDefautlKey:self.key];
+  return [[KPKFormat sharedFormat] isDefaultKey:self.key];
 }
 
 - (NSString *)referencedValue {

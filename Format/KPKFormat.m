@@ -110,7 +110,7 @@ NSString *const KPKImageKey     = @"Image";
   return _defaultKeys;
 }
 
-- (BOOL)isDefautlKey:(NSString *)key {
+- (BOOL)isDefaultKey:(NSString *)key {
   return [_defaultKeys containsObject:key];
 }
 
