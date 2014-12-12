@@ -27,14 +27,76 @@
 #import "KPKTypes.h"
 #import "DDXMLElement.h"
 
+#pragma mark XML Character helper
+NSString *stripUnsafeCharacterForXMLFromString(NSString *unsafeString);
+
 #pragma mark Writing Helper
+/**
+ *  Adds an XML Element with the given name and value to the parent element
+ *
+ *  @param element parent the new element should be added to
+ *  @param name    name of the new element
+ *  @param value   string value for the element
+ */
 void KPKAddXmlElement(DDXMLElement *element, NSString *name, NSString *value);
+/**
+ *  Adds an XML Element with the given name and value to the parent element,
+ *  but only if the value is not nil
+ *
+ *  @param element parent the new element should be added to
+ *  @param name    name of the new element
+ *  @param value   string value for the element. If nil the element will not be added
+ */
 void KPKAddXmlElementIfNotNil(DDXMLElement *element, NSString *name, NSString *value);
+/**
+ *  Adds an XML Element with the givne name and value only to the parent element.
+ *  The value has a lenght greater than zero
+ *
+ *  @param element parent the new element should be added to
+ *  @param name    name of the new element
+ *  @param value   string value for the new elment. If empty (or nil) the element will not be added
+ */
 void KPKAddXmlElementIfNotEmtpy(DDXMLElement *element, NSString *name, NSString *value);
+/**
+ *  Adds an XML Attribute with the given name and value to the element.
+ *
+ *  @param element element that should get the attribute
+ *  @param name    name of the attribute
+ *  @param value   string value of the attribute
+ */
 void KPKAddXmlAttribute(DDXMLElement *element, NSString *name, NSString *value);
-NSString * KPKStringFromLong(NSInteger integer);
+/**
+ *  Generates a string from the supplied NSInteger
+ *
+ *  @param integer value to be converted to a string
+ *
+ *  @return string representation of the value
+ */
+NSString *KPKStringFromLong(NSInteger integer);
+/**
+ *  Generates a string for the given date using the supplied date formatter
+ *
+ *  @param dateFormatter formatter to be used for the conversion
+ *  @param date          date that should be converted
+ *
+ *  @return string representation of the date.
+ */
 NSString *KPKStringFromDate(NSDateFormatter *dateFormatter, NSDate *date);
+/**
+ *  Generates a string value from the given bool
+ *
+ *  @param value BOOL to be stringified
+ *
+ *  @return @"True" if YES, @"False" if NO
+ */
 NSString *KPKStringFromBool(BOOL value);
+/**
+ *  Generates a String for the KPKInheritBool value
+ *
+ *  @param value value to be converted to a string
+ *
+ *  @return @"null" if KPKInherit, @"True" if KPKInhertiYes and @"False" if KPKInheritNO
+ */
 NSString *stringFromInhertiBool(KPKInheritBool value);
 
 #pragma mark Reading Helper

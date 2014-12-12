@@ -285,10 +285,16 @@
 - (DDXMLElement *)_xmlAttribute:(KPKAttribute *)attribute {
   DDXMLElement *attributeElement = [DDXMLElement elementWithName:@"String"];
   KPKAddXmlElement(attributeElement, kKPKXmlKey, attribute.key);
-  /* set protection for the value element */
-  DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue stringValue:attribute.value];
+  /*
+   If we write direct output without later proteting the stream,
+   e.g. direkt output to XML we need to strip any invalid characters
+   to prevent XML malformation
+   */
+  BOOL usesRandomStream = (_randomStream != nil);
+  NSString *attributeValue = usesRandomStream ? attribute.value : stripUnsafeCharacterForXMLFromString(attribute.value);
+  DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue stringValue:attributeValue];
   if(attribute.isProtected) {
-    NSString *attributeName = _randomStream != nil ? @"Protected" : @"ProtectInMemory";
+    NSString *attributeName = usesRandomStream ? @"Protected" : @"ProtectInMemory";
     KPKAddXmlAttribute(valueElement, attributeName, kKPKXmlTrue);
   }
   [attributeElement addChild:valueElement];
