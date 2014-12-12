@@ -60,7 +60,13 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 @end
 
+
 @implementation KPKEntry
+
+NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
+  NSString *keyPath = [[NSString alloc] initWithFormat:@"%@.%@", NSStringFromSelector(aSelector), NSStringFromSelector(@selector(value))];
+  return [[NSSet alloc] initWithObjects:keyPath, nil];
+}
 
 + (BOOL)supportsSecureCoding {
   return YES;
@@ -83,6 +89,26 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 + (NSSet *)keyPathsForValuesAffectingIsEditable {
   return [[NSSet alloc] initWithObjects:NSStringFromSelector(@selector(isHistory)), nil];
+}
+
++ (NSSet *)keyPathsForValuesAffectingProtectNotes {
+  return _protectedKeyPathForAttribute(@selector(notesAttribute));
+}
+
++ (NSSet *)keyPathsForValuesAffectingProtectPassword {
+  return _protectedKeyPathForAttribute(@selector(passwordAttribute));
+}
+
++ (NSSet *)keyPathsForValuesAffectingProtectTitle {
+  return _protectedKeyPathForAttribute(@selector(titleAttribute));
+}
+
++ (NSSet *)keyPathsForValuesAffectingProtectUrl {
+  return _protectedKeyPathForAttribute(@selector(urlAttribute));
+}
+
++ (NSSet *)keyPathsForValuesAffectingProtectUsername {
+  return _protectedKeyPathForAttribute(@selector(usernameAttribute));
 }
 
 - (id)init {
@@ -305,6 +331,26 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 }
 
 #pragma mark Properties
+- (BOOL )protectNotes {
+  return self.notesAttribute.isProtected;
+}
+
+- (BOOL)protectPassword {
+  return self.passwordAttribute.isProtected;
+}
+
+- (BOOL)protectTitle {
+  return self.titleAttribute.isProtected;
+}
+
+- (BOOL)protectUrl {
+  return self.urlAttribute.isProtected;
+}
+
+- (BOOL)protectUsername {
+  return self.usernameAttribute.isProtected;
+}
+
 - (BOOL)isEditable {
   return !self.isHistory;
 }
@@ -339,6 +385,26 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 - (NSString *)url {
   return self.urlAttribute.value;
+}
+
+- (void)setProtectNotes:(BOOL)protectNotes {
+  self.notesAttribute.isProtected = protectNotes;
+}
+
+- (void)setProtectPassword:(BOOL)protectPassword {
+  self.passwordAttribute.isProtected = protectPassword;
+}
+
+- (void)setProtectTitle:(BOOL)protectTitle {
+  self.titleAttribute.isProtected = protectTitle;
+}
+
+- (void)setProtectUrl:(BOOL)protectUrl {
+  self.urlAttribute.isProtected = protectUrl;
+}
+
+- (void)setProtectUsername:(BOOL)protectUsername {
+  self.usernameAttribute.isProtected = protectUsername;
 }
 
 - (void)setParent:(KPKGroup *)parent {

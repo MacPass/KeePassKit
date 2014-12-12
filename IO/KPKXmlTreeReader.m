@@ -288,18 +288,23 @@
     
     if([attribute.key isEqualToString:KPKTitleKey]) {
       entry.title = attribute.value;
+      entry.protectTitle = attribute.isProtected;
     }
     else if([attribute.key isEqualToString:KPKUsernameKey]) {
       entry.username = attribute.value;
+      entry.protectUsername = attribute.isProtected;
     }
     else if([attribute.key isEqualToString:KPKPasswordKey]) {
       entry.password = attribute.value;
+      entry.protectPassword = attribute.isProtected;
     }
     else if([attribute.key isEqualToString:KPKURLKey]) {
       entry.url = attribute.value;
+      entry.protectUrl = attribute.isProtected;
     }
     else if([attribute.key isEqualToString:KPKNotesKey]) {
       entry.notes = attribute.value;
+      entry.protectNotes = attribute.isProtected;
     }
     else {
       [entry addCustomAttribute:attribute];

@@ -56,6 +56,12 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic, copy) NSString *notes;
 
+@property (nonatomic, assign) BOOL protectTitle;
+@property (nonatomic, assign) BOOL protectPassword;
+@property (nonatomic, assign) BOOL protectUsername;
+@property (nonatomic, assign) BOOL protectUrl;
+@property (nonatomic, assign) BOOL protectNotes;
+
 @property (nonatomic, strong) NSArray *binaries;
 // TODO: change Tags to an String array!
 @property (nonatomic, copy) NSString *tags;
