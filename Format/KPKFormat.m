@@ -25,17 +25,13 @@
 #import "KPKXmlFormat.h"
 
 
-NSString *const KPKTitleKey     = @"Title";
-NSString *const KPKNameKey      = @"Name";
-NSString *const KPKUsernameKey  = @"UserName";
-NSString *const KPKPasswordKey  = @"Password";
-NSString *const KPKURLKey       = @"URL";
-NSString *const KPKNotesKey     = @"Notes";
-NSString *const KPKBinaryKey    = @"Binary";
-NSString *const KPKBinaryRefKey = @"BinaryRef";
-NSString *const KPKAutotypeKe   = @"Autotype";
-NSString *const KPKTagKey       = @"Tags";
-NSString *const KPKImageKey     = @"Image";
+NSString *const kKPKTitleKey     = @"Title";
+NSString *const kKPKNameKey      = @"Name";
+NSString *const kKPKUsernameKey  = @"UserName";
+NSString *const kKPKPasswordKey  = @"Password";
+NSString *const kKPKURLKey       = @"URL";
+NSString *const kKPKNotesKey     = @"Notes";
+NSString *const KPKImageKey      = @"Image";
 
 @interface KPKFormat () {
   NSSet *_defaultKeys;
@@ -57,12 +53,12 @@ NSString *const KPKImageKey     = @"Image";
 - (instancetype)_init {
   self = [super init];
   if (self) {
-    NSArray *keys = @[ KPKTitleKey,
-                       KPKNameKey,
-                       KPKUsernameKey,
-                       KPKPasswordKey,
-                       KPKURLKey,
-                       KPKNotesKey,
+    NSArray *keys = @[ kKPKTitleKey,
+                       kKPKNameKey,
+                       kKPKUsernameKey,
+                       kKPKPasswordKey,
+                       kKPKURLKey,
+                       kKPKNotesKey,
                        KPKImageKey];
     _defaultKeys = [NSSet setWithArray:keys];
   }

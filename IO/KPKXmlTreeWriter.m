@@ -34,6 +34,7 @@
 #import "KPKXmlElements.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"
+#import "KPKFormat.h"
 #import "KPKMetaData.h"
 #import "KPKTimeInfo.h"
 #import "KPKDeletedNode.h"
@@ -285,16 +286,35 @@
 - (DDXMLElement *)_xmlAttribute:(KPKAttribute *)attribute {
   DDXMLElement *attributeElement = [DDXMLElement elementWithName:@"String"];
   KPKAddXmlElement(attributeElement, kKPKXmlKey, attribute.key);
+  
+  KPKMetaData *metaData = attribute.entry.tree.metaData;
+  NSAssert(metaData, @"Metadata needs to be present for attributes");
+  BOOL isProtected = attribute.isProtected;
+  if([attribute.key isEqualToString:kKPKNotesKey]) {
+    isProtected |= metaData.protectNotes;
+  }
+  else if([attribute.key isEqualToString:kKPKPasswordKey] ) {
+    isProtected |= metaData.protectPassword;
+  }
+  else if([attribute.key isEqualToString:kKPKTitleKey] ) {
+    isProtected |= metaData.protectTitle;
+  }
+  else if([attribute.key isEqualToString:kKPKURLKey] ) {
+    isProtected |= metaData.protectUrl;
+  }
+  else if([attribute.key isEqualToString:kKPKUsernameKey] ) {
+    isProtected |= metaData.protectUserName;
+  }
   /*
    If we write direct output without later proteting the stream,
    e.g. direkt output to XML we need to strip any invalid characters
    to prevent XML malformation
    */
   BOOL usesRandomStream = (_randomStream != nil);
-  NSString *attributeValue = usesRandomStream ? attribute.value : stripUnsafeCharacterForXMLFromString(attribute.value);
+  NSString *attributeValue = (usesRandomStream && isProtected) ? attribute.value : stripUnsafeCharacterForXMLFromString(attribute.value);
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue stringValue:attributeValue];
-  if(attribute.isProtected) {
-    NSString *attributeName = usesRandomStream ? @"Protected" : @"ProtectInMemory";
+  if(isProtected) {
+    NSString *attributeName = usesRandomStream ? kKPKXmlProtected : kKPKXMLProtectInMemory;
     KPKAddXmlAttribute(valueElement, attributeName, kKPKXmlTrue);
   }
   [attributeElement addChild:valueElement];
@@ -305,7 +325,7 @@
 - (DDXMLElement *)_xmlBinaries {
   
   [self _prepareBinaries];
-  DDXMLElement *binaryElements = [DDXMLElement elementWithName:@"Binaries"];
+  DDXMLElement *binaryElements = [DDXMLElement elementWithName:kKPKXmlBinaries];
   
   BOOL compress = (self.tree.metaData.compressionAlgorithm == KPKCompressionGzip);
   for(KPKBinary *binary in _binaries) {

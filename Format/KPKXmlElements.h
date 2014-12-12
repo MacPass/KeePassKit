@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-#pragma mark Nodes
+#pragma mark Format
 FOUNDATION_EXTERN NSString *const kKPKXmlKeePassFile;
 FOUNDATION_EXTERN NSString *const kKPKXmlRoot;
 FOUNDATION_EXTERN NSString *const kKPKXmlHeaderHash;
 FOUNDATION_EXTERN NSString *const kKPKXmlMeta;
 FOUNDATION_EXTERN NSString *const kKPKXmlGroup;
-/* Meta */
+
+#pragma mark Metainformation
 FOUNDATION_EXTERN NSString *const kKPKXmlGenerator;
 FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseName;
 FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseNameChanged;
@@ -46,6 +47,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlHistoryMaxSize;
 FOUNDATION_EXTERN NSString *const kKPKXmlLastSelectedGroup;
 FOUNDATION_EXTERN NSString *const kKPKXmlLastTopVisibleGroup;
 
+#pragma mark Groups
 FOUNDATION_EXTERN NSString *const kKPKXmlIsExpanded;
 FOUNDATION_EXTERN NSString *const kKPKXmlDefaultAutoTypeSequence;
 FOUNDATION_EXTERN NSString *const kKPKXmlEnableAutoType;
@@ -56,6 +58,10 @@ FOUNDATION_EXTERN NSString *const kKPKXmlUUID;
 FOUNDATION_EXTERN NSString *const kKPKXmlName;
 FOUNDATION_EXTERN NSString *const kKPKXmlNotes;
 FOUNDATION_EXTERN NSString *const kKPKXmlIconId;
+
+#pragma mark Binaries
+FOUNDATION_EXTERN NSString *const kKPKXmlBinary;
+FOUNDATION_EXTERN NSString *const kKPKXmlBinaries;
 
 #pragma mark Time
 FOUNDATION_EXTERN NSString *const kKPKXmlTimes;
@@ -73,6 +79,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlValue;
 FOUNDATION_EXTERN NSString *const kKPKXmlData;
 
 #pragma mark Attributes
-FOUNDATION_EXTERN NSString *const kKPKXmlProtected;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtected; // Only used when stored as kdbx files.
+FOUNDATION_EXTERN NSString *const kKPKXMLProtectInMemory; // Only used when stores as plain XML files.
 FOUNDATION_EXTERN NSString *const kKPKXmlTrue;
 FOUNDATION_EXTERN NSString *const kKPKXmlFalse;

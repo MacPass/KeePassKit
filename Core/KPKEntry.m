@@ -114,11 +114,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (id)init {
   self = [super init];
   if (self) {
-    _titleAttribute = [[KPKAttribute alloc] initWithKey:KPKTitleKey value:@""];
-    _passwordAttribute = [[KPKAttribute alloc] initWithKey:KPKPasswordKey value:@""];
-    _usernameAttribute = [[KPKAttribute alloc] initWithKey:KPKUsernameKey value:@""];
-    _urlAttribute = [[KPKAttribute alloc] initWithKey:KPKURLKey value:@""];
-    _notesAttribute = [[KPKAttribute alloc] initWithKey:KPKNotesKey value:@""];
+    _titleAttribute = [[KPKAttribute alloc] initWithKey:kKPKTitleKey value:@""];
+    _passwordAttribute = [[KPKAttribute alloc] initWithKey:kKPKPasswordKey value:@""];
+    _usernameAttribute = [[KPKAttribute alloc] initWithKey:kKPKUsernameKey value:@""];
+    _urlAttribute = [[KPKAttribute alloc] initWithKey:kKPKURLKey value:@""];
+    _notesAttribute = [[KPKAttribute alloc] initWithKey:kKPKNotesKey value:@""];
     _customAttributes = [[NSMutableArray alloc] initWithCapacity:2];
     _binaries = [[NSMutableArray alloc] initWithCapacity:2];
     _history = [[NSMutableArray alloc] initWithCapacity:5];

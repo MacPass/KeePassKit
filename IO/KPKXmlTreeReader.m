@@ -281,28 +281,28 @@
   
   for (DDXMLElement *element in [entryElement elementsForName:@"String"]) {
     DDXMLElement *valueElement = [element elementForName:kKPKXmlValue];
-    BOOL isProtected = KPKXmlBoolAttribute(valueElement, @"Protected") || KPKXmlBoolAttribute(valueElement, @"ProtectInMemory");
+    BOOL isProtected = KPKXmlBoolAttribute(valueElement, kKPKXmlProtected) || KPKXmlBoolAttribute(valueElement, kKPKXMLProtectInMemory);
     KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKXmlString(element, kKPKXmlKey)
                                                           value:[valueElement stringValue]
                                                     isProtected:isProtected];
     
-    if([attribute.key isEqualToString:KPKTitleKey]) {
+    if([attribute.key isEqualToString:kKPKTitleKey]) {
       entry.title = attribute.value;
       entry.protectTitle = attribute.isProtected;
     }
-    else if([attribute.key isEqualToString:KPKUsernameKey]) {
+    else if([attribute.key isEqualToString:kKPKUsernameKey]) {
       entry.username = attribute.value;
       entry.protectUsername = attribute.isProtected;
     }
-    else if([attribute.key isEqualToString:KPKPasswordKey]) {
+    else if([attribute.key isEqualToString:kKPKPasswordKey]) {
       entry.password = attribute.value;
       entry.protectPassword = attribute.isProtected;
     }
-    else if([attribute.key isEqualToString:KPKURLKey]) {
+    else if([attribute.key isEqualToString:kKPKURLKey]) {
       entry.url = attribute.value;
       entry.protectUrl = attribute.isProtected;
     }
-    else if([attribute.key isEqualToString:KPKNotesKey]) {
+    else if([attribute.key isEqualToString:kKPKNotesKey]) {
       entry.notes = attribute.value;
       entry.protectNotes = attribute.isProtected;
     }
@@ -359,7 +359,7 @@
    <Binary>
    </Binaries>
    */
-  DDXMLElement *binariesElement = [root elementForName:@"Binaries"];
+  DDXMLElement *binariesElement = [root elementForName:kKPKXmlBinaries];
   NSUInteger binaryCount = [[binariesElement elementsForName:@"Binary"] count];
   _binaryMap = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,binaryCount)];
   for (DDXMLElement *element in [binariesElement elementsForName:@"Binary"]) {

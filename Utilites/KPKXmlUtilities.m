@@ -118,11 +118,11 @@ NSString *stringFromInhertiBool(KPKInheritBool value) {
 #pragma mark Reading Helper
 
 BOOL KPKXmlTrue(DDXMLNode *attribute) {
-  return (NSOrderedSame == [[attribute stringValue] caseInsensitiveCompare:@"True"]);
+  return (attribute && NSOrderedSame == [[attribute stringValue] caseInsensitiveCompare:@"True"]);
 }
 
 BOOL KPKXmlFalse(DDXMLNode *attribute) {
-  return (NSOrderedSame == [[attribute stringValue] caseInsensitiveCompare:@"False"]);
+  return (attribute && NSOrderedSame == [[attribute stringValue] caseInsensitiveCompare:@"False"]);
 }
 
 NSString *KPKXmlString(DDXMLElement *element, NSString *name) {

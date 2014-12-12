@@ -55,6 +55,10 @@ NSString *const kKPKXmlName = @"Name";
 NSString *const kKPKXmlNotes = @"Notes";
 NSString *const kKPKXmlIconId = @"IconID";
 
+#pragma mark Binaries
+NSString *const kKPKXmlBinary = @"Binary";
+NSString *const kKPKXmlBinaries = @"Binaries";
+
 #pragma mark Time
 NSString *const kKPKXmlTimes = @"Times";
 NSString *const kKPKXmlLastModificationTime = @"LastModificationTime";
@@ -72,6 +76,7 @@ NSString *const kKPKXmlValue = @"Value";
 NSString *const kKPKXmlData = @"Data";
 
 #pragma mark Attributes
-NSString *const kKPKXmlProtected    = @"Protected";
-NSString *const kKPKXmlTrue         = @"True";
-NSString *const kKPKXmlFalse        = @"False";
+NSString *const kKPKXmlProtected        = @"Protected";
+NSString *const kKPKXMLProtectInMemory  = @"ProtectInMemory";
+NSString *const kKPKXmlTrue             = @"True";
+NSString *const kKPKXmlFalse            = @"False";
