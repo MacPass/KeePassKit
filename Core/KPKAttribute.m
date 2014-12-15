@@ -27,6 +27,7 @@
 #import "KPKErrors.h"
 
 #import "NSString+Commands.h"
+#import "NSString+XMLUtilities.h"
 #import "NSData+Random.h"
 #import "NSMutableData+KeePassKit.h"
 /*
@@ -116,6 +117,8 @@
     KPKCreateError(outError, KPKErrorAttributeKeyValidationFailed, @"ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED", "");
     return NO; // No string, so we cannot process it further
   }
+  /* We need to make the key valid, as they are never protected */
+  *ioValue = ((NSString *)*ioValue).XMLCompatibleString;
   if([self.entry hasAttributeWithKey:*ioValue]) {
     NSString *copy = [*ioValue copy];
     *ioValue = [self.entry proposedKeyForAttributeKey:copy];

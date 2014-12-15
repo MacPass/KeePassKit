@@ -24,50 +24,6 @@
 #import <Foundation/Foundation.h>
 #import "DDXMLElementAdditions.h"
 
-#pragma mark XML Character helper
-/*
- Removes all characters that are not valid XML characters,
- according to http://www.w3.org/TR/xml/#charsets .
- 
- Based heavily on SafeXmlString(string strText) from StrUtil.cs of KeePass
- */
-NSString *stripUnsafeCharacterForXMLFromString(NSString *unsafeString) {
-  if(unsafeString.length == 0) {
-    return nil;
-  }
-  unichar *safeCharaters = malloc(unsafeString.length * sizeof(unichar));
-  NSInteger safeIndex = 0;
-  for(NSInteger index = 0; index < unsafeString.length; ++index) {
-    unichar character = [unsafeString characterAtIndex:index];
-    
-    if(((character >= 0x20) && (character <= 0xD7FF )) ||
-       (character == 0x9) || (character == 0xA) || (character == 0xD) ||
-       ((character >= 0xE000) && (character <= 0xFFFD))) {
-      
-      safeCharaters[safeIndex++] = character;
-    }
-    else if( (character >= 0xD800) && (character <= 0xDBFF) ) { // High surrogate
-      if((index + 1) < unsafeString.length) {
-        unichar lowCharacter = [unsafeString characterAtIndex:index+1];
-        if((lowCharacter >= 0xDC00) && (lowCharacter <= 0xDFFF)) // Low sur.
-        {
-          safeCharaters[safeIndex++] = character;
-          safeCharaters[safeIndex++] = lowCharacter;
-          ++index;
-        }
-        else {
-          // Low sur. invalid
-        }
-      }
-      else {
-        // Low sur. missing
-      }
-    }
-  }
-  NSString *safeString = [[NSString alloc] initWithCharactersNoCopy:safeCharaters length:safeIndex freeWhenDone:YES];
-  return safeString;
-}
-
 #pragma mark Writing Helper
 
 void KPKAddXmlElement(DDXMLElement *element, NSString *name, NSString *value) {

@@ -27,9 +27,6 @@
 #import "KPKTypes.h"
 #import "DDXMLElement.h"
 
-#pragma mark XML Character helper
-NSString *stripUnsafeCharacterForXMLFromString(NSString *unsafeString);
-
 #pragma mark Writing Helper
 /**
  *  Adds an XML Element with the given name and value to the parent element

@@ -45,6 +45,7 @@
 #import "KPKWindowAssociation.h"
 
 #import "NSColor+KeePassKit.h"
+#import "NSString+XMLUtilities.h"
 
 #import "KPKRandomStream.h"
 #import "KPKSalsa20RandomStream.h"
@@ -180,15 +181,15 @@
   
   // Add the standard properties
   KPKAddXmlElement(groupElement, kKPKXmlUUID, [group.uuid encodedString]);
-  KPKAddXmlElement(groupElement, kKPKXmlName, group.name);
-  KPKAddXmlElement(groupElement, kKPKXmlNotes, group.notes);
+  KPKAddXmlElement(groupElement, kKPKXmlName, group.name.XMLCompatibleString);
+  KPKAddXmlElement(groupElement, kKPKXmlNotes, group.notes.XMLCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlIconId, KPKStringFromLong(group.iconId));
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:group.timeInfo];
   [groupElement addChild:timesElement];
   
   KPKAddXmlElement(groupElement, kKPKXmlIsExpanded, KPKStringFromBool(group.isExpanded));
-  NSString *keystrokes = (group.hasDefaultAutotypeSequence ? nil : group.defaultAutoTypeSequence);
+  NSString *keystrokes = (group.hasDefaultAutotypeSequence ? nil : group.defaultAutoTypeSequence.XMLCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlDefaultAutoTypeSequence, keystrokes);
   KPKAddXmlElement(groupElement, kKPKXmlEnableAutoType, stringFromInhertiBool(group.isAutoTypeEnabled));
   KPKAddXmlElement(groupElement, kKPKXmlEnableSearching, stringFromInhertiBool(group.isSearchEnabled));
@@ -216,8 +217,8 @@
   }
   KPKAddXmlElement(entryElement, @"ForegroundColor", [entry.foregroundColor hexString]);
   KPKAddXmlElement(entryElement, @"BackgroundColor", [entry.backgroundColor hexString]);
-  KPKAddXmlElement(entryElement, @"OverrideURL", entry.overrideURL);
-  KPKAddXmlElement(entryElement, @"Tags", entry.tags);
+  KPKAddXmlElement(entryElement, @"OverrideURL", entry.overrideURL.XMLCompatibleString);
+  KPKAddXmlElement(entryElement, @"Tags", entry.tags.XMLCompatibleString);
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:entry.timeInfo];
   [entryElement addChild:timesElement];
@@ -311,7 +312,7 @@
    to prevent XML malformation
    */
   BOOL usesRandomStream = (_randomStream != nil);
-  NSString *attributeValue = (usesRandomStream && isProtected) ? attribute.value : stripUnsafeCharacterForXMLFromString(attribute.value);
+  NSString *attributeValue = (usesRandomStream && isProtected) ? attribute.value : attribute.value.XMLCompatibleString;
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue stringValue:attributeValue];
   if(isProtected) {
     NSString *attributeName = usesRandomStream ? kKPKXmlProtected : kKPKXMLProtectInMemory;
@@ -340,7 +341,7 @@
 
 - (DDXMLElement *)_xmlBinary:(KPKBinary *)binary {
   DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
-  KPKAddXmlElement(binaryElement, kKPKXmlKey, binary.name);
+  KPKAddXmlElement(binaryElement, kKPKXmlKey, binary.name.XMLCompatibleString);
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue];
   [binaryElement addChild:valueElement];
   NSUInteger reference = [_binaries indexOfObject:binary];
@@ -362,7 +363,7 @@
 
 - (DDXMLElement *)_xmlCustomData:(KPKBinary *)customData {
   DDXMLElement *itemElement = [DDXMLElement elementWithName:@"Item"];
-  KPKAddXmlElement(itemElement, kKPKXmlKey, customData.name);
+  KPKAddXmlElement(itemElement, kKPKXmlKey, customData.name.XMLCompatibleString);
   KPKAddXmlElement(itemElement, kKPKXmlValue, [customData encodedStringUsingCompression:NO]);
   return itemElement;
 }
