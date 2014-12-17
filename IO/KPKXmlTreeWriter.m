@@ -101,11 +101,11 @@
   }
   
   
-  KPKAddXmlElement(metaElement, kKPKXmlDatabaseName, metaData.databaseName);
+  KPKAddXmlElement(metaElement, kKPKXmlDatabaseName, metaData.databaseName.XMLCompatibleString);
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseNameChanged, KPKStringFromDate(_dateFormatter, metaData.databaseNameChanged));
-  KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescription, metaData.databaseDescription);
+  KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescription, metaData.databaseDescription.XMLCompatibleString);
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescriptionChanged, KPKStringFromDate(_dateFormatter, metaData.databaseDescriptionChanged));
-  KPKAddXmlElement(metaElement, kKPKXmlDefaultUserName, metaData.defaultUserName);
+  KPKAddXmlElement(metaElement, kKPKXmlDefaultUserName, metaData.defaultUserName.XMLCompatibleString);
   KPKAddXmlElement(metaElement, kKPKXmlDefaultUserNameChanged, KPKStringFromDate(_dateFormatter, metaData.defaultUserNameChanged));
   KPKAddXmlElement(metaElement, kKPKXmlMaintenanceHistoryDays, KPKStringFromLong(metaData.maintenanceHistoryDays));
   KPKAddXmlElement(metaElement, kKPKXmlColor, [metaData.color hexString]);
@@ -268,14 +268,14 @@
   KPKAddXmlElement(autotypeElement, @"Enabled", KPKStringFromBool(autotype.isEnabled));
   NSString *obfuscate = autotype.obfuscateDataTransfer ? @"1" : @"0";
   KPKAddXmlElement(autotypeElement, @"DataTransferObfuscation", obfuscate);
-  NSString *keystrokes = autotype.hasDefaultKeystrokeSequence ? nil : autotype.defaultKeystrokeSequence;
+  NSString *keystrokes = autotype.hasDefaultKeystrokeSequence ? nil : autotype.defaultKeystrokeSequence.XMLCompatibleString;
   KPKAddXmlElementIfNotNil(autotypeElement, @"DefaultSequence", keystrokes);
   
   if([autotype.associations count] > 0) {
     DDXMLElement *associationsElement = [DDXMLElement elementWithName:@"Association"];
     for(KPKWindowAssociation *association in autotype.associations) {
-      KPKAddXmlElement(associationsElement, @"Window", association.windowTitle);
-      NSString *keyStrokes = (association.hasDefaultKeystrokeSequence ? nil : association.keystrokeSequence);
+      KPKAddXmlElement(associationsElement, @"Window", association.windowTitle.XMLCompatibleString);
+      NSString *keyStrokes = (association.hasDefaultKeystrokeSequence ? nil : association.keystrokeSequence.XMLCompatibleString);
       KPKAddXmlElement(associationsElement, @"KeystrokeSequence", keyStrokes);
     }
     [autotypeElement addChild:associationsElement];
