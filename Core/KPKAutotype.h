@@ -31,6 +31,7 @@
 @property (nonatomic, assign) BOOL obfuscateDataTransfer;
 @property (nonatomic, copy) NSString *defaultKeystrokeSequence;
 @property (nonatomic, strong, readonly) NSArray *associations;
+@property (nonatomic, assign, readonly) BOOL hasDefaultKeystrokeSequence;
 
 @property (weak) KPKEntry *entry;
 
@@ -44,7 +45,5 @@
  *  @return first matching association, if there are found more, only the first match is returned
  */
 - (KPKWindowAssociation *)windowAssociationMatchingWindowTitle:(NSString *)windowTitle;
-
-- (BOOL)hasDefaultKeystrokeSequence;
 
 @end

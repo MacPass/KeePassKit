@@ -39,6 +39,10 @@
   return YES;
 }
 
++ (NSSet *)keyPathsForValuesAffectingHasDefaultKeystrokeSequence {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
+}
+
 - (id)init {
   self = [super init];
   if(self) {
