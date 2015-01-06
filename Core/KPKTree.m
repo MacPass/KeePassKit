@@ -104,6 +104,10 @@
   KPKEntry *entry = [[KPKEntry alloc] init];
   entry.parent = parent;
   entry.tree = self;
+  if(!parent.hasDefaultIcon) {
+    entry.iconUUID = parent.iconUUID;
+    entry.iconId = parent.iconId;
+  }
   return entry;
 }
 

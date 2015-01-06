@@ -47,6 +47,8 @@
 @property (nonatomic, weak, readonly) NSUndoManager *undoManager;
 @property (nonatomic, readonly, assign) BOOL isEditable;
 
+@property (nonatomic, readonly, assign) BOOL hasDefaultIcon;
+
 /**
  *	Returns the default icon number for a Group
  *	@return	default icon index for a group

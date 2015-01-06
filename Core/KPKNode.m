@@ -41,13 +41,11 @@
 - (id)init {
   self = [super init];
   if (self) {
-    _iconId = 0;
     _uuid = [[NSUUID alloc] init];
     _minimumVersion = KPKLegacyVersion;
     _timeInfo = [[KPKTimeInfo alloc] init];
     _timeInfo.node = self;
     _iconId = [[self class] defaultIcon];
-    _iconUUID = nil;
   }
   return self;
 }
@@ -79,6 +77,14 @@
     return self.tree.isEditable;
   }
   return YES;
+}
+
+- (BOOL)hasDefaultIcon {
+  /* if we have a custom icon, we are certainly not default */
+  if(self.iconUUID) {
+    return NO;
+  }
+  return (self.iconId == [[self class] defaultIcon]);
 }
 
 - (void)setIconId:(NSInteger)iconId {
