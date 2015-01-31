@@ -138,6 +138,11 @@
   /* Update content*/
 }
 
+- (void)remove {
+  /* not implemented */
+  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
+}
+
 - (KPKGroup *)asGroup {
   return nil;
 }

@@ -63,6 +63,8 @@
 
 - (void)updateTo:(KPKNode *)node;
 
+- (void)remove;
+
 - (KPKGroup *)asGroup;
 - (KPKEntry *)asEntry;
 
