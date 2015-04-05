@@ -28,7 +28,6 @@
 
 @interface KPKTree () {
   NSMutableDictionary *_tagsMap;
-  NSArray *_groups;
 }
 
 @end
@@ -41,7 +40,7 @@
   return [NSSet setWithObjects:@"root", nil];
 }
 
-+ (KPKTree *)templateTree {
++  (KPKTree *)allocTemplateTree {
 
   KPKTree *tree = [[KPKTree alloc] init];
   KPKGroup *parentGroup = [tree createGroup:nil];
@@ -49,7 +48,7 @@
   parentGroup.name = NSLocalizedString(@"GENERAL", "General");
   parentGroup.iconId = 48;
   tree.root = parentGroup;
-  
+
   KPKGroup *group = [tree createGroup:parentGroup];
   group.name = NSLocalizedString(@"WINDOWS", "Windows");
   group.iconId = 38;
@@ -89,6 +88,12 @@
   return self;
 }
 
+- (void)dealloc {
+  self.metaData = nil;
+  _deletedObjects = nil;
+  self.root = nil;
+  
+}
 - (id)parent {
   return nil;
 }

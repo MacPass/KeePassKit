@@ -135,6 +135,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return self;
 }
 
+#pragma mark NSCopying
 - (id)copyWithZone:(NSZone *)zone {
   KPKEntry *entry = [[KPKEntry allocWithZone:zone] init];
   entry.iconId = self.iconId;
