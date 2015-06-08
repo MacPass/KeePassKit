@@ -40,43 +40,6 @@
   return [NSSet setWithObjects:@"root", nil];
 }
 
-+  (KPKTree *)allocTemplateTree {
-
-  KPKTree *tree = [[KPKTree alloc] init];
-  KPKGroup *parentGroup = [tree createGroup:nil];
-  
-  parentGroup.name = NSLocalizedString(@"GENERAL", "General");
-  parentGroup.iconId = 48;
-  tree.root = parentGroup;
-
-  KPKGroup *group = [tree createGroup:parentGroup];
-  group.name = NSLocalizedString(@"WINDOWS", "Windows");
-  group.iconId = 38;
-  [parentGroup addGroup:group];
-  
-  group = [tree createGroup:parentGroup];
-  group.name = NSLocalizedString(@"NETWORK", "Network");
-  group.iconId = 3;
-  [parentGroup addGroup:group];
-  
-  group = [tree createGroup:parentGroup];
-  group.name = NSLocalizedString(@"INTERNET", "Internet");
-  group.iconId = 1;
-  [parentGroup addGroup:group];
-  
-  group = [tree createGroup:parentGroup];
-  group.name = NSLocalizedString(@"EMAIL", "EMail");
-  group.iconId = 19;
-  [parentGroup addGroup:group];
-  
-  group = [tree createGroup:parentGroup];
-  group.name = NSLocalizedString(@"HOMEBANKING", "Homebanking");
-  group.iconId = 37;
-  [parentGroup addGroup:group];
-  
-  return tree;
-}
-
 - (instancetype)init {
   self = [super init];
   if(self) {
@@ -88,12 +51,51 @@
   return self;
 }
 
+- (instancetype)initWithTemplateContents {
+  self = [self init];
+  if (self) {
+  }
+  KPKGroup *parentGroup = [self createGroup:nil];
+  
+  parentGroup.name = NSLocalizedString(@"GENERAL", "General");
+  parentGroup.iconId = 48;
+  self.root = parentGroup;
+  
+  KPKGroup *group = [self createGroup:parentGroup];
+  group.name = NSLocalizedString(@"WINDOWS", "Windows");
+  group.iconId = 38;
+  [parentGroup addGroup:group];
+  
+  group = [self createGroup:parentGroup];
+  group.name = NSLocalizedString(@"NETWORK", "Network");
+  group.iconId = 3;
+  [parentGroup addGroup:group];
+  
+  group = [self createGroup:parentGroup];
+  group.name = NSLocalizedString(@"INTERNET", "Internet");
+  group.iconId = 1;
+  [parentGroup addGroup:group];
+  
+  group = [self createGroup:parentGroup];
+  group.name = NSLocalizedString(@"EMAIL", "EMail");
+  group.iconId = 19;
+  [parentGroup addGroup:group];
+  
+  group = [self createGroup:parentGroup];
+  group.name = NSLocalizedString(@"HOMEBANKING", "Homebanking");
+  group.iconId = 37;
+  [parentGroup addGroup:group];
+  
+  return self;
+}
+
+
 - (void)dealloc {
   self.metaData = nil;
   _deletedObjects = nil;
   self.root = nil;
-  
 }
+
 - (id)parent {
   return nil;
 }

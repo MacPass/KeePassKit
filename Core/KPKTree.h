@@ -88,7 +88,7 @@
  */
 @property (nonatomic, strong, readonly) NSArray *tags;
 
-+ (KPKTree *)allocTemplateTree;
+- (instancetype)initWithTemplateContents;
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent;
 - (KPKEntry *)createEntry:(KPKGroup *)parent;
