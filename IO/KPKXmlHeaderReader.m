@@ -28,13 +28,13 @@
 
 #import "KPKDataStreamReader.h"
 #import "NSData+Random.h"
+#import "NSData+CommonCrypto.h"
 
 @interface KPKXmlHeaderReader () {
   NSData *_comment;
   NSUInteger _endOfHeader;
   NSData *_data;
   KPKDataStreamReader *_dataStreamer;
-
 }
 
 @end
@@ -69,6 +69,19 @@
 
 - (NSData *)dataWithoutHeader {
   return [_data subdataWithRange:NSMakeRange(_endOfHeader, [_data length] - _endOfHeader)];
+}
+
+- (BOOL)verifyHeader:(NSData *)hash {
+  /* NOTE only works if header was parsed */
+  NSData *myHash = [[self headerData] SHA256Hash];
+  return [myHash isEqualToData:hash];
+}
+
+- (NSData *)headerData {
+  if(_data.length < _endOfHeader) {
+    return nil;
+  }
+  return [_data subdataWithRange:NSMakeRange(0, _endOfHeader)];
 }
 
 - (BOOL)_parseHeader:(NSError *__autoreleasing *)error {
@@ -172,10 +185,6 @@
         return NO;
     }
   }
-}
-
-- (void)writeHeaderData:(NSMutableData *)data {
-  
 }
 
 @end

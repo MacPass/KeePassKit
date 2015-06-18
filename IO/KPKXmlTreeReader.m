@@ -40,20 +40,20 @@
 #import "KPKXmlFormat.h"
 #import "KPKXmlElements.h"
 #import "KPKErrors.h"
+#import "KPKIcon.h"
 
 #import "KPKRandomStream.h"
 #import "KPKArc4RandomStream.h"
 #import "KPKSalsa20RandomStream.h"
-
-#import "NSMutableData+Base64.h"
-#import "KPKIcon.h"
+#import "KPKXmlUtilities.h"
 
 #import "DDXML.h"
 #import "DDXMLElementAdditions.h"
 
+#import "NSMutableData+Base64.h"
+#import "NSData+CommonCrypto.h"
 #import "NSUUID+KeePassKit.h"
 #import "NSColor+KeePassKit.h"
-#import "KPKXmlUtilities.h"
 
 @interface KPKXmlTreeReader () {
 @private
@@ -121,7 +121,10 @@
   }
   NSString *headerHash = KPKXmlString(metaElement, kKPKXmlHeaderHash);
   if(headerHash) {
-    // test headerhash;
+    NSData *expectedHash = [NSMutableData dataFromBase64EncodedString:headerHash encoding:NSUTF8StringEncoding];
+    if(![_headerReader verifyHeader:expectedHash]) {
+      KPKCreateError(error, KPKErrorXMLHeaderHashVerificationFailed, @"ERROR_HEADER_HASH_VERIFICATION_FAILED", "");
+    }
   }
   
   [self _parseMeta:metaElement metaData:tree.metaData];

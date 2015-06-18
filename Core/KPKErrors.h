@@ -47,6 +47,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorUnsupportedRandomStream, // The header specifies an unsupporte stream or it's corrupted
   KPKErrorPasswordAndOrKeyfileWrong, // Password and or keyfile is wrong
   KPKErrorIntegrityCheckFaild, // The startbytes in the header aren't matching the AES stream-start
+  KPKErrorXMLHeaderHashVerificationFailed, // The header hash does not match the one provieded in the database
   KPKErrorXMLKeePassFileElementMissing, // the Keepass root element is missing
   KPKErrorXMLRootElementMissing, // The root Elemetn is missing;
   KPKErrorXMLMetaElementMissing, // The root element has no meta entry
@@ -57,6 +58,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorLegacyInvalidFieldSize, // KDB Invalid field size
   KPKErrorLegacyHeaderHashCorrupted, // Header missmatch
   KPKErrorLegacyCorruptTree, // Tree sturcture is corrupted
+
   /* Validation error */
   KPKErrorAttributeKeyValidationFailed, // Validation of attribute key failed
   KPKErrorWindowTitleFormatValidationFailed, // The Window title for autotype is not supported

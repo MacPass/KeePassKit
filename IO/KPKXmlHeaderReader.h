@@ -54,5 +54,11 @@
  @returns the data with the header data removed.
  */
 - (NSData *)dataWithoutHeader;
+/**
+ Verifies the integrity of the header
+ @param hash The checksum hash the header shoudl verify again
+ @returns YES if the check succeeded, NO otherwise
+ */
+- (BOOL)verifyHeader:(NSData *)hash;
 
 @end
