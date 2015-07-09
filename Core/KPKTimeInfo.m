@@ -24,10 +24,15 @@
 #import "KPKNode.h"
 #import "KPKTree.h"
 
+@interface KPKTimeInfo ()
+
+@property(assign) BOOL isExpired;
+
+@end
+
 @implementation KPKTimeInfo
 
 @synthesize updateTiming = _updateTiming;
-@synthesize isExpired = _isExpired;
 
 + (BOOL)supportsSecureCoding {
   return YES;
@@ -37,7 +42,6 @@
   return [NSSet setWithArray:@[ NSStringFromSelector(@selector(expires)),
                                 NSStringFromSelector(@selector(expiryTime))]];
 }
-
 
 - (id)init {
   self = [super init];
@@ -54,6 +58,11 @@
     _isExpired = NO;
   }
   return self;
+}
+
+- (void)dealloc {
+  /* Remove any scheduled calls for expiration */
+  [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_updateExpireState) object:nil];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -106,18 +115,6 @@
 
 #pragma mark -
 #pragma mark Properties
-- (BOOL)isExpired {
-  BOOL oldValue = _isExpired;
-  BOOL reachedExpiredDate = (0 < [[NSDate date] timeIntervalSinceDate:self.expiryTime]);
-  BOOL newValue = self.expires && reachedExpiredDate;
-  if(oldValue != newValue) {
-    [self willChangeValueForKey:NSStringFromSelector(@selector(isExpired))];
-    _isExpired = newValue;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(isExpired))];
-  }
-  return _isExpired;
-}
-
 - (void)setExpires:(BOOL)expires {
   if(self.expires != expires) {
     [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpires:self.expires];
@@ -125,6 +122,7 @@
     if(self.updateTiming) {
       self.lastModificationTime = [NSDate date];
     }
+    [self _updateExpireState];
   }
 }
 
@@ -135,6 +133,7 @@
     if(self.updateTiming) {
       self.lastModificationTime = [NSDate date];
     }
+    [self _updateExpireState];
   }
 }
 
@@ -167,6 +166,26 @@
     return;
   }
   self.locationChanged = [NSDate date];
+}
+
+- (void)_updateExpireState {
+  /* Remove sheduled invocation */
+  [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_updateExpireState) object:nil];
+  /* Shedule invocation only if we can expire */
+  if(self.expires && self.expiryTime) {
+    NSTimeInterval expireTimeInterval = [self.expiryTime timeIntervalSinceNow];
+    if( expireTimeInterval > 0) {
+      [self performSelector:@selector(_updateExpireState) withObject:nil afterDelay:expireTimeInterval];
+    }
+    else {
+      self.isExpired = YES;
+      return; // done!
+    }
+  }
+  /* We aren't expired, update if needed */
+  if(self.isExpired) {
+    self.isExpired = NO;
+  }
 }
 
 @end
