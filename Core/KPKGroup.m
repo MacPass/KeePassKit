@@ -82,6 +82,10 @@
   return self;
 }
 
+- (void)dealloc {
+  [self.undoManager removeAllActionsWithTarget:self];
+}
+
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [super encodeWithCoder:aCoder];
   [aCoder encodeObject:_name forKey:NSStringFromSelector(@selector(name))];

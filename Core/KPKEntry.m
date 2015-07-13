@@ -135,6 +135,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return self;
 }
 
+- (void)dealloc {
+  /* Remove us from the undo stack */
+  [self.undoManager removeAllActionsWithTarget:self];
+}
+
 #pragma mark NSCopying
 - (id)copyWithZone:(NSZone *)zone {
   KPKEntry *entry = [[KPKEntry allocWithZone:zone] init];

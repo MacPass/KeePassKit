@@ -62,6 +62,7 @@
 
 - (void)dealloc {
   /* Remove any scheduled calls for expiration */
+  [self.node.undoManager removeAllActionsWithTarget:self];
   [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_updateExpireState) object:nil];
 }
 

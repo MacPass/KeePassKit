@@ -87,6 +87,10 @@
   return self;
 }
 
+- (void)dealloc {
+  [self.entry.undoManager removeAllActionsWithTarget:self];
+}
+
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeBool:self.isProtected forKey:@"isProtected"];
   [aCoder encodeObject:self.key forKey:@"key"];
