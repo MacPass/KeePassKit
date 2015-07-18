@@ -25,6 +25,7 @@
 #import "KPKTree.h"
 #import "KPKTimeInfo.h"
 #import "KPKDeletedNode.h"
+#import "KPKMetaData.h"
 #import "NSUUID+KeePassKit.h"
 
 @interface KPKGroup () {
@@ -420,6 +421,9 @@
 }
 
 - (BOOL)isSearchable {
+  if([self.tree.metaData.recycleBinUuid isEqual:self.uuid]) {
+    return NO;
+  }
   switch(self.isSearchEnabled) {
     case KPKInherit:
       return self.parent ? [self.parent isSearchable] : YES;
@@ -449,6 +453,9 @@
 }
 
 - (BOOL)isAutotypeable {
+  if([self.tree.metaData.recycleBinUuid isEqual:self.uuid]) {
+    return NO;
+  }
   switch(self.isAutoTypeEnabled) {
     case KPKInherit:
       /* Default is YES, so fall back to YES if no parent is set, aplies to root node as well */
