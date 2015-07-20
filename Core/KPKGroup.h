@@ -93,13 +93,6 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 - (KPKGroup *)groupForUUID:(NSUUID *)uuid;
 
 /**
- *	Determines if the receiving group is an ancestor of the supplied group
- *	@param	group	group to test ancestorship for
- *	@return	YES if reveiver is ancestor of group, NO otherwise
- */
-- (BOOL)isAnchestorOfGroup:(KPKGroup *)group;
-
-/**
  *	Returns an array containing all entries inside searchable groups.
  *	@return	NSArray of KPKEntries contained in searchable groups
  */

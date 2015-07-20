@@ -127,6 +127,21 @@
   return YES;
 }
 
+- (KPKGroup *)trash {
+  /* Caching is dangerous, as we might have deleted the trashcan */
+  if(self.metaData.useTrash) {
+    return [self.root groupForUUID:self.metaData.trashUuid];
+  }
+  return nil;
+}
+
+- (void)setTrash:(KPKGroup *)trash {
+  if(self.metaData.useTrash) {
+    if(![self.metaData.trashUuid isEqual:trash.uuid]) {
+      self.metaData.trashUuid = trash.uuid;
+    }
+  }
+}
 - (void)setRoot:(KPKGroup *)root {
   if(_root != root) {
     _root = root;

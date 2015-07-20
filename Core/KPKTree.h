@@ -59,6 +59,8 @@
 
 @property(nonatomic, readonly, assign) BOOL isEditable;
 
+@property(nonatomic, weak) KPKGroup *trash;
+
 @property (nonatomic, strong) KPKGroup *root;
 /**
  Acces to the root group via the groups property

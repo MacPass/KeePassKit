@@ -39,15 +39,26 @@
 @property(nonatomic, weak) KPKTree *tree;
 @property(nonatomic, assign) NSInteger iconId;
 @property(nonatomic, strong) NSUUID *iconUUID;
-@property(nonatomic, weak) KPKGroup *parent;
 @property(nonatomic, strong) NSUUID *uuid;
 @property(nonatomic, assign) KPKVersion minimumVersion;
 @property(nonatomic, strong) KPKTimeInfo *timeInfo;
+
+@property(nonatomic, weak) KPKGroup *parent;
+@property(nonatomic, assign) NSInteger *postion;
 
 @property (nonatomic, weak, readonly) NSUndoManager *undoManager;
 @property (nonatomic, readonly, assign) BOOL isEditable;
 
 @property (nonatomic, readonly, assign) BOOL hasDefaultIcon;
+
+@property (nonatomic, readonly) BOOL isTrash;
+/**
+ *  Determines, whether the receiving node is inside the trash.
+ *  The trash group itself is not considered as trashed.
+ *  Hence when sending this message with the trash group, NO is returned
+ *  @return YES, if the item is inside the trash, NO otherwise (and if item is trash group)
+ */
+@property (nonatomic, readonly) BOOL isTrashed;
 
 /**
  *	Returns the default icon number for a Group
@@ -60,6 +71,16 @@
  *	@return	root group of the node
  */
 - (KPKGroup *)rootGroup;
+
+
+/**
+ *	Determines if the receiving group is an ancestor of the supplied group
+ *	@param	group	group to test ancestorship for
+ *	@return	YES if reveiver is ancestor of group, NO otherwise
+ */
+- (BOOL)isAnchestorOf:(KPKNode *)node;
+
+- (BOOL)isDecendantOf:(KPKNode *)node;
 
 - (void)updateTo:(KPKNode *)node;
 

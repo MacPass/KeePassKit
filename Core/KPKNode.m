@@ -25,6 +25,7 @@
 #import "KPKGroup.h"
 #import "KPKTimeInfo.h"
 #import "KPKTree.h"
+#import "KPKMetaData.h"
 
 #import "NSUUID+KeePassKit.h"
 
@@ -87,6 +88,17 @@
   return (self.iconId == [[self class] defaultIcon]);
 }
 
+- (BOOL)isTrash {
+  return [self asGroup].uuid == self.tree.metaData.trashUuid;
+}
+
+- (BOOL)isTrashed {
+  if(self.isTrash) {
+    return NO; // Trash is not trashed
+  }
+  return [self.tree.trash isAnchestorOf:self];
+}
+
 - (void)setIconId:(NSInteger)iconId {
   if(iconId != _iconId) {
     [[self.undoManager prepareWithInvocationTarget:self] setIconId:_iconId];
@@ -107,6 +119,24 @@
     rootGroup = rootGroup.parent;
   }
   return rootGroup;
+}
+
+- (BOOL)isAnchestorOf:(KPKNode *)node {
+  if(nil == node) {
+    return NO;
+  }
+  KPKNode *ancestor = node.parent;
+  while(ancestor) {
+    if(ancestor == self) {
+      return YES;
+    }
+    ancestor = ancestor.parent;
+  }
+  return NO;
+}
+
+- (BOOL)isDecendantOf:(KPKNode *)node {
+  return [node isAnchestorOf:self];
 }
 
 - (NSUndoManager *)undoManager {

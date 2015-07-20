@@ -59,9 +59,9 @@
 @property(nonatomic, assign) BOOL protectUrl;
 @property(nonatomic, assign) BOOL protectNotes;
 
-@property(nonatomic, assign) BOOL recycleBinEnabled;
-@property(nonatomic, strong) NSUUID *recycleBinUuid;
-@property(nonatomic, strong) NSDate *recycleBinChanged;
+@property(nonatomic, assign) BOOL useTrash;
+@property(nonatomic, strong) NSUUID *trashUuid;
+@property(nonatomic, strong) NSDate *trashChanged;
 
 @property(nonatomic, strong) NSUUID *entryTemplatesGroup;
 @property(nonatomic, strong) NSDate *entryTemplatesGroupChanged;

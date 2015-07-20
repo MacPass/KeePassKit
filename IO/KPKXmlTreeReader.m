@@ -196,9 +196,9 @@
   data.protectUrl = KPKXmlBool(memoryProtectionElement, kKPKXmlProtectURL);
   data.protectNotes = KPKXmlBool(memoryProtectionElement, kKPKXmlProtectNotes);
   
-  data.recycleBinEnabled = KPKXmlBool(metaElement, kKPKXmlRecycleBinEnabled);
-  data.recycleBinUuid = [NSUUID uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlRecycleBinUUID)];
-  data.recycleBinChanged = KPKXmlDate(_dateFormatter, metaElement, kKPKXmlRecycleBinChanged);
+  data.useTrash = KPKXmlBool(metaElement, kKPKXmlRecycleBinEnabled);
+  data.trashUuid = [NSUUID uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlRecycleBinUUID)];
+  data.trashChanged = KPKXmlDate(_dateFormatter, metaElement, kKPKXmlRecycleBinChanged);
   data.entryTemplatesGroup = [NSUUID uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlEntryTemplatesGroup)];
   data.entryTemplatesGroupChanged = KPKXmlDate(_dateFormatter, metaElement, kKPKXmlEntryTemplatesGroupChanged);
   data.historyMaxItems = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxItems);

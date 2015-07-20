@@ -391,21 +391,6 @@
   return  [filteredGroups lastObject];
 }
 
-
-- (BOOL)isAnchestorOfGroup:(KPKGroup *)group {
-  if(group == nil) {
-    return NO;
-  }
-  KPKGroup *ancestor = group.parent;
-  while(ancestor) {
-    if(ancestor == self) {
-      return YES;
-    }
-    ancestor = ancestor.parent;
-  }
-  return NO;
-}
-
 - (NSArray *)searchableChildEntries {
   NSMutableArray *searchableEntries;
   if([self isSearchable]) {
@@ -421,7 +406,7 @@
 }
 
 - (BOOL)isSearchable {
-  if([self.tree.metaData.recycleBinUuid isEqual:self.uuid]) {
+  if([self.tree.metaData.trashUuid isEqual:self.uuid]) {
     return NO;
   }
   switch(self.isSearchEnabled) {
@@ -453,7 +438,7 @@
 }
 
 - (BOOL)isAutotypeable {
-  if([self.tree.metaData.recycleBinUuid isEqual:self.uuid]) {
+  if([self.tree.metaData.trashUuid isEqual:self.uuid]) {
     return NO;
   }
   switch(self.isAutoTypeEnabled) {

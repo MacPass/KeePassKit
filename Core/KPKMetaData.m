@@ -66,8 +66,8 @@
     _defaultUserNameChanged = [NSDate date];
     _entryTemplatesGroupChanged = [NSDate date];
     _entryTemplatesGroup = [NSUUID nullUUID];
-    _recycleBinChanged = [NSDate date];
-    _recycleBinUuid = [NSUUID nullUUID];
+    _trashChanged = [NSDate date];
+    _trashUuid = [NSUUID nullUUID];
     _lastSelectedGroup = [NSUUID nullUUID];
     _lastTopVisibleGroup = [NSUUID nullUUID];
     _historyMaxItems = 10;
@@ -144,11 +144,11 @@
   }
 }
 
-- (void)setRecycleBinUuid:(NSUUID *)recycleBinUuid {
-  if(![_recycleBinUuid isEqual:recycleBinUuid]) {
-    _recycleBinUuid = recycleBinUuid;
+- (void)setTrashUuid:(NSUUID *)recycleBinUuid {
+  if(![_trashUuid isEqual:recycleBinUuid]) {
+    _trashUuid = recycleBinUuid;
     if(_updateTiming) {
-      self.recycleBinChanged = [NSDate date];
+      self.trashChanged = [NSDate date];
     }
   }
 }

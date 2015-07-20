@@ -126,9 +126,9 @@
     [metaElement addChild:[self _xmlIcons]];
   }
   
-  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinEnabled, KPKStringFromBool(metaData.recycleBinEnabled));
-  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinUUID, [metaData.recycleBinUuid encodedString]);
-  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinChanged, KPKStringFromDate(_dateFormatter, metaData.recycleBinChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinEnabled, KPKStringFromBool(metaData.useTrash));
+  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinUUID, [metaData.trashUuid encodedString]);
+  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinChanged, KPKStringFromDate(_dateFormatter, metaData.trashChanged));
   KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroup, [metaData.entryTemplatesGroup encodedString]);
   KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroupChanged, KPKStringFromDate(_dateFormatter, metaData.entryTemplatesGroupChanged));
   KPKAddXmlElement(metaElement, kKPKXmlHistoryMaxItems, KPKStringFromLong(metaData.historyMaxItems));
