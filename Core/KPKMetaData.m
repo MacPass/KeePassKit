@@ -144,9 +144,9 @@
   }
 }
 
-- (void)setTrashUuid:(NSUUID *)recycleBinUuid {
-  if(![_trashUuid isEqual:recycleBinUuid]) {
-    _trashUuid = recycleBinUuid;
+- (void)setTrashUuid:(NSUUID *)trashUuid {
+  if(![_trashUuid isEqual:trashUuid]) {
+    _trashUuid = trashUuid;
     if(_updateTiming) {
       self.trashChanged = [NSDate date];
     }
