@@ -44,7 +44,6 @@
 @property(nonatomic, strong) KPKTimeInfo *timeInfo;
 
 @property(nonatomic, weak) KPKGroup *parent;
-@property(nonatomic, assign) NSInteger *postion;
 
 @property (nonatomic, weak, readonly) NSUndoManager *undoManager;
 @property (nonatomic, readonly, assign) BOOL isEditable;
@@ -71,7 +70,6 @@
  *	@return	root group of the node
  */
 - (KPKGroup *)rootGroup;
-
 
 /**
  *	Determines if the receiving group is an ancestor of the supplied group
