@@ -382,10 +382,10 @@
 
 - (DDXMLElement *)_xmlTimeinfo:(KPKTimeInfo *)timeInfo {
   DDXMLElement *timesElement = [DDXMLNode elementWithName:kKPKXmlTimes];
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastModificationTime, KPKStringFromDate(_dateFormatter, timeInfo.lastModificationTime));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlCreationTime, KPKStringFromDate(_dateFormatter, timeInfo.creationTime));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastAccessTime, KPKStringFromDate(_dateFormatter, timeInfo.lastAccessTime));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlExpiryTime, KPKStringFromDate(_dateFormatter, timeInfo.expiryTime));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastModificationDate, KPKStringFromDate(_dateFormatter, timeInfo.modificationDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlCreationDate, KPKStringFromDate(_dateFormatter, timeInfo.creationDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastAccessDate, KPKStringFromDate(_dateFormatter, timeInfo.accessDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlExpirationDate, KPKStringFromDate(_dateFormatter, timeInfo.expirationDate));
   KPKAddXmlElement(timesElement, kKPKXmlExpires, KPKStringFromBool(timeInfo.expires));
   KPKAddXmlElement(timesElement, kKPKXmlUsageCount, KPKStringFromLong(timeInfo.usageCount));
   KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLocationChanged, KPKStringFromDate(_dateFormatter, timeInfo.locationChanged));

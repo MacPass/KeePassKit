@@ -210,7 +210,7 @@
             return NO;
           }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
-          group.timeInfo.creationTime = [NSDate dateFromPackedBytes:dateBuffer];
+          group.timeInfo.creationDate = [NSDate dateFromPackedBytes:dateBuffer];
           break;
           
         case KPKFieldTypeGroupModificationTime:
@@ -219,7 +219,7 @@
             return NO;
           }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
-          group.timeInfo.lastModificationTime = [NSDate dateFromPackedBytes:dateBuffer];
+          group.timeInfo.modificationDate = [NSDate dateFromPackedBytes:dateBuffer];
           break;
           
         case KPKFieldTypeGroupAccessTime:
@@ -228,7 +228,7 @@
             return NO;
           }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
-          group.timeInfo.lastAccessTime = [NSDate dateFromPackedBytes:dateBuffer];
+          group.timeInfo.accessDate = [NSDate dateFromPackedBytes:dateBuffer];
           break;
           
         case KPKFieldTypeGroupExpiryDate:
@@ -237,7 +237,7 @@
             return NO;
           }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
-          group.timeInfo.expiryTime = [NSDate dateFromPackedBytes:dateBuffer];
+          group.timeInfo.expirationDate = [NSDate dateFromPackedBytes:dateBuffer];
           break;
           
         case KPKFieldTypeGroupImage:
@@ -374,7 +374,7 @@
             return NO;
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
-          entry.timeInfo.creationTime = [NSDate dateFromPackedBytes:buffer];
+          entry.timeInfo.creationDate = [NSDate dateFromPackedBytes:buffer];
           break;
           
         case KPKFieldTypeEntryModificationTime:
@@ -383,7 +383,7 @@
             return NO;
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
-          entry.timeInfo.lastModificationTime = [NSDate dateFromPackedBytes:buffer];
+          entry.timeInfo.modificationDate = [NSDate dateFromPackedBytes:buffer];
           break;
           
         case KPKFieldTypeEntryAccessTime:
@@ -392,7 +392,7 @@
             return NO;
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
-          entry.timeInfo.lastAccessTime = [NSDate dateFromPackedBytes:buffer];
+          entry.timeInfo.accessDate = [NSDate dateFromPackedBytes:buffer];
           break;
           
         case KPKFieldTypeEntryExpiryDate:
@@ -401,7 +401,7 @@
             return NO;
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
-          entry.timeInfo.expiryTime = [NSDate dateFromPackedBytes:buffer];
+          entry.timeInfo.expirationDate = [NSDate dateFromPackedBytes:buffer];
           break;
           
         case KPKFieldTypeEntryBinaryDescription: {

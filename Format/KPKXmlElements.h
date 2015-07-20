@@ -65,10 +65,10 @@ FOUNDATION_EXTERN NSString *const kKPKXmlBinaries;
 
 #pragma mark Time
 FOUNDATION_EXTERN NSString *const kKPKXmlTimes;
-FOUNDATION_EXTERN NSString *const kKPKXmlLastModificationTime;
-FOUNDATION_EXTERN NSString *const kKPKXmlCreationTime;
-FOUNDATION_EXTERN NSString *const kKPKXmlLastAccessTime;
-FOUNDATION_EXTERN NSString *const kKPKXmlExpiryTime;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastModificationDate;
+FOUNDATION_EXTERN NSString *const kKPKXmlCreationDate;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastAccessDate;
+FOUNDATION_EXTERN NSString *const kKPKXmlExpirationDate;
 FOUNDATION_EXTERN NSString *const kKPKXmlExpires;
 FOUNDATION_EXTERN NSString *const kKPKXmlUsageCount;
 FOUNDATION_EXTERN NSString *const kKPKXmlLocationChanged;

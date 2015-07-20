@@ -404,19 +404,19 @@
   BOOL isEntry = [node isKindOfClass:[KPKEntry class]];
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryCreationTime : KPKFieldTypeGroupCreationTime )
-               data:[NSDate packedBytesFromDate:node.timeInfo.creationTime]];
+               data:[NSDate packedBytesFromDate:node.timeInfo.creationDate]];
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryModificationTime : KPKFieldTypeGroupModificationTime )
-               data:[NSDate packedBytesFromDate:node.timeInfo.lastModificationTime]];
+               data:[NSDate packedBytesFromDate:node.timeInfo.modificationDate]];
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryAccessTime : KPKFieldTypeGroupAccessTime )
-               data:[NSDate packedBytesFromDate:node.timeInfo.lastAccessTime]];
+               data:[NSDate packedBytesFromDate:node.timeInfo.accessDate]];
   
   /*
    Keepass stores only the date. If the date is set, expire is true.
    If no date is set the entry does not expire
    */
-  NSDate *expiryDate = node.timeInfo.expires ? node.timeInfo.expiryTime : nil;
+  NSDate *expiryDate = node.timeInfo.expires ? node.timeInfo.expirationDate : nil;
   [self _writeField:(isEntry ? KPKFieldTypeEntryExpiryDate : KPKFieldTypeGroupExpiryDate )
                data:[NSDate packedBytesFromDate:expiryDate]];
 }

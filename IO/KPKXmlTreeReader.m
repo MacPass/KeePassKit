@@ -326,10 +326,10 @@
 }
 
 - (void)_parseTimes:(KPKTimeInfo *)timeInfo element:(DDXMLElement *)nodeElement {
-  timeInfo.lastModificationTime = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLastModificationTime);
-  timeInfo.creationTime = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlCreationTime);
-  timeInfo.lastAccessTime = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLastAccessTime);
-  timeInfo.expiryTime = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlExpiryTime);
+  timeInfo.modificationDate = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLastModificationDate);
+  timeInfo.creationDate = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlCreationDate);
+  timeInfo.accessDate = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLastAccessDate);
+  timeInfo.expirationDate = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlExpirationDate);
   timeInfo.expires = KPKXmlBool(nodeElement, kKPKXmlExpires);
   timeInfo.usageCount = KPKXmlInteger(nodeElement, kKPKXmlUsageCount);
   timeInfo.locationChanged = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLocationChanged);

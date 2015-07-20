@@ -40,17 +40,17 @@
 
 + (NSSet *)keyPathsForValuesAffectingIsExpired {
   return [NSSet setWithArray:@[ NSStringFromSelector(@selector(expires)),
-                                NSStringFromSelector(@selector(expiryTime))]];
+                                NSStringFromSelector(@selector(expirationDate))]];
 }
 
 - (id)init {
   self = [super init];
   if(self) {
     NSDate *now = [NSDate date];
-    _creationTime = now;
-    _lastModificationTime = now;
-    _lastAccessTime = now;
-    _expiryTime = [NSDate distantFuture];
+    _creationDate = now;
+    _modificationDate = now;
+    _accessDate = now;
+    _expirationDate = [NSDate distantFuture];
     _locationChanged = now;
     _expires = NO;
     _usageCount = 0;
@@ -69,13 +69,13 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
-    _creationTime = [aDecoder decodeObjectOfClass:[NSDate class] forKey:@"creationTime"];
-    _lastModificationTime = [aDecoder decodeObjectOfClass:[NSDate class] forKey:@"lastModificationTime"];
-    _lastAccessTime = [aDecoder decodeObjectOfClass:[NSDate class] forKey:@"lastAccessTime"];
-    _expiryTime = [aDecoder decodeObjectOfClass:[NSDate class] forKey:@"expiryTime"];
-    _expires = [aDecoder decodeBoolForKey:@"expires"];
-    _locationChanged = [aDecoder decodeObjectOfClass:[NSDate class] forKey:@"locationChanged"];
-    _usageCount = [aDecoder decodeIntegerForKey:@"usageCount"];
+    _creationDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(creationDate))];
+    _modificationDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(modificationDate))];
+    _accessDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(accessDate))];
+    _expirationDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(expirationDate))];
+    _expires = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(expires))];
+    _locationChanged = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(locationChanged))];
+    _usageCount = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(usageCount))];
   }
   return self;
 }
@@ -83,21 +83,21 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   /* TODO update to NSStringFromSelector */
   if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
-    [aCoder encodeObject:self.creationTime forKey:@"creationTime"];
-    [aCoder encodeObject:self.lastAccessTime forKey:@"lastAccessTime"];
-    [aCoder encodeObject:self.expiryTime forKey:@"expiryTime"];
-    [aCoder encodeBool:self.expires forKey:@"expires"];
-    [aCoder encodeObject:self.locationChanged forKey:@"locationChanged"];
-    [aCoder encodeInteger:self.usageCount forKey:@"usageCount"];
+    [aCoder encodeObject:self.creationDate forKey:NSStringFromSelector(@selector(creationDate))];
+    [aCoder encodeObject:self.accessDate forKey:NSStringFromSelector(@selector(accessDate))];
+    [aCoder encodeObject:self.expirationDate forKey:NSStringFromSelector(@selector(expirationDate))];
+    [aCoder encodeBool:self.expires forKey:NSStringFromSelector(@selector(expires))];
+    [aCoder encodeObject:self.locationChanged forKey:NSStringFromSelector(@selector(locationChanged))];
+    [aCoder encodeInteger:self.usageCount forKey:NSStringFromSelector(@selector(usageCount))];
   }
 }
 
 - (id)copyWithZone:(NSZone *)zone {
   KPKTimeInfo *timeInfo = [[KPKTimeInfo alloc] init];
-  timeInfo.creationTime = [self.creationTime copyWithZone:zone];
-  timeInfo.lastAccessTime = [self.lastAccessTime copyWithZone:zone];
-  timeInfo.lastModificationTime = [self.lastModificationTime copyWithZone:zone];
-  timeInfo.expiryTime = [self.expiryTime copyWithZone:zone];
+  timeInfo.creationDate = [self.creationDate copyWithZone:zone];
+  timeInfo.accessDate = [self.accessDate copyWithZone:zone];
+  timeInfo.modificationDate = [self.modificationDate copyWithZone:zone];
+  timeInfo.expirationDate = [self.expirationDate copyWithZone:zone];
   timeInfo.expires = self.expires;
   timeInfo.locationChanged = [self.locationChanged copyWithZone:zone];
   timeInfo.usageCount = self.usageCount; // reset?
@@ -105,11 +105,11 @@
 }
 
 - (NSString *)description {
-  return [NSString stringWithFormat:@"creationTime=%@, modificationTime=%@, accessTime=%@, expiryTime=%@, moved=%@, used=%ld",
-          self.creationTime,
-          self.lastModificationTime,
-          self.lastAccessTime,
-          self.expiryTime,
+  return [NSString stringWithFormat:@"creationDate=%@, modificationDate=%@, accessDate=%@, expirationDate=%@, moved=%@, used=%ld",
+          self.creationDate,
+          self.modificationDate,
+          self.accessDate,
+          self.expirationDate,
           self.locationChanged,
           self.usageCount];
 }
@@ -121,18 +121,18 @@
     [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpires:self.expires];
     _expires = expires;
     if(self.updateTiming) {
-      self.lastModificationTime = [NSDate date];
+      self.modificationDate = [NSDate date];
     }
     [self _updateExpireState];
   }
 }
 
-- (void)setExpiryTime:(NSDate *)expiryTime {
-  if(self.expiryTime != expiryTime) {
-    [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpiryTime:self.expiryTime];
-    _expiryTime = expiryTime;
+- (void)setExpirationDate:(NSDate *)expirationDate {
+  if(self.expirationDate != expirationDate) {
+    [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpirationDate:self.expirationDate];
+    _expirationDate = expirationDate;
     if(self.updateTiming) {
-      self.lastModificationTime = [NSDate date];
+      self.modificationDate = [NSDate date];
     }
     [self _updateExpireState];
   }
@@ -140,9 +140,9 @@
 
 - (void)reset {
   NSDate *now = [NSDate date];
-  self.creationTime = now;
-  self.lastModificationTime = now;
-  self.lastAccessTime = now;
+  self.creationDate = now;
+  self.modificationDate = now;
+  self.accessDate = now;
   self.locationChanged = now;
   self.usageCount = 0;
 }
@@ -151,7 +151,7 @@
   if(!self.updateTiming) {
     return;
   }
-  self.lastModificationTime = [NSDate date];
+  self.modificationDate = [NSDate date];
 }
 
 - (void)wasAccessed {
@@ -159,7 +159,7 @@
     return;
   }
   
-  self.lastAccessTime = [NSDate date];
+  self.accessDate = [NSDate date];
 }
 
 - (void)wasMoved {
@@ -173,8 +173,8 @@
   /* Remove sheduled invocation */
   [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_updateExpireState) object:nil];
   /* Shedule invocation only if we can expire */
-  if(self.expires && self.expiryTime) {
-    NSTimeInterval expireTimeInterval = [self.expiryTime timeIntervalSinceNow];
+  if(self.expires && self.expirationDate) {
+    NSTimeInterval expireTimeInterval = [self.expirationDate timeIntervalSinceNow];
     if( expireTimeInterval > 0) {
       [self performSelector:@selector(_updateExpireState) withObject:nil afterDelay:expireTimeInterval];
     }

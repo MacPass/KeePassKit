@@ -61,10 +61,10 @@ NSString *const kKPKXmlBinaries = @"Binaries";
 
 #pragma mark Time
 NSString *const kKPKXmlTimes = @"Times";
-NSString *const kKPKXmlLastModificationTime = @"LastModificationTime";
-NSString *const kKPKXmlCreationTime = @"CreationTime";
-NSString *const kKPKXmlLastAccessTime = @"LastAccessTime";
-NSString *const kKPKXmlExpiryTime = @"ExpiryTime";
+NSString *const kKPKXmlLastModificationDate = @"LastModificationTime";
+NSString *const kKPKXmlCreationDate = @"CreationTime";
+NSString *const kKPKXmlLastAccessDate = @"LastAccessTime";
+NSString *const kKPKXmlExpirationDate = @"ExpiryTime";
 NSString *const kKPKXmlExpires = @"Expires";
 NSString *const kKPKXmlUsageCount = @"UsageCount";
 NSString *const kKPKXmlLocationChanged = @"LocationChanged";
