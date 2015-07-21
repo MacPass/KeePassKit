@@ -406,7 +406,7 @@
 }
 
 - (BOOL)isSearchable {
-  if([self.tree.metaData.trashUuid isEqual:self.uuid]) {
+  if ([self inTrash]){
     return NO;
   }
   switch(self.isSearchEnabled) {
@@ -419,6 +419,11 @@
     case KPKInheritYES:
       return YES;
   }
+}
+
+- (BOOL)inTrash {
+  KPKGroup *recycleBin = [self.tree.root groupForUUID:self.tree.metaData.recycleBinUuid];
+  return [recycleBin isAnchestorOfGroup:self] || [recycleBin isEqual:self];
 }
 
 #pragma mark Autotype
@@ -438,7 +443,7 @@
 }
 
 - (BOOL)isAutotypeable {
-  if([self.tree.metaData.trashUuid isEqual:self.uuid]) {
+  if ([self inTrash]){
     return NO;
   }
   switch(self.isAutoTypeEnabled) {
