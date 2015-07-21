@@ -86,6 +86,8 @@
 
 @property(nonatomic, assign) BOOL updateTiming;
 
+- (BOOL)isEqualToMetaData:(KPKMetaData *)other;
+
 - (KPKIcon *)findIcon:(NSUUID *)uuid;
 
 - (void)addCustomIcon:(KPKIcon *)icon;

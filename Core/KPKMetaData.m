@@ -168,6 +168,57 @@
 }
 
 
+#pragma mark -
+#pragma mark Equality
+- (BOOL)isEqualToMetaData:(KPKMetaData *)other {
+  if(self == other) {
+    return YES; // Pointers match
+  }
+  /* no tree comparison, since the pointers cannot be encoded persitently */
+  return self.rounds == other.rounds &&
+  self.compressionAlgorithm == other.compressionAlgorithm &&
+  [self.generator isEqualToString:other.generator] &&
+  [self.databaseName isEqualToString:other.databaseName] &&
+  [self.databaseNameChanged isEqualToDate:other.databaseNameChanged] &&
+  [self.databaseDescription isEqualToString:other.databaseDescription] &&
+  [self.databaseDescriptionChanged isEqualToDate:other.databaseDescriptionChanged] &&
+  [self.defaultUserName isEqualToString:other.defaultUserName] &&
+  [self.defaultUserNameChanged isEqualToDate:other.defaultUserNameChanged] &&
+  self.maintenanceHistoryDays == other.maintenanceHistoryDays &&
+  [self.color isEqual:other.color] &&
+  [self.masterKeyChanged isEqualToDate:other.masterKeyChanged] &&
+  self.recommendMasterKeyChange == other.recommendMasterKeyChange &&
+  self.masterKeyChangeRecommendationInterval == other.masterKeyChangeRecommendationInterval &&
+  self.enforceMasterKeyChange == other.enforceMasterKeyChange &&
+  self.masterKeyChangeEnforcementInterval == other.masterKeyChangeEnforcementInterval &&
+  self.protectTitle == other.protectTitle &&
+  self.protectUserName == other.protectUserName &&
+  self.protectPassword == other.protectPassword &&
+  self.protectUrl == other.protectUrl &&
+  self.protectNotes == other.protectNotes &&
+  self.useTrash == other.useTrash &&
+  [self.trashUuid isEqual:other.trashUuid] &&
+  [self.trashChanged isEqualToDate:other.trashChanged] &&
+  [self.entryTemplatesGroup isEqualTo:other.entryTemplatesGroup] &&
+  [self.entryTemplatesGroupChanged isEqualToDate:other.entryTemplatesGroupChanged] &&
+  self.isHistoryEnabled == other.isHistoryEnabled &&
+  self.historyMaxItems == other.historyMaxItems &&
+  self.historyMaxSize == other.historyMaxSize &&
+  [self.lastSelectedGroup isEqualTo:other.lastSelectedGroup] &&
+  [self.lastTopVisibleGroup isEqualTo:other.lastTopVisibleGroup] &&
+  [self.customData isEqualToArray:other.customData] &&
+  [self.customIcons isEqualToArray:other.customIcons] &&
+  [self.unknownMetaEntryData isEqualToArray:other.unknownMetaEntryData] &&
+  self.updateTiming == other.updateTiming;
+}
+
+- (BOOL)isEqual:(id)object {
+  if([object isKindOfClass:[self class]]) {
+    return [self isEqualToMetaData:object];
+  }
+  return NO;
+}
+
 - (void)addCustomIcon:(KPKIcon *)icon {
   [self addCustomIcon:icon atIndex:[_customIcons count]];
 }
