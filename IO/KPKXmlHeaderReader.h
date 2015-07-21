@@ -34,8 +34,8 @@
 @property (nonatomic, readonly, strong) NSData *protectedStreamKey;
 @property (nonatomic, readonly, strong) NSData *streamStartBytes;
 
-@property (nonatomic, readonly, assign) uint32_t compressionAlgorithm;
-@property (nonatomic, readonly, assign) uint32_t randomStreamID;
+@property (nonatomic, readonly, assign) uint32_t compressionAlgorithm; // KPKCompression
+@property (nonatomic, readonly, assign) uint32_t randomStreamID; // KPKRandomStreamType
 @property (nonatomic, readonly, assign) uint64_t rounds;
 
 /**
