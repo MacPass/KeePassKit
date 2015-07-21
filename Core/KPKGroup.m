@@ -21,11 +21,14 @@
 //
 
 #import "KPKGroup.h"
+
+#import "KPKAutotype.h"
+#import "KPKDeletedNode.h"
 #import "KPKEntry.h"
+#import "KPKMetaData.h"
 #import "KPKTree.h"
 #import "KPKTimeInfo.h"
-#import "KPKDeletedNode.h"
-#import "KPKMetaData.h"
+
 #import "NSUUID+KeePassKit.h"
 
 @interface KPKGroup () {
@@ -373,7 +376,6 @@
 }
 
 #pragma mark Seaching
-
 - (KPKEntry *)entryForUUID:(NSUUID *)uuid {
   NSArray *filterdEntries = [[self childEntries] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
     return [uuid isEqual:(NSUUID *)[evaluatedObject uuid]];
@@ -406,7 +408,7 @@
 }
 
 - (BOOL)isSearchable {
-  if ([self inTrash]){
+  if(self.isTrash || self.isTrashed) {
     return NO;
   }
   switch(self.isSearchEnabled) {
@@ -421,17 +423,17 @@
   }
 }
 
-- (BOOL)inTrash {
-  KPKGroup *recycleBin = [self.tree.root groupForUUID:self.tree.metaData.recycleBinUuid];
-  return [recycleBin isAnchestorOfGroup:self] || [recycleBin isEqual:self];
-}
-
 #pragma mark Autotype
-
 - (NSArray *)autotypeableChildEntries {
   NSMutableArray *autotypeEntries;
   if([self isAutotypeable]) {
-    autotypeEntries = [NSMutableArray arrayWithArray:_entries];
+    /* KPKEntries have their own autotype settings, hence we need to filter them as well */
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+      NSAssert([evaluatedObject isKindOfClass:[KPKEntry class]], @"entry array should contain only KPKEntry objects");
+      KPKEntry *entry = evaluatedObject;
+      return entry.autotype.isEnabled;
+    }];
+    autotypeEntries = [NSMutableArray arrayWithArray:[_entries filteredArrayUsingPredicate:predicate]];
   }
   else {
     autotypeEntries = [[NSMutableArray alloc] init];
@@ -443,7 +445,7 @@
 }
 
 - (BOOL)isAutotypeable {
-  if ([self inTrash]){
+  if(self.isTrash || self.isTrashed){
     return NO;
   }
   switch(self.isAutoTypeEnabled) {
