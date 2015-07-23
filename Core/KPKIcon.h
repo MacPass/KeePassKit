@@ -26,13 +26,13 @@
 
 @property (nonatomic, strong) NSUUID *uuid;
 @property (nonatomic, strong) NSImage *image;
+@property (nonatomic, readonly) NSData *pngData;
+@property (nonatomic, readonly) NSString *encodedString;
 
 - (id)initWithImageAtURL:(NSURL *)imageLocation;
 - (id)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString;
 - (id)initWithData:(NSData *)data;
 
 - (BOOL)isEqualToIcon:(KPKIcon *)icon;
-- (NSString *)encodedString;
-- (NSData *)pngData;
 
 @end

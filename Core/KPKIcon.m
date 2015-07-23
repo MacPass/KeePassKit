@@ -25,9 +25,15 @@
 
 @implementation KPKIcon
 
+/* Prevent autosynthesizeis on derrived properties */
+@dynamic pngData;
+@dynamic encodedString;
+
 + (BOOL)supportsSecureCoding {
   return YES;
 }
+
+#pragma mark Lifecycle
 
 - (id)init {
   self = [super init];
@@ -41,6 +47,8 @@
   self = [self init];
   if(self) {
     _image = [[NSImage alloc] initWithContentsOfURL:imageLocation];
+    /* convert the Image to be in our PNG representation */
+    _image = [[NSImage alloc] initWithData:self.pngData];
   }
   return self;
 }
@@ -62,6 +70,8 @@
   return self;
 }
 
+#pragma mark NSCoding
+
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [[KPKIcon alloc] init];
   if(self) {
@@ -74,10 +84,12 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
-    [aCoder encodeObject:[self.image TIFFRepresentation] forKey:@"image"];
+    [aCoder encodeObject:self.pngData forKey:@"image"];
     [aCoder encodeObject:self.uuid forKey:@"uuid"];
   }
 }
+
+#pragma mark NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
   KPKIcon *copy = [[KPKIcon alloc] init];
@@ -85,6 +97,8 @@
   copy.uuid = [self.uuid copyWithZone:zone];
   return copy;
 }
+
+#pragma mark Equality
 
 - (BOOL)isEqual:(id)object {
   if([object isKindOfClass:[KPKIcon class]]) {
@@ -94,17 +108,22 @@
 }
 
 - (BOOL)isEqualToIcon:(KPKIcon *)icon {
+  if(self == icon) {
+    return YES; // Pointers match, should be the same object
+  }
   NSAssert([icon isKindOfClass:[KPKIcon class]], @"icon needs to be of class KPKIcon");
   BOOL equal = [self.uuid isEqual:icon.uuid] && [[self encodedString] isEqualToString:[icon encodedString]];
   return equal;
 }
 
+#pragma mark Properties
+
 - (NSUInteger)hash {
-  return([self.uuid hash] ^ [self.encodedString hash]);
+  return (self.uuid.hash ^ self.encodedString.hash);
 }
 
 - (NSString *)encodedString {
-  NSData *data = [self pngData];
+  NSData *data = self.pngData;
   if(data) {
     NSData *encoded = [NSMutableData mutableDataWithBase64EncodedData:data];
     return [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
@@ -119,10 +138,13 @@
   NSImageRep *imageRep = [[self.image representations] lastObject];
   if([imageRep isKindOfClass:[NSBitmapImageRep class]]) {
     NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
+    //[bitmapRep setProperty:NSImageGamma withValue:@1.0];
     return [bitmapRep representationUsingType:NSPNGFileType properties:nil];
   }
   return nil;
 }
+
+#pragma mark Private
 
 - (NSImage *)_decodeString:(NSString *)imageString {
   NSData *data = [NSMutableData mutableDataWithBase64DecodedData:[imageString dataUsingEncoding:NSUTF8StringEncoding]];
