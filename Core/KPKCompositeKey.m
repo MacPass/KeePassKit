@@ -28,11 +28,7 @@
 
 #define KPK_KEYLENGTH 32
 
-@interface KPKCompositeKey () {
-  NSData *_compositeDataVersion1;
-  NSData *_compositeDataVersion2;
-}
-
+@interface KPKCompositeKey ()
 @property (nonatomic, assign) BOOL hasKeyFile;
 @property (nonatomic, assign) BOOL hasPassword;
 @property (nonatomic, copy) NSData *rawData;
@@ -82,23 +78,14 @@
 - (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key {
   self.hasPassword = ([password length] > 0);
   self.hasKeyFile = (key != nil);
-  _compositeDataVersion1 = [self _createVersion1CompositeDataWithPassword:password keyFile:key];
-  _compositeDataVersion2 = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
+  self.rawData = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
 }
 
-- (NSData *)finalDataForVersion:(KPKVersion)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
+- (NSData *)transformUsingMasterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
   uint8_t masterKey[KPK_KEYLENGTH];
-  if(version == KPKLegacyVersion) {
-    [_compositeDataVersion1 getBytes:masterKey length:KPK_KEYLENGTH];
-  }
-  else if(version == KPKXmlVersion) {
-    [_compositeDataVersion2 getBytes:masterKey length:KPK_KEYLENGTH];
-  }
-  else {
-    return nil; // Wrong Version
-  }
-  
+  [self.rawData getBytes:masterKey length:KPK_KEYLENGTH];
+
   /* Transform the key */
   CCCryptorRef cryptorRef;
   CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES128, kCCOptionECBMode, transformSeed.bytes, kCCKeySizeAES256, nil, &cryptorRef);
@@ -123,67 +110,48 @@
   return [NSData dataWithBytes:finalKey length:KPK_KEYLENGTH];
 }
 
-- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version {
-  NSData *data;
-  switch(version) {
-    case KPKLegacyVersion:
-      data = [self _createVersion1CompositeDataWithPassword:password keyFile:key];
-      break;
-    case KPKXmlVersion:
-      data = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
-      break;
-    default:
-      return NO;
-  }
-  if(data) {
-    NSData *compare = (version == KPKLegacyVersion) ? _compositeDataVersion1 : _compositeDataVersion2;
-    return [data isEqualToData:compare];
-  }
-  return NO;
-}
-
-- (NSData *)_createVersion1CompositeDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
-  if(!password && !keyURL) {
-    return nil;
-  }
-  uint8_t masterKey[KPK_KEYLENGTH];
-  if(password && !keyURL) {
-    /* Hash the password into the master key FIXME: PasswordEncoding! */
-    NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
-    CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, masterKey);
-  }
-  else if(!password && keyURL) {
-    /* Get the bytes from the keyfile */
-    NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
-    if(!keyFileData) {
-      NSLog(@"Error while trying to load keyfile:%@", [error localizedDescription]);
-      return nil;
-    }
-    [keyFileData getBytes:masterKey length:32];
-  }
-  else {
-    /* Hash the password */
-    uint8_t passwordHash[32];
-    NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
-    CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, passwordHash);
-    
-    /* Get the bytes from the keyfile */
-    NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
-    if( keyFileData == nil) {
-      return nil;
-    }
-    
-    /* Hash the password and keyfile into the master key */
-    CC_SHA256_CTX ctx;
-    CC_SHA256_Init(&ctx);
-    CC_SHA256_Update(&ctx, passwordHash, 32);
-    CC_SHA256_Update(&ctx, keyFileData.bytes, 32);
-    CC_SHA256_Final(masterKey, &ctx);
-  }
-  return [NSData dataWithBytes:masterKey length:KPK_KEYLENGTH];
-}
+//- (NSData *)_createVersion1CompositeDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
+//  if(!password && !keyURL) {
+//    return nil;
+//  }
+//  uint8_t masterKey[KPK_KEYLENGTH];
+//  if(password && !keyURL) {
+//    /* Hash the password into the master key FIXME: PasswordEncoding! */
+//    NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
+//    CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, masterKey);
+//  }
+//  else if(!password && keyURL) {
+//    /* Get the bytes from the keyfile */
+//    NSError *error = nil;
+//    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
+//    if(!keyFileData) {
+//      NSLog(@"Error while trying to load keyfile:%@", [error localizedDescription]);
+//      return nil;
+//    }
+//    [keyFileData getBytes:masterKey length:32];
+//  }
+//  else {
+//    /* Hash the password */
+//    uint8_t passwordHash[32];
+//    NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
+//    CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, passwordHash);
+//    
+//    /* Get the bytes from the keyfile */
+//    NSError *error = nil;
+//    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
+//    if( keyFileData == nil) {
+//      return nil;
+//    }
+//    
+//    /* Hash the password and keyfile into the master key */
+//    CC_SHA256_CTX ctx;
+//    CC_SHA256_Init(&ctx);
+//    CC_SHA256_Update(&ctx, passwordHash, 32);
+//    CC_SHA256_Update(&ctx, keyFileData.bytes, 32);
+//    CC_SHA256_Final(masterKey, &ctx);
+//  }
+//  return [NSData dataWithBytes:masterKey length:KPK_KEYLENGTH];
+//}
 
 - (NSData *)_createVersion2CompositeDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
   if(!password && !keyURL) {
