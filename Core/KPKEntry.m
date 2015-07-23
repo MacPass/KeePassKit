@@ -150,18 +150,27 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   entry.uuid = [self.uuid copyWithZone:zone];
   entry.minimumVersion = self.minimumVersion;
   
+  /* Default attributes */
   entry.password = self.password;
   entry.title = self.title;
   entry.username = self.username;
   entry.url = self.url;
   entry.notes = self.notes;
-  entry->_binaries = [[NSMutableArray alloc] initWithArray:self.binaries copyItems:YES];
-  entry->_customAttributes = [[NSMutableArray alloc] initWithArray:self.customAttributes copyItems:YES];
-  entry->_tags = [self.tags copyWithZone:zone];
-  entry->_autotype = [self.autotype copyWithZone:zone];
-  entry->_history = [[NSMutableArray alloc] initWithArray:self.history copyItems:YES];
+  
+  entry.overrideURL = self.overrideURL;
+  
+  entry.binaries = [[NSMutableArray alloc] initWithArray:self->_binaries copyItems:YES];
+  entry.customAttributes = [[NSMutableArray alloc] initWithArray:self->_customAttributes copyItems:YES];
+  entry.tags = self->_tags;
+  entry.autotype = [self.autotype copyWithZone:zone];
+  entry.history = [[NSMutableArray alloc] initWithArray:self->_history copyItems:YES];
   entry->_isHistory = self->_isHistory;
   
+  /* Color */
+  entry.foregroundColor = self.foregroundColor;
+  entry.backgroundColor = self.backgroundColor;
+  
+  /* Time */
   entry.timeInfo = [self.timeInfo copyWithZone:zone];
   
   /* fix entry references */
@@ -187,14 +196,19 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     _customAttributes = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(customAttributes))];
     _tags = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(tags))];
     _history = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(history))];
+    _foregroundColor = [aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(foregroundColor))];
+    _backgroundColor = [aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(backgroundColor))];
+    _overrideURL = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(overrideURL))];
     _autotype = [aDecoder decodeObjectOfClass:[KPKAutotype class] forKey:NSStringFromSelector(@selector(autotype))];
     _isHistory = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isHistory))];
     
+    /* Default attributes */
     _titleAttribute.entry = self;
     _passwordAttribute.entry = self;
     _usernameAttribute.entry = self;
     _urlAttribute.entry = self;
     _notesAttribute.entry = self;
+    
     _autotype.entry = self;
     
     for(KPKAttribute *attribute in _customAttributes) {
@@ -215,6 +229,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [aCoder encodeObject:_binaries forKey:NSStringFromSelector(@selector(binaries))];
   [aCoder encodeObject:_customAttributes forKey:NSStringFromSelector(@selector(customAttributes))];
   [aCoder encodeObject:_tags forKey:NSStringFromSelector(@selector(tags))];
+  [aCoder encodeObject:_foregroundColor forKey:NSStringFromSelector(@selector(foregroundColor))];
+  [aCoder encodeObject:_backgroundColor forKey:NSStringFromSelector(@selector(backgroundColor))];
+  [aCoder encodeObject:_overrideURL forKey:NSStringFromSelector(@selector(overrideURL))];
   [aCoder encodeObject:_history forKey:NSStringFromSelector(@selector(history))];
   [aCoder encodeObject:_autotype forKey:NSStringFromSelector(@selector(autotype))];
   [aCoder encodeBool:_isHistory forKey:NSStringFromSelector(@selector(isHistory))];
