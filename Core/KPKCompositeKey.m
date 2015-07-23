@@ -75,10 +75,49 @@
   return (self.hasPassword || self.hasKeyFile);
 }
 
-- (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key {
-  self.hasPassword = ([password length] > 0);
-  self.hasKeyFile = (key != nil);
-  self.rawData = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
+- (void)setPassword:(NSString *)password andKeyfile:(NSURL *)keyURL {
+  self.hasPassword = (password.length > 0);
+  self.hasKeyFile = (keyURL != nil);
+
+  if(!password && !keyURL) {
+    return;
+  }
+  
+  // Initialize the master hash
+  CC_SHA256_CTX ctx;
+  CC_SHA256_Init(&ctx);
+  
+  // Add the password to the master key if it was supplied
+  if(password) {
+    // Get the bytes from the password using the supplied encoding
+    NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
+    
+    // Hash the password
+    uint8_t hash[32];
+    CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, hash);
+    
+    // Add the password hash to the master hash
+    CC_SHA256_Update(&ctx, hash, 32);
+  }
+  
+  // Add the keyfile to the master key if it was supplied
+  if (keyURL) {
+    // Get the bytes from the keyfile
+    NSError *error = nil;
+    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
+    if(!keyURL) {
+      return; // We are unable to use the keyfile
+    }
+    // Add the keyfile hash to the master hash
+    CC_SHA256_Update(&ctx, keyFileData.bytes, (CC_LONG)keyFileData.length);
+  }
+  
+  // Finish the hash into the master key
+  uint8_t masterKey[KPK_KEYLENGTH];
+  CC_SHA256_Final(masterKey, &ctx);
+  
+  /* Store the hashed data */
+  self.rawData = [NSData dataWithBytes:masterKey length:KPK_KEYLENGTH];
 }
 
 - (NSData *)transformUsingMasterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
@@ -108,89 +147,6 @@
   CC_SHA256_Final(finalKey, &ctx);
   
   return [NSData dataWithBytes:finalKey length:KPK_KEYLENGTH];
-}
-
-//- (NSData *)_createVersion1CompositeDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
-//  if(!password && !keyURL) {
-//    return nil;
-//  }
-//  uint8_t masterKey[KPK_KEYLENGTH];
-//  if(password && !keyURL) {
-//    /* Hash the password into the master key FIXME: PasswordEncoding! */
-//    NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
-//    CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, masterKey);
-//  }
-//  else if(!password && keyURL) {
-//    /* Get the bytes from the keyfile */
-//    NSError *error = nil;
-//    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
-//    if(!keyFileData) {
-//      NSLog(@"Error while trying to load keyfile:%@", [error localizedDescription]);
-//      return nil;
-//    }
-//    [keyFileData getBytes:masterKey length:32];
-//  }
-//  else {
-//    /* Hash the password */
-//    uint8_t passwordHash[32];
-//    NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
-//    CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, passwordHash);
-//    
-//    /* Get the bytes from the keyfile */
-//    NSError *error = nil;
-//    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
-//    if( keyFileData == nil) {
-//      return nil;
-//    }
-//    
-//    /* Hash the password and keyfile into the master key */
-//    CC_SHA256_CTX ctx;
-//    CC_SHA256_Init(&ctx);
-//    CC_SHA256_Update(&ctx, passwordHash, 32);
-//    CC_SHA256_Update(&ctx, keyFileData.bytes, 32);
-//    CC_SHA256_Final(masterKey, &ctx);
-//  }
-//  return [NSData dataWithBytes:masterKey length:KPK_KEYLENGTH];
-//}
-
-- (NSData *)_createVersion2CompositeDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
-  if(!password && !keyURL) {
-    return nil;
-  }
-
-  // Initialize the master hash
-  CC_SHA256_CTX ctx;
-  CC_SHA256_Init(&ctx);
-  
-  // Add the password to the master key if it was supplied
-  if(password) {
-    // Get the bytes from the password using the supplied encoding
-    NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
-    
-    // Hash the password
-    uint8_t hash[32];
-    CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, hash);
-    
-    // Add the password hash to the master hash
-    CC_SHA256_Update(&ctx, hash, 32);
-  }
-  
-  // Add the keyfile to the master key if it was supplied
-  if (keyURL) {
-    // Get the bytes from the keyfile
-    NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
-    if(!keyURL) {
-      return nil;
-    }
-    // Add the keyfile hash to the master hash
-    CC_SHA256_Update(&ctx, keyFileData.bytes, (CC_LONG)keyFileData.length);
-  }
-  
-  // Finish the hash into the master key
-  uint8_t masterKey[KPK_KEYLENGTH];
-  CC_SHA256_Final(masterKey, &ctx);
-  return [NSData dataWithBytes:masterKey length:KPK_KEYLENGTH];
 }
 
 @end

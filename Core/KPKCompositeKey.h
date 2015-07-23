@@ -63,6 +63,6 @@
  *  @param password the new password, can be nil
  *  @param key      the new key file URL, can be nil
  */
-- (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key;
+- (void)setPassword:(NSString *)password andKeyfile:(NSURL *)keyURL;
 
 @end
