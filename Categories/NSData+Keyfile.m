@@ -34,31 +34,15 @@
 
 @implementation NSData (Keyfile)
 
-+ (NSData *)dataWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
-  // Open the keyfile
-  NSData *fileData = [NSData dataWithContentsOfURL:url options:0 error:error];
-  if(!fileData) {
-    return nil;
++ (NSData *)dataWithContentsOfKeyFile:(NSURL *)url version:(KPKVersion)version error:(NSError *__autoreleasing *)error {
+  switch (version) {
+    case KPKLegacyVersion:
+      return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
+    case KPKXmlVersion:
+      return [self _dataVersion2WithWithContentsOfKeyFile:url error:error];
+    default:
+      return nil;
   }
-  /* XML */
-  NSData *decordedData = [self _keyDataFromXML:fileData];
-  if(decordedData) {
-    return decordedData;
-  }
-  
-  /* Binary */
-  if(fileData.length == 32) {
-    return fileData; // Loading of a 32 bit binary file succeded;
-  }
-  
-  /* Hex */
-  decordedData = [self _keyDataFromHex:fileData];
-
-  /* Hexdata loading failed, so just hash the key */
-  if(!decordedData) {
-    decordedData = [self _keyDataFromHash:fileData];
-  }
-  return decordedData;
 }
 
 + (NSData *)generateKeyfiledataForVersion:(KPKVersion)version {
@@ -69,7 +53,7 @@
       
     case KPKXmlVersion:
       return [self _xmlKeyForData:data];
-      
+    
     default:
       return nil;
   }
@@ -84,7 +68,37 @@
   return [keyDocument XMLDataWithOptions:DDXMLNodePrettyPrint];
 }
 
-+ (NSData *)_keyDataFromXML:(NSData *)xmlData; {
++ (NSData *)_dataVersion1WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
+  // Open the keyfile
+  NSData *fileData = [NSData dataWithContentsOfURL:url options:0 error:error];
+  if(!fileData) {
+    return nil;
+  }
+  
+  if([fileData length] == 32) {
+    return fileData; // Loading of a 32 bit binary file succeded;
+  }
+  NSData *decordedData = nil;
+  if ([fileData length] == 64) {
+    decordedData = [self _keyDataFromHex:fileData];
+  }
+  /* Hexdata loading failed, so just hash the key */
+  if(!decordedData) {
+    decordedData = [self _keyDataFromHash:fileData];
+  }
+  return decordedData;
+}
+
++ (NSData *)_dataVersion2WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
+  // Try and load a 2.x XML keyfile first
+  NSData *data = [self _dataWithContentOfXMLKeyFile:url error:error];
+  if(!data) {
+    return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
+  }
+  return data;
+}
+
++ (NSData *)_dataWithContentOfXMLKeyFile:(NSURL *)fileURL error:(NSError *__autoreleasing *)error {
   /*
    Format of the Keyfile
    <KeyFile>
@@ -96,9 +110,13 @@
    </Key>
    </KeyFile>
    */
-  
-  DDXMLDocument *document = [[DDXMLDocument alloc] initWithData:xmlData options:0 error:nil];
-  if(document == nil) {
+  NSData *xmlData = [NSData dataWithContentsOfURL:fileURL options:NSDataReadingUncached error:error];
+  if(!xmlData) {
+    // eror is already filled
+    return nil;
+  }
+  DDXMLDocument *document = [[DDXMLDocument alloc] initWithData:xmlData options:0 error:error];
+  if (document == nil) {
     return nil;
   }
   
@@ -111,39 +129,36 @@
     NSScanner *versionScanner = [[NSScanner alloc] initWithString:[versionElement stringValue]];
     double version = 1;
     if(![versionScanner scanDouble:&version] || version > 1) {
-      //KPKCreateError(error, KPKErrorXMLKeyUnsupportedVersion, @"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION", "");
+      KPKCreateError(error, KPKErrorXMLKeyUnsupportedVersion, @"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION", "");
       return nil;
     }
   }
   
   DDXMLElement *keyElement = [rootElement elementForName:kKPKXmlKey];
   if (keyElement == nil) {
-    //KPKCreateError(error, KPKErrorXMLKeyKeyElementMissing, @"ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT", "");
+    KPKCreateError(error, KPKErrorXMLKeyKeyElementMissing, @"ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT", "");
     return nil;
   }
   
   DDXMLElement *dataElement = [keyElement elementForName:@"Data"];
   if (dataElement == nil) {
-    // KPKCreateError(error, KPKErrorXMLKeyDataElementMissing, @"ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT", "");
+    KPKCreateError(error, KPKErrorXMLKeyDataElementMissing, @"ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT", "");
     return nil;
     
   }
   
   NSString *dataString = [dataElement stringValue];
   if (dataString == nil) {
-    //KPKCreateError(error, KPKErrorXMLKeyDataParsingError, @"ERROR_XML_KEYFILE_DATA_PARSING_ERROR", "");
+    KPKCreateError(error, KPKErrorXMLKeyDataParsingError, @"ERROR_XML_KEYFILE_DATA_PARSING_ERROR", "");
     return nil;
   }
   return [NSMutableData mutableDataWithBase64DecodedData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 + (NSData *)_keyDataFromHex:(NSData *)hexData {
-  if(hexData.length != 64) {
-    return nil;
-  }
   NSString *hexString = [[NSString alloc] initWithData:hexData encoding:NSUTF8StringEncoding];
   if(!hexString) {
-    return nil;
+   return nil;
   }
   if([hexString length] != 64) {
     return nil; // No valid lenght found

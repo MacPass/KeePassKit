@@ -35,7 +35,6 @@
 
 @property (nonatomic, assign) BOOL hasKeyFile;
 @property (nonatomic, assign) BOOL hasPassword;
-@property (nonatomic, copy) NSData *rawData;
 
 @end
 
@@ -155,7 +154,7 @@
   else if(!password && keyURL) {
     /* Get the bytes from the keyfile */
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
+    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKLegacyVersion error:&error];
     if(!keyFileData) {
       NSLog(@"Error while trying to load keyfile:%@", [error localizedDescription]);
       return nil;
@@ -170,7 +169,7 @@
     
     /* Get the bytes from the keyfile */
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
+    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKLegacyVersion error:&error];
     if( keyFileData == nil) {
       return nil;
     }
@@ -211,7 +210,7 @@
   if (keyURL) {
     // Get the bytes from the keyfile
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL error:&error];
+    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKXmlVersion error:&error];
     if(!keyURL) {
       return nil;
     }
