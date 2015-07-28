@@ -53,9 +53,10 @@
    Create the Key
    Supply the Data found in the header
    */
-  NSData *keyData = [password transformUsingMasterSeed:headerReader.masterSeed
-                                         transformSeed:headerReader.transformSeed
-                                                rounds:headerReader.rounds];
+  NSData *keyData = [password finalDataForVersion:KPKXmlVersion
+                                       masterSeed:headerReader.masterSeed
+                                    transformSeed:headerReader.transformSeed
+                                           rounds:headerReader.rounds];
   
   /*
    The datastream is AES encrypted. Decrypt using the supplied
@@ -105,9 +106,10 @@
     // create Error
     return nil;
   }
-  NSData *key = [password transformUsingMasterSeed:treeWriter.headerWriter.masterSeed
-                                     transformSeed:treeWriter.headerWriter.transformSeed
-                                            rounds:treeWriter.tree.metaData.rounds];
+  NSData *key = [password finalDataForVersion:KPKXmlVersion
+                                   masterSeed:treeWriter.headerWriter.masterSeed
+                                transformSeed:treeWriter.headerWriter.transformSeed
+                                       rounds:treeWriter.tree.metaData.rounds];
   
   
   NSMutableData *contentData = [[NSMutableData alloc] initWithData:treeWriter.headerWriter.streamStartBytes];
@@ -117,10 +119,10 @@
   NSData *hashedData = [xmlData hashedDataWithBlockSize:1024*1024];
   [contentData appendData:hashedData];
   NSData *encryptedData = [contentData dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
-                                                               key:key
-                                              initializationVector:treeWriter.headerWriter.encryptionIv
-                                                           options:kCCOptionPKCS7Padding
-                                                             error:NULL];
+                                                              key:key
+                                             initializationVector:treeWriter.headerWriter.encryptionIv
+                                                          options:kCCOptionPKCS7Padding
+                                                            error:NULL];
   [treeWriter.headerWriter writeHeaderData:data];
   [data appendData:encryptedData];
   return data;

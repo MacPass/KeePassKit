@@ -41,11 +41,12 @@
     return nil;
   }
   // Create the final key and initialize the AES input stream
-  NSData *keyData = [password transformUsingMasterSeed:headerReader.masterSeed
-                                         transformSeed:headerReader.transformSeed
-                                                rounds:headerReader.rounds];
+  NSData *keyData = [password finalDataForVersion:KPKLegacyVersion
+                                        masterSeed:headerReader.masterSeed
+                                     transformSeed:headerReader.transformSeed
+                                            rounds:headerReader.rounds];
   
-  
+
   /*
    The error doesn't get set to success on success
    only get's filled on errors. Therefor initalize it
@@ -53,10 +54,10 @@
    */
   CCCryptorStatus cryptoStatus = kCCSuccess;
   NSData *aesDecrypted = [[headerReader dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
-                                                                                   key:keyData
-                                                                  initializationVector:headerReader.encryptionIV
-                                                                               options:kCCOptionPKCS7Padding
-                                                                                 error:&cryptoStatus];
+                                                                                        key:keyData
+                                                                       initializationVector:headerReader.encryptionIV
+                                                                                    options:kCCOptionPKCS7Padding
+                                                                                      error:&cryptoStatus];
   if(cryptoStatus != kCCSuccess ) {
     KPKCreateError(error, KPKErrorDecryptionFaild, @"ERROR_DECRYPTION_FAILED", "");
     return nil;
@@ -72,13 +73,14 @@
   // Serialize the tree
   KPKLegacyTreeWriter *treeWriter = [[KPKLegacyTreeWriter alloc] initWithTree:tree];
   NSData *treeData = [treeWriter treeData];
-  
+
   /* Create the key to encrypt the data stream from the password */
-  NSData *keyData = [password transformUsingMasterSeed:treeWriter.headerWriter.masterSeed
+  NSData *keyData = [password finalDataForVersion:KPKLegacyVersion
+                                            masterSeed:treeWriter.headerWriter.masterSeed
                                          transformSeed:treeWriter.headerWriter.transformSeed
                                                 rounds:treeWriter.headerWriter.transformationRounds];
-  
-  
+
+
   CCCryptorStatus cryptoError = kCCSuccess;
   NSData *encryptedTreeData = [treeData dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
                                                                 key:keyData

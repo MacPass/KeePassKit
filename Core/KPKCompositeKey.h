@@ -56,7 +56,7 @@
 /*
  @return the final Data to use to en/decrypt the database
  */
-- (NSData *)transformUsingMasterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger )rounds;
+- (NSData *)finalDataForVersion:(KPKVersion )version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger )rounds;
 
 /**
  *  Updates the password and keyfile for the composite key
@@ -64,5 +64,11 @@
  *  @param key      the new key file URL, can be nil
  */
 - (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key;
+
+/*
+ @return YES if the password and/or key are correct for this composite key
+ */
+- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version;
+
 
 @end
