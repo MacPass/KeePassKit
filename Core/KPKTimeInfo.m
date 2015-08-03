@@ -62,7 +62,6 @@
 
 - (void)dealloc {
   /* Remove any scheduled calls for expiration */
-  [self.node.undoManager removeAllActionsWithTarget:self];
   [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_updateExpireState) object:nil];
 }
 
@@ -118,7 +117,6 @@
 #pragma mark Properties
 - (void)setExpires:(BOOL)expires {
   if(self.expires != expires) {
-    [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpires:self.expires];
     _expires = expires;
     if(self.updateTiming) {
       self.modificationDate = [NSDate date];
@@ -129,7 +127,6 @@
 
 - (void)setExpirationDate:(NSDate *)expirationDate {
   if(self.expirationDate != expirationDate) {
-    [[[self.node.tree undoManager] prepareWithInvocationTarget:self] setExpirationDate:self.expirationDate];
     _expirationDate = expirationDate;
     if(self.updateTiming) {
       self.modificationDate = [NSDate date];

@@ -65,12 +65,5 @@
  *  @return YES if the reciever is a defautl attribute, NO otherwise
  */
 - (BOOL)isDefault;
-/**
- *  Sets the value for the given reciever without registering and undo action.
- *  This is used for higher level calls to ensure a singel undo registration
- *  as the call needs to be done to the higher leve function not the low level value change
- *  @param value The Value to be set.
- */
-- (void)setValueWithoutUndoRegistration:(NSString *)value;
 
 @end

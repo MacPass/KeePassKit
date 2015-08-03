@@ -28,8 +28,6 @@
 
 @interface KPKMetaData : NSObject <KPKModificationRecording>
 
-@property (nonatomic, weak) KPKTree *tree;
-
 @property(nonatomic, assign) uint64_t rounds;
 @property(nonatomic, assign) uint32_t compressionAlgorithm;
 

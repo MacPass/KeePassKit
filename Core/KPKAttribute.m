@@ -87,10 +87,6 @@
   return self;
 }
 
-- (void)dealloc {
-  [self.entry.undoManager removeAllActionsWithTarget:self];
-}
-
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeBool:self.isProtected forKey:@"isProtected"];
   [aCoder encodeObject:self.key forKey:@"key"];
@@ -142,20 +138,13 @@
   return [self.value finalValueForEntry:self.entry];
 }
 
-- (void)setValueWithoutUndoRegistration:(NSString *)value {
-  [self _encodeValue:value];
-  [self.entry wasModified];
-}
-
 - (void)setValue:(NSString *)value {
-  [self.entry.undoManager registerUndoWithTarget:self selector:@selector(setValue:) object:self.value];
   [self _encodeValue:value];
   [self.entry wasModified];
 }
 
 - (void)setKey:(NSString *)key {
   if(![_key isEqualToString:key]) {
-    [self.entry.undoManager registerUndoWithTarget:self selector:@selector(setKey:) object:self.key];
     _key = [key copy];
     [self.entry wasModified];
   }

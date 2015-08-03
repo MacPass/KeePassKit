@@ -449,28 +449,24 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)setTitle:(NSString *)title {
-  [self.undoManager registerUndoWithTarget:self selector:@selector(setTitle:) object:self.title];
-  [self.titleAttribute setValueWithoutUndoRegistration:title];
+  self.titleAttribute.value = title;
 }
 
 - (void)setUsername:(NSString *)username {
-  [self.undoManager registerUndoWithTarget:self selector:@selector(setUsername:) object:self.username];
-  [self.usernameAttribute setValueWithoutUndoRegistration:username];
+  self.usernameAttribute.value = username;
 }
 
 - (void)setPassword:(NSString *)password {
-  [self.undoManager registerUndoWithTarget:self selector:@selector(setPassword:) object:self.password];
-  [self.passwordAttribute setValueWithoutUndoRegistration:password];
+
+  self.passwordAttribute.value = password;
 }
 
 - (void)setNotes:(NSString *)notes {
-  [self.undoManager registerUndoWithTarget:self selector:@selector(setNotes:) object:self.notes];
-  [self.notesAttribute setValueWithoutUndoRegistration:notes];
+  self.notesAttribute.value = notes;
 }
 
 - (void)setUrl:(NSString *)url {
-  [self.undoManager registerUndoWithTarget:self selector:@selector(setUrl:) object:self.url];
-  [self.urlAttribute setValueWithoutUndoRegistration:url];
+  self.urlAttribute.value= url;
 }
 
 - (void)setTags:(NSString *)tags {
@@ -480,7 +476,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if([self.tags isEqualToString:tags]) {
     return; // Nothing to change
   }
-  [self.undoManager registerUndoWithTarget:self selector:@selector(setTags:) object:self.tags];
   _tags = [tags copy];
 }
 
@@ -585,7 +580,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (void)addCustomAttribute:(KPKAttribute *)attribute atIndex:(NSUInteger)index {
   /* TODO: sanity check if attribute has unique key */
   index = MIN([_customAttributes count], index);
-  [self.undoManager registerUndoWithTarget:self selector:@selector(removeCustomAttribute:) object:attribute];
   [self insertObject:attribute inCustomAttributesAtIndex:index];
   attribute.entry = self;
   [self wasModified];
@@ -595,7 +589,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
   NSUInteger index = [_customAttributes indexOfObject:attribute];
   if(NSNotFound != index) {
-    [[self.undoManager prepareWithInvocationTarget:self] addCustomAttribute:attribute atIndex:index];
     attribute.entry = nil;
     [self removeObjectFromCustomAttributesAtIndex:index];
     [self wasModified];
@@ -613,7 +606,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     return; // nil not allowed
   }
   index = MIN([_binaries count], index);
-  [self.undoManager registerUndoWithTarget:self selector:@selector(removeBinary:) object:binary];
   [self insertObject:binary inBinariesAtIndex:index];
   [self wasModified];
   self.minimumVersion = [self _minimumVersionForCurrentAttachments];
@@ -628,7 +620,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
    */
   NSUInteger index = [_binaries indexOfObject:attachment];
   if(index != NSNotFound) {
-    [[self.undoManager prepareWithInvocationTarget:self] addBinary:attachment atIndex:index];
     [self removeObjectFromBinariesAtIndex:index];
     [self wasModified];
     self.minimumVersion = [self _minimumVersionForCurrentAttachments];

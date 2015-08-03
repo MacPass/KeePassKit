@@ -45,7 +45,6 @@
   if(self) {
     _metaData = [[KPKMetaData alloc] init];
     _deletedObjects = [[NSMutableDictionary alloc] init];
-    _metaData.tree = self;
     _tagsMap = [[NSMutableDictionary alloc] init];
   }
   return self;

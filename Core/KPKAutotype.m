@@ -96,9 +96,6 @@
 }
 
 - (void)setDefaultKeystrokeSequence:(NSString *)defaultSequence {
-  if(![self.defaultKeystrokeSequence isEqualToString:defaultSequence]) {
-    [[self.entry.undoManager prepareWithInvocationTarget:self] setDefaultKeystrokeSequence:self.defaultKeystrokeSequence];
-  }
   _defaultKeystrokeSequence = [defaultSequence length]  > 0 ? [defaultSequence copy] : nil;
 }
 
@@ -106,26 +103,11 @@
   return [_associations copy];
 }
 
-- (void)setIsEnabled:(BOOL)isEnabled {
-  if(self.isEnabled != isEnabled) {
-    [[self.entry.undoManager prepareWithInvocationTarget:self] setIsEnabled:self.isEnabled];
-    _isEnabled = isEnabled;
-  }
-}
-
-- (void)setObfuscateDataTransfer:(BOOL)obfuscateDataTransfer {
-  if(self.obfuscateDataTransfer != obfuscateDataTransfer) {
-    [[self.entry.undoManager prepareWithInvocationTarget:self] setObfuscateDataTransfer:self.obfuscateDataTransfer];
-    _obfuscateDataTransfer = obfuscateDataTransfer;
-  }
-}
-
 - (void)addAssociation:(KPKWindowAssociation *)association {
   [self addAssociation:association atIndex:[_associations count]];
 }
 
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index {
-  [self.entry.tree.undoManager registerUndoWithTarget:self selector:@selector(removeAssociation:) object:association];
   association.autotype = self;
   [self insertObject:association inAssociationsAtIndex:index];
 }
@@ -133,7 +115,6 @@
 - (void)removeAssociation:(KPKWindowAssociation *)association {
   NSUInteger index = [_associations indexOfObject:association];
   if(index != NSNotFound) {
-    [[self.entry.tree.undoManager prepareWithInvocationTarget:self] addAssociation:association atIndex:index];
     association.autotype = nil;
     [self removeObjectFromAssociationsAtIndex:index];
   }

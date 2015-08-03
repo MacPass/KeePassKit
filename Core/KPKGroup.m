@@ -198,7 +198,6 @@
 
 - (void)setName:(NSString *)name {
   if(![_name isEqualToString:name]) {
-    [self.undoManager registerUndoWithTarget:self selector:@selector(setName:) object:self.name];
     _name = [name copy];
     [self wasModified];
   }
@@ -206,16 +205,8 @@
 
 - (void)setNotes:(NSString *)notes {
   if(![_notes isEqualToString:notes]) {
-    [self.undoManager registerUndoWithTarget:self selector:@selector(setName:) object:self.notes];
     _notes = [notes copy];
     [self wasModified];
-  }
-}
-
-- (void)setDefaultAutoTypeSequence:(NSString *)defaultAutoTypeSequence {
-  if(![self.defaultAutoTypeSequence isEqualToString:defaultAutoTypeSequence]) {
-    [[self.undoManager prepareWithInvocationTarget:self] setDefaultAutoTypeSequence:self.defaultAutoTypeSequence];
-    _defaultAutoTypeSequence = [defaultAutoTypeSequence copy];
   }
 }
 
@@ -229,25 +220,10 @@
   NSString *defaultSequence = [self.tree defaultAutotypeSequence];
   BOOL hasDefault = [defaultSequence length] > 0;
   return hasDefault ? defaultSequence : @"{USERNAME}{TAB}{PASSWORD}{ENTER}";
-  
 }
 
 - (BOOL)hasDefaultAutotypeSequence {
   return !([_defaultAutoTypeSequence length] > 0);
-}
-
-- (void)setIsAutoTypeEnabled:(KPKInheritBool)isAutoTypeEnabled {
-  if(_isAutoTypeEnabled != isAutoTypeEnabled) {
-    [[self.undoManager prepareWithInvocationTarget:self] setIsAutoTypeEnabled:self.isAutoTypeEnabled];
-    _isAutoTypeEnabled = isAutoTypeEnabled;
-  }
-}
-
-- (void)setIsSearchEnabled:(KPKInheritBool)isSearchEnabled {
-  if(_isSearchEnabled != isSearchEnabled) {
-    [[self.undoManager prepareWithInvocationTarget:self] setIsSearchEnabled:self.isSearchEnabled];
-    _isSearchEnabled = isSearchEnabled;
-  }
 }
 
 #pragma mark -

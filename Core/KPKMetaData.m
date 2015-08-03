@@ -153,20 +153,6 @@
   }
 }
 
-- (void)setMasterKeyChangeEnforcementInterval:(NSInteger)masterKeyChangeEnforcementInterval {
-  if(_masterKeyChangeEnforcementInterval != masterKeyChangeEnforcementInterval) {
-    [[self.tree.undoManager prepareWithInvocationTarget:self] setMasterKeyChangeEnforcementInterval:_masterKeyChangeEnforcementInterval];
-    _masterKeyChangeEnforcementInterval = masterKeyChangeEnforcementInterval;
-  }
-}
-
-- (void)setMasterKeyChangeRecommendationInterval:(NSInteger)masterKeyChangeRecommendationInterval {
-  if(_masterKeyChangeRecommendationInterval != masterKeyChangeRecommendationInterval) {
-    [[self.tree.undoManager prepareWithInvocationTarget:self] setMasterKeyChangeRecommendationInterval:_masterKeyChangeRecommendationInterval];
-    _masterKeyChangeRecommendationInterval = masterKeyChangeRecommendationInterval;
-  }
-}
-
 
 #pragma mark -
 #pragma mark Equality
@@ -224,16 +210,13 @@
 }
 
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index {
-  /* Use undomanager ? */
   index = MIN([_customIcons count], index);
-  [[self.tree.undoManager prepareWithInvocationTarget:self] removeCustomIcon:icon];
   [self insertObject:icon inCustomIconsAtIndex:index];
 }
 
 - (void)removeCustomIcon:(KPKIcon *)icon {
   NSUInteger index = [_customIcons indexOfObject:icon];
   if(index != NSNotFound) {
-    [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
     [self removeObjectFromCustomIconsAtIndex:index];
   }
 }
