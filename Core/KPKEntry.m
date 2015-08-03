@@ -430,6 +430,14 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   self.usernameAttribute.isProtected = protectUsername;
 }
 
+- (void)setAutotype:(KPKAutotype *)autotype {
+  if(autotype == _autotype) {
+    return;
+  }
+  _autotype = autotype;
+  _autotype.entry = self;
+}
+
 - (void)setParent:(KPKGroup *)parent {
   [super setParent:parent];
   if(self.isHistory) {
@@ -488,9 +496,47 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [self.parent removeEntry:self];
 }
 
-- (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
-  [self.parent moveEntry:self toGroup:group atIndex:index];
+- (void)moveToGroup:(KPKGroup *)group {
+  [self.parent moveEntry:self toGroup:group];
 }
+
+#pragma mark Editing
+- (void)updateToNode:(KPKNode *)node {
+  [super updateToNode:node];
+  if(![node isKindOfClass:[KPKEntry class]]) {
+    return;
+  }
+  KPKEntry *entry = (KPKEntry *)node;
+  if(entry.isHistory) {
+    /* We need to reset the history to the correct "point in time" */
+    NSUInteger historyIndex = [self.history indexOfObject:entry];
+    [self removeHistoryAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(historyIndex, [_history count] - historyIndex)]];
+  }
+  else {
+    /* add a copy of the node to the history and be done */
+    [self addHistoryEntry:[node copy]];
+  }
+  
+  self.title = entry.title;
+  self.username = entry.username;
+  self.password = entry.password;
+  self.notes = entry.notes;
+  self.url = entry.url;
+  self.tags = entry.tags;
+  self.foregroundColor = entry.foregroundColor;
+  self.backgroundColor = entry.backgroundColor;
+  self.overrideURL = entry.overrideURL;
+  self.autotype = entry.autotype;
+  self.binaries = entry.binaries;
+  self.timeInfo = entry.timeInfo;
+  self.customAttributes = [[NSMutableArray alloc] initWithArray:entry->_customAttributes copyItems:YES];
+  
+  for(KPKAttribute *attribute in _customAttributes) {
+    attribute.entry = entry;
+  }
+  [self wasModified];
+}
+
 
 #pragma mark CustomAttributes
 - (KPKAttribute *)customAttributeForKey:(NSString *)key {
@@ -608,9 +654,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)clearHistory {
-  for(KPKEntry *historyEntry in self.history) {
-    [self removeHistoryEntry:historyEntry];
-  }
+  NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, _history.count)];
+  [self removeHistoryAtIndexes:indexes];
 }
 
 - (NSUInteger)calculateByteSize {
@@ -701,6 +746,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)insertObject:(KPKEntry *)entry inHistoryAtIndex:(NSUInteger)index {
   index = MIN([_history count], index);
+  /* Entries in history should not have a history of their own */
+  [entry clearHistory];
   entry.isHistory = YES;
   entry.parent = self.parent;
   NSAssert([entry.history count] == 0, @"History entries cannot hold a history of their own!");
@@ -708,12 +755,16 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)removeObjectFromHistoryAtIndex:(NSUInteger)index {
-  if(index < [_history count]) {
-    KPKEntry *historyEntry = self.history[index];
-    NSAssert(historyEntry != nil, @"");
+  [self removeHistoryAtIndexes:[NSIndexSet indexSetWithIndex:index]];
+}
+
+- (void)removeHistoryAtIndexes:(NSIndexSet *)indexes {
+  [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+    KPKEntry *historyEntry = self.history[idx];
+    NSAssert(historyEntry != nil, @"History indexes need to be valid!");
     historyEntry.isHistory = NO;
-    [_history removeObjectAtIndex:index];
-  }
+  }];
+  [_history removeObjectsAtIndexes:indexes];
 }
 
 #pragma mark -

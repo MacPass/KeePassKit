@@ -47,6 +47,14 @@
  *  @return YES if the tree can be modified, otherwise NO
  */
 - (BOOL)shouldEditTree:(KPKTree *)tree;
+/**
+ *  Delegates can provide an Undo-Manager to enabel Undo-Redo registration inside the tree.
+ *
+ *  @param tree Tree for which an undo manager is requested
+ *
+ *  @return the undo manager to be used for the tree.
+ */
+- (NSUndoManager *)undoManagerForTree:(KPKTree *)tree;
 
 @end
 
@@ -55,8 +63,9 @@
 @property(nonatomic, weak) id<KPKTreeDelegate> delegate;
 @property(nonatomic, strong, readonly) NSMutableDictionary *deletedObjects;
 @property(nonatomic, strong) KPKMetaData *metaData;
-@property(nonatomic, weak) NSUndoManager *undoManager;
 
+
+@property(nonatomic, readonly) NSUndoManager *undoManager;
 @property(nonatomic, readonly, assign) BOOL isEditable;
 
 @property(nonatomic, weak) KPKGroup *trash;

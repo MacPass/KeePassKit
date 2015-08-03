@@ -94,7 +94,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *  @param group The new group that should contain the entry
  *  @param index The index at which to sort the entry into the existing entries of the group
  */
-- (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
+- (void)moveToGroup:(KPKGroup *)group;
 /**
  *  Creates a duplicate of the Entry updating references and UUIDs
  *

@@ -120,6 +120,13 @@
 
 #pragma mark -
 #pragma mark Properties
+- (NSUndoManager *)undoManager {
+  if([self.delegate respondsToSelector:@selector(undoManagerForTree:)]) {
+    return [self.delegate undoManagerForTree:self];
+  }
+  return nil;
+}
+
 - (BOOL)isEditable {
   if([self.delegate respondsToSelector:@selector(shouldEditTree:)]) {
     return  [self.delegate shouldEditTree:self];

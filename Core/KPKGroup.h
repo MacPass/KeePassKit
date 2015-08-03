@@ -55,26 +55,14 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 - (void)remove;
 - (void)addGroup:(KPKGroup *)group;
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
-- (void)removeGroup:(KPKGroup *)group;
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 
 #pragma mark Entry manipulation
 - (void)addEntry:(KPKEntry *)entry;
-- (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index;
 - (void)removeEntry:(KPKEntry *)entry;
-- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup atIndex:(NSUInteger)index;
+- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup;
 
 #pragma mark Search
-/**
- *	Determines if a given group is contained inside this group
- *  The search works recursively that is, it finds groups that are inside subgroups as well
- *  as direct child groups
- *
- *	@param	group	the group that should be searched for
- *	@return	YES if the group is contained inside this group, NO otherwise
- */
-- (BOOL)containsGroup:(KPKGroup *)group;
-
 /**
  *	Searches the group for an entry with the supplied NSUUID.
  *  The search does work recursively and searches inside all subgroups

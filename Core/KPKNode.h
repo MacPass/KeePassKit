@@ -45,7 +45,7 @@
 
 @property(nonatomic, weak) KPKGroup *parent;
 
-@property (nonatomic, weak, readonly) NSUndoManager *undoManager;
+@property (nonatomic, readonly) NSUndoManager *undoManager;
 @property (nonatomic, readonly, assign) BOOL isEditable;
 
 @property (nonatomic, readonly, assign) BOOL hasDefaultIcon;
@@ -80,7 +80,7 @@
 
 - (BOOL)isDecendantOf:(KPKNode *)node;
 
-- (void)updateTo:(KPKNode *)node;
+- (void)updateToNode:(KPKNode *)node;
 
 - (void)remove;
 

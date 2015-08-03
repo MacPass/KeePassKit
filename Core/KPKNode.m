@@ -164,8 +164,24 @@
   [self.timeInfo wasMoved];
 }
 
-- (void)updateTo:(KPKNode *)node {
-  /* Update content*/
+- (void)updateToNode:(KPKNode *)node {
+  if(!node) {
+    return; // Nothing to do!
+  }
+  KPKNode *copy = [self copy];
+  [[self.undoManager prepareWithInvocationTarget:self] updateToNode:copy];
+  /* UUID should be the same */
+  if(![self.uuid isEqualTo:node.uuid]) {
+    NSAssert(NO, @"Nodes should never update to differen UUIDs!");
+    return;
+  }
+  /* Do not update parent/child structure, we just want "content" to update */
+  self.iconId = node.iconId;
+  self.minimumVersion = node.minimumVersion;
+  self.timeInfo = node.timeInfo;
+  self.iconUUID = node.iconUUID;
+  /* Update the Timing! */
+  [self wasModified];
 }
 
 - (void)remove {
