@@ -50,11 +50,9 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 
 @interface KPKEntry : KPKNode <NSCopying, NSSecureCoding, NSPasteboardWriting, NSPasteboardReading>
 
-@property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *url;
-@property (nonatomic, copy) NSString *notes;
 
 @property (nonatomic, assign) BOOL protectTitle;
 @property (nonatomic, assign) BOOL protectPassword;
@@ -95,14 +93,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *  @param index The index at which to sort the entry into the existing entries of the group
  */
 - (void)moveToGroup:(KPKGroup *)group;
-/**
- *  Creates a duplicate of the Entry updating references and UUIDs
- *
- *  @param title   The new Title for the copy. If you leave this blank, a default title will be generated
- *
- *  @return The copied KPKEntry
- */
-- (instancetype)copyWithTitle:(NSString *)title;
 
 #pragma mark MetaEntries
 /**

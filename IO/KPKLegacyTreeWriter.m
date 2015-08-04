@@ -131,8 +131,8 @@
   tmp32 = CFSwapInt32HostToLittle(groupId);
   [self _writeField:KPKFieldTypeGroupId bytes:&tmp32 length:4];
   
-  if (![NSString isEmptyString:group.name]){
-    const char *title = [group.name cStringUsingEncoding:NSUTF8StringEncoding];
+  if (![NSString isEmptyString:group.title]){
+    const char *title = [group.title cStringUsingEncoding:NSUTF8StringEncoding];
     [self _writeField:KPKFieldTypeGroupName bytes:(void *)title length:strlen(title)+1];
   }
   

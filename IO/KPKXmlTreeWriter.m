@@ -181,7 +181,7 @@
   
   // Add the standard properties
   KPKAddXmlElement(groupElement, kKPKXmlUUID, [group.uuid encodedString]);
-  KPKAddXmlElement(groupElement, kKPKXmlName, group.name.XMLCompatibleString);
+  KPKAddXmlElement(groupElement, kKPKXmlName, group.title.XMLCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlNotes, group.notes.XMLCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlIconId, KPKStringFromLong(group.iconId));
   

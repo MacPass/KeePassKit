@@ -56,32 +56,32 @@
   }
   KPKGroup *parentGroup = [self createGroup:nil];
   
-  parentGroup.name = NSLocalizedString(@"GENERAL", "General");
+  parentGroup.title = NSLocalizedString(@"GENERAL", "General");
   parentGroup.iconId = 48;
   self.root = parentGroup;
   
   KPKGroup *group = [self createGroup:parentGroup];
-  group.name = NSLocalizedString(@"WINDOWS", "Windows");
+  group.title = NSLocalizedString(@"WINDOWS", "Windows");
   group.iconId = 38;
   [parentGroup addGroup:group];
   
   group = [self createGroup:parentGroup];
-  group.name = NSLocalizedString(@"NETWORK", "Network");
+  group.title = NSLocalizedString(@"NETWORK", "Network");
   group.iconId = 3;
   [parentGroup addGroup:group];
   
   group = [self createGroup:parentGroup];
-  group.name = NSLocalizedString(@"INTERNET", "Internet");
+  group.title = NSLocalizedString(@"INTERNET", "Internet");
   group.iconId = 1;
   [parentGroup addGroup:group];
   
   group = [self createGroup:parentGroup];
-  group.name = NSLocalizedString(@"EMAIL", "EMail");
+  group.title = NSLocalizedString(@"EMAIL", "EMail");
   group.iconId = 19;
   [parentGroup addGroup:group];
   
   group = [self createGroup:parentGroup];
-  group.name = NSLocalizedString(@"HOMEBANKING", "Homebanking");
+  group.title = NSLocalizedString(@"HOMEBANKING", "Homebanking");
   group.iconId = 37;
   [parentGroup addGroup:group];
   

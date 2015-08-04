@@ -42,6 +42,9 @@
 
 @implementation KPKGroup
 
+@synthesize title = _title;
+@synthesize notes = _notes;
+
 + (NSUInteger)defaultIcon {
   return 48;
 }
@@ -65,7 +68,7 @@
   self = [super initWithCoder:aDecoder];
   if(self) {
     self.updateTiming = NO;
-    self.name = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(name))];
+    self.title = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(title))];
     self.notes = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(notes))];
     _groups = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))];
     _entries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))];
@@ -92,7 +95,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [super encodeWithCoder:aCoder];
-  [aCoder encodeObject:_name forKey:NSStringFromSelector(@selector(name))];
+  [aCoder encodeObject:_title forKey:NSStringFromSelector(@selector(title))];
   [aCoder encodeObject:_notes forKey:NSStringFromSelector(@selector(notes))];
   [aCoder encodeObject:_groups forKey:NSStringFromSelector(@selector(groups))];
   [aCoder encodeObject:_entries forKey:NSStringFromSelector(@selector(entries))];
@@ -127,20 +130,18 @@
   return copy;
 }
 
-- (instancetype)copyWithName:(NSString *)name {
+- (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
   KPKGroup *copy = [self copy];
   
   /* update entry uuids */
   /* update child uuids */
-  if(nil == name) {
+  if(nil == titleOrNil) {
     NSString *format = NSLocalizedStringFromTable(@"KPK_GROUP_COPY_%@", @"KPKLocalizable", "");
-    name = [[NSString alloc] initWithFormat:format, self.name];
+    titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
   [copy _updateUUIDs];
   [copy.timeInfo reset];
-  [self.undoManager disableUndoRegistration];
-  copy.name = name;
-  [self.undoManager enableUndoRegistration];
+  copy.title = titleOrNil;
   return copy;
 }
 
@@ -196,9 +197,9 @@
   return  [_entries copy];
 }
 
-- (void)setName:(NSString *)name {
-  if(![_name isEqualToString:name]) {
-    _name = [name copy];
+- (void)setTitle:(NSString *)title {
+  if(![_title isEqualToString:title]) {
+    _title = [title copy];
     [self wasModified];
   }
 }
@@ -336,7 +337,7 @@
   return [NSString stringWithFormat:@"%@ [image=%ld, name=%@, %@]",
           [self class],
           self.iconId,
-          self.name,
+          self.title,
           self.timeInfo];
 }
 
@@ -434,9 +435,9 @@
 
 - (NSString *)breadcrumbWithSeparator:(NSString *)separator {
   if(self.parent && (self.rootGroup != self.parent)) {
-    return [[self.parent breadcrumb] stringByAppendingFormat:@" > %@", self.name];
+    return [[self.parent breadcrumb] stringByAppendingFormat:@" > %@", self.title];
   }
-  return self.name;
+  return self.title;
 }
 
 - (NSIndexPath *)indexPath {

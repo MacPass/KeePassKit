@@ -222,9 +222,10 @@
     group.uuid = [NSUUID UUID];
   }
   
-  group.name = KPKXmlString(groupElement, @"Name");
-  group.notes = KPKXmlString(groupElement, @"Notes");
-  group.iconId = KPKXmlInteger(groupElement, @"IconID");
+  /* Group title is "Name" key in XML */
+  group.title = KPKXmlString(groupElement, kKPKXmlName);
+  group.notes = KPKXmlString(groupElement, kKPKXmlNotes);
+  group.iconId = KPKXmlInteger(groupElement, kKPKXmlIconId);
   
   DDXMLElement *customIconUuidElement = [groupElement elementForName:@"CustomIconUUID"];
   if (customIconUuidElement != nil) {

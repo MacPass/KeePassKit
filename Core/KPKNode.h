@@ -31,26 +31,36 @@
 @class KPKTimeInfo;
 @class KPKTree;
 
+typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
+  kKPKCopyOptionNone               = 0,    // No option
+  kKPKCopyOptionCopyHistory        = 1<<0, // KPKEntry only - make a copy of the soures' history.
+  kKPKCopyOptionReferenceUsername  = 1<<1, // KPKEntry only - copy refernces the username of the source
+  kKPKCopyOptionReferencePassword  = 1<<2, // KPKEntry only - copy references the password of the source
+};
+
 /**
  *	Baseclass for all Nodes in a Tree.
  */
 @interface KPKNode : NSObject <NSSecureCoding, KPKModificationRecording>
 
 @property(nonatomic, weak) KPKTree *tree;
+
 @property(nonatomic, assign) NSInteger iconId;
 @property(nonatomic, strong) NSUUID *iconUUID;
 @property(nonatomic, strong) NSUUID *uuid;
+@property(nonatomic, copy) NSString *title;
+@property(nonatomic, copy) NSString *notes;
+
 @property(nonatomic, assign) KPKVersion minimumVersion;
 @property(nonatomic, strong) KPKTimeInfo *timeInfo;
 
 @property(nonatomic, weak) KPKGroup *parent;
 
-@property (nonatomic, readonly) NSUndoManager *undoManager;
-@property (nonatomic, readonly, assign) BOOL isEditable;
+@property(nonatomic, readonly) NSUndoManager *undoManager;
 
-@property (nonatomic, readonly, assign) BOOL hasDefaultIcon;
-
-@property (nonatomic, readonly) BOOL isTrash;
+@property(nonatomic, readonly, assign) BOOL hasDefaultIcon;
+@property(nonatomic, readonly, assign) BOOL isEditable;
+@property(nonatomic, readonly) BOOL isTrash;
 /**
  *  Determines, whether the receiving node is inside the trash.
  *  The trash group itself is not considered as trashed.
@@ -58,6 +68,13 @@
  *  @return YES, if the item is inside the trash, NO otherwise (and if item is trash group)
  */
 @property (nonatomic, readonly) BOOL isTrashed;
+
+/**
+ *  Returns a copy of the node with the given title or a default tile if nil was supplied
+ *  @param titelOrNil Title for the copy or default if nil
+ *  @return copy of the node with title
+ */
+- (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options;
 
 /**
  *	Returns the default icon number for a Group

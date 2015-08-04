@@ -31,6 +31,9 @@
 
 @implementation KPKNode
 
+@dynamic notes;
+@dynamic title;
+
 + (BOOL)supportsSecureCoding {
   return YES;
 }
@@ -70,6 +73,12 @@
   [aCoder encodeInteger:self.minimumVersion forKey:NSStringFromSelector(@selector(minimumVersion))];
   [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
+}
+
+- (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
+  /* not implemented */
+  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
+  return nil;
 }
 
 #pragma mark Properties

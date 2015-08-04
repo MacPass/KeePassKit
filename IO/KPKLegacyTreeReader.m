@@ -107,7 +107,7 @@
    initalize it with sane defaults
    */
   KPKGroup *rootGroup = [[KPKGroup alloc] init];
-  rootGroup.name = NSLocalizedString(@"DATABASE", "");
+  rootGroup.title = NSLocalizedString(@"DATABASE", "");
   rootGroup.iconId = 48;
   tree.root = rootGroup;
   rootGroup.isExpanded = YES;
@@ -201,7 +201,7 @@
         }
           
         case KPKFieldTypeGroupName:
-          group.name = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          group.title = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeGroupCreationTime:

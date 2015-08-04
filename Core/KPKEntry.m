@@ -63,6 +63,9 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 @implementation KPKEntry
 
+@dynamic title;
+@dynamic notes;
+
 NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   NSString *keyPath = [[NSString alloc] initWithFormat:@"%@.%@", NSStringFromSelector(aSelector), NSStringFromSelector(@selector(value))];
   return [[NSSet alloc] initWithObjects:keyPath, nil];
@@ -99,7 +102,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return _protectedKeyPathForAttribute(@selector(passwordAttribute));
 }
 
-+ (NSSet *)keyPathsForValuesAffectingProtectTitle {
++ (NSSet *)keyPathsForValuesAffectingTitle {
   return _protectedKeyPathForAttribute(@selector(titleAttribute));
 }
 
@@ -114,6 +117,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (id)init {
   self = [super init];
   if (self) {
+    /* Attetion - Title -> Name */
     _titleAttribute = [[KPKAttribute alloc] initWithKey:kKPKTitleKey value:@""];
     _passwordAttribute = [[KPKAttribute alloc] initWithKey:kKPKPasswordKey value:@""];
     _usernameAttribute = [[KPKAttribute alloc] initWithKey:kKPKUsernameKey value:@""];
@@ -203,12 +207,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     _isHistory = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isHistory))];
     
     /* Default attributes */
-    _titleAttribute.entry = self;
-    _passwordAttribute.entry = self;
-    _usernameAttribute.entry = self;
-    _urlAttribute.entry = self;
-    _notesAttribute.entry = self;
-    
+    for(KPKAttribute *attribute in self.defaultAttributes) {
+      attribute.entry = self;
+    }
     _autotype.entry = self;
     
     for(KPKAttribute *attribute in _customAttributes) {
@@ -238,16 +239,14 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return;
 }
 
-- (instancetype)copyWithTitle:(NSString *)title {
+- (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
   KPKEntry *copy = [self copy];
-  if(!title) {
+  if(!titleOrNil) {
     NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKLocalizable", "");
-    title = [[NSString alloc] initWithFormat:format, self.title];
+    titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
   /* Disbale the undomanager since we do not want the updated title to be registered */
-  [copy.undoManager disableUndoRegistration];
-  copy.title = title;
-  [copy.undoManager enableUndoRegistration];
+  copy.title = titleOrNil;
   //[copy.timeInfo reset];
   copy.uuid = [[NSUUID alloc] init];
 

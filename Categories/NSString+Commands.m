@@ -468,7 +468,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }
   /* mis mappings */
   //mappings[@"{APPDIR}"] = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
-  caseInsensitiveMappings[@"{GROUP}"] = entry.parent.name ? entry.parent.name : @"";
+  caseInsensitiveMappings[@"{GROUP}"] = entry.parent.title ? entry.parent.title : @"";
   caseInsensitiveMappings[@"{GROUPPATH}"] = entry.parent ? [entry.parent breadcrumb] : @"";
   caseInsensitiveMappings[@"{ENV_DIRSEP}"] = @"/";
   NSURL *appDirURL = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask][0];
