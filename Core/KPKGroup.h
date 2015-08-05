@@ -52,6 +52,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 - (void)remove;
 - (void)addGroup:(KPKGroup *)group;
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
+- (void)moveToGroup:(KPKGroup *)group;
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 
 #pragma mark Entry manipulation

@@ -264,7 +264,7 @@
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   group.parent = self;
   group.tree = self.tree;
-  index = MIN([_groups count], index);
+  index = MAX(0, MIN([_groups count], index));
   [[self.undoManager prepareWithInvocationTarget:self] _removeGroup:group];
   /* Remove entries that might have been added to the deleted objects */
   [self.tree.deletedObjects removeObjectForKey:group.uuid];
@@ -284,6 +284,10 @@
   }
 }
 
+- (void)moveToGroup:(KPKGroup *)group {
+  [self moveToGroup:group atIndex:group->_groups.count];
+}
+
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   NSUInteger oldIndex = [self.parent.groups indexOfObject:self];
   if(oldIndex == NSNotFound) {
@@ -292,7 +296,7 @@
   [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:oldIndex];
   [self.parent removeObjectFromGroupsAtIndex:oldIndex];
   self.parent = nil;
-  index = MIN([group.groups count], index);
+  index = MAX(0, MIN([group.groups count], index));
   self.parent = group;
   [group insertObject:self inGroupsAtIndex:index];
   [self wasModified];
@@ -306,7 +310,7 @@
 - (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
   entry.parent = self;
   entry.tree = self.tree;
-  index = MIN([_entries count], index);
+  index = MAX(0, MIN([_entries count], index));
   [[self.undoManager prepareWithInvocationTarget:self] removeEntry:entry];
   /* Remove the deleted Object */
   [self.tree.deletedObjects removeObjectForKey:entry.uuid];
@@ -327,6 +331,7 @@
 - (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup {
   NSUInteger oldIndex = [_entries indexOfObject:entry];
   if(oldIndex != NSNotFound) {
+    [[self.undoManager prepareWithInvocationTarget:entry] moveToGroup:self];
     [self removeObjectFromEntriesAtIndex:oldIndex];
     entry.parent = toGroup;
     [toGroup insertObject:entry inEntriesAtIndex:toGroup->_entries.count];
