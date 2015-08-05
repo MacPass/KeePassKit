@@ -25,6 +25,7 @@
 #import "KPKAutotype.h"
 #import "KPKDeletedNode.h"
 #import "KPKEntry.h"
+#import "KPKIconTypes.h"
 #import "KPKMetaData.h"
 #import "KPKTree.h"
 #import "KPKTimeInfo.h"
@@ -46,7 +47,7 @@
 @synthesize notes = _notes;
 
 + (NSUInteger)defaultIcon {
-  return 48;
+  return KPKIconFolder;
 }
 
 - (instancetype)init {

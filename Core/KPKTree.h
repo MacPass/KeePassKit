@@ -103,6 +103,13 @@
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent;
 - (KPKEntry *)createEntry:(KPKGroup *)parent;
+/**
+ *  Enforces the right setup for the current settings. That is if trash is disabled, does nothing
+ *  If trash is enabled, returnes the specified trahs group or creates on if none is present.
+ *
+ *  @return the Trash group or nil if usage of trash is disabled
+ */
+- (KPKGroup *)createTrash;
 
 /**
  *  Returns the defautl autotype squence for this tree. If a delegate is set, it is asked for the sequence.

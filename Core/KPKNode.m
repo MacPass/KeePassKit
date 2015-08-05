@@ -23,6 +23,7 @@
 
 #import "KPKNode.h"
 #import "KPKGroup.h"
+#import "KPKIconTypes.h"
 #import "KPKTimeInfo.h"
 #import "KPKTree.h"
 #import "KPKMetaData.h"
@@ -39,7 +40,7 @@
 }
 
 + (NSUInteger)defaultIcon {
-  return 0;
+  return KPKIconPassword;
 }
 
 - (id)init {
@@ -106,20 +107,6 @@
     return NO; // Trash is not trashed
   }
   return [self.tree.trash isAnchestorOf:self];
-}
-
-- (void)setIconId:(NSInteger)iconId {
-  if(iconId != _iconId) {
-    [[self.undoManager prepareWithInvocationTarget:self] setIconId:_iconId];
-    _iconId = iconId;
-  }
-}
-
-- (void)setIconUUID:(NSUUID *)iconUUID {
-  if(![self.iconUUID isEqual:iconUUID]) {
-    [[self.undoManager prepareWithInvocationTarget:self] setIconUUID:self.iconUUID];
-    _iconUUID = iconUUID;
-  }
 }
 
 - (KPKGroup *)rootGroup {

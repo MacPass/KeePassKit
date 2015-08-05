@@ -21,8 +21,9 @@
 //
 
 #import "KPKTree.h"
-#import "KPKGroup.h"
 #import "KPKEntry.h"
+#import "KPKGroup.h"
+#import "KPKIconTypes.h"
 #import "KPKMetaData.h"
 #import "KPKTimeInfo.h"
 
@@ -57,32 +58,32 @@
   KPKGroup *parentGroup = [self createGroup:nil];
   
   parentGroup.title = NSLocalizedString(@"GENERAL", "General");
-  parentGroup.iconId = 48;
+  parentGroup.iconId = KPKIconFolder;
   self.root = parentGroup;
   
   KPKGroup *group = [self createGroup:parentGroup];
   group.title = NSLocalizedString(@"WINDOWS", "Windows");
-  group.iconId = 38;
+  group.iconId = KPKIconSambaUnmount;
   [parentGroup addGroup:group];
   
   group = [self createGroup:parentGroup];
   group.title = NSLocalizedString(@"NETWORK", "Network");
-  group.iconId = 3;
+  group.iconId = KPKIconServer;
   [parentGroup addGroup:group];
   
   group = [self createGroup:parentGroup];
   group.title = NSLocalizedString(@"INTERNET", "Internet");
-  group.iconId = 1;
+  group.iconId = KPKIconPackageNetwork;
   [parentGroup addGroup:group];
   
   group = [self createGroup:parentGroup];
   group.title = NSLocalizedString(@"EMAIL", "EMail");
-  group.iconId = 19;
+  group.iconId = KPKIconEmail;
   [parentGroup addGroup:group];
   
   group = [self createGroup:parentGroup];
   group.title = NSLocalizedString(@"HOMEBANKING", "Homebanking");
-  group.iconId = 37;
+  group.iconId = KPKIconPercentage;
   [parentGroup addGroup:group];
   
   return self;
@@ -115,6 +116,26 @@
     entry.iconId = parent.iconId;
   }
   return entry;
+}
+
+- (KPKGroup *)createTrash {
+  if(!self.metaData.useTrash) {
+    return nil;
+  }
+  KPKGroup *trash = self.trash;
+  if(nil != trash) {
+    return trash;
+  }
+  trash = [self createGroup:self.root];
+  trash.iconId = KPKIconTrash;
+  BOOL wasEnabled = self.undoManager.undoRegistrationEnabled;
+  [self.undoManager disableUndoRegistration];
+  [self.root addGroup:trash];
+  if(wasEnabled) {
+    [self.undoManager enableUndoRegistration];
+  }
+  self.metaData.trashUuid = trash.uuid;
+  return trash;
 }
 
 #pragma mark -
