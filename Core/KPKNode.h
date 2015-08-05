@@ -104,7 +104,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  *  a) trash is enabled: If no trash is present, a trash group is created and the node is moved to the trash group
  *  b) trash is disabled: removes the node.
  */
-- (void)trash;
+- (void)trashOrRemove;
 
 - (void)remove;
 

@@ -484,9 +484,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark move/remove/copy
 - (void)remove {
-  /*
-   Undo is handelded in the groups implementation of entry removal
-   */
   [self.parent removeEntry:self];
 }
 

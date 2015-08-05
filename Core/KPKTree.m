@@ -128,12 +128,8 @@
   }
   trash = [self createGroup:self.root];
   trash.iconId = KPKIconTrash;
-  BOOL wasEnabled = self.undoManager.undoRegistrationEnabled;
-  [self.undoManager disableUndoRegistration];
+  trash.title = NSLocalizedString(@"TRASH", @"Name for the trash group");
   [self.root addGroup:trash];
-  if(wasEnabled) {
-    [self.undoManager enableUndoRegistration];
-  }
   self.metaData.trashUuid = trash.uuid;
   return trash;
 }

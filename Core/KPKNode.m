@@ -22,6 +22,7 @@
 
 
 #import "KPKNode.h"
+#import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
 #import "KPKTimeInfo.h"
@@ -178,6 +179,24 @@
   self.iconUUID = node.iconUUID;
   /* Update the Timing! */
   [self wasModified];
+}
+
+- (void)trashOrRemove {
+  /* If we do create a trahs group we should also remove it after a undo operation */
+  if(self == self.tree.trash) {
+    return; // Prevent recursive trashing of trash group
+  }
+  [self.undoManager beginUndoGrouping];
+  KPKGroup *trash = [self.tree createTrash];
+  NSAssert(self.tree.trash == trash, @"Trash should be nil or equal");
+  if(trash) {
+    [[self asEntry] moveToGroup:trash];
+    [[self asGroup] moveToGroup:trash];
+  }
+  else {
+    [self remove];
+  }
+  [self.undoManager endUndoGrouping];
 }
 
 - (void)remove {
