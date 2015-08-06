@@ -279,7 +279,8 @@
     [[self.undoManager prepareWithInvocationTarget:self] addGroup:group atIndex:index];
     group.parent = nil;
     /* Add group to deleted objects */
-    self.tree.deletedObjects[ group.uuid ] = [[KPKDeletedNode alloc] initWithNode:group];
+    NSAssert(nil == self.tree.deletedObjects[group.uuid], @"Group already registered as deleted!");
+    self.tree.deletedObjects[group.uuid] = [[KPKDeletedNode alloc] initWithNode:group];
     [self removeObjectFromGroupsAtIndex:index];
     [self wasModified];
   }
@@ -324,6 +325,7 @@
     [[self.undoManager prepareWithInvocationTarget:self] addEntry:entry atIndex:index];
     [self removeObjectFromEntriesAtIndex:index];
     /* Add the entry to the deleted Objects */
+    NSAssert(nil == self.tree.deletedObjects[entry.uuid], @"Entry already marked as deleted!");
     self.tree.deletedObjects[ entry.uuid ] = [[KPKDeletedNode alloc] initWithNode:entry];
     entry.parent = nil;
   }
