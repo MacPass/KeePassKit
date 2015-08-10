@@ -25,6 +25,8 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "NSData+CommonCrypto.h"
 
+#define KPKValidateLength(length, location, offset) if(length < location + offset ) { return nil; }
+
 @implementation NSData (HashedData)
 
 - (NSData *)unhashedData {
@@ -34,15 +36,11 @@
   uint32_t bufferLength;
   uint8_t hash[32];
 
-  NSMutableData *unhashed = [[NSMutableData alloc] initWithCapacity:[self length]];
-  
+  NSMutableData *unhashed = [[NSMutableData alloc] initWithCapacity:self.length];
   
   while(true) {
 
-    if([self length] < location + 4) {
-      /* There needs to be at lease one block index */
-      return nil;
-    }
+    KPKValidateLength(self.length, location, 4)
     /* Read the block index */
     [self getBytes:&indexBuffer range:NSMakeRange(location, 4)];
     location += 4;
@@ -52,32 +50,24 @@
       return nil;
     }
     blockIndex++;
-    
-    if([self length] < location + 32) {
-      /* At least one has has to be there */
-      return nil;
-    }
+
+    KPKValidateLength(self.length, location, 32)
     [self getBytes:hash range:NSMakeRange(location, 32)];
     location += 32;
     
-    if([self length] < location + 4) {
-      /* we need to be able to read the lenght of the data */
-      return nil;
-    }
+    KPKValidateLength(self.length, location, 4)
     [self getBytes:&bufferLength range:NSMakeRange(location, 4)];
     location += 4;
 
-    if (bufferLength == 0) {
-      for (int i = 0; i < 32; ++i) {
-        if (hash[i] != 0) {
+    if(bufferLength == 0) {
+      for(int i = 0; i < 32; ++i) {
+        if(hash[i] != 0) {
           return nil;
         }
       }
       return unhashed;
     }
-    if([self length] < location + bufferLength) {
-      return nil;
-    }
+    KPKValidateLength(self.length, location, bufferLength)
     uint8_t rawData[bufferLength];
     [self getBytes:rawData range:NSMakeRange(location, bufferLength)];
     location +=bufferLength;
@@ -87,20 +77,20 @@
     if(!memcmp(verifyHash, hash, 32)) {
       [unhashed appendBytes:rawData length:bufferLength];
     }
-    if(location == [self length]) {
-      return  unhashed;
+    if(location == self.length) {
+      return unhashed;
     }
   }
 }
 
 - (NSData *)hashedDataWithBlockSize:(NSUInteger)blockSize {
-  uint32_t blockCount = ceil((CGFloat)[self length] / (CGFloat)blockSize);
+  uint32_t blockCount = ceil((CGFloat)self.length / (CGFloat)blockSize);
   uint32_t location = 0;
   NSMutableData *outputData = [[NSMutableData alloc] initWithCapacity:blockCount * blockSize + 33 ];
   uint32_t blockIndex = 0;
   uint32_t blockLength = 0;
   for(; blockIndex < blockCount; blockIndex++) {
-    blockLength = MIN((uint32_t)[self length] - location, (uint32_t)blockSize);
+    blockLength = MAX(0,MIN((uint32_t)self.length - location, (uint32_t)blockSize));
     NSData *slice = [self subdataWithRange:NSMakeRange(location,blockLength)];
     [outputData appendBytes:&blockIndex length:4];
     [outputData appendData:[slice SHA256Hash]];
