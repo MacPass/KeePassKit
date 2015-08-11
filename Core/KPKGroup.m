@@ -64,7 +64,6 @@
 }
 
 #pragma mark NSCoding
-
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if(self) {
@@ -78,12 +77,7 @@
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
     self.defaultAutoTypeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultAutoTypeSequence))];
     
-    for(KPKGroup *group in self.groups) {
-      group.parent = self;
-    }
-    for(KPKEntry *entry in self.entries) {
-      entry.parent = self;
-    }
+    [self _updateParents];
     
     self.updateTiming = YES;
   }
@@ -111,6 +105,7 @@
 - (instancetype)copyWithZone:(NSZone *)zone {
   KPKGroup *copy = [[KPKGroup alloc] init];
   copy.uuid = [self.uuid copyWithZone:zone];
+  copy.deleted = self.deleted;
   copy->_entries = [[NSMutableArray alloc] initWithArray:_entries copyItems:YES];
   copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
@@ -157,11 +152,11 @@
 }
 
 - (void)_updateParents {
-  for(KPKGroup *childGroup in self.groups) {
+  for(KPKGroup *childGroup in _groups) {
     childGroup.parent = self;
     [childGroup _updateParents];
   }
-  for(KPKEntry *childEntry in self.entries) {
+  for(KPKEntry *childEntry in _entries) {
     childEntry.parent = self;
   }
 }
@@ -255,6 +250,7 @@
 
 - (void)remove {
   /* Undo is handled in removeGroup */
+  self.deleted = YES;
   [self.parent _removeGroup:self];
 }
 
@@ -267,8 +263,12 @@
   group.tree = self.tree;
   index = MAX(0, MIN([_groups count], index));
   [[self.undoManager prepareWithInvocationTarget:self] _removeGroup:group];
-  /* Remove entries that might have been added to the deleted objects */
+  if(group.deleted) {
+    /* Remove groups that might have been added to the deleted objects */
+    NSAssert(nil != self.tree.deletedObjects[group.uuid], @"A deleted group has to have an entry in deleted nodes");
+  }
   [self.tree.deletedObjects removeObjectForKey:group.uuid];
+  group.deleted = NO;
   [self insertObject:group inGroupsAtIndex:index];
   [self wasModified];
 }
@@ -278,9 +278,11 @@
   if(index != NSNotFound) {
     [[self.undoManager prepareWithInvocationTarget:self] addGroup:group atIndex:index];
     group.parent = nil;
-    /* Add group to deleted objects */
-    NSAssert(nil == self.tree.deletedObjects[group.uuid], @"Group already registered as deleted!");
-    self.tree.deletedObjects[group.uuid] = [[KPKDeletedNode alloc] initWithNode:group];
+    if(group.deleted) {
+      /* Add group to deleted objects */
+      NSAssert(nil == self.tree.deletedObjects[group.uuid], @"Group already registered as deleted!");
+      self.tree.deletedObjects[group.uuid] = [[KPKDeletedNode alloc] initWithNode:group];
+    }
     [self removeObjectFromGroupsAtIndex:index];
     [self wasModified];
   }
@@ -314,8 +316,12 @@
   entry.tree = self.tree;
   index = MAX(0, MIN([_entries count], index));
   [[self.undoManager prepareWithInvocationTarget:self] removeEntry:entry];
-  /* Remove the deleted Object */
-  [self.tree.deletedObjects removeObjectForKey:entry.uuid];
+  if(entry.deleted) {
+    /* Remove the deleted Object */
+    NSAssert(nil != self.tree.deletedObjects[entry.uuid], @"A deleted entry has to have an entry in deleted nodes");
+    [self.tree.deletedObjects removeObjectForKey:entry.uuid];
+  }
+  entry.deleted = NO;
   [self insertObject:entry inEntriesAtIndex:index];
 }
 
@@ -324,9 +330,11 @@
   if(NSNotFound != index) {
     [[self.undoManager prepareWithInvocationTarget:self] addEntry:entry atIndex:index];
     [self removeObjectFromEntriesAtIndex:index];
-    /* Add the entry to the deleted Objects */
-    NSAssert(nil == self.tree.deletedObjects[entry.uuid], @"Entry already marked as deleted!");
-    self.tree.deletedObjects[ entry.uuid ] = [[KPKDeletedNode alloc] initWithNode:entry];
+    if(entry.deleted) {
+      /* Add the entry to the deleted Objects */
+      NSAssert(nil == self.tree.deletedObjects[entry.uuid], @"Entry already marked as deleted!");
+      self.tree.deletedObjects[ entry.uuid ] = [[KPKDeletedNode alloc] initWithNode:entry];
+    }
     entry.parent = nil;
   }
 }

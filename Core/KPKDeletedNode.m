@@ -25,16 +25,16 @@
 
 @implementation KPKDeletedNode
 
-- (id)initWithNode:(KPKNode *)node {
-  self = [super init];
-  if(self) {
-    _deletionDate = [NSDate date];
-    _uuid = node.uuid;
-  }
++ (instancetype)deletedNodeForNode:(KPKNode *)node {
+  return [[KPKDeletedNode alloc] initWithUUID:node.uuid date:[NSDate date]];
+}
+
+- (instancetype)initWithNode:(KPKNode *)node {
+  self = [self initWithUUID:self.uuid date:[NSDate date]];
   return self;
 }
 
-- (id)initWithUUID:(NSUUID *)uuid date:(NSDate *)date {
+- (instancetype)initWithUUID:(NSUUID *)uuid date:(NSDate *)date {
   self = [super init];
   if(self) {
     _deletionDate = date;

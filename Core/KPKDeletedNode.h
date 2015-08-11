@@ -32,7 +32,9 @@
 @property (nonatomic, retain, readonly) NSUUID *uuid;
 @property (nonatomic, retain, readonly) NSDate *deletionDate;
 
-- (id)initWithNode:(KPKNode *)node;
-- (id)initWithUUID:(NSUUID *)uuid date:(NSDate *)date;
++ (instancetype)deletedNodeForNode:(KPKNode *)node;
+
+- (instancetype)initWithNode:(KPKNode *)node;
+- (instancetype)initWithUUID:(NSUUID *)uuid date:(NSDate *)date;
 
 @end

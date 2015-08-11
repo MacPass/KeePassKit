@@ -52,6 +52,7 @@
     _timeInfo = [[KPKTimeInfo alloc] init];
     _timeInfo.node = self;
     _iconId = [[self class] defaultIcon];
+    _deleted = NO;
   }
   return self;
 }
@@ -65,6 +66,7 @@
     _iconUUID = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))];
     /* decode time info at last */
     _timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
+    _deleted = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(deleted))];
   }
   return self;
 }
@@ -75,6 +77,7 @@
   [aCoder encodeInteger:self.minimumVersion forKey:NSStringFromSelector(@selector(minimumVersion))];
   [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
+  [aCoder encodeBool:self.deleted forKey:NSStringFromSelector(@selector(deleted))];
 }
 
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
@@ -165,13 +168,14 @@
   if(!node) {
     return; // Nothing to do!
   }
-  KPKNode *copy = [self copy];
-  [[self.undoManager prepareWithInvocationTarget:self] updateToNode:copy];
+  NSAssert([node asGroup] || [node asEntry], @"Cannot update to abstract KPKNode class");
   /* UUID should be the same */
   if(![self.uuid isEqualTo:node.uuid]) {
     NSAssert(NO, @"Nodes should never update to differen UUIDs!");
     return;
   }
+  KPKNode *copy = [self copy];
+  [[self.undoManager prepareWithInvocationTarget:self] updateToNode:copy];
   /* Do not update parent/child structure, we just want "content" to update */
   self.iconId = node.iconId;
   self.minimumVersion = node.minimumVersion;

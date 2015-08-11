@@ -147,6 +147,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark NSCopying
 - (id)copyWithZone:(NSZone *)zone {
   KPKEntry *entry = [[KPKEntry allocWithZone:zone] init];
+  entry.deleted = self.deleted;
   entry.iconId = self.iconId;
   entry.iconUUID = self.iconUUID;
   entry.tree = self.tree;
@@ -278,6 +279,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark Equality
 
 - (BOOL)isEqual:(id)object {
+  /* pointing to the same instance */
+  if(nil != self && self == object) {
+    return YES;
+  }
   if([object isKindOfClass:[KPKEntry class]]) {
     return [self isEqualToEntry:object];
   }
@@ -285,7 +290,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (BOOL)isEqualToEntry:(KPKEntry *)entry {
-  NSAssert([entry isKindOfClass:[KPKEntry class]], @"Test onyl allowed with KPKEntry classes");
+  NSAssert([entry isKindOfClass:[KPKEntry class]], @"Test only allowed with KPKEntry classes");
   
   if([self.customAttributes count] != [entry.customAttributes count]) {
     return NO;
@@ -484,6 +489,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark move/remove/copy
 - (void)remove {
+  self.deleted = YES;
   [self.parent removeEntry:self];
 }
 
@@ -494,10 +500,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark Editing
 - (void)updateToNode:(KPKNode *)node {
   [super updateToNode:node];
-  if(![node isKindOfClass:[KPKEntry class]]) {
-    return;
+  KPKEntry *entry = [node asEntry];
+  NSAssert(entry, @"KPKEntry nodes can only update to KPKEntry nodes!");
+  if(nil == entry) {
+    return; // We need an KPKEntry to update to!
   }
-  KPKEntry *entry = (KPKEntry *)node;
   if(entry.isHistory) {
     /* We need to reset the history to the correct "point in time" */
     NSUInteger historyIndex = [self.history indexOfObject:entry];

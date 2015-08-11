@@ -61,6 +61,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly, assign) BOOL hasDefaultIcon;
 @property(nonatomic, readonly, assign) BOOL isEditable;
 @property(nonatomic, readonly) BOOL isTrash;
+@property(nonatomic, assign) BOOL deleted;
 /**
  *  Determines, whether the receiving node is inside the trash.
  *  The trash group itself is not considered as trashed.
@@ -70,17 +71,17 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property (nonatomic, readonly) BOOL isTrashed;
 
 /**
+ *	Returns the default icon number for a Group
+ *	@return	default icon index for a group
+ */
++ (NSUInteger)defaultIcon;
+
+/**
  *  Returns a copy of the node with the given title or a default tile if nil was supplied
  *  @param titelOrNil Title for the copy or default if nil
  *  @return copy of the node with title
  */
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options;
-
-/**
- *	Returns the default icon number for a Group
- *	@return	default icon index for a group
- */
-+ (NSUInteger)defaultIcon;
 
 /**
  *	Returns the root group of the node by walking up the tree
