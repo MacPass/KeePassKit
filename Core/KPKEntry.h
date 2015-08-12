@@ -72,6 +72,8 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, strong) NSArray *history;
 @property (nonatomic, readonly, assign) BOOL isHistory;
 
+- (instancetype)init;
+
 /**
  *  Test for Equality
  *  @param entry entry to test for equality

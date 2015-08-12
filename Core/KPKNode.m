@@ -22,6 +22,7 @@
 
 
 #import "KPKNode.h"
+#import "KPKNode+Private.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
@@ -36,47 +37,14 @@
 @dynamic notes;
 @dynamic title;
 
-+ (BOOL)supportsSecureCoding {
-  return YES;
-}
-
 + (NSUInteger)defaultIcon {
   return KPKIconPassword;
 }
 
-- (id)init {
-  self = [super init];
-  if (self) {
-    _uuid = [[NSUUID alloc] init];
-    _minimumVersion = KPKLegacyVersion;
-    _timeInfo = [[KPKTimeInfo alloc] init];
-    _iconId = [[self class] defaultIcon];
-    _deleted = NO;
-  }
+- (instancetype)init {
+  NSAssert(NO,@"KPKNode cannot be directly initalized");
+  self = nil;
   return self;
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder {
-  self = [self init];
-  if(self) {
-    _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))];
-    _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(minimumVersion))];
-    _iconId = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(iconId))];
-    _iconUUID = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))];
-    /* decode time info at last */
-    _timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
-    _deleted = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(deleted))];
-  }
-  return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-  [aCoder encodeObject:self.timeInfo forKey:NSStringFromSelector(@selector(timeInfo))];
-  [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
-  [aCoder encodeInteger:self.minimumVersion forKey:NSStringFromSelector(@selector(minimumVersion))];
-  [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
-  [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
-  [aCoder encodeBool:self.deleted forKey:NSStringFromSelector(@selector(deleted))];
 }
 
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
@@ -235,6 +203,45 @@
 
 - (KPKEntry *)asEntry {
   return nil;
+}
+
+@end
+
+@implementation KPKNode (Private)
+
+- (instancetype)_init {
+  self = [super init];
+  if (self) {
+    _uuid = [[NSUUID alloc] init];
+    _minimumVersion = KPKLegacyVersion;
+    _timeInfo = [[KPKTimeInfo alloc] init];
+    _iconId = [[self class] defaultIcon];
+    _deleted = NO;
+  }
+  return self;
+}
+
+- (instancetype)_initWithCoder:(NSCoder *)aDecoder {
+  self = [self init];
+  if(self) {
+    _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))];
+    _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(minimumVersion))];
+    _iconId = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(iconId))];
+    _iconUUID = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))];
+    /* decode time info at last */
+    _timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
+    _deleted = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(deleted))];
+  }
+  return self;
+}
+
+- (void)_encodeWithCoder:(NSCoder *)aCoder {
+  [aCoder encodeObject:self.timeInfo forKey:NSStringFromSelector(@selector(timeInfo))];
+  [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
+  [aCoder encodeInteger:self.minimumVersion forKey:NSStringFromSelector(@selector(minimumVersion))];
+  [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
+  [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
+  [aCoder encodeBool:self.deleted forKey:NSStringFromSelector(@selector(deleted))];
 }
 
 @end

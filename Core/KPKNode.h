@@ -39,9 +39,10 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 };
 
 /**
- *	Baseclass for all Nodes in a Tree.
+ *  Abstract base class for all Nodes (Entries and Groups)
+ *  Do not instanciate an instance of KPKnode
  */
-@interface KPKNode : NSObject <NSSecureCoding, KPKModificationRecording>
+@interface KPKNode : NSObject <KPKModificationRecording>
 
 @property(nonatomic, weak) KPKTree *tree;
 

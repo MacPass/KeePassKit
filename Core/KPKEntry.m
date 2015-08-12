@@ -21,6 +21,7 @@
 //
 
 #import "KPKEntry.h"
+#import "KPKNode+Private.h"
 #import "KPKGroup.h"
 #import "KPKBinary.h"
 #import "KPKAttribute.h"
@@ -43,6 +44,7 @@ NSString *const KPKMetaEntryDatabaseColor           = @"Database Color";
 NSString *const KPKMetaEntryKeePassXCustomIcon      = @"KPX_CUSTOM_ICONS_2";
 NSString *const KPKMetaEntryKeePassXCustomIcon2     = @"KPX_CUSTOM_ICONS_4";
 NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
+
 
 @interface KPKEntry () {
 @private
@@ -115,7 +117,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (id)init {
-  self = [super init];
+  self = [super _init];
   if (self) {
     /* Attetion - Title -> Name */
     _titleAttribute = [[KPKAttribute alloc] initWithKey:kKPKTitleKey value:@""];
@@ -187,7 +189,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark NSCoding
 - (id)initWithCoder:(NSCoder *)aDecoder {
-  self = [super initWithCoder:aDecoder];
+  self = [super _initWithCoder:aDecoder];
   if(self) {
     /* Disable timing since we init via coder */
     self.updateTiming = NO;
@@ -221,7 +223,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  [super encodeWithCoder:aCoder];
+  [super _encodeWithCoder:aCoder];
   [aCoder encodeObject:_passwordAttribute forKey:NSStringFromSelector(@selector(passwordAttribute))];
   [aCoder encodeObject:_titleAttribute forKey:NSStringFromSelector(@selector(titleAttribute))];
   [aCoder encodeObject:_usernameAttribute forKey:NSStringFromSelector(@selector(usernameAttribute))];

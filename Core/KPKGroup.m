@@ -21,6 +21,7 @@
 //
 
 #import "KPKGroup.h"
+#import "KPKNode+Private.h"
 
 #import "KPKAutotype.h"
 #import "KPKDeletedNode.h"
@@ -46,12 +47,16 @@
 @synthesize title = _title;
 @synthesize notes = _notes;
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 + (NSUInteger)defaultIcon {
   return KPKIconFolder;
 }
 
 - (instancetype)init {
-  self = [super init];
+  self = [super _init];
   if (self) {
     _groups = [[NSMutableArray alloc] initWithCapacity:8];
     _entries = [[NSMutableArray alloc] initWithCapacity:16];
@@ -65,7 +70,7 @@
 
 #pragma mark NSCoding
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-  self = [super initWithCoder:aDecoder];
+  self = [super _initWithCoder:aDecoder];
   if(self) {
     self.updateTiming = NO;
     self.title = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(title))];
@@ -89,7 +94,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  [super encodeWithCoder:aCoder];
+  [super _encodeWithCoder:aCoder];
   [aCoder encodeObject:_title forKey:NSStringFromSelector(@selector(title))];
   [aCoder encodeObject:_notes forKey:NSStringFromSelector(@selector(notes))];
   [aCoder encodeObject:_groups forKey:NSStringFromSelector(@selector(groups))];
@@ -139,6 +144,53 @@
   [copy.timeInfo reset];
   copy.title = titleOrNil;
   return copy;
+}
+
+- (BOOL)isEqual:(id)object {
+  if(self == object) {
+    return YES; // Pointers match;
+  }
+  if(object && [object isKindOfClass:[KPKGroup class]]) {
+    KPKGroup *group = (KPKGroup *)object;
+    NSAssert(group, @"Equality is only possible on groups");
+    return [self isEqualToGroup:group];
+  }
+  return NO;
+}
+
+- (BOOL)isEqualToGroup:(KPKGroup *)aGroup {
+  NSAssert([aGroup isKindOfClass:[KPKGroup class]], @"No valid object supplied!");
+  if(![aGroup isKindOfClass:[KPKGroup class]]) {
+    return NO;
+  }
+  BOOL entryCountDiffers = _entries.count != aGroup->_entries.count;
+  BOOL groupCountDiffers = _groups.count != aGroup->_groups.count;
+  if( entryCountDiffers || groupCountDiffers ) {
+    return NO;
+  }
+  __block BOOL isEqual = self.iconId == aGroup.iconId
+  && [self.iconUUID isEqualTo:aGroup.iconUUID]
+  && (_isAutoTypeEnabled == aGroup->_isAutoTypeEnabled)
+  && (_isSearchEnabled == aGroup->_isSearchEnabled);
+ 
+  if(!isEqual) {
+    return NO;
+  }
+  
+  for(KPKEntry *entry in _entries) {
+    /* Indexes might be different, the contents of the array is important */
+    if(NSNotFound == [aGroup->_entries indexOfObject:entry]) {
+      return NO;
+    }
+  }
+  /* Indexes in groups matter, so we need to compare them */
+  [_groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    KPKGroup *otherGroup = obj;
+    KPKGroup *myGroup = _groups[idx];
+    isEqual &= [myGroup isEqualTo:otherGroup];
+    *stop = !isEqual;
+  }];
+  return isEqual;
 }
 
 - (void)_updateUUIDs {

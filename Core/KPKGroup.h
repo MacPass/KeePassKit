@@ -30,7 +30,6 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 
 @interface KPKGroup : KPKNode <NSSecureCoding, NSCopying, NSPasteboardReading, NSPasteboardWriting>
 
-@property(nonatomic, copy) NSString *notes;
 @property(nonatomic, readonly) NSArray *groups;
 @property(nonatomic, readonly) NSArray *entries;
 @property(nonatomic, readonly) NSArray *childEntries;
@@ -47,6 +46,8 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  thus are undoable.
  Action names aren't set by the model
  */
+
+- (BOOL)isEqualToGroup:(KPKGroup *)aGroup;
 
 #pragma mark Group manipulation
 - (void)remove;
