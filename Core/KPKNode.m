@@ -85,6 +85,28 @@
   return nil;
 }
 
+- (BOOL)isEqual:(id)object {
+  if(![self isKindOfClass:[KPKNode class]]) {
+    return NO;
+  }
+  return [self isEqualToNode:object];
+}
+
+- (BOOL)isEqualToNode:(KPKNode *)aNode {
+  /* pointing to the same instance */
+  if(nil != self && self == aNode) {
+    return YES;
+  }
+  /* We do not compare UUIDs as those are supposed to be different for nodes unless they are encoded/decoded */
+  NSAssert([aNode isKindOfClass:[KPKNode class]], @"Unsupported type for quality test");
+  BOOL isEqual = [_timeInfo isEqual:aNode->_timeInfo]
+  && (_iconId == aNode->_iconId)
+  && [_iconUUID isEqual:aNode->_iconUUID]
+  && [self.title isEqual:aNode.title]
+  && [self.notes isEqual:aNode.notes];
+  return isEqual;
+}
+
 #pragma mark Properties
 - (BOOL)isEditable {
   if(self.tree) {

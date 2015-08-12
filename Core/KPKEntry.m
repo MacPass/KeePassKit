@@ -278,9 +278,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark Equality
 
 - (BOOL)isEqual:(id)object {
-  /* pointing to the same instance */
-  if(nil != self && self == object) {
-    return YES;
+  if(![super isEqual:object]) {
+    return NO;
   }
   if([object isKindOfClass:[KPKEntry class]]) {
     return [self isEqualToEntry:object];
@@ -291,7 +290,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (BOOL)isEqualToEntry:(KPKEntry *)entry {
   NSAssert([entry isKindOfClass:[KPKEntry class]], @"Test only allowed with KPKEntry classes");
   
-  if([self.customAttributes count] != [entry.customAttributes count]) {
+  if(![self isEqualToNode:entry]) {
+    return NO;
+  }
+  
+  if(self.customAttributes.count != entry.customAttributes.count) {
     return NO;
   }
   

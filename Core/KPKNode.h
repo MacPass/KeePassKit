@@ -83,6 +83,8 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options;
 
+- (BOOL)isEqualToNode:(KPKNode *)aNode;
+
 /**
  *	Returns the root group of the node by walking up the tree
  *	@return	root group of the node
