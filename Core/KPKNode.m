@@ -50,7 +50,6 @@
     _uuid = [[NSUUID alloc] init];
     _minimumVersion = KPKLegacyVersion;
     _timeInfo = [[KPKTimeInfo alloc] init];
-    _timeInfo.node = self;
     _iconId = [[self class] defaultIcon];
     _deleted = NO;
   }

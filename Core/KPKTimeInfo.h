@@ -38,8 +38,6 @@
 @property(nonatomic, strong) NSDate *locationChanged;
 @property(nonatomic, assign) NSUInteger usageCount;
 
-@property(weak) KPKNode *node;
-
 - (void)reset;
 - (void)wasModified;
 - (void)wasAccessed;
