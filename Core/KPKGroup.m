@@ -70,14 +70,14 @@
     self.updateTiming = NO;
     self.title = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(title))];
     self.notes = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(notes))];
-    _groups = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))];
-    _entries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))];
+    self.groups = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))];
+    self.entries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))];
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
     self.defaultAutoTypeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultAutoTypeSequence))];
     
-    [self _updateParents];
+    //[self _updateParents];
     
     self.updateTiming = YES;
   }
@@ -106,8 +106,8 @@
   KPKGroup *copy = [[KPKGroup alloc] init];
   copy.uuid = [self.uuid copyWithZone:zone];
   copy.deleted = self.deleted;
-  copy->_entries = [[NSMutableArray alloc] initWithArray:_entries copyItems:YES];
-  copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
+  copy.entries = _entries;
+  copy.groups = _groups;
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
@@ -118,7 +118,7 @@
   copy.iconUUID = self.iconUUID;
   copy.parent = self.parent;
   
-  [copy _updateParents];
+  //[copy _updateParents];
   
   /* Copy time info at last to ensure valid times */
   copy.timeInfo = [self.timeInfo copyWithZone:zone];
@@ -151,15 +151,15 @@
   }
 }
 
-- (void)_updateParents {
-  for(KPKGroup *childGroup in _groups) {
-    childGroup.parent = self;
-    [childGroup _updateParents];
-  }
-  for(KPKEntry *childEntry in _entries) {
-    childEntry.parent = self;
-  }
-}
+//- (void)_updateParents {
+//  for(KPKGroup *childGroup in _groups) {
+//    childGroup.parent = self;
+//    [childGroup _updateParents];
+//  }
+//  for(KPKEntry *childEntry in _entries) {
+//    childEntry.parent = self;
+//  }
+//}
 
 #pragma mark NSPasteboardWriting/Reading
 
@@ -191,6 +191,26 @@
 
 - (NSArray *)entries {
   return  [_entries copy];
+}
+
+- (void)setGroups:(NSArray *)groups {
+  if(_groups == groups) {
+    return; // No changes
+  }
+  _groups = [[NSMutableArray alloc] initWithArray:groups copyItems:YES];
+  for(KPKGroup *group in _groups) {
+    group.parent = self;
+  }
+}
+
+- (void)setEntries:(NSArray *)entries {
+  if(_entries == entries) {
+    return; // No changes
+  }
+  _entries = [[NSMutableArray alloc] initWithArray:entries copyItems:YES];
+  for(KPKEntry *entry in _entries) {
+    entry.parent = self;
+  }
 }
 
 - (void)setTitle:(NSString *)title {

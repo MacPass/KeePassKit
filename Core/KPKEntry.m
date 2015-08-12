@@ -167,7 +167,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   entry.binaries = [[NSMutableArray alloc] initWithArray:self->_binaries copyItems:YES];
   entry.customAttributes = [[NSMutableArray alloc] initWithArray:self->_customAttributes copyItems:YES];
   entry.tags = self->_tags;
-  entry.autotype = [self.autotype copyWithZone:zone];
+  entry.autotype = self.autotype;
   entry.history = [[NSMutableArray alloc] initWithArray:self->_history copyItems:YES];
   entry->_isHistory = self->_isHistory;
   
@@ -179,7 +179,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   entry.timeInfo = [self.timeInfo copyWithZone:zone];
   
   /* fix entry references */
-  entry.autotype.entry = entry;
   for(KPKAttribute *attribute in _customAttributes) {
     attribute.entry = entry;
   }
@@ -438,7 +437,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(autotype == _autotype) {
     return;
   }
-  _autotype = autotype;
+  _autotype = [autotype copy];
   _autotype.entry = self;
 }
 

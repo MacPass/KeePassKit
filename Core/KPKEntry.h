@@ -68,7 +68,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy) NSString *overrideURL;
 
 @property (nonatomic, strong) NSArray *customAttributes;
-@property (nonatomic, strong) KPKAutotype *autotype;
+@property (nonatomic, copy) KPKAutotype *autotype;
 @property (nonatomic, strong) NSArray *history;
 @property (nonatomic, readonly, assign) BOOL isHistory;
 
