@@ -154,7 +154,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   entry.iconUUID = self.iconUUID;
   entry.tree = self.tree;
   entry.parent = self.parent;
-  entry.uuid = [self.uuid copyWithZone:zone];
   entry.minimumVersion = self.minimumVersion;
   
   /* Default attributes */

@@ -109,7 +109,6 @@
 
 - (instancetype)copyWithZone:(NSZone *)zone {
   KPKGroup *copy = [[KPKGroup alloc] init];
-  copy.uuid = [self.uuid copyWithZone:zone];
   copy.deleted = self.deleted;
   copy.entries = _entries;
   copy.groups = _groups;
@@ -119,6 +118,7 @@
   copy.isExpanded = self.isExpanded;
   copy.updateTiming = self.updateTiming;
   copy.notes = self.notes;
+  copy.title = self.title;
   copy.iconId = self.iconId;
   copy.iconUUID = self.iconUUID;
   copy.parent = self.parent;
@@ -163,16 +163,19 @@
   if(![aGroup isKindOfClass:[KPKGroup class]]) {
     return NO;
   }
+  
+  if(![self isEqualToNode:aGroup]) {
+    return NO;
+  }
+  
   BOOL entryCountDiffers = _entries.count != aGroup->_entries.count;
   BOOL groupCountDiffers = _groups.count != aGroup->_groups.count;
   if( entryCountDiffers || groupCountDiffers ) {
     return NO;
   }
-  __block BOOL isEqual = self.iconId == aGroup.iconId
-  && [self.iconUUID isEqualTo:aGroup.iconUUID]
-  && (_isAutoTypeEnabled == aGroup->_isAutoTypeEnabled)
+  __block BOOL isEqual = (_isAutoTypeEnabled == aGroup->_isAutoTypeEnabled)
   && (_isSearchEnabled == aGroup->_isSearchEnabled);
- 
+  
   if(!isEqual) {
     return NO;
   }
