@@ -169,7 +169,7 @@
 - (void)setRoot:(KPKGroup *)root {
   if(_root != root) {
     _root = root;
-    _root.parent = (id)self;
+    _root.tree = self;
   }
 }
 
