@@ -37,9 +37,7 @@
 @private
   NSMutableArray *_groups;
   NSMutableArray *_entries;
-  NSString *_defaultAutoTypeSequence;
 }
-
 @end
 
 @implementation KPKGroup
@@ -56,8 +54,13 @@
 }
 
 - (instancetype)init {
-  self = [super _init];
-  if (self) {
+  self = [self initWithUUID:nil];
+  return self;
+}
+
+- (instancetype)initWithUUID:(NSUUID *)uuid {
+  self = [super _initWithUUID:uuid];
+  if(self) {
     _groups = [[NSMutableArray alloc] initWithCapacity:8];
     _entries = [[NSMutableArray alloc] initWithCapacity:16];
     _isAutoTypeEnabled = KPKInherit;
@@ -75,14 +78,14 @@
     self.updateTiming = NO;
     self.title = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(title))];
     self.notes = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(notes))];
-    self.groups = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))];
-    self.entries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))];
+    _groups = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))];
+    _entries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))];
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
     self.defaultAutoTypeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultAutoTypeSequence))];
     
-    //[self _updateParents];
+    [self _updateParents];
     
     self.updateTiming = YES;
   }
@@ -140,7 +143,6 @@
     NSString *format = NSLocalizedStringFromTable(@"KPK_GROUP_COPY_%@", @"KPKLocalizable", "");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
-  [copy _updateUUIDs];
   [copy.timeInfo reset];
   copy.title = titleOrNil;
   return copy;
@@ -196,25 +198,31 @@
   return isEqual;
 }
 
-- (void)_updateUUIDs {
-  self.uuid = [[NSUUID alloc] init];
-  for(KPKEntry *entry in self.entries) {
-    entry.uuid = [[NSUUID alloc] init];
-  }
-  for(KPKGroup *group in self.groups) {
-    [group _updateUUIDs];
-  }
-}
-
-//- (void)_updateParents {
-//  for(KPKGroup *childGroup in _groups) {
-//    childGroup.parent = self;
-//    [childGroup _updateParents];
+//- (void)_updateUUIDs {
+//  self.uuid = [[NSUUID alloc] init];
+//  for(KPKEntry *entry in self.entries) {
+//    entry.uuid = [[NSUUID alloc] init];
 //  }
-//  for(KPKEntry *childEntry in _entries) {
-//    childEntry.parent = self;
+//  for(KPKGroup *group in self.groups) {
+//    [group _updateUUIDs];
 //  }
 //}
+
+- (void)_generateUUID:(BOOL)recursive {
+  [super _generateUUID:recursive];
+  [_entries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [obj _generateUUID:recursive]; }];
+  [_groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [obj _generateUUID:recursive]; }];
+}
+
+- (void)_updateParents {
+  for(KPKGroup *childGroup in _groups) {
+    childGroup.parent = self;
+    [childGroup _updateParents];
+  }
+  for(KPKEntry *childEntry in _entries) {
+    childEntry.parent = self;
+  }
+}
 
 #pragma mark NSPasteboardWriting/Reading
 
@@ -259,9 +267,11 @@
 }
 
 - (void)setEntries:(NSArray *)entries {
+  
   if(_entries == entries) {
     return; // No changes
   }
+  /* Entries will get new UUIDs */
   _entries = [[NSMutableArray alloc] initWithArray:entries copyItems:YES];
   for(KPKEntry *entry in _entries) {
     entry.parent = self;
@@ -335,7 +345,7 @@
 
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   group.parent = self;
-  group.tree = self.tree;
+  //group.tree = self.tree;
   index = MAX(0, MIN([_groups count], index));
   [[self.undoManager prepareWithInvocationTarget:self] _removeGroup:group];
   if(group.deleted) {
@@ -388,7 +398,7 @@
 
 - (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
   entry.parent = self;
-  entry.tree = self.tree;
+  //entry.tree = self.tree;
   index = MAX(0, MIN([_entries count], index));
   [[self.undoManager prepareWithInvocationTarget:self] removeEntry:entry];
   if(entry.deleted) {

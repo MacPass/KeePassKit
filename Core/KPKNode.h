@@ -44,25 +44,23 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 @interface KPKNode : NSObject <KPKModificationRecording>
 
-@property(nonatomic, weak) KPKTree *tree;
-
-@property(nonatomic, assign) NSInteger iconId;
+@property(nonatomic) NSInteger iconId;
 @property(nonatomic, strong) NSUUID *iconUUID;
-@property(nonatomic, strong) NSUUID *uuid;
+@property(nonatomic, readonly, strong) NSUUID *uuid;
 @property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *notes;
 
-@property(nonatomic, assign) KPKVersion minimumVersion;
+@property(nonatomic, readonly) KPKVersion minimumVersion;
 @property(nonatomic, strong) KPKTimeInfo *timeInfo;
 
 @property(nonatomic, weak) KPKGroup *parent;
 
 @property(nonatomic, readonly) NSUndoManager *undoManager;
 
-@property(nonatomic, readonly, assign) BOOL hasDefaultIcon;
-@property(nonatomic, readonly, assign) BOOL isEditable;
+@property(nonatomic, readonly) BOOL hasDefaultIcon;
+@property(nonatomic, readonly) BOOL isEditable;
 @property(nonatomic, readonly) BOOL isTrash;
-@property(nonatomic, assign) BOOL deleted;
+@property(nonatomic, readonly) BOOL deleted;
 /**
  *  Determines, whether the receiving node is inside the trash.
  *  The trash group itself is not considered as trashed.
@@ -84,6 +82,8 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options;
 
+- (instancetype)initWithUUID:(NSUUID *)uuid;
+
 - (BOOL)isEqualToNode:(KPKNode *)aNode;
 
 /**
@@ -91,7 +91,6 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  *	@return	root group of the node
  */
 - (KPKGroup *)rootGroup;
-
 /**
  *	Determines if the receiving group is an ancestor of the supplied group
  *	@param	group	group to test ancestorship for

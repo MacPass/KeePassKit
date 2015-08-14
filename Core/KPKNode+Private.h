@@ -9,17 +9,25 @@
 #ifndef MacPass_KPKNode_Private_h
 #define MacPass_KPKNode_Private_h
 
-
 #import "KPKNode.h"
 
 @interface KPKNode (Private)
 
+@property(nonatomic, readwrite, weak) KPKTree *tree;
+@property(nonatomic, readwrite, assign) KPKVersion minimumVersion;
+@property(nonatomic, readwrite, assign) BOOL deleted;
+
 #pragma mark Initalizer
 - (instancetype)_init;
+- (instancetype)_initWithUUID:(NSUUID *)uuid;
+
 
 #pragma mark NSSecureCoding
 - (instancetype)_initWithCoder:(NSCoder *)aDecoder;
 - (void)_encodeWithCoder:(NSCoder *)aCoder;
+
+#pragma mark Interals
+- (void)_generateUUID:(BOOL)recursive;
 
 @end
 

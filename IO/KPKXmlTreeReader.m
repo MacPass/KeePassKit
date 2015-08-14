@@ -22,29 +22,28 @@
 
 #import "KPKXmlTreeReader.h"
 #import "DDXMLDocument.h"
-#import "KPKXmlHeaderReader.h"
 
-#import "KPKTree.h"
-#import "KPKMetaData.h"
-#import "KPKTimeInfo.h"
-#import "KPKGroup.h"
-#import "KPKNode.h"
-#import "KPKDeletedNode.h"
-#import "KPKEntry.h"
-#import "KPKBinary.h"
+#import "KPKArc4RandomStream.h"
 #import "KPKAttribute.h"
 #import "KPKAutotype.h"
-#import "KPKWindowAssociation.h"
-
-#import "KPKFormat.h"
-#import "KPKXmlFormat.h"
-#import "KPKXmlElements.h"
+#import "KPKBinary.h"
+#import "KPKDeletedNode.h"
+#import "KPKEntry.h"
 #import "KPKErrors.h"
+#import "KPKFormat.h"
+#import "KPKGroup.h"
 #import "KPKIcon.h"
-
+#import "KPKMetaData.h"
+//#import "KPKNode+Private.h"
+#import "KPKNode.h"
 #import "KPKRandomStream.h"
-#import "KPKArc4RandomStream.h"
 #import "KPKSalsa20RandomStream.h"
+#import "KPKTimeInfo.h"
+#import "KPKTree.h"
+#import "KPKWindowAssociation.h"
+#import "KPKXmlElements.h"
+#import "KPKXmlFormat.h"
+#import "KPKXmlHeaderReader.h"
 #import "KPKXmlUtilities.h"
 
 #import "DDXML.h"
@@ -141,7 +140,7 @@
     return nil;
   }
   
-  tree.root = [self _parseGroup:rootGroup forTree:tree];
+  tree.root = [self _parseGroup:rootGroup];
   [self _parseDeletedObjects:root tree:tree];
   
   tree.metaData.updateTiming = YES;
@@ -211,16 +210,11 @@
   [self _parseCustomData:metaElement meta:data];
 }
 
-- (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement forTree:(KPKTree *)tree{
-  KPKGroup *group = [[KPKGroup alloc] init];
+- (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement {
+  NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlUUID)];
+  KPKGroup *group = [[KPKGroup alloc] initWithUUID:uuid];
   
   group.updateTiming = NO;
-  group.tree = tree;
-  
-  group.uuid = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlUUID)];
-  if (group.uuid == nil) {
-    group.uuid = [NSUUID UUID];
-  }
   
   /* Group title is "Name" key in XML */
   group.title = KPKXmlString(groupElement, kKPKXmlName);
@@ -244,12 +238,12 @@
   group.lastTopVisibleEntry = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlLastTopVisibleEntry)];
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Entry"]) {
-    KPKEntry *entry = [self _parseEntry:element forTree:tree ignoreHistory:NO];
+    KPKEntry *entry = [self _parseEntry:element ignoreHistory:NO];
     [group addEntry:entry];
   }
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Group"]) {
-    KPKGroup *subGroup = [self _parseGroup:element forTree:tree];
+    KPKGroup *subGroup = [self _parseGroup:element];
     [group addGroup:subGroup];
   }
   
@@ -257,17 +251,12 @@
   return group;
 }
 
-- (KPKEntry *)_parseEntry:(DDXMLElement *)entryElement forTree:(KPKTree *)tree ignoreHistory:(BOOL)ignoreHistory {
-  KPKEntry *entry = [[KPKEntry alloc] init];
+- (KPKEntry *)_parseEntry:(DDXMLElement *)entryElement ignoreHistory:(BOOL)ignoreHistory {
+  NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKXmlString(entryElement, kKPKXmlUUID)];
+  KPKEntry *entry = [[KPKEntry alloc] initWithUUID:uuid];
   
   entry.updateTiming = NO;
-  entry.tree = tree;
-  
-  entry.uuid = [NSUUID uuidWithEncodedString:KPKXmlString(entryElement, kKPKXmlUUID)];
-  if (entry.uuid == nil) {
-    entry.uuid = [NSUUID UUID];
-  }
-  
+
   entry.iconId = KPKXmlInteger(entryElement, kKPKXmlIconId);
   
   DDXMLElement *customIconUuidElement = [entryElement elementForName:@"CustomIconUUID"];
@@ -451,7 +440,7 @@
   DDXMLElement *historyElement = [entryElement elementForName:@"History"];
   if (historyElement != nil) {
     for (DDXMLElement *entryElement in [historyElement elementsForName:@"Entry"]) {
-      KPKEntry *historyEntry = [self _parseEntry:entryElement forTree:entry.tree ignoreHistory:YES];
+      KPKEntry *historyEntry = [self _parseEntry:entryElement ignoreHistory:YES];
       [entry addHistoryEntry:historyEntry];
     }
   }

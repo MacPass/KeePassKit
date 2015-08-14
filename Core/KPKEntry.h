@@ -85,10 +85,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 - (NSArray *)defaultAttributes;
 /**
- *	Removes the Entry from it's parent group
- */
-- (void)remove;
-/**
  *  Moves the Entry the the new group at the given index
  *
  *  @param group The new group that should contain the entry
@@ -129,9 +125,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 /**
  Adds an attribute to the entry
  @param attribute The attribute to be added
- @param index the position at wicht to add the attribute
  */
-- (void)addCustomAttribute:(KPKAttribute *)attribute atIndex:(NSUInteger)index;
 - (void)addCustomAttribute:(KPKAttribute *)attribute;
 /**
  Removes the attribute for the given string
@@ -141,12 +135,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 
 #pragma mark Binaries
 
-/**
- *  Adds a binary to the attachments of this entry
- *	@param	binary	Binary to add
- *	@param	index	Index to add the binary at
- */
-- (void)addBinary:(KPKBinary *)binary atIndex:(NSUInteger)index;
 /**
  *	Adds the given Binary to the binaries of this entry
  *	@param	binary	Binary to add
@@ -166,7 +154,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *	@param	entry	Entry element to be added as history
  */
 - (void)addHistoryEntry:(KPKEntry *)entry;
-- (void)addHistoryEntry:(KPKEntry *)entry atIndex:(NSUInteger)index;
 - (void)removeHistoryEntry:(KPKEntry *)entry;
 /**
  *	Clears the history and removes all entries

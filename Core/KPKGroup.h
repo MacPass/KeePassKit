@@ -50,7 +50,6 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 - (BOOL)isEqualToGroup:(KPKGroup *)aGroup;
 
 #pragma mark Group manipulation
-- (void)remove;
 - (void)addGroup:(KPKGroup *)group;
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 - (void)moveToGroup:(KPKGroup *)group;

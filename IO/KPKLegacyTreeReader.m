@@ -29,6 +29,7 @@
 #import "KPKDataStreamReader.h"
 
 #import "KPKTree.h"
+#import "KPKIconTypes.h"
 #import "KPKMetaData.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"
@@ -108,7 +109,7 @@
    */
   KPKGroup *rootGroup = [[KPKGroup alloc] init];
   rootGroup.title = NSLocalizedString(@"DATABASE", "");
-  rootGroup.iconId = 48;
+  rootGroup.iconId = KPKIconFolder;
   tree.root = rootGroup;
   rootGroup.isExpanded = YES;
   
@@ -151,13 +152,10 @@
   }
   for(KPKEntry *entry in tree.root.entries) {
     entry.updateTiming = YES;
-    entry.tree = tree;
   }
   for(KPKGroup *group in [tree allGroups]) {
-    group.tree = tree;
     for(KPKEntry *entry in group.entries) {
       entry.updateTiming = YES;
-      entry.tree = tree;
     }
   }
   
@@ -172,6 +170,7 @@
   
   // Parse the groups
   for (NSUInteger groupIndex = 0; groupIndex < _headerReader.numberOfGroups; groupIndex++) {
+    /* create a new group with a random UUID */
     KPKGroup *group = [[KPKGroup alloc] init];
     group.updateTiming = NO;
     
@@ -195,7 +194,6 @@
           
         case KPKFieldTypeGroupId: {
           uint32_t groupId = CFSwapInt32LittleToHost([_dataStreamer read4Bytes]);
-          group.uuid = [NSUUID UUID];
           _groupIdToUUID[@(groupId)] = group.uuid;
           break;
         }
@@ -302,8 +300,7 @@
   
   // Parse the entries
   for (NSUInteger iEntryIndex = 0; iEntryIndex < _headerReader.numberOfEntries; iEntryIndex++) {
-    KPKEntry *entry = [[KPKEntry alloc] init];
-    entry.updateTiming = NO;
+    KPKEntry *entry;
     KPKBinary *binary; // placeholder for binary reading
     
     // Parse the entry
@@ -334,7 +331,8 @@
             return NO;
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
-          entry.uuid = [[NSUUID alloc] initWithUUIDBytes:buffer];
+          entry = [[KPKEntry alloc] initWithUUID:[[NSUUID alloc] initWithUUIDBytes:buffer]];
+          entry.updateTiming = NO;
           break;
           
         case KPKFieldTypeEntryGroupId: {

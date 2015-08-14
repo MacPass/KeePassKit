@@ -70,34 +70,34 @@
 
 @property(nonatomic, weak) KPKGroup *trash;
 
-@property (nonatomic, strong) KPKGroup *root;
+@property(nonatomic, strong) KPKGroup *root;
 /**
  Acces to the root group via the groups property
  to offer a bindable interface for a tree
  */
-@property (nonatomic, readonly) NSArray *groups;
+@property(nonatomic, readonly) NSArray *groups;
 /**
  *	NSArray of KPKGroup objects. Contains all child groups in a tree.
  *  @note The root group is missing from this array
  */
-@property (nonatomic, readonly) NSArray *allGroups;
+@property(nonatomic, readonly) NSArray *allGroups;
 /**
  *	NSArray of KPKEntries. Contains all entries of the tree
  */
-@property (nonatomic, readonly) NSArray *allEntries;
+@property(nonatomic, readonly) NSArray *allEntries;
 /**
  *  NSArray of KPKEntries that are History elements
  */
-@property (nonatomic, readonly) NSArray *allHistoryEntries;
+@property(nonatomic, readonly) NSArray *allHistoryEntries;
 /**
  *	The minimum Version of the tree. If any node uses higher
  *  featuers, the whole tree needs to have the highest version
  */
-@property (nonatomic, assign) KPKVersion minimumVersion;
+@property(nonatomic, assign) KPKVersion minimumVersion;
 /**
  *  Tags on this tree. This is a aggregation of all Tags of entries
  */
-@property (nonatomic, strong, readonly) NSArray *tags;
+@property(nonatomic, strong, readonly) NSArray *tags;
 
 - (instancetype)initWithTemplateContents;
 

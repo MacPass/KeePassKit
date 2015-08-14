@@ -32,7 +32,10 @@
 
 #import "NSUUID+KeePassKit.h"
 
-@implementation KPKNode
+@implementation KPKNode {
+  BOOL _deleted;
+  KPKTree *_tree;
+}
 
 @dynamic notes;
 @dynamic title;
@@ -41,7 +44,19 @@
   return KPKIconPassword;
 }
 
++ (NSSet *)keyPathsForValuesAffectingTree {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(parent))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingParentGroup {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(parent))];
+}
+
 - (instancetype)init {
+  return [self initWithUUID:nil];
+}
+
+- (instancetype)initWithUUID:(NSUUID *)uuid {
   NSAssert(NO,@"KPKNode cannot be directly initalized");
   self = nil;
   return self;
@@ -132,6 +147,23 @@
   return self.tree.undoManager;
 }
 
+//- (KPKGroup *)parentGroup {
+//  if([self.parent isKindOfClass:[KPKGroup class]]) {
+//    return self.parent;
+//  }
+//  return nil;
+//}
+
+//- (void)setParent:(id )parent {
+//  if([parent isMemberOfClass:[KPKTree class]]) {
+//    _tree = (id)parent;
+//    return;
+//  }
+//  if([parent isMemberOfClass:[KPKGroup class]]) {
+//    _parent = parent;
+//  }
+//}
+
 #pragma mark KPKTimerecording
 - (void)setUpdateTiming:(BOOL)updateTiming {
   self.timeInfo.updateTiming = updateTiming;
@@ -221,8 +253,16 @@
   return self;
 }
 
+- (instancetype)_initWithUUID:(NSUUID *)uuid {
+  self = [self _init];
+  if(self && uuid) {
+    _uuid = uuid;
+  }
+  return self;
+}
+
 - (instancetype)_initWithCoder:(NSCoder *)aDecoder {
-  self = [self init];
+  self = [self _init];
   if(self) {
     _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))];
     _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(minimumVersion))];
@@ -235,6 +275,10 @@
   return self;
 }
 
+- (void)_generateUUID:(BOOL)recursive {
+  _uuid = [NSUUID UUID];
+}
+
 - (void)_encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeObject:self.timeInfo forKey:NSStringFromSelector(@selector(timeInfo))];
   [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
@@ -242,6 +286,30 @@
   [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
   [aCoder encodeBool:self.deleted forKey:NSStringFromSelector(@selector(deleted))];
+}
+
+#pragma mark Properites
+- (void)setDeleted:(BOOL)deleted {
+  _deleted = deleted;
+}
+
+- (void)setMinimumVersion:(KPKVersion)minimumVersion {
+  _minimumVersion = minimumVersion;
+}
+
+- (KPKTree *)tree {
+  if(self.parent) {
+    return self.parent.tree;
+  }
+  return _tree;
+}
+
+- (void)setTree:(KPKTree *)tree {
+  if(self.parent) {
+    _tree = nil;
+    return;
+  }
+  _tree = tree;
 }
 
 @end

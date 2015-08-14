@@ -20,6 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#import "KPKNode+Private.h"
 #import "KPKTree.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
@@ -102,7 +103,7 @@
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent {
   KPKGroup *group = [[KPKGroup alloc] init];
-  group.tree = self;
+  //group.tree = self;
   group.parent = parent;
   return group;
 }
@@ -110,7 +111,7 @@
 - (KPKEntry *)createEntry:(KPKGroup *)parent {
   KPKEntry *entry = [[KPKEntry alloc] init];
   entry.parent = parent;
-  entry.tree = self;
+  //entry.tree = self;
   if(!parent.hasDefaultIcon) {
     entry.iconUUID = parent.iconUUID;
     entry.iconId = parent.iconId;
@@ -168,7 +169,7 @@
 - (void)setRoot:(KPKGroup *)root {
   if(_root != root) {
     _root = root;
-    _root.tree = self;
+    _root.parent = (id)self;
   }
 }
 

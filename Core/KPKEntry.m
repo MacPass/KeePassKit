@@ -117,7 +117,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (id)init {
-  self = [super _init];
+  self = [self initWithUUID:nil];
+  return self;
+}
+
+- (instancetype)initWithUUID:(NSUUID *)uuid {
+  self = [super _initWithUUID:uuid];
   if (self) {
     /* Attetion - Title -> Name */
     _titleAttribute = [[KPKAttribute alloc] initWithKey:kKPKTitleKey value:@""];
@@ -141,6 +146,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return self;
 }
 
+
 - (void)dealloc {
   /* Remove us from the undo stack */
   [self.undoManager removeAllActionsWithTarget:self];
@@ -152,7 +158,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   entry.deleted = self.deleted;
   entry.iconId = self.iconId;
   entry.iconUUID = self.iconUUID;
-  entry.tree = self.tree;
+  //entry.tree = self.tree;
   entry.parent = self.parent;
   entry.minimumVersion = self.minimumVersion;
   
@@ -241,6 +247,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
+  /* Copy sets a new UUID */
   KPKEntry *copy = [self copy];
   if(!titleOrNil) {
     NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKLocalizable", "");
@@ -249,8 +256,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   /* Disbale the undomanager since we do not want the updated title to be registered */
   copy.title = titleOrNil;
   //[copy.timeInfo reset];
-  copy.uuid = [[NSUUID alloc] init];
-
   return copy;
 }
 
@@ -580,13 +585,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)addCustomAttribute:(KPKAttribute *)attribute {
-  [self addCustomAttribute:attribute atIndex:[_customAttributes count]];
-}
-
-- (void)addCustomAttribute:(KPKAttribute *)attribute atIndex:(NSUInteger)index {
   /* TODO: sanity check if attribute has unique key */
-  index = MIN([_customAttributes count], index);
-  [self insertObject:attribute inCustomAttributesAtIndex:index];
+  [self insertObject:attribute inCustomAttributesAtIndex:_customAttributes.count];
   attribute.entry = self;
   [self wasModified];
   self.minimumVersion = [self _minimumVersionForCurrentAttributes];
@@ -604,15 +604,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark Attachments
 
 - (void)addBinary:(KPKBinary *)binary {
-  [self addBinary:binary atIndex:[_binaries count]];
-}
-
-- (void)addBinary:(KPKBinary *)binary atIndex:(NSUInteger)index {
   if(nil == binary) {
     return; // nil not allowed
   }
-  index = MIN([_binaries count], index);
-  [self insertObject:binary inBinariesAtIndex:index];
+  [self insertObject:binary inBinariesAtIndex:_binaries.count];
   [self wasModified];
   self.minimumVersion = [self _minimumVersionForCurrentAttachments];
 }
@@ -635,11 +630,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark History
 
 - (void)addHistoryEntry:(KPKEntry *)entry {
-  [self addHistoryEntry:entry atIndex:[_history count]];
-}
-
-- (void)addHistoryEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
-  [self insertObject:entry inHistoryAtIndex:[_history count]];
+  [self insertObject:entry inHistoryAtIndex:_history.count];
   // Update Minimum Version?
 }
 
