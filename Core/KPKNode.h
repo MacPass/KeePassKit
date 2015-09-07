@@ -82,6 +82,11 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options;
 
+/**
+ *  Creates a new Node with the given UUID or genreates a new one, if nil
+ *  @param uuid the UUID to use for the newly created node
+ *  @return created node with the UUID
+ */
 - (instancetype)initWithUUID:(NSUUID *)uuid;
 
 - (BOOL)isEqualToNode:(KPKNode *)aNode;
