@@ -652,8 +652,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   
   void (^attributeBlock)(id obj, NSUInteger idx, BOOL *stop) = ^(id obj, NSUInteger idx, BOOL *stop) {
     KPKAttribute *attribute = obj;
-    size += [attribute.value length];
-    size += [attribute.key length];
+    size += attribute.value.length;
+    size += attribute.key.length;
   };
   
   /* Default attributes */
@@ -666,20 +666,20 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [[self binaries] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKBinary *binary = obj;
     size += [binary.key length];
-    size += [binary.data length];
+    size += binary.data.length;
   }];
   
   /* Autotype */
   size += [self.autotype.defaultKeystrokeSequence length];
   [self.autotype.associations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKWindowAssociation *association = obj;
-    size += [association.windowTitle length];
-    size += [association.keystrokeSequence length];
+    size += association.windowTitle.length;
+    size += association.keystrokeSequence.length;
   }];
   
   /* Misc */
-  size += [self.overrideURL length];
-  size += [self.tags length];
+  size += self.overrideURL.length;
+  size += self.tags.length;
   
   /* History */
   [[self history] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
