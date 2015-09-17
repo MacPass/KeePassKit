@@ -51,7 +51,7 @@
   return data;
 }
 
-- (NSString *)stringWithLenght:(NSUInteger)length encoding:(NSStringEncoding)encoding {
+- (NSString *)stringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding {
   char characters[length];
   [self _getBytes:characters length:length];
   return [NSString stringWithCString:characters encoding:encoding];
@@ -96,12 +96,12 @@
   _location = MIN([_data length], _location);
 }
 
-- (BOOL)endOfData {
+- (BOOL)reachedEndOfData {
   return (_location == [_data length]);
 }
 
-- (NSUInteger)countOfReadableBytes {
-  if([self endOfData]) {
+- (NSUInteger)readableBytes {
+  if(self.reachedEndOfData) {
     return 0;
   }
   return ([_data length] - _location);

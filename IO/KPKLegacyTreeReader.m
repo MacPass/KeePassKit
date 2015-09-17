@@ -199,7 +199,7 @@
         }
           
         case KPKFieldTypeGroupName:
-          group.title = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          group.title = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeGroupCreationTime:
@@ -306,7 +306,7 @@
     // Parse the entry
     endOfStream = NO;
     while (!endOfStream) {
-      if([_dataStreamer countOfReadableBytes] == 0) {
+      if(_dataStreamer.readableBytes == 0) {
         KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_CORRUPT_DATA", "");
         return NO;
       }
@@ -346,23 +346,23 @@
           break;
           
         case KPKFieldTypeEntryTitle:
-          entry.title = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          entry.title = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryURL:
-          entry.url = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          entry.url = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryUsername:
-          entry.username = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          entry.username = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryPassword:
-          entry.password = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          entry.password = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryNotes:
-          entry.notes = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          entry.notes = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           [self _parseAutotype:entry];
           break;
           
@@ -405,7 +405,7 @@
         case KPKFieldTypeEntryBinaryDescription: {
           binary = [[KPKBinary alloc] init];
           
-          binary.name = [_dataStreamer stringWithLenght:fieldSize encoding:NSUTF8StringEncoding];
+          binary.name = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
         }
         case KPKFieldTypeEntryBinaryData:
@@ -451,7 +451,7 @@
   NSData *headerHash;
 	
   while(YES) {
-    if([_dataStreamer countOfReadableBytes] == 0) {
+    if(_dataStreamer.readableBytes == 0) {
       KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_CORRUPT_DATA", "");
       return NO;
     }
@@ -585,23 +585,23 @@
   KPKDataStreamReader *dataReader = [[KPKDataStreamReader alloc] initWithData:data];
   uint32_t groupId = 0;
   
-  if([dataReader countOfReadableBytes] >= 4) {
+  if(dataReader.readableBytes >= 4) {
     groupId = [dataReader read4Bytes];
     metaData.lastSelectedGroup = _groupIdToUUID[@(groupId)];
   }
-  if([dataReader countOfReadableBytes] >= 4) {
+  if(dataReader.readableBytes >= 4) {
     groupId = [dataReader read4Bytes];
     metaData.lastTopVisibleGroup = _groupIdToUUID[@(groupId)];
   }
   NSData *uuidData;
   NSUUID *lastSelectedEntryUUID;
-  if([dataReader countOfReadableBytes] >= 16) {
+  if(dataReader.readableBytes >= 16) {
     uuidData = [dataReader dataWithLength:16];
     lastSelectedEntryUUID = [[NSUUID alloc] initWithData:uuidData];
     // right now this data is ignored.
   }
   NSUUID *lastVisibleEntryUUID;
-  if([dataReader countOfReadableBytes] >= 16) {
+  if(dataReader.readableBytes >= 16) {
     uuidData = [dataReader dataWithLength:16];
     lastVisibleEntryUUID = [[NSUUID alloc] initWithData:uuidData];
   }
@@ -669,11 +669,11 @@
   /* Read Icons */
   NSMutableArray *iconUUIDs = [[NSMutableArray alloc] initWithCapacity:MAX(1,numberOfIcons)];
   for(NSUInteger index = 0; index < numberOfIcons; index++) {
-    if([dataReader countOfReadableBytes] < 4) {
+    if(dataReader.readableBytes < 4) {
       return NO; // Data is truncated
     }
     uint32_t iconDataSize = CFSwapInt32LittleToHost([dataReader read4Bytes]);
-    if([dataReader countOfReadableBytes] < iconDataSize) {
+    if(dataReader.readableBytes < iconDataSize) {
       return NO; // Data is truncated
     }
     KPKIcon *icon = [[KPKIcon alloc] initWithData:[dataReader dataWithLength:iconDataSize]];
@@ -681,7 +681,7 @@
     [iconUUIDs addObject:icon.uuid];
   }
   
-  if([dataReader countOfReadableBytes] < (numberOfEntries * 20)) {
+  if(dataReader.readableBytes < (numberOfEntries * 20)) {
     return NO; // Data truncated
   }
   /* Read Entries */
@@ -694,7 +694,7 @@
     }
     entry.iconUUID = iconUUIDs[iconId];
   }
-  if([dataReader countOfReadableBytes] < (numberOfGroups * 8)) {
+  if(dataReader.readableBytes < (numberOfGroups * 8)) {
     return NO; // Data truncated
   }
   /* Read Groups */

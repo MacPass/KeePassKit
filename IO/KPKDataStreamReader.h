@@ -24,10 +24,13 @@
 
 @interface KPKDataStreamReader : NSObject
 
+@property (nonatomic, readonly) NSUInteger readableBytes;
+@property (nonatomic, readonly) BOOL reachedEndOfData;
+
 - (id)initWithData:(NSData *)data;
 
 - (NSData *)dataWithLength:(NSUInteger)length;
-- (NSString *)stringWithLenght:(NSUInteger)length encoding:(NSStringEncoding)encoding;
+- (NSString *)stringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding;
 - (void)readBytes:(void *)buffer length:(NSUInteger)length;
 - (uint8_t)readByte;
 - (uint16_t)read2Bytes;
@@ -37,8 +40,6 @@
 
 - (NSUInteger)location;
 - (void)skipBytes:(NSUInteger)numberOfBytes;
-- (BOOL)endOfData;
-- (NSUInteger)countOfReadableBytes;
 - (void)reset;
 
 @end
