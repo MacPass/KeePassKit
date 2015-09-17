@@ -665,7 +665,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   /* Binaries */
   [[self binaries] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKBinary *binary = obj;
-    size += [binary.key length];
+    size += binary.name.length;
     size += binary.data.length;
   }];
   
