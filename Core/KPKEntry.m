@@ -337,34 +337,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
             ];
 }
 
-- (BOOL)isMeta {
-  /* Meta entries always contain data */
-  KPKBinary *binary = [self.binaries lastObject];
-  if(!binary) {
-    return NO;
-  }
-  if([binary.data length] == 0) {
-    return NO;
-  }
-  if(![binary.name isEqualToString:KPKMetaEntryBinaryDescription]) {
-    return NO;
-  }
-  if(![self.title isEqualToString:KPKMetaEntryTitle]) {
-    return NO;
-  }
-  if(![self.username isEqualToString:KPKMetaEntryUsername]) {
-    return NO;
-  }
-  if(![self.url isEqualToString:KPKMetaEntryURL]) {
-    return NO;
-  }
-  /* The Name of the type is stored as the note attribute */
-  if([self.notes length] == 0) {
-    return NO;
-  }
-  return YES;
-}
-
 #pragma mark Properties
 - (BOOL )protectNotes {
   return self.notesAttribute.isProtected;
@@ -420,6 +392,34 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (NSString *)url {
   return self.urlAttribute.value;
+}
+
+- (BOOL)isMeta {
+  /* Meta entries always contain data */
+  KPKBinary *binary = self.binaries.lastObject;
+  if(!binary) {
+    return NO;
+  }
+  if(binary.data.length == 0) {
+    return NO;
+  }
+  if(![binary.name isEqualToString:KPKMetaEntryBinaryDescription]) {
+    return NO;
+  }
+  if(![self.title isEqualToString:KPKMetaEntryTitle]) {
+    return NO;
+  }
+  if(![self.username isEqualToString:KPKMetaEntryUsername]) {
+    return NO;
+  }
+  if(![self.url isEqualToString:KPKMetaEntryURL]) {
+    return NO;
+  }
+  /* The Name of the type is stored as the note attribute */
+  if(self.notes.length == 0) {
+    return NO;
+  }
+  return YES;
 }
 
 - (void)setProtectNotes:(BOOL)protectNotes {

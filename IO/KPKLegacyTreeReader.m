@@ -429,8 +429,10 @@
               }
             }
           }
-          [_entries addObject:entry];
-          
+          NSAssert(entry != nil, @"Entry cannot be nil at this point");
+          if(entry) {
+            [_entries addObject:entry];
+          }
           endOfStream = YES;
           break;
           

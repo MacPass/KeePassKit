@@ -71,6 +71,12 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy) KPKAutotype *autotype;
 @property (nonatomic, strong) NSArray *history;
 @property (nonatomic, readonly, assign) BOOL isHistory;
+/**
+ *	Additional information is stores in MetaEntrie in KDB files.
+ *  This function determines wheter the entry is a meta entry or not.
+ *	@return	YES if this entry is a Meta Entry, NO if not
+ */
+@property (nonatomic, readonly) BOOL isMeta;
 
 - (instancetype)init;
 
@@ -100,12 +106,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *	@return	a meta entry that can be serailized
  */
 + (KPKEntry *)metaEntryWithData:(NSData *)data name:(NSString *)name;
-/**
- *	Additialn information is stores in MetaEntrie in KDB files.
- *  This function determines wheter the entry is a meta entry or not.
- *	@return	YES if this entry is a Meta Entry, NO if not
- */
-- (BOOL)isMeta;
+
 
 #pragma mark Custom Attributes
 /**
