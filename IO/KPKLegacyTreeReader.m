@@ -261,7 +261,7 @@
           
         case KPKFieldTypeGroupFlags:
           /*
-           KeePass suggest ignoring this is fine
+           KeePass suggests ignoring this is fine
            group.flags = [inputStream readInt32];
            group.flags = CFSwapInt32LittleToHost(group.flags);
            */
@@ -497,10 +497,10 @@
    TODO
    
    Notes contain Autotype information.
-   Parse notes and extract any exsisting
+   Parse notes and extract any exisisting
    autotype info
    
-   Autotype on KeePass1 Files workd with different values,
+   Autotype on KeePass1 Files works with different values,
    need to be converted!
    
    See http://keepass.info/help/base/autotype.html for references!
@@ -630,11 +630,11 @@
 
 - (BOOL)_parseKPXCustomIcon:(NSData *)data metaData:(KPKMetaData *)metaData {
   
-  /* Theoretica structures, variabel data sizes are mapped to fixed arrays with size 1
+  /* Theoretical structures, variable data sizes are mapped to fixed arrays with size 1
    
    struct KPXCustomIconData {
    uint32_t dataSize;
-   uint8_t data[1];
+   uint8_t data[dataSize];
    };
    
    struct KPXEntryIconInfo {
@@ -651,13 +651,13 @@
    uint32_t iconCount;
    uint32_t entryCount;
    uint32_t groupCount;
-   struct KPXCustomIconData data[1]; // 1 -> iconCount
-   struct KPXEntryIconInfo entryIcon[1]; // 1 -> entryCount
-   struct KPXGroupIconInfo groupIcon[1]; // 1 -> groupCount
+   struct KPXCustomIconData data[iconCount];
+   struct KPXEntryIconInfo entryIcon[entryCount];
+   struct KPXGroupIconInfo groupIcon[groupCount];
    };
    */
   
-  if([data length] < 12) {
+  if(data.length < 12) {
     return NO; // Data is truncated
   }
   
@@ -721,18 +721,18 @@
    
    struct KPXTreeState {
    uint32 numerOfEntries;
-   struct KPXGroupState states[];
+   struct KPXGroupState states[numberOfEntries];
    };
    */
   
-  if([data length] < 4) {
+  if(data.length < 4) {
     return NO;
   }
   
   KPKDataStreamReader *dataReader = [[KPKDataStreamReader alloc] initWithData:data];
   uint32_t count = CFSwapInt32LittleToHost([dataReader read4Bytes]);
   
-  if([data length] - 4 != (count * 5)) {
+  if(data.length - 4 != (count * 5)) {
     return NO; // Data is truncated
   }
   
