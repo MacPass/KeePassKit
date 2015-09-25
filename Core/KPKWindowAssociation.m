@@ -114,25 +114,25 @@
   if(!_regularExpressionIsValid) {
     NSString *pattern;
     if([self.windowTitle hasPrefix:@"//"] && [self.windowTitle hasSuffix:@"//"]) {
-      pattern = [self.windowTitle substringWithRange:NSMakeRange(2, [self.windowTitle length] - 4)];
+      pattern = [self.windowTitle substringWithRange:NSMakeRange(2, self.windowTitle.length - 4)];
     }
     else {
-      pattern = [self.windowTitle stringByReplacingOccurrencesOfString:@"*" withString:@".*" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [self.windowTitle length])];
+      pattern = [self.windowTitle stringByReplacingOccurrencesOfString:@"*" withString:@".*" options:NSCaseInsensitiveSearch range:NSMakeRange(0, self.windowTitle.length)];
     }
     NSError *error;
     self.windowTitleRegularExpression = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:&error];
     if(!self.windowTitleRegularExpression) {
-      NSLog(@"Error while trying to evaluate regular expression %@: %@", pattern, [error localizedDescription]);
+      NSLog(@"Error while trying to evaluate regular expression %@: %@", pattern, error.localizedDescription);
       return NO;
     }
     _regularExpressionIsValid = YES;
   }
-  NSUInteger matches = [self.windowTitleRegularExpression numberOfMatchesInString:windowTitle options:0 range:NSMakeRange(0, [windowTitle length])];
+  NSUInteger matches = [self.windowTitleRegularExpression numberOfMatchesInString:windowTitle options:0 range:NSMakeRange(0, windowTitle.length)];
   return (matches == 1);
 }
 
 - (BOOL)hasDefaultKeystrokeSequence {
-  return !([_keystrokeSequence length] > 0);
+  return !(_keystrokeSequence.length > 0);
 }
 
 @end
