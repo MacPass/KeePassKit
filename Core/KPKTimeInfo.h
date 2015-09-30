@@ -27,16 +27,16 @@
 
 @interface KPKTimeInfo : NSObject <NSSecureCoding, NSCopying, KPKModificationRecording>
 
-@property(nonatomic, strong) NSDate *creationDate;
-@property(nonatomic, strong) NSDate *modificationDate;
-@property(nonatomic, strong) NSDate *accessDate;
+@property(strong) NSDate *creationDate;
+@property(strong) NSDate *modificationDate;
+@property(strong) NSDate *accessDate;
 
 @property(nonatomic, strong) NSDate *expirationDate;
-@property(nonatomic, assign) BOOL expires;
-@property(readonly, assign) BOOL isExpired;
+@property(nonatomic) BOOL expires;
+@property(readonly) BOOL isExpired;
 
-@property(nonatomic, strong) NSDate *locationChanged;
-@property(nonatomic, assign) NSUInteger usageCount;
+@property(strong) NSDate *locationChanged;
+@property NSUInteger usageCount;
 
 - (void)reset;
 - (void)wasModified;

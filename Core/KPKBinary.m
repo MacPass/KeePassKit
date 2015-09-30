@@ -31,7 +31,7 @@
   return YES;
 }
 
-- (id)initWithName:(NSString *)name value:(NSString *)value compressed:(BOOL)compressed {
+- (instancetype)initWithName:(NSString *)name value:(NSString *)value compressed:(BOOL)compressed {
   self = [super init];
   if(self) {
     _name = [name copy];
@@ -40,7 +40,7 @@
   return self;
 }
 
-- (id)initWithContentsOfURL:(NSURL *)url {
+- (instancetype)initWithContentsOfURL:(NSURL *)url {
   self = [super init];
   if(self) {
     if(url) {
@@ -61,7 +61,7 @@
   return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
     _name = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(name))];
@@ -75,7 +75,7 @@
   [aCoder encodeObject:self.data forKey:NSStringFromSelector(@selector(data))];
 }
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
   KPKBinary *copy = [[KPKBinary allocWithZone:zone] init];
   if(copy) {
     copy.name = _name;

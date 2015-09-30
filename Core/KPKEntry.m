@@ -59,7 +59,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 @property (nonatomic, strong) KPKAttribute *usernameAttribute;
 @property (nonatomic, strong) KPKAttribute *urlAttribute;
 @property (nonatomic, strong) KPKAttribute *notesAttribute;
-@property (nonatomic, assign) BOOL isHistory;
+@property (nonatomic) BOOL isHistory;
 
 @end
 

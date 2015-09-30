@@ -54,11 +54,11 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *url;
 
-@property (nonatomic, assign) BOOL protectTitle;
-@property (nonatomic, assign) BOOL protectPassword;
-@property (nonatomic, assign) BOOL protectUsername;
-@property (nonatomic, assign) BOOL protectUrl;
-@property (nonatomic, assign) BOOL protectNotes;
+@property (nonatomic) BOOL protectTitle;
+@property (nonatomic) BOOL protectPassword;
+@property (nonatomic) BOOL protectUsername;
+@property (nonatomic) BOOL protectUrl;
+@property (nonatomic) BOOL protectNotes;
 
 @property (nonatomic, strong) NSArray *binaries;
 // TODO: change Tags to an String array!
@@ -70,7 +70,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, strong) NSArray *customAttributes;
 @property (nonatomic, copy) KPKAutotype *autotype;
 @property (nonatomic, strong) NSArray *history;
-@property (nonatomic, readonly, assign) BOOL isHistory;
+@property (nonatomic, readonly) BOOL isHistory;
 /**
  *	Additional information is stores in MetaEntrie in KDB files.
  *  This function determines wheter the entry is a meta entry or not.

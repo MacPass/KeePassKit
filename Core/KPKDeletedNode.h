@@ -29,8 +29,8 @@
  */
 @interface KPKDeletedNode : NSObject
 
-@property (nonatomic, retain, readonly) NSUUID *uuid;
-@property (nonatomic, retain, readonly) NSDate *deletionDate;
+@property (nonatomic, strong, readonly) NSUUID *uuid;
+@property (nonatomic, strong, readonly) NSDate *deletionDate;
 
 + (instancetype)deletedNodeForNode:(KPKNode *)node;
 

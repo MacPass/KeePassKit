@@ -27,11 +27,11 @@
 
 @interface KPKAutotype : NSObject <NSCopying, NSSecureCoding>
 
-@property (nonatomic, assign) BOOL isEnabled;
-@property (nonatomic, assign) BOOL obfuscateDataTransfer;
+@property BOOL isEnabled;
+@property BOOL obfuscateDataTransfer;
 @property (nonatomic, copy) NSString *defaultKeystrokeSequence;
 @property (nonatomic, strong, readonly) NSArray *associations;
-@property (nonatomic, assign, readonly) BOOL hasDefaultKeystrokeSequence;
+@property (nonatomic, readonly) BOOL hasDefaultKeystrokeSequence;
 
 @property (weak, readonly) KPKEntry *entry;
 

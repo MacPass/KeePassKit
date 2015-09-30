@@ -62,11 +62,11 @@
 
 @property(nonatomic, weak) id<KPKTreeDelegate> delegate;
 @property(nonatomic, strong, readonly) NSMutableDictionary *deletedObjects;
-@property(nonatomic, strong) KPKMetaData *metaData;
+@property(nonatomic, strong, readonly) KPKMetaData *metaData;
 
 
 @property(nonatomic, readonly) NSUndoManager *undoManager;
-@property(nonatomic, readonly, assign) BOOL isEditable;
+@property(nonatomic, readonly) BOOL isEditable;
 
 @property(nonatomic, weak) KPKGroup *trash;
 
@@ -93,7 +93,7 @@
  *	The minimum Version of the tree. If any node uses higher
  *  featuers, the whole tree needs to have the highest version
  */
-@property(nonatomic, assign) KPKVersion minimumVersion;
+@property(nonatomic) KPKVersion minimumVersion;
 /**
  *  Tags on this tree. This is a aggregation of all Tags of entries
  */

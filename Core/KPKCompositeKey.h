@@ -40,8 +40,8 @@
  *  Since a composite key can be created with am empty string as password or without one,
  *  this property considers both ways as no password given, although technically and emptry string is a password
  */
-@property (nonatomic, readonly, assign) BOOL hasPassword;
-@property (nonatomic, readonly, assign) BOOL hasKeyFile;
+@property (nonatomic, readonly) BOOL hasPassword;
+@property (nonatomic, readonly) BOOL hasKeyFile;
 
 + (void)benchmarkTransformationRounds:(NSUInteger)seconds completionHandler:(void(^)(NSUInteger rounds))completionHandler;
 
@@ -52,7 +52,7 @@
  
  The Final key is then created before a write or read gets performend
  */
-- (id)initWithPassword:(NSString *)password key:(NSURL *)url;
+- (instancetype)initWithPassword:(NSString *)password key:(NSURL *)url;
 /*
  @return the final Data to use to en/decrypt the database
  */

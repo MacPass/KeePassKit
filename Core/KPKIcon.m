@@ -35,7 +35,7 @@
 
 #pragma mark Lifecycle
 
-- (id)init {
+- (instancetype)init {
   self = [super init];
   if(self) {
     _uuid = [NSUUID UUID];
@@ -43,7 +43,7 @@
   return self;
 }
 
-- (id)initWithImageAtURL:(NSURL *)imageLocation {
+- (instancetype)initWithImageAtURL:(NSURL *)imageLocation {
   self = [self init];
   if(self) {
     _image = [[NSImage alloc] initWithContentsOfURL:imageLocation];
@@ -53,7 +53,7 @@
   return self;
 }
 
-- (id)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString {
+- (instancetype)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString {
   self = [self init];
   if(self) {
     _uuid = uuid;
@@ -62,7 +62,7 @@
   return self;
 }
 
-- (id)initWithData:(NSData *)data {
+- (instancetype)initWithData:(NSData *)data {
   self = [self init];
   if(self) {
     self.image =[[NSImage alloc] initWithData:data];
@@ -72,7 +72,7 @@
 
 #pragma mark NSCoding
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [[KPKIcon alloc] init];
   if(self) {
     NSData *imageData = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"image"];
@@ -91,7 +91,7 @@
 
 #pragma mark NSCopying
 
-- (id)copyWithZone:(NSZone *)zone {
+- (instancetype)copyWithZone:(NSZone *)zone {
   KPKIcon *copy = [[KPKIcon alloc] init];
   copy.image = [self.image copyWithZone:zone];
   copy.uuid = [self.uuid copyWithZone:zone];

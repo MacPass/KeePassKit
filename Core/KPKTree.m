@@ -31,7 +31,7 @@
 @interface KPKTree () {
   NSMutableDictionary *_tagsMap;
 }
-
+@property(nonatomic, strong) KPKMetaData *metaData;
 @end
 
 @class KPKIcon;

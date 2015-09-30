@@ -29,9 +29,9 @@
 @property (nonatomic, readonly) NSData *pngData;
 @property (nonatomic, readonly) NSString *encodedString;
 
-- (id)initWithImageAtURL:(NSURL *)imageLocation;
-- (id)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString;
-- (id)initWithData:(NSData *)data;
+- (instancetype)initWithImageAtURL:(NSURL *)imageLocation;
+- (instancetype)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString;
+- (instancetype)initWithData:(NSData *)data;
 
 - (BOOL)isEqualToIcon:(KPKIcon *)icon;
 

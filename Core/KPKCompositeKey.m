@@ -33,8 +33,8 @@
   NSData *_compositeDataVersion2;
 }
 
-@property (nonatomic, assign) BOOL hasKeyFile;
-@property (nonatomic, assign) BOOL hasPassword;
+@property (nonatomic) BOOL hasKeyFile;
+@property (nonatomic) BOOL hasPassword;
 
 @end
 
@@ -65,7 +65,7 @@
   });
 }
 
-- (id)initWithPassword:(NSString *)password key:(NSURL *)url {
+- (instancetype)initWithPassword:(NSString *)password key:(NSURL *)url {
   self = [super init];
   if(self) {
     [self setPassword:password andKeyfile:url];

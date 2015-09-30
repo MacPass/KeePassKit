@@ -28,8 +28,8 @@
 
 @interface KPKMetaData : NSObject <KPKModificationRecording>
 
-@property(nonatomic, assign) uint64_t rounds;
-@property(nonatomic, assign) uint32_t compressionAlgorithm;
+@property(nonatomic) uint64_t rounds;
+@property(nonatomic) uint32_t compressionAlgorithm;
 
 @property(nonatomic, copy) NSString *generator;
 
@@ -40,24 +40,24 @@
 
 @property(nonatomic, copy) NSString *defaultUserName;
 @property(nonatomic, strong) NSDate *defaultUserNameChanged;
-@property(nonatomic, assign) NSInteger maintenanceHistoryDays;
+@property(nonatomic) NSInteger maintenanceHistoryDays;
 
 /* Hexstring - #AA77FF */
 @property(nonatomic, copy) NSColor *color;
 
 @property(nonatomic, strong) NSDate *masterKeyChanged;
-@property(nonatomic, readonly, assign) BOOL recommendMasterKeyChange;
-@property(nonatomic, assign) NSInteger masterKeyChangeRecommendationInterval;
-@property(nonatomic, readonly, assign) BOOL enforceMasterKeyChange;
-@property(nonatomic, assign) NSInteger masterKeyChangeEnforcementInterval;
+@property(nonatomic, readonly) BOOL recommendMasterKeyChange;
+@property(nonatomic) NSInteger masterKeyChangeRecommendationInterval;
+@property(nonatomic, readonly) BOOL enforceMasterKeyChange;
+@property(nonatomic) NSInteger masterKeyChangeEnforcementInterval;
 
-@property(nonatomic, assign) BOOL protectTitle;
-@property(nonatomic, assign) BOOL protectUserName;
-@property(nonatomic, assign) BOOL protectPassword;
-@property(nonatomic, assign) BOOL protectUrl;
-@property(nonatomic, assign) BOOL protectNotes;
+@property(nonatomic) BOOL protectTitle;
+@property(nonatomic) BOOL protectUserName;
+@property(nonatomic) BOOL protectPassword;
+@property(nonatomic) BOOL protectUrl;
+@property(nonatomic) BOOL protectNotes;
 
-@property(nonatomic, assign) BOOL useTrash;
+@property(nonatomic) BOOL useTrash;
 @property(nonatomic, strong) NSUUID *trashUuid;
 @property(nonatomic, strong) NSDate *trashChanged;
 
@@ -65,8 +65,8 @@
 @property(nonatomic, strong) NSDate *entryTemplatesGroupChanged;
 
 @property(nonatomic, readonly) BOOL isHistoryEnabled;
-@property(nonatomic, assign) NSInteger historyMaxItems;
-@property(nonatomic, assign) NSInteger historyMaxSize; // Megabytes
+@property(nonatomic) NSInteger historyMaxItems;
+@property(nonatomic) NSInteger historyMaxSize; // Megabytes
 
 @property(nonatomic, strong) NSUUID *lastSelectedGroup;
 @property(nonatomic, strong) NSUUID *lastTopVisibleGroup;

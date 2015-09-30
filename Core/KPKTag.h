@@ -12,11 +12,10 @@
 
 @interface KPKTag : NSObject
 
-@property (weak) KPKTree *tree;
-@property (copy) NSString *name;
-@property (nonatomic, assign, readonly) NSArray *entries;
-@property (nonatomic, assign, readonly) NSArray *groups;
+@property (copy, readonly) NSString *name;
 
++ (instancetype)tagWithName:(NSString *)name;
+- (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithName:(NSString *)name;
 
 @end

@@ -28,7 +28,7 @@
 
 @property (nonatomic, copy) NSString *key;
 @property (nonatomic, copy) NSString *value;
-@property (nonatomic, assign) BOOL isProtected;
+@property (nonatomic) BOOL isProtected;
 @property (nonatomic, readonly) NSString *referencedValue;
 @property (nonatomic, readonly) NSString *placeholderValue;
 /**

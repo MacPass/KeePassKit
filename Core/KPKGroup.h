@@ -36,10 +36,10 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 @property(nonatomic, readonly) NSArray *childGroups;
 
 @property(nonatomic, strong) NSUUID *lastTopVisibleEntry;
-@property(nonatomic, assign) BOOL isExpanded;
+@property(nonatomic) BOOL isExpanded;
 @property(nonatomic, copy) NSString *defaultAutoTypeSequence;
-@property(nonatomic, assign) KPKInheritBool isAutoTypeEnabled;
-@property(nonatomic, assign) KPKInheritBool isSearchEnabled;
+@property(nonatomic) KPKInheritBool isAutoTypeEnabled;
+@property(nonatomic) KPKInheritBool isSearchEnabled;
 
 /**
  All actions register with the undomanager and
