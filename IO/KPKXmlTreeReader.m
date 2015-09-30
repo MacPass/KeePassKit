@@ -267,7 +267,7 @@
   entry.foregroundColor =  [NSColor colorWithHexString:KPKXmlString(entryElement, @"ForegroundColor")];
   entry.backgroundColor = [NSColor colorWithHexString:KPKXmlString(entryElement, @"BackgroundColor")];
   entry.overrideURL = KPKXmlString(entryElement, @"OverrideURL");
-  entry.tags = KPKXmlString(entryElement, @"Tags");
+  entry.tags = [KPKXmlString(entryElement, @"Tags") componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@".,;"]];
   
   DDXMLElement *timesElement = [entryElement elementForName:@"Times"];
   [self _parseTimes:entry.timeInfo element:timesElement];

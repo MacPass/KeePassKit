@@ -118,6 +118,4 @@
  */
 - (NSString *)defaultAutotypeSequence;
 
-- (void)registerTags:(NSString *)tags forEntry:(KPKEntry *)entry;
-- (void)deregisterTags:(NSString *)tags forEntry:(KPKEntry *)entry;
 @end

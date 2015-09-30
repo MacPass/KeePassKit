@@ -219,7 +219,7 @@
   KPKAddXmlElement(entryElement, @"ForegroundColor", [entry.foregroundColor hexString]);
   KPKAddXmlElement(entryElement, @"BackgroundColor", [entry.backgroundColor hexString]);
   KPKAddXmlElement(entryElement, @"OverrideURL", entry.overrideURL.XMLCompatibleString);
-  KPKAddXmlElement(entryElement, @"Tags", entry.tags.XMLCompatibleString);
+  KPKAddXmlElement(entryElement, @"Tags", [entry.tags componentsJoinedByString:@";"].XMLCompatibleString);
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:entry.timeInfo];
   [entryElement addChild:timesElement];

@@ -482,16 +482,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   self.urlAttribute.value= url;
 }
 
-- (void)setTags:(NSString *)tags {
-  if([tags isKindOfClass:[NSArray class]]) {
-    tags = [(NSArray *)tags componentsJoinedByString:@","];
-  }
-  if([self.tags isEqualToString:tags]) {
-    return; // Nothing to change
-  }
-  _tags = [tags copy];
-}
-
 - (KPKEntry *)asEntry {
   return self;
 }
@@ -680,7 +670,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   
   /* Misc */
   size += self.overrideURL.length;
-  size += self.tags.length;
+  
+  /* Tags */
+  [self.tags enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    NSString *tag = obj;
+    size +=tag.length;
+  }];
   
   /* History */
   [[self history] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
