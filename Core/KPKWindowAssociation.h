@@ -37,12 +37,12 @@
  *  The autotype sequence to use for this window association
  */
 @property (nonatomic, copy) NSString *keystrokeSequence;
-/**
- *  Reference to the parent autotype for undo/redo capability
- */
-@property (weak) KPKAutotype *autotype;
 
-- (id)initWithWindow:(NSString *)window keystrokeSequence:(NSString *)strokes;
+@property (weak, readonly) KPKAutotype *autotype;
+
+@property (nonatomic, readonly) BOOL hasDefaultKeystrokeSequence;
+
+- (instancetype)initWithWindowTitle:(NSString *)windowTitle keystrokeSequence:(NSString *)strokes;
 /**
  *  Returns YES if the supplied window title is matched by the association
  *
@@ -52,6 +52,5 @@
  */
 - (BOOL)matchesWindowTitle:(NSString *)windowTitle;
 
-- (BOOL)hasDefaultKeystrokeSequence;
 
 @end

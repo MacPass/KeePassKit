@@ -21,6 +21,7 @@
 //
 
 #import "KPKWindowAssociation.h"
+#import "KPKWindowAssociation+Private.h"
 #import "KPKEntry.h"
 #import "KPKAutotype.h"
 #import "KPKErrors.h"
@@ -43,10 +44,10 @@
 #pragma mark -
 #pragma mark Lifecylce
 
-- (id)initWithWindow:(NSString *)window keystrokeSequence:(NSString *)strokes {
+- (id)initWithWindowTitle:(NSString *)windowTitle keystrokeSequence:(NSString *)strokes {
   self = [super init];
   if(self) {
-    _windowTitle = [window copy];
+    _windowTitle = [windowTitle copy];
     _keystrokeSequence = [strokes copy];
     _regularExpressionIsValid = NO;
   }
@@ -70,7 +71,7 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-  return [[KPKWindowAssociation alloc] initWithWindow:self.windowTitle keystrokeSequence:self.keystrokeSequence];
+  return [[KPKWindowAssociation alloc] initWithWindowTitle:self.windowTitle keystrokeSequence:self.keystrokeSequence];
 }
 
 #pragma mark -
@@ -108,6 +109,10 @@
   }
 }
 
+- (BOOL)hasDefaultKeystrokeSequence {
+  return !(_keystrokeSequence.length > 0);
+}
+
 - (BOOL)matchesWindowTitle:(NSString *)windowTitle {
   if(NSOrderedSame == [self.windowTitle caseInsensitiveCompare:windowTitle]) { return YES; }
   /* Only update the cached expression, if we need to */
@@ -129,10 +134,6 @@
   }
   NSUInteger matches = [self.windowTitleRegularExpression numberOfMatchesInString:windowTitle options:0 range:NSMakeRange(0, windowTitle.length)];
   return (matches == 1);
-}
-
-- (BOOL)hasDefaultKeystrokeSequence {
-  return !(_keystrokeSequence.length > 0);
 }
 
 @end

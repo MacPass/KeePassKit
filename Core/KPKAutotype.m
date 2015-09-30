@@ -21,10 +21,12 @@
 //
 
 #import "KPKAutotype.h"
+#import "KPKAutotype+Private.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKTree.h"
 #import "KPKWindowAssociation.h"
+#import "KPKWindowAssociation+Private.h"
 
 @interface KPKAutotype () {
   NSMutableArray *_associations;

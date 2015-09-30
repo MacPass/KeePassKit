@@ -293,7 +293,7 @@
 }
 
 - (NSString *)defaultAutoTypeSequence {
-  if(![self hasDefaultAutotypeSequence]) {
+  if(!self.hasDefaultAutotypeSequence) {
     return _defaultAutoTypeSequence;
   }
   if(self.parent) {
@@ -305,7 +305,7 @@
 }
 
 - (BOOL)hasDefaultAutotypeSequence {
-  return !([_defaultAutoTypeSequence length] > 0);
+  return !(_defaultAutoTypeSequence.length > 0);
 }
 
 #pragma mark -

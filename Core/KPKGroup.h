@@ -100,11 +100,11 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  *
  *  @return YES if autotype can be used, otherwise NO
  */
-- (BOOL)isAutotypeable;
+@property (nonatomic, readonly) BOOL isAutotypeable;
 /**
  *  @return YES if the group has a default autotype sequence. That is none set. NO otherwise
  */
-- (BOOL)hasDefaultAutotypeSequence;
+@property(nonatomic, readonly) BOOL hasDefaultAutotypeSequence;
 
 #pragma mark Hierarchy
 /**

@@ -425,10 +425,9 @@
   autotype.defaultKeystrokeSequence = KPKXmlNonEmptyString(autotypeElement, @"DefaultSequence");
   NSInteger obfuscate = KPKXmlInteger(autotypeElement, @"DataTransferObfuscation");
   autotype.obfuscateDataTransfer = obfuscate > 0;
-  autotype.entry = entry;
   
   for(DDXMLElement *associationElement in [autotypeElement elementsForName:@"Association"]) {
-    KPKWindowAssociation *association = [[KPKWindowAssociation alloc] initWithWindow:KPKXmlString(associationElement, @"Window")
+    KPKWindowAssociation *association = [[KPKWindowAssociation alloc] initWithWindowTitle:KPKXmlString(associationElement, @"Window")
                                                                    keystrokeSequence:KPKXmlNonEmptyString(associationElement, @"KeystrokeSequence")];
     [autotype addAssociation:association];
   }

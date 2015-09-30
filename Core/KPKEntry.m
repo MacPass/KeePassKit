@@ -26,6 +26,7 @@
 #import "KPKBinary.h"
 #import "KPKAttribute.h"
 #import "KPKAutotype.h"
+#import "KPKAutotype+Private.h"
 #import "KPKWindowAssociation.h"
 #import "KPKFormat.h"
 #import "KPKTimeInfo.h"

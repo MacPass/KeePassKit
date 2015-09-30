@@ -33,7 +33,7 @@
 @property (nonatomic, strong, readonly) NSArray *associations;
 @property (nonatomic, assign, readonly) BOOL hasDefaultKeystrokeSequence;
 
-@property (weak) KPKEntry *entry;
+@property (weak, readonly) KPKEntry *entry;
 
 - (void)addAssociation:(KPKWindowAssociation *)association;
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index;
