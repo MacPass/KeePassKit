@@ -151,3 +151,11 @@
 }
 
 @end
+
+@implementation KPKAutotype (Private)
+
+- (void)setEntry:(KPKEntry *)entry {
+  _entry = entry;
+}
+
+@end

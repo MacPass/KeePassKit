@@ -137,3 +137,11 @@
 }
 
 @end
+
+@implementation KPKWindowAssociation (Private)
+
+- (void)setAutotype:(KPKAutotype *)autotype {
+  _autotype = autotype;
+}
+
+@end
