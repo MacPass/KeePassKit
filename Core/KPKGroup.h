@@ -37,9 +37,6 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 
 @property(nonatomic, strong) NSUUID *lastTopVisibleEntry;
 @property(nonatomic) BOOL isExpanded;
-@property(nonatomic, copy) NSString *defaultAutoTypeSequence;
-@property(nonatomic) KPKInheritBool isAutoTypeEnabled;
-@property(nonatomic) KPKInheritBool isSearchEnabled;
 
 /**
  All actions register with the undomanager and
@@ -84,14 +81,13 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  */
 - (NSArray *)searchableChildEntries;
 
-/**
- *	Returns YES if the group is seachable, NO otherwise. The value is determined by the isSeacheEnabled settings
- *  If the settings is KPKInherit, the parent is asked. If the root has set KPKInhertig, YES is assumed
- *	@return	YES if enabled, NO otherwise
- */
-- (BOOL)isSearchable;
+@property(nonatomic) KPKInheritBool isSearchEnabled;
 
 #pragma mark Autotype
+
+@property(nonatomic, copy) NSString *defaultAutoTypeSequence;
+
+@property(nonatomic) KPKInheritBool isAutoTypeEnabled;
 
 - (NSArray *)autotypeableChildEntries;
 /**

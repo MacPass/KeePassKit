@@ -462,7 +462,7 @@
 
 - (NSArray *)searchableChildEntries {
   NSMutableArray *searchableEntries;
-  if([self isSearchable]) {
+  if([self _isSearchable]) {
     searchableEntries = [NSMutableArray arrayWithArray:_entries];
   }
   else {
@@ -474,13 +474,13 @@
   return searchableEntries;
 }
 
-- (BOOL)isSearchable {
+- (BOOL)_isSearchable {
   if(self.isTrash || self.isTrashed) {
     return NO;
   }
   switch(self.isSearchEnabled) {
     case KPKInherit:
-      return self.parent ? [self.parent isSearchable] : YES;
+      return self.parent ? [self.parent _isSearchable] : YES;
       
     case KPKInheritNO:
       return NO;
