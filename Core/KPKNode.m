@@ -37,6 +37,8 @@
   KPKTree *_tree;
 }
 
+@synthesize minimumVersion = _minimumVersion;
+@synthesize deleted = _deleted;
 @dynamic notes;
 @dynamic title;
 
@@ -237,9 +239,8 @@
   return nil;
 }
 
-@end
-
-@implementation KPKNode (Private)
+#pragma mark -
+#pragma mark Private Extensions
 
 - (instancetype)_init {
   self = [super init];
@@ -286,15 +287,6 @@
   [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
   [aCoder encodeBool:self.deleted forKey:NSStringFromSelector(@selector(deleted))];
-}
-
-#pragma mark Properites
-- (void)setDeleted:(BOOL)deleted {
-  _deleted = deleted;
-}
-
-- (void)setMinimumVersion:(KPKVersion)minimumVersion {
-  _minimumVersion = minimumVersion;
 }
 
 - (KPKTree *)tree {

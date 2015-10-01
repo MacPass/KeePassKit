@@ -37,6 +37,8 @@
 
 @implementation KPKAutotype
 
+@synthesize entry = _entry;
+
 + (BOOL)supportsSecureCoding {
   return YES;
 }
@@ -148,14 +150,6 @@
   if(association) {
     [_associations removeObjectAtIndex:index];
   }
-}
-
-@end
-
-@implementation KPKAutotype (Private)
-
-- (void)setEntry:(KPKEntry *)entry {
-  _entry = entry;
 }
 
 @end

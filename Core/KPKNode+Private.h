@@ -11,7 +11,7 @@
 
 #import "KPKNode.h"
 
-@interface KPKNode (Private)
+@interface KPKNode ()
 
 @property(nonatomic, readwrite, weak) KPKTree *tree;
 @property(nonatomic, readwrite) KPKVersion minimumVersion;

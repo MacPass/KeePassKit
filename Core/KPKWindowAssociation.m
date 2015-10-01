@@ -37,6 +37,8 @@
 
 @implementation KPKWindowAssociation
 
+@synthesize autotype = _autotype;
+
 + (BOOL)supportsSecureCoding {
   return YES;
 }
@@ -134,14 +136,6 @@
   }
   NSUInteger matches = [self.windowTitleRegularExpression numberOfMatchesInString:windowTitle options:0 range:NSMakeRange(0, windowTitle.length)];
   return (matches == 1);
-}
-
-@end
-
-@implementation KPKWindowAssociation (Private)
-
-- (void)setAutotype:(KPKAutotype *)autotype {
-  _autotype = autotype;
 }
 
 @end

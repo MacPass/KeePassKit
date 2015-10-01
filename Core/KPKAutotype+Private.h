@@ -8,7 +8,7 @@
 
 #import "KPKAutotype.h"
 
-@interface KPKAutotype (Private)
+@interface KPKAutotype ()
 
 @property (weak) KPKEntry *entry;
 

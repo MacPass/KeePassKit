@@ -8,7 +8,7 @@
 
 #import "KPKWindowAssociation.h"
 
-@interface KPKWindowAssociation (Private)
+@interface KPKWindowAssociation ()
 
 @property (weak) KPKAutotype *autotype;
 
