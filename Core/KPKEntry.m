@@ -155,6 +155,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark NSCopying
 - (id)copyWithZone:(NSZone *)zone {
+  /* Copies have the same UUID */
   KPKEntry *entry = [[KPKEntry allocWithZone:zone] init];
   entry.deleted = self.deleted;
   entry.iconId = self.iconId;

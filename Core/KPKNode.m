@@ -149,23 +149,6 @@
   return self.tree.undoManager;
 }
 
-//- (KPKGroup *)parentGroup {
-//  if([self.parent isKindOfClass:[KPKGroup class]]) {
-//    return self.parent;
-//  }
-//  return nil;
-//}
-
-//- (void)setParent:(id )parent {
-//  if([parent isMemberOfClass:[KPKTree class]]) {
-//    _tree = (id)parent;
-//    return;
-//  }
-//  if([parent isMemberOfClass:[KPKGroup class]]) {
-//    _parent = parent;
-//  }
-//}
-
 #pragma mark KPKTimerecording
 - (void)setUpdateTiming:(BOOL)updateTiming {
   self.timeInfo.updateTiming = updateTiming;
@@ -192,11 +175,8 @@
     return; // Nothing to do!
   }
   NSAssert([node asGroup] || [node asEntry], @"Cannot update to abstract KPKNode class");
+  NSAssert([node asGroup] == [self asGroup] && [node asEntry] == [self asEntry], @"Cannot update accross types");
   /* UUID should be the same */
-  if(![self.uuid isEqualTo:node.uuid]) {
-    NSAssert(NO, @"Nodes should never update to differen UUIDs!");
-    return;
-  }
   KPKNode *copy = [self copy];
   [[self.undoManager prepareWithInvocationTarget:self] updateToNode:copy];
   /* Do not update parent/child structure, we just want "content" to update */
