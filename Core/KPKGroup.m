@@ -111,10 +111,14 @@
 #pragma mark NSCopying
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-  KPKGroup *copy = [[KPKGroup alloc] init];
+  return [self _copyWithUUID:self.uuid];
+}
+
+- (instancetype)_copyWithUUID:(NSUUID *)uuid {
+  KPKGroup *copy = [[KPKGroup alloc] initWithUUID:uuid];
   copy.deleted = self.deleted;
-  copy.entries = _entries;
-  copy.groups = _groups;
+  copy->_entries = [[NSMutableArray alloc] initWithArray:_entries copyItems:YES];
+  copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
@@ -126,16 +130,17 @@
   copy.iconUUID = self.iconUUID;
   copy.parent = self.parent;
   
-  //[copy _updateParents];
+  [copy _updateParents];
   
   /* Copy time info at last to ensure valid times */
-  copy.timeInfo = [self.timeInfo copyWithZone:zone];
+  copy.timeInfo = self.timeInfo;
   
   return copy;
 }
 
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
-  KPKGroup *copy = [self copy];
+  /* We update the UUID */
+  KPKGroup *copy = [self _copyWithUUID:nil];
   
   /* update entry uuids */
   /* update child uuids */
@@ -196,22 +201,6 @@
     *stop = !isEqual;
   }];
   return isEqual;
-}
-
-//- (void)_updateUUIDs {
-//  self.uuid = [[NSUUID alloc] init];
-//  for(KPKEntry *entry in self.entries) {
-//    entry.uuid = [[NSUUID alloc] init];
-//  }
-//  for(KPKGroup *group in self.groups) {
-//    [group _updateUUIDs];
-//  }
-//}
-
-- (void)_generateUUID:(BOOL)recursive {
-  [super _generateUUID:recursive];
-  [_entries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [obj _generateUUID:recursive]; }];
-  [_groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [obj _generateUUID:recursive]; }];
 }
 
 - (void)_updateParents {

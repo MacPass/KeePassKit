@@ -155,8 +155,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark NSCopying
 - (id)copyWithZone:(NSZone *)zone {
-  /* Copies have the same UUID */
-  KPKEntry *entry = [[KPKEntry allocWithZone:zone] init];
+  return [self _copyWithUUUD:self.uuid];
+}
+
+- (instancetype)_copyWithUUUD:(nullable NSUUID *)uuid {
+  KPKEntry *entry = [[KPKEntry alloc] initWithUUID:uuid];
   entry.deleted = self.deleted;
   entry.iconId = self.iconId;
   entry.iconUUID = self.iconUUID;
@@ -184,7 +187,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   entry.backgroundColor = self.backgroundColor;
   
   /* Time */
-  entry.timeInfo = [self.timeInfo copyWithZone:zone];
+  entry.timeInfo = self.timeInfo;
   
   /* fix entry references */
   for(KPKAttribute *attribute in _customAttributes) {
@@ -249,7 +252,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
   /* Copy sets a new UUID */
-  KPKEntry *copy = [self copy];
+  KPKEntry *copy = [self _copyWithUUUD:nil];
   if(!titleOrNil) {
     NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKLocalizable", "");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];

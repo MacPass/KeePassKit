@@ -174,11 +174,12 @@
   if(!node) {
     return; // Nothing to do!
   }
+  /* UUID should be the same */
+  NSAssert([self.uuid isEqual:node], @"Cannot update to node with differen UUID");
+
   NSAssert(node.asGroup || node.asEntry, @"Cannot update to abstract KPKNode class");
   NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
-  /* UUID should be the same */
-  KPKNode *copy = [self copy];
-  [[self.undoManager prepareWithInvocationTarget:self] updateToNode:copy];
+  [[self.undoManager prepareWithInvocationTarget:self] updateToNode:[self copy]];
   /* Do not update parent/child structure, we just want "content" to update */
   self.iconId = node.iconId;
   self.timeInfo = node.timeInfo;
@@ -251,10 +252,6 @@
     _deleted = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(deleted))];
   }
   return self;
-}
-
-- (void)_generateUUID:(BOOL)recursive {
-  _uuid = [NSUUID UUID];
 }
 
 - (void)_encodeWithCoder:(NSCoder *)aCoder {

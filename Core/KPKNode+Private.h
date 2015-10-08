@@ -15,6 +15,7 @@
 
 @property(nonatomic, readwrite, weak) KPKTree *tree;
 @property(nonatomic, readwrite) BOOL deleted;
+@property(nonatomic, copy) KPKTimeInfo *timeInfo;
 
 #pragma mark Initalizer
 - (instancetype)_init;
@@ -24,9 +25,6 @@
 #pragma mark NSSecureCoding
 - (instancetype)_initWithCoder:(NSCoder *)aDecoder;
 - (void)_encodeWithCoder:(NSCoder *)aCoder;
-
-#pragma mark Interals
-- (void)_generateUUID:(BOOL)recursive;
 
 @end
 
