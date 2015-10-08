@@ -308,6 +308,17 @@
   return !(_defaultAutoTypeSequence.length > 0);
 }
 
+- (KPKVersion)minimumVersion {
+  KPKVersion version = KPKUnknownVersion;
+  for(KPKGroup *group in self.groups) {
+    version = MAX(version, group.minimumVersion);
+  }
+  for(KPKEntry *entry in self.entries) {
+    version = MAX(version, entry.minimumVersion);
+  }
+  return version;
+}
+
 #pragma mark -
 #pragma mark Accessors
 - (NSArray *)childEntries {

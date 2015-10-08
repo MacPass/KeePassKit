@@ -37,10 +37,10 @@
   KPKTree *_tree;
 }
 
-@synthesize minimumVersion = _minimumVersion;
 @synthesize deleted = _deleted;
 @dynamic notes;
 @dynamic title;
+@dynamic minimumVersion;
 
 + (NSUInteger)defaultIcon {
   return KPKIconPassword;
@@ -109,7 +109,7 @@
 }
 
 - (BOOL)isTrash {
-  return [self asGroup].uuid == self.tree.metaData.trashUuid;
+  return self.asGroup.uuid == self.tree.metaData.trashUuid;
 }
 
 - (BOOL)isTrashed {
@@ -174,14 +174,13 @@
   if(!node) {
     return; // Nothing to do!
   }
-  NSAssert([node asGroup] || [node asEntry], @"Cannot update to abstract KPKNode class");
-  NSAssert([node asGroup] == [self asGroup] && [node asEntry] == [self asEntry], @"Cannot update accross types");
+  NSAssert(node.asGroup || node.asEntry, @"Cannot update to abstract KPKNode class");
+  NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
   /* UUID should be the same */
   KPKNode *copy = [self copy];
   [[self.undoManager prepareWithInvocationTarget:self] updateToNode:copy];
   /* Do not update parent/child structure, we just want "content" to update */
   self.iconId = node.iconId;
-  self.minimumVersion = node.minimumVersion;
   self.timeInfo = node.timeInfo;
   self.iconUUID = node.iconUUID;
   /* Update the Timing! */
@@ -197,8 +196,8 @@
   KPKGroup *trash = [self.tree createTrash];
   NSAssert(self.tree.trash == trash, @"Trash should be nil or equal");
   if(trash) {
-    [[self asEntry] moveToGroup:trash];
-    [[self asGroup] moveToGroup:trash];
+    [self.asEntry moveToGroup:trash];
+    [self.asGroup moveToGroup:trash];
   }
   else {
     [self remove];
@@ -226,7 +225,6 @@
   self = [super init];
   if (self) {
     _uuid = [[NSUUID alloc] init];
-    _minimumVersion = KPKLegacyVersion;
     _timeInfo = [[KPKTimeInfo alloc] init];
     _iconId = [[self class] defaultIcon];
     _deleted = NO;
@@ -246,7 +244,6 @@
   self = [self _init];
   if(self) {
     _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))];
-    _minimumVersion = (KPKVersion) [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(minimumVersion))];
     _iconId = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(iconId))];
     _iconUUID = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))];
     /* decode time info at last */

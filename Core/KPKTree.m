@@ -202,17 +202,10 @@
 }
 
 - (KPKVersion)minimumVersion {
-  KPKVersion minimumVersion = KPKUnknownVersion;
-  if([self.root.entries count] > 0) {
+  if(self.root.entries.count > 0) {
     return KPKXmlVersion;
   }
-  for (KPKNode *node in self.allEntries) {
-    minimumVersion = MAX(node.minimumVersion, minimumVersion);
-  }
-  for(KPKNode *node in self.allGroups) {
-    minimumVersion = MAX(node.minimumVersion, minimumVersion);
-  }
-  return minimumVersion;
+  return self.root.minimumVersion;
 }
 
 - (NSString *)defaultAutotypeSequence {

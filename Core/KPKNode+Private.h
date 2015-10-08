@@ -14,7 +14,6 @@
 @interface KPKNode ()
 
 @property(nonatomic, readwrite, weak) KPKTree *tree;
-@property(nonatomic, readwrite) KPKVersion minimumVersion;
 @property(nonatomic, readwrite) BOOL deleted;
 
 #pragma mark Initalizer

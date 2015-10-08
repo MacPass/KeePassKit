@@ -95,7 +95,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  *	Returns the root group of the node by walking up the tree
  *	@return	root group of the node
  */
-- (KPKGroup *)rootGroup;
+@property (nonatomic, readonly) KPKGroup *rootGroup;
 /**
  *	Determines if the receiving group is an ancestor of the supplied group
  *	@param	group	group to test ancestorship for
@@ -116,7 +116,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 
 - (void)remove;
 
-- (KPKGroup *)asGroup;
-- (KPKEntry *)asEntry;
+@property(nonatomic, readonly) KPKGroup *asGroup;
+@property(nonatomic, readonly) KPKEntry *asEntry;
 
 @end

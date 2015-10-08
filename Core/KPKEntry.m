@@ -162,7 +162,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   entry.iconUUID = self.iconUUID;
   //entry.tree = self.tree;
   entry.parent = self.parent;
-  entry.minimumVersion = self.minimumVersion;
   
   /* Default attributes */
   entry.password = self.password;
@@ -424,6 +423,16 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return YES;
 }
 
+- (KPKVersion)minimumVersion {
+  if(self.binaries.count > 1) {
+    return KPKXmlVersion;
+  }
+  if(self.customAttributes.count > 0) {
+    return KPKXmlVersion;
+  }
+  return KPKLegacyVersion;
+}
+
 - (void)setProtectNotes:(BOOL)protectNotes {
   self.notesAttribute.isProtected = protectNotes;
 }
@@ -500,7 +509,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark Editing
 - (void)updateToNode:(KPKNode *)node {
   [super updateToNode:node];
-  KPKEntry *entry = [node asEntry];
+  KPKEntry *entry = node.asEntry;
   NSAssert(entry, @"KPKEntry nodes can only update to KPKEntry nodes!");
   if(nil == entry) {
     return; // We need an KPKEntry to update to!
@@ -581,7 +590,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [self insertObject:attribute inCustomAttributesAtIndex:_customAttributes.count];
   attribute.entry = self;
   [self wasModified];
-  self.minimumVersion = [self _minimumVersionForCurrentAttributes];
 }
 
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
@@ -590,7 +598,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     attribute.entry = nil;
     [self removeObjectFromCustomAttributesAtIndex:index];
     [self wasModified];
-    self.minimumVersion = [self _minimumVersionForCurrentAttributes];
   }
 }
 #pragma mark Attachments
@@ -601,7 +608,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
   [self insertObject:binary inBinariesAtIndex:_binaries.count];
   [self wasModified];
-  self.minimumVersion = [self _minimumVersionForCurrentAttachments];
 }
 
 - (void)removeBinary:(KPKBinary *)attachment {
@@ -615,7 +621,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(index != NSNotFound) {
     [self removeObjectFromBinariesAtIndex:index];
     [self wasModified];
-    self.minimumVersion = [self _minimumVersionForCurrentAttachments];
   }
 }
 
@@ -755,12 +760,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark -
 #pragma mark Private Helper
 
-- (KPKVersion)_minimumVersionForCurrentAttachments {
-  return ([_binaries count] > 1 ? KPKXmlVersion : KPKLegacyVersion);
-}
 
-- (KPKVersion)_minimumVersionForCurrentAttributes {
-  return ([_customAttributes count] > 0 ? KPKXmlVersion : KPKLegacyVersion);
-}
 
 @end
