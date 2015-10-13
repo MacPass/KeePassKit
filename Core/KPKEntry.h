@@ -107,7 +107,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 + (KPKEntry *)metaEntryWithData:(NSData *)data name:(NSString *)name;
 
-
 #pragma mark Custom Attributes
 /**
  @param key String that identifies the attributes

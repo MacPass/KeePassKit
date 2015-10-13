@@ -25,15 +25,17 @@
 @class KPKEntry;
 @class KPKWindowAssociation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface KPKAutotype : NSObject <NSCopying, NSSecureCoding>
 
 @property BOOL isEnabled;
 @property BOOL obfuscateDataTransfer;
-@property (nonatomic, copy) NSString *defaultKeystrokeSequence;
-@property (nonatomic, strong, readonly) NSArray *associations;
+@property (null_resettable, nonatomic, copy) NSString *defaultKeystrokeSequence;
+@property (nonnull, nonatomic, strong, readonly) NSArray *associations;
 @property (nonatomic, readonly) BOOL hasDefaultKeystrokeSequence;
 
-@property (weak, readonly) KPKEntry *entry;
+@property (nullable, weak, readonly) KPKEntry *entry;
 
 - (void)addAssociation:(KPKWindowAssociation *)association;
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index;
@@ -44,6 +46,8 @@
  *  @param windowTitle The window title to search associations for
  *  @return first matching association, if there are found more, only the first match is returned
  */
-- (KPKWindowAssociation *)windowAssociationMatchingWindowTitle:(NSString *)windowTitle;
+- (nullable KPKWindowAssociation *)windowAssociationMatchingWindowTitle:(NSString *)windowTitle;
+
+NS_ASSUME_NONNULL_END
 
 @end

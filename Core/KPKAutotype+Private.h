@@ -10,6 +10,6 @@
 
 @interface KPKAutotype ()
 
-@property (weak) KPKEntry *entry;
+@property (nullable, weak) KPKEntry *entry;
 
 @end

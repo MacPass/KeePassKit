@@ -427,10 +427,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (KPKVersion)minimumVersion {
-  if(self.binaries.count > 1) {
-    return KPKXmlVersion;
-  }
-  if(self.customAttributes.count > 0) {
+  if(self.binaries.count > 1 ||
+     self.customAttributes.count > 0 ||
+     self.history.count > 0) {
     return KPKXmlVersion;
   }
   return KPKLegacyVersion;
@@ -462,16 +461,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
   _autotype = [autotype copy];
   _autotype.entry = self;
-}
-
-- (void)setParent:(KPKGroup *)parent {
-  [super setParent:parent];
-  if(self.isHistory) {
-    return; // History entries should not propagate set parent;
-  }
-  for(KPKEntry *historyEntry in self.history) {
-    historyEntry.parent = self.parent;
-  }
 }
 
 - (void)setTitle:(NSString *)title {
@@ -552,10 +541,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (KPKAttribute *)customAttributeForKey:(NSString *)key {
   // test for default keys;
   NSPredicate *filter = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-    return [[evaluatedObject key] isEqualToString:key];
+    return [((KPKAttribute *)evaluatedObject).key isEqualToString:key];
   }];
   NSArray *filterdAttributes = [self.customAttributes filteredArrayUsingPredicate:filter];
-  return [filterdAttributes lastObject];
+  return filterdAttributes.lastObject;
 }
 
 - (NSString *)valueForCustomAttributeWithKey:(NSString *)key {
@@ -564,12 +553,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (BOOL)hasAttributeWithKey:(NSString *)key {
-  // test for default keys;
-  NSPredicate *filter = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-    return [[evaluatedObject key] isEqualToString:key];
-  }];
-  NSArray *filterdAttributes = [self.customAttributes filteredArrayUsingPredicate:filter];
-  return [filterdAttributes count] > 0;
+  return (nil != [self customAttributeForKey:key]);
 }
 
 -(NSString *)proposedKeyForAttributeKey:(NSString *)key {
@@ -589,6 +573,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)addCustomAttribute:(KPKAttribute *)attribute {
+  NSAssert(nil == [self customAttributeForKey:attribute.key], @"Attributes have to have unique keys!");
   /* TODO: sanity check if attribute has unique key */
   [self insertObject:attribute inCustomAttributesAtIndex:_customAttributes.count];
   attribute.entry = self;
@@ -631,7 +616,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)addHistoryEntry:(KPKEntry *)entry {
   [self insertObject:entry inHistoryAtIndex:_history.count];
-  // Update Minimum Version?
 }
 
 - (void)removeHistoryEntry:(KPKEntry *)entry {
