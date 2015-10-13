@@ -139,7 +139,7 @@
   if([imageRep isKindOfClass:[NSBitmapImageRep class]]) {
     NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
     //[bitmapRep setProperty:NSImageGamma withValue:@1.0];
-    return [bitmapRep representationUsingType:NSPNGFileType properties:nil];
+    return [bitmapRep representationUsingType:NSPNGFileType properties:@{}];
   }
   return nil;
 }
