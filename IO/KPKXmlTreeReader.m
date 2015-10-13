@@ -40,6 +40,7 @@
 #import "KPKSalsa20RandomStream.h"
 #import "KPKTimeInfo.h"
 #import "KPKTree.h"
+#import "KPKTree+Private.h"
 #import "KPKWindowAssociation.h"
 #import "KPKXmlElements.h"
 #import "KPKXmlFormat.h"
@@ -459,7 +460,7 @@
     NSUUID *uuid = [[NSUUID alloc] initWithEncodedUUIDString:KPKXmlString(deletedObject, kKPKXmlUUID)];
     NSDate *date = KPKXmlDate(_dateFormatter, deletedObject, @"DeletionTime");
     KPKDeletedNode *deletedNode = [[KPKDeletedNode alloc] initWithUUID:uuid date:date];
-    tree.deletedObjects[ deletedNode.uuid ] = deletedNode;
+    tree.mutableDeletedObjects[ deletedNode.uuid ] = deletedNode;
   }
 }
 

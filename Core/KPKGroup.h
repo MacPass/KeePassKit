@@ -30,10 +30,10 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 
 @interface KPKGroup : KPKNode <NSSecureCoding, NSCopying, NSPasteboardReading, NSPasteboardWriting>
 
-@property(nonatomic, readonly) NSArray *groups;
-@property(nonatomic, readonly) NSArray *entries;
-@property(nonatomic, readonly) NSArray *childEntries;
-@property(nonatomic, readonly) NSArray *childGroups;
+@property(nonatomic, readonly) NSArray<KPKGroup *> *groups;
+@property(nonatomic, readonly) NSArray<KPKEntry *> *entries;
+@property(nonatomic, readonly) NSArray<KPKEntry *> *childEntries;
+@property(nonatomic, readonly) NSArray<KPKGroup *> *childGroups;
 
 @property(nonatomic, strong) NSUUID *lastTopVisibleEntry;
 @property(nonatomic) BOOL isExpanded;
@@ -79,7 +79,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  *	Returns an array containing all entries inside searchable groups.
  *	@return	NSArray of KPKEntries contained in searchable groups
  */
-- (NSArray *)searchableChildEntries;
+- (NSArray<KPKEntry *> *)searchableChildEntries;
 
 @property(nonatomic) KPKInheritBool isSearchEnabled;
 
@@ -89,7 +89,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 
 @property(nonatomic) KPKInheritBool isAutoTypeEnabled;
 
-- (NSArray *)autotypeableChildEntries;
+- (NSArray<KPKEntry *> *)autotypeableChildEntries;
 /**
  *  Returns YES if the entries for this group use Autotype. The value is determined by the isAutotypeEnabled settings
  *  If the setting is KPKInherit, the parent is aksed. If th eroot has KPKInhert, YES is assumed

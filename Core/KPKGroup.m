@@ -29,6 +29,7 @@
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
 #import "KPKTree.h"
+#import "KPKTree+Private.h"
 #import "KPKTimeInfo.h"
 
 #import "NSUUID+KeePassKit.h"
@@ -213,13 +214,12 @@
   }
 }
 
-#pragma mark NSPasteboardWriting/Reading
 
-- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
+#pragma mark NSPasteboardWriting/Reading
+- (NSArray<NSString *> *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
   return @[KPKGroupUTI];
 }
-
-+ (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
++ (NSArray<NSString *> *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
   return @[KPKGroupUTI];
 }
 
@@ -237,15 +237,15 @@
 
 #pragma mark -
 #pragma mark Properties
-- (NSArray *)groups {
+- (NSArray<KPKGroup *> *)groups {
   return [_groups copy];
 }
 
-- (NSArray *)entries {
+- (NSArray<KPKEntry *> *)entries {
   return  [_entries copy];
 }
 
-- (void)setGroups:(NSArray *)groups {
+- (void)setGroups:(NSArray<KPKGroup *> *)groups {
   if(_groups == groups) {
     return; // No changes
   }
@@ -352,7 +352,7 @@
     /* Remove groups that might have been added to the deleted objects */
     NSAssert(nil != self.tree.deletedObjects[group.uuid], @"A deleted group has to have an entry in deleted nodes");
   }
-  [self.tree.deletedObjects removeObjectForKey:group.uuid];
+  [self.tree.mutableDeletedObjects removeObjectForKey:group.uuid];
   group.deleted = NO;
   [self insertObject:group inGroupsAtIndex:index];
   [self wasModified];
@@ -366,7 +366,7 @@
     if(group.deleted) {
       /* Add group to deleted objects */
       NSAssert(nil == self.tree.deletedObjects[group.uuid], @"Group already registered as deleted!");
-      self.tree.deletedObjects[group.uuid] = [[KPKDeletedNode alloc] initWithNode:group];
+      self.tree.mutableDeletedObjects[group.uuid] = [[KPKDeletedNode alloc] initWithNode:group];
     }
     [self removeObjectFromGroupsAtIndex:index];
     [self wasModified];
@@ -404,7 +404,7 @@
   if(entry.deleted) {
     /* Remove the deleted Object */
     NSAssert(nil != self.tree.deletedObjects[entry.uuid], @"A deleted entry has to have an entry in deleted nodes");
-    [self.tree.deletedObjects removeObjectForKey:entry.uuid];
+    [self.tree.mutableDeletedObjects removeObjectForKey:entry.uuid];
   }
   entry.deleted = NO;
   [self insertObject:entry inEntriesAtIndex:index];
@@ -418,7 +418,7 @@
     if(entry.deleted) {
       /* Add the entry to the deleted Objects */
       NSAssert(nil == self.tree.deletedObjects[entry.uuid], @"Entry already marked as deleted!");
-      self.tree.deletedObjects[ entry.uuid ] = [[KPKDeletedNode alloc] initWithNode:entry];
+      self.tree.mutableDeletedObjects[ entry.uuid ] = [[KPKDeletedNode alloc] initWithNode:entry];
     }
     entry.parent = nil;
   }
@@ -460,7 +460,7 @@
   return  [filteredGroups lastObject];
 }
 
-- (NSArray *)searchableChildEntries {
+- (NSArray<KPKEntry *> *)searchableChildEntries {
   NSMutableArray *searchableEntries;
   if([self _isSearchable]) {
     searchableEntries = [NSMutableArray arrayWithArray:_entries];
@@ -491,8 +491,8 @@
 }
 
 #pragma mark Autotype
-- (NSArray *)autotypeableChildEntries {
-  NSMutableArray *autotypeEntries;
+- (NSArray<KPKEntry *> *)autotypeableChildEntries {
+  NSMutableArray<KPKEntry *> *autotypeEntries;
   if([self isAutotypeable]) {
     /* KPKEntries have their own autotype settings, hence we need to filter them as well */
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {

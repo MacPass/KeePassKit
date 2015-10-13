@@ -515,10 +515,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   KPKEntry *entry = node.asEntry;
   NSAssert(entry, @"KPKEntry nodes can only update to KPKEntry nodes!");
   if(nil == entry) {
-    return; // We need an KPKEntry to update to!
+    return; // only KPKEntry can be used
   }
   if(entry.isHistory) {
-    /* We need to reset the history to the correct "point in time" */
+    /* Reset the history to the correct "point in time" */
     NSUInteger historyIndex = [self.history indexOfObject:entry];
     [self removeHistoryAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(historyIndex, [_history count] - historyIndex)]];
   }

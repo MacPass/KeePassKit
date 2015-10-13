@@ -22,6 +22,7 @@
 
 #import "KPKNode+Private.h"
 #import "KPKTree.h"
+#import "KPKTree+Private.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
@@ -46,7 +47,7 @@
   self = [super init];
   if(self) {
     _metaData = [[KPKMetaData alloc] init];
-    _deletedObjects = [[NSMutableDictionary alloc] init];
+    _mutableDeletedObjects = [[NSMutableDictionary alloc] init];
     _tagsMap = [[NSMutableDictionary alloc] init];
   }
   return self;
@@ -93,7 +94,7 @@
 
 - (void)dealloc {
   self.metaData = nil;
-  _deletedObjects = nil;
+  _mutableDeletedObjects = nil;
   self.root = nil;
 }
 
@@ -178,6 +179,10 @@
     return @[self.root];
   }
   return @[];
+}
+
+- (NSDictionary<NSUUID *,KPKDeletedNode *> *)deletedObjects {
+  return [self.mutableDeletedObjects copy];
 }
 
 - (NSArray *)allGroups {

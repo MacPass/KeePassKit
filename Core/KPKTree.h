@@ -27,6 +27,7 @@
 @class KPKGroup;
 @class KPKEntry;
 @class KPKCompositeKey;
+@class KPKDeletedNode;
 @class KPKIcon;
 @class KPKMetaData;
 
@@ -61,7 +62,7 @@
 @interface KPKTree : NSObject
 
 @property(nonatomic, weak) id<KPKTreeDelegate> delegate;
-@property(nonatomic, strong, readonly) NSMutableDictionary *deletedObjects;
+@property(nonatomic, strong, readonly) NSDictionary<NSUUID *,KPKDeletedNode *> *deletedObjects;
 @property(nonatomic, strong, readonly) KPKMetaData *metaData;
 
 
@@ -75,20 +76,20 @@
  Acces to the root group via the groups property
  to offer a bindable interface for a tree
  */
-@property(nonatomic, readonly) NSArray *groups;
+@property(nonatomic, readonly) NSArray<KPKGroup *> *groups;
 /**
  *	NSArray of KPKGroup objects. Contains all child groups in a tree.
  *  @note The root group is missing from this array
  */
-@property(nonatomic, readonly) NSArray *allGroups;
+@property(nonatomic, readonly) NSArray<KPKGroup *> *allGroups;
 /**
  *	NSArray of KPKEntries. Contains all entries of the tree
  */
-@property(nonatomic, readonly) NSArray *allEntries;
+@property(nonatomic, readonly) NSArray<KPKEntry *> *allEntries;
 /**
  *  NSArray of KPKEntries that are History elements
  */
-@property(nonatomic, readonly) NSArray *allHistoryEntries;
+@property(nonatomic, readonly) NSArray<KPKEntry *> *allHistoryEntries;
 /**
  *	The minimum Version of the tree. If any node uses higher
  *  featuers, the whole tree needs to have the highest version
@@ -97,7 +98,7 @@
 /**
  *  Tags on this tree. This is a aggregation of all Tags of entries
  */
-@property(nonatomic, strong, readonly) NSArray *tags;
+@property(nonatomic, strong, readonly) NSArray<NSString *> *tags;
 
 - (instancetype)initWithTemplateContents;
 

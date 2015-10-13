@@ -64,6 +64,7 @@
   return self;
 }
 
+
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
   /* not implemented */
   NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));

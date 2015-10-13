@@ -76,16 +76,21 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 + (NSUInteger)defaultIcon;
 
 /**
- *  Returns a copy of the node with the given title or a default tile if nil was supplied
- *  @param titelOrNil Title for the copy or default if nil
- *  @return copy of the node with title
+ *  Returns a copy of the node assigned with a new UUID. Use copy on KPKEntry or KPKGroup to get a carbon copy
+ *
+ *  @param titleOrNil title for the new node, if nil a default title is generated
+ *  @param options    options for the specific copy
+ *
+ *  @return copied node
  */
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options;
 
 /**
- *  Creates a new Node with the given UUID or genreates a new one, if nil
- *  @param uuid the UUID to use for the newly created node
- *  @return created node with the UUID
+ *  Creates a new node with the given UUID or generates a new of if nil was supplied
+ *
+ *  @param uuid uuid for the node. Use nil if you want a newly generated one
+ *
+ *  @return newly created node
  */
 - (instancetype)initWithUUID:(NSUUID *)uuid;
 
@@ -104,7 +109,11 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 - (BOOL)isAnchestorOf:(KPKNode *)node;
 
 - (BOOL)isDecendantOf:(KPKNode *)node;
-
+/**
+ *  Updates the node data to the given one.
+ *
+ *  @param node Node to update to
+ */
 - (void)updateToNode:(KPKNode *)node;
 
 /**
