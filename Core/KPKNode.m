@@ -24,10 +24,13 @@
 #import "KPKNode.h"
 #import "KPKNode+Private.h"
 #import "KPKEntry.h"
+#import "KPKEditingSession.h"
+#import "KPKEditingSession+Private.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
 #import "KPKTimeInfo.h"
 #import "KPKTree.h"
+#import "KPKTree+Private.h"
 #import "KPKMetaData.h"
 
 #import "NSUUID+KeePassKit.h"
@@ -171,24 +174,6 @@
   [self.timeInfo wasMoved];
 }
 
-- (void)updateToNode:(KPKNode *)node {
-  if(!node) {
-    return; // Nothing to do!
-  }
-  /* UUID should be the same */
-  NSAssert([self.uuid isEqual:node], @"Cannot update to node with differen UUID");
-
-  NSAssert(node.asGroup || node.asEntry, @"Cannot update to abstract KPKNode class");
-  NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
-  [[self.undoManager prepareWithInvocationTarget:self] updateToNode:[self copy]];
-  /* Do not update parent/child structure, we just want "content" to update */
-  self.iconId = node.iconId;
-  self.timeInfo = node.timeInfo;
-  self.iconUUID = node.iconUUID;
-  /* Update the Timing! */
-  [self wasModified];
-}
-
 - (void)trashOrRemove {
   /* If we do create a trahs group we should also remove it after a undo operation */
   if(self == self.tree.trash) {
@@ -262,6 +247,45 @@
   [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
   [aCoder encodeBool:self.deleted forKey:NSStringFromSelector(@selector(deleted))];
+}
+# pragma mark Editing
+- (void)beginEditing {
+  self.editingSession = [KPKEditingSession _editingSessionWithSource:self];
+  [self.tree _didStartOrResumeEditingSession:self.editingSession];
+}
+
+- (void)cancelEditing {
+  [self.tree _didEndEditingSession:self.editingSession];
+  self.editingSession = nil;
+}
+
+- (BOOL)commitEditing {
+  BOOL hasChanges = self.editingSession.hasChanges;
+  if(!hasChanges) {
+    NSAssert(self == self.editingSession.source, @"Source of editing sessiong needs to be self!");
+    [self _updateToNode:self.editingSession.node];
+  }
+  [self.tree _didEndEditingSession:self.editingSession];
+  self.editingSession = nil;
+  return hasChanges;
+}
+
+- (void)_updateToNode:(KPKNode *)node {
+  if(!node) {
+    return; // Nothing to do!
+  }
+  /* UUID should be the same */
+  NSAssert([self.uuid isEqual:node], @"Cannot update to node with differen UUID");
+  
+  NSAssert(node.asGroup || node.asEntry, @"Cannot update to abstract KPKNode class");
+  NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
+  [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self copy]];
+  /* Do not update parent/child structure, we just want "content" to update */
+  self.iconId = node.iconId;
+  self.timeInfo = node.timeInfo;
+  self.iconUUID = node.iconUUID;
+  /* Update the Timing! */
+  [self wasModified];
 }
 
 - (KPKTree *)tree {

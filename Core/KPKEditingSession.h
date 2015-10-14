@@ -1,9 +1,9 @@
 //
-//  KPKTree+Private.h
+//  KPKEditingSession.h
 //  KeePassKit
 //
-//  Created by Michael Starke on 13/10/15.
-//  Copyright © 2015 HicknHack Software GmbH. All rights reserved.
+//  Created by Michael Starke on 30/05/14.
+//  Copyright (c) 2014 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,20 +20,22 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKTree.h"
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface KPKTree ()
+@class KPKNode;
 
-@property(nonatomic, strong) NSMutableDictionary<NSUUID *,KPKDeletedNode *> *mutableDeletedObjects;
-@property(nullable, nonatomic, weak) KPKEditingSession *activeEditingSession;
+@interface KPKEditingSession : NSObject
 
-- (void)_didStartOrResumeEditingSession:(KPKEditingSession *)session;
-- (void)_didEndEditingSession:(KPKEditingSession *)session;
-- (void)_didPauseEditingSession:(KPKEditingSession *)session;
+@property (copy, readonly) KPKNode *node;
+@property (nullable, weak, readonly) KPKNode *source;
+
+- (instancetype)init NS_UNAVAILABLE;
+
+- (BOOL)hasChanges;
+
+@end
 
 NS_ASSUME_NONNULL_END
 
-@end

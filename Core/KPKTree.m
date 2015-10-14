@@ -23,6 +23,7 @@
 #import "KPKNode+Private.h"
 #import "KPKTree.h"
 #import "KPKTree+Private.h"
+#import "KPKEditingSession.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
@@ -33,6 +34,7 @@
   NSMutableDictionary *_tagsMap;
 }
 @property(nonatomic, strong) KPKMetaData *metaData;
+@property(nonatomic, strong) NSMutableDictionary *pendingEditingSessions;
 @end
 
 @class KPKIcon;
@@ -49,6 +51,7 @@
     _metaData = [[KPKMetaData alloc] init];
     _mutableDeletedObjects = [[NSMutableDictionary alloc] init];
     _tagsMap = [[NSMutableDictionary alloc] init];
+    _pendingEditingSessions = [[NSMutableDictionary alloc] init];
   }
   return self;
 }
@@ -220,12 +223,29 @@
   return nil;
 }
 
-- (void)registerTags:(NSString *)tags forEntry:(KPKEntry *)entry {
-  NSAssert(NO, @"registerTags:forEntry: not implemented");
+- (KPKEditingSession *)pendingEditingSessionForNode:(KPKNode *)node {
+  NSAssert(node, @"Node cannot be nil!");
+  if(!node) {
+    return nil;
+  }
+  return self.pendingEditingSessions[node.uuid];
 }
 
-- (void)deregisterTags:(NSString *)tags forEntry:(KPKEntry *)entry {
-  NSAssert(NO, @"deregisterTags:forEntry: not implemented");
+- (void)_didStartOrResumeEditingSession:(KPKEditingSession *)session {
+  NSAssert(session, @"Session cannot be nil!");
+  self.pendingEditingSessions[session.node.uuid] = session;
+  self.activeEditingSession = session;
+}
+
+- (void)_didEndEditingSession:(KPKEditingSession *)session {
+  NSAssert(session, @"Session cannot be nil!");
+  self.activeEditingSession = nil;
+  [self.pendingEditingSessions removeObjectForKey:session.node.uuid];
+}
+
+- (void)_didPauseEditingSession:(KPKEditingSession *)session {
+  NSAssert(session, @"Session cannot be nil!");
+  self.activeEditingSession = nil;
 }
 
 @end

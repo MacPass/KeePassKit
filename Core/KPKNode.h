@@ -26,6 +26,7 @@
 #import "KPKModificationRecording.h"
 
 @class KPKEntry;
+@class KPKEditingSession;
 @class KPKGroup;
 @class KPKIcon;
 @class KPKTimeInfo;
@@ -110,13 +111,6 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 
 - (BOOL)isDecendantOf:(KPKNode *)node;
 /**
- *  Updates the node data to the given one.
- *
- *  @param node Node to update to
- */
-- (void)updateToNode:(KPKNode *)node;
-
-/**
  *  Trashes the node. Respects the settings for trash handling
  *  a) trash is enabled: If no trash is present, a trash group is created and the node is moved to the trash group
  *  b) trash is disabled: removes the node.
@@ -127,5 +121,12 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 
 @property(nonatomic, readonly) KPKGroup *asGroup;
 @property(nonatomic, readonly) KPKEntry *asEntry;
+
+#pragma mark Editing
+//- (KPKEditingSession *)beginOrResumeEditing;
+- (void)beginEditing;
+- (void)resumeEditing;
+- (void)cancelEditing;
+- (BOOL)commitEditing;
 
 @end

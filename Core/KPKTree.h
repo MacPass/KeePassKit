@@ -119,4 +119,12 @@
  */
 - (NSString *)defaultAutotypeSequence;
 
+#pragma mark Editing
+
+@property(nonatomic, readonly) BOOL hasOpenEditingSession;
+
+@property(nullable, nonatomic, readonly, weak) KPKEditingSession *activeEditingSession;
+
+- (nullable KPKEditingSession *)pendingEditingSessionForNode:(KPKNode * _Nonnull)node;
+
 @end

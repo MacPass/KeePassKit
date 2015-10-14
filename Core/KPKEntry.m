@@ -499,8 +499,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 #pragma mark Editing
-- (void)updateToNode:(KPKNode *)node {
-  [super updateToNode:node];
+- (void)_updateToNode:(KPKNode *)node {
+  [super _updateToNode:node];
   KPKEntry *entry = node.asEntry;
   NSAssert(entry, @"KPKEntry nodes can only update to KPKEntry nodes!");
   if(nil == entry) {

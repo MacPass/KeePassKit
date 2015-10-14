@@ -16,6 +16,7 @@
 @property(nonatomic, readwrite, weak) KPKTree *tree;
 @property(nonatomic, readwrite) BOOL deleted;
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;
+@property(nonatomic, strong) KPKEditingSession *editingSession;
 
 #pragma mark Initalizer
 - (instancetype)_init;
@@ -25,6 +26,14 @@
 #pragma mark NSSecureCoding
 - (instancetype)_initWithCoder:(NSCoder *)aDecoder;
 - (void)_encodeWithCoder:(NSCoder *)aCoder;
+
+#pragma mark Editing
+/**
+ *  Updates the node data to the given one.
+ *
+ *  @param node Node to update to
+ */
+- (void)_updateToNode:(KPKNode *)node;
 
 @end
 

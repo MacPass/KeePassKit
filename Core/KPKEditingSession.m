@@ -1,9 +1,9 @@
 //
-//  KPKTree+Private.h
+//  KPKEditingSession.m
 //  KeePassKit
 //
-//  Created by Michael Starke on 13/10/15.
-//  Copyright © 2015 HicknHack Software GmbH. All rights reserved.
+//  Created by Michael Starke on 30/05/14.
+//  Copyright (c) 2014 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,20 +20,33 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKTree.h"
-#import <Foundation/Foundation.h>
+#import "KPKEditingSession.h"
+#import "KPKNode.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@interface KPKEditingSession ()
 
-@interface KPKTree ()
+@property (copy) KPKNode *node;
+@property (weak) KPKNode *source;
 
-@property(nonatomic, strong) NSMutableDictionary<NSUUID *,KPKDeletedNode *> *mutableDeletedObjects;
-@property(nullable, nonatomic, weak) KPKEditingSession *activeEditingSession;
+@end
 
-- (void)_didStartOrResumeEditingSession:(KPKEditingSession *)session;
-- (void)_didEndEditingSession:(KPKEditingSession *)session;
-- (void)_didPauseEditingSession:(KPKEditingSession *)session;
+@implementation KPKEditingSession
 
-NS_ASSUME_NONNULL_END
++ (instancetype)_editingSessionWithSource:(KPKNode *)node {
+  return [[KPKEditingSession alloc] _initWithSource:node];
+}
+
+- (instancetype)_initWithSource:(KPKNode *)node {
+  self = [super init];
+  if(self) {
+    self.node = node;
+    self.source = node;
+  }
+  return self;
+}
+
+- (BOOL)hasChanges {
+  return ![self.node isEqual:self.source];
+}
 
 @end
