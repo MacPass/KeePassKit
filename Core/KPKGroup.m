@@ -117,7 +117,7 @@
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
   KPKGroup *copy = [[KPKGroup alloc] initWithUUID:uuid];
-  copy.deleted = self.deleted;
+  [copy _copyDataFromNode:self];
   copy->_entries = [[NSMutableArray alloc] initWithArray:_entries copyItems:YES];
   copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
@@ -125,16 +125,7 @@
   copy.isSearchEnabled = self.isSearchEnabled;
   copy.isExpanded = self.isExpanded;
   copy.updateTiming = self.updateTiming;
-  copy.notes = self.notes;
-  copy.title = self.title;
-  copy.iconId = self.iconId;
-  copy.iconUUID = self.iconUUID;
-  copy.parent = self.parent;
-  
   [copy _updateParents];
-  
-  /* Copy time info at last to ensure valid times */
-  copy.timeInfo = self.timeInfo;
   
   return copy;
 }

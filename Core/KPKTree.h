@@ -120,10 +120,13 @@
 - (NSString *)defaultAutotypeSequence;
 
 #pragma mark Editing
-
-@property(nonatomic, readonly) BOOL hasOpenEditingSession;
-
-@property(nullable, nonatomic, readonly, weak) KPKEditingSession *activeEditingSession;
+/**
+ *  If a node enteres edigin, it creates an KPKEditingSession that is registeres as pending.
+ *  Until this session is either cancled or commited it remains pending
+ *  There is none or only one active editing session but possibly a pending one for each and every node in the tree.
+ */
+@property(nonatomic, readonly) BOOL hasPendingEditingSessions;
+@property(nonatomic, strong, readonly) NSDictionary<NSUUID *,KPKEditingSession *> *pendingEditingSessions;
 
 - (nullable KPKEditingSession *)pendingEditingSessionForNode:(KPKNode * _Nonnull)node;
 

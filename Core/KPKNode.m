@@ -67,7 +67,6 @@
   return self;
 }
 
-
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
   /* not implemented */
   NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
@@ -207,7 +206,6 @@
 
 #pragma mark -
 #pragma mark Private Extensions
-
 - (instancetype)_init {
   self = [super init];
   if (self) {
@@ -248,29 +246,46 @@
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
   [aCoder encodeBool:self.deleted forKey:NSStringFromSelector(@selector(deleted))];
 }
-# pragma mark Editing
-- (void)beginEditing {
-  self.editingSession = [KPKEditingSession _editingSessionWithSource:self];
-  [self.tree _didStartOrResumeEditingSession:self.editingSession];
+
+- (void)_copyDataFromNode:(KPKNode *)node {
+  /* As subclasses might call us, use dynamic resolving! */
+  self.iconId = node.iconId;
+  self.iconUUID = node.iconUUID;
+  self.timeInfo = node.timeInfo;
+  self.deleted = node.deleted;
+  self.parent = node.parent;
+  self.notes = node.notes;
+  self.title = node.title;
 }
 
-- (void)cancelEditing {
-  [self.tree _didEndEditingSession:self.editingSession];
+- (instancetype)_copyWithUUUD:(NSUUID *)uuid {
+  // nothing to do here!
+  return nil;
+}
+
+# pragma mark Editing
+- (KPKEditingSession *)beginEditing {
+  self.editingSession = [KPKEditingSession _editingSessionWithSource:self];
+  return self.editingSession;
+}
+
+- (BOOL)cancelEditing {
+  BOOL hasChanges = self.editingSession.hasChanges;
   self.editingSession = nil;
+  return hasChanges;
 }
 
 - (BOOL)commitEditing {
   BOOL hasChanges = self.editingSession.hasChanges;
   if(!hasChanges) {
     NSAssert(self == self.editingSession.source, @"Source of editing sessiong needs to be self!");
-    [self _updateToNode:self.editingSession.node];
+    [self _revertToNode:self.editingSession.node];
   }
-  [self.tree _didEndEditingSession:self.editingSession];
   self.editingSession = nil;
   return hasChanges;
 }
 
-- (void)_updateToNode:(KPKNode *)node {
+- (void)_revertToNode:(KPKNode *)node {
   if(!node) {
     return; // Nothing to do!
   }
@@ -279,7 +294,7 @@
   
   NSAssert(node.asGroup || node.asEntry, @"Cannot update to abstract KPKNode class");
   NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
-  [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self copy]];
+  [[self.undoManager prepareWithInvocationTarget:self] _revertToNode:[self _copyWithUUUD:self.uuid]];
   /* Do not update parent/child structure, we just want "content" to update */
   self.iconId = node.iconId;
   self.timeInfo = node.timeInfo;

@@ -123,10 +123,26 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly) KPKEntry *asEntry;
 
 #pragma mark Editing
-//- (KPKEditingSession *)beginOrResumeEditing;
-- (void)beginEditing;
-- (void)resumeEditing;
-- (void)cancelEditing;
+
+@property(nonatomic, strong, readonly) KPKEditingSession *editingSession;
+/**
+ *  Creates a new editing Session for the node. Any previous session will get cancled and changes will get dropped!
+ *
+ *  @return The created or already present editing session
+ */
+- (KPKEditingSession *)beginEditing;
+/**
+ *  Discards the editing changes.
+ *
+ *  @return YES if any changes were discared, NO otherwise
+ */
+- (BOOL)cancelEditing;
+/**
+ *  Commits the changes from the current sessoin, stores the data and adds a history entry
+ *  If nothing was changes during the edit, nothing will get updates and no history entry will get created.
+ *
+ *  @return YES if any changes were store, NO otherwise
+ */
 - (BOOL)commitEditing;
 
 @end

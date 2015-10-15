@@ -34,7 +34,7 @@
   NSMutableDictionary *_tagsMap;
 }
 @property(nonatomic, strong) KPKMetaData *metaData;
-@property(nonatomic, strong) NSMutableDictionary *pendingEditingSessions;
+
 @end
 
 @class KPKIcon;
@@ -223,29 +223,16 @@
   return nil;
 }
 
+- (BOOL)hasPendingEditingSessions {
+  return (self.pendingEditingSessions.count > 0);
+}
+
 - (KPKEditingSession *)pendingEditingSessionForNode:(KPKNode *)node {
   NSAssert(node, @"Node cannot be nil!");
   if(!node) {
     return nil;
   }
   return self.pendingEditingSessions[node.uuid];
-}
-
-- (void)_didStartOrResumeEditingSession:(KPKEditingSession *)session {
-  NSAssert(session, @"Session cannot be nil!");
-  self.pendingEditingSessions[session.node.uuid] = session;
-  self.activeEditingSession = session;
-}
-
-- (void)_didEndEditingSession:(KPKEditingSession *)session {
-  NSAssert(session, @"Session cannot be nil!");
-  self.activeEditingSession = nil;
-  [self.pendingEditingSessions removeObjectForKey:session.node.uuid];
-}
-
-- (void)_didPauseEditingSession:(KPKEditingSession *)session {
-  NSAssert(session, @"Session cannot be nil!");
-  self.activeEditingSession = nil;
 }
 
 @end

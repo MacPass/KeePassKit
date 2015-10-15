@@ -17,6 +17,7 @@
 @property(nonatomic, readwrite) BOOL deleted;
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;
 @property(nonatomic, strong) KPKEditingSession *editingSession;
+@property(nonatomic, copy) KPKNode *rollbackNode;
 
 #pragma mark Initalizer
 - (instancetype)_init;
@@ -27,13 +28,17 @@
 - (instancetype)_initWithCoder:(NSCoder *)aDecoder;
 - (void)_encodeWithCoder:(NSCoder *)aCoder;
 
+#pragma makr Copy Helper
+- (instancetype)_copyWithUUUD:(NSUUID *)uuid;
+- (void)_copyDataFromNode:(KPKNode *)node;
+
 #pragma mark Editing
 /**
  *  Updates the node data to the given one.
  *
  *  @param node Node to update to
  */
-- (void)_updateToNode:(KPKNode *)node;
+- (void)_revertToNode:(KPKNode *)node;
 
 @end
 

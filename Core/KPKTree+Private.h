@@ -28,11 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface KPKTree ()
 
 @property(nonatomic, strong) NSMutableDictionary<NSUUID *,KPKDeletedNode *> *mutableDeletedObjects;
-@property(nullable, nonatomic, weak) KPKEditingSession *activeEditingSession;
-
-- (void)_didStartOrResumeEditingSession:(KPKEditingSession *)session;
-- (void)_didEndEditingSession:(KPKEditingSession *)session;
-- (void)_didPauseEditingSession:(KPKEditingSession *)session;
+@property(nonatomic, strong) NSDictionary<NSUUID *,KPKEditingSession *> *pendingEditingSessions;
 
 NS_ASSUME_NONNULL_END
 

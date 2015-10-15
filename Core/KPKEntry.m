@@ -160,15 +160,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (instancetype)_copyWithUUUD:(nullable NSUUID *)uuid {
   KPKEntry *entry = [[KPKEntry alloc] initWithUUID:uuid];
-  entry.deleted = self.deleted;
-  entry.iconId = self.iconId;
-  entry.iconUUID = self.iconUUID;
-  //entry.tree = self.tree;
-  entry.parent = self.parent;
-  
+  [entry _copyDataFromNode:self];
   /* Default attributes */
   entry.password = self.password;
-  entry.title = self.title;
   entry.username = self.username;
   entry.url = self.url;
   entry.notes = self.notes;
@@ -185,9 +179,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   /* Color */
   entry.foregroundColor = self.foregroundColor;
   entry.backgroundColor = self.backgroundColor;
-  
-  /* Time */
-  entry.timeInfo = self.timeInfo;
   
   /* fix entry references */
   for(KPKAttribute *attribute in _customAttributes) {
@@ -499,8 +490,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 #pragma mark Editing
-- (void)_updateToNode:(KPKNode *)node {
-  [super _updateToNode:node];
+- (void)_revertToNode:(KPKNode *)node {
+  [super _revertToNode:node];
   KPKEntry *entry = node.asEntry;
   NSAssert(entry, @"KPKEntry nodes can only update to KPKEntry nodes!");
   if(nil == entry) {
