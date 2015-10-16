@@ -117,15 +117,25 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return _protectedKeyPathForAttribute(@selector(usernameAttribute));
 }
 
-- (id)init {
+- (instancetype)init {
+  self = [self _init];
+  return self;
+}
+
+- (instancetype)_init {
   self = [self initWithUUID:nil];
   return self;
 }
 
 - (instancetype)initWithUUID:(NSUUID *)uuid {
+  self = [self _initWithUUID:uuid];
+  return self;
+}
+
+- (instancetype)_initWithUUID:(NSUUID *)uuid {
   self = [super _initWithUUID:uuid];
   if (self) {
-    /* Attetion - Title -> Name */
+    /* !Note! - Title -> Name */
     _titleAttribute = [[KPKAttribute alloc] initWithKey:kKPKTitleKey value:@""];
     _passwordAttribute = [[KPKAttribute alloc] initWithKey:kKPKPasswordKey value:@""];
     _usernameAttribute = [[KPKAttribute alloc] initWithKey:kKPKUsernameKey value:@""];
@@ -159,8 +169,16 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (instancetype)_copyWithUUUD:(nullable NSUUID *)uuid {
-  KPKEntry *entry = [[KPKEntry alloc] initWithUUID:uuid];
-  [entry _copyDataFromNode:self];
+  KPKEntry *entry = [self _shallowCopyWithUUID:uuid];
+  /* Shallow does not copy history */
+  entry.history = [[NSMutableArray alloc] initWithArray:self->_history copyItems:YES];
+  entry->_isHistory = self->_isHistory;
+
+  return entry;
+}
+
+- (instancetype)_shallowCopyWithUUID:(NSUUID *)uuid {
+  KPKEntry *entry = [super _shallowCopyWithUUID:uuid];
   /* Default attributes */
   entry.password = self.password;
   entry.username = self.username;
@@ -173,8 +191,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   entry.customAttributes = [[NSMutableArray alloc] initWithArray:self->_customAttributes copyItems:YES];
   entry.tags = self->_tags;
   entry.autotype = self.autotype;
-  entry.history = [[NSMutableArray alloc] initWithArray:self->_history copyItems:YES];
-  entry->_isHistory = self->_isHistory;
+  /* Shallow copy skipps history */
+  entry->_isHistory = NO;
   
   /* Color */
   entry.foregroundColor = self.foregroundColor;
@@ -186,6 +204,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
   return entry;
 }
+
 
 #pragma mark NSCoding
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -490,21 +509,21 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 #pragma mark Editing
-- (void)_revertToNode:(KPKNode *)node {
-  [super _revertToNode:node];
+- (void)_updateToNode:(KPKNode *)node {
   KPKEntry *entry = node.asEntry;
   NSAssert(entry, @"KPKEntry nodes can only update to KPKEntry nodes!");
   if(nil == entry) {
     return; // only KPKEntry can be used
   }
+  [super _updateToNode:node];
   if(entry.isHistory) {
     /* Reset the history to the correct "point in time" */
     NSUInteger historyIndex = [self.history indexOfObject:entry];
     [self removeHistoryAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(historyIndex, [_history count] - historyIndex)]];
   }
   else {
-    /* add a copy of the node to the history and be done */
-    [self addHistoryEntry:[node copy]];
+    /* add a shallow copy of the node to the history and be done */
+    [self addHistoryEntry:[entry _shallowCopyWithUUID:self.uuid]];
   }
   
   self.title = entry.title;
@@ -621,7 +640,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [self removeHistoryAtIndexes:indexes];
 }
 
-- (NSUInteger)calculateByteSize {
+- (NSUInteger)estimatedByteSize {
   
   NSUInteger __block size = 128; // KeePass suggest this as the inital size
   
@@ -632,10 +651,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   };
   
   /* Default attributes */
-  [[self defaultAttributes] enumerateObjectsUsingBlock:attributeBlock];
+  [self.defaultAttributes enumerateObjectsUsingBlock:attributeBlock];
   
   /* Custom attributes */
-  [[self customAttributes] enumerateObjectsUsingBlock:attributeBlock];
+  [_customAttributes enumerateObjectsUsingBlock:attributeBlock];
   
   /* Binaries */
   [[self binaries] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -664,7 +683,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   /* History */
   [[self history] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKEntry *entry = obj;
-    size += [entry calculateByteSize];
+    size += entry.estimatedByteSize;
   }];
   
   /* Color? */

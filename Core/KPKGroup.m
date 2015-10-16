@@ -55,11 +55,21 @@
 }
 
 - (instancetype)init {
+  self = [self _init];
+  return self;
+}
+
+- (instancetype)_init {
   self = [self initWithUUID:nil];
   return self;
 }
 
 - (instancetype)initWithUUID:(NSUUID *)uuid {
+  self = [self _initWithUUID:uuid];
+  return self;
+}
+
+- (instancetype)_initWithUUID:(NSUUID *)uuid {
   self = [super _initWithUUID:uuid];
   if(self) {
     _groups = [[NSMutableArray alloc] initWithCapacity:8];
@@ -85,6 +95,7 @@
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
     self.defaultAutoTypeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultAutoTypeSequence))];
+    self.lastTopVisibleEntry = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(lastTopVisibleEntry))];
     
     [self _updateParents];
     
@@ -107,6 +118,7 @@
   [aCoder encodeInteger:_isSearchEnabled forKey:NSStringFromSelector(@selector(isSearchEnabled))];
   [aCoder encodeBool:_isExpanded forKey:NSStringFromSelector(@selector(isExpanded))];
   [aCoder encodeObject:_defaultAutoTypeSequence forKey:NSStringFromSelector(@selector(defaultAutoTypeSequence))];
+  [aCoder encodeObject:_lastTopVisibleEntry forKey:NSStringFromSelector(@selector(lastTopVisibleEntry))];
 }
 
 #pragma mark NSCopying
@@ -116,16 +128,23 @@
 }
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
-  KPKGroup *copy = [[KPKGroup alloc] initWithUUID:uuid];
-  [copy _copyDataFromNode:self];
+  KPKGroup *copy = [self _shallowCopyWithUUID:uuid];
   copy->_entries = [[NSMutableArray alloc] initWithArray:_entries copyItems:YES];
   copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
+  
+  [copy _updateParents];
+
+  return copy;
+}
+
+- (instancetype)_shallowCopyWithUUID:(NSUUID *)uuid {
+  KPKGroup *copy = [super _shallowCopyWithUUID:uuid];
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
   copy.isExpanded = self.isExpanded;
+  copy.lastTopVisibleEntry = self.lastTopVisibleEntry;
   copy.updateTiming = self.updateTiming;
-  [copy _updateParents];
   
   return copy;
 }
@@ -189,7 +208,7 @@
   [_groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKGroup *otherGroup = obj;
     KPKGroup *myGroup = _groups[idx];
-    isEqual &= [myGroup isEqualTo:otherGroup];
+    isEqual &= [myGroup isEqualToGroup:otherGroup];
     *stop = !isEqual;
   }];
   return isEqual;

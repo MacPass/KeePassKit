@@ -24,8 +24,6 @@
 #import "KPKNode.h"
 #import "KPKNode+Private.h"
 #import "KPKEntry.h"
-#import "KPKEditingSession.h"
-#import "KPKEditingSession+Private.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
 #import "KPKTimeInfo.h"
@@ -58,11 +56,13 @@
 }
 
 - (instancetype)init {
-  return [self initWithUUID:nil];
+  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
+  self = nil;
+  return nil;
 }
 
 - (instancetype)initWithUUID:(NSUUID *)uuid {
-  NSAssert(NO,@"KPKNode cannot be directly initalized");
+  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
   self = nil;
   return self;
 }
@@ -207,20 +207,17 @@
 #pragma mark -
 #pragma mark Private Extensions
 - (instancetype)_init {
-  self = [super init];
-  if (self) {
-    _uuid = [[NSUUID alloc] init];
-    _timeInfo = [[KPKTimeInfo alloc] init];
-    _iconId = [[self class] defaultIcon];
-    _deleted = NO;
-  }
+  self = [self _initWithUUID:nil];
   return self;
 }
 
 - (instancetype)_initWithUUID:(NSUUID *)uuid {
-  self = [self _init];
-  if(self && uuid) {
-    _uuid = uuid;
+  self = [super init];
+  if (self) {
+    _uuid = uuid ? uuid : [[NSUUID alloc] init];
+    _timeInfo = [[KPKTimeInfo alloc] init];
+    _iconId = [[self class] defaultIcon];
+    _deleted = NO;
   }
   return self;
 }
@@ -247,45 +244,48 @@
   [aCoder encodeBool:self.deleted forKey:NSStringFromSelector(@selector(deleted))];
 }
 
-- (void)_copyDataFromNode:(KPKNode *)node {
-  /* As subclasses might call us, use dynamic resolving! */
-  self.iconId = node.iconId;
-  self.iconUUID = node.iconUUID;
-  self.timeInfo = node.timeInfo;
-  self.deleted = node.deleted;
-  self.parent = node.parent;
-  self.notes = node.notes;
-  self.title = node.title;
+- (instancetype)_copyWithUUUD:(NSUUID *)uuid {
+  return [self _shallowCopyWithUUID:uuid];
 }
 
-- (instancetype)_copyWithUUUD:(NSUUID *)uuid {
-  // nothing to do here!
-  return nil;
+- (instancetype)_shallowCopyWithUUID:(NSUUID *)uuid {
+  KPKNode *copy = [[[self class] alloc] _initWithUUID:uuid];
+  copy.iconId = self.iconId;
+  copy.iconUUID = self.iconUUID;
+  copy.deleted = self.deleted;
+  copy.parent = self.parent;
+  copy.notes = self.notes;
+  copy.title = self.title;
+  copy.timeInfo = self.timeInfo;
+  return copy;
 }
 
 # pragma mark Editing
-- (KPKEditingSession *)beginEditing {
-  self.editingSession = [KPKEditingSession _editingSessionWithSource:self];
-  return self.editingSession;
+- (KPKNode *)beginEditing {
+  self.editNode = [self _copyWithUUUD:self.uuid];
+  return self.editNode;
 }
 
 - (BOOL)cancelEditing {
-  BOOL hasChanges = self.editingSession.hasChanges;
-  self.editingSession = nil;
+  BOOL hasChanges = self.hasUncommitedChanges;
+  self.editNode = nil;
   return hasChanges;
 }
 
 - (BOOL)commitEditing {
-  BOOL hasChanges = self.editingSession.hasChanges;
-  if(!hasChanges) {
-    NSAssert(self == self.editingSession.source, @"Source of editing sessiong needs to be self!");
-    [self _revertToNode:self.editingSession.node];
+  BOOL hasChanges = self.hasUncommitedChanges;
+  if(hasChanges) {
+    [self _updateToNode:self.editNode];
   }
-  self.editingSession = nil;
+  self.editNode = nil;
   return hasChanges;
 }
 
-- (void)_revertToNode:(KPKNode *)node {
+- (BOOL)hasUncommitedChanges {
+  return ![self.editNode isEqualTo:self];
+}
+
+- (void)_updateToNode:(KPKNode *)node {
   if(!node) {
     return; // Nothing to do!
   }
@@ -294,7 +294,7 @@
   
   NSAssert(node.asGroup || node.asEntry, @"Cannot update to abstract KPKNode class");
   NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
-  [[self.undoManager prepareWithInvocationTarget:self] _revertToNode:[self _copyWithUUUD:self.uuid]];
+  [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self _shallowCopyWithUUID:self.uuid]];
   /* Do not update parent/child structure, we just want "content" to update */
   self.iconId = node.iconId;
   self.timeInfo = node.timeInfo;

@@ -78,8 +78,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 @property (nonatomic, readonly) BOOL isMeta;
 
-- (instancetype)init;
-
 /**
  *  Test for Equality
  *  @param entry entry to test for equality
@@ -89,7 +87,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 /**
  *	Retrieves a list of all defaultAttributes
  */
-- (NSArray *)defaultAttributes;
+@property (nonatomic, readonly, copy) NSArray *defaultAttributes;
 /**
  *  Moves the Entry the the new group at the given index
  *
@@ -166,7 +164,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *
  *  @return Size of this entry in bytes
  */
-- (NSUInteger)calculateByteSize;
+@property (nonatomic, readonly) NSUInteger estimatedByteSize;
 
 @end
 

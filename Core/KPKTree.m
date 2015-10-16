@@ -23,7 +23,6 @@
 #import "KPKNode+Private.h"
 #import "KPKTree.h"
 #import "KPKTree+Private.h"
-#import "KPKEditingSession.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"

@@ -16,10 +16,10 @@
 @property(nonatomic, readwrite, weak) KPKTree *tree;
 @property(nonatomic, readwrite) BOOL deleted;
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;
-@property(nonatomic, strong) KPKEditingSession *editingSession;
-@property(nonatomic, copy) KPKNode *rollbackNode;
+@property(nonatomic, strong) KPKNode *editNode;
 
 #pragma mark Initalizer
+/* Subclasses have to override these initalizers */
 - (instancetype)_init;
 - (instancetype)_initWithUUID:(NSUUID *)uuid;
 
@@ -29,8 +29,23 @@
 - (void)_encodeWithCoder:(NSCoder *)aCoder;
 
 #pragma makr Copy Helper
+/**
+ *  Creates a deep copy of the Node.
+ *  If a subclass implements this, it's mandatory to also override _init and _initWithUUID:
+ *
+ *  @param uuid UUID for the copy
+ *
+ *  @return Copy of the receiving node.
+ */
 - (instancetype)_copyWithUUUD:(NSUUID *)uuid;
-- (void)_copyDataFromNode:(KPKNode *)node;
+/**
+ *  Creates a shallow copy of the Node. This is mostly usefull for editing
+ *
+ *  @param uuid UUID for the copy
+ *
+ *  @return Copy of the reveiving node.
+ */
+- (instancetype)_shallowCopyWithUUID:(NSUUID *)uuid;
 
 #pragma mark Editing
 /**
@@ -38,7 +53,7 @@
  *
  *  @param node Node to update to
  */
-- (void)_revertToNode:(KPKNode *)node;
+- (void)_updateToNode:(KPKNode *)node;
 
 @end
 
