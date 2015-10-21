@@ -209,9 +209,9 @@
 
 #pragma mark Meta Entries
 
-- (NSArray *)_collectMetaEntries {
+- (NSArray <KPKEntry *>*)_collectMetaEntries {
   /* Store metadata in entries */
-  NSMutableArray *metaEntries = [[NSMutableArray alloc] init];
+  NSMutableArray<KPKEntry *> *metaEntries = [[NSMutableArray alloc] init];
   if(![NSString isEmptyString:self.tree.metaData.defaultUserName]) {
     NSData *defaultUsernameData = [self.tree.metaData.defaultUserName dataUsingEncoding:NSUTF8StringEncoding];
     KPKEntry *defaultUsernameEntry = [KPKEntry metaEntryWithData:defaultUsernameData name:KPKMetaEntryDefaultUsername];
@@ -236,10 +236,9 @@
   }
   KPKGroup *firstGroup = _allGroups[0];
   NSAssert(firstGroup != nil, @"Cannot write tree without any groups");
-  [metaEntries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    KPKEntry *entry = obj;
+  for(KPKEntry *entry in metaEntries) {
     entry.parent = firstGroup;
-  }];
+  }
   return metaEntries;
 }
 
@@ -274,18 +273,16 @@
    */
   NSMutableArray *_iconEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,[_allEntries count])];
   NSMutableArray *_iconGroups = [[NSMutableArray alloc] initWithCapacity:MAX(1,[_allGroups count])];
-  [_allEntries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    KPKNode *node = obj;
+  for(KPKNode *node in _allEntries) {
     if(node.iconUUID) {
       [_iconEntries addObject:node];
     }
-  }];
-  [_allGroups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    KPKNode *node = obj;
+  }
+  for(KPKNode *node in _allGroups) {
     if(node.iconUUID) {
       [_iconGroups addObject:node];
     }
-  }];
+  }
   
   NSArray *icons = self.tree.metaData.customIcons;
   NSMutableData *iconData = [[NSMutableData alloc] initWithCapacity:1024*1024];

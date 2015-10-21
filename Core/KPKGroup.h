@@ -79,7 +79,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  *	Returns an array containing all entries inside searchable groups.
  *	@return	NSArray of KPKEntries contained in searchable groups
  */
-- (NSArray<KPKEntry *> *)searchableChildEntries;
+@property (nonatomic, readonly, copy) NSArray<KPKEntry *> *searchableChildEntries;
 
 @property(nonatomic) KPKInheritBool isSearchEnabled;
 

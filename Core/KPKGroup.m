@@ -471,7 +471,7 @@
 }
 
 - (NSArray<KPKEntry *> *)searchableChildEntries {
-  NSMutableArray *searchableEntries;
+  NSMutableArray<KPKEntry *> *searchableEntries;
   if([self _isSearchable]) {
     searchableEntries = [NSMutableArray arrayWithArray:_entries];
   }
@@ -479,7 +479,7 @@
     searchableEntries = [[NSMutableArray alloc] init];
   }
   for(KPKGroup *group in _groups) {
-    [searchableEntries addObjectsFromArray:[group searchableChildEntries]];
+    [searchableEntries addObjectsFromArray:group.searchableChildEntries];
   }
   return searchableEntries;
 }
