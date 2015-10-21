@@ -308,7 +308,7 @@
 }
 
 - (KPKVersion)minimumVersion {
-  KPKVersion version = KPKUnknownVersion;
+  KPKVersion version = KPKLegacyVersion;
   for(KPKGroup *group in self.groups) {
     version = MAX(version, group.minimumVersion);
   }

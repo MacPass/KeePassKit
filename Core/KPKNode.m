@@ -262,7 +262,7 @@
 
 # pragma mark Editing
 - (KPKNode *)beginEditing {
-  self.editNode = [self _copyWithUUUD:self.uuid];
+  self.editNode = [self _shallowCopyWithUUID:self.uuid];
   return self.editNode;
 }
 
@@ -297,8 +297,10 @@
   [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self _shallowCopyWithUUID:self.uuid]];
   /* Do not update parent/child structure, we just want "content" to update */
   self.iconId = node.iconId;
-  self.timeInfo = node.timeInfo;
   self.iconUUID = node.iconUUID;
+  self.title = node.title;
+  self.notes = node.notes;
+  self.timeInfo = node.timeInfo;
   /* Update the Timing! */
   [self wasModified];
 }

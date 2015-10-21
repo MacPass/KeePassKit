@@ -51,14 +51,9 @@ FOUNDATION_EXTERN NSString *const kKPKNotesKey;
  */
 - (uint32_t)fileVersionForData:(NSData *)data;
 /**
- @returns A set containing the strings that are default keys
+ @returns A set containing the strings that are default keys for enty attributes
  */
-- (NSSet *)defaultKeys;
-/**
- @param key The key to test for defaultness
- @returns YES, if the key is a default key, NO otherwise
- */
-- (BOOL)isDefaultKey:(NSString *)key;
+@property (nonatomic, strong, readonly) NSSet *entryDefaultKeys;
 
 /**
  @param key The key to determine the minimum version for

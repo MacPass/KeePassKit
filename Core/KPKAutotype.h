@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL isEnabled;
 @property BOOL obfuscateDataTransfer;
 @property (null_resettable, nonatomic, copy) NSString *defaultKeystrokeSequence;
-@property (nonnull, nonatomic, strong, readonly) NSArray *associations;
+@property (nonnull, nonatomic, strong, readonly) NSArray<KPKWindowAssociation *> *associations;
 @property (nonatomic, readonly) BOOL hasDefaultKeystrokeSequence;
 
 @property (nullable, weak, readonly) KPKEntry *entry;

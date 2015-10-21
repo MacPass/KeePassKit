@@ -60,16 +60,17 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic) BOOL protectUrl;
 @property (nonatomic) BOOL protectNotes;
 
-@property (nonatomic, strong) NSArray *binaries;
+@property (nonatomic, strong) NSArray<KPKBinary *> *binaries;
 // TODO: change Tags to an String array!
-@property (nonatomic, copy) NSArray *tags;
+@property (nonatomic, copy) NSArray<NSString *> *tags;
 @property (nonatomic, copy) NSColor *foregroundColor;
 @property (nonatomic, copy) NSColor *backgroundColor;
 @property (nonatomic, copy) NSString *overrideURL;
 
-@property (nonatomic, strong) NSArray *customAttributes;
+@property (nonatomic, copy, readonly) NSArray *attributes;
+@property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *customAttributes;
 @property (nonatomic, copy) KPKAutotype *autotype;
-@property (nonatomic, strong) NSArray *history;
+@property (nonatomic, copy, readonly) NSArray<KPKEntry *> *history;
 @property (nonatomic, readonly) BOOL isHistory;
 /**
  *	Additional information is stores in MetaEntrie in KDB files.
@@ -87,7 +88,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 /**
  *	Retrieves a list of all defaultAttributes
  */
-@property (nonatomic, readonly, copy) NSArray *defaultAttributes;
+@property (nonatomic, readonly, copy) NSArray<KPKAttribute *> *defaultAttributes;
 /**
  *  Moves the Entry the the new group at the given index
  *

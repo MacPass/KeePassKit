@@ -361,7 +361,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
       KPKEntry *entry = obj;
       for(KPKAttribute *attribute in entry.customAttributes) {
         NSRange matchRange = [attribute.value rangeOfString:match];
-        if(matchRange.location != NSNotFound && matchRange.length > 0) {
+        if(matchRange.length > 0) {
           matchingEntry = obj;
           *stop = YES;
         }

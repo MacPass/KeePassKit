@@ -21,6 +21,7 @@
 //
 
 #import "KPKEntry.h"
+#import "KPKEntry+Private.h"
 #import "KPKNode+Private.h"
 #import "KPKGroup.h"
 #import "KPKBinary.h"
@@ -50,15 +51,9 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 @interface KPKEntry () {
 @private
   NSMutableArray *_binaries;
-  NSMutableArray *_customAttributes;
-  NSMutableArray *_history;
 }
 
-@property (nonatomic, strong) KPKAttribute *titleAttribute;
-@property (nonatomic, strong) KPKAttribute *passwordAttribute;
-@property (nonatomic, strong) KPKAttribute *usernameAttribute;
-@property (nonatomic, strong) KPKAttribute *urlAttribute;
-@property (nonatomic, strong) KPKAttribute *notesAttribute;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, KPKAttribute *> *attributeMap;
 @property (nonatomic) BOOL isHistory;
 
 @end
@@ -68,6 +63,9 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 @dynamic title;
 @dynamic notes;
+@dynamic attributes;
+@dynamic defaultAttributes;
+@dynamic customAttributes;
 
 NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   NSString *keyPath = [[NSString alloc] initWithFormat:@"%@.%@", NSStringFromSelector(aSelector), NSStringFromSelector(@selector(value))];
@@ -96,7 +94,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 + (NSSet *)keyPathsForValuesAffectingIsEditable {
   return [[NSSet alloc] initWithObjects:NSStringFromSelector(@selector(isHistory)), nil];
 }
-
+/*
 + (NSSet *)keyPathsForValuesAffectingProtectNotes {
   return _protectedKeyPathForAttribute(@selector(notesAttribute));
 }
@@ -115,6 +113,24 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 + (NSSet *)keyPathsForValuesAffectingProtectUsername {
   return _protectedKeyPathForAttribute(@selector(usernameAttribute));
+}
+*/
+
++ (NSSet *)keyPathsForValuesAffectingHistory {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableHistory))];
+}
+
+/* All Attributes getter just fitler the attribute map */
++ (NSSet *)keyPathsForValuesAffectingAttributes {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(attributeMap))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingCustomAttributes {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(attributeMap))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingDefaultAttributes {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(attributeMap))];
 }
 
 - (instancetype)init {
@@ -136,27 +152,22 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   self = [super _initWithUUID:uuid];
   if (self) {
     /* !Note! - Title -> Name */
-    _titleAttribute = [[KPKAttribute alloc] initWithKey:kKPKTitleKey value:@""];
-    _passwordAttribute = [[KPKAttribute alloc] initWithKey:kKPKPasswordKey value:@""];
-    _usernameAttribute = [[KPKAttribute alloc] initWithKey:kKPKUsernameKey value:@""];
-    _urlAttribute = [[KPKAttribute alloc] initWithKey:kKPKURLKey value:@""];
-    _notesAttribute = [[KPKAttribute alloc] initWithKey:kKPKNotesKey value:@""];
-    _customAttributes = [[NSMutableArray alloc] initWithCapacity:2];
+    _attributeMap = [[NSMutableDictionary alloc] init];
+    /* create the default attributs */
+    for(NSString *key in @[kKPKTitleKey, kKPKPasswordKey, kKPKUsernameKey, kKPKURLKey, kKPKNotesKey]) {
+      KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:key value:@""];
+      attribute.entry = self;
+      _attributeMap[key] = attribute;
+    }
     _binaries = [[NSMutableArray alloc] initWithCapacity:2];
-    _history = [[NSMutableArray alloc] initWithCapacity:5];
+    _mutableHistory = [[NSMutableArray alloc] initWithCapacity:5];
     _autotype = [[KPKAutotype alloc] init];
     
-    _titleAttribute.entry = self;
-    _passwordAttribute.entry = self;
-    _usernameAttribute.entry = self;
-    _urlAttribute.entry = self;
-    _notesAttribute.entry = self;
     _autotype.entry = self;
     _isHistory = NO;
   }
   return self;
 }
-
 
 - (void)dealloc {
   /* Remove us from the undo stack */
@@ -171,37 +182,28 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (instancetype)_copyWithUUUD:(nullable NSUUID *)uuid {
   KPKEntry *entry = [self _shallowCopyWithUUID:uuid];
   /* Shallow does not copy history */
-  entry.history = [[NSMutableArray alloc] initWithArray:self->_history copyItems:YES];
-  entry->_isHistory = self->_isHistory;
-
+  entry.mutableHistory = [[NSMutableArray alloc] initWithArray:self.mutableHistory copyItems:YES];
+  entry.isHistory = self.isHistory;
+  
   return entry;
 }
 
 - (instancetype)_shallowCopyWithUUID:(NSUUID *)uuid {
   KPKEntry *entry = [super _shallowCopyWithUUID:uuid];
   /* Default attributes */
-  entry.password = self.password;
-  entry.username = self.username;
-  entry.url = self.url;
-  entry.notes = self.notes;
-  
   entry.overrideURL = self.overrideURL;
   
   entry.binaries = [[NSMutableArray alloc] initWithArray:self->_binaries copyItems:YES];
-  entry.customAttributes = [[NSMutableArray alloc] initWithArray:self->_customAttributes copyItems:YES];
-  entry.tags = self->_tags;
+  entry.attributeMap = [[NSMutableDictionary alloc] initWithDictionary:_attributeMap copyItems:YES];
+  entry.tags = self.tags;
   entry.autotype = self.autotype;
   /* Shallow copy skipps history */
-  entry->_isHistory = NO;
+  entry.isHistory = NO;
   
   /* Color */
   entry.foregroundColor = self.foregroundColor;
   entry.backgroundColor = self.backgroundColor;
   
-  /* fix entry references */
-  for(KPKAttribute *attribute in _customAttributes) {
-    attribute.entry = entry;
-  }
   return entry;
 }
 
@@ -212,30 +214,20 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(self) {
     /* Disable timing since we init via coder */
     self.updateTiming = NO;
-    _passwordAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(passwordAttribute))];
-    _titleAttribute= [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(titleAttribute))];
-    _usernameAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(usernameAttribute))];
-    _urlAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(urlAttribute))];
-    _notesAttribute = [aDecoder decodeObjectOfClass:[KPKAttribute class] forKey:NSStringFromSelector(@selector(notesAttribute))];
+    _attributeMap = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(attributeMap))];
     _binaries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(binaries))];
-    _customAttributes = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(customAttributes))];
     _tags = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(tags))];
-    _history = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(history))];
+    _mutableHistory = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableHistory))];
     _foregroundColor = [aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(foregroundColor))];
     _backgroundColor = [aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(backgroundColor))];
     _overrideURL = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(overrideURL))];
     _autotype = [aDecoder decodeObjectOfClass:[KPKAutotype class] forKey:NSStringFromSelector(@selector(autotype))];
     _isHistory = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isHistory))];
     
-    /* Default attributes */
-    for(KPKAttribute *attribute in self.defaultAttributes) {
-      attribute.entry = self;
+    for(NSString *key in self.attributeMap) {
+      self.attributeMap[key].entry = self;
     }
     _autotype.entry = self;
-    
-    for(KPKAttribute *attribute in _customAttributes) {
-      attribute.entry = self;
-    }
     self.updateTiming = YES;
   }
   return self;
@@ -243,18 +235,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [super _encodeWithCoder:aCoder];
-  [aCoder encodeObject:_passwordAttribute forKey:NSStringFromSelector(@selector(passwordAttribute))];
-  [aCoder encodeObject:_titleAttribute forKey:NSStringFromSelector(@selector(titleAttribute))];
-  [aCoder encodeObject:_usernameAttribute forKey:NSStringFromSelector(@selector(usernameAttribute))];
-  [aCoder encodeObject:_urlAttribute forKey:NSStringFromSelector(@selector(urlAttribute))];
-  [aCoder encodeObject:_notesAttribute forKey:NSStringFromSelector(@selector(notesAttribute))];
+  [aCoder encodeObject:_attributeMap forKey:NSStringFromSelector(@selector(attributeMap))];
   [aCoder encodeObject:_binaries forKey:NSStringFromSelector(@selector(binaries))];
-  [aCoder encodeObject:_customAttributes forKey:NSStringFromSelector(@selector(customAttributes))];
   [aCoder encodeObject:_tags forKey:NSStringFromSelector(@selector(tags))];
   [aCoder encodeObject:_foregroundColor forKey:NSStringFromSelector(@selector(foregroundColor))];
   [aCoder encodeObject:_backgroundColor forKey:NSStringFromSelector(@selector(backgroundColor))];
   [aCoder encodeObject:_overrideURL forKey:NSStringFromSelector(@selector(overrideURL))];
-  [aCoder encodeObject:_history forKey:NSStringFromSelector(@selector(history))];
+  [aCoder encodeObject:_mutableHistory forKey:NSStringFromSelector(@selector(mutableHistory))];
   [aCoder encodeObject:_autotype forKey:NSStringFromSelector(@selector(autotype))];
   [aCoder encodeBool:_isHistory forKey:NSStringFromSelector(@selector(isHistory))];
   return;
@@ -314,23 +301,14 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     return NO;
   }
   
-  if(self.customAttributes.count != entry.customAttributes.count) {
+  if(self.attributeMap.count != entry.attributeMap.count) {
     return NO;
   }
   
-  NSArray *otherAttributes = [entry defaultAttributes];
-  NSArray *defaultAttributes = [self defaultAttributes];
-  NSAssert([otherAttributes count] == [defaultAttributes count], @"Defautl Attributes have to match size");
-  for(NSUInteger index = 0; index < [defaultAttributes count]; index++) {
-    KPKAttribute *attribute = defaultAttributes[index];
-    KPKAttribute *other = otherAttributes[index];
-    if(![other isEqualToAttribute:attribute]) {
-      return NO;
-    }
-  }
-  for(KPKAttribute *attribute in self.customAttributes) {
-    KPKAttribute *otherAttribute = [entry customAttributeForKey:attribute.key];
-    if(!otherAttributes) {
+  for(NSString *key in self.attributeMap) {
+    KPKAttribute *attribute = self.attributeMap[key];
+    KPKAttribute *otherAttribute = entry.attributeMap[key];
+    if(!otherAttribute) {
       return NO;
     }
     if(![otherAttribute isEqualToAttribute:attribute]) {
@@ -341,35 +319,71 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 #pragma mark -
-
+#pragma mark Attribute accessors
 - (NSArray *)defaultAttributes {
-  return @[ self.titleAttribute,
-            self.usernameAttribute,
-            self.passwordAttribute,
-            self.urlAttribute,
-            self.notesAttribute
+  return @[ [self attributeWithKey:kKPKTitleKey],
+            [self attributeWithKey:kKPKUsernameKey],
+            [self attributeWithKey:kKPKPasswordKey],
+            [self attributeWithKey:kKPKURLKey],
+            [self attributeWithKey:kKPKNotesKey]
             ];
 }
 
+- (NSArray *)customAttributes {
+  /* cache? */
+  return [self.attributeMap.allValues filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+    return !((KPKAttribute *)evaluatedObject).isDefault;
+  }]];
+}
+
+- (NSArray *)attributes {
+  return self.attributeMap.allValues;
+}
+
+- (KPKAttribute *)attributeWithKey:(NSString *)key {
+  return self.attributeMap[key];
+}
+
+- (BOOL)hasAttributeWithKey:(NSString *)key {
+  return (nil != [self attributeWithKey:key]);
+}
+
+- (BOOL)protectValueForKey:(NSString *)key {
+  return [self attributeWithKey:key].isProtected;
+}
+
+- (void)setProtect:(BOOL)protect valueForkey:(NSString *)key {
+  [self attributeWithKey:key].isProtected = protect;
+}
+
+- (NSString *)valueForAttributeWithKey:(NSString *)key {
+  return [self attributeWithKey:key].value;
+}
+
+- (void)setValue:(NSString *)value forAttributeWithKey:(NSString *)key {
+  [self attributeWithKey:key].value = value;
+}
+
+#pragma mark -
 #pragma mark Properties
 - (BOOL )protectNotes {
-  return self.notesAttribute.isProtected;
+  return [self protectValueForKey:kKPKNotesKey];
 }
 
 - (BOOL)protectPassword {
-  return self.passwordAttribute.isProtected;
+  return  [self protectValueForKey:kKPKPasswordKey];
 }
 
 - (BOOL)protectTitle {
-  return self.titleAttribute.isProtected;
+  return [self protectValueForKey:kKPKTitleKey];
 }
 
 - (BOOL)protectUrl {
-  return self.urlAttribute.isProtected;
+  return [self protectValueForKey:kKPKURLKey];
 }
 
 - (BOOL)protectUsername {
-  return self.usernameAttribute.isProtected;
+  return [self protectValueForKey:kKPKUsernameKey];
 }
 
 - (BOOL)isEditable {
@@ -380,32 +394,28 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return [_binaries copy];
 }
 
-- (NSArray *)customAttributes {
-  return [_customAttributes copy];
-}
-
 - (NSArray *)history {
-  return  [_history copy];
+  return  [self.mutableHistory copy];
 }
 
 - (NSString *)title {
-  return self.titleAttribute.value;
+  return [self valueForAttributeWithKey:kKPKTitleKey];
 }
 
 - (NSString *)username {
-  return self.usernameAttribute.value;
+  return [self valueForAttributeWithKey:kKPKUsernameKey];
 }
 
 - (NSString *)password {
-  return self.passwordAttribute.value;
+  return [self valueForAttributeWithKey:kKPKPasswordKey];
 }
 
 - (NSString *)notes {
-  return self.notesAttribute.value;
+  return [self valueForAttributeWithKey:kKPKNotesKey];
 }
 
 - (NSString *)url {
-  return self.urlAttribute.value;
+  return [self valueForAttributeWithKey:kKPKURLKey];
 }
 
 - (BOOL)isMeta {
@@ -445,24 +455,41 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return KPKLegacyVersion;
 }
 
+- (void)setAttributeMap:(NSMutableDictionary<NSString *,KPKAttribute *> *)attributeMap {
+  _attributeMap = attributeMap;
+  [self.attributeMap enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, KPKAttribute * _Nonnull obj, BOOL * _Nonnull stop) {
+    obj.entry = self;
+  }];
+}
+
+- (void)setParent:(KPKGroup *)parent {
+  [super setParent:parent];
+  if(self.isHistory) {
+    return;
+  }
+  for(KPKEntry *entry in self.mutableHistory) {
+    entry.parent = parent;
+  }
+}
+
 - (void)setProtectNotes:(BOOL)protectNotes {
-  self.notesAttribute.isProtected = protectNotes;
+  [self setProtect:protectNotes valueForkey:kKPKNotesKey];
 }
 
 - (void)setProtectPassword:(BOOL)protectPassword {
-  self.passwordAttribute.isProtected = protectPassword;
+  [self setProtect:protectPassword valueForkey:kKPKPasswordKey];
 }
 
 - (void)setProtectTitle:(BOOL)protectTitle {
-  self.titleAttribute.isProtected = protectTitle;
+  [self setProtect:protectTitle valueForkey:kKPKTitleKey];
 }
 
 - (void)setProtectUrl:(BOOL)protectUrl {
-  self.urlAttribute.isProtected = protectUrl;
+  [self setProtect:protectUrl valueForkey:kKPKURLKey];
 }
 
 - (void)setProtectUsername:(BOOL)protectUsername {
-  self.usernameAttribute.isProtected = protectUsername;
+  [self setProtect:protectUsername valueForkey:kKPKUsernameKey];
 }
 
 - (void)setAutotype:(KPKAutotype *)autotype {
@@ -474,24 +501,23 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)setTitle:(NSString *)title {
-  self.titleAttribute.value = title;
+  [self setValue:title forAttributeWithKey:kKPKTitleKey];
 }
 
 - (void)setUsername:(NSString *)username {
-  self.usernameAttribute.value = username;
+  [self setValue:username forAttributeWithKey:kKPKUsernameKey];
 }
 
 - (void)setPassword:(NSString *)password {
-
-  self.passwordAttribute.value = password;
+  [self setValue:password forAttributeWithKey:kKPKPasswordKey];
 }
 
 - (void)setNotes:(NSString *)notes {
-  self.notesAttribute.value = notes;
+  [self setValue:notes forAttributeWithKey:kKPKNotesKey];
 }
 
 - (void)setUrl:(NSString *)url {
-  self.urlAttribute.value= url;
+  [self setValue:url forAttributeWithKey:kKPKURLKey];
 }
 
 - (KPKEntry *)asEntry {
@@ -515,22 +541,22 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(nil == entry) {
     return; // only KPKEntry can be used
   }
+  /* updates icon, iconID, note, title */
   [super _updateToNode:node];
   if(entry.isHistory) {
     /* Reset the history to the correct "point in time" */
-    NSUInteger historyIndex = [self.history indexOfObject:entry];
-    [self removeHistoryAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(historyIndex, [_history count] - historyIndex)]];
+    NSUInteger historyIndex = [self.mutableHistory indexOfObject:entry];
+    [self removeHistoryAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(historyIndex, self.mutableHistory.count - historyIndex)]];
   }
   else {
     /* add a shallow copy of the node to the history and be done */
     [self addHistoryEntry:[entry _shallowCopyWithUUID:self.uuid]];
   }
   
-  self.title = entry.title;
   self.username = entry.username;
   self.password = entry.password;
-  self.notes = entry.notes;
   self.url = entry.url;
+  
   self.tags = entry.tags;
   self.foregroundColor = entry.foregroundColor;
   self.backgroundColor = entry.backgroundColor;
@@ -538,23 +564,19 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   self.autotype = entry.autotype;
   self.binaries = entry.binaries;
   self.timeInfo = entry.timeInfo;
-  self.customAttributes = [[NSMutableArray alloc] initWithArray:entry->_customAttributes copyItems:YES];
-  
-  for(KPKAttribute *attribute in _customAttributes) {
-    attribute.entry = entry;
-  }
+  self.attributeMap = [[NSMutableDictionary alloc] initWithDictionary:self.attributeMap copyItems:YES];
+
   [self wasModified];
 }
 
 
 #pragma mark CustomAttributes
 - (KPKAttribute *)customAttributeForKey:(NSString *)key {
-  // test for default keys;
-  NSPredicate *filter = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-    return [((KPKAttribute *)evaluatedObject).key isEqualToString:key];
-  }];
-  NSArray *filterdAttributes = [self.customAttributes filteredArrayUsingPredicate:filter];
-  return filterdAttributes.lastObject;
+  KPKAttribute *attribute = [self attributeWithKey:key];
+  if(attribute.isDefault) {
+    return attribute;
+  }
+  return nil;
 }
 
 - (NSString *)valueForCustomAttributeWithKey:(NSString *)key {
@@ -562,21 +584,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return attribute.value;
 }
 
-- (BOOL)hasAttributeWithKey:(NSString *)key {
-  return (nil != [self customAttributeForKey:key]);
-}
-
 -(NSString *)proposedKeyForAttributeKey:(NSString *)key {
-  /*
-   FIXME: Introduce some caching behaviour. We iterate over after every single edit
-   */
-  NSMutableSet *keys = [[NSMutableSet alloc] initWithCapacity:MAX(1,[_customAttributes count])];
-  for(KPKAttribute *attribute in _customAttributes) {
-    [keys addObject:attribute.key];
-  }
   NSUInteger counter = 1;
   NSString *base = key;
-  while([keys containsObject:key]) {
+  while(nil != self.attributeMap[key]) {
     key = [NSString stringWithFormat:@"%@-%ld", base, counter++];
   }
   return key;
@@ -585,18 +596,22 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (void)addCustomAttribute:(KPKAttribute *)attribute {
   NSAssert(nil == [self customAttributeForKey:attribute.key], @"Attributes have to have unique keys!");
   /* TODO: sanity check if attribute has unique key */
-  [self insertObject:attribute inCustomAttributesAtIndex:_customAttributes.count];
+  [self addAttributeMapObject:attribute];
+  //[self insertObject:attribute inCustomAttributesAtIndex:_customAttributes.count];
   attribute.entry = self;
   [self wasModified];
 }
 
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
-  NSUInteger index = [_customAttributes indexOfObject:attribute];
-  if(NSNotFound != index) {
-    attribute.entry = nil;
-    [self removeObjectFromCustomAttributesAtIndex:index];
-    [self wasModified];
-  }
+  attribute.entry = nil;
+  [self removeAttributeMapObject:attribute];
+  [self wasModified];
+//  NSUInteger index = [_customAttributes indexOfObject:attribute];
+//  if(NSNotFound != index) {
+//    attribute.entry = nil;
+//    [self removeObjectFromCustomAttributesAtIndex:index];
+//    [self wasModified];
+//  }
 }
 #pragma mark Attachments
 
@@ -625,18 +640,18 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark History
 
 - (void)addHistoryEntry:(KPKEntry *)entry {
-  [self insertObject:entry inHistoryAtIndex:_history.count];
+  [self insertObject:entry inHistoryAtIndex:self.mutableHistory.count];
 }
 
 - (void)removeHistoryEntry:(KPKEntry *)entry {
-  NSUInteger index = [self.history indexOfObject:entry];
+  NSUInteger index = [self.mutableHistory indexOfObject:entry];
   if(index != NSNotFound) {
     [self removeObjectFromHistoryAtIndex:index];
   }
 }
 
 - (void)clearHistory {
-  NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, _history.count)];
+  NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.mutableHistory.count)];
   [self removeHistoryAtIndexes:indexes];
 }
 
@@ -644,27 +659,20 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   
   NSUInteger __block size = 128; // KeePass suggest this as the inital size
   
-  void (^attributeBlock)(id obj, NSUInteger idx, BOOL *stop) = ^(id obj, NSUInteger idx, BOOL *stop) {
-    KPKAttribute *attribute = obj;
+  /* Attributes */
+  [self.attributeMap enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, KPKAttribute * _Nonnull attribute, BOOL * _Nonnull stop) {
     size += attribute.value.length;
     size += attribute.key.length;
-  };
-  
-  /* Default attributes */
-  [self.defaultAttributes enumerateObjectsUsingBlock:attributeBlock];
-  
-  /* Custom attributes */
-  [_customAttributes enumerateObjectsUsingBlock:attributeBlock];
+  }];
   
   /* Binaries */
-  [[self binaries] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    KPKBinary *binary = obj;
+  [self.binaries enumerateObjectsUsingBlock:^(KPKBinary * _Nonnull binary, NSUInteger idx, BOOL * _Nonnull stop) {
     size += binary.name.length;
     size += binary.data.length;
   }];
   
   /* Autotype */
-  size += [self.autotype.defaultKeystrokeSequence length];
+  size += self.autotype.defaultKeystrokeSequence.length;
   [self.autotype.associations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKWindowAssociation *association = obj;
     size += association.windowTitle.length;
@@ -693,7 +701,31 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark -
 #pragma mark KVO
 
-/* CustomAttributes */
+- (NSUInteger)countOfAttributeMap {
+  return self.attributeMap.count;
+}
+
+- (void)addAttributeMap:(NSSet *)attribues {
+  for(KPKAttribute *attribute in attribues) {
+    self.attributeMap[attribute.key] = attribute;
+  }
+};
+
+- (void)addAttributeMapObject:(KPKAttribute *)attribute {
+  [self addAttributeMap:[NSSet setWithObject:attribute]];
+};
+
+- (void)removeAttributeMap:(NSSet *)attributes {
+  for(KPKAttribute *attribute in attributes) {
+    [self.attributeMap removeObjectForKey:attribute.key];
+  }
+};
+
+- (void)removeAttributeMapObject:(KPKAttribute *)attribute {
+  [self removeAttributeMap:[NSSet setWithObject:attribute]];
+};
+
+/*
 - (NSUInteger)countOfCustomAttributes {
   return [_customAttributes count];
 }
@@ -708,6 +740,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     [_customAttributes removeObjectAtIndex:index];
   }
 }
+ */
 
 /* Binaries */
 - (NSUInteger)countOfBinaries {
@@ -728,17 +761,17 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 /* History */
 - (NSUInteger)countOfHistory {
-  return [_history count];
+  return self.mutableHistory.count;
 }
 
 - (void)insertObject:(KPKEntry *)entry inHistoryAtIndex:(NSUInteger)index {
-  index = MIN([_history count], index);
+  index = MIN([self.mutableHistory count], index);
   /* Entries in history should not have a history of their own */
   [entry clearHistory];
   entry.isHistory = YES;
   entry.parent = self.parent;
   NSAssert([entry.history count] == 0, @"History entries cannot hold a history of their own!");
-  [_history insertObject:entry atIndex:index];
+  [self.mutableHistory insertObject:entry atIndex:index];
 }
 
 - (void)removeObjectFromHistoryAtIndex:(NSUInteger)index {
@@ -751,7 +784,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     NSAssert(historyEntry != nil, @"History indexes need to be valid!");
     historyEntry.isHistory = NO;
   }];
-  [_history removeObjectsAtIndexes:indexes];
+  [self.mutableHistory removeObjectsAtIndexes:indexes];
 }
 
 #pragma mark -

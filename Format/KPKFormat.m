@@ -31,13 +31,6 @@ NSString *const kKPKUsernameKey  = @"UserName";
 NSString *const kKPKPasswordKey  = @"Password";
 NSString *const kKPKURLKey       = @"URL";
 NSString *const kKPKNotesKey     = @"Notes";
-NSString *const KPKImageKey      = @"Image";
-
-@interface KPKFormat () {
-  NSSet *_defaultKeys;
-}
-
-@end
 
 @implementation KPKFormat
 
@@ -53,14 +46,13 @@ NSString *const KPKImageKey      = @"Image";
 - (instancetype)_init {
   self = [super init];
   if (self) {
-    NSArray *keys = @[ kKPKTitleKey,
-                       kKPKNameKey,
-                       kKPKUsernameKey,
-                       kKPKPasswordKey,
-                       kKPKURLKey,
-                       kKPKNotesKey,
-                       KPKImageKey];
-    _defaultKeys = [NSSet setWithArray:keys];
+    NSArray *entryDefaults = @[ kKPKTitleKey,
+                                kKPKUsernameKey,
+                                kKPKPasswordKey,
+                                kKPKURLKey,
+                                kKPKNotesKey,
+                                ];
+    _entryDefaultKeys = [NSSet setWithArray:entryDefaults];
   }
   return self;
 }
@@ -100,14 +92,6 @@ NSString *const KPKImageKey      = @"Image";
   [data getBytes:&version range:NSMakeRange(8, 4)];
   version = CFSwapInt32LittleToHost(version);
   return version;
-}
-
-- (NSSet *)defaultKeys {
-  return _defaultKeys;
-}
-
-- (BOOL)isDefaultKey:(NSString *)key {
-  return [_defaultKeys containsObject:key];
 }
 
 - (KPKVersion)minimumVersionForKey:(NSString *)key {

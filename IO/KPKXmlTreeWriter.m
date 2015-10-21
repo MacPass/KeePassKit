@@ -224,11 +224,7 @@
   DDXMLElement *timesElement = [self _xmlTimeinfo:entry.timeInfo];
   [entryElement addChild:timesElement];
   
-  for(KPKAttribute *defaultAttribute in [entry defaultAttributes]) {
-    [entryElement addChild:[self _xmlAttribute:defaultAttribute]];
-  }
-  
-  for(KPKAttribute *attribute in entry.customAttributes) {
+  for(KPKAttribute *attribute in entry.attributes) {
     [entryElement addChild:[self _xmlAttribute:attribute]];
   }
   for(KPKBinary *binary in entry.binaries) {

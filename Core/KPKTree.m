@@ -169,6 +169,7 @@
     }
   }
 }
+
 - (void)setRoot:(KPKGroup *)root {
   if(_root != root) {
     _root = root;
@@ -196,8 +197,8 @@
 }
 
 - (NSArray *)allHistoryEntries {
-  NSArray *allEntries = [self allEntries];
-  if([allEntries count] == 0) {
+  NSArray *allEntries = self.allEntries;
+  if(allEntries.count == 0) {
     return nil;
   }
   NSMutableArray *historyEntries = [[NSMutableArray alloc] init];
