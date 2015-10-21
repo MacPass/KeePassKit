@@ -29,6 +29,7 @@ FOUNDATION_EXTERN NSString *const kKPKUsernameKey;
 FOUNDATION_EXTERN NSString *const kKPKPasswordKey;
 FOUNDATION_EXTERN NSString *const kKPKURLKey;
 FOUNDATION_EXTERN NSString *const kKPKNotesKey;
+FOUNDATION_EXPORT NSUInteger const kKPKDefaultEntryKeysCount;
 
 /**
  Format class.
@@ -53,7 +54,8 @@ FOUNDATION_EXTERN NSString *const kKPKNotesKey;
 /**
  @returns A set containing the strings that are default keys for enty attributes
  */
-@property (nonatomic, strong, readonly) NSSet *entryDefaultKeys;
+@property (nonatomic, strong, readonly) NSArray<NSString *> *entryDefaultKeys;
+- (NSInteger)indexForDefaultKey:(NSString *)key;
 
 /**
  @param key The key to determine the minimum version for

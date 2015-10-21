@@ -67,8 +67,10 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy) NSColor *backgroundColor;
 @property (nonatomic, copy) NSString *overrideURL;
 
-@property (nonatomic, copy, readonly) NSArray *attributes;
+@property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *attributes;
 @property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *customAttributes;
+@property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *defaultAttributes;
+
 @property (nonatomic, copy) KPKAutotype *autotype;
 @property (nonatomic, copy, readonly) NSArray<KPKEntry *> *history;
 @property (nonatomic, readonly) BOOL isHistory;
@@ -85,10 +87,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *  @return YES if receiver is equal to entry based on all attributes. UUID and parents are NOT considered
  */
 - (BOOL)isEqualToEntry:(KPKEntry *)entry;
-/**
- *	Retrieves a list of all defaultAttributes
- */
-@property (nonatomic, readonly, copy) NSArray<KPKAttribute *> *defaultAttributes;
+
 /**
  *  Moves the Entry the the new group at the given index
  *

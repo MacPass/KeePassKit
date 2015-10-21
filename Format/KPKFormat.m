@@ -31,6 +31,7 @@ NSString *const kKPKUsernameKey  = @"UserName";
 NSString *const kKPKPasswordKey  = @"Password";
 NSString *const kKPKURLKey       = @"URL";
 NSString *const kKPKNotesKey     = @"Notes";
+NSUInteger const kKPKDefaultEntryKeysCount = 5;
 
 @implementation KPKFormat
 
@@ -46,13 +47,7 @@ NSString *const kKPKNotesKey     = @"Notes";
 - (instancetype)_init {
   self = [super init];
   if (self) {
-    NSArray *entryDefaults = @[ kKPKTitleKey,
-                                kKPKUsernameKey,
-                                kKPKPasswordKey,
-                                kKPKURLKey,
-                                kKPKNotesKey,
-                                ];
-    _entryDefaultKeys = [NSSet setWithArray:entryDefaults];
+    _entryDefaultKeys = @[ kKPKTitleKey, kKPKUsernameKey, kKPKPasswordKey, kKPKURLKey, kKPKNotesKey ];
   }
   return self;
 }
@@ -63,6 +58,10 @@ NSString *const kKPKNotesKey     = @"Notes";
 
 + (instancetype)allocWithZone:(NSZone *)zone {
   return [self sharedFormat];
+}
+
+- (NSInteger)indexForDefaultKey:(NSString *)key {
+  return [self.entryDefaultKeys indexOfObject:key];
 }
 
 - (KPKVersion)databaseVersionForData:(NSData *)data {
