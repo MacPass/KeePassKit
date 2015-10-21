@@ -124,9 +124,9 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 
 #pragma mark Editing
 /**
- *  Creates a new editing Session for the node. Any previous session will get cancled and changes will get dropped!
+ *  Signals the Node there are changes to be made. Previues uncommited changes will get dropped.
  *
- *  @return The created or already present node for editing.
+ *  @return A shallow copy of the node suitabel for editing.
  */
 - (KPKNode *)beginEditing;
 /**

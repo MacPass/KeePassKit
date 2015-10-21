@@ -55,7 +55,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy) NSString *url;
 
 @property (nonatomic, strong) NSArray<KPKBinary *> *binaries;
-// TODO: change Tags to an String array!
 @property (nonatomic, copy) NSArray<NSString *> *tags;
 @property (nonatomic, copy) NSColor *foregroundColor;
 @property (nonatomic, copy) NSColor *backgroundColor;
@@ -65,7 +64,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *customAttributes;
 @property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *defaultAttributes;
 
-@property (nonatomic, copy) KPKAutotype *autotype;
+@property (nonatomic, copy, readonly) KPKAutotype *autotype;
 @property (nonatomic, copy, readonly) NSArray<KPKEntry *> *history;
 @property (nonatomic, readonly) BOOL isHistory;
 /**

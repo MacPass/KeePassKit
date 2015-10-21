@@ -216,10 +216,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(self) {
     /* Disable timing since we init via coder */
     self.updateTiming = NO;
+    /* use setter for internal consistency */
     self.mutableAttributes = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableAttributes))];
+    self.mutableHistory = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableHistory))];
     _binaries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(binaries))];
     _tags = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(tags))];
-    _mutableHistory = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableHistory))];
     _foregroundColor = [aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(foregroundColor))];
     _backgroundColor = [aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(backgroundColor))];
     _overrideURL = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(overrideURL))];
@@ -458,6 +459,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   _mutableAttributes = mutableAttributes;
   for(KPKAttribute *attribute in self.mutableAttributes) {
     attribute.entry = self;
+  }
+}
+
+- (void)setMutableHistory:(NSMutableArray<KPKEntry *> *)mutableHistory {
+  _mutableHistory = mutableHistory;
+  for(KPKEntry *entry in self.mutableHistory) {
+    entry.parent = self.parent;
   }
 }
 
