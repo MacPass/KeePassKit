@@ -29,12 +29,12 @@
 #import "KPKBinary.h"
 #import "KPKDeletedNode.h"
 #import "KPKEntry.h"
+#import "KPKEntry+Private.h"
 #import "KPKErrors.h"
 #import "KPKFormat.h"
 #import "KPKGroup.h"
 #import "KPKIcon.h"
 #import "KPKMetaData.h"
-//#import "KPKNode+Private.h"
 #import "KPKNode.h"
 #import "KPKRandomStream.h"
 #import "KPKSalsa20RandomStream.h"
@@ -280,25 +280,9 @@
                                                           value:[valueElement stringValue]
                                                     isProtected:isProtected];
     
-    if([attribute.key isEqualToString:kKPKTitleKey]) {
-      entry.title = attribute.value;
-      entry.protectTitle = attribute.isProtected;
-    }
-    else if([attribute.key isEqualToString:kKPKUsernameKey]) {
-      entry.username = attribute.value;
-      entry.protectUsername = attribute.isProtected;
-    }
-    else if([attribute.key isEqualToString:kKPKPasswordKey]) {
-      entry.password = attribute.value;
-      entry.protectPassword = attribute.isProtected;
-    }
-    else if([attribute.key isEqualToString:kKPKURLKey]) {
-      entry.url = attribute.value;
-      entry.protectUrl = attribute.isProtected;
-    }
-    else if([attribute.key isEqualToString:kKPKNotesKey]) {
-      entry.notes = attribute.value;
-      entry.protectNotes = attribute.isProtected;
+    if(attribute.isDefault) {
+      [entry _setValue:attribute.value forAttributeWithKey:attribute.key];
+      [entry _setProtect:attribute.isProtected valueForkey:attribute.key];
     }
     else {
       [entry addCustomAttribute:attribute];

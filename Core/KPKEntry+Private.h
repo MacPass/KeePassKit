@@ -9,7 +9,27 @@
 #import "KPKEntry.h"
 
 @interface KPKEntry ()
-
-@property (nonatomic, strong) NSMutableArray *mutableHistory;
+/**
+ *  Generic getter for the protected property of a attribute with the supplied key,
+ *
+ *  @param key The key for the attribute to test for protection
+ *
+ *  @return YES if the attribute is protected, NO if not or if it wasn't found
+ */
+- (BOOL)_protectValueForKey:(NSString *)key;
+/**
+ *  Sets the protected value for the attribute with the given key
+ *
+ *  @param protect The value for the protected flag
+ *  @param key     The key for the attribute to set the protected flag
+ */
+- (void)_setProtect:(BOOL)protect valueForkey:(NSString *)key;
+/**
+ *  Sets the value for the attribute with the given key
+ *
+ *  @param value Value to set
+ *  @param key   Key for the attribute to set the value upon
+ */
+- (void)_setValue:(NSString *)value forAttributeWithKey:(NSString *)key;
 
 @end

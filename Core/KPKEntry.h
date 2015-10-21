@@ -54,12 +54,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *url;
 
-@property (nonatomic) BOOL protectTitle;
-@property (nonatomic) BOOL protectPassword;
-@property (nonatomic) BOOL protectUsername;
-@property (nonatomic) BOOL protectUrl;
-@property (nonatomic) BOOL protectNotes;
-
 @property (nonatomic, strong) NSArray<KPKBinary *> *binaries;
 // TODO: change Tags to an String array!
 @property (nonatomic, copy) NSArray<NSString *> *tags;
@@ -105,13 +99,21 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 + (KPKEntry *)metaEntryWithData:(NSData *)data name:(NSString *)name;
 
-#pragma mark Custom Attributes
+#pragma mark Generic Attribute manipulation
+
 /**
  @param key String that identifies the attributes
  @returns the attribute with the given key
  */
 - (KPKAttribute *)customAttributeForKey:(NSString *)key;
-- (NSString *)valueForCustomAttributeWithKey:(NSString *)key;
+/**
+ *  Returns the value for the attribute with the given key
+ *
+ *  @param key Key for the attribute
+ *
+ *  @return value of the attriubte matching the key, nil if no matching attributes was found
+ */
+- (NSString *)valueForAttributeWithKey:(NSString *)key;
 /**
  @returns YES, if the supplied key is a key in the attributes of this entry
  */

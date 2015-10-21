@@ -305,7 +305,7 @@
   }
   /*
    If we write direct output without later proteting the stream,
-   e.g. direkt output to XML we need to strip any invalid characters
+   e.g. direct output to XML we need to strip any invalid characters
    to prevent XML malformation
    */
   BOOL usesRandomStream = (_randomStream != nil);
