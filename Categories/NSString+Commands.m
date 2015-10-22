@@ -255,18 +255,18 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 }
 
 - (BOOL)validateCommmand {
-  if([self length] == 0) {
+  if(self.length == 0) {
     return NO;
   }
   NSUInteger index = 0;
   BOOL isBracketOpen = NO;
   while(YES) {
-    if(index >= [self length]) {
+    if(index >= self.length) {
       /* At the end all brackets should be closed */
       return !isBracketOpen;
     }
-    NSUInteger openingBracketIndex = [self rangeOfString:@"{" options:0 range:NSMakeRange(index, [self length] - index)].location;
-    NSUInteger closingBracketIndex = [self rangeOfString:@"}" options:0 range:NSMakeRange(index, [self length] - index)].location;
+    NSUInteger openingBracketIndex = [self rangeOfString:@"{" options:0 range:NSMakeRange(index, self.length - index)].location;
+    NSUInteger closingBracketIndex = [self rangeOfString:@"}" options:0 range:NSMakeRange(index, self.length - index)].location;
     if(isBracketOpen) {
       if(closingBracketIndex != NSNotFound && closingBracketIndex < openingBracketIndex) {
         isBracketOpen = NO;
@@ -354,19 +354,21 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   if(!valueSelectorString) {
     return nil; // Wrong valueKey
   }
-  __block KPKEntry *matchingEntry;
+  KPKEntry *matchingEntry;
   /* Custom Attribute search */
   if([searchKey isEqualToString:@"O"]) {
-    [tree.allEntries enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-      KPKEntry *entry = obj;
+    for(KPKEntry *entry in tree.allEntries) {
       for(KPKAttribute *attribute in entry.customAttributes) {
         NSRange matchRange = [attribute.value rangeOfString:match];
         if(matchRange.length > 0) {
-          matchingEntry = obj;
-          *stop = YES;
+          matchingEntry = entry;
+          break;
         }
       }
-    }];
+      if(matchingEntry) {
+        break;
+      }
+    }
   }
   /* Direct UUID search */
   else if([searchKey isEqualToString:@"I"]) {
@@ -427,23 +429,23 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   /* build mapping for all default fields */
   NSMutableDictionary *caseInsensitiveMappings = [[NSMutableDictionary alloc] initWithCapacity:30];
   NSMutableDictionary *caseSensitiviveMappings = [[NSMutableDictionary alloc] initWithCapacity:entry.customAttributes.count];
-  for(KPKAttribute *defaultAttribute in [entry defaultAttributes]) {
+  for(KPKAttribute *defaultAttribute in entry.defaultAttributes) {
     NSString *keyString = [[NSString alloc] initWithFormat:@"{%@}", defaultAttribute.key];
     caseInsensitiveMappings[keyString] = defaultAttribute.value;
   }
   /*
    Custom String fields {S:<Key>}
    */
-  for(KPKAttribute *customAttribute in [entry customAttributes]) {
+  for(KPKAttribute *customAttribute in entry.customAttributes) {
     NSString *upperCaseKey = [[NSString alloc] initWithFormat:@"{S:%@}", customAttribute.key ];
     NSString *lowerCaseKey = [[NSString alloc] initWithFormat:@"{s:%@}", customAttribute.key ];
     caseSensitiviveMappings[upperCaseKey] = customAttribute.value;
     caseSensitiviveMappings[lowerCaseKey] = customAttribute.value;
   }
   /*  url mappings */
-  if([entry.url length] > 0) {
+  if(entry.url.length > 0) {
     NSURL *url = [[NSURL alloc] initWithString:entry.url];
-    if([url scheme]) {
+    if(url.scheme) {
       NSMutableString *mutableURL = [entry.url mutableCopy];
       [mutableURL replaceOccurrencesOfString:[url scheme] withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableURL length])];
       caseInsensitiveMappings[@"{URL:RMVSCM}"] = [mutableURL copy];
@@ -453,14 +455,14 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
       caseInsensitiveMappings[@"{URL:RMVSCM}"] = entry.url;
       caseInsensitiveMappings[@"{URL:SCM}"] = @"";
     }
-    caseInsensitiveMappings[@"{URL:HOST}"] = [url host] ? [url host] : @"";
-    caseInsensitiveMappings[@"{URL:PORT}"] = [url port] ? [[url port] stringValue] : @"";
-    caseInsensitiveMappings[@"{URL:PATH}"] = [url path] ? [url path] : @"";
-    caseInsensitiveMappings[@"{URL:QUERY}"] = [url query] ? [url query] : @"";
-    caseInsensitiveMappings[@"{URL:USERNAME}"] = [url user] ? [url user] : @"";
-    caseInsensitiveMappings[@"{URL:PASSWORD}"] = [url password] ? [url password] : @"";
-    if( [url user] && [url password]) {
-      caseInsensitiveMappings[@"{URL:USERINFO}"] = [[NSString alloc] initWithFormat:@"%@:%@", [url user], [url password]];
+    caseInsensitiveMappings[@"{URL:HOST}"] = url.host ? url.host : @"";
+    caseInsensitiveMappings[@"{URL:PORT}"] = url.port ? [[url port] stringValue] : @"";
+    caseInsensitiveMappings[@"{URL:PATH}"] = url.path ? url.path : @"";
+    caseInsensitiveMappings[@"{URL:QUERY}"] = url.query ? url.query : @"";
+    caseInsensitiveMappings[@"{URL:USERNAME}"] = url.user ? url.user : @"";
+    caseInsensitiveMappings[@"{URL:PASSWORD}"] = url.password ? url.password : @"";
+    if( url.user && url.password) {
+      caseInsensitiveMappings[@"{URL:USERINFO}"] = [[NSString alloc] initWithFormat:@"%@:%@", url.user, url.password];
     }
     else {
       caseInsensitiveMappings[@"{URL:USERINFO}"] = [[NSString alloc] initWithFormat:@"%@%@", caseInsensitiveMappings[@"{URL:USERNAME}"], caseInsensitiveMappings[@"{URL:PASSWORD}"]];

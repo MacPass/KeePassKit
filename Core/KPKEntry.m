@@ -258,9 +258,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKLocalizable", "");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
-  /* Disbale the undomanager since we do not want the updated title to be registered */
   copy.title = titleOrNil;
-  //[copy.timeInfo reset];
+  [copy.timeInfo reset];
   return copy;
 }
 

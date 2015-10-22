@@ -142,6 +142,7 @@
   self.accessDate = now;
   self.locationChanged = now;
   self.usageCount = 0;
+  self.updateTiming = YES;
 }
 
 - (void)wasModified {

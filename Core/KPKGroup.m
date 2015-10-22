@@ -153,14 +153,12 @@
   /* We update the UUID */
   KPKGroup *copy = [self _copyWithUUID:nil];
   
-  /* update entry uuids */
-  /* update child uuids */
   if(nil == titleOrNil) {
     NSString *format = NSLocalizedStringFromTable(@"KPK_GROUP_COPY_%@", @"KPKLocalizable", "");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
-  [copy.timeInfo reset];
   copy.title = titleOrNil;
+  [copy.timeInfo reset];
   return copy;
 }
 
