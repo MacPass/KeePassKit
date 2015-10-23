@@ -44,17 +44,17 @@
  Initalizes a new Chipher information with random seeds
  @returns the initalized instance
  */
-- (id)init;
+- (instancetype)init;
 /**
  Initalizes a new Chipher information with the information found in the header
  @param data The file input to read (raw file data)
  @param error Occuring errors. Suppy NULL if you're not interested in any errors
  @returns the initalized instance
  */
-- (id)initWithData:(NSData *)data error:(NSError **)error;
+- (instancetype)initWithData:(NSData *)data error:(NSError **)error;
 /**
  @returns the data with the header data removed.
  */
-- (NSData *)dataWithoutHeader;
+@property (nonatomic, readonly, copy) NSData *dataWithoutHeader;
 
 @end

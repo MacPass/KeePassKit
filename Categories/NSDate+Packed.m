@@ -40,12 +40,12 @@
   }
   
   NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
-  [dateComponents setYear:y];
-  [dateComponents setMonth:mon];
-  [dateComponents setDay:d];
-  [dateComponents setHour:h];
-  [dateComponents setMinute:min];
-  [dateComponents setSecond:s];
+  dateComponents.year = y;
+  dateComponents.month = mon;
+  dateComponents.day = d;
+  dateComponents.hour = h;
+  dateComponents.minute = min;
+  dateComponents.second = s;
   
   NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
   NSDate *date = [calendar dateFromComponents:dateComponents];
@@ -55,7 +55,7 @@
 
 + (void)getPackedBytes:(uint8_t *)buffer fromDate:(NSDate *)date {
   NSData *data = [self packedBytesFromDate:date];
-  [data getBytes:buffer length:[data length]];
+  [data getBytes:buffer length:data.length];
 }
 
 + (NSData *)packedBytesFromDate:(NSDate *)date {
@@ -72,12 +72,12 @@
     NSUInteger calendarComponents = (NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit);
     NSDateComponents *dateComponents = [calendar components:calendarComponents fromDate:date];
     
-    year = (uint32_t)[dateComponents year];
-    month = (uint32_t)[dateComponents month];
-    days = (uint32_t)[dateComponents day];
-    hours = (uint32_t)[dateComponents hour];
-    minutes = (uint32_t)[dateComponents minute];
-    seconds = (uint32_t)[dateComponents second];
+    year = (uint32_t)dateComponents.year;
+    month = (uint32_t)dateComponents.month;
+    days = (uint32_t)dateComponents.day;
+    hours = (uint32_t)dateComponents.hour;
+    minutes = (uint32_t)dateComponents.minute;
+    seconds = (uint32_t)dateComponents.second;
   }
   else {
     year = 2999;

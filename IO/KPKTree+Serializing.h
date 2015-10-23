@@ -59,6 +59,6 @@
  *	Serializes the tree into the KeePass xml file
  *	@return	XML file string. Pretty printed
  */
-- (NSData *)xmlData;
+@property (nonatomic, readonly, copy) NSData *xmlData;
 
 @end

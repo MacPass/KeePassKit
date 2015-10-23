@@ -112,7 +112,7 @@
     return YES; // Pointers match, should be the same object
   }
   NSAssert([icon isKindOfClass:[KPKIcon class]], @"icon needs to be of class KPKIcon");
-  BOOL equal = [self.uuid isEqual:icon.uuid] && [[self encodedString] isEqualToString:[icon encodedString]];
+  BOOL equal = [self.uuid isEqual:icon.uuid] && [self.encodedString isEqualToString:icon.encodedString];
   return equal;
 }
 
@@ -135,7 +135,7 @@
 }
 
 - (NSData *)pngData {
-  NSImageRep *imageRep = [[self.image representations] lastObject];
+  NSImageRep *imageRep = (self.image).representations.lastObject;
   if([imageRep isKindOfClass:[NSBitmapImageRep class]]) {
     NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
     //[bitmapRep setProperty:NSImageGamma withValue:@1.0];

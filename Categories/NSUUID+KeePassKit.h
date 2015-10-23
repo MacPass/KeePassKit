@@ -28,8 +28,8 @@
 + (NSUUID *)AESUUID;
 + (NSUUID *)uuidWithEncodedString:(NSString *)string;
 
-- (NSData *)uuidData;
-- (NSString *)encodedString;
+@property (nonatomic, readonly, copy) NSData *uuidData;
+@property (nonatomic, readonly, copy) NSString *encodedString;
 - (instancetype)initWithEncodedUUIDString:(NSString *)string;
 - (instancetype)initWithData:(NSData *)data;
 /* Initsalizes with a UUID string missing any - */

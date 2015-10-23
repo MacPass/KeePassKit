@@ -31,7 +31,7 @@
 
 @implementation KPKDataStreamReader
 
-- (id)initWithData:(NSData *)data {
+- (instancetype)initWithData:(NSData *)data {
   self = [super init];
   if(self) {
     _location = 0;
@@ -97,14 +97,14 @@
 }
 
 - (BOOL)reachedEndOfData {
-  return (_location == [_data length]);
+  return (_location == _data.length);
 }
 
 - (NSUInteger)readableBytes {
   if(self.reachedEndOfData) {
     return 0;
   }
-  return ([_data length] - _location);
+  return (_data.length - _location);
 }
 
 - (void)reset {
@@ -112,7 +112,7 @@
 }
 
 - (NSUInteger)_getBytes:(void *)buffer length:(NSUInteger)length {
-  NSUInteger maxLength = [_data length] - _location;
+  NSUInteger maxLength = _data.length - _location;
   length = MIN(maxLength, length);
   [_data getBytes:buffer range:NSMakeRange(_location, length)];
   _location += length;

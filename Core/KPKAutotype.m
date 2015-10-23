@@ -47,7 +47,7 @@
   return [NSSet setWithObject:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
 }
 
-- (id)init {
+- (instancetype)init {
   self = [super init];
   if(self) {
     _isEnabled = YES;
@@ -57,7 +57,7 @@
   return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
     _isEnabled = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isEnabled))];
@@ -93,14 +93,14 @@
 
 - (NSString *)defaultKeystrokeSequence {
   /* The default sequence is inherited, so just bubble up */
-  if([self hasDefaultKeystrokeSequence]) {
+  if(self.hasDefaultKeystrokeSequence) {
     return self.entry.parent.defaultAutoTypeSequence;
   }
   return _defaultKeystrokeSequence;
 }
 
 - (void)setDefaultKeystrokeSequence:(NSString *)defaultSequence {
-  _defaultKeystrokeSequence = [defaultSequence length]  > 0 ? [defaultSequence copy] : nil;
+  _defaultKeystrokeSequence = defaultSequence.length  > 0 ? [defaultSequence copy] : nil;
 }
 
 - (NSArray *)associations {
@@ -108,7 +108,7 @@
 }
 
 - (void)addAssociation:(KPKWindowAssociation *)association {
-  [self addAssociation:association atIndex:[_associations count]];
+  [self addAssociation:association atIndex:_associations.count];
 }
 
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index {
@@ -134,7 +134,7 @@
 }
 
 - (BOOL)hasDefaultKeystrokeSequence {
-  return ! [_defaultKeystrokeSequence length] > 0;
+  return ! _defaultKeystrokeSequence.length > 0;
 }
 
 #pragma mark -

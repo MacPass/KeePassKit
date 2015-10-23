@@ -38,7 +38,7 @@
 
 @implementation KPKLegacyHeaderWriter
 
-- (id)initWithTree:(KPKTree *)tree {
+- (instancetype)initWithTree:(KPKTree *)tree {
   self = [super init];
   if(self) {
     _headerValid = NO;
@@ -63,7 +63,7 @@
 }
 
 - (void)setContentHash:(NSData *)hash {
-  if([hash length] == 32) {
+  if(hash.length == 32) {
     [hash getBytes:&_header.contentsHash length:32];
   }
 }

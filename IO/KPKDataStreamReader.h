@@ -27,18 +27,18 @@
 @property (nonatomic, readonly) NSUInteger readableBytes;
 @property (nonatomic, readonly) BOOL reachedEndOfData;
 
-- (id)initWithData:(NSData *)data;
+- (instancetype)initWithData:(NSData *)data;
 
 - (NSData *)dataWithLength:(NSUInteger)length;
 - (NSString *)stringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding;
 - (void)readBytes:(void *)buffer length:(NSUInteger)length;
-- (uint8_t)readByte;
-- (uint16_t)read2Bytes;
-- (uint32_t)read4Bytes;
-- (uint64_t)read8Bytes;
-- (NSUInteger)integer;
+@property (nonatomic, readonly) uint8_t readByte;
+@property (nonatomic, readonly) uint16_t read2Bytes;
+@property (nonatomic, readonly) uint32_t read4Bytes;
+@property (nonatomic, readonly) uint64_t read8Bytes;
+@property (nonatomic, readonly) NSUInteger integer;
 
-- (NSUInteger)location;
+@property (nonatomic, readonly) NSUInteger location;
 - (void)skipBytes:(NSUInteger)numberOfBytes;
 - (void)reset;
 

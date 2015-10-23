@@ -37,7 +37,7 @@ void KPKAddXmlElementIfNotNil(DDXMLElement *element, NSString *name, NSString *v
 }
 
 void KPKAddXmlElementIfNotEmtpy(DDXMLElement *element, NSString *name, NSString *value) {
-  if([value length] > 0) {
+  if(value.length > 0) {
     KPKAddXmlElement(element, name, value);
   }
 }
@@ -87,15 +87,15 @@ NSString *KPKXmlString(DDXMLElement *element, NSString *name) {
 
 NSString *KPKXmlNonEmptyString(DDXMLElement *element, NSString *name) {
   NSString *string = KPKXmlString(element, name);
-  return [string length] > 0 ? string : nil;
+  return string.length > 0 ? string : nil;
 }
 
 NSInteger KPKXmlInteger(DDXMLElement *element, NSString *name) {
-  return [[[element elementForName:name] stringValue] integerValue];
+  return [[element elementForName:name] stringValue].integerValue;
 }
 
 BOOL KPKXmlBool(DDXMLElement *element, NSString *name) {
-  return [[[element elementForName:name] stringValue] boolValue];
+  return [[element elementForName:name] stringValue].boolValue;
 }
 
 BOOL KPKXmlBoolAttribute(DDXMLElement *element, NSString *attribute) {

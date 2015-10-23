@@ -42,7 +42,7 @@
 
 @implementation KPKArc4RandomStream
 
-- (id)init {
+- (instancetype)init {
     uint8_t buffer[256];
     
     SecRandomCopyBytes(kSecRandomDefault, sizeof(buffer), buffer);
@@ -50,7 +50,7 @@
     return [self init:[NSData dataWithBytes:buffer length:sizeof(buffer)]];
 }
 
-- (id)init:(NSData*)key {
+- (instancetype)init:(NSData*)key {
     self = [super init];
     if (self) {
         const uint8_t *bytes = key.bytes;

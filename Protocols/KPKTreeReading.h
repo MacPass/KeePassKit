@@ -37,7 +37,7 @@
  *	@param	headerReader	the used headerreader to parst the header for this data
  *	@return	instance of tree reader
  */
-- (id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
+- (instancetype)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
 
 /**
  *	Reads the data and creates a tree from it

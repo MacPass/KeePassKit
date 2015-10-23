@@ -36,7 +36,7 @@
 
 @implementation KPKLegacyHeaderReader
 
-- (id)init {
+- (instancetype)init {
   self = [super init];
   if(self) {
     
@@ -44,7 +44,7 @@
   return self;
 }
 
-- (id)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error {
+- (instancetype)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error {
   self = [super init];
   if(self) {
     _data = data;
@@ -67,7 +67,7 @@
 
 - (NSData *)dataWithoutHeader {
   NSUInteger headerSize = sizeof(KPKLegacyHeader);
-  return [_data subdataWithRange:NSMakeRange(headerSize, [_data length] - headerSize)];
+  return [_data subdataWithRange:NSMakeRange(headerSize, _data.length - headerSize)];
 }
 
 - (void)writeHeaderData:(NSMutableData *)data {
@@ -77,7 +77,7 @@
 
 - (BOOL)_parseHeader:(NSError **)error {
   // Read in the header
-  if([_data length] < sizeof(KPKLegacyHeader)) {
+  if(_data.length < sizeof(KPKLegacyHeader)) {
     KPKCreateError(error, KPKErrorHeaderCorrupted, @"ERROR_HEADER_CORRUPTED", "");
     return NO;
   }

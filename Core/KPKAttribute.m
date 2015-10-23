@@ -166,8 +166,8 @@
 
 - (void)_encodeValue:(NSString *)string {
   NSMutableData *stringData = [[string dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
-  _lenght = [stringData length];
-  if([_xorPad length] < _lenght) {
+  _lenght = stringData.length;
+  if(_xorPad.length < _lenght) {
     _xorPad = [NSData dataWithRandomBytes:_lenght];
   }
   [stringData xorWithKey:_xorPad];

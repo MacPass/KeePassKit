@@ -38,9 +38,9 @@
 - (void)write8Bytes:(uint64)bytes;
 - (void)writeInteger:(NSUInteger)integer;
 
-- (NSData *)data;
-- (NSData *)writtenData;
-- (NSUInteger)location;
+@property (nonatomic, readonly, copy) NSData *data;
+@property (nonatomic, readonly, copy) NSData *writtenData;
+@property (nonatomic, readonly) NSUInteger location;
 - (void)reset;
 
 @end

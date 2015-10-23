@@ -43,7 +43,7 @@
                                 NSStringFromSelector(@selector(expirationDate))]];
 }
 
-- (id)init {
+- (instancetype)init {
   self = [super init];
   if(self) {
     NSDate *now = [NSDate date];
@@ -65,7 +65,7 @@
   [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_updateExpireState) object:nil];
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
     _creationDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(creationDate))];
@@ -172,7 +172,7 @@
   [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_updateExpireState) object:nil];
   /* Shedule invocation only if we can expire */
   if(self.expires && self.expirationDate) {
-    NSTimeInterval expireTimeInterval = [self.expirationDate timeIntervalSinceNow];
+    NSTimeInterval expireTimeInterval = (self.expirationDate).timeIntervalSinceNow;
     if( expireTimeInterval > 0) {
       [self performSelector:@selector(_updateExpireState) withObject:nil afterDelay:expireTimeInterval];
     }

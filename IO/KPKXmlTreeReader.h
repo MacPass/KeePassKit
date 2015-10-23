@@ -33,7 +33,7 @@
  @param data The raw XML data. Make sure to decrypt the data before passing it in
  @param cipherInformation Chipher information to handle the writing
  */
--(id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
+-(instancetype)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
 - (KPKTree *)tree:(NSError *__autoreleasing *)error;
 
 @end

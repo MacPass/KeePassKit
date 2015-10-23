@@ -56,7 +56,7 @@
 
 @implementation KPKLegacyTreeReader
 
-- (id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader {
+- (instancetype)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader {
   NSAssert([headerReader isKindOfClass:[KPKLegacyHeaderReader class]], @"Incompatible header reader type supplied");
   self = [super init];
   if(self) {
@@ -114,7 +114,7 @@
   rootGroup.isExpanded = YES;
   
   // Find the parent for every group
-  for(groupIndex = 0; groupIndex < [_groups count]; groupIndex++) {
+  for(groupIndex = 0; groupIndex < _groups.count; groupIndex++) {
     KPKGroup *group = _groups[groupIndex];
     groupLevel = [_groupLevels[groupIndex] integerValue];
     BOOL foundLostGroup = NO;
@@ -153,7 +153,7 @@
   for(KPKEntry *entry in tree.root.entries) {
     entry.updateTiming = YES;
   }
-  for(KPKGroup *group in [tree allGroups]) {
+  for(KPKGroup *group in tree.allGroups) {
     for(KPKEntry *entry in group.entries) {
       entry.updateTiming = YES;
     }
@@ -422,7 +422,7 @@
             return NO;
           }
           /* Only add non-meta entries to the groups as the other are stored separately */
-          if(![entry isMeta]) {
+          if(!entry.isMeta) {
             for(KPKGroup *group in _groups) {
               if([group.uuid isEqual:groupUUID]) {
                 [group addEntry:entry];
@@ -519,11 +519,11 @@
 - (void)_readMetaEntries:(KPKTree *)tree {
   NSMutableArray *metaEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,[_entries count] / 2)];
   for(KPKEntry *entry in _entries) {
-    if([entry isMeta]) {
+    if(entry.isMeta) {
       [metaEntries addObject:entry];
       if(![self _parseMetaEntry:entry metaData:tree.metaData]) {
         /* We need to store unknown data to write it back out */
-        KPKBinary *binary = [entry.binaries lastObject];
+        KPKBinary *binary = (entry.binaries).lastObject;
         if(binary) {
           KPKBinary *metaBinary = [[KPKBinary alloc] init];
           metaBinary.data = binary.data;
@@ -537,9 +537,9 @@
 }
 
 - (BOOL)_parseMetaEntry:(KPKEntry *)entry metaData:(KPKMetaData *)metaData {
-  KPKBinary *binary = [entry.binaries lastObject];
+  KPKBinary *binary = (entry.binaries).lastObject;
   NSData *data = binary.data;
-  if([data length] == 0) {
+  if(data.length == 0) {
     return NO;
   }
   if([entry.notes isEqualToString:KPKMetaEntryCustomKVP]) {
@@ -617,7 +617,7 @@
  Stored as uint32_t (COLORREF)  0x00bbggrr;
  */
 - (void)_parseColorData:(NSData *)data metaData:(KPKMetaData *)metaData {
-  if([data length] == sizeof(uint32_t)) {
+  if(data.length == sizeof(uint32_t)) {
     
     uint32_t color;
     [data getBytes:&color length:4];
@@ -689,7 +689,7 @@
     NSUUID *entryUUID = [[NSUUID alloc] initWithData:[dataReader dataWithLength:16]];
     uint32_t iconId = CFSwapInt32LittleToHost([dataReader read4Bytes]);
     KPKEntry *entry = [self _findEntryForUUID:entryUUID];
-    if([iconUUIDs count] <= iconId) {
+    if(iconUUIDs.count <= iconId) {
       return NO;
     }
     entry.iconUUID = iconUUIDs[iconId];
@@ -702,7 +702,7 @@
     uint32_t groupId = CFSwapInt32LittleToHost([dataReader read4Bytes]);
     uint32_t groupIconId = CFSwapInt32LittleToHost([dataReader read4Bytes]);
     NSUUID *groupUUID = _groupIdToUUID[ @(groupId) ];
-    if( !groupUUID || groupIconId >= [iconUUIDs count]) {
+    if( !groupUUID || groupIconId >= iconUUIDs.count) {
       return NO;
     }
     KPKGroup *group = [self _findGroupForUUID:groupUUID];

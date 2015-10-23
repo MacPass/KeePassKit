@@ -25,7 +25,7 @@
 @interface NSString (Hexdata)
 
 + (NSString *)hexstringFromData:(NSData *)data;
-- (NSData *)dataFromHexString;
-- (BOOL)isValidHexString;
+@property (nonatomic, readonly, copy) NSData *dataFromHexString;
+@property (nonatomic, getter=isValidHexString, readonly) BOOL validHexString;
 
 @end

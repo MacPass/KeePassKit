@@ -75,11 +75,11 @@
     return nil;
   }
   
-  if([fileData length] == 32) {
+  if(fileData.length == 32) {
     return fileData; // Loading of a 32 bit binary file succeded;
   }
   NSData *decordedData = nil;
-  if ([fileData length] == 64) {
+  if (fileData.length == 64) {
     decordedData = [self _keyDataFromHex:fileData];
   }
   /* Hexdata loading failed, so just hash the key */
@@ -160,7 +160,7 @@
   if(!hexString) {
    return nil;
   }
-  if([hexString length] != 64) {
+  if(hexString.length != 64) {
     return nil; // No valid lenght found
   }
   return [hexString dataFromHexString];
@@ -174,7 +174,7 @@
   CC_SHA256_Init(&ctx);
   @autoreleasepool {
     const NSUInteger chunkSize = 2048;
-    for(NSUInteger iIndex = 0; iIndex < [fileData length]; iIndex += chunkSize) {
+    for(NSUInteger iIndex = 0; iIndex < fileData.length; iIndex += chunkSize) {
       NSUInteger maxChunkLenght = MIN(fileData.length - iIndex, chunkSize);
       chunk = [fileData subdataWithRange:NSMakeRange(iIndex, maxChunkLenght)];
       CC_SHA256_Update(&ctx, chunk.bytes, (CC_LONG)chunk.length);

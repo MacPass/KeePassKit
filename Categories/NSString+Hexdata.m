@@ -27,9 +27,9 @@
 @implementation NSString (Hexdata)
 
 + (NSString *)hexstringFromData:(NSData *)data {
-  NSMutableString *hexString = [[NSMutableString alloc] initWithCapacity:[data length] * 2];
+  NSMutableString *hexString = [[NSMutableString alloc] initWithCapacity:data.length * 2];
   uint8_t byte;
-  for(NSInteger byteIndex = 0; byteIndex < [data length]; byteIndex++) {
+  for(NSInteger byteIndex = 0; byteIndex < data.length; byteIndex++) {
     [data getBytes:&byte range:NSMakeRange(byteIndex, 1)];
     [hexString appendFormat:@"%02x", byte];
   }
@@ -44,9 +44,9 @@
   if(![string isValidHexString]) {
     return nil;
   }
-  const char *chars = [string UTF8String];
+  const char *chars = string.UTF8String;
   NSUInteger index = 0;
-  NSUInteger length = [string length];
+  NSUInteger length = string.length;
   
   NSMutableData *data = [NSMutableData dataWithCapacity:length / 2];
   char byteChars[3] = {'\0','\0','\0'};
@@ -64,7 +64,7 @@
 }
 
 - (BOOL)isValidHexString {
-  NSCharacterSet *hexCharactes = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789AaBbCcDdEeFf"] invertedSet];
+  NSCharacterSet *hexCharactes = [NSCharacterSet characterSetWithCharactersInString:@"0123456789AaBbCcDdEeFf"].invertedSet;
   return (NSNotFound == [self rangeOfCharacterFromSet:hexCharactes].location);
 }
 

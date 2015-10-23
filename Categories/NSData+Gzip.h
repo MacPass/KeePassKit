@@ -32,10 +32,10 @@
 /*
  Returns a data object containing a Gzip decompressed copy of the receivers contents.
  */
-- (NSData *) gzipInflate;
+@property (nonatomic, readonly, copy) NSData *gzipInflate;
 /*
  Returns a data object containing a Gzip compressed copy of the receivers contents.
  */
-- (NSData *) gzipDeflate;
+@property (nonatomic, readonly, copy) NSData *gzipDeflate;
 
 @end

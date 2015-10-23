@@ -25,10 +25,10 @@
 @protocol KPKHeaderReading <NSObject>
 
 @required
-- (id)initWithData:(NSData *)data error:(NSError **)error;
+- (instancetype)initWithData:(NSData *)data error:(NSError **)error;
 /**
  @returns the data with the header data removed.
  */
-- (NSData *)dataWithoutHeader;
+@property (nonatomic, readonly, copy) NSData *dataWithoutHeader;
 
 @end

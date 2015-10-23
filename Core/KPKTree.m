@@ -189,11 +189,11 @@
 }
 
 - (NSArray *)allGroups {
-  return [self.root childGroups];
+  return (self.root).childGroups;
 }
 
 - (NSArray *)allEntries {
-  return [self.root childEntries];
+  return (self.root).childEntries;
 }
 
 - (NSArray *)allHistoryEntries {

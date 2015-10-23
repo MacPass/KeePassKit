@@ -56,7 +56,7 @@
 
 - (void)writeData:(NSData *)data {
   [_data appendData:data];
-  _location += [data length];
+  _location += data.length;
 }
 
 - (void)writeString:(NSString *)string encoding:(NSStringEncoding)encoding {

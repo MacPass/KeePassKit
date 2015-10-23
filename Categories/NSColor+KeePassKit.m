@@ -34,7 +34,7 @@
 }
 
 + (NSColor *)colorWithData:(NSData *)data {
-  if([data length] != 3 && [data length] != 4) {
+  if(data.length != 3 && data.length != 4) {
     return nil; // Unsupported data format
   }
   uint8_t red,green,blue;
@@ -59,9 +59,9 @@
     return nil;
   }
   return [NSString stringWithFormat:@"#%02X%02X%02X",
-          (int)([rgbColor redComponent] * 255),
-          (int)([rgbColor greenComponent] * 255),
-          (int)([rgbColor blueComponent] * 255)];
+          (int)(rgbColor.redComponent * 255),
+          (int)(rgbColor.greenComponent * 255),
+          (int)(rgbColor.blueComponent * 255)];
 }
 
 - (NSData *)colorData {
@@ -70,9 +70,9 @@
     return nil;
   }
   uint8_t color[4] = { 0 };
-  color[0] = (uint8_t)[rgbColor redComponent]*255;
-  color[1] = (uint8_t)[rgbColor greenComponent]*255;
-  color[2] = (uint8_t)[rgbColor blueComponent]*255;
+  color[0] = (uint8_t)rgbColor.redComponent*255;
+  color[1] = (uint8_t)rgbColor.greenComponent*255;
+  color[2] = (uint8_t)rgbColor.blueComponent*255;
   return [NSData dataWithBytes:&color length:4];
 }
 

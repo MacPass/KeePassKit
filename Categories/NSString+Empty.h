@@ -25,6 +25,6 @@
 @interface NSString (Empty)
 
 + (BOOL)isEmptyString:(NSString *)string;
-- (BOOL)isEmpty;
+@property (nonatomic, getter=isEmpty, readonly) BOOL empty;
 
 @end

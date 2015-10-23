@@ -89,7 +89,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 
 @property(nonatomic) KPKInheritBool isAutoTypeEnabled;
 
-- (NSArray<KPKEntry *> *)autotypeableChildEntries;
+@property (nonatomic, readonly, copy) NSArray<KPKEntry *> *autotypeableChildEntries;
 /**
  *  Returns YES if the entries for this group use Autotype. The value is determined by the isAutotypeEnabled settings
  *  If the setting is KPKInherit, the parent is aksed. If th eroot has KPKInhert, YES is assumed
@@ -106,7 +106,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 /**
  *  @return The breadcrumb of this group separated by dots.
  */
-- (NSString *)breadcrumb;
+@property (nonatomic, readonly, copy) NSString *breadcrumb;
 /**
  *  Retursn the path of groups this group is under. The group names a separated by the given separator
  *
@@ -120,7 +120,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  *
  *  @return NSIndexPath starting at the root group of the tree
  */
-- (NSIndexPath *)indexPath;
+@property (nonatomic, readonly, copy) NSIndexPath *indexPath;
 
 #pragma mark Delete
 /**

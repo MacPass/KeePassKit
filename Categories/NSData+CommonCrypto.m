@@ -92,10 +92,10 @@ NSString * const kCommonCryptoErrorDomain = @"CommonCryptoErrorDomain";
 	}
 	
 	NSMutableDictionary * userInfo = [[NSMutableDictionary alloc] init];
-	[userInfo setObject: description forKey: NSLocalizedDescriptionKey];
+	userInfo[NSLocalizedDescriptionKey] = description;
 	
 	if ( reason != nil )
-		[userInfo setObject: reason forKey: NSLocalizedFailureReasonErrorKey];
+		userInfo[NSLocalizedFailureReasonErrorKey] = reason;
 	
 	NSError * result = [NSError errorWithDomain: kCommonCryptoErrorDomain code: status userInfo: userInfo];
 	
@@ -111,56 +111,56 @@ NSString * const kCommonCryptoErrorDomain = @"CommonCryptoErrorDomain";
 - (NSData *) MD2Sum
 {
 	unsigned char hash[CC_MD2_DIGEST_LENGTH];
-	(void) CC_MD2( [self bytes], (CC_LONG)[self length], hash );
+	(void) CC_MD2( self.bytes, (CC_LONG)self.length, hash );
 	return ( [NSData dataWithBytes: hash length: CC_MD2_DIGEST_LENGTH] );
 }
 
 - (NSData *) MD4Sum
 {
 	unsigned char hash[CC_MD4_DIGEST_LENGTH];
-	(void) CC_MD4( [self bytes], (CC_LONG)[self length], hash );
+	(void) CC_MD4( self.bytes, (CC_LONG)self.length, hash );
 	return ( [NSData dataWithBytes: hash length: CC_MD4_DIGEST_LENGTH] );
 }
 
 - (NSData *) MD5Sum
 {
 	unsigned char hash[CC_MD5_DIGEST_LENGTH];
-	(void) CC_MD5( [self bytes], (CC_LONG)[self length], hash );
+	(void) CC_MD5( self.bytes, (CC_LONG)self.length, hash );
 	return ( [NSData dataWithBytes: hash length: CC_MD5_DIGEST_LENGTH] );
 }
 
 - (NSData *) SHA1Hash
 {
 	unsigned char hash[CC_SHA1_DIGEST_LENGTH];
-	(void) CC_SHA1( [self bytes], (CC_LONG)[self length], hash );
+	(void) CC_SHA1( self.bytes, (CC_LONG)self.length, hash );
 	return ( [NSData dataWithBytes: hash length: CC_SHA1_DIGEST_LENGTH] );
 }
 
 - (NSData *) SHA224Hash
 {
 	unsigned char hash[CC_SHA224_DIGEST_LENGTH];
-	(void) CC_SHA224( [self bytes], (CC_LONG)[self length], hash );
+	(void) CC_SHA224( self.bytes, (CC_LONG)self.length, hash );
 	return ( [NSData dataWithBytes: hash length: CC_SHA224_DIGEST_LENGTH] );
 }
 
 - (NSData *) SHA256Hash
 {
 	unsigned char hash[CC_SHA256_DIGEST_LENGTH];
-	(void) CC_SHA256( [self bytes], (CC_LONG)[self length], hash );
+	(void) CC_SHA256( self.bytes, (CC_LONG)self.length, hash );
 	return ( [NSData dataWithBytes: hash length: CC_SHA256_DIGEST_LENGTH] );
 }
 
 - (NSData *) SHA384Hash
 {
 	unsigned char hash[CC_SHA384_DIGEST_LENGTH];
-	(void) CC_SHA384( [self bytes], (CC_LONG)[self length], hash );
+	(void) CC_SHA384( self.bytes, (CC_LONG)self.length, hash );
 	return ( [NSData dataWithBytes: hash length: CC_SHA384_DIGEST_LENGTH] );
 }
 
 - (NSData *) SHA512Hash
 {
 	unsigned char hash[CC_SHA512_DIGEST_LENGTH];
-	(void) CC_SHA512( [self bytes], (CC_LONG)[self length], hash );
+	(void) CC_SHA512( self.bytes, (CC_LONG)self.length, hash );
 	return ( [NSData dataWithBytes: hash length: CC_SHA512_DIGEST_LENGTH] );
 }
 
@@ -274,22 +274,22 @@ NSString * const kCommonCryptoErrorDomain = @"CommonCryptoErrorDomain";
 
 static void FixKeyLengths( CCAlgorithm algorithm, NSMutableData * keyData, NSMutableData * ivData )
 {
-	NSUInteger keyLength = [keyData length];
+	NSUInteger keyLength = keyData.length;
 	switch ( algorithm )
 	{
 		case kCCAlgorithmAES128:
 		{
 			if ( keyLength <= 16 )
 			{
-				[keyData setLength: 16];
+				keyData.length = 16;
 			}
 			else if ( keyLength <= 24 )
 			{
-				[keyData setLength: 24];
+				keyData.length = 24;
 			}
 			else
 			{
-				[keyData setLength: 32];
+				keyData.length = 32;
 			}
 			
 			break;
@@ -297,13 +297,13 @@ static void FixKeyLengths( CCAlgorithm algorithm, NSMutableData * keyData, NSMut
 			
 		case kCCAlgorithmDES:
 		{
-			[keyData setLength: 8];
+			keyData.length = 8;
 			break;
 		}
 			
 		case kCCAlgorithm3DES:
 		{
-			[keyData setLength: 24];
+			keyData.length = 24;
 			break;
 		}
 			
@@ -311,11 +311,11 @@ static void FixKeyLengths( CCAlgorithm algorithm, NSMutableData * keyData, NSMut
 		{
 			if ( keyLength <= 5 )
 			{
-				[keyData setLength: 5];
+				keyData.length = 5;
 			}
 			else if ( keyLength > 16 )
 			{
-				[keyData setLength: 16];
+				keyData.length = 16;
 			}
 			
 			break;
@@ -324,7 +324,7 @@ static void FixKeyLengths( CCAlgorithm algorithm, NSMutableData * keyData, NSMut
 		case kCCAlgorithmRC4:
 		{
 			if ( keyLength > 512 )
-				[keyData setLength: 512];
+				keyData.length = 512;
 			break;
 		}
 			
@@ -332,18 +332,18 @@ static void FixKeyLengths( CCAlgorithm algorithm, NSMutableData * keyData, NSMut
 			break;
 	}
 	
-	[ivData setLength: [keyData length]];
+	ivData.length = keyData.length;
 }
 
 @implementation NSData (LowLevelCommonCryptor)
 
 - (NSData *) _runCryptor: (CCCryptorRef) cryptor result: (CCCryptorStatus *) status
 {
-	size_t bufsize = CCCryptorGetOutputLength( cryptor, (size_t)[self length], true );
+	size_t bufsize = CCCryptorGetOutputLength( cryptor, (size_t)self.length, true );
 	void * buf = malloc( bufsize );
 	size_t bufused = 0;
     size_t bytesTotal = 0;
-	*status = CCCryptorUpdate( cryptor, [self bytes], (size_t)[self length], 
+	*status = CCCryptorUpdate( cryptor, self.bytes, (size_t)self.length, 
 							  buf, bufsize, &bufused );
 	if ( *status != kCCSuccess )
 	{
@@ -417,7 +417,7 @@ static void FixKeyLengths( CCAlgorithm algorithm, NSMutableData * keyData, NSMut
 	FixKeyLengths( algorithm, keyData, ivData );
 	
 	status = CCCryptorCreate( kCCEncrypt, algorithm, options,
-							  [keyData bytes], [keyData length], [ivData bytes],
+							  keyData.bytes, keyData.length, ivData.bytes,
 							  &cryptor );
 	
 	if ( status != kCCSuccess )
@@ -486,7 +486,7 @@ static void FixKeyLengths( CCAlgorithm algorithm, NSMutableData * keyData, NSMut
 	FixKeyLengths( algorithm, keyData, ivData );
 	
 	status = CCCryptorCreate( kCCDecrypt, algorithm, options,
-							  [keyData bytes], [keyData length], [ivData bytes],
+							  keyData.bytes, keyData.length, ivData.bytes,
 							  &cryptor );
 	
 	if ( status != kCCSuccess )
@@ -526,7 +526,7 @@ static void FixKeyLengths( CCAlgorithm algorithm, NSMutableData * keyData, NSMut
 	
 	// this could be either CC_SHA1_DIGEST_LENGTH or CC_MD5_DIGEST_LENGTH. SHA1 is larger.
 	unsigned char buf[CC_SHA1_DIGEST_LENGTH];
-	CCHmac( algorithm, [keyData bytes], [keyData length], [self bytes], [self length], buf );
+	CCHmac( algorithm, keyData.bytes, keyData.length, self.bytes, self.length, buf );
 	
 	return ( [NSData dataWithBytes: buf length: (algorithm == kCCHmacAlgMD5 ? CC_MD5_DIGEST_LENGTH : CC_SHA1_DIGEST_LENGTH)] );
 }

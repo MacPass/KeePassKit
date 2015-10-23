@@ -46,7 +46,7 @@
 #pragma mark -
 #pragma mark Lifecylce
 
-- (id)initWithWindowTitle:(NSString *)windowTitle keystrokeSequence:(NSString *)strokes {
+- (instancetype)initWithWindowTitle:(NSString *)windowTitle keystrokeSequence:(NSString *)strokes {
   self = [super init];
   if(self) {
     _windowTitle = [windowTitle copy];
@@ -56,7 +56,7 @@
   return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
     _windowTitle = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"windowTitle"];

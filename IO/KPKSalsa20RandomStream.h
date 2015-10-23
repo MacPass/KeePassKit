@@ -25,7 +25,7 @@
 
 @interface KPKSalsa20RandomStream : KPKRandomStream
 
-- (id)init;
-- (id)init:(NSData*)key;
+- (instancetype)init;
+- (instancetype)init:(NSData*)key;
 
 @end

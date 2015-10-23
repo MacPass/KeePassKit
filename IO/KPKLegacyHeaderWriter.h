@@ -33,10 +33,10 @@
 @property (nonatomic, assign) NSUInteger entryCount;
 
 #pragma mark KPKHeaderWriting
-- (id)initWithTree:(KPKTree *)tree;
+- (instancetype)initWithTree:(KPKTree *)tree;
 - (void)writeHeaderData:(NSMutableData *)data;
 
 - (void)setContentHash:(NSData *)hash;
-- (NSData *)headerHash;
+@property (nonatomic, readonly, copy) NSData *headerHash;
 
 @end

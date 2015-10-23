@@ -44,7 +44,7 @@
   return [NSSet setWithObject:NSStringFromSelector(@selector(masterKeyChangeRecommendationInterval))];
 }
 
-- (id)init {
+- (instancetype)init {
   self = [super init];
   if(self){
     _customData = [[NSMutableArray alloc] init];
@@ -206,7 +206,7 @@
 }
 
 - (void)addCustomIcon:(KPKIcon *)icon {
-  [self addCustomIcon:icon atIndex:[_customIcons count]];
+  [self addCustomIcon:icon atIndex:_customIcons.count];
 }
 
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index {
@@ -236,7 +236,7 @@
 }
 
 - (NSUInteger)countOfCustomIcons {
-  return [_customIcons count];
+  return _customIcons.count;
 }
 
 - (void)insertObject:(KPKIcon *)icon inCustomIconsAtIndex:(NSUInteger)index {

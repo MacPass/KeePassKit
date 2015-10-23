@@ -53,7 +53,7 @@
     NSUInteger completedRounds = 0;
     NSDate *date = [[NSDate alloc] init];
     /* run transformations until our set time is over */
-    while(-[date timeIntervalSinceNow] < seconds) {
+    while(-date.timeIntervalSinceNow < seconds) {
       completedRounds++;
       CCCryptorUpdate(cryptorRef, &key, sizeof(size_t), &key, sizeof(size_t), &tmp);
     }
@@ -79,7 +79,7 @@
 }
 
 - (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key {
-  self.hasPassword = ([password length] > 0);
+  self.hasPassword = (password.length > 0);
   self.hasKeyFile = (key != nil);
   _compositeDataVersion1 = [self _createVersion1CompositeDataWithPassword:password keyFile:key];
   _compositeDataVersion2 = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
@@ -156,7 +156,7 @@
     NSError *error = nil;
     NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKLegacyVersion error:&error];
     if(!keyFileData) {
-      NSLog(@"Error while trying to load keyfile:%@", [error localizedDescription]);
+      NSLog(@"Error while trying to load keyfile:%@", error.localizedDescription);
       return nil;
     }
     [keyFileData getBytes:masterKey length:32];

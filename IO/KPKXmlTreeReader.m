@@ -68,7 +68,7 @@
 
 @implementation KPKXmlTreeReader
 
-- (id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader {
+- (instancetype)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader {
   self = [super init];
   if(self) {
     _document = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
@@ -83,8 +83,8 @@
       }
     }
     _dateFormatter = [[NSDateFormatter alloc] init];
-    [_dateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"];
-    [_dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT"]];
+    _dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
+    _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
   }
   return self;
 }
@@ -338,13 +338,13 @@
    </Binaries>
    */
   DDXMLElement *binariesElement = [root elementForName:kKPKXmlBinaries];
-  NSUInteger binaryCount = [[binariesElement elementsForName:@"Binary"] count];
+  NSUInteger binaryCount = [binariesElement elementsForName:@"Binary"].count;
   _binaryMap = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,binaryCount)];
   for (DDXMLElement *element in [binariesElement elementsForName:@"Binary"]) {
     DDXMLNode *idAttribute = [element attributeForName:@"ID"];
     
     KPKBinary *binary = [[KPKBinary alloc] initWithName:@"UNNAMED" value:[element stringValue] compressed:KPKXmlBoolAttribute(element, @"Compressed")];
-    NSUInteger index = [[idAttribute stringValue] integerValue];
+    NSUInteger index = [idAttribute stringValue].integerValue;
     _binaryMap[ @(index) ] = binary;
   }
 }
@@ -360,7 +360,7 @@
   for (DDXMLElement *binaryElement in [entryElement elementsForName:@"Binary"]) {
     DDXMLElement *valueElement = [binaryElement elementForName:kKPKXmlValue];
     DDXMLNode *refAttribute = [valueElement attributeForName:@"Ref"];
-    NSUInteger index = [[refAttribute stringValue] integerValue];
+    NSUInteger index = [refAttribute stringValue].integerValue;
     
     KPKBinary *binary = _binaryMap[ @(index) ];
     binary.name = KPKXmlString(binaryElement, kKPKXmlKey);

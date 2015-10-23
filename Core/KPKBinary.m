@@ -55,7 +55,7 @@
         self = nil;
         return self; // unable to read data
       }
-      _name = [url lastPathComponent];
+      _name = url.lastPathComponent;
     }
   }
   return self;
@@ -102,8 +102,8 @@
   NSUInteger result = 1;
   NSUInteger prime = 37;
   
-  result = prime * result + [self.name hash];
-  result = prime * result + [self.data hash];
+  result = prime * result + (self.name).hash;
+  result = prime * result + (self.data).hash;
   
   return result;
 }

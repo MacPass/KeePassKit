@@ -66,7 +66,7 @@
 
 @implementation KPKXmlTreeWriter
 
-- (id)initWithTree:(KPKTree *)tree {
+- (instancetype)initWithTree:(KPKTree *)tree {
   self = [super init];
   if(self) {
     _tree = tree;
@@ -123,7 +123,7 @@
   
   [metaElement addChild:memoryProtectionElement];
   
-  if ([metaData.customIcons count] > 0) {
+  if ((metaData.customIcons).count > 0) {
     [metaElement addChild:[self _xmlIcons]];
   }
   
@@ -268,7 +268,7 @@
   NSString *keystrokes = autotype.hasDefaultKeystrokeSequence ? nil : autotype.defaultKeystrokeSequence.XMLCompatibleString;
   KPKAddXmlElementIfNotNil(autotypeElement, @"DefaultSequence", keystrokes);
   
-  if([autotype.associations count] > 0) {
+  if((autotype.associations).count > 0) {
     DDXMLElement *associationsElement = [DDXMLElement elementWithName:@"Association"];
     for(KPKWindowAssociation *association in autotype.associations) {
       KPKAddXmlElement(associationsElement, @"Window", association.windowTitle.XMLCompatibleString);
@@ -352,7 +352,7 @@
   for (KPKIcon *icon in self.tree.metaData.customIcons) {
     DDXMLElement *iconElement = [DDXMLNode elementWithName:@"Icon"];
     KPKAddXmlElement(iconElement, kKPKXmlUUID, [icon.uuid encodedString]);
-    KPKAddXmlElement(iconElement, kKPKXmlData, [icon encodedString]);
+    KPKAddXmlElement(iconElement, kKPKXmlData, icon.encodedString);
     [customIconsElements addChild:iconElement];
   }
   return customIconsElements;

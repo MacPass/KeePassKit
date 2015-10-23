@@ -30,6 +30,6 @@
 @property (strong, readonly) KPKLegacyHeaderWriter *headerWriter;
 
 - (instancetype)initWithTree:(KPKTree *)tree;
-- (NSData *)treeData;
+@property (nonatomic, readonly, copy) NSData *treeData;
 
 @end

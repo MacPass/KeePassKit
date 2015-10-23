@@ -30,7 +30,7 @@
  */
 @interface KPKLegacyTreeReader : NSObject <KPKTreeReading>
 
-- (id)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
+- (instancetype)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
 - (KPKTree *)tree:(NSError *__autoreleasing *)error;
 
 @end

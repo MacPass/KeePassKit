@@ -49,15 +49,15 @@ extern NSString * const kCommonCryptoErrorDomain;
 
 @interface NSData (CommonDigest)
 
-- (NSData *) MD2Sum;
-- (NSData *) MD4Sum;
-- (NSData *) MD5Sum;
+@property (nonatomic, readonly, copy) NSData *MD2Sum;
+@property (nonatomic, readonly, copy) NSData *MD4Sum;
+@property (nonatomic, readonly, copy) NSData *MD5Sum;
 
-- (NSData *) SHA1Hash;
-- (NSData *) SHA224Hash;
-- (NSData *) SHA256Hash;
-- (NSData *) SHA384Hash;
-- (NSData *) SHA512Hash;
+@property (nonatomic, readonly, copy) NSData *SHA1Hash;
+@property (nonatomic, readonly, copy) NSData *SHA224Hash;
+@property (nonatomic, readonly, copy) NSData *SHA256Hash;
+@property (nonatomic, readonly, copy) NSData *SHA384Hash;
+@property (nonatomic, readonly, copy) NSData *SHA512Hash;
 
 @end
 

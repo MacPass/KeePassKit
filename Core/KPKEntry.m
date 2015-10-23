@@ -211,7 +211,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 
 #pragma mark NSCoding
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super _initWithCoder:aDecoder];
   if(self) {
     /* Disable timing since we init via coder */
@@ -469,7 +469,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)setParent:(KPKGroup *)parent {
-  [super setParent:parent];
+  super.parent = parent;
   if(self.isHistory) {
     return;
   }
@@ -707,7 +707,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 /* Binaries */
 - (NSUInteger)countOfBinaries {
-  return [_binaries count];
+  return _binaries.count;
 }
 
 - (void)insertObject:(KPKBinary *)binary inBinariesAtIndex:(NSUInteger)index {
@@ -717,7 +717,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)removeObjectFromBinariesAtIndex:(NSUInteger)index {
-  if(index < [_binaries count]) {
+  if(index < _binaries.count) {
     [_binaries removeObjectAtIndex:index];
   }
 }

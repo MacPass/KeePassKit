@@ -70,14 +70,14 @@
    those groups should be placed inside another group,
    or discarded.
    */
-  _allEntries = [_tree allEntries];
-  BOOL writeRootGroup = ([_tree.root.entries count] > 0 && [_tree.root.groups count] == 0);
-  _allGroups = writeRootGroup ? @[_tree.root] : [_tree allGroups];
+  _allEntries = _tree.allEntries;
+  BOOL writeRootGroup = ((_tree.root.entries).count > 0 && (_tree.root.groups).count == 0);
+  _allGroups = writeRootGroup ? @[_tree.root] : _tree.allGroups;
   
   
   NSArray *metaEntries = [self _collectMetaEntries];
-  self.headerWriter.groupCount = [_allGroups count];
-  self.headerWriter.entryCount =  [_allEntries count] + [metaEntries count];
+  self.headerWriter.groupCount = _allGroups.count;
+  self.headerWriter.entryCount =  _allEntries.count + metaEntries.count;
   
   /* Having calculated all entries, we can now write the header hash */
   _dataWriter = [KPKDataStreamWriter streamWriter];
@@ -193,9 +193,9 @@
   [self _writeTimeInfo:entry];
   
   /* We only save the last binary if there is more than one */
-  KPKBinary *firstBinary = [entry.binaries lastObject];
+  KPKBinary *firstBinary = (entry.binaries).lastObject;
   [self _writeString:firstBinary.name forField:KPKFieldTypeEntryBinaryDescription];
-  if(firstBinary && [firstBinary.data length] > 0) {
+  if(firstBinary && (firstBinary.data).length > 0) {
     [self _writeField:KPKFieldTypeEntryBinaryData data:firstBinary.data];
   }
   else {
@@ -221,7 +221,7 @@
     KPKEntry *treeColorEntry = [KPKEntry metaEntryWithData:[self.tree.metaData.color colorData] name:KPKMetaEntryDatabaseColor];
     [metaEntries addObject:treeColorEntry];
   }
-  if([self.tree.metaData.customIcons  count] > 0) {
+  if((self.tree.metaData.customIcons).count > 0) {
     KPKEntry *customIconEntry = [KPKEntry metaEntryWithData:[self _customIconData] name:KPKMetaEntryKeePassXCustomIcon2];
     [metaEntries addObject:customIconEntry];
   }
@@ -287,14 +287,14 @@
   NSArray *icons = self.tree.metaData.customIcons;
   NSMutableData *iconData = [[NSMutableData alloc] initWithCapacity:1024*1024];
   KPKDataStreamWriter *dataWriter = [[KPKDataStreamWriter alloc] initWithData:iconData];
-  [dataWriter write4Bytes:(uint32_t)[icons count]];
-  [dataWriter write4Bytes:(uint32)[_iconEntries count]];
-  [dataWriter write4Bytes:(uint32)[_iconGroups count]];
+  [dataWriter write4Bytes:(uint32_t)icons.count];
+  [dataWriter write4Bytes:(uint32)_iconEntries.count];
+  [dataWriter write4Bytes:(uint32)_iconGroups.count];
   
   
   for(KPKIcon *icon in icons) {
-    NSData *pngData = [icon pngData];
-    [dataWriter write4Bytes:(uint32_t)[pngData length]];
+    NSData *pngData = icon.pngData;
+    [dataWriter write4Bytes:(uint32_t)pngData.length];
     [dataWriter writeData:pngData];
   }
   
@@ -367,7 +367,7 @@
    };
    */
   KPKDataStreamWriter *writer = [KPKDataStreamWriter streamWriter];
-  [writer write4Bytes:(uint32_t)[_allGroups count]];
+  [writer write4Bytes:(uint32_t)_allGroups.count];
   for(KPKGroup *group in _allGroups) {
     uint32_t groupId = [self _groupIdForGroup:group];
     [writer write4Bytes:(uint32_t)groupId];
@@ -420,7 +420,7 @@
 
 
 - (void)_writeField:(KPKLegacyFieldType)type data:(NSData *)data {
-  [self _writeField:type bytes:data.bytes length:[data length]];
+  [self _writeField:type bytes:data.bytes length:data.length];
 }
 
 - (void)_writeField:(KPKLegacyFieldType)type bytes:(const void *)bytes length:(NSUInteger)length {

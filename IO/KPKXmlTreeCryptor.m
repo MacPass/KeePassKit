@@ -83,7 +83,7 @@
    The Stream is Hashed, read the data and verify it.
    If the Stream was Gzipped, uncrompress it.
    */
-  NSData *unhashedData = [[aesDecrypted subdataWithRange:NSMakeRange(32, [aesDecrypted length] - 32)] unhashedData];
+  NSData *unhashedData = [[aesDecrypted subdataWithRange:NSMakeRange(32, aesDecrypted.length - 32)] unhashedData];
   if(headerReader.compressionAlgorithm == KPKCompressionGzip) {
     unhashedData = [unhashedData gzipInflate];
   }

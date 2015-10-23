@@ -141,11 +141,11 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   KPKCommandCacheEntry *cacheHit = cache[command];
   if(!cacheHit) {
     cacheHit = [[KPKCommandCacheEntry alloc] initWithCommand:[self _normalizeCommand:command]];
-    if([cache count] > kMPMaximumCacheEntries) {
+    if(cache.count > kMPMaximumCacheEntries) {
       __block NSMutableArray *keysToRemove = [[NSMutableArray alloc] init];
       [cache enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         KPKCommandCacheEntry *entry = obj;
-        if([entry.lastUsed timeIntervalSinceNow] > kMPCacheLifeTime) {
+        if((entry.lastUsed).timeIntervalSinceNow > kMPCacheLifeTime) {
           [keysToRemove addObject:key];
         }
       }];
@@ -166,8 +166,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     return nil;
   }
   NSMutableString __block *mutableCommand = [command mutableCopy];
-  [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketLeft withString:kKPKAutotypeCurlyBracketLeft options:0 range:NSMakeRange(0, [mutableCommand length])];
-  [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketRight withString:kKPKAutotypeCurlyBracketRight options:0 range:NSMakeRange(0, [mutableCommand length])];
+  [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketLeft withString:kKPKAutotypeCurlyBracketLeft options:0 range:NSMakeRange(0, mutableCommand.length)];
+  [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketRight withString:kKPKAutotypeCurlyBracketRight options:0 range:NSMakeRange(0, mutableCommand.length)];
   
   if(![mutableCommand validateCommmand]) {
     return nil;
@@ -180,12 +180,12 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   NSRegularExpression *modifierRegExp = [[NSRegularExpression alloc] initWithPattern:modifierMatch options:NSRegularExpressionCaseInsensitive error:0];
   NSAssert(modifierRegExp, @"Modifier RegExp should be correct!");
   NSMutableIndexSet __block *matchingIndices = [[NSMutableIndexSet alloc] init];
-  [modifierRegExp enumerateMatchesInString:command options:0 range:NSMakeRange(0, [command length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+  [modifierRegExp enumerateMatchesInString:command options:0 range:NSMakeRange(0, command.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
     [matchingIndices addIndex:result.range.location];
   }];
   /* Enumerate the indices backwards, to not invalidate them by replacing strings */
   NSDictionary *unsafeShortFormats = [self unsafeShortFormats];
-  [matchingIndices enumerateIndexesInRange:NSMakeRange(0, [command length]) options:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *stop) {
+  [matchingIndices enumerateIndexesInRange:NSMakeRange(0, command.length) options:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *stop) {
     NSString *shortFormatKey = [mutableCommand substringWithRange:NSMakeRange(idx, 1)];
     [mutableCommand replaceCharactersInRange:NSMakeRange(idx, 1) withString:unsafeShortFormats[shortFormatKey]];
   }];
@@ -206,7 +206,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   NSRegularExpression *repeaterRegExp = [[NSRegularExpression alloc] initWithPattern:repeaterMatch options:NSRegularExpressionCaseInsensitive error:0];
   NSAssert(repeaterRegExp, @"Repeater RegExp should be corret!");
   NSMutableDictionary __block *repeaterValues = [[NSMutableDictionary alloc] init];
-  [repeaterRegExp enumerateMatchesInString:mutableCommand options:0 range:NSMakeRange(0, [mutableCommand length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+  [repeaterRegExp enumerateMatchesInString:mutableCommand options:0 range:NSMakeRange(0, mutableCommand.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
     @autoreleasepool {
       NSString *key = [mutableCommand substringWithRange:result.range];
       NSString *command = [mutableCommand substringWithRange:[result rangeAtIndex:1]];
@@ -223,7 +223,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
       if(![numberScanner scanInteger:&repeatCounter]) {
         *stop = YES; // Abort!
       }
-      NSMutableString *rolledOutRepeat = [[NSMutableString alloc] initWithCapacity:([command length] + 2) * repeatCounter];
+      NSMutableString *rolledOutRepeat = [[NSMutableString alloc] initWithCapacity:(command.length + 2) * repeatCounter];
       command = [NSString stringWithFormat:@"{%@}", command];
       while(repeatCounter-- > 0) {
         [rolledOutRepeat appendString:command];
@@ -233,15 +233,15 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }];
   
   for(NSString *needle in repeaterValues) {
-    [mutableCommand replaceOccurrencesOfString:needle withString:repeaterValues[needle] options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableCommand length])];
+    [mutableCommand replaceOccurrencesOfString:needle withString:repeaterValues[needle] options:NSCaseInsensitiveSearch range:NSMakeRange(0, mutableCommand.length)];
   }
   
   NSDictionary *shortFormats = [self shortFormats];
   for(NSString *needle in shortFormats) {
     NSString *replace = shortFormats[needle];
-    [mutableCommand replaceOccurrencesOfString:needle withString:replace options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableCommand length])];
+    [mutableCommand replaceOccurrencesOfString:needle withString:replace options:NSCaseInsensitiveSearch range:NSMakeRange(0, mutableCommand.length)];
   }
-  [mutableCommand replaceOccurrencesOfString:_KPKSpaceSaveGuard withString:kKPKAutotypeShortSpace options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableCommand length])];
+  [mutableCommand replaceOccurrencesOfString:_KPKSpaceSaveGuard withString:kKPKAutotypeShortSpace options:NSCaseInsensitiveSearch range:NSMakeRange(0, mutableCommand.length)];
   return [[NSString alloc] initWithString:mutableCommand];
 }
 
@@ -326,7 +326,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                                                                             error:NULL];
   __block NSMutableString *mutableSelf = [self mutableCopy];
   __block BOOL didReplace = NO;
-  [regexp enumerateMatchesInString:self options:0 range:NSMakeRange(0, [self length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+  [regexp enumerateMatchesInString:self options:0 range:NSMakeRange(0, self.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
     NSString *valueField = [self substringWithRange:[result rangeAtIndex:1]];
     NSString *searchField = [self substringWithRange:[result rangeAtIndex:2]];
     NSString *criteria = [self substringWithRange:[result rangeAtIndex:3]];
@@ -349,8 +349,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                             @"N" : @"notes",
                             @"I" : @"uuid"
                             };
-  searchKey = [searchKey uppercaseString];
-  NSString *valueSelectorString = _selectorForReference[[valueKey uppercaseString]];
+  searchKey = searchKey.uppercaseString;
+  NSString *valueSelectorString = _selectorForReference[valueKey.uppercaseString];
   if(!valueSelectorString) {
     return nil; // Wrong valueKey
   }
@@ -373,7 +373,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   /* Direct UUID search */
   else if([searchKey isEqualToString:@"I"]) {
     NSUUID *uuid;
-    if([match length] == 32) {
+    if(match.length == 32) {
       uuid = [[NSUUID alloc] initWithUndelemittedUUIDString:match];
     }
     else {
@@ -396,8 +396,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   SEL selector = NSSelectorFromString(valueSelectorString);
   NSMethodSignature *signatur = [matchingEntry methodSignatureForSelector:selector];
   NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signatur];
-  [invocation setSelector:selector];
-  [invocation setTarget:matchingEntry];
+  invocation.selector = selector;
+  invocation.target = matchingEntry;
   [invocation invoke];
   
   CFTypeRef result;
@@ -447,16 +447,16 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     NSURL *url = [[NSURL alloc] initWithString:entry.url];
     if(url.scheme) {
       NSMutableString *mutableURL = [entry.url mutableCopy];
-      [mutableURL replaceOccurrencesOfString:[url scheme] withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableURL length])];
+      [mutableURL replaceOccurrencesOfString:url.scheme withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, mutableURL.length)];
       caseInsensitiveMappings[@"{URL:RMVSCM}"] = [mutableURL copy];
-      caseInsensitiveMappings[@"{URL:SCM}"] = [url scheme];
+      caseInsensitiveMappings[@"{URL:SCM}"] = url.scheme;
     }
     else {
       caseInsensitiveMappings[@"{URL:RMVSCM}"] = entry.url;
       caseInsensitiveMappings[@"{URL:SCM}"] = @"";
     }
     caseInsensitiveMappings[@"{URL:HOST}"] = url.host ? url.host : @"";
-    caseInsensitiveMappings[@"{URL:PORT}"] = url.port ? [[url port] stringValue] : @"";
+    caseInsensitiveMappings[@"{URL:PORT}"] = url.port ? url.port.stringValue : @"";
     caseInsensitiveMappings[@"{URL:PATH}"] = url.path ? url.path : @"";
     caseInsensitiveMappings[@"{URL:QUERY}"] = url.query ? url.query : @"";
     caseInsensitiveMappings[@"{URL:USERNAME}"] = url.user ? url.user : @"";
@@ -475,7 +475,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   caseInsensitiveMappings[@"{GROUPPATH}"] = entry.parent ? [entry.parent breadcrumb] : @"";
   caseInsensitiveMappings[@"{ENV_DIRSEP}"] = @"/";
   NSURL *appDirURL = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask][0];
-  caseInsensitiveMappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  [appDirURL path] : @"";
+  caseInsensitiveMappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  appDirURL.path : @"";
   /*
    These mappings require access to the mpdocument.
    {DB_PATH} Full path of the current database.
@@ -513,14 +513,14 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     [supstitudedString replaceOccurrencesOfString:placeholderKey
                                        withString:caseInsensitiveMappings[placeholderKey]
                                           options:NSCaseInsensitiveSearch
-                                            range:NSMakeRange(0, [supstitudedString length])];
+                                            range:NSMakeRange(0, supstitudedString.length)];
   }
   /* Custom keys should be mapped case senstiviely */
   for(NSString *placeholderKey in caseSensitiviveMappings) {
     [supstitudedString replaceOccurrencesOfString:placeholderKey
                                        withString:caseSensitiviveMappings[placeholderKey]
                                           options:0
-                                            range:NSMakeRange(0, [supstitudedString length])];
+                                            range:NSMakeRange(0, supstitudedString.length)];
   }
   if([supstitudedString isEqualToString:self]) {
     return [self copy];

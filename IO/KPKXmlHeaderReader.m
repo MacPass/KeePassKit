@@ -41,7 +41,7 @@
 
 @implementation KPKXmlHeaderReader
 
-- (id)init {
+- (instancetype)init {
   self = [super init];
   if(self) {
     _masterSeed = [NSData dataWithRandomBytes:32];
@@ -53,7 +53,7 @@
   return self;
 }
 
-- (id)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error{
+- (instancetype)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error{
   self = [super init];
   if(self) {
     _data = data;
@@ -68,7 +68,7 @@
 }
 
 - (NSData *)dataWithoutHeader {
-  return [_data subdataWithRange:NSMakeRange(_endOfHeader, [_data length] - _endOfHeader)];
+  return [_data subdataWithRange:NSMakeRange(_endOfHeader, _data.length - _endOfHeader)];
 }
 
 - (BOOL)verifyHeader:(NSData *)hash {

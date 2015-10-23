@@ -42,7 +42,7 @@
 
 @implementation KPKXmlHeaderWriter
 
-- (id)initWithTree:(KPKTree *)tree {
+- (instancetype)initWithTree:(KPKTree *)tree {
   self = [super init];
   if(self) {
     _tree = tree;
@@ -96,8 +96,8 @@
 
 - (void)_writerHeaderField:(KPKHeaderKey)key data:(NSData *)data {
   [_writer writeByte:key];
-  [_writer write2Bytes:CFSwapInt16HostToLittle([data length])];
-  if ([data length] > 0) {
+  [_writer write2Bytes:CFSwapInt16HostToLittle(data.length)];
+  if (data.length > 0) {
     [_writer writeData:data];
   }
 }

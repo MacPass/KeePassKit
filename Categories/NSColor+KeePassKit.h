@@ -49,11 +49,11 @@
  *  Return a hexadecimal string representation of the color
  *  @return	hexadecimal string of the recieving NSColor object
  */
-- (NSString *)hexString;
+@property (nonatomic, readonly, copy) NSString *hexString;
 /**
  *  Returns the color represented as 4 byte data. This format is used in KDB files
  *  @return	NSData for the receiving color
  */
-- (NSData *)colorData;
+@property (nonatomic, readonly, copy) NSData *colorData;
 
 @end

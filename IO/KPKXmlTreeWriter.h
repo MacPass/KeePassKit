@@ -30,8 +30,8 @@
 @property (strong, readonly) KPKTree *tree;
 @property (strong, readonly) KPKXmlHeaderWriter *headerWriter;
 
-- (id)initWithTree:(KPKTree *)tree;
-- (DDXMLDocument *)xmlDocument;
-- (DDXMLDocument *)protectedXmlDocument;
+- (instancetype)initWithTree:(KPKTree *)tree;
+@property (nonatomic, readonly, copy) DDXMLDocument *xmlDocument;
+@property (nonatomic, readonly, copy) DDXMLDocument *protectedXmlDocument;
 
 @end

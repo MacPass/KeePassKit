@@ -68,7 +68,7 @@ NSUInteger const kKPKDefaultEntryKeysCount = 5;
   uint32_t signature1;
   uint32_t signature2;
   
-  if([data length] < 7 ) {
+  if(data.length < 7 ) {
     return KPKUnknownVersion;
   }
   

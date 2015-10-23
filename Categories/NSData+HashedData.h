@@ -49,7 +49,7 @@ typedef NS_ENUM(NSUInteger, KPKHashingAlgorithm) {
 /**
  @returns YES, if the hashed data's integritry was verified, NO if the hash is corrupted
  */
-- (NSData *)unhashedData;
+@property (nonatomic, readonly, copy) NSData *unhashedData;
 /**
  *	Hashes the given data using SHA256 hashing and the proviede block size.
  *	@param	blockSize	Size to use for hashing blocks

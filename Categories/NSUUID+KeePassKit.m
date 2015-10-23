@@ -63,7 +63,7 @@ static NSUUID *aesUUID = nil;
   if(![string isValidHexString]) {
     return nil; // invalid characters
   }
-  if([string length] != 32) {
+  if(string.length != 32) {
     return nil; // invalid lenght
   }
   @autoreleasepool {

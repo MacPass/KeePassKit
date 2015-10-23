@@ -297,7 +297,7 @@
     return self.parent.defaultAutoTypeSequence;
   }
   NSString *defaultSequence = [self.tree defaultAutotypeSequence];
-  BOOL hasDefault = [defaultSequence length] > 0;
+  BOOL hasDefault = defaultSequence.length > 0;
   return hasDefault ? defaultSequence : @"{USERNAME}{TAB}{PASSWORD}{ENTER}";
 }
 
@@ -321,7 +321,7 @@
 - (NSArray *)childEntries {
   NSMutableArray *childEntries = [NSMutableArray arrayWithArray:_entries];
   for(KPKGroup *group in _groups) {
-    [childEntries addObjectsFromArray:[group childEntries]];
+    [childEntries addObjectsFromArray:group.childEntries];
   }
   return  childEntries;
 }
@@ -329,7 +329,7 @@
 - (NSArray *)childGroups {
   NSMutableArray *childGroups = [NSMutableArray arrayWithArray:_groups];
   for(KPKGroup *group in _groups) {
-    [childGroups addObjectsFromArray:[group childGroups]];
+    [childGroups addObjectsFromArray:group.childGroups];
   }
   return childGroups;
 }
@@ -348,7 +348,7 @@
 }
 
 - (void)addGroup:(KPKGroup *)group {
-  [self addGroup:group atIndex:[_groups count]];
+  [self addGroup:group atIndex:_groups.count];
 }
 
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
@@ -401,7 +401,7 @@
 }
 
 - (void)addEntry:(KPKEntry *)entry {
-  [self addEntry:entry atIndex:[self.entries count]];
+  [self addEntry:entry atIndex:(self.entries).count];
 }
 
 - (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
@@ -452,20 +452,20 @@
 
 #pragma mark Seaching
 - (KPKEntry *)entryForUUID:(NSUUID *)uuid {
-  NSArray *filterdEntries = [[self childEntries] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+  NSArray *filterdEntries = [self.childEntries filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
     return [uuid isEqual:(NSUUID *)[evaluatedObject uuid]];
   }]];
   NSAssert([filterdEntries count] <= 1, @"NSUUID hast to be unique");
-  return [filterdEntries lastObject];
+  return filterdEntries.lastObject;
 }
 
 - (KPKGroup *)groupForUUID:(NSUUID *)uuid {
   NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
     return [uuid isEqual:(NSUUID *)[evaluatedObject uuid]];
   }];
-  NSArray *filteredGroups = [[self childGroups] filteredArrayUsingPredicate:predicate];
+  NSArray *filteredGroups = [self.childGroups filteredArrayUsingPredicate:predicate];
   NSAssert([filteredGroups count] <= 1, @"NSUUID hast to be unique");
-  return  [filteredGroups lastObject];
+  return  filteredGroups.lastObject;
 }
 
 - (NSArray<KPKEntry *> *)searchableChildEntries {
@@ -501,7 +501,7 @@
 #pragma mark Autotype
 - (NSArray<KPKEntry *> *)autotypeableChildEntries {
   NSMutableArray<KPKEntry *> *autotypeEntries;
-  if([self isAutotypeable]) {
+  if(self.isAutotypeable) {
     /* KPKEntries have their own autotype settings, hence we need to filter them as well */
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
       NSAssert([evaluatedObject isKindOfClass:[KPKEntry class]], @"entry array should contain only KPKEntry objects");
@@ -563,11 +563,11 @@
 #pragma mark Delete
 
 - (void)clear {
-  NSUInteger groupCount = [_groups count];
+  NSUInteger groupCount = _groups.count;
   for(NSInteger index = (groupCount - 1); index > -1; index--) {
     [self removeObjectFromGroupsAtIndex:index];
   }
-  NSUInteger entryCount = [_entries count];
+  NSUInteger entryCount = _entries.count;
   for(NSInteger index = (entryCount - 1); index > -1; index--) {
     [self removeObjectFromEntriesAtIndex:index];
   }
@@ -577,7 +577,7 @@
 #pragma mark KVC
 
 - (NSUInteger)countOfEntries {
-  return [_entries count];
+  return _entries.count;
 }
 
 - (void)insertObject:(KPKEntry *)entry inEntriesAtIndex:(NSUInteger)index {
@@ -589,7 +589,7 @@
 }
 
 - (NSUInteger)countOfGroups {
-  return [_groups count];
+  return _groups.count;
 }
 
 - (void)insertObject:(KPKGroup *)group inGroupsAtIndex:(NSUInteger)index {
