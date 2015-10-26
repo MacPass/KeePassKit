@@ -112,7 +112,15 @@
 }
 
 - (BOOL)isTrash {
-  return self.asGroup.uuid == self.tree.metaData.trashUuid;
+  return [self.asGroup.uuid isEqual:self.tree.metaData.trashUuid];
+}
+
+- (BOOL)isUserTemplateGroup {
+  return [self.asGroup.uuid isEqual:self.tree.metaData.entryTemplatesGroup];
+}
+
+- (BOOL)isUserTemplate {
+  return [self isDecendantOf:self.tree.templates];
 }
 
 - (BOOL)isTrashed {
@@ -131,7 +139,7 @@
 }
 
 - (BOOL)isAnchestorOf:(KPKNode *)node {
-  if(nil == node) {
+  if(!node) {
     return NO;
   }
   KPKNode *ancestor = node.parent;

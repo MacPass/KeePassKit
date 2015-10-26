@@ -61,6 +61,8 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly) BOOL hasDefaultIcon;
 @property(nonatomic, readonly) BOOL isEditable;
 @property(nonatomic, readonly) BOOL isTrash;
+@property(nonatomic, readonly) BOOL isUserTemplate;
+@property(nonatomic, readonly) BOOL isUserTemplateGroup;
 @property(nonatomic, readonly) BOOL deleted;
 /**
  *  Determines, whether the receiving node is inside the trash.

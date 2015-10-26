@@ -452,20 +452,29 @@
 
 #pragma mark Seaching
 - (KPKEntry *)entryForUUID:(NSUUID *)uuid {
-  NSArray *filterdEntries = [self.childEntries filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-    return [uuid isEqual:(NSUUID *)[evaluatedObject uuid]];
-  }]];
-  NSAssert([filterdEntries count] <= 1, @"NSUUID hast to be unique");
-  return filterdEntries.lastObject;
+  if(!uuid) {
+    return nil;
+  }
+  /* TODO hash lookup, since UUIDs do not change! */
+  for(KPKEntry *entry in self.childEntries) {
+    if([entry.uuid isEqual:uuid]) {
+      return entry;
+    }
+  }
+  return nil;
 }
 
 - (KPKGroup *)groupForUUID:(NSUUID *)uuid {
-  NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-    return [uuid isEqual:(NSUUID *)[evaluatedObject uuid]];
-  }];
-  NSArray *filteredGroups = [self.childGroups filteredArrayUsingPredicate:predicate];
-  NSAssert([filteredGroups count] <= 1, @"NSUUID hast to be unique");
-  return  filteredGroups.lastObject;
+  if(!uuid) {
+    return nil;
+  }
+  /* TODO hash lookup, since UUIDs do not change! */
+  for(KPKGroup *group in self.childGroups) {
+    if([group.uuid isEqual:uuid]) {
+      return group;
+    }
+  }
+  return nil;
 }
 
 - (NSArray<KPKEntry *> *)searchableChildEntries {
