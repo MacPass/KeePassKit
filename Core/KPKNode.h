@@ -130,7 +130,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  *
  *  @return A shallow copy of the node suitabel for editing.
  */
-- (KPKNode *)beginEditing;
+- (void)beginEditing;
 /**
  *  Discards the editing changes.
  *
@@ -138,8 +138,8 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 - (BOOL)cancelEditing;
 /**
- *  Commits the changes from the current sessoin, stores the data and adds a history entry
- *  If nothing was changes during the edit, nothing will get updates and no history entry will get created.
+ *  Commits the changes from the current open editing, stores the data (KPKEntries add a history entry with old values as well)
+ *  If nothing was changes during the edit, nothing will changes
  *
  *  @return YES if any changes were store, NO otherwise
  */

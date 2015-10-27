@@ -39,7 +39,7 @@
  *
  *  @return YES, if the command is valid, NO otherweise.
  */
-@property (nonatomic, readonly) BOOL validateCommmand;
+@property (nonatomic, readonly) BOOL validCommand;
 
 @end
 

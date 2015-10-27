@@ -88,7 +88,7 @@
   KPKFormat *format = [KPKFormat sharedFormat];
   uint32_t version = [format fileVersionForData:_data];
   
-  if ((version & KPK_XML_VERSION_CRITICAL_MASK) > (KPK_XML_VERSION_CRITICAL_MAX_32 & KPK_XML_VERSION_CRITICAL_MASK)) {
+  if ((version & kKPKXMLFileVersionCriticalMask) > (kKPKXMLFileVersionCriticalMax & kKPKXMLFileVersionCriticalMask)) {
     KPKCreateError(error, KPKErrorUnsupportedDatabaseVersion, @"ERROR_UNSUPPORTED_DATABASER_VERSION", "");
     return NO;
   }

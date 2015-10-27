@@ -107,9 +107,4 @@ typedef NS_OPTIONS(NSUInteger, KPKLegacyEncryptionFlags) {
   KPKLegacyEncryptionTwoFish    = 1<<3
 };
 
-#define KPK_LEGACY_FILE_VERSION 0x00030004
-#define KPK_LEGACY_SIGNATURE_1 0x9AA2D903
-#define KPK_LEGACY_SIGNATURE_2 0xB54BFB65
-
-
 #endif

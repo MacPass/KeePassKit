@@ -42,7 +42,6 @@
 #import "KPKTree.h"
 #import "KPKTree+Private.h"
 #import "KPKWindowAssociation.h"
-#import "KPKXmlElements.h"
 #import "KPKXmlFormat.h"
 #import "KPKXmlHeaderReader.h"
 #import "KPKXmlUtilities.h"

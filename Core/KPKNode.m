@@ -269,9 +269,8 @@
 }
 
 # pragma mark Editing
-- (KPKNode *)beginEditing {
+- (void)beginEditing {
   self.editNode = [self _shallowCopyWithUUID:self.uuid];
-  return self.editNode;
 }
 
 - (BOOL)cancelEditing {

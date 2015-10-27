@@ -23,6 +23,7 @@
 #import "KPKLegacyHeaderWriter.h"
 #import "KPKLegacyHeaderUtility.h"
 #import "KPKLegacyFormat.h"
+#import "KPKFormat.h"
 #import "KPKTree.h"
 #import "KPKMetaData.h"
 
@@ -95,10 +96,10 @@
 - (void)_updateHeader {
   NSAssert(_groupCount != -1, @"Group count needs to be initalized");
   NSAssert(_entryCount != -1, @"Entry count needs to be initalized");
-  _header.signature1 = CFSwapInt32HostToLittle(KPK_LEGACY_SIGNATURE_1);
-  _header.signature2 = CFSwapInt32HostToLittle(KPK_LEGACY_SIGNATURE_2);
+  _header.signature1 = CFSwapInt32HostToLittle(kKPKBinarySignature1);
+  _header.signature2 = CFSwapInt32HostToLittle(kKPKBinarySignature2);
   _header.flags = CFSwapInt32HostToLittle( KPKLegacyEncryptionSHA2 | KPKLegacyEncryptionRijndael );
-  _header.version = CFSwapInt32HostToLittle(KPK_LEGACY_FILE_VERSION);
+  _header.version = CFSwapInt32HostToLittle(kKPKBinaryFileVersion);
   
   /* Master seed and encryption iv */
   [_masterSeed getBytes:_header.masterSeed length:sizeof(_header.masterSeed)];

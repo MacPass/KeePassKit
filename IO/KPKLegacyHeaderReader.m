@@ -88,7 +88,7 @@
   
   // Check the version
   _header.version = CFSwapInt32LittleToHost(_header.version);
-  if ((_header.version & 0xFFFFFF00) != (KPK_LEGACY_FILE_VERSION & 0xFFFFFF00)) {
+  if ((_header.version & kKPKBinaryFileVersionMask) != (kKPKBinaryFileVersion & kKPKBinaryFileVersionMask)) {
     KPKCreateError(error, KPKErrorUnsupportedDatabaseVersion, @"ERROR_UNSUPPORTED_DATABASER_VERSION", "");
   }
   

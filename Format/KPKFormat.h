@@ -23,13 +23,201 @@
 #import <Foundation/Foundation.h>
 #import "KPKVersion.h"
 
-FOUNDATION_EXTERN NSString *const kKPKTitleKey;
-FOUNDATION_EXTERN NSString *const kKPKNameKey;
-FOUNDATION_EXTERN NSString *const kKPKUsernameKey;
-FOUNDATION_EXTERN NSString *const kKPKPasswordKey;
-FOUNDATION_EXTERN NSString *const kKPKURLKey;
-FOUNDATION_EXTERN NSString *const kKPKNotesKey;
+/**
+ *  Signatures for the Binary (Keepass1) file format
+ */
+FOUNDATION_EXTERN uint32_t const kKPKBinaryFileVersion;
+FOUNDATION_EXTERN uint32_t const kKPKBinaryFileVersionMask;
+FOUNDATION_EXTERN uint32_t const kKPKBinarySignature1;
+FOUNDATION_EXTERN uint32_t const kKPKBinarySignature2;
+
+/**
+ *  Signatrues and Data for the XML (Keepass2) file format
+ */
+FOUNDATION_EXTERN uint32_t const  kKPKXMLFileVersion;
+FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersionCriticalMax;
+FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersionCriticalMask;
+
+FOUNDATION_EXTERN uint32_t const kKPKXMLSignature1;
+FOUNDATION_EXTERN uint32_t const kKPKXMLSignature2;
+
+/**
+ *  Default Keys used in the XML format
+ */
+FOUNDATION_EXPORT NSString *const kKPKTitleKey;
+FOUNDATION_EXPORT NSString *const kKPKNameKey;
+FOUNDATION_EXPORT NSString *const kKPKUsernameKey;
+FOUNDATION_EXPORT NSString *const kKPKPasswordKey;
+FOUNDATION_EXPORT NSString *const kKPKURLKey;
+FOUNDATION_EXPORT NSString *const kKPKNotesKey;
+FOUNDATION_EXPORT NSString *const kKPKUUIDKey;
 FOUNDATION_EXPORT NSUInteger const kKPKDefaultEntryKeysCount;
+
+#pragma mark Format
+FOUNDATION_EXTERN NSString *const kKPKXmlKeePassFile;
+FOUNDATION_EXTERN NSString *const kKPKXmlRoot;
+FOUNDATION_EXTERN NSString *const kKPKXmlHeaderHash;
+FOUNDATION_EXTERN NSString *const kKPKXmlMeta;
+FOUNDATION_EXTERN NSString *const kKPKXmlGroup;
+
+#pragma mark Metainformation
+FOUNDATION_EXTERN NSString *const kKPKXmlGenerator;
+FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseName;
+FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseNameChanged;
+
+FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseDescription;
+FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseDescriptionChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlDefaultUserName;
+FOUNDATION_EXTERN NSString *const kKPKXmlDefaultUserNameChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlMaintenanceHistoryDays;
+FOUNDATION_EXTERN NSString *const kKPKXmlColor;
+FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeRecommendationInterval;
+FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeForceInterval;
+
+FOUNDATION_EXTERN NSString *const kKPKXmlMemoryProtection;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectTitle;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectUserName;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectPassword;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectURL;
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectNotes;
+
+FOUNDATION_EXTERN NSString *const kKPKXmlRecycleBinEnabled;
+FOUNDATION_EXTERN NSString *const kKPKXmlRecycleBinUUID;
+FOUNDATION_EXTERN NSString *const kKPKXmlRecycleBinChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlEntryTemplatesGroup;
+FOUNDATION_EXTERN NSString *const kKPKXmlEntryTemplatesGroupChanged;
+FOUNDATION_EXTERN NSString *const kKPKXmlHistoryMaxItems;
+FOUNDATION_EXTERN NSString *const kKPKXmlHistoryMaxSize;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastSelectedGroup;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastTopVisibleGroup;
+
+#pragma mark Groups
+FOUNDATION_EXTERN NSString *const kKPKXmlIsExpanded;
+FOUNDATION_EXTERN NSString *const kKPKXmlDefaultAutoTypeSequence;
+FOUNDATION_EXTERN NSString *const kKPKXmlEnableAutoType;
+FOUNDATION_EXTERN NSString *const kKPKXmlEnableSearching;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastTopVisibleEntry;
+
+FOUNDATION_EXTERN NSString *const kKPKXmlUUID;
+FOUNDATION_EXTERN NSString *const kKPKXmlName;
+FOUNDATION_EXTERN NSString *const kKPKXmlNotes;
+FOUNDATION_EXTERN NSString *const kKPKXmlIconId;
+
+#pragma mark Binaries
+FOUNDATION_EXTERN NSString *const kKPKXmlBinary;
+FOUNDATION_EXTERN NSString *const kKPKXmlBinaries;
+
+#pragma mark Time
+FOUNDATION_EXTERN NSString *const kKPKXmlTimes;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastModificationDate;
+FOUNDATION_EXTERN NSString *const kKPKXmlCreationDate;
+FOUNDATION_EXTERN NSString *const kKPKXmlLastAccessDate;
+FOUNDATION_EXTERN NSString *const kKPKXmlExpirationDate;
+FOUNDATION_EXTERN NSString *const kKPKXmlExpires;
+FOUNDATION_EXTERN NSString *const kKPKXmlUsageCount;
+FOUNDATION_EXTERN NSString *const kKPKXmlLocationChanged;
+
+#pragma mark Generic
+FOUNDATION_EXTERN NSString *const kKPKXmlKey;
+FOUNDATION_EXTERN NSString *const kKPKXmlValue;
+FOUNDATION_EXTERN NSString *const kKPKXmlData;
+
+#pragma mark Attributes
+FOUNDATION_EXTERN NSString *const kKPKXmlProtected; // Only used when stored as kdbx files.
+FOUNDATION_EXTERN NSString *const kKPKXMLProtectInMemory; // Only used when stores as plain XML files.
+FOUNDATION_EXTERN NSString *const kKPKXmlTrue;
+FOUNDATION_EXTERN NSString *const kKPKXmlFalse;
+
+/**
+ *  Referemce Keys used for Referencing attributes inside entries
+ */
+FOUNDATION_EXPORT NSString *const kKPKReferencePrefix;
+FOUNDATION_EXPORT NSString *const kKPKReferenceTitleKey;
+FOUNDATION_EXPORT NSString *const kKPKReferenceUsernameKey;
+FOUNDATION_EXPORT NSString *const kKPKReferencePasswordKey;
+FOUNDATION_EXPORT NSString *const kKPKReferenceURLKey;
+FOUNDATION_EXPORT NSString *const kKPKReferenceNotesKey;
+FOUNDATION_EXPORT NSString *const kKPKReferenceUUIDKey;
+FOUNDATION_EXPORT NSString *const kKPKReferenceCustomFieldKey;
+
+/**
+ *  Autotype Commands
+ */
+
+/* Short versions */
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortShift;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortControl;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortAlt;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortEnter;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortInsert;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortDelete;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortBackspace;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortBackspace2;
+FOUNDATION_EXPORT NSString *const kKPKAutotypeShortSpace;
+
+/* Normalized */
+FOUNDATION_EXTERN NSString *const kKPKAutotypeEnter;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShift;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeControl;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeAlt;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeInsert;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeDelete;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeBackspace;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeSpace;
+
+/* Other Keys */
+FOUNDATION_EXTERN NSString *const kKPKAutotypeTab;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeUp;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeDown;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeLeft;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeRight;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeHome;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeEnd;
+FOUNDATION_EXTERN NSString *const kKPKAutotypePageUp;
+FOUNDATION_EXTERN NSString *const kKPKAutotypePageDown;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeBreak;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeCapsLock;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeEscape;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeWindows;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeLeftWindows;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeRightWindows;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeApps;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeHelp;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeNumlock;
+FOUNDATION_EXTERN NSString *const kKPKAutotypePrintScreen;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeScrollLock;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeFunctionMaskRegularExpression; //1-16
+
+/* Keypad */
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddAdd;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddSubtract;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddMultiply;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddDivide;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddNumberMaskRegularExpression; // 0-9
+
+/* Symbols */
+FOUNDATION_EXTERN NSString *const kKPKAutotypePlus;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeOr;
+FOUNDATION_EXTERN NSString *const kKPKAutotypePercent;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeTilde;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeRoundBracketLeft;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeRoundBracketRight;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeSquareBracketLeft;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeSquareBracketRight;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortCurlyBracketLeft;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeShortCurlyBracketRight;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeCurlyBracketLeft;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeCurlyBracketRight;
+
+/* Special Commands */
+FOUNDATION_EXPORT NSString *const kKPKAutotypeClearField;
+
+/* Value-Commands*/
+FOUNDATION_EXTERN NSString *const kKPKAutotypeDelay;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualKey;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualNonExtendedKey;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualExtendedKey;
 
 /**
  Format class.
@@ -56,11 +244,5 @@ FOUNDATION_EXPORT NSUInteger const kKPKDefaultEntryKeysCount;
  */
 @property (nonatomic, strong, readonly) NSArray<NSString *> *entryDefaultKeys;
 - (NSInteger)indexForDefaultKey:(NSString *)key;
-
-/**
- @param key The key to determine the minimum version for
- @returns The minimum version for a database to store this key
- */
-- (KPKVersion)minimumVersionForKey:(NSString *)key;
 
 @end

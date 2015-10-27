@@ -60,9 +60,9 @@
   _writer = [[KPKDataStreamWriter alloc] initWithData:data];
   
   /* Version and Signature */
-  [_writer write4Bytes:CFSwapInt32HostToLittle(KPK_XML_SIGNATURE_1)];
-  [_writer write4Bytes:CFSwapInt32HostToLittle(KPK_XML_SIGNATURE_2)];
-  [_writer write4Bytes:CFSwapInt32HostToLittle(KPK_XML_FILE_VERSION)];
+  [_writer write4Bytes:CFSwapInt32HostToLittle(kKPKXMLSignature1)];
+  [_writer write4Bytes:CFSwapInt32HostToLittle(kKPKXMLSignature2)];
+  [_writer write4Bytes:CFSwapInt32HostToLittle(kKPKXMLFileVersion)];
   
   @autoreleasepool {
     uuid_t uuidBytes;

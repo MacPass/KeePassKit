@@ -25,7 +25,7 @@
 #import <CommonCrypto/CommonCrypto.h>
 
 #import "KPKErrors.h"
-#import "KPKXmlElements.h"
+#import "KPKFormat.h"
 
 #import "DDXMLElementAdditions.h"
 #import "NSMutableData+Base64.h"

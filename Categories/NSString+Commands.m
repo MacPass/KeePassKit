@@ -26,11 +26,11 @@
 #import "KPKAttribute.h"
 #import "KPKTree.h"
 #import "KPKGroup.h"
-#import "KPKAutotypeCommands.h"
 #import "NSUUID+KeePassKit.h"
+#import "KPKFormat.h"
 
 static NSUInteger const _KPKMaxiumRecursionLevel = 10;
-static NSDictionary *_selectorForReference;
+static NSDictionary *_attributeKeyForReferenceKey;
 static NSString *const _KPKSpaceSaveGuard = @"{KPK_LITERAL_SPACE}";
 
 /**
@@ -169,7 +169,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketLeft withString:kKPKAutotypeCurlyBracketLeft options:0 range:NSMakeRange(0, mutableCommand.length)];
   [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketRight withString:kKPKAutotypeCurlyBracketRight options:0 range:NSMakeRange(0, mutableCommand.length)];
   
-  if(![mutableCommand validateCommmand]) {
+  if(![mutableCommand validCommand]) {
     return nil;
   }
   /*
@@ -251,10 +251,11 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 @implementation NSString (Autotype)
 
 - (NSString *)normalizedAutotypeSequence {
+  /* findCommand returns a copy */
   return [[KPKCommandCache sharedCache] findCommand:self];
 }
 
-- (BOOL)validateCommmand {
+- (BOOL)validCommand {
   if(self.length == 0) {
     return NO;
   }
@@ -341,22 +342,18 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 }
 
 - (NSString *)_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match withTree:(KPKTree *)tree {
-  _selectorForReference = @{
-                            @"T" : @"title",
-                            @"U" : @"username",
-                            @"P" : @"password",
-                            @"A" : @"url",
-                            @"N" : @"notes",
-                            @"I" : @"uuid"
+  /* Custom and UUID will get special treatment, so we do not collect them inside the array */
+  _attributeKeyForReferenceKey = @{
+                            kKPKReferenceTitleKey : kKPKTitleKey,
+                            kKPKReferenceUsernameKey : kKPKUsernameKey,
+                            kKPKReferencePasswordKey : kKPKPasswordKey,
+                            kKPKReferenceURLKey : kKPKURLKey,
+                            kKPKReferenceNotesKey : kKPKNotesKey,
                             };
   searchKey = searchKey.uppercaseString;
-  NSString *valueSelectorString = _selectorForReference[valueKey.uppercaseString];
-  if(!valueSelectorString) {
-    return nil; // Wrong valueKey
-  }
   KPKEntry *matchingEntry;
   /* Custom Attribute search */
-  if([searchKey isEqualToString:@"O"]) {
+  if([searchKey isEqualToString:kKPKReferenceCustomFieldKey]) {
     for(KPKEntry *entry in tree.allEntries) {
       for(KPKAttribute *attribute in entry.customAttributes) {
         NSRange matchRange = [attribute.value rangeOfString:match];
@@ -371,7 +368,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     }
   }
   /* Direct UUID search */
-  else if([searchKey isEqualToString:@"I"]) {
+  else if([searchKey isEqualToString:kKPKReferenceUUIDKey]) {
     NSUUID *uuid;
     if(match.length == 32) {
       uuid = [[NSUUID alloc] initWithUndelemittedUUIDString:match];

@@ -24,14 +24,248 @@
 #import "KPKLegacyFormat.h"
 #import "KPKXmlFormat.h"
 
+#pragma mark Signatures/Format
+uint32_t const kKPKBinaryFileVersion      = 0x00030004;
+uint32_t const kKPKBinaryFileVersionMask  = 0xFFFFFF00;
+uint32_t const kKPKBinarySignature1       = 0x9AA2D903;
+uint32_t const kKPKBinarySignature2       = 0xB54BFB65;
 
+uint32_t const kKPKXMLFileVersion             = 0x00030001;
+uint32_t const kKPKXMLFileVersionCriticalMax  = 0x00030000;
+uint32_t const kKPKXMLFileVersionCriticalMask = 0xFFFF0000;
+
+uint32_t const kKPKXMLSignature1 = 0x9AA2D903;
+uint32_t const kKPKXMLSignature2 = 0xB54BFB67;
+
+#pragma mark Attribute Keys
 NSString *const kKPKTitleKey     = @"Title";
 NSString *const kKPKNameKey      = @"Name";
 NSString *const kKPKUsernameKey  = @"UserName";
 NSString *const kKPKPasswordKey  = @"Password";
 NSString *const kKPKURLKey       = @"URL";
 NSString *const kKPKNotesKey     = @"Notes";
+NSString *const kKPKUUIDKey      = @"UUID";
 NSUInteger const kKPKDefaultEntryKeysCount = 5;
+
+#pragma mark Nodes
+NSString *const kKPKXmlKeePassFile = @"KeePassFile";
+NSString *const kKPKXmlRoot = @"Root";
+NSString *const kKPKXmlHeaderHash = @"HeaderHash";
+NSString *const kKPKXmlMeta = @"Meta";
+NSString *const kKPKXmlGroup = @"Group";
+NSString *const kKPKXmlGenerator = @"Generator";
+NSString *const kKPKXmlDatabaseName = @"DatabaseName";
+NSString *const kKPKXmlDatabaseNameChanged = @"DatabaseNameChanged";
+NSString *const kKPKXmlDatabaseDescription = @"DatabaseDescription";
+NSString *const kKPKXmlDatabaseDescriptionChanged = @"DatabaseDescriptionChanged";
+NSString *const kKPKXmlDefaultUserName = @"DefaultUserName";
+NSString *const kKPKXmlDefaultUserNameChanged = @"DefaultUserNameChanged";
+NSString *const kKPKXmlMaintenanceHistoryDays = @"MaintenanceHistoryDays";
+NSString *const kKPKXmlColor = @"Color";
+NSString *const kKPKXmlMasterKeyChanged = @"MasterKeyChanged";
+NSString *const kKPKXmlMasterKeyChangeRecommendationInterval = @"MasterKeyChangeRec";
+NSString *const kKPKXmlMasterKeyChangeForceInterval = @"MasterKeyChangeForce";
+
+NSString *const kKPKXmlMemoryProtection = @"MemoryProtection";
+NSString *const kKPKXmlProtectTitle = @"ProtectTitle";
+NSString *const kKPKXmlProtectUserName = @"ProtectUserName";
+NSString *const kKPKXmlProtectPassword = @"ProtectPassword";
+NSString *const kKPKXmlProtectURL = @"ProtectURL";
+NSString *const kKPKXmlProtectNotes = @"ProtectNotes";
+
+NSString *const kKPKXmlRecycleBinEnabled = @"RecycleBinEnabled";
+NSString *const kKPKXmlRecycleBinUUID = @"RecycleBinUUID";
+NSString *const kKPKXmlRecycleBinChanged = @"RecycleBinChanged";
+NSString *const kKPKXmlEntryTemplatesGroup = @"EntryTemplatesGroup";
+NSString *const kKPKXmlEntryTemplatesGroupChanged = @"EntryTemplatesGroupChanged";
+NSString *const kKPKXmlHistoryMaxItems = @"HistoryMaxItems";
+NSString *const kKPKXmlHistoryMaxSize = @"HistoryMaxSize";
+NSString *const kKPKXmlLastSelectedGroup = @"LastSelectedGroup";
+NSString *const kKPKXmlLastTopVisibleGroup = @"LastTopVisibleGroup";
+
+NSString *const kKPKXmlIsExpanded = @"IsExpanded";
+NSString *const kKPKXmlDefaultAutoTypeSequence = @"DefaultAutoTypeSequence";
+NSString *const kKPKXmlEnableAutoType = @"EnableAutoType";
+NSString *const kKPKXmlEnableSearching = @"EnableSearching";
+NSString *const kKPKXmlLastTopVisibleEntry = @"LastTopVisibleEntry";
+
+NSString *const kKPKXmlUUID = @"UUID";
+NSString *const kKPKXmlName = @"Name";
+NSString *const kKPKXmlNotes = @"Notes";
+NSString *const kKPKXmlIconId = @"IconID";
+
+#pragma mark Binaries
+NSString *const kKPKXmlBinary = @"Binary";
+NSString *const kKPKXmlBinaries = @"Binaries";
+
+#pragma mark Time
+NSString *const kKPKXmlTimes = @"Times";
+NSString *const kKPKXmlLastModificationDate = @"LastModificationTime";
+NSString *const kKPKXmlCreationDate = @"CreationTime";
+NSString *const kKPKXmlLastAccessDate = @"LastAccessTime";
+NSString *const kKPKXmlExpirationDate = @"ExpiryTime";
+NSString *const kKPKXmlExpires = @"Expires";
+NSString *const kKPKXmlUsageCount = @"UsageCount";
+NSString *const kKPKXmlLocationChanged = @"LocationChanged";
+
+
+#pragma mark Generic
+NSString *const kKPKXmlKey = @"Key";
+NSString *const kKPKXmlValue = @"Value";
+NSString *const kKPKXmlData = @"Data";
+
+#pragma mark Attributes
+NSString *const kKPKXmlProtected        = @"Protected";
+NSString *const kKPKXMLProtectInMemory  = @"ProtectInMemory";
+NSString *const kKPKXmlTrue             = @"True";
+NSString *const kKPKXmlFalse            = @"False";
+
+#pragma mark Reference Keys
+
+NSString *const kKPKReferencePrefix         = @"REF:";
+NSString *const kKPKReferenceTitleKey       = @"T";
+NSString *const kKPKReferenceUsernameKey    = @"U";
+NSString *const kKPKReferencePasswordKey    = @"P";
+NSString *const kKPKReferenceURLKey         = @"A";
+NSString *const kKPKReferenceNotesKey       = @"N";
+NSString *const kKPKReferenceUUIDKey        = @"I";
+NSString *const kKPKReferenceCustomFieldKey = @"O";
+
+#pragma mark Autotype commands
+/*
+ Tab	{TAB}
+ Enter	{ENTER} or ~
+ Arrow Up	{UP}
+ Arrow Down	{DOWN}
+ Arrow Left	{LEFT}
+ Arrow Right	{RIGHT}
+ Insert	{INSERT} or {INS}
+ Delete	{DELETE} or {DEL}
+ Home	{HOME}
+ End	{END}
+ Page Up	{PGUP}
+ Page Down	{PGDN}
+ Backspace	{BACKSPACE}, {BS} or {BKSP}
+ Break	{BREAK}
+ Caps-Lock	{CAPSLOCK}
+ Escape	{ESC}
+ Windows Key	{WIN} (equ. to {LWIN})
+ Windows Key: left, right	{LWIN}, {RWIN}
+ Apps / Menu	{APPS}
+ Help	{HELP}
+ Numlock	{NUMLOCK}
+ Print Screen	{PRTSC}
+ Scroll Lock	{SCROLLLOCK}
+ F1 - F16	{F1} - {F16}
+ Numeric Keypad +	{ADD}
+ Numeric Keypad -	{SUBTRACT}
+ Numeric Keypad *	{MULTIPLY}
+ Numeric Keypad /	{DIVIDE}
+ Numeric Keypad 0 to 9	{NUMPAD0} to {NUMPAD9}
+ Shift	+
+ Ctrl	^
+ Alt	%
+ +	{+}
+ ^	{^}
+ %	{%}
+ ~	{~}
+ (, )	{(}, {)}
+ [, ]	{[}, {]}
+ {, }	{{}, {}}
+ 
+ special commands:
+ 
+ {DELAY X}	Delays X milliseconds.
+ {CLEARFIELD}	Clears the contents of the edit control that currently has the focus (only single-line edit controls).
+ {VKEY X}
+ */
+
+/* Shorts */
+NSString *const kKPKAutotypeShortShift = @"+";
+NSString *const kKPKAutotypeShortControl = @"^";
+NSString *const kKPKAutotypeShortAlt = @"%";
+NSString *const kKPKAutotypeShortEnter = @"~";
+NSString *const kKPKAutotypeShortInsert = @"{INS}";
+NSString *const kKPKAutotypeShortDelete = @"{DEL}";
+NSString *const kKPKAutotypeShortBackspace = @"{BS}";
+NSString *const kKPKAutotypeShortBackspace2 = @"{BKSP}";
+NSString *const kKPKAutotypeShortCurlyBracketLeft = @"{{}";
+NSString *const kKPKAutotypeShortCurlyBracketRight = @"{}}";
+NSString *const kKPKAutotypeShortSpace = @" ";
+
+/* Extended Formats*/
+NSString *const kKPKAutotypeShift = @"{SHIFT}";
+NSString *const kKPKAutotypeControl = @"{CONTROL}";
+NSString *const kKPKAutotypeAlt = @"{ALT}";
+NSString *const kKPKAutotypeEnter = @"{ENTER}";
+NSString *const kKPKAutotypeInsert = @"{INSERT}";
+NSString *const kKPKAutotypeDelete = @"{DELETE}";
+NSString *const kKPKAutotypeBackspace = @"{BACKSPACE}";
+NSString *const kKPKAutotypeSpace = @"{SPACE}";
+
+/* Other Keys */
+NSString *const kKPKAutotypeTab = @"{TAB}";
+NSString *const kKPKAutotypeUp = @"{UP}";
+NSString *const kKPKAutotypeDown = @"{DOWN}";
+NSString *const kKPKAutotypeLeft = @"{LEFT}";
+NSString *const kKPKAutotypeRight = @"{RIGHT}";
+NSString *const kKPKAutotypeHome = @"{HOME}";
+NSString *const kKPKAutotypeEnd = @"{END}";
+NSString *const kKPKAutotypePageUp = @"{PGUP}";
+NSString *const kKPKAutotypePageDown = @"{PGDOWN}";
+NSString *const kKPKAutotypeBreak = @"{BREAK}";
+NSString *const kKPKAutotypeCapsLock = @"{CAPSLOCK}";
+NSString *const kKPKAutotypeEscape = @"{ESC}";
+NSString *const kKPKAutotypeWindows = @"{WIN}";
+NSString *const kKPKAutotypeLeftWindows = @"{LWIN}";
+NSString *const kKPKAutotypeRightWindows = @"{RWIN}";
+NSString *const kKPKAutotypeApps = @"{APPS}";
+NSString *const kKPKAutotypeHelp = @"{HELP}";
+NSString *const kKPKAutotypeNumlock = @"{NUMLOCK}";
+NSString *const kKPKAutotypePrintScreen = @"{PRTSC}";
+NSString *const kKPKAutotypeScrollLock = @"{SCROLLLOCK}";
+NSString *const kKPKAutotypeFunctionMaskRegularExpression = @"\\{F(1?[0-9])\\}"; //1-16
+
+/* Keypad */
+NSString *const kKPKAutotypeKeypaddAdd = @"{ADD}";
+NSString *const kKPKAutotypeKeypaddSubtract = @"{SUBTRACT}";
+NSString *const kKPKAutotypeKeypaddMultiply = @"{MULTIPLY}";
+NSString *const kKPKAutotypeKeypaddDivide = @"{DIVIDE}";
+NSString *const kKPKAutotypeKeypaddNumberMask = @"\\{NUMPAD[0-9]\\}"; // 0-9
+
+/* Symbols */
+NSString *const kKPKAutotypePlus = @"{+}";
+NSString *const kKPKAutotypeOr = @"{^}";
+NSString *const kKPKAutotypePercent = @"{%}";
+NSString *const kKPKAutotypeTilde = @"{~}";
+NSString *const kKPKAutotypeRoundBracketLeft = @"{(}";
+NSString *const kKPKAutotypeRoundBracketRight = @"{)}";
+NSString *const kKPKAutotypeSquareBracketLeft = @"{[}";
+NSString *const kKPKAutotypeSquareBracketRight = @"{]}";
+NSString *const kKPKAutotypeCurlyBracketLeft = @"{CURLYLEFT}";
+NSString *const kKPKAutotypeCurlyBracketRight = @"{CURLYRIGHT}";
+
+/* Special Commands */
+NSString *const kKPKAutotypeClearField = @"{CLEARFIELD}";
+
+/* Value Commands without Brackets to use in Matches */
+NSString *const kKPKAutotypeDelay = @"DELAY";
+NSString *const kKPKAutotypeVirtualKey = @"VKEY";
+NSString *const kKPKAutotypeVirtualNonExtendedKey = @"VKEY-NX";
+NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
+
+/*
+ Windows Key	{WIN} (equ. to {LWIN})
+ Windows Key: left, right	{LWIN}, {RWIN}
+ +	{+}
+ ^	{^}
+ %	{%}
+ ~	{~}
+ (, )	{(}, {)}
+ [, ]	{[}, {]}
+ {, }	{{}, {}}
+ 
+ */
 
 @implementation KPKFormat
 
@@ -77,10 +311,10 @@ NSUInteger const kKPKDefaultEntryKeysCount = 5;
   signature1 = CFSwapInt32LittleToHost(signature1);
   signature2 = CFSwapInt32LittleToHost(signature2);
   
-  if (signature1 == KPK_LEGACY_SIGNATURE_1 && signature2 == KPK_LEGACY_SIGNATURE_2) {
+  if (signature1 == kKPKBinarySignature1 && signature2 == kKPKBinarySignature2) {
     return KPKLegacyVersion;
   }
-  if (signature1 == KPK_XML_SIGNATURE_1 && signature2 == KPK_XML_SIGNATURE_2 ) {
+  if (signature1 == kKPKXMLSignature1 && signature2 == kKPKXMLSignature2 ) {
     return KPKXmlVersion;
   }
   return KPKUnknownVersion;
@@ -93,8 +327,4 @@ NSUInteger const kKPKDefaultEntryKeysCount = 5;
   return version;
 }
 
-- (KPKVersion)minimumVersionForKey:(NSString *)key {
-  NSAssert(NO, @"Not implemented");
-  return KPKLegacyVersion;
-}
 @end
