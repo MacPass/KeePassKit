@@ -6,7 +6,7 @@
 //  Copyright © 2015 HicknHack Software GmbH. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+@import Cocoa;
 
 //! Project version number for KeePassKit.
 FOUNDATION_EXPORT double KeePassKitVersionNumber;
@@ -38,6 +38,8 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import "KPKTimeInfo.h"
 #import "KPKAutotype.h"
 #import "KPKWindowAssociation.h"
+
+#import "KPKModificationRecording.h"
 
 #import "KPKErrors.h"
 

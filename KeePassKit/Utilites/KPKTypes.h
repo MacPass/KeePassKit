@@ -23,7 +23,7 @@
 #ifndef MacPass_KPKTypes_h
 #define MacPass_KPKTypes_h
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 typedef NS_ENUM(NSInteger, KPKInheritBool) {
   KPKInherit = -1,

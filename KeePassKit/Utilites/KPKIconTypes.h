@@ -9,7 +9,7 @@
 #ifndef KeePassKit_KPKIconTypes_h
 #define KeePassKit_KPKIconTypes_h
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 typedef NS_ENUM(NSUInteger, KPKIconType) {
   /* 0 */

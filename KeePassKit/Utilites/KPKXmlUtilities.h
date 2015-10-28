@@ -23,7 +23,7 @@
 #ifndef MacPass_KPKXmlUtilities_h
 #define MacPass_KPKXmlUtilities_h
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 #import "KPKTypes.h"
 #import "DDXMLElement.h"
 

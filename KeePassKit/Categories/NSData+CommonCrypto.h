@@ -36,12 +36,14 @@
  *
  */
 
-#import <Foundation/NSData.h>
-#import <Foundation/NSError.h>
-#import <CommonCrypto/CommonCryptor.h>
-#import <CommonCrypto/CommonHMAC.h>
+@import Foundation;
 
 extern NSString * const kCommonCryptoErrorDomain;
+
+typedef int32_t CCCryptorStatus;
+typedef uint32_t CCAlgorithm;
+typedef uint32_t CCOptions;
+typedef uint32_t CCHmacAlgorithm;
 
 @interface NSError (CommonCryptoErrorDomain)
 + (NSError *) errorWithCCCryptorStatus: (CCCryptorStatus) status;

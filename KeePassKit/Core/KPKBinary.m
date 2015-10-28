@@ -108,10 +108,8 @@
   return result;
 }
 
-- (BOOL)saveToLocation:(NSURL *)location {
-  NSError *error;
-  if(![self.data writeToURL:location options:NSDataWritingAtomic error:&error]) {
-    [NSApp presentError:error];
+- (BOOL)saveToLocation:(NSURL *)location error:(NSError **)error {
+  if(![self.data writeToURL:location options:NSDataWritingAtomic error:error]) {
     return NO;
   }
   return YES;

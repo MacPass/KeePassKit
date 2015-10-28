@@ -6,9 +6,8 @@
 //  Copyright (c) 2014 HicknHack Software GmbH. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
-
-#import "KeePassKit.h"
+@import  XCTest;
+@import KeePassKit;
 
 @interface KPKTestReference : XCTestCase
 @property (strong) KPKTree *tree;
