@@ -350,13 +350,18 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                             kKPKReferenceURLKey : kKPKURLKey,
                             kKPKReferenceNotesKey : kKPKNotesKey,
                             };
+  /* Noramlize the keys */
   searchKey = searchKey.uppercaseString;
+  valueKey = valueKey.uppercaseString;
   KPKEntry *matchingEntry;
-  /* Custom Attribute search */
+  /* Custom Attribute search
+   First hit will get returned, even if there's a better one later on!
+   */
+  NSArray *allEntries = tree.allEntries;
   if([searchKey isEqualToString:kKPKReferenceCustomFieldKey]) {
-    for(KPKEntry *entry in tree.allEntries) {
+    for(KPKEntry *entry in allEntries) {
       for(KPKAttribute *attribute in entry.customAttributes) {
-        NSRange matchRange = [attribute.value rangeOfString:match];
+        NSRange matchRange = [attribute.value rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, attribute.value.length) locale:[NSLocale currentLocale ]];
         if(matchRange.length > 0) {
           matchingEntry = entry;
           break;
@@ -380,31 +385,28 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }
   /* Default attribute search */
   else {
-    NSString *searchSelectorString = _selectorForReference[searchKey];
-    if(!searchSelectorString) {
-      return nil; // Selector to search is wrong!
+    NSString *searchAttributeKey = _attributeKeyForReferenceKey[searchKey];
+    if(!searchAttributeKey) {
+      return nil; // no valid attribute key supplied
     }
-    NSPredicate *searchPredicat = [NSPredicate predicateWithFormat:@"%K CONTAINS[cd] %@", searchSelectorString, match];
-    matchingEntry = [tree.allEntries filteredArrayUsingPredicate:searchPredicat][0];
+    for(KPKEntry *entry in allEntries) {
+      NSString *value = [entry valueForAttributeWithKey:searchAttributeKey];
+      NSRange matchRange = [value rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, value.length) locale:[NSLocale currentLocale ]];
+      if(matchRange.length > 0) {
+        /* First hit wins */
+        matchingEntry = entry;
+        break;
+      }
+    }
   }
   if(!matchingEntry) {
     return nil;
   }
-  SEL selector = NSSelectorFromString(valueSelectorString);
-  NSMethodSignature *signatur = [matchingEntry methodSignatureForSelector:selector];
-  NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signatur];
-  invocation.selector = selector;
-  invocation.target = matchingEntry;
-  [invocation invoke];
-  
-  CFTypeRef result;
-  [invocation getReturnValue:&result];
-  if (result) {
-    CFRetain(result);
-    NSString *string = (NSString *)CFBridgingRelease(result);
-    return string;
+  /* Direct UUID retrieval */
+  if([valueKey isEqualToString:kKPKReferenceUUIDKey]) {
+    return matchingEntry.uuid.UUIDString;
   }
-  return nil;
+  return [matchingEntry valueForAttributeWithKey:_attributeKeyForReferenceKey[valueKey]];
 }
 
 @end
