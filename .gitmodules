@@ -1,0 +1,3 @@
+[submodule "KissXML"]
+	path = KissXML
+	url = https://github.com/robbiehanson/KissXML.git
