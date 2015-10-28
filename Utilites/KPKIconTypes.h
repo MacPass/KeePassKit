@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 HicknHack Software GmbH. All rights reserved.
 //
 
-#ifndef MacPass_KPKIconTypes_h
-#define MacPass_KPKIconTypes_h
+#ifndef KeePassKit_KPKIconTypes_h
+#define KeePassKit_KPKIconTypes_h
 
 #import <Foundation/Foundation.h>
 
@@ -97,4 +97,4 @@ typedef NS_ENUM(NSUInteger, KPKIconType) {
   KPKIconPhone
 };
 
-#endif
+#endif /* KeePassKit_h */
