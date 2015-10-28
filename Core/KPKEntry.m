@@ -67,6 +67,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 @dynamic attributes;
 @dynamic defaultAttributes;
 @dynamic customAttributes;
+@dynamic updateTiming;
 
 NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   NSString *keyPath = [[NSString alloc] initWithFormat:@"%@.%@", NSStringFromSelector(aSelector), NSStringFromSelector(@selector(value))];
@@ -335,6 +336,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (KPKAttribute *)attributeWithKey:(NSString *)key {
+  if(!key) {
+    return nil;
+  }
   for(KPKAttribute *attribute in self.mutableAttributes) {
     if([attribute.key isEqualToString:key]) {
       return attribute;

@@ -12,9 +12,6 @@
 
 #import "KPKFormat.h"
 #import "KPKVersion.h"
-#import "KPKAutotypeCommands.h"
-#import "KPKReferenceKeys.h"
-
 #import "KPKCompositeKey.h"
 
 #import "KPKTree.h"
@@ -30,3 +27,5 @@
 #import "KPKTimeInfo.h"
 #import "KPKAutotype.h"
 #import "KPKWindowAssociation.h"
+
+#import "NSData+Random.h"

@@ -42,6 +42,7 @@
 @dynamic notes;
 @dynamic title;
 @dynamic minimumVersion;
+@dynamic updateTiming;
 
 + (NSUInteger)defaultIcon {
   return KPKIconPassword;

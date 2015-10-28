@@ -36,6 +36,8 @@
 
 @implementation KPKMetaData
 
+@synthesize updateTiming = _updateTiming;
+
 + (NSSet *)keyPathsForValuesAffectingEnforceMasterKeyChange {
   return [NSSet setWithObject:NSStringFromSelector(@selector(masterKeyChangeEnforcementInterval))];
 }
@@ -76,6 +78,7 @@
     /* No Key change recommandation or enforcement */
     _masterKeyChangeRecommendationInterval=-1;
     _masterKeyChangeEnforcementInterval=-1;
+    _updateTiming = YES;
   }
   return self;
 }
@@ -111,7 +114,7 @@
 - (void)setDatabaseName:(NSString *)databaseName {
   if(![_databaseName isEqualToString:databaseName]) {
     _databaseName = [databaseName copy];
-    if(_updateTiming) {
+    if(self.updateTiming) {
       self.databaseNameChanged = [NSDate date];
     }
   }
@@ -120,7 +123,7 @@
 - (void)setDatabaseDescription:(NSString *)databaseDescription {
   if(![_databaseDescription isEqualToString:databaseDescription]) {
     _databaseDescription = [databaseDescription copy];
-    if(_updateTiming) {
+    if(self.updateTiming) {
       self.databaseNameChanged = [NSDate date];
     }
   }
@@ -129,7 +132,7 @@
 - (void)setDefaultUserName:(NSString *)defaultUserName {
   if(![_defaultUserName isEqualToString:defaultUserName]) {
     _defaultUserName = [defaultUserName copy];
-    if(_updateTiming) {
+    if(self.updateTiming) {
       self.defaultUserNameChanged = [NSDate date];
     }
   }
@@ -138,7 +141,7 @@
 - (void)setEntryTemplatesGroup:(NSUUID *)entryTemplatesGroup {
   if(![_entryTemplatesGroup isEqual:entryTemplatesGroup]) {
     _entryTemplatesGroup = entryTemplatesGroup;
-    if(_updateTiming) {
+    if(self.updateTiming) {
       self.entryTemplatesGroupChanged = [NSDate date];
     }
   }
@@ -147,7 +150,7 @@
 - (void)setTrashUuid:(NSUUID *)trashUuid {
   if(![_trashUuid isEqual:trashUuid]) {
     _trashUuid = trashUuid;
-    if(_updateTiming) {
+    if(self.updateTiming) {
       self.trashChanged = [NSDate date];
     }
   }

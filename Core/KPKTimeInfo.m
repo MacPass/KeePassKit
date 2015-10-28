@@ -54,7 +54,7 @@
     _locationChanged = now;
     _expires = NO;
     _usageCount = 0;
-    _updateTiming = NO;
+    _updateTiming = YES;
     _isExpired = NO;
   }
   return self;
@@ -100,6 +100,7 @@
   timeInfo.expires = self.expires;
   timeInfo.locationChanged = [self.locationChanged copyWithZone:zone];
   timeInfo.usageCount = self.usageCount; // reset?
+  timeInfo.updateTiming = self.updateTiming;
   return timeInfo;
 }
 

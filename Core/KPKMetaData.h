@@ -82,8 +82,6 @@
  */
 @property(nonatomic, strong, readonly) NSMutableArray *unknownMetaEntryData; // Array of KPKBinaries Compatibility for KDB files
 
-@property(nonatomic, assign) BOOL updateTiming;
-
 - (BOOL)isEqualToMetaData:(KPKMetaData *)other;
 
 - (KPKIcon *)findIcon:(NSUUID *)uuid;

@@ -43,6 +43,7 @@
 
 @implementation KPKGroup
 
+@dynamic updateTiming;
 @synthesize title = _title;
 @synthesize notes = _notes;
 
@@ -77,7 +78,7 @@
     _isAutoTypeEnabled = KPKInherit;
     _isSearchEnabled = KPKInherit;
     _lastTopVisibleEntry = [NSUUID nullUUID];
-    self.updateTiming = YES;
+    //self.updateTiming = YES;
   }
   return self;
 }
@@ -354,7 +355,7 @@
 - (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   group.parent = self;
   //group.tree = self.tree;
-  index = MAX(0, MIN([_groups count], index));
+  index = MAX(0, MIN(_groups.count, index));
   [[self.undoManager prepareWithInvocationTarget:self] _removeGroup:group];
   if(group.deleted) {
     /* Remove groups that might have been added to the deleted objects */
@@ -386,14 +387,14 @@
 }
 
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
-  NSUInteger oldIndex = [self.parent.groups indexOfObject:self];
+  NSUInteger oldIndex = [self.parent->_groups indexOfObject:self];
   if(oldIndex == NSNotFound) {
     return; // Parent does not contain us!
   }
   [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:oldIndex];
   [self.parent removeObjectFromGroupsAtIndex:oldIndex];
   self.parent = nil;
-  index = MAX(0, MIN([group.groups count], index));
+  index = MAX(0, MIN(group->_groups.count, index));
   self.parent = group;
   [group insertObject:self inGroupsAtIndex:index];
   [self wasModified];
@@ -401,13 +402,13 @@
 }
 
 - (void)addEntry:(KPKEntry *)entry {
-  [self addEntry:entry atIndex:(self.entries).count];
+  [self addEntry:entry atIndex:_entries.count];
 }
 
 - (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
   entry.parent = self;
   //entry.tree = self.tree;
-  index = MAX(0, MIN([_entries count], index));
+  index = MAX(0, MIN(_entries.count, index));
   [[self.undoManager prepareWithInvocationTarget:self] removeEntry:entry];
   if(entry.deleted) {
     /* Remove the deleted Object */
