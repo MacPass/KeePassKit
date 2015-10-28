@@ -6,8 +6,7 @@
 //  Copyright © 2015 HicknHack Software GmbH. All rights reserved.
 //
 
-#ifndef KeePassKit_Private_h
-#define KeePassKit_Private_h
+#import <Cocoa/Cocoa.h>
 
 #import "KPKXmlTreeReader.h"
 
@@ -17,4 +16,3 @@
 #import "KPKAutotype+Private.h"
 #import "KPKWindowAssociation+Private.h"
 
-#endif /* KeePassKit_Private_h */
