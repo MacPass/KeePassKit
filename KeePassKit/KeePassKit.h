@@ -21,6 +21,7 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import "KPKIconTypes.h"
 
 #import "KPKFormat.h"
+#import "KPKXmlFormat.h"
 #import "KPKVersion.h"
 #import "KPKCompositeKey.h"
 
@@ -48,6 +49,7 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import "NSData+Keyfile.h"
 #import "NSData+Random.h"
 #import "NSString+Commands.h"
+#import "NSString+Empty.h"
 #import "NSString+XMLUtilities.h"
 #import "NSUUID+KeePassKit.h"
 
