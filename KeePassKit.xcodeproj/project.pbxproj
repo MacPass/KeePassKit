@@ -157,6 +157,15 @@
 		4C5CF4BA1BE10F090019AA81 /* KPKTestXmlParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A61BE10F090019AA81 /* KPKTestXmlParsing.m */; };
 		4C5CF4BB1BE10F090019AA81 /* KPKTestXmlWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A71BE10F090019AA81 /* KPKTestXmlWriting.m */; };
 		4C5CF4BC1BE10F090019AA81 /* KPKTextXMLUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */; };
+		4C8138261BE282DC001BF195 /* Autotype_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */; };
+		4C8138271BE282DC001BF195 /* CustomIcon_Password_1234.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */; };
+		4C8138281BE282DC001BF195 /* CustomIcon_Password_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */; };
+		4C8138291BE282DC001BF195 /* KDB1_KeePassX_test.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381E1BE282DC001BF195 /* KDB1_KeePassX_test.kdb */; };
+		4C81382A1BE282DC001BF195 /* KeePass1_native_test.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381F1BE282DC001BF195 /* KeePass1_native_test.kdb */; };
+		4C81382B1BE282DC001BF195 /* Test_Password_1234.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138201BE282DC001BF195 /* Test_Password_1234.kdb */; };
+		4C81382C1BE282DC001BF195 /* Test_Password_1234.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138211BE282DC001BF195 /* Test_Password_1234.kdbx */; };
+		4C81382D1BE282DC001BF195 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138231BE282DC001BF195 /* image.png */; };
+		4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138251BE282DC001BF195 /* Keepass2Key.xml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -323,6 +332,15 @@
 		4C5CF4A61BE10F090019AA81 /* KPKTestXmlParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestXmlParsing.m; sourceTree = "<group>"; };
 		4C5CF4A71BE10F090019AA81 /* KPKTestXmlWriting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestXmlWriting.m; sourceTree = "<group>"; };
 		4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTextXMLUtilities.m; sourceTree = "<group>"; };
+		4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Autotype_test.kdbx; sourceTree = "<group>"; };
+		4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = CustomIcon_Password_1234.kdbx; sourceTree = "<group>"; };
+		4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = CustomIcon_Password_1234.xml; sourceTree = "<group>"; };
+		4C81381E1BE282DC001BF195 /* KDB1_KeePassX_test.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = KDB1_KeePassX_test.kdb; sourceTree = "<group>"; };
+		4C81381F1BE282DC001BF195 /* KeePass1_native_test.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = KeePass1_native_test.kdb; sourceTree = "<group>"; };
+		4C8138201BE282DC001BF195 /* Test_Password_1234.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = Test_Password_1234.kdb; sourceTree = "<group>"; };
+		4C8138211BE282DC001BF195 /* Test_Password_1234.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Test_Password_1234.kdbx; sourceTree = "<group>"; };
+		4C8138231BE282DC001BF195 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
+		4C8138251BE282DC001BF195 /* Keepass2Key.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Keepass2Key.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -436,6 +454,9 @@
 		4C5CF3261BE10B650019AA81 /* KeePassKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				4C81381A1BE282DC001BF195 /* Databases */,
+				4C8138221BE282DC001BF195 /* Images */,
+				4C8138241BE282DC001BF195 /* Keyfiles */,
 				4C5CF4951BE10F090019AA81 /* KPKHashedDataTest.m */,
 				4C5CF4961BE10F090019AA81 /* KPKIconLoading.m */,
 				4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */,
@@ -617,6 +638,36 @@
 			path = Utilites;
 			sourceTree = "<group>";
 		};
+		4C81381A1BE282DC001BF195 /* Databases */ = {
+			isa = PBXGroup;
+			children = (
+				4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */,
+				4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */,
+				4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */,
+				4C81381E1BE282DC001BF195 /* KDB1_KeePassX_test.kdb */,
+				4C81381F1BE282DC001BF195 /* KeePass1_native_test.kdb */,
+				4C8138201BE282DC001BF195 /* Test_Password_1234.kdb */,
+				4C8138211BE282DC001BF195 /* Test_Password_1234.kdbx */,
+			);
+			path = Databases;
+			sourceTree = "<group>";
+		};
+		4C8138221BE282DC001BF195 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				4C8138231BE282DC001BF195 /* image.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		4C8138241BE282DC001BF195 /* Keyfiles */ = {
+			isa = PBXGroup;
+			children = (
+				4C8138251BE282DC001BF195 /* Keepass2Key.xml */,
+			);
+			path = Keyfiles;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -787,6 +838,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C8138281BE282DC001BF195 /* CustomIcon_Password_1234.xml in Resources */,
+				4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */,
+				4C8138291BE282DC001BF195 /* KDB1_KeePassX_test.kdb in Resources */,
+				4C81382B1BE282DC001BF195 /* Test_Password_1234.kdb in Resources */,
+				4C81382C1BE282DC001BF195 /* Test_Password_1234.kdbx in Resources */,
+				4C8138261BE282DC001BF195 /* Autotype_test.kdbx in Resources */,
+				4C81382A1BE282DC001BF195 /* KeePass1_native_test.kdb in Resources */,
+				4C8138271BE282DC001BF195 /* CustomIcon_Password_1234.kdbx in Resources */,
+				4C81382D1BE282DC001BF195 /* image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
