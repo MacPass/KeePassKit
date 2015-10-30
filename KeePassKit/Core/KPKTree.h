@@ -24,6 +24,8 @@
 #import "KPKVersion.h"
 #import "KPKNode.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class KPKGroup;
 @class KPKEntry;
 @class KPKCompositeKey;
@@ -61,17 +63,17 @@
 
 @interface KPKTree : NSObject
 
-@property(nonatomic, weak) id<KPKTreeDelegate> delegate;
+@property(nonatomic, weak, nullable) id<KPKTreeDelegate> delegate;
 @property(nonatomic, strong, readonly) NSDictionary<NSUUID *,KPKDeletedNode *> *deletedObjects;
-@property(nonatomic, strong, readonly) KPKMetaData *metaData;
+@property(nonatomic, strong, readonly, nullable) KPKMetaData *metaData;
 
 
-@property(nonatomic, readonly) NSUndoManager *undoManager;
+@property(nonatomic, readonly, nullable) NSUndoManager *undoManager;
 @property(nonatomic, readonly) BOOL isEditable;
 
-@property(nonatomic, weak) KPKGroup *trash;
-@property(nonatomic, weak) KPKGroup *templates;
-@property(nonatomic, strong) KPKGroup *root;
+@property(nonatomic, weak, nullable) KPKGroup *trash;
+@property(nonatomic, weak, nullable) KPKGroup *templates;
+@property(nonatomic, strong, nullable) KPKGroup *root;
 /**
  Acces to the root group via the groups property
  to offer a bindable interface for a tree
@@ -95,15 +97,11 @@
  *  featuers, the whole tree needs to have the highest version
  */
 @property(nonatomic) KPKVersion minimumVersion;
-/**
- *  Tags on this tree. This is a aggregation of all Tags of entries
- */
-@property(nonatomic, strong, readonly) NSArray<NSString *> *tags;
 
 - (instancetype)initWithTemplateContents;
 
-- (KPKGroup *)createGroup:(KPKGroup *)parent;
-- (KPKEntry *)createEntry:(KPKGroup *)parent;
+- (KPKGroup *)createGroup:(KPKGroup *_Nullable)parent;
+- (KPKEntry *)createEntry:(KPKGroup *_Nullable)parent;
 /**
  *  Enforces the right setup for the current settings. That is if trash is disabled, does nothing
  *  If trash is enabled, returnes the specified trahs group or creates on if none is present.
@@ -131,3 +129,5 @@
 - (nullable KPKEditingSession *)pendingEditingSessionForNode:(KPKNode * _Nonnull)node;
 
 @end
+
+NS_ASSUME_NONNULL_END

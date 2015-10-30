@@ -22,10 +22,10 @@
 
 @import Foundation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class KPKEntry;
 @class KPKWindowAssociation;
-
-NS_ASSUME_NONNULL_BEGIN
 
 @interface KPKAutotype : NSObject <NSCopying, NSSecureCoding>
 
@@ -48,6 +48,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable KPKWindowAssociation *)windowAssociationMatchingWindowTitle:(NSString *)windowTitle;
 
-NS_ASSUME_NONNULL_END
-
 @end
+
+NS_ASSUME_NONNULL_END
