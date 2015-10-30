@@ -98,10 +98,12 @@
 
 #pragma mark Properties
 - (BOOL)isEditable {
+  BOOL editable = YES;
   if(self.tree) {
-    return self.tree.isEditable;
+    editable &= self.tree.isEditable;
   }
-  return YES;
+  /* we allow only to be edited when we've got no pending edits */
+  return (nil != self.rollbackNode);
 }
 
 - (BOOL)hasDefaultIcon {
@@ -271,26 +273,18 @@
 
 # pragma mark Editing
 - (void)beginEditing {
-  self.editNode = [self _shallowCopyWithUUID:self.uuid];
+  self.rollbackNode = [self _shallowCopyWithUUID:self.uuid];
 }
 
 - (BOOL)cancelEditing {
-  BOOL hasChanges = self.hasUncommitedChanges;
-  self.editNode = nil;
-  return hasChanges;
+  [self _updateToNode:self.rollbackNode];
+  self.rollbackNode = nil;
+  return YES;
 }
 
 - (BOOL)commitEditing {
-  BOOL hasChanges = self.hasUncommitedChanges;
-  if(hasChanges) {
-    [self _updateToNode:self.editNode];
-  }
-  self.editNode = nil;
-  return hasChanges;
-}
-
-- (BOOL)hasUncommitedChanges {
-  return ![self.editNode isEqualTo:self];
+  self.rollbackNode = nil;
+  return YES;
 }
 
 - (void)_updateToNode:(KPKNode *)node {
@@ -302,15 +296,15 @@
   
   NSAssert(node.asGroup || node.asEntry, @"Cannot update to abstract KPKNode class");
   NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
-  [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self _shallowCopyWithUUID:self.uuid]];
+
+  if(node.asGroup) {
+    [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self _shallowCopyWithUUID:self.uuid]];
+  }
   /* Do not update parent/child structure, we just want "content" to update */
   self.iconId = node.iconId;
   self.iconUUID = node.iconUUID;
   self.title = node.title;
   self.notes = node.notes;
-  self.timeInfo = node.timeInfo;
-  /* Update the Timing! */
-  [self wasModified];
 }
 
 - (KPKTree *)tree {

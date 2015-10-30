@@ -83,6 +83,14 @@
   return self;
 }
 
+- (NSString*)description {
+  return [NSString stringWithFormat:@"%@ [image=%ld, name=%@, %@]",
+          [self class],
+          self.iconId,
+          self.title,
+          self.timeInfo];
+}
+
 #pragma mark NSCoding
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super _initWithCoder:aDecoder];
@@ -143,10 +151,8 @@
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
-  copy.isExpanded = self.isExpanded;
+  //copy.isExpanded = self.isExpanded;
   copy.lastTopVisibleEntry = self.lastTopVisibleEntry;
-  copy.updateTiming = self.updateTiming;
-  
   return copy;
 }
 
@@ -223,6 +229,17 @@
   }
 }
 
+-  (void)_updateToNode:(KPKNode *)node {
+  KPKGroup *group = node.asGroup;
+  if(!group) {
+    return; // No group
+  }
+  [super _updateToNode:node];
+  self.isAutoTypeEnabled = group.isAutoTypeEnabled;
+  self.isSearchEnabled = group.isSearchEnabled;
+  self.defaultAutoTypeSequence = group.defaultAutoTypeSequence;
+  [self wasModified];
+}
 
 #pragma mark NSPasteboardWriting/Reading
 - (NSArray<NSString *> *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
@@ -441,14 +458,6 @@
     entry.parent = toGroup;
     [toGroup insertObject:entry inEntriesAtIndex:toGroup->_entries.count];
   }
-}
-
-- (NSString*)description {
-  return [NSString stringWithFormat:@"%@ [image=%ld, name=%@, %@]",
-          [self class],
-          self.iconId,
-          self.title,
-          self.timeInfo];
 }
 
 #pragma mark Seaching

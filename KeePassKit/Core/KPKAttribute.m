@@ -53,6 +53,8 @@
 
 @implementation KPKAttribute
 
+@dynamic editable;
+
 + (BOOL)supportsSecureCoding {
   return YES;
 }
@@ -152,6 +154,13 @@
 
 - (BOOL)isDefault {
   return [[KPKFormat sharedFormat].entryDefaultKeys containsObject:self.key];
+}
+
+- (BOOL)isEditable {
+  if(!self.entry) {
+    return YES;
+  }
+  return self.entry.isEditable;
 }
 
 - (NSString *)referencedValue {

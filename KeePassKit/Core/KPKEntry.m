@@ -390,7 +390,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (BOOL)isEditable {
-  return !self.isHistory;
+  
+  if(super.isEditable) {
+    return !self.isHistory;
+  }
+  return NO;
 }
 
 - (NSArray *)binaries {
@@ -551,17 +555,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(nil == entry) {
     return; // only KPKEntry can be used
   }
+  /* add History entry */
+  [self addHistoryEntry:[self _shallowCopyWithUUID:self.uuid]];
   /* updates icon, iconID, note, title */
   [super _updateToNode:node];
-  if(entry.isHistory) {
-    /* Reset the history to the correct "point in time" */
-    NSUInteger historyIndex = [self.mutableHistory indexOfObject:entry];
-    [self removeHistoryAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(historyIndex, self.mutableHistory.count - historyIndex)]];
-  }
-  else {
-    /* add a shallow copy of the node to the history and be done */
-    [self addHistoryEntry:[entry _shallowCopyWithUUID:self.uuid]];
-  }
   
   self.tags = entry.tags;
   self.foregroundColor = entry.foregroundColor;
@@ -569,9 +566,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   self.overrideURL = entry.overrideURL;
   self.autotype = entry.autotype;
   self.binaries = entry.binaries;
-  self.timeInfo = entry.timeInfo;
   self.mutableAttributes = [[NSMutableArray alloc] initWithArray:self.mutableAttributes copyItems:YES];
-
+  
   [self wasModified];
 }
 

@@ -145,6 +145,4 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 - (BOOL)commitEditing;
 
-@property (nonatomic, readonly) BOOL hasUncommitedChanges;
-
 @end
