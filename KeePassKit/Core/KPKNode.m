@@ -103,7 +103,7 @@
     editable &= self.tree.isEditable;
   }
   /* we allow only to be edited when we've got no pending edits */
-  return (nil != self.rollbackNode);
+  return ( !self.rollbackNode);
 }
 
 - (BOOL)hasDefaultIcon {
