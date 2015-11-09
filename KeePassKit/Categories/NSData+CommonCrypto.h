@@ -40,6 +40,7 @@
 
 extern NSString * const kCommonCryptoErrorDomain;
 
+/* See CommonCrypto, redefinition for module compatibilty */
 typedef int32_t CCCryptorStatus;
 typedef uint32_t CCAlgorithm;
 typedef uint32_t CCOptions;

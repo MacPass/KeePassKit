@@ -37,6 +37,8 @@ uint32_t const kKPKXMLFileVersionCriticalMask = 0xFFFF0000;
 uint32_t const kKPKXMLSignature1 = 0x9AA2D903;
 uint32_t const kKPKXMLSignature2 = 0xB54BFB67;
 
+uint32_t const kKPKKeyFileLength = 32;
+
 #pragma mark Attribute Keys
 NSString *const kKPKTitleKey     = @"Title";
 NSString *const kKPKNameKey      = @"Name";

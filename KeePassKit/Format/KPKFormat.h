@@ -42,6 +42,11 @@ FOUNDATION_EXTERN uint32_t const kKPKXMLSignature1;
 FOUNDATION_EXTERN uint32_t const kKPKXMLSignature2;
 
 /**
+ *  Key
+ */
+FOUNDATION_EXTERN uint32_t const kKPKKeyFileLength;
+
+/**
  *  Default Keys used in the XML format
  */
 FOUNDATION_EXPORT NSString *const kKPKTitleKey;
