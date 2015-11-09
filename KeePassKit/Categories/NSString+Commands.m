@@ -335,8 +335,10 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                                              withKey:searchField
                                             matching:criteria
                                             withTree:tree];
-    didReplace = YES;
-    [mutableSelf replaceCharactersInRange:result.range withString:substitute];
+    if(substitute) {
+      [mutableSelf replaceCharactersInRange:result.range withString:substitute];
+      didReplace = YES;
+    }
   }];
   return (didReplace ? [mutableSelf _resolveReferencesWithTree:tree recursionLevel:level+1] : [self copy]);
 }
