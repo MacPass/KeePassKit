@@ -57,6 +57,10 @@
   [entry addBinary:binary];
   [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@"Custom" value:kKPKXmlValue isProtected:NO]];
   
+  entry.autotype.defaultKeystrokeSequence = @"DEFAULTSEQUENCE";;
+  [entry.autotype addAssociation:[[KPKWindowAssociation alloc] initWithWindowTitle:@"Window1" keystrokeSequence:@"Sequence1"]];
+  [entry.autotype addAssociation:  [[KPKWindowAssociation alloc] initWithWindowTitle:@"Window2" keystrokeSequence:nil]];
+  
   NSData *encodedData = [self encode:entry];
   KPKEntry *copyEntry = [self decode:encodedData ofClass:[KPKEntry class]];
   
@@ -68,6 +72,8 @@
   KPKBinary *copiedBinary = [copyEntry.binaries lastObject];
   XCTAssertTrue([copiedBinary.data isEqualToData:binary.data], @"Binary data should match");
   XCTAssertTrue([copiedBinary.name isEqualToString:binary.name], @"Binary names should match");
+  
+  XCTAssertEqualObjects(entry, copyEntry, @"Decoede entry is the equal to encoded one!");
 }
 
 - (void)testIconCoding {

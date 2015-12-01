@@ -48,6 +48,8 @@
   [entry.autotype addAssociation:[[KPKWindowAssociation alloc] initWithWindowTitle:@"C" keystrokeSequence:@"C{ENTER}{SPACE}{ENTER}C"]];
   XCTAssertEqual(entry.autotype.associations.count, 3, @"Entry has 3 window association");
   
+  [tree.root addEntry:entry];
+  
   KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   NSError *error;
   NSData *data = [tree encryptWithPassword:password forVersion:KPKXmlVersion error:&error];
@@ -56,6 +58,7 @@
   KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data password:password error:&error];
   XCTAssertNotNil(decryptedTree, @"Initalized tree from data is present!");
   KPKEntry *decryptedEntry = [tree.root entryForUUID:uuid];
+  XCTAssertNotNil(entry, @"Encrypted entry is decryted!");
   XCTAssertEqualObjects(entry, decryptedEntry, @"Decrypted entry is the same as the encrypted one");
   
 }

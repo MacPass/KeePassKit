@@ -231,6 +231,7 @@
 
 -  (void)_updateToNode:(KPKNode *)node {
   KPKGroup *group = node.asGroup;
+  NSAssert(group, @"Only groups can be udpated to groups!");
   if(!group) {
     return; // No group
   }

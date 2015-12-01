@@ -272,7 +272,7 @@
       DDXMLElement *associationsElement = [DDXMLElement elementWithName:@"Association"];
       KPKAddXmlElement(associationsElement, @"Window", association.windowTitle.XMLCompatibleString);
       NSString *keyStrokes = (association.hasDefaultKeystrokeSequence ? nil : association.keystrokeSequence.XMLCompatibleString);
-      KPKAddXmlElement(associationsElement, @"KeystrokeSequence", keyStrokes);
+      KPKAddXmlElementIfNotNil(associationsElement, @"KeystrokeSequence", keyStrokes);
       [autotypeElement addChild:associationsElement];
     }
   }

@@ -90,13 +90,13 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
-    [aCoder encodeObject:self.windowTitle forKey:@"windowTitle"];
-    [aCoder encodeObject:self.keystrokeSequence forKey:@"keystrokeSequence"];
+    [aCoder encodeObject:_windowTitle forKey:NSStringFromSelector(@selector(windowTitle))];
+    [aCoder encodeObject:_keystrokeSequence forKey:NSStringFromSelector(@selector(keystrokeSequence))];
   }
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-  return [[KPKWindowAssociation alloc] initWithWindowTitle:self.windowTitle keystrokeSequence:self.keystrokeSequence];
+  return [[KPKWindowAssociation alloc] initWithWindowTitle:self.windowTitle keystrokeSequence:_keystrokeSequence];
 }
 
 #pragma mark -

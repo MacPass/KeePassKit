@@ -72,10 +72,10 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  [aCoder encodeBool:self.isEnabled forKey:NSStringFromSelector(@selector(isEnabled))];
-  [aCoder encodeBool:self.obfuscateDataTransfer forKey:NSStringFromSelector(@selector(obfuscateDataTransfer))];
+  [aCoder encodeBool:_isEnabled forKey:NSStringFromSelector(@selector(isEnabled))];
+  [aCoder encodeBool:_obfuscateDataTransfer forKey:NSStringFromSelector(@selector(obfuscateDataTransfer))];
   [aCoder encodeObject:_associations forKey:NSStringFromSelector(@selector(associations))];
-  [aCoder encodeObject:self.defaultKeystrokeSequence forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
+  [aCoder encodeObject:_defaultKeystrokeSequence forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
 }
 
 - (id)copyWithZone:(NSZone *)zone {
