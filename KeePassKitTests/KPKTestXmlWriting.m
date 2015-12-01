@@ -36,6 +36,30 @@
   XCTAssertNotNil(reloadedTree, @"Reloaded tree should not be nil");
 }
 
+- (void)testWindowAssociationWriting {
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.root = [[KPKGroup alloc] init];
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  NSUUID *uuid = entry.uuid;
+  [entry.autotype addAssociation:[[KPKWindowAssociation alloc] initWithWindowTitle:@"A" keystrokeSequence:@"A{ENTER}{SPACE}{ENTER}A"]];
+  XCTAssertEqual(entry.autotype.associations.count, 1, @"Entry has 1 window association");
+  [entry.autotype addAssociation:[[KPKWindowAssociation alloc] initWithWindowTitle:@"B" keystrokeSequence:@"B{ENTER}{SPACE}{ENTER}B"]];
+  XCTAssertEqual(entry.autotype.associations.count, 2, @"Entry has 2 window association");
+  [entry.autotype addAssociation:[[KPKWindowAssociation alloc] initWithWindowTitle:@"C" keystrokeSequence:@"C{ENTER}{SPACE}{ENTER}C"]];
+  XCTAssertEqual(entry.autotype.associations.count, 3, @"Entry has 3 window association");
+  
+  KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  NSError *error;
+  NSData *data = [tree encryptWithPassword:password forVersion:KPKXmlVersion error:&error];
+  XCTAssertNotNil(data, @"Tree encryption yields data!");
+  
+  KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data password:password error:&error];
+  XCTAssertNotNil(decryptedTree, @"Initalized tree from data is present!");
+  KPKEntry *decryptedEntry = [tree.root entryForUUID:uuid];
+  XCTAssertEqualObjects(entry, decryptedEntry, @"Decrypted entry is the same as the encrypted one");
+  
+}
+
 - (NSData *)_loadTestDataBase:(NSString *)name extension:(NSString *)extension {
   NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
   NSURL *url = [myBundle URLForResource:name withExtension:extension];

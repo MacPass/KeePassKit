@@ -37,12 +37,13 @@
  *  The autotype sequence to use for this window association
  */
 @property (nonatomic, copy) NSString *keystrokeSequence;
-
 @property (weak, readonly) KPKAutotype *autotype;
-
 @property (nonatomic, readonly) BOOL hasDefaultKeystrokeSequence;
 
 - (instancetype)initWithWindowTitle:(NSString *)windowTitle keystrokeSequence:(NSString *)strokes;
+
+- (BOOL)isEqualToWindowAssociation:(KPKWindowAssociation *)other;
+
 /**
  *  Returns YES if the supplied window title is matched by the association
  *

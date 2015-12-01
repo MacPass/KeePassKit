@@ -65,6 +65,29 @@
   return self;
 }
 
+- (BOOL)isEqual:(id)object {
+  if(![object isKindOfClass:self.class]) {
+    return NO;
+  }
+  return [self isEqualToWindowAssociation:object];
+}
+
+- (BOOL)isEqualToWindowAssociation:(KPKWindowAssociation *)other {
+  if(!other) {
+    return NO;
+  }
+  if(self.hasDefaultKeystrokeSequence != other.hasDefaultKeystrokeSequence) {
+    return NO;
+  }
+  if(self.hasDefaultKeystrokeSequence && ![self.keystrokeSequence isEqualToString:other.keystrokeSequence]) {
+    return NO;
+  }
+  if(![self.windowTitle isEqualToString:other.windowTitle]) {
+    return NO;
+  }
+  return YES;
+}
+
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
     [aCoder encodeObject:self.windowTitle forKey:@"windowTitle"];

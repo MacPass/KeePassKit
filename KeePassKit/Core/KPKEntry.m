@@ -292,7 +292,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(![super isEqual:object]) {
     return NO;
   }
-  if([object isKindOfClass:[KPKEntry class]]) {
+  if([object isKindOfClass:self.class]) {
     return [self isEqualToEntry:object];
   }
   return NO;
@@ -318,7 +318,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
       return NO;
     }
   }
-  return YES;
+  return [self.autotype isEqualToAutotype:entry.autotype];
 }
 
 #pragma mark -

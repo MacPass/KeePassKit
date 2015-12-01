@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, weak, readonly) KPKEntry *entry;
 
+- (BOOL)isEqualToAutotype:(KPKAutotype *)autotype;
+
 - (void)addAssociation:(KPKWindowAssociation *)association;
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index;
 - (void)removeAssociation:(KPKWindowAssociation *)association;

@@ -91,6 +91,36 @@
   return copy;
 }
 
+- (BOOL)isEqual:(id)object {
+  if(![object isKindOfClass:self.class]) {
+    return NO;
+  }
+  return [self isEqualToAutotype:object];
+}
+
+- (BOOL)isEqualToAutotype:(KPKAutotype *)autotype {
+  if(!autotype) {
+    return NO;
+  }
+  if(self.isEnabled != autotype.isEnabled) {
+    return NO;
+  }
+  if(self.obfuscateDataTransfer != autotype.obfuscateDataTransfer) {
+    return NO;
+  }
+  if(self.hasDefaultKeystrokeSequence != autotype.hasDefaultKeystrokeSequence) {
+    return NO;
+  }
+  if(!self.hasDefaultKeystrokeSequence && ![self.defaultKeystrokeSequence isEqualToString:autotype.defaultKeystrokeSequence]) {
+    /* no default so the sequences need to match */
+    return NO;
+  }
+  if(![self.associations isEqualToArray:autotype.associations]) {
+    return NO;
+  }
+  return YES;
+}
+
 - (NSString *)defaultKeystrokeSequence {
   /* The default sequence is inherited, so just bubble up */
   if(self.hasDefaultKeystrokeSequence) {
