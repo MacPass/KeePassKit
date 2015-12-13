@@ -109,10 +109,7 @@
 }
 
 - (BOOL)saveToLocation:(NSURL *)location error:(NSError **)error {
-  if(![self.data writeToURL:location options:NSDataWritingAtomic error:error]) {
-    return NO;
-  }
-  return YES;
+  return [self.data writeToURL:location options:0 error:error];
 }
 
 - (NSData *)_dataForEncodedString:(NSString *)string compressed:(BOOL)compressed {

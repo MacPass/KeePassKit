@@ -149,7 +149,7 @@
 
 - (BOOL)isEditable {
   if([self.delegate respondsToSelector:@selector(shouldEditTree:)]) {
-    return  [self.delegate shouldEditTree:self];
+    return [self.delegate shouldEditTree:self];
   }
   return YES;
 }
