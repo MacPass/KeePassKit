@@ -126,7 +126,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 
 #pragma mark Editing
 /**
- *  Signals the Node there are changes to be made. Previues uncommited changes will get dropped.
+ *  Signals the Node there are changes to be made. Previous uncommited changes will get dropped.
  *
  *  @return A shallow copy of the node suitabel for editing.
  */
