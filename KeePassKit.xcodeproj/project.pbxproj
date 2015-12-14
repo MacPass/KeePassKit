@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C21282E1C1F4F27006DE3C6 /* KPKTestNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */; };
 		4C4FF1B81BE119E60015827B /* DDXMLElementAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4FF1AA1BE119E60015827B /* DDXMLElementAdditions.h */; };
 		4C4FF1B91BE119E60015827B /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4FF1AB1BE119E60015827B /* DDXMLElementAdditions.m */; };
 		4C4FF1BA1BE119E60015827B /* NSString+DDXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4FF1AD1BE119E60015827B /* NSString+DDXML.h */; };
@@ -179,6 +180,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestNode.m; sourceTree = "<group>"; };
 		4C4FF1AA1BE119E60015827B /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
 		4C4FF1AB1BE119E60015827B /* DDXMLElementAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElementAdditions.m; sourceTree = "<group>"; };
 		4C4FF1AD1BE119E60015827B /* NSString+DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DDXML.h"; sourceTree = "<group>"; };
@@ -458,6 +460,7 @@
 				4C8138221BE282DC001BF195 /* Images */,
 				4C8138241BE282DC001BF195 /* Keyfiles */,
 				4C5CF4951BE10F090019AA81 /* KPKHashedDataTest.m */,
+				4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */,
 				4C5CF4961BE10F090019AA81 /* KPKIconLoading.m */,
 				4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */,
 				4C5CF4981BE10F090019AA81 /* KPKTestEntryLookup.m */,
@@ -949,6 +952,7 @@
 				4C5CF4BB1BE10F090019AA81 /* KPKTestXmlWriting.m in Sources */,
 				4C5CF4AF1BE10F090019AA81 /* KPKTestLegacyLoading.m in Sources */,
 				4C5CF4B51BE10F090019AA81 /* KPKTestPlaceholder.m in Sources */,
+				4C21282E1C1F4F27006DE3C6 /* KPKTestNode.m in Sources */,
 				4C5CF4AC1BE10F090019AA81 /* KPKTestEntryLookup.m in Sources */,
 				4C5CF4B21BE10F090019AA81 /* KPKTestNSCoding.m in Sources */,
 				4C5CF4B41BE10F090019AA81 /* KPKTestPerformance.m in Sources */,
@@ -1066,7 +1070,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 1.0.1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = "$(CURRENT_PROJECT_VERSION)";
@@ -1078,6 +1082,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hicknhacksoftware.KeePassKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "";
 			};
 			name = Debug;
 		};
@@ -1086,7 +1091,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 1.0.1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = "$(CURRENT_PROJECT_VERSION)";
@@ -1098,6 +1103,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hicknhacksoftware.KeePassKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "";
 			};
 			name = Release;
 		};

@@ -135,7 +135,10 @@
 
 - (KPKGroup *)rootGroup {
   KPKGroup *rootGroup = self.parent;
-  while(rootGroup) {
+  if(!rootGroup) {
+    return self.asGroup;
+  }
+  while(rootGroup.parent) {
     rootGroup = rootGroup.parent;
   }
   return rootGroup;
