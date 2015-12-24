@@ -271,8 +271,8 @@
     for(KPKWindowAssociation *association in autotype.associations) {
       DDXMLElement *associationsElement = [DDXMLElement elementWithName:@"Association"];
       KPKAddXmlElement(associationsElement, @"Window", association.windowTitle.XMLCompatibleString);
-      NSString *keyStrokes = (association.hasDefaultKeystrokeSequence ? nil : association.keystrokeSequence.XMLCompatibleString);
-      KPKAddXmlElementIfNotNil(associationsElement, @"KeystrokeSequence", keyStrokes);
+      NSString *keyStrokes = (association.hasDefaultKeystrokeSequence ? @"" : association.keystrokeSequence.XMLCompatibleString);
+      KPKAddXmlElement(associationsElement, @"KeystrokeSequence", keyStrokes);
       [autotypeElement addChild:associationsElement];
     }
   }
