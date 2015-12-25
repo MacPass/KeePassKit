@@ -14,8 +14,8 @@
 @interface KPKTestModificationDates : XCTestCase
 
 @property (strong) KPKTree *tree;
-@property (weak) KPKGroup *group;
-@property (weak) KPKEntry *entry;
+@property (strong) KPKGroup *group;
+@property (strong) KPKEntry *entry;
 
 @end
 
@@ -33,6 +33,9 @@
 - (void)tearDown {
   // Put teardown code here. This method is called after the invocation of each test method in the class.
   [super tearDown];
+  self.group = nil,
+  self.entry = nil;
+  self.tree = nil;
 }
 
 - (void)testEnableDisableModificationRecording {
@@ -48,18 +51,62 @@
   XCTAssertTrue(self.entry.updateTiming, @"updateTiming is enabled!");
 }
 
-- (void)testGroupModificationDate {
-  XCTFail(@"Missing Test");
+- (void)testNodeIconIdModifcationDate {
+  XCTAssertTrue(self.entry.updateTiming, @"updateTiming is enabled");
+  NSDate *before = self.entry.timeInfo.modificationDate;
+  self.entry.iconId = self.entry.iconId = KPKIconBattery;
+  NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing node iconID");
 }
 
-- (void)testEntryModifiationDate {
+- (void)testNodeIconUUIDModifcationDate {
+  XCTAssertTrue(self.entry.updateTiming, @"updateTiming is enabled");
+  NSDate *before = self.entry.timeInfo.modificationDate;
+  self.entry.iconUUID = [NSUUID UUID];
+  NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing node iconUUID");
+}
+
+- (void)testNodeTitleModificationDate {
+  XCTAssertTrue(self.entry.updateTiming, @"updateTiming is enabled");
+  NSDate *before = self.entry.timeInfo.modificationDate;
+  self.entry.title = @"NewTitle";
+  NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing node title");
+}
+
+- (void)testGroupeNotesModificationDate {
+  XCTAssertTrue(self.group.updateTiming, @"updateTiming is enabled");
+  NSDate *before = self.group.timeInfo.modificationDate;
+  self.group.notes = @"NewTitle";
+  NSComparisonResult compare = [before compare:self.group.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing group notes");
+}
+
+
+- (void)testGroupEntryModificationDate {
+  XCTAssertTrue(self.group.updateTiming, @"updateTiming is enabled");
+  NSDate *before = self.group.timeInfo.modificationDate;
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  [self.group addEntry:entry];
+  NSComparisonResult compare = [before compare:self.group.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedSame, @"Modification of a group does not change when entry is added");
+
+  before = self.group.timeInfo.modificationDate;
+  [self.group removeEntry:entry];
+  compare = [before compare:self.group.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedSame, @"Modification of a group does not change when entry is removed");
+
+}
+
+- (void)testEntryDefaultAttributesModifiationDate {
   static NSString *const _kUpdatedString = @"Updated";
 
   for(NSString *key in [KPKFormat sharedFormat].entryDefaultKeys) {
     NSDate *before = [self.entry.timeInfo.modificationDate copy];
     [self.entry _setValue:_kUpdatedString forAttributeWithKey:key];
     NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
-    XCTAssertTrue(compare == NSOrderedAscending,@"Modification date has to be updated after modification");
+    XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after modification");
   }
 }
 @end
