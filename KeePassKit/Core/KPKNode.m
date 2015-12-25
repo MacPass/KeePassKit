@@ -166,6 +166,16 @@
   return self.tree.undoManager;
 }
 
+- (void)setIconId:(NSInteger)iconId {
+  _iconId = iconId;
+  [self wasModified];
+}
+
+- (void)setIconUUID:(NSUUID *)iconUUID {
+  _iconUUID = iconUUID;
+  [self wasModified];
+}
+
 #pragma mark KPKTimerecording
 - (void)setUpdateTiming:(BOOL)updateTiming {
   self.timeInfo.updateTiming = updateTiming;

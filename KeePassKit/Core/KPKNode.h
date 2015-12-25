@@ -46,8 +46,8 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @interface KPKNode : NSObject <KPKModificationRecording>
 
 @property(nonatomic) NSInteger iconId;
-@property(nonatomic, strong) NSUUID *iconUUID;
-@property(nonatomic, readonly, strong) NSUUID *uuid;
+@property(nonatomic, copy) NSUUID *iconUUID;
+@property(nonatomic, readonly, copy) NSUUID *uuid;
 @property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *notes;
 
