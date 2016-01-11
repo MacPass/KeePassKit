@@ -20,7 +20,7 @@
   
   NSData *data = [NSData dataWithRandomBytes:10000];
   NSData *hashedData = [data hashedDataWithBlockSize:512];
-  NSData *unhashedData = [hashedData unhashedData];
+  NSData *unhashedData = hashedData.unhashedData;
   XCTAssertTrue([unhashedData isEqualToData:data], @"Data needs to be the same after hashing and unhashing");
 }
 

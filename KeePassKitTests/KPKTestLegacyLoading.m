@@ -51,7 +51,7 @@
   KPKTree *tree = [[KPKTree alloc] initWithData:data password:password error:NULL];
   XCTAssertNotNil(tree, @"Tree shoudl be loaded" );
   
-  KPKIcon *icon = [tree.metaData.customIcons lastObject];
+  KPKIcon *icon = (tree.metaData.customIcons).lastObject;
   XCTAssertNotNil(icon, @"Should load one Icon");
 }
 

@@ -69,7 +69,7 @@
   XCTAssertTrue([copyEntry.url isEqualToString:entry.url], @"URLS should match");
   XCTAssertTrue([copyEntry.binaries count] == 1, @"Binaries should be copied");
   
-  KPKBinary *copiedBinary = [copyEntry.binaries lastObject];
+  KPKBinary *copiedBinary = (copyEntry.binaries).lastObject;
   XCTAssertTrue([copiedBinary.data isEqualToData:binary.data], @"Binary data should match");
   XCTAssertTrue([copiedBinary.name isEqualToString:binary.name], @"Binary names should match");
   
@@ -93,8 +93,8 @@
   XCTAssertEqual(originalRep.pixelsHigh, decodedRep.pixelsHigh);
   XCTAssertEqual(originalRep.pixelsWide, decodedRep.pixelsWide);
   
-  NSData *originalData = [icon.image TIFFRepresentation];
-  NSData *decodedData = [decodedIcon.image TIFFRepresentation];
+  NSData *originalData = (icon.image).TIFFRepresentation;
+  NSData *decodedData = (decodedIcon.image).TIFFRepresentation;
   XCTAssertTrue([originalData isEqualToData:decodedData]);
 }
 

@@ -21,7 +21,7 @@
 - (void)setUp {
     NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
   _image = [myBundle imageForResource:@"image.png"];
-  _imageData = [_image TIFFRepresentation];
+  _imageData = _image.TIFFRepresentation;
   //_imageData = [_image.representations.lastObject representationUsingType:NSPNGFileType properties:nil];
 }
 
