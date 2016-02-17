@@ -23,19 +23,21 @@
 //  Licensed under GPLv2 Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
 //
 
+#import "KPKDataStreamReader.h"
 #import "KPKLegacyTreeReader.h"
 #import "KPKLegacyFormat.h"
 #import "KPKLegacyHeaderReader.h"
-#import "KPKDataStreamReader.h"
 
-#import "KPKTree.h"
+#import "KPKBinary.h"
+#import "KPKEntry.h"
+#import "KPKErrors.h"
+#import "KPKGroup.h"
+#import "KPKIcon.h"
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
-#import "KPKGroup.h"
-#import "KPKEntry.h"
-#import "KPKBinary.h"
+#import "KPKMetaData+Private.h"
 #import "KPKTimeInfo.h"
-#import "KPKErrors.h"
+#import "KPKTree.h"
 
 #import "NSDate+Packed.h"
 #import "NSUUID+KeePassKit.h"
@@ -528,7 +530,7 @@
           KPKBinary *metaBinary = [[KPKBinary alloc] init];
           metaBinary.data = binary.data;
           metaBinary.name = entry.title;
-          [tree.metaData.unknownMetaEntryData addObject:metaBinary];
+          [tree.metaData.mutableUnknownMetaEntryData addObject:metaBinary];
         }
       }
     }

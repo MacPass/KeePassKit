@@ -35,6 +35,7 @@
 #import "KPKGroup.h"
 #import "KPKIcon.h"
 #import "KPKMetaData.h"
+#import "KPKMetaData+Private.h"
 #import "KPKNode.h"
 #import "KPKRandomStream.h"
 #import "KPKSalsa20RandomStream.h"
@@ -379,7 +380,7 @@
      </CustomData>
      */
     KPKBinary *customData = [[KPKBinary alloc] initWithName:KPKXmlString(dataElement, kKPKXmlKey) value:KPKXmlString(dataElement, kKPKXmlValue) compressed:NO];
-    [metaData.customData addObject:customData];
+    [metaData.mutableCustomData addObject:customData];
   }
 }
 

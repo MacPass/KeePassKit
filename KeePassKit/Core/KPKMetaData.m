@@ -21,6 +21,7 @@
 //
 
 #import "KPKMetaData.h"
+#import "KPKMetaData+Private.h"
 #import "KPKXmlFormat.h"
 #import "KPKIcon.h"
 #import "KPKTree.h"
@@ -29,7 +30,6 @@
 
 @interface KPKMetaData () {
   NSMutableDictionary *_customIconCache;
-  NSMutableArray *_customIcons;
 }
 
 @end
@@ -46,11 +46,21 @@
   return [NSSet setWithObject:NSStringFromSelector(@selector(masterKeyChangeRecommendationInterval))];
 }
 
++ (NSSet *)keyPathsForValuesAffectingCustomIcons {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableCustomIcons))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingIsHistoryEnabled {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(historyMaxItems))];
+}
+
+
 - (instancetype)init {
   self = [super init];
   if(self){
-    _customData = [[NSMutableArray alloc] init];
-    _customIcons = [[NSMutableArray alloc] init];
+    _mutableCustomData = [[NSMutableArray alloc] init];
+    _mutableCustomIcons = [[NSMutableArray alloc] init];
+    _mutableUnknownMetaEntryData = [[NSMutableArray alloc] init];
     _customIconCache = [[NSMutableDictionary alloc] init];
     _rounds = 50000;
     _compressionAlgorithm = KPKCompressionGzip;
@@ -86,7 +96,15 @@
 #pragma mark -
 #pragma mark Properties
 - (NSArray *)customIcons {
-  return [_customIcons copy];
+  return [_mutableCustomIcons copy];
+}
+
+- (NSArray<KPKBinary *> *)customData {
+  return [_mutableCustomData copy];
+}
+
+- (NSArray<KPKBinary *> *)unknownMetaEntryData {
+  return [_mutableUnknownMetaEntryData copy];
 }
 
 - (BOOL)isHistoryEnabled {
@@ -195,9 +213,9 @@
   self.historyMaxSize == other.historyMaxSize &&
   [self.lastSelectedGroup isEqualTo:other.lastSelectedGroup] &&
   [self.lastTopVisibleGroup isEqualTo:other.lastTopVisibleGroup] &&
-  [self.customData isEqualToArray:other.customData] &&
-  [self.customIcons isEqualToArray:other.customIcons] &&
-  [self.unknownMetaEntryData isEqualToArray:other.unknownMetaEntryData] &&
+  [self.mutableCustomData isEqualToArray:other.mutableCustomData] &&
+  [self.mutableCustomIcons isEqualToArray:other.mutableCustomIcons] &&
+  [self.mutableUnknownMetaEntryData isEqualToArray:other.mutableUnknownMetaEntryData] &&
   self.updateTiming == other.updateTiming;
 }
 
@@ -209,18 +227,18 @@
 }
 
 - (void)addCustomIcon:(KPKIcon *)icon {
-  [self addCustomIcon:icon atIndex:_customIcons.count];
+  [self addCustomIcon:icon atIndex:_mutableCustomIcons.count];
 }
 
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index {
-  index = MIN([_customIcons count], index);
-  [self insertObject:icon inCustomIconsAtIndex:index];
+  index = MIN(_mutableCustomIcons.count, index);
+  [self insertObject:icon inMutableCustomIconsAtIndex:index];
 }
 
 - (void)removeCustomIcon:(KPKIcon *)icon {
-  NSUInteger index = [_customIcons indexOfObject:icon];
+  NSUInteger index = [_mutableCustomIcons indexOfObject:icon];
   if(index != NSNotFound) {
-    [self removeObjectFromCustomIconsAtIndex:index];
+    [self removeObjectFromMutableCustomIconsAtIndex:index];
   }
 }
 
@@ -229,31 +247,22 @@
 }
 
 #pragma mark KVO
-
-+ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
-  NSSet *keyPathSet = [super keyPathsForValuesAffectingValueForKey:key];
-  if([key isEqualToString:@"isHistoryEnabled"]) {
-    keyPathSet = [keyPathSet setByAddingObject:@"historyMaxItems"];
-  }
-  return keyPathSet;
+- (NSUInteger)countOfMutableCustomIcons {
+  return _mutableCustomIcons.count;
 }
 
-- (NSUInteger)countOfCustomIcons {
-  return _customIcons.count;
-}
-
-- (void)insertObject:(KPKIcon *)icon inCustomIconsAtIndex:(NSUInteger)index {
-  index = MIN([_customIcons count], index);
-  [_customIcons insertObject:icon atIndex:index];
+- (void)insertObject:(KPKIcon *)icon inMutableCustomIconsAtIndex:(NSUInteger)index {
+  index = MIN(_mutableCustomIcons.count, index);
+  [_mutableCustomIcons insertObject:icon atIndex:index];
   _customIconCache[icon.uuid] = icon;
 }
 
-- (void)removeObjectFromCustomIconsAtIndex:(NSUInteger)index {
-  index = MIN([_customIcons count], index);
-  KPKIcon *icon = _customIcons[index];
-  [_customIcons removeObjectAtIndex:index];
+- (void)removeObjectFromMutableCustomIconsAtIndex:(NSUInteger)index {
+  index = MIN(_mutableCustomIcons.count, index);
+  KPKIcon *icon = _mutableCustomIcons[index];
+  [_mutableCustomIcons removeObjectAtIndex:index];
   if(icon) {
-    [_customIconCache removeObjectForKey:icon.uuid];
+    _customIconCache[icon.uuid] = nil;
   }
 }
 

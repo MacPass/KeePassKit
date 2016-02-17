@@ -23,12 +23,14 @@
 #import "KPKLegacyTreeWriter.h"
 #import "KPKLegacyFormat.h"
 #import "KPKLegacyHeaderWriter.h"
-#import "KPKTree.h"
-#import "KPKTimeInfo.h"
-#import "KPKMetaData.h"
-#import "KPKGroup.h"
-#import "KPKEntry.h"
+
 #import "KPKBinary.h"
+#import "KPKEntry.h"
+#import "KPKGroup.h"
+#import "KPKMetaData.h"
+#import "KPKMetaData+Private.h"
+#import "KPKTimeInfo.h"
+#import "KPKTree.h"
 
 #import "KPKDataStreamWriter.h"
 

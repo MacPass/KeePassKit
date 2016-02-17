@@ -22,8 +22,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import "KPKModificationRecording.h"
-#import "KPKIcon.h"
 
+@class KPKBinary;
+@class KPKIcon;
 @class KPKTree;
 
 @interface KPKMetaData : NSObject <KPKModificationRecording>
@@ -34,18 +35,18 @@
 @property(nonatomic, copy) NSString *generator;
 
 @property(nonatomic, copy) NSString *databaseName;
-@property(nonatomic, strong) NSDate *databaseNameChanged;
+@property(nonatomic, copy) NSDate *databaseNameChanged;
 @property(nonatomic, copy) NSString *databaseDescription;
-@property(nonatomic, strong) NSDate *databaseDescriptionChanged;
+@property(nonatomic, copy) NSDate *databaseDescriptionChanged;
 
 @property(nonatomic, copy) NSString *defaultUserName;
-@property(nonatomic, strong) NSDate *defaultUserNameChanged;
+@property(nonatomic, copy) NSDate *defaultUserNameChanged;
 @property(nonatomic) NSInteger maintenanceHistoryDays;
-
+#
 /* Hexstring - #AA77FF */
 @property(nonatomic, copy) NSColor *color;
 
-@property(nonatomic, strong) NSDate *masterKeyChanged;
+@property(nonatomic, copy) NSDate *masterKeyChanged;
 @property(nonatomic, readonly) BOOL recommendMasterKeyChange;
 @property(nonatomic) NSInteger masterKeyChangeRecommendationInterval;
 @property(nonatomic, readonly) BOOL enforceMasterKeyChange;
@@ -58,29 +59,25 @@
 @property(nonatomic) BOOL protectNotes;
 
 @property(nonatomic) BOOL useTrash;
-@property(nonatomic, strong) NSUUID *trashUuid;
-@property(nonatomic, strong) NSDate *trashChanged;
+@property(nonatomic, copy) NSUUID *trashUuid;
+@property(nonatomic, copy) NSDate *trashChanged;
 
-@property(nonatomic, strong) NSUUID *entryTemplatesGroup;
-@property(nonatomic, strong) NSDate *entryTemplatesGroupChanged;
+@property(nonatomic, copy) NSUUID *entryTemplatesGroup;
+@property(nonatomic, copy) NSDate *entryTemplatesGroupChanged;
 
 @property(nonatomic, readonly) BOOL isHistoryEnabled;
 @property(nonatomic) NSInteger historyMaxItems;
 @property(nonatomic) NSInteger historyMaxSize; // Megabytes
 
-@property(nonatomic, strong) NSUUID *lastSelectedGroup;
-@property(nonatomic, strong) NSUUID *lastTopVisibleGroup;
+@property(nonatomic, copy) NSUUID *lastSelectedGroup;
+@property(nonatomic, copy) NSUUID *lastTopVisibleGroup;
 
-
-@property(nonatomic, strong, readonly) NSMutableArray *customData;
-/**
- *	Array of KPKIcon objects
- */
-@property(nonatomic, strong, readonly) NSArray *customIcons;
+@property(nonatomic, copy, readonly) NSArray<KPKBinary *> *customData;
+@property(nonatomic, copy, readonly) NSArray<KPKIcon *> *customIcons;
 /**
  *	Array of KPKBinary objects - extracted from unknown meta entries. Notes is mapped to name, data to data
  */
-@property(nonatomic, strong, readonly) NSMutableArray *unknownMetaEntryData; // Array of KPKBinaries Compatibility for KDB files
+@property(nonatomic, copy, readonly) NSArray<KPKBinary *> *unknownMetaEntryData;
 
 - (BOOL)isEqualToMetaData:(KPKMetaData *)other;
 

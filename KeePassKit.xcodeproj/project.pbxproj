@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C15091D1C74AD10008A2C8E /* KPKMetaData+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C15091B1C74AD10008A2C8E /* KPKMetaData+Private.h */; };
 		4C21282E1C1F4F27006DE3C6 /* KPKTestNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */; };
 		4C4FF1B81BE119E60015827B /* DDXMLElementAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4FF1AA1BE119E60015827B /* DDXMLElementAdditions.h */; };
 		4C4FF1B91BE119E60015827B /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4FF1AB1BE119E60015827B /* DDXMLElementAdditions.m */; };
@@ -180,6 +181,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4C15091B1C74AD10008A2C8E /* KPKMetaData+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KPKMetaData+Private.h"; sourceTree = "<group>"; };
 		4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestNode.m; sourceTree = "<group>"; };
 		4C4FF1AA1BE119E60015827B /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
 		4C4FF1AB1BE119E60015827B /* DDXMLElementAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElementAdditions.m; sourceTree = "<group>"; };
@@ -544,6 +546,7 @@
 				4C5CF3F31BE10E000019AA81 /* KPKIcon.h */,
 				4C5CF3F41BE10E000019AA81 /* KPKIcon.m */,
 				4C5CF3F51BE10E000019AA81 /* KPKMetaData.h */,
+				4C15091B1C74AD10008A2C8E /* KPKMetaData+Private.h */,
 				4C5CF3F61BE10E000019AA81 /* KPKMetaData.m */,
 				4C5CF3F71BE10E000019AA81 /* KPKNode+Private.h */,
 				4C5CF3F81BE10E000019AA81 /* KPKNode.h */,
@@ -690,6 +693,7 @@
 				4C5CF4301BE10E070019AA81 /* KPKVersion.h in Headers */,
 				4C5CF4691BE10E100019AA81 /* KPKTree+Serializing.h in Headers */,
 				4C5CF41B1BE10E000019AA81 /* KPKNode.h in Headers */,
+				4C15091D1C74AD10008A2C8E /* KPKMetaData+Private.h in Headers */,
 				4C5CF4221BE10E000019AA81 /* KPKTree.h in Headers */,
 				4C5CF4101BE10E000019AA81 /* KPKEntry.h in Headers */,
 				4C5CF4141BE10E000019AA81 /* KPKGroup.h in Headers */,
@@ -1070,7 +1074,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.0.4;
+				CURRENT_PROJECT_VERSION = 1.1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = "$(CURRENT_PROJECT_VERSION)";
@@ -1091,7 +1095,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.0.4;
+				CURRENT_PROJECT_VERSION = 1.1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = "$(CURRENT_PROJECT_VERSION)";
