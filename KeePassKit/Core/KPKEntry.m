@@ -541,6 +541,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark move/remove/copy
 - (void)remove {
   self.deleted = YES;
+  [self.undoManager removeAllActionsWithTarget:self];
   [self.parent removeEntry:self];
 }
 

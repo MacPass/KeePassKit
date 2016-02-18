@@ -142,7 +142,7 @@
   copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
   
   [copy _updateParents];
-
+  
   return copy;
 }
 
@@ -363,6 +363,7 @@
 - (void)remove {
   /* Undo is handled in removeGroup */
   self.deleted = YES;
+  [self.undoManager removeAllActionsWithTarget:self];
   [self.parent _removeGroup:self];
 }
 
@@ -376,6 +377,7 @@
   index = MAX(0, MIN(_groups.count, index));
   [[self.undoManager prepareWithInvocationTarget:self] _removeGroup:group];
   if(group.deleted) {
+    NSAssert(!group.deleted, @"We do not support undo of deleting groups!");
     /* Remove groups that might have been added to the deleted objects */
     NSAssert(nil != self.tree.deletedObjects[group.uuid], @"A deleted group has to have an entry in deleted nodes");
   }
@@ -388,10 +390,12 @@
 - (void)_removeGroup:(KPKGroup *)group {
   NSUInteger index = [_groups indexOfObject:group];
   if(index != NSNotFound) {
-    [[self.undoManager prepareWithInvocationTarget:self] addGroup:group atIndex:index];
     group.parent = nil;
-    if(group.deleted) {
-      /* Add group to deleted objects */
+    if(!group.deleted) {
+      [[self.undoManager prepareWithInvocationTarget:self] addGroup:group atIndex:index];
+    }
+    else {
+      /* deleted objecst should be registred, no undo registration */
       NSAssert(nil == self.tree.deletedObjects[group.uuid], @"Group already registered as deleted!");
       self.tree.mutableDeletedObjects[group.uuid] = [[KPKDeletedNode alloc] initWithNode:group];
     }
@@ -429,6 +433,7 @@
   index = MAX(0, MIN(_entries.count, index));
   [[self.undoManager prepareWithInvocationTarget:self] removeEntry:entry];
   if(entry.deleted) {
+    NSAssert(!entry.deleted, @"We do not supoort undo of deleting");
     /* Remove the deleted Object */
     NSAssert(nil != self.tree.deletedObjects[entry.uuid], @"A deleted entry has to have an entry in deleted nodes");
     [self.tree.mutableDeletedObjects removeObjectForKey:entry.uuid];
@@ -440,14 +445,17 @@
 - (void)removeEntry:(KPKEntry *)entry {
   NSUInteger index = [_entries indexOfObject:entry];
   if(NSNotFound != index) {
-    [[self.undoManager prepareWithInvocationTarget:self] addEntry:entry atIndex:index];
-    [self removeObjectFromEntriesAtIndex:index];
-    if(entry.deleted) {
+    entry.parent = nil;
+    /* no undo registration for deleted nodes */
+    if(!entry.deleted) {
+      [[self.undoManager prepareWithInvocationTarget:self] addEntry:entry atIndex:index];
+    }
+    else {
       /* Add the entry to the deleted Objects */
       NSAssert(nil == self.tree.deletedObjects[entry.uuid], @"Entry already marked as deleted!");
       self.tree.mutableDeletedObjects[ entry.uuid ] = [[KPKDeletedNode alloc] initWithNode:entry];
     }
-    entry.parent = nil;
+    [self removeObjectFromEntriesAtIndex:index];
   }
 }
 

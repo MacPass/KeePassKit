@@ -35,7 +35,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 @property(nonatomic, readonly) NSArray<KPKEntry *> *childEntries;
 @property(nonatomic, readonly) NSArray<KPKGroup *> *childGroups;
 
-@property(nonatomic, strong) NSUUID *lastTopVisibleEntry;
+@property(nonatomic, copy) NSUUID *lastTopVisibleEntry;
 @property(nonatomic) BOOL isExpanded;
 
 /**

@@ -202,7 +202,7 @@
   if(self == self.tree.trash) {
     return; // Prevent recursive trashing of trash group
   }
-  [self.undoManager beginUndoGrouping];
+  //[self.undoManager beginUndoGrouping];
   KPKGroup *trash = [self.tree createTrash];
   NSAssert(self.tree.trash == trash, @"Trash should be nil or equal");
   if(trash) {
@@ -212,7 +212,7 @@
   else {
     [self remove];
   }
-  [self.undoManager endUndoGrouping];
+  //[self.undoManager endUndoGrouping];
 }
 
 - (void)remove {
