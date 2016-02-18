@@ -14,7 +14,6 @@
 @interface KPKNode ()
 
 @property(nonatomic, readwrite, weak) KPKTree *tree;
-@property(nonatomic, readwrite) BOOL deleted;
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;
 @property(nonatomic, strong) KPKNode *rollbackNode;
 

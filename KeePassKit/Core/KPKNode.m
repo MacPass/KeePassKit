@@ -25,6 +25,7 @@
 #import "KPKNode+Private.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
+#import "KPKGroup+Private.h"
 #import "KPKIconTypes.h"
 #import "KPKTimeInfo.h"
 #import "KPKTree.h"
@@ -38,7 +39,7 @@
   KPKTree *_tree;
 }
 
-@synthesize deleted = _deleted;
+//@synthesize deleted = _deleted;
 @dynamic notes;
 @dynamic title;
 @dynamic minimumVersion;
@@ -206,8 +207,7 @@
   KPKGroup *trash = [self.tree createTrash];
   NSAssert(self.tree.trash == trash, @"Trash should be nil or equal");
   if(trash) {
-    [self.asEntry moveToGroup:trash];
-    [self.asGroup moveToGroup:trash];
+    [self moveToGroup:trash];
   }
   else {
     [self remove];
@@ -216,8 +216,34 @@
 }
 
 - (void)remove {
-  /* not implemented */
-  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
+  [[self.undoManager prepareWithInvocationTarget:self] addToGroup:self.parent atIndex:[self.parent _indexForNode:self]];
+  //self.deleted = YES;
+  NSAssert(nil == self.tree.deletedObjects[self.uuid], @"Node already registered as deleted!");
+  self.tree.mutableDeletedObjects[self.uuid] = [[KPKDeletedNode alloc] initWithNode:self];
+  [self.parent _removeChild:self];
+}
+
+- (void)moveToGroup:(KPKGroup *)group {
+  [self moveToGroup:group atIndex:NSNotFound];
+}
+
+- (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
+  [[group.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:[self.parent _indexForNode:self]];
+  [self.parent _removeChild:self];
+  [group _addChild:self atIndex:index];
+  [self wasMoved];
+}
+
+- (void)addToGroup:(KPKGroup *)group {
+  [self addToGroup:group atIndex:[self.parent _indexForNode:self]];
+}
+
+- (void)addToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
+  /* new items do not have an undomanager, so we have to use the group */
+  [[group.undoManager prepareWithInvocationTarget:self] remove];
+  self.tree.mutableDeletedObjects[self.uuid] = nil;
+  [group _addChild:self atIndex:index];
+  [self wasMoved];
 }
 
 - (KPKGroup *)asGroup {
@@ -254,7 +280,6 @@
     _iconUUID = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))];
     /* decode time info at last */
     _timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
-    _deleted = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(deleted))];
   }
   return self;
 }
@@ -265,7 +290,6 @@
   [aCoder encodeInteger:self.minimumVersion forKey:NSStringFromSelector(@selector(minimumVersion))];
   [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
-  [aCoder encodeBool:self.deleted forKey:NSStringFromSelector(@selector(deleted))];
 }
 
 - (instancetype)_copyWithUUUD:(NSUUID *)uuid {
@@ -276,7 +300,6 @@
   KPKNode *copy = [[[self class] alloc] _initWithUUID:uuid];
   copy.iconId = self.iconId;
   copy.iconUUID = self.iconUUID;
-  copy.deleted = self.deleted;
   copy.parent = self.parent;
   copy.notes = self.notes;
   copy.title = self.title;
@@ -309,7 +332,7 @@
   
   NSAssert(node.asGroup || node.asEntry, @"Cannot update to abstract KPKNode class");
   NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
-
+  
   if(node.asGroup) {
     [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self _shallowCopyWithUUID:self.uuid]];
   }

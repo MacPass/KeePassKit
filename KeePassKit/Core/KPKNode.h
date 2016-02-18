@@ -63,7 +63,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly) BOOL isTrash;
 @property(nonatomic, readonly) BOOL isUserTemplate;
 @property(nonatomic, readonly) BOOL isUserTemplateGroup;
-@property(nonatomic, readonly) BOOL deleted;
+
 /**
  *  Determines, whether the receiving node is inside the trash.
  *  The trash group itself is not considered as trashed.
@@ -120,6 +120,11 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 - (void)trashOrRemove;
 
 - (void)remove;
+- (void)moveToGroup:(KPKGroup *)group;
+- (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
+- (void)addToGroup:(KPKGroup *)group;
+- (void)addToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
+
 
 @property(nonatomic, readonly) KPKGroup *asGroup;
 @property(nonatomic, readonly) KPKEntry *asEntry;

@@ -46,17 +46,6 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 
 - (BOOL)isEqualToGroup:(KPKGroup *)aGroup;
 
-#pragma mark Group manipulation
-- (void)addGroup:(KPKGroup *)group;
-- (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
-- (void)moveToGroup:(KPKGroup *)group;
-- (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
-
-#pragma mark Entry manipulation
-- (void)addEntry:(KPKEntry *)entry;
-- (void)removeEntry:(KPKEntry *)entry;
-- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup;
-
 #pragma mark Search
 /**
  *	Searches the group for an entry with the supplied NSUUID.

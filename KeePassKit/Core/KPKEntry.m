@@ -538,17 +538,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return self;
 }
 
-#pragma mark move/remove/copy
-- (void)remove {
-  self.deleted = YES;
-  [self.undoManager removeAllActionsWithTarget:self];
-  [self.parent removeEntry:self];
-}
-
-- (void)moveToGroup:(KPKGroup *)group {
-  [self.parent moveEntry:self toGroup:group];
-}
-
 #pragma mark Editing
 - (void)_updateToNode:(KPKNode *)node {
   KPKEntry *entry = node.asEntry;

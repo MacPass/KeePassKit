@@ -81,14 +81,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 - (BOOL)isEqualToEntry:(KPKEntry *)entry;
 
-/**
- *  Moves the Entry the the new group at the given index
- *
- *  @param group The new group that should contain the entry
- *  @param index The index at which to sort the entry into the existing entries of the group
- */
-- (void)moveToGroup:(KPKGroup *)group;
-
 #pragma mark MetaEntries
 /**
  *	Creates KDB meta entry with the given data and name

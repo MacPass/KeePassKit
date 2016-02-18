@@ -121,7 +121,7 @@
     groupLevel = [_groupLevels[groupIndex] integerValue];
     BOOL foundLostGroup = NO;
     if (groupLevel == 0) {
-      [rootGroup addGroup:group];
+      [group addToGroup:rootGroup];
       continue;
     }
     // The first item with a lower level is the parent
@@ -142,13 +142,13 @@
          return nil;
          */
         foundLostGroup = YES;
-        [tree.root addGroup:group];
+        [group addToGroup:tree.root];
         group.updateTiming = NO;
       }
     }
     if(!foundLostGroup) {
       KPKGroup *parent = _groups[parentIndex];
-      [parent addGroup:group];
+      [group addToGroup:parent];
       group.updateTiming = NO;
     }
   }
@@ -427,7 +427,7 @@
           if(!entry.isMeta) {
             for(KPKGroup *group in _groups) {
               if([group.uuid isEqual:groupUUID]) {
-                [group addEntry:entry];
+                [entry addToGroup:group];
               }
             }
           }

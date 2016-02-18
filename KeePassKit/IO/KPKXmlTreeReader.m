@@ -240,12 +240,12 @@
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Entry"]) {
     KPKEntry *entry = [self _parseEntry:element ignoreHistory:NO];
-    [group addEntry:entry];
+    [entry addToGroup:group];
   }
   
   for (DDXMLElement *element in [groupElement elementsForName:@"Group"]) {
     KPKGroup *subGroup = [self _parseGroup:element];
-    [group addGroup:subGroup];
+    [subGroup addToGroup:group];
   }
   
   group.updateTiming = YES;

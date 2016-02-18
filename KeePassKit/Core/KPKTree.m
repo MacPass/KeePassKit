@@ -68,27 +68,27 @@
   KPKGroup *group = [self createGroup:parentGroup];
   group.title = NSLocalizedString(@"WINDOWS", "Windows");
   group.iconId = KPKIconSambaUnmount;
-  [parentGroup addGroup:group];
+  [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
   group.title = NSLocalizedString(@"NETWORK", "Network");
   group.iconId = KPKIconServer;
-  [parentGroup addGroup:group];
+  [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
   group.title = NSLocalizedString(@"INTERNET", "Internet");
   group.iconId = KPKIconPackageNetwork;
-  [parentGroup addGroup:group];
+  [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
   group.title = NSLocalizedString(@"EMAIL", "EMail");
   group.iconId = KPKIconEmail;
-  [parentGroup addGroup:group];
+  [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
   group.title = NSLocalizedString(@"HOMEBANKING", "Homebanking");
   group.iconId = KPKIconPercentage;
-  [parentGroup addGroup:group];
+  [group addToGroup:parentGroup];
   
   return self;
 }
@@ -133,7 +133,7 @@
   trash = [self createGroup:self.root];
   trash.iconId = KPKIconTrash;
   trash.title = NSLocalizedString(@"TRASH", @"Name for the trash group");
-  [self.root addGroup:trash];
+  [trash addToGroup:self.root];
   self.metaData.trashUuid = trash.uuid;
   return trash;
 }

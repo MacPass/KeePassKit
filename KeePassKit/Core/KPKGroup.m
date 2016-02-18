@@ -21,6 +21,7 @@
 //
 
 #import "KPKGroup.h"
+#import "KPKGroup+Private.h"
 #import "KPKNode+Private.h"
 
 #import "KPKAutotype.h"
@@ -264,6 +265,9 @@
 
 #pragma mark -
 #pragma mark Properties
+- (NSUInteger)childIndex {
+  return [self.parent->_groups indexOfObject:self];
+}
 - (NSArray<KPKGroup *> *)groups {
   return [_groups copy];
 }
@@ -360,113 +364,41 @@
 #pragma mark -
 #pragma mark Group/Entry editing
 
-- (void)remove {
-  /* Undo is handled in removeGroup */
-  self.deleted = YES;
-  [self.undoManager removeAllActionsWithTarget:self];
-  [self.parent _removeGroup:self];
-}
-
-- (void)addGroup:(KPKGroup *)group {
-  [self addGroup:group atIndex:_groups.count];
-}
-
-- (void)addGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
-  group.parent = self;
-  //group.tree = self.tree;
-  index = MAX(0, MIN(_groups.count, index));
-  [[self.undoManager prepareWithInvocationTarget:self] _removeGroup:group];
-  if(group.deleted) {
-    NSAssert(!group.deleted, @"We do not support undo of deleting groups!");
-    /* Remove groups that might have been added to the deleted objects */
-    NSAssert(nil != self.tree.deletedObjects[group.uuid], @"A deleted group has to have an entry in deleted nodes");
+- (void)_addChild:(KPKNode *)node atIndex:(NSUInteger)index {
+  KPKEntry *entry = node.asEntry;
+  KPKGroup *group = node.asGroup;
+   
+  if(group) {
+    index = MAX(0, MIN(_groups.count, index));
+    [self insertObject:group inGroupsAtIndex:index];
   }
-  [self.tree.mutableDeletedObjects removeObjectForKey:group.uuid];
-  group.deleted = NO;
-  [self insertObject:group inGroupsAtIndex:index];
-  [self wasModified];
-}
-
-- (void)_removeGroup:(KPKGroup *)group {
-  NSUInteger index = [_groups indexOfObject:group];
-  if(index != NSNotFound) {
-    group.parent = nil;
-    if(!group.deleted) {
-      [[self.undoManager prepareWithInvocationTarget:self] addGroup:group atIndex:index];
-    }
-    else {
-      /* deleted objecst should be registred, no undo registration */
-      NSAssert(nil == self.tree.deletedObjects[group.uuid], @"Group already registered as deleted!");
-      self.tree.mutableDeletedObjects[group.uuid] = [[KPKDeletedNode alloc] initWithNode:group];
-    }
-    [self removeObjectFromGroupsAtIndex:index];
-    [self wasModified];
+  else if(entry) {
+    index = MAX(0, MIN(_entries.count, index));
+    [self insertObject:entry inEntriesAtIndex:index];
   }
+  
+  node.parent = self;
 }
 
-- (void)moveToGroup:(KPKGroup *)group {
-  [self moveToGroup:group atIndex:group->_groups.count];
-}
-
-- (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
-  NSUInteger oldIndex = [self.parent->_groups indexOfObject:self];
-  if(oldIndex == NSNotFound) {
-    return; // Parent does not contain us!
+- (void)_removeChild:(KPKNode *)node {
+  KPKEntry *entry = node.asEntry;
+  KPKGroup *group = node.asGroup;
+  
+  if(group) {
+    /* deleted objects should be registred, no undo registration */
+    [self removeObjectFromGroupsAtIndex:[_groups indexOfObject:node]];
   }
-  [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:oldIndex];
-  [self.parent removeObjectFromGroupsAtIndex:oldIndex];
+  else if(entry) {
+    [self removeObjectFromEntriesAtIndex:[_entries indexOfObject:node]];
+  }
   self.parent = nil;
-  index = MAX(0, MIN(group->_groups.count, index));
-  self.parent = group;
-  [group insertObject:self inGroupsAtIndex:index];
-  [self wasModified];
-  [self wasMoved];
 }
 
-- (void)addEntry:(KPKEntry *)entry {
-  [self addEntry:entry atIndex:_entries.count];
-}
-
-- (void)addEntry:(KPKEntry *)entry atIndex:(NSUInteger)index {
-  entry.parent = self;
-  //entry.tree = self.tree;
-  index = MAX(0, MIN(_entries.count, index));
-  [[self.undoManager prepareWithInvocationTarget:self] removeEntry:entry];
-  if(entry.deleted) {
-    NSAssert(!entry.deleted, @"We do not supoort undo of deleting");
-    /* Remove the deleted Object */
-    NSAssert(nil != self.tree.deletedObjects[entry.uuid], @"A deleted entry has to have an entry in deleted nodes");
-    [self.tree.mutableDeletedObjects removeObjectForKey:entry.uuid];
+- (NSUInteger)indexForNode:(KPKNode *)node {
+  if(node.asGroup) {
+    return [_groups indexOfObject:node];
   }
-  entry.deleted = NO;
-  [self insertObject:entry inEntriesAtIndex:index];
-}
-
-- (void)removeEntry:(KPKEntry *)entry {
-  NSUInteger index = [_entries indexOfObject:entry];
-  if(NSNotFound != index) {
-    entry.parent = nil;
-    /* no undo registration for deleted nodes */
-    if(!entry.deleted) {
-      [[self.undoManager prepareWithInvocationTarget:self] addEntry:entry atIndex:index];
-    }
-    else {
-      /* Add the entry to the deleted Objects */
-      NSAssert(nil == self.tree.deletedObjects[entry.uuid], @"Entry already marked as deleted!");
-      self.tree.mutableDeletedObjects[ entry.uuid ] = [[KPKDeletedNode alloc] initWithNode:entry];
-    }
-    [self removeObjectFromEntriesAtIndex:index];
-  }
-}
-
-- (void)moveEntry:(KPKEntry *)entry toGroup:(KPKGroup *)toGroup {
-  NSUInteger oldIndex = [_entries indexOfObject:entry];
-  if(oldIndex != NSNotFound) {
-    [[self.undoManager prepareWithInvocationTarget:entry] moveToGroup:self];
-    [self removeObjectFromEntriesAtIndex:oldIndex];
-    entry.parent = toGroup;
-    [toGroup insertObject:entry inEntriesAtIndex:toGroup->_entries.count];
-  }
+  return [_entries indexOfObject:node];
 }
 
 #pragma mark Seaching
