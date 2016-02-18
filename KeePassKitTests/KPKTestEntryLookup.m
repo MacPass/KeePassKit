@@ -26,14 +26,14 @@
   tree.root = root;
   KPKGroup *searchableGroup = [tree createGroup:tree.root];
   KPKGroup *unsearchableGroup = [tree createGroup:tree.root];
-  [tree.root addGroup:searchableGroup];
-  [tree.root addGroup:unsearchableGroup];
+  [searchableGroup addToGroup:tree.root];
+  [unsearchableGroup addToGroup:tree.root];
   searchableGroup.isSearchEnabled = KPKInheritYES;
   unsearchableGroup.isSearchEnabled = KPKInheritNO;
   KPKEntry *entryA = [tree createEntry:searchableGroup];
   KPKEntry *entryB = [tree createEntry:unsearchableGroup];
-  [searchableGroup addEntry:entryA];
-  [unsearchableGroup addEntry:entryB];
+  [entryA addToGroup:searchableGroup];
+  [entryB addToGroup:unsearchableGroup];
 }
 
 - (void)tearDown {

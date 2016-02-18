@@ -241,8 +241,8 @@
 - (void)addToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   /* new items do not have an undomanager, so we have to use the group */
   [[group.undoManager prepareWithInvocationTarget:self] remove];
-  self.tree.mutableDeletedObjects[self.uuid] = nil;
   [group _addChild:self atIndex:index];
+  self.tree.mutableDeletedObjects[self.uuid] = nil;
   [self wasMoved];
 }
 

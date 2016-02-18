@@ -30,7 +30,8 @@
   KPKGroup *root = [[KPKGroup alloc] init];
   KPKGroup *group = root;
   while(depth-- != 0) {
-    [group addGroup:[[KPKGroup alloc] init]];
+    
+    [[[KPKGroup alloc] init] addToGroup:group];
     group = group.groups.firstObject;
   }
   XCTAssertEqualObjects(root, root.rootGroup, @"Root group of root is root group itself!");

@@ -394,7 +394,7 @@
   self.parent = nil;
 }
 
-- (NSUInteger)indexForNode:(KPKNode *)node {
+- (NSUInteger)_indexForNode:(KPKNode *)node {
   if(node.asGroup) {
     return [_groups indexOfObject:node];
   }

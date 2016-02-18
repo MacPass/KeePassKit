@@ -43,22 +43,22 @@
   _groupB = [[KPKGroup alloc] init];
   _groupB.title = @"Group B";
   
-  [_root addGroup:_groupA];
-  [_root addGroup:_groupB];
+  [_groupA addToGroup:_root];
+  [_groupB addToGroup:_root];
   
   _entryA = [[KPKEntry alloc] init];
   _entryA.title = @"Entry A";
   _entryA.username = @"Username A";
   _entryA.url = @"http://www.a.com";
   
-  [_groupA addEntry:_entryA];
+  [_entryA addToGroup:_groupA];
   
   _entryB = [[KPKEntry alloc] init];
   _entryB.title = @"Entry B";
   _entryB.username = @"Username B";
   _entryB.url = @"http://www.b.com";
   
-  [_groupB addEntry:_entryB];
+  [_entryB addToGroup:_groupB];
   
   /* Enable undo registration for the tests */
   [_undoManager enableUndoRegistration];
@@ -81,7 +81,7 @@
   XCTAssertEqual(_tree.deletedObjects.count, 0, @"There are no deleted objects in the database");
   
   KPKEntry *entry = [_tree createEntry:_groupA];
-  [_groupA addEntry:entry];
+  [entry addToGroup:_groupA];
   
   XCTAssertTrue(_undoManager.canUndo, @"Undomanager can undo");
   
@@ -137,8 +137,7 @@
   XCTAssertEqual(_tree.deletedObjects.count, 0, @"There are no deleted objects in the database");
   KPKGroup *group = [_tree createGroup:_tree.root];
   /* insert group between group A and B */
-  [_tree.root addGroup:group atIndex:1];
-  
+  [group addToGroup:_tree.root atIndex:1];
   
   XCTAssertTrue(_undoManager.canUndo, @"Undomanager can undo");
   XCTAssertFalse(_undoManager.canRedo, @"Undomanager cannot redo");

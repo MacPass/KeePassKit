@@ -108,18 +108,18 @@
   KPKEntry *entry = [[KPKEntry alloc] init];
   entry.title = @"Entry";
   entry.url = @"www.url.com";
-  [group addEntry:entry];
+  [entry addToGroup:group];
 
   KPKGroup *childGroup = [[KPKGroup alloc] init];
   childGroup.title = @"Subgroup";
   childGroup.iconId = 1;
   childGroup.isAutoTypeEnabled = KPKInheritNO;
-  [group addGroup:childGroup];
+  [childGroup addToGroup:group];
   
   KPKEntry *subEntry = [[KPKEntry alloc] init];
   subEntry.title = @"Subentry";
   subEntry.url = @"www.url.com";
-  [childGroup addEntry:subEntry];
+  [subEntry addToGroup:childGroup];
   
   NSData *data = [self encode:group];
   KPKGroup *decodedGroup = [self decode:data ofClass:[KPKGroup class]];

@@ -26,7 +26,7 @@
   self.tree = [[KPKTree alloc] init];
   self.tree.root = [[KPKGroup alloc] init];
   self.group = self.tree.root;
-  [self.group addEntry:[[KPKEntry alloc] init]];
+  [[[KPKEntry alloc] init] addToGroup:self.group];
   self.entry = self.group.entries.firstObject;
 }
 
@@ -88,12 +88,12 @@
   XCTAssertTrue(self.group.updateTiming, @"updateTiming is enabled");
   NSDate *before = self.group.timeInfo.modificationDate;
   KPKEntry *entry = [[KPKEntry alloc] init];
-  [self.group addEntry:entry];
+  [entry addToGroup:self.group];
   NSComparisonResult compare = [before compare:self.group.timeInfo.modificationDate];
   XCTAssertTrue(compare == NSOrderedSame, @"Modification of a group does not change when entry is added");
 
   before = self.group.timeInfo.modificationDate;
-  [self.group removeEntry:entry];
+  [entry remove];
   compare = [before compare:self.group.timeInfo.modificationDate];
   XCTAssertTrue(compare == NSOrderedSame, @"Modification of a group does not change when entry is removed");
 

@@ -48,7 +48,7 @@
   [entry.autotype addAssociation:[[KPKWindowAssociation alloc] initWithWindowTitle:@"C" keystrokeSequence:@"C{ENTER}{SPACE}{ENTER}C"]];
   XCTAssertEqual(entry.autotype.associations.count, 3, @"Entry has 3 window association");
   
-  [tree.root addEntry:entry];
+  [entry addToGroup:tree.root];
   
   KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   NSError *error;

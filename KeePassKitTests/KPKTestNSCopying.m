@@ -99,12 +99,12 @@
   entryB.url = @"www.nope.com";
 
   
-  [groupA addEntry:entryA];
-  [groupA addGroup:groupA1];
-  [groupA addGroup:groupA2];
-  [groupA2 addEntry:entryB];
+  [entryA addToGroup:groupA];
+  [groupA1 addToGroup:groupA];
+  [groupA2 addToGroup:groupA];
+  [entryB addToGroup:groupA2];
   
-  [root addGroup:groupA];
+  [groupA addToGroup:root];
   
   KPKGroup *copy = [root copy];
   

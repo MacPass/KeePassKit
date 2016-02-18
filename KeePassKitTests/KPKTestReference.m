@@ -26,8 +26,8 @@
   
   KPKEntry *entry1 = [self.tree createEntry:self.tree.root];
   KPKEntry *entry2 = [self.tree createEntry:self.tree.root];
-  [self.tree.root addEntry:entry1];
-  [self.tree.root addEntry:entry2];
+  [entry1 addToGroup:self.tree.root];
+  [entry2 addToGroup:self.tree.root];
   self.entry1 = entry1;
   self.entry2 = entry2;
   
