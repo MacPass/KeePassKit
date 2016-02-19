@@ -333,9 +333,9 @@
   NSAssert(node.asGroup || node.asEntry, @"Cannot update to abstract KPKNode class");
   NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
   
-  if(node.asGroup) {
+  //if(node.asGroup) {
     [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self _shallowCopyWithUUID:self.uuid]];
-  }
+  //}
   /* Do not update parent/child structure, we just want "content" to update */
   self.iconId = node.iconId;
   self.iconUUID = node.iconUUID;

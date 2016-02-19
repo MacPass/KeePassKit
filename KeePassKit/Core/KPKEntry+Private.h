@@ -34,4 +34,10 @@
  */
 - (void)_setValue:(NSString *)value forAttributeWithKey:(NSString *)key;
 
+/**
+ *	Adds an Item to the Entries history
+ *	@param	entry	Entry element to be added as history
+ */
+- (void)_addHistoryEntry:(KPKEntry *)entry;
+
 @end

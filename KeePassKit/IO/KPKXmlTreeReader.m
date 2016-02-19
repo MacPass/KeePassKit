@@ -425,7 +425,7 @@
   if (historyElement != nil) {
     for (DDXMLElement *entryElement in [historyElement elementsForName:@"Entry"]) {
       KPKEntry *historyEntry = [self _parseEntry:entryElement ignoreHistory:YES];
-      [entry addHistoryEntry:historyEntry];
+      [entry _addHistoryEntry:historyEntry];
     }
   }
 }

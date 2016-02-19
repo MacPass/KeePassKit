@@ -545,8 +545,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(nil == entry) {
     return; // only KPKEntry can be used
   }
-  /* add History entry */
-  [self addHistoryEntry:[self _shallowCopyWithUUID:self.uuid]];
+  if(self.undoManager.isUndoing) {
+    [self _removeHistoryEntry:self.mutableHistory.lastObject];
+  }
+  else {
+    [self _addHistoryEntry:[self _shallowCopyWithUUID:self.uuid]];
+  }
   /* updates icon, iconID, note, title */
   [super _updateToNode:node];
   
@@ -619,12 +623,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 #pragma mark History
-
-- (void)addHistoryEntry:(KPKEntry *)entry {
+- (void)_addHistoryEntry:(KPKEntry *)entry {
   [self insertObject:entry inHistoryAtIndex:self.mutableHistory.count];
 }
 
-- (void)removeHistoryEntry:(KPKEntry *)entry {
+- (void)_removeHistoryEntry:(KPKEntry *)entry {
   NSUInteger index = [self.mutableHistory indexOfObject:entry];
   if(index != NSNotFound) {
     [self removeObjectFromHistoryAtIndex:index];

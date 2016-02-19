@@ -141,12 +141,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 #pragma mark History
 
 /**
- *	Adds an Item to the Entries history
- *	@param	entry	Entry element to be added as history
- */
-- (void)addHistoryEntry:(KPKEntry *)entry;
-- (void)removeHistoryEntry:(KPKEntry *)entry;
-/**
  *	Clears the history and removes all entries
  */
 - (void)clearHistory;
