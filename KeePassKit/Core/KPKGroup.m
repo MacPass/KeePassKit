@@ -152,7 +152,7 @@
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
-  //copy.isExpanded = self.isExpanded;
+  copy.isExpanded = self.isExpanded;
   copy.lastTopVisibleEntry = self.lastTopVisibleEntry;
   return copy;
 }
@@ -391,7 +391,7 @@
   else if(entry) {
     [self removeObjectFromEntriesAtIndex:[_entries indexOfObject:node]];
   }
-  self.parent = nil;
+  node.parent = nil;
 }
 
 - (NSUInteger)_indexForNode:(KPKNode *)node {

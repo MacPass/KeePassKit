@@ -31,6 +31,17 @@
   _tree = [[KPKTree alloc] init];
   _tree.delegate = self;
   
+  /*
+   
+   root
+    +- Group A
+    |   +- Entry A
+    +- Group B
+        +- Entry B
+   
+   */
+  
+  
   /* Disable undo registration in the setup to have a clean test environment */
   [_undoManager disableUndoRegistration];
   
@@ -198,6 +209,14 @@
   
   [_entryA moveToGroup:_groupB];
   
+  /*
+   
+   root
+   +- Group A
+   +- Group B
+       +- Entry B
+       +- Entry A
+   */
   
   XCTAssertEqual(_groupA.entries.count, 0, @"Group A has no entries");
   
@@ -215,6 +234,16 @@
   XCTAssertFalse(_undoManager.canRedo, @"Undomanager still cannot redo");
   
   [_undoManager undo];
+
+  /*
+   
+   root
+   +- Group A
+   |   +- Entry A
+   +- Group B
+       +- Entry B
+   
+   */
   
   XCTAssertEqual(_groupA.entries.count, 1, @"Group A has one entry after undo");
   XCTAssertTrue([_groupA.entries containsObject:_entryA], @"Entry A is in group A after undo");
@@ -232,6 +261,15 @@
   XCTAssertTrue(_undoManager.canRedo, @"Undomanger can redo executed undo");
   
   [_undoManager redo];
+  
+  /*
+   
+   root
+   +- Group A
+   +- Group B
+       +- Entry B
+       +- Entry A
+   */
   
   XCTAssertEqual(_groupA.entries.count, 0, @"Group A has no entries after redo");
   
