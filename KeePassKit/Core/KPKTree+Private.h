@@ -28,7 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface KPKTree ()
 
 @property(nonatomic, strong) NSMutableDictionary<NSUUID *,KPKDeletedNode *> *mutableDeletedObjects;
-@property(nonatomic, strong) NSDictionary<NSUUID *,KPKEditingSession *> *pendingEditingSessions;
+/* Deleted nodes are stored inside this dictionary for undomanager support */
+@property(strong) NSMutableDictionary<NSUUID *, KPKNode *> *mutableDeletedNodes;
 
 NS_ASSUME_NONNULL_END
 

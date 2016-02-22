@@ -203,7 +203,9 @@
   if(self == self.tree.trash) {
     return; // Prevent recursive trashing of trash group
   }
-  //[self.undoManager beginUndoGrouping];
+  if(self.tree.metaData.useTrash) {
+    [self.undoManager beginUndoGrouping];
+  }
   KPKGroup *trash = [self.tree createTrash];
   NSAssert(self.tree.trash == trash, @"Trash should be nil or equal");
   if(trash) {
@@ -212,14 +214,18 @@
   else {
     [self remove];
   }
-  //[self.undoManager endUndoGrouping];
+  if(trash) {
+    [self.undoManager endUndoGrouping];
+  }
 }
 
 - (void)remove {
   [[self.undoManager prepareWithInvocationTarget:self] addToGroup:self.parent atIndex:[self.parent _indexForNode:self]];
-  //self.deleted = YES;
-  NSAssert(nil == self.tree.deletedObjects[self.uuid], @"Node already registered as deleted!");
+  NSAssert(nil == self.tree.mutableDeletedObjects[self.uuid], @"Node already registered as deleted!");
   self.tree.mutableDeletedObjects[self.uuid] = [[KPKDeletedNode alloc] initWithNode:self];
+  /* keep a strong reference for undo support in the tree */
+  NSAssert(nil == self.tree.mutableDeletedNodes[self.uuid], @"Node is already deleted!");
+  self.tree.mutableDeletedNodes[self.uuid] = self;
   [self.parent _removeChild:self];
 }
 
@@ -228,7 +234,8 @@
 }
 
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
-  [[group.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:[self.parent _indexForNode:self]];
+  /* TODO handle moving accross trees! */
+  [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:[self.parent _indexForNode:self]];
   [self.parent _removeChild:self];
   [group _addChild:self atIndex:index];
   [self wasMoved];
@@ -239,10 +246,12 @@
 }
 
 - (void)addToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
-  /* new items do not have an undomanager, so we have to use the group */
-  [[group.undoManager prepareWithInvocationTarget:self] remove];
+  /* setup parent relationship to make undo possible */
+  self.parent = group;
+  [[self.undoManager prepareWithInvocationTarget:self] remove];
   [group _addChild:self atIndex:index];
   self.tree.mutableDeletedObjects[self.uuid] = nil;
+  self.tree.mutableDeletedNodes[self.uuid] = nil;
   [self wasMoved];
 }
 
@@ -334,7 +343,7 @@
   NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
   
   //if(node.asGroup) {
-    [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self _shallowCopyWithUUID:self.uuid]];
+  [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self _shallowCopyWithUUID:self.uuid]];
   //}
   /* Do not update parent/child structure, we just want "content" to update */
   self.iconId = node.iconId;

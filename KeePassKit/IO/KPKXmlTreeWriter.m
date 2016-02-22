@@ -23,6 +23,7 @@
 #import "KPKXmlTreeWriter.h"
 #import "KPKXmlHeaderWriter.h"
 #import "KPKTree.h"
+#import "KPKTree+Private.h"
 
 #import "DDXMLDocument.h"
 #import "DDXMLElementAdditions.h"
@@ -36,6 +37,7 @@
 #import "KPKEntry.h"
 #import "KPKFormat.h"
 #import "KPKMetaData.h"
+#import "KPKMetaData+Private.h"
 #import "KPKTimeInfo.h"
 #import "KPKDeletedNode.h"
 #import "KPKAttribute.h"
@@ -122,7 +124,7 @@
   
   [metaElement addChild:memoryProtectionElement];
   
-  if ((metaData.customIcons).count > 0) {
+  if ((metaData.mutableCustomIcons).count > 0) {
     [metaElement addChild:[self _xmlIcons]];
   }
   
@@ -139,7 +141,7 @@
   /* Custom Data is stored as KPKBinaries in the meta object */
   [metaElement addChild:[self _xmlBinaries]];
   DDXMLElement *customDataElement = [DDXMLElement elementWithName:@"CustomData"];
-  for (KPKBinary *binary in metaData.customData) {
+  for (KPKBinary *binary in metaData.mutableCustomData) {
     [customDataElement addChild:[self _xmlCustomData:binary]];
   }
   [metaElement addChild:customDataElement];
@@ -348,7 +350,7 @@
 
 - (DDXMLElement *)_xmlIcons {
   DDXMLElement *customIconsElements = [DDXMLElement elementWithName:@"CustomIcons"];
-  for (KPKIcon *icon in self.tree.metaData.customIcons) {
+  for (KPKIcon *icon in self.tree.metaData.mutableCustomIcons) {
     DDXMLElement *iconElement = [DDXMLNode elementWithName:@"Icon"];
     KPKAddXmlElement(iconElement, kKPKXmlUUID, [icon.uuid encodedString]);
     KPKAddXmlElement(iconElement, kKPKXmlData, icon.encodedString);
@@ -366,8 +368,8 @@
 
 - (DDXMLElement *)_xmlDeletedObjects {
   DDXMLElement *deletedObjectsElement = [DDXMLElement elementWithName:@"DeletedObjects"];
-  for(NSUUID *uuid in self.tree.deletedObjects) {
-    KPKDeletedNode *node = self.tree.deletedObjects[ uuid ];
+  for(NSUUID *uuid in self.tree.mutableDeletedObjects) {
+    KPKDeletedNode *node = self.tree.mutableDeletedObjects[ uuid ];
     DDXMLElement *deletedElement = [DDXMLNode elementWithName:@"DeletedObject"];
     KPKAddXmlElement(deletedElement, kKPKXmlUUID,[node.uuid encodedString]);
     KPKAddXmlElement(deletedElement, @"DeletionTime", KPKStringFromDate(_dateFormatter, node.deletionDate));

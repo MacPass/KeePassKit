@@ -26,7 +26,6 @@
 #import "KPKModificationRecording.h"
 
 @class KPKEntry;
-@class KPKEditingSession;
 @class KPKGroup;
 @class KPKIcon;
 @class KPKTimeInfo;

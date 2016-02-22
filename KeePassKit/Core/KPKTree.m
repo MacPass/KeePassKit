@@ -49,8 +49,8 @@
   if(self) {
     _metaData = [[KPKMetaData alloc] init];
     _mutableDeletedObjects = [[NSMutableDictionary alloc] init];
+    _mutableDeletedNodes = [[NSMutableDictionary alloc] init];
     _tagsMap = [[NSMutableDictionary alloc] init];
-    _pendingEditingSessions = [[NSMutableDictionary alloc] init];
   }
   return self;
 }
@@ -229,18 +229,6 @@
     return [self.delegate defaultAutotypeSequenceForTree:self];
   }
   return nil;
-}
-
-- (BOOL)hasPendingEditingSessions {
-  return (self.pendingEditingSessions.count > 0);
-}
-
-- (KPKEditingSession *)pendingEditingSessionForNode:(KPKNode *)node {
-  NSAssert(node, @"Node cannot be nil!");
-  if(!node) {
-    return nil;
-  }
-  return self.pendingEditingSessions[node.uuid];
 }
 
 @end

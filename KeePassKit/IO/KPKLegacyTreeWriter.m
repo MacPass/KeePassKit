@@ -223,7 +223,7 @@
     KPKEntry *treeColorEntry = [KPKEntry metaEntryWithData:[self.tree.metaData.color colorData] name:KPKMetaEntryDatabaseColor];
     [metaEntries addObject:treeColorEntry];
   }
-  if((self.tree.metaData.customIcons).count > 0) {
+  if((self.tree.metaData.mutableCustomIcons).count > 0) {
     KPKEntry *customIconEntry = [KPKEntry metaEntryWithData:[self _customIconData] name:KPKMetaEntryKeePassXCustomIcon2];
     [metaEntries addObject:customIconEntry];
   }
@@ -232,7 +232,7 @@
   KPKEntry *treeStateEntry = [KPKEntry metaEntryWithData:[self _kpxTreeStateData] name:KPKMetaEntryKeePassXGroupTreeState];
   [metaEntries addObject:treeStateEntry];
   
-  for(KPKBinary *metaBinary in self.tree.metaData.unknownMetaEntryData) {
+  for(KPKBinary *metaBinary in self.tree.metaData.mutableUnknownMetaEntryData) {
     KPKEntry *metaEntry = [KPKEntry metaEntryWithData:metaBinary.data name:metaBinary.name];
     [metaEntries addObject:metaEntry];
   }
@@ -286,7 +286,7 @@
     }
   }
   
-  NSArray *icons = self.tree.metaData.customIcons;
+  NSArray *icons = self.tree.metaData.mutableCustomIcons;
   NSMutableData *iconData = [[NSMutableData alloc] initWithCapacity:1024*1024];
   KPKDataStreamWriter *dataWriter = [[KPKDataStreamWriter alloc] initWithData:iconData];
   [dataWriter write4Bytes:(uint32_t)icons.count];
