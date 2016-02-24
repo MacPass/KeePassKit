@@ -26,6 +26,15 @@
 
 @implementation NSString (Hexdata)
 
+NSCharacterSet *KPKHexCharacterSet() {
+  static dispatch_once_t onceToken;
+  static NSCharacterSet *set;
+  dispatch_once(&onceToken, ^{
+     set = [NSCharacterSet characterSetWithCharactersInString:@"0123456789AaBbCcDdEeFf"].invertedSet;
+  });
+  return set;
+}
+
 + (NSString *)hexstringFromData:(NSData *)data {
   NSMutableString *hexString = [[NSMutableString alloc] initWithCapacity:data.length * 2];
   uint8_t byte;
@@ -37,6 +46,9 @@
 }
 
 - (NSData *)dataFromHexString {
+  if(!self.isValidHexString) {
+    return nil;
+  }
   NSString *string = [self copy];
   if([string hasPrefix:@"0x"]) {
     string = [self substringFromIndex:2];
@@ -64,8 +76,8 @@
 }
 
 - (BOOL)isValidHexString {
-  NSCharacterSet *hexCharactes = [NSCharacterSet characterSetWithCharactersInString:@"0123456789AaBbCcDdEeFf"].invertedSet;
-  return (NSNotFound == [self rangeOfCharacterFromSet:hexCharactes].location);
+  NSRange range = [self rangeOfCharacterFromSet:KPKHexCharacterSet()];
+  return (NSNotFound == range.location) && (0 == range.length);
 }
 
 @end

@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "KeePassKit.h"
+#import "NSString+Hexdata.h"
 
 @interface KPKTestHexColor : XCTestCase
 
@@ -16,10 +17,23 @@
 
 @implementation KPKTestHexColor
 
+- (void)testHexColorFormat {
+  NSArray<NSString *> *hexStrings = @[ @"000000", @"abcabcxx", @"9999x0", @"ABCDEFGH" ];
+  BOOL results[] = { YES, NO, NO, NO };
+  for(NSUInteger index = 0; index < hexStrings.count; index++) {
+    if(results[index]) {
+      XCTAssertTrue(hexStrings[index].isValidHexString, @"Is valid hex string!");
+    }
+    else {
+      XCTAssertFalse(hexStrings[index].isValidHexString, @"Is invalid hex string!");
+    }
+  }
+}
+
 - (void)testHexToColor {
-  NSString *redHex = @"FF000000";
+  NSString *redHex = @"ff000000";
   NSString *greeHex = @"00FF0000";
-  NSString *blueHex = @"0000FF00";
+  NSString *blueHex = @"0000ff00";
   
   NSColor *red = [NSColor colorWithHexString:redHex];
   NSColor *green = [NSColor colorWithHexString:greeHex];

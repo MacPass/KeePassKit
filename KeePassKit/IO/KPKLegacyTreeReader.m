@@ -494,7 +494,7 @@
 	}
 }
 
-- (void)_parseAutotype:(KPKEntry *)notes {
+- (void)_parseAutotype:(KPKEntry *)entry {
   /*
    TODO
    
@@ -505,8 +505,23 @@
    Autotype on KeePass1 Files works with different values,
    need to be converted!
    
+   Auto-Type: {USERNAME}{TAB}{PASSWORD}{ENTER}
+   Auto-Type-Window: Some Dialog - *
+   Auto-Type-1: {USERNAME}{ENTER}
+   Auto-Type-Window-1: * - Editor
+   Auto-Type-Window-1: * - Notepad
+   Auto-Type-Window-1: * - WordPad
+   Auto-Type-2: {PASSWORD}{ENTER}
+   Auto-Type-Window-2: Some Web Page - *
+   
    See http://keepass.info/help/base/autotype.html for references!
    */
+  NSRegularExpression *regExp = [NSRegularExpression regularExpressionWithPattern:@"auto-type(:?-[0-9]+){0,1}:\\ *(.*)" options:NSRegularExpressionCaseInsensitive error:nil];
+  for(NSString *line in [entry.notes componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+    [regExp enumerateMatchesInString:line options:0 range:NSMakeRange(0, line.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
+      
+    }];
+  }
 }
 
 #pragma mark -

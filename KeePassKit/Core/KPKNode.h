@@ -128,25 +128,4 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly) KPKGroup *asGroup;
 @property(nonatomic, readonly) KPKEntry *asEntry;
 
-#pragma mark Editing
-/**
- *  Signals the Node there are changes to be made. Previous uncommited changes will get dropped.
- *
- *  @return A shallow copy of the node suitabel for editing.
- */
-- (void)beginEditing;
-/**
- *  Discards the editing changes.
- *
- *  @return YES if any changes were discared, NO otherwise
- */
-- (BOOL)cancelEditing;
-/**
- *  Commits the changes from the current open editing, stores the data (KPKEntries add a history entry with old values as well)
- *  If nothing was changes during the edit, nothing will changes
- *
- *  @return YES if any changes were store, NO otherwise
- */
-- (BOOL)commitEditing;
-
 @end

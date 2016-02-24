@@ -99,12 +99,10 @@
 
 #pragma mark Properties
 - (BOOL)isEditable {
-  BOOL editable = YES;
   if(self.tree) {
-    editable &= self.tree.isEditable;
+    return self.tree.isEditable;
   }
-  /* we allow only to be edited when we've got no pending edits */
-  return ( !self.rollbackNode);
+  return YES;
 }
 
 - (BOOL)hasDefaultIcon {
@@ -168,11 +166,17 @@
 }
 
 - (void)setIconId:(NSInteger)iconId {
+  if(self.asGroup) {
+    [[self.undoManager prepareWithInvocationTarget:self] setIconId:self.iconId];
+  }
   _iconId = iconId;
   [self wasModified];
 }
 
 - (void)setIconUUID:(NSUUID *)iconUUID {
+  if(self.asGroup) {
+    [[self.undoManager prepareWithInvocationTarget:self] setIconUUID:self.iconUUID];
+  }
   _iconUUID = iconUUID;
   [self wasModified];
 }
@@ -314,22 +318,6 @@
   copy.title = self.title;
   copy.timeInfo = self.timeInfo;
   return copy;
-}
-
-# pragma mark Editing
-- (void)beginEditing {
-  self.rollbackNode = [self _shallowCopyWithUUID:self.uuid];
-}
-
-- (BOOL)cancelEditing {
-  [self _updateToNode:self.rollbackNode];
-  self.rollbackNode = nil;
-  return YES;
-}
-
-- (BOOL)commitEditing {
-  self.rollbackNode = nil;
-  return YES;
 }
 
 - (void)_updateToNode:(KPKNode *)node {
