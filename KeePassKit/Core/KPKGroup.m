@@ -45,6 +45,7 @@
 @implementation KPKGroup
 
 @dynamic updateTiming;
+@synthesize defaultAutoTypeSequence = _defaultAutoTypeSequence;
 @synthesize title = _title;
 @synthesize notes = _notes;
 
@@ -287,7 +288,6 @@
 }
 
 - (void)setEntries:(NSArray *)entries {
-  
   if(_entries == entries) {
     return; // No changes
   }
@@ -300,6 +300,7 @@
 
 - (void)setTitle:(NSString *)title {
   if(![_title isEqualToString:title]) {
+    [[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
     _title = [title copy];
     [self wasModified];
   }
@@ -307,6 +308,7 @@
 
 - (void)setNotes:(NSString *)notes {
   if(![_notes isEqualToString:notes]) {
+    [[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
     _notes = [notes copy];
     [self wasModified];
   }
@@ -324,8 +326,26 @@
   return hasDefault ? defaultSequence : @"{USERNAME}{TAB}{PASSWORD}{ENTER}";
 }
 
+- (void)setDefaultAutoTypeSequence:(NSString *)defaultAutoTypeSequence {
+  [[self.undoManager prepareWithInvocationTarget:self] setDefaultAutoTypeSequence:_defaultAutoTypeSequence];
+  _defaultAutoTypeSequence = defaultAutoTypeSequence;
+  [self wasModified];
+}
+
 - (BOOL)hasDefaultAutotypeSequence {
   return !(_defaultAutoTypeSequence.length > 0);
+}
+
+- (void)setIsAutoTypeEnabled:(KPKInheritBool)isAutoTypeEnabled {
+  [[self.undoManager prepareWithInvocationTarget:self] setIsAutoTypeEnabled:_isAutoTypeEnabled];
+  _isAutoTypeEnabled = isAutoTypeEnabled;
+  [self wasModified];
+}
+
+- (void)setIsSearchEnabled:(KPKInheritBool)isSearchEnabled {
+  [[self.undoManager prepareWithInvocationTarget:self] setIsSearchEnabled:_isSearchEnabled];
+  _isSearchEnabled = isSearchEnabled;
+  [self wasModified];
 }
 
 - (KPKVersion)minimumVersion {
