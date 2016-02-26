@@ -75,8 +75,8 @@
 - (instancetype)_initWithUUID:(NSUUID *)uuid {
   self = [super _initWithUUID:uuid];
   if(self) {
-    _groups = [[[NSMutableArray alloc] initWithCapacity:8] copy];
-    _entries = [[[NSMutableArray alloc] initWithCapacity:16] copy];
+    _groups = [@[] mutableCopy];
+    _entries = [@[] mutableCopy];
     _isAutoTypeEnabled = KPKInherit;
     _isSearchEnabled = KPKInherit;
     _lastTopVisibleEntry = [NSUUID nullUUID];
@@ -100,8 +100,8 @@
     self.updateTiming = NO;
     self.title = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(title))];
     self.notes = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(notes))];
-    _groups = [[aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))] copy];
-    _entries = [[aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))] copy];
+    _groups = [[aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))] mutableCopy];
+    _entries = [[aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))] mutableCopy];
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
@@ -140,8 +140,8 @@
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
   KPKGroup *copy = [self _shallowCopyWithUUID:uuid];
-  copy->_entries = [[[NSMutableArray alloc] initWithArray:_entries copyItems:YES] copy];
-  copy->_groups = [[[NSMutableArray alloc] initWithArray:_groups copyItems:YES] copy];
+  copy->_entries = [[[NSMutableArray alloc] initWithArray:_entries copyItems:YES] mutableCopy];
+  copy->_groups = [[[NSMutableArray alloc] initWithArray:_groups copyItems:YES] mutableCopy];
   
   [copy _updateParents];
   
