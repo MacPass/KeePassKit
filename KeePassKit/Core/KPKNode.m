@@ -277,8 +277,8 @@
 - (instancetype)_initWithUUID:(NSUUID *)uuid {
   self = [super init];
   if (self) {
-    _uuid = uuid ? uuid : [[NSUUID alloc] init];
-    _timeInfo = [[KPKTimeInfo alloc] init];
+    _uuid = uuid ? [uuid copy] : [[[NSUUID alloc] init] copy];
+    _timeInfo = [[[KPKTimeInfo alloc] init] copy];
     _iconId = [[self class] defaultIcon];
     _deleted = NO;
   }
@@ -288,11 +288,11 @@
 - (instancetype)_initWithCoder:(NSCoder *)aDecoder {
   self = [self _init];
   if(self) {
-    _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))];
+    _uuid = [[aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))] copy];
     _iconId = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(iconId))];
-    _iconUUID = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))];
+    _iconUUID = [[aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))] copy];
     /* decode time info at last */
-    _timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
+    _timeInfo = [[aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))] copy];
   }
   return self;
 }
@@ -318,26 +318,6 @@
   copy.title = self.title;
   copy.timeInfo = self.timeInfo;
   return copy;
-}
-
-- (void)_updateToNode:(KPKNode *)node {
-  if(!node) {
-    return; // Nothing to do!
-  }
-  /* UUID should be the same */
-  NSAssert([self.uuid isEqual:node], @"Cannot update to node with differen UUID");
-  
-  NSAssert(node.asGroup || node.asEntry, @"Cannot update to abstract KPKNode class");
-  NSAssert(node.asGroup == self.asGroup && node.asEntry == self.asEntry, @"Cannot update accross types");
-  
-  //if(node.asGroup) {
-  [[self.undoManager prepareWithInvocationTarget:self] _updateToNode:[self _shallowCopyWithUUID:self.uuid]];
-  //}
-  /* Do not update parent/child structure, we just want "content" to update */
-  self.iconId = node.iconId;
-  self.iconUUID = node.iconUUID;
-  self.title = node.title;
-  self.notes = node.notes;
 }
 
 - (KPKTree *)tree {

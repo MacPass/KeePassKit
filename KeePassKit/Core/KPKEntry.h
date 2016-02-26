@@ -139,7 +139,10 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 - (void)removeBinary:(KPKBinary *)binary;
 
 #pragma mark History
-
+/**
+ * Copies all data from the supplied entry and records a history entry
+ */
+- (void)commitChangesFromEntry:(KPKEntry *)entry;
 /**
  *	Clears the history and removes all entries
  */

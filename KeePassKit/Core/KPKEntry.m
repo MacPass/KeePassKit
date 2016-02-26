@@ -96,27 +96,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 + (NSSet *)keyPathsForValuesAffectingIsEditable {
   return [[NSSet alloc] initWithObjects:NSStringFromSelector(@selector(isHistory)), nil];
 }
-/*
-+ (NSSet *)keyPathsForValuesAffectingProtectNotes {
-  return _protectedKeyPathForAttribute(@selector(notesAttribute));
-}
-
-+ (NSSet *)keyPathsForValuesAffectingProtectPassword {
-  return _protectedKeyPathForAttribute(@selector(passwordAttribute));
-}
-
-+ (NSSet *)keyPathsForValuesAffectingTitle {
-  return _protectedKeyPathForAttribute(@selector(titleAttribute));
-}
-
-+ (NSSet *)keyPathsForValuesAffectingProtectUrl {
-  return _protectedKeyPathForAttribute(@selector(urlAttribute));
-}
-
-+ (NSSet *)keyPathsForValuesAffectingProtectUsername {
-  return _protectedKeyPathForAttribute(@selector(usernameAttribute));
-}
-*/
 
 + (NSSet *)keyPathsForValuesAffectingHistory {
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableHistory))];
@@ -164,7 +143,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     }
     _binaries = [[NSMutableArray alloc] init];
     _mutableHistory = [[NSMutableArray alloc] init];
-    _autotype = [[KPKAutotype alloc] init];
+    _autotype = [[[KPKAutotype alloc] init] copy];
     
     _autotype.entry = self;
     _isHistory = NO;
@@ -221,18 +200,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     self.mutableAttributes = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableAttributes))];
     self.mutableHistory = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableHistory))];
     _binaries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(binaries))];
-    _tags = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(tags))];
-    _foregroundColor = [aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(foregroundColor))];
-    _backgroundColor = [aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(backgroundColor))];
-    _overrideURL = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(overrideURL))];
+    _tags = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(tags))] copy];
+    _foregroundColor = [[aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
+    _backgroundColor = [[aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
+    _overrideURL = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(overrideURL))] copy];
     self.autotype = [aDecoder decodeObjectOfClass:[KPKAutotype class] forKey:NSStringFromSelector(@selector(autotype))];
     _isHistory = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isHistory))];
     
-    
-    for(KPKAttribute *attribute in self.mutableAttributes) {
-      attribute.entry = self;
-    }
-    _autotype.entry = self;
     self.updateTiming = YES;
   }
   return self;
@@ -402,7 +376,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (NSArray *)history {
-  return  [self.mutableHistory copy];
+  return [self.mutableHistory copy];
 }
 
 - (NSString *)title {
@@ -456,7 +430,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (KPKVersion)minimumVersion {
   if(self.binaries.count > 1 ||
      self.customAttributes.count > 0 ||
-     self.history.count > 0) {
+     self.history.count > 0 ) {
     return KPKXmlVersion;
   }
   return KPKLegacyVersion;
@@ -539,27 +513,27 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 #pragma mark Editing
-- (void)_updateToNode:(KPKNode *)node {
-  KPKEntry *entry = node.asEntry;
+- (void)commitChangesFromEntry:(KPKEntry *)entry {
+  entry = entry.asEntry;
   NSAssert(entry, @"KPKEntry nodes can only update to KPKEntry nodes!");
   if(nil == entry) {
     return; // only KPKEntry can be used
   }
-  if(self.undoManager.isUndoing) {
-    [self _removeHistoryEntry:self.mutableHistory.lastObject];
-  }
-  else {
-    [self _addHistoryEntry:[self _shallowCopyWithUUID:self.uuid]];
-  }
+  
+  [self _addHistoryEntry:entry];
+
   /* updates icon, iconID, note, title */
-  [super _updateToNode:node];
+  self.iconId = entry.iconId;
+  self.iconUUID = entry.iconUUID;
+  self.title = entry.title;
+  self.notes = entry.notes;
   
   self.tags = entry.tags;
   self.foregroundColor = entry.foregroundColor;
   self.backgroundColor = entry.backgroundColor;
   self.overrideURL = entry.overrideURL;
   self.autotype = entry.autotype;
-  self.binaries = entry.binaries;
+  self.binaries = [[NSMutableArray alloc] initWithArray:entry->_binaries copyItems:YES];
   self.mutableAttributes = [[NSMutableArray alloc] initWithArray:self.mutableAttributes copyItems:YES];
   
   [self wasModified];
@@ -721,12 +695,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)insertObject:(KPKEntry *)entry inHistoryAtIndex:(NSUInteger)index {
-  index = MIN([self.mutableHistory count], index);
+  index = MIN(self.mutableHistory.count, index);
   /* Entries in history should not have a history of their own */
   [entry clearHistory];
+  NSAssert(entry.history.count == 0, @"History entries cannot hold a history of their own!");
   entry.isHistory = YES;
   entry.parent = self.parent;
-  NSAssert([entry.history count] == 0, @"History entries cannot hold a history of their own!");
   [self.mutableHistory insertObject:entry atIndex:index];
 }
 
@@ -736,7 +710,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)removeHistoryAtIndexes:(NSIndexSet *)indexes {
   [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-    KPKEntry *historyEntry = self.history[idx];
+    KPKEntry *historyEntry = self.mutableHistory[idx];
     NSAssert(historyEntry != nil, @"History indexes need to be valid!");
     historyEntry.isHistory = NO;
   }];

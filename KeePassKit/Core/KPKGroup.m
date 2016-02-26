@@ -75,8 +75,8 @@
 - (instancetype)_initWithUUID:(NSUUID *)uuid {
   self = [super _initWithUUID:uuid];
   if(self) {
-    _groups = [[NSMutableArray alloc] initWithCapacity:8];
-    _entries = [[NSMutableArray alloc] initWithCapacity:16];
+    _groups = [[[NSMutableArray alloc] initWithCapacity:8] copy];
+    _entries = [[[NSMutableArray alloc] initWithCapacity:16] copy];
     _isAutoTypeEnabled = KPKInherit;
     _isSearchEnabled = KPKInherit;
     _lastTopVisibleEntry = [NSUUID nullUUID];
@@ -100,8 +100,8 @@
     self.updateTiming = NO;
     self.title = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(title))];
     self.notes = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(notes))];
-    _groups = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))];
-    _entries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))];
+    _groups = [[aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))] copy];
+    _entries = [[aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))] copy];
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
@@ -140,8 +140,8 @@
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
   KPKGroup *copy = [self _shallowCopyWithUUID:uuid];
-  copy->_entries = [[NSMutableArray alloc] initWithArray:_entries copyItems:YES];
-  copy->_groups = [[NSMutableArray alloc] initWithArray:_groups copyItems:YES];
+  copy->_entries = [[[NSMutableArray alloc] initWithArray:_entries copyItems:YES] copy];
+  copy->_groups = [[[NSMutableArray alloc] initWithArray:_groups copyItems:YES] copy];
   
   [copy _updateParents];
   
@@ -237,7 +237,7 @@
   if(!group) {
     return; // No group
   }
-  [super _updateToNode:node];
+  //[super _updateToNode:node];
   self.isAutoTypeEnabled = group.isAutoTypeEnabled;
   self.isSearchEnabled = group.isSearchEnabled;
   self.defaultAutoTypeSequence = group.defaultAutoTypeSequence;
@@ -281,28 +281,9 @@
   if(_groups == groups) {
     return; // No changes
   }
-  _groups = [[NSMutableArray alloc] initWithArray:groups copyItems:YES];
+  _groups = [[[NSMutableArray alloc] initWithArray:groups copyItems:YES] copy];
   for(KPKGroup *group in _groups) {
     group.parent = self;
-  }
-}
-
-- (void)setEntries:(NSArray *)entries {
-  if(_entries == entries) {
-    return; // No changes
-  }
-  /* Entries will get new UUIDs */
-  _entries = [[NSMutableArray alloc] initWithArray:entries copyItems:YES];
-  for(KPKEntry *entry in _entries) {
-    entry.parent = self;
-  }
-}
-
-- (void)setTitle:(NSString *)title {
-  if(![_title isEqualToString:title]) {
-    [[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
-    _title = [title copy];
-    [self wasModified];
   }
 }
 
@@ -366,7 +347,7 @@
   for(KPKGroup *group in _groups) {
     [childEntries addObjectsFromArray:group.childEntries];
   }
-  return  childEntries;
+  return childEntries;
 }
 
 - (NSArray *)childGroups {

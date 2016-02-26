@@ -45,14 +45,6 @@
  */
 - (instancetype)_shallowCopyWithUUID:(NSUUID *)uuid;
 
-#pragma mark Editing
-/**
- *  Updates the node data to the one given by the shawlow copy
- *
- *  @param node A node to update to. Shallow copies are sufficient
- */
-- (void)_updateToNode:(KPKNode *)node;
-
 @end
 
 #endif

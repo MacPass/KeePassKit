@@ -50,7 +50,7 @@
   NSError *error;
   KPKTree *tree = [[KPKTree alloc] initWithContentsOfUrl:url password:password error:&error];
   XCTAssertNotNil(tree, @"Tree shoud be loaded");
-  KPKEntry *entry = tree.root.entries[0];
+  KPKEntry *entry = tree.root.entries.firstObject;
   XCTAssertNotNil(entry, @"Entry should be there");
   XCTFail(@"Uncomplete Test!");
 }
