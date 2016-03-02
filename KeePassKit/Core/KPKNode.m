@@ -246,7 +246,7 @@
 }
 
 - (void)addToGroup:(KPKGroup *)group {
-  [self addToGroup:group atIndex:[self.parent _indexForNode:self]];
+  [self addToGroup:group atIndex:NSNotFound];
 }
 
 - (void)addToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
