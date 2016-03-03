@@ -8,8 +8,14 @@
 
 #import "KPKAutotype.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface KPKAutotype ()
 
 @property (nullable, weak) KPKEntry *entry;
 
+- (NSString *)_autotypeNotes;
+
 @end
+
+NS_ASSUME_NONNULL_END
