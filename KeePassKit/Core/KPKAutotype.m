@@ -47,6 +47,88 @@
   return [NSSet setWithObject:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
 }
 
++ (instancetype)autotypeFromNotes:(NSString *)notes {
+  /*
+   TODO
+   
+   Notes contain Autotype information.
+   Parse notes and extract any exisisting
+   autotype info
+   
+   Autotype on KeePass1 Files works with different values,
+   need to be converted!
+   
+   Auto-Type: {USERNAME}{TAB}{PASSWORD}{ENTER}
+   Auto-Type-Window: Some Dialog - *
+   Auto-Type-1: {USERNAME}{ENTER}
+   Auto-Type-Window-1: * - Editor
+   Auto-Type-Window-1: * - Notepad
+   Auto-Type-Window-1: * - WordPad
+   Auto-Type-2: {PASSWORD}{ENTER}
+   Auto-Type-Window-2: Some Web Page - *
+   
+   See http://keepass.info/help/base/autotype.html for references!
+   */
+  NSRegularExpression *regExp = [NSRegularExpression regularExpressionWithPattern:@"auto-type(-window){0,1}(-[0-9]*){0,1}:\\ *(.*)" options:NSRegularExpressionCaseInsensitive error:nil];
+  __block KPKAutotype *autotype = [[KPKAutotype alloc] init];
+  for(NSString *line in [notes componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+    [regExp enumerateMatchesInString:line options:0 range:NSMakeRange(0, line.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
+      @autoreleasepool {
+        
+        NSRange windowRange = [result rangeAtIndex:1];
+        NSRange numberRange = [result rangeAtIndex:2];
+        NSRange titleOrCommandRange = [result rangeAtIndex:3];
+
+        NSInteger currentIndex = 0;
+        BOOL isAssociation = (windowRange.length != 0);
+        BOOL hasTitleOrCommand = (titleOrCommandRange.length != 0);
+        BOOL hasNumber = (numberRange.length != 0);
+        
+        /* Empty keystrokes or titles aren't allowed */
+        if(!hasTitleOrCommand) {
+          NSLog(@"Encountered emptry %@. Aborting!", isAssociation ? @"window title" : @"keystroke sequence");
+          *stop = YES;
+        }
+        
+        /* Associations need a autotype sequence, otherwise there's something missing */
+        if(isAssociation) {
+          NSString *windowTitle = [line substringWithRange:titleOrCommandRange];
+          if(autotype.hasDefaultKeystrokeSequence) {
+            NSLog(@"Encounterd window association %@ but no Autotype sequence was specified. Aborting!", windowTitle);
+            *stop = YES;
+          }
+          else {
+          
+          }
+        }
+        
+        if(hasNumber) {
+          NSScanner *numberScanner = [[NSScanner alloc] initWithString:[line substringWithRange:numberRange]];
+          NSInteger index = 0;
+          if([numberScanner scanInteger:&index]) {
+            index = labs(index);
+            if(currentIndex + 1 == index) {
+              currentIndex++;
+            }
+            else {
+              NSLog(@"Encountered Autotype index %ld but expected %ld. Aborting!", index, currentIndex + 1 );
+              *stop = YES;
+            }
+          }
+        }
+        
+        
+        
+        
+        if(*stop) {
+          autotype = nil;
+        }
+      }
+    }];
+  }
+  return autotype;
+}
+
 - (instancetype)init {
   self = [super init];
   if(self) {

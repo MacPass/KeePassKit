@@ -35,4 +35,12 @@
   XCTAssertTrue(@"{}{}{}{}{}{      }ThisIsValid{}{STOP}".validCommand);
 }
 
+- (void)testKDBAutotypeImport {
+  NSString *string = @"Auto-Type: {USERNAME}{TAB}{PASSWORD}{ENTER}\nAuto-Type-Window: Some Dialog - *\nAuto-Type-1: {USERNAME}{ENTER}\nAuto-Type-Window-1: * - Editor\nAuto-Type-Window-1: * - Notepad\nAuto-Type-Window-1: * - WordPad\nAuto-Type-2: {PASSWORD}{ENTER}\nAuto-Type-Window-2: Some Web Page - *";
+  KPKAutotype *autotype = [KPKAutotype autotypeFromNotes:string];
+}
+
+- (void)testKDBAutotypeExport {
+}
+
 @end
