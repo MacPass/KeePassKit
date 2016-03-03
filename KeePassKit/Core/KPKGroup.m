@@ -277,16 +277,6 @@
   return  [_entries copy];
 }
 
-- (void)setGroups:(NSArray<KPKGroup *> *)groups {
-  if(_groups == groups) {
-    return; // No changes
-  }
-  _groups = [[[NSMutableArray alloc] initWithArray:groups copyItems:YES] copy];
-  for(KPKGroup *group in _groups) {
-    group.parent = self;
-  }
-}
-
 - (void)setNotes:(NSString *)notes {
   if(![_notes isEqualToString:notes]) {
     [[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
