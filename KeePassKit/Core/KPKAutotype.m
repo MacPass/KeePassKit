@@ -62,7 +62,7 @@
   if(self) {
     _isEnabled = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isEnabled))];
     _obfuscateDataTransfer = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(obfuscateDataTransfer))];
-    _defaultKeystrokeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
+    _defaultKeystrokeSequence = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))] copy];
     _associations = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(associations))];
     for(KPKWindowAssociation *association in _associations) {
       association.autotype = self;
