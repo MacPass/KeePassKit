@@ -30,7 +30,6 @@
 
 @interface KPKAutotype () {
   NSMutableArray *_associations;
-  NSString *_defaultKeystrokeSequence;
 }
 
 @end
@@ -38,6 +37,7 @@
 @implementation KPKAutotype
 
 @synthesize entry = _entry;
+@synthesize defaultKeystrokeSequence = _defaultKeystrokeSequence;
 
 + (BOOL)supportsSecureCoding {
   return YES;
