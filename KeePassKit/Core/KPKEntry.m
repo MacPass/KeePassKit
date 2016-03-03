@@ -134,7 +134,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if (self) {
     /* !Note! - Title -> Name */
     _mutableAttributes = [[NSMutableArray alloc] init];
-    /* create the default attributs */
+    /* create the default attributes */
     
     for(NSString *key in [KPKFormat sharedFormat].entryDefaultKeys) {
       KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:key value:@""];
