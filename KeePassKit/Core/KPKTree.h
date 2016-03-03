@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface KPKTree : NSObject
 
 @property(nonatomic, weak, nullable) id<KPKTreeDelegate> delegate;
-@property(nonatomic, strong, readonly) NSDictionary<NSUUID *,KPKDeletedNode *> *deletedObjects;
+@property(nonatomic, copy, readonly) NSDictionary<NSUUID *,KPKDeletedNode *> *deletedObjects;
 @property(nonatomic, strong, readonly, nullable) KPKMetaData *metaData;
 
 
