@@ -375,7 +375,7 @@
   XCTAssertFalse(_undoManager.canUndo, @"Undo stack is empty");
   XCTAssertFalse(_undoManager.canRedo, @"Redo stack is empty");
 
-  XCTAssertThrows([_entryA commitChangesFromEntry:_groupA], @"Updating Entry to Group is not possible");
+  XCTAssertThrows([_entryA commitChangesFromEntry:(id)_groupA], @"Updating Entry to Group is not possible");
 
   XCTAssertFalse(_undoManager.canUndo, @"Undo stack is empty after failed update");
   XCTAssertFalse(_undoManager.canRedo, @"Redo stack is empty after failed update");
