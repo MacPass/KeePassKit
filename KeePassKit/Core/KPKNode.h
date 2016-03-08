@@ -46,6 +46,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 
 @property(nonatomic) NSInteger iconId;
 @property(nonatomic, copy) NSUUID *iconUUID;
+@property(nonatomic, readonly, strong) KPKIcon *icon;
 @property(nonatomic, readonly, copy) NSUUID *uuid;
 @property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *notes;

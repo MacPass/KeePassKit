@@ -49,6 +49,14 @@
   return KPKIconPassword;
 }
 
++ (NSSet *)keyPathsForValuesAffectingHasDefaultIcon {
+  return [NSSet setWithArray:@[ NSStringFromSelector(@selector(iconUUID)), NSStringFromSelector(@selector(iconId)) ]];
+}
+
++ (NSSet *)keyPathsForValuesAffectingIcon {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(iconUUID))];
+}
+
 + (NSSet *)keyPathsForValuesAffectingTree {
   return [NSSet setWithObject:NSStringFromSelector(@selector(parent))];
 }
@@ -111,6 +119,10 @@
     return NO;
   }
   return (self.iconId == [[self class] defaultIcon]);
+}
+
+- (KPKIcon *)icon {
+  return [self.tree.metaData findIcon:self.iconUUID];
 }
 
 - (BOOL)isTrash {
