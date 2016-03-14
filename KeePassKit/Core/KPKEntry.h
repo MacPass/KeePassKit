@@ -54,7 +54,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *url;
 
-@property (nonatomic, strong) NSArray<KPKBinary *> *binaries;
+@property (nonatomic, strong, readonly) NSArray<KPKBinary *> *binaries;
 @property (nonatomic, copy) NSArray<NSString *> *tags;
 @property (nonatomic, copy) NSColor *foregroundColor;
 @property (nonatomic, copy) NSColor *backgroundColor;
