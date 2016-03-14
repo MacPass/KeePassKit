@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, weak) KPKEntry *entry;
 
-- (NSString *)_autotypeNotes;
+@property (nullable, copy, readonly) NSString *autotypeNotes;
 
 @end
 
