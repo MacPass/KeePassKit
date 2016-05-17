@@ -49,12 +49,6 @@
 
 + (instancetype)autotypeFromNotes:(NSString *)notes {
   /*
-   TODO
-   
-   Notes contain Autotype information.
-   Parse notes and extract any exisisting
-   autotype info
-   
    Autotype on KeePass1 Files works with different values,
    need to be converted!
    
@@ -71,37 +65,25 @@
    */
   NSRegularExpression *regExp = [NSRegularExpression regularExpressionWithPattern:@"auto-type(-window){0,1}(-[0-9]*){0,1}:\\ *(.*)" options:NSRegularExpressionCaseInsensitive error:nil];
   __block KPKAutotype *autotype = [[KPKAutotype alloc] init];
-  for(NSString *line in [notes componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+  for(NSString *line in [notes componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]].reverseObjectEnumerator) {
     [regExp enumerateMatchesInString:line options:0 range:NSMakeRange(0, line.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
       @autoreleasepool {
         
         NSRange windowRange = [result rangeAtIndex:1];
         NSRange numberRange = [result rangeAtIndex:2];
-        NSRange titleOrCommandRange = [result rangeAtIndex:3];
+        NSRange windowTitleOrCommandRange = [result rangeAtIndex:3];
 
         NSInteger currentIndex = 0;
         BOOL isAssociation = (windowRange.length != 0);
-        BOOL hasTitleOrCommand = (titleOrCommandRange.length != 0);
+        BOOL hasWindowTitleOrCommand = (windowTitleOrCommandRange.length != 0);
         BOOL hasNumber = (numberRange.length != 0);
         
         /* Empty keystrokes or titles aren't allowed */
-        if(!hasTitleOrCommand) {
+        if(!hasWindowTitleOrCommand) {
           NSLog(@"Encountered emptry %@. Aborting!", isAssociation ? @"window title" : @"keystroke sequence");
           *stop = YES;
         }
-        
-        /* Associations need a autotype sequence, otherwise there's something missing */
-        if(isAssociation) {
-          NSString *windowTitle = [line substringWithRange:titleOrCommandRange];
-          if(autotype.hasDefaultKeystrokeSequence) {
-            NSLog(@"Encounterd window association %@ but no Autotype sequence was specified. Aborting!", windowTitle);
-            *stop = YES;
-          }
-          else {
-          
-          }
-        }
-        
+        /* Test for correct numbering */
         if(hasNumber) {
           NSScanner *numberScanner = [[NSScanner alloc] initWithString:[line substringWithRange:numberRange]];
           NSInteger index = 0;
@@ -116,12 +98,22 @@
             }
           }
         }
-        
-        
-        
-        
-        if(*stop) {
-          autotype = nil;
+        /* first encounter of non-association will get pushed to keystrokje sequence */
+        NSString *windowTitleOrCommand = [line substringWithRange:windowTitleOrCommandRange];
+        if(!isAssociation) {
+          if(autotype.associations.count == 0) {
+            autotype.defaultKeystrokeSequence = windowTitleOrCommand;
+          }
+        }
+        else {
+          if(autotype.hasDefaultKeystrokeSequence) {
+            NSLog(@"Encounterd window association %@ but no Autotype sequence was specified. Aborting!", windowTitleOrCommand);
+            *stop = YES;
+            return;
+          }
+          else {
+            autotype.defaultKeystrokeSequence = nil;
+          }
         }
       }
     }];
@@ -201,6 +193,11 @@
     return NO;
   }
   return YES;
+}
+
+- (NSString *)autotypeNotes {
+  NSAssert(NO, @"Missing implementation!");
+  return nil;
 }
 
 - (NSString *)defaultKeystrokeSequence {
