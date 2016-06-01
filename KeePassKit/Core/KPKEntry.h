@@ -144,10 +144,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 - (void)commitChangesFromEntry:(KPKEntry *)entry;
 /**
- * restores the entry to the last known history item. This looses any changes made to the entry!!!
- */
-- (void)popHistory;
-/**
  * pushes the current state of the entry to the history. This should be done befor any user-initiated modifications are introduced
  */
 - (void)pushHistory;

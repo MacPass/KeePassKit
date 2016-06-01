@@ -608,6 +608,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     [self removeObjectFromHistoryAtIndex:index];
   }
 }
+- (void)pushHistory {
+  [self _addHistoryEntry:[self _shallowCopyWithUUID:self.uuid]];
+}
 
 - (void)clearHistory {
   NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.mutableHistory.count)];
