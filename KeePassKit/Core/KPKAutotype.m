@@ -243,7 +243,7 @@
 }
 
 - (BOOL)hasDefaultKeystrokeSequence {
-  return ! _defaultKeystrokeSequence.length > 0;
+  return ! (_defaultKeystrokeSequence.length > 0);
 }
 
 #pragma mark -
