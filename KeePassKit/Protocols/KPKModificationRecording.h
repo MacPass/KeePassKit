@@ -40,16 +40,16 @@
 /**
  *	Called to signal a modification
  */
-- (void)wasModified;
+- (void)touchModified;
 
 /**
  *	Called to signal an access
  */
-- (void)wasAccessed;
+- (void)touchAccessed;
 
 /**
  *	Called to signal a move
  */
-- (void)wasMoved;
+- (void)touchMoved;
 
 @end

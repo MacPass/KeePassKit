@@ -141,14 +141,14 @@
 }
 
 - (void)setValue:(NSString *)value {
+  [self.entry touchModified];
   [self _encodeValue:value];
-  [self.entry wasModified];
 }
 
 - (void)setKey:(NSString *)key {
   if(![_key isEqualToString:key]) {
+    [self.entry touchModified];
     _key = [key copy];
-    [self.entry wasModified];
   }
 }
 

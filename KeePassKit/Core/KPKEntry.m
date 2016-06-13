@@ -163,16 +163,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (instancetype)_copyWithUUUD:(nullable NSUUID *)uuid {
-  KPKEntry *entry = [self _shallowCopyWithUUID:uuid];
-  /* Shallow does not copy history */
-  entry.mutableHistory = [[NSMutableArray alloc] initWithArray:self.mutableHistory copyItems:YES];
-  entry.isHistory = self.isHistory;
-  
-  return entry;
-}
-
-- (instancetype)_shallowCopyWithUUID:(NSUUID *)uuid {
-  KPKEntry *entry = [super _shallowCopyWithUUID:uuid];
+  KPKEntry *entry = [self _copyWithUUUD:uuid];
   /* Default attributes */
   entry.overrideURL = self.overrideURL;
   
@@ -187,9 +178,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   entry.foregroundColor = self.foregroundColor;
   entry.backgroundColor = self.backgroundColor;
   
+  /* History */
+  entry.mutableHistory = [[NSMutableArray alloc] initWithArray:self.mutableHistory copyItems:YES];
+  entry.isHistory = self.isHistory;
+  
   return entry;
 }
-
 
 #pragma mark NSCoding
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -537,7 +531,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   self.binaries = [[NSMutableArray alloc] initWithArray:entry->_binaries copyItems:YES];
   self.mutableAttributes = [[NSMutableArray alloc] initWithArray:self.mutableAttributes copyItems:YES];
   
-  [self wasModified];
+  [self touchModified];
 }
 
 #pragma mark CustomAttributes
@@ -562,7 +556,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   /* TODO: sanity check if attribute has unique key */
   [self insertObject:attribute inMutableAttributesAtIndex:self.mutableAttributes.count];
   attribute.entry = self;
-  [self wasModified];
+  [self touchModified];
 }
 
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
@@ -570,7 +564,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(NSNotFound != index) {
     attribute.entry = nil;
     [self removeObjectFromMutableAttributesAtIndex:index];
-    [self wasModified];
+    [self touchModified];
   }
 }
 #pragma mark Attachments
@@ -580,7 +574,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     return; // nil not allowed
   }
   [self insertObject:binary inBinariesAtIndex:_binaries.count];
-  [self wasModified];
+  [self touchModified];
 }
 
 - (void)removeBinary:(KPKBinary *)attachment {
@@ -593,7 +587,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   NSUInteger index = [_binaries indexOfObject:attachment];
   if(index != NSNotFound) {
     [self removeObjectFromBinariesAtIndex:index];
-    [self wasModified];
+    [self touchModified];
   }
 }
 
@@ -609,7 +603,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
 }
 - (void)pushHistory {
-  [self _addHistoryEntry:[self _shallowCopyWithUUID:self.uuid]];
+  [self _addHistoryEntry:[self _copyWithUUUD:self.uuid]];
 }
 
 - (void)clearHistory {

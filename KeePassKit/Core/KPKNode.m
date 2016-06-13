@@ -182,7 +182,7 @@
     [[self.undoManager prepareWithInvocationTarget:self] setIconId:self.iconId];
   }
   _iconId = iconId;
-  [self wasModified];
+  [self touchModified];
 }
 
 - (void)setIconUUID:(NSUUID *)iconUUID {
@@ -190,7 +190,7 @@
     [[self.undoManager prepareWithInvocationTarget:self] setIconUUID:self.iconUUID];
   }
   _iconUUID = iconUUID;
-  [self wasModified];
+  [self touchModified];
 }
 
 #pragma mark KPKTimerecording
@@ -202,16 +202,16 @@
   return self.timeInfo.updateTiming;
 }
 
-- (void)wasModified {
-  [self.timeInfo wasModified];
+- (void)touchModified {
+  [self.timeInfo touchModified];
 }
 
-- (void)wasAccessed {
-  [self.timeInfo wasAccessed];
+- (void)touchAccessed {
+  [self.timeInfo touchAccessed];
 }
 
-- (void)wasMoved {
-  [self.timeInfo wasMoved];
+- (void)touchMoved {
+  [self.timeInfo touchMoved];
 }
 
 - (void)trashOrRemove {
@@ -254,7 +254,7 @@
   [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:[self.parent _indexForNode:self]];
   [self.parent _removeChild:self];
   [group _addChild:self atIndex:index];
-  [self wasMoved];
+  [self touchMoved];
 }
 
 - (void)addToGroup:(KPKGroup *)group {
@@ -268,7 +268,7 @@
   [group _addChild:self atIndex:index];
   self.tree.mutableDeletedObjects[self.uuid] = nil;
   self.tree.mutableDeletedNodes[self.uuid] = nil;
-  [self wasMoved];
+  [self touchMoved];
 }
 
 - (KPKGroup *)asGroup {
@@ -318,10 +318,6 @@
 }
 
 - (instancetype)_copyWithUUUD:(NSUUID *)uuid {
-  return [self _shallowCopyWithUUID:uuid];
-}
-
-- (instancetype)_shallowCopyWithUUID:(NSUUID *)uuid {
   KPKNode *copy = [[[self class] alloc] _initWithUUID:uuid];
   copy.iconId = self.iconId;
   copy.iconUUID = self.iconUUID;

@@ -36,14 +36,6 @@
  *  @return Copy of the receiving node.
  */
 - (instancetype)_copyWithUUUD:(NSUUID *)uuid;
-/**
- *  Creates a shallow copy of the Node. This is mostly usefull for editing
- *
- *  @param uuid UUID for the copy
- *
- *  @return Copy of the reveiving node.
- */
-- (instancetype)_shallowCopyWithUUID:(NSUUID *)uuid;
 
 @end
 

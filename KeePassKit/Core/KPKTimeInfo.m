@@ -118,20 +118,16 @@
 #pragma mark Properties
 - (void)setExpires:(BOOL)expires {
   if(self.expires != expires) {
+    [self touchModified];
     _expires = expires;
-    if(self.updateTiming) {
-      self.modificationDate = [NSDate date];
-    }
     [self _updateExpireState];
   }
 }
 
 - (void)setExpirationDate:(NSDate *)expirationDate {
   if(self.expirationDate != expirationDate) {
+    [self touchModified];
     _expirationDate = expirationDate;
-    if(self.updateTiming) {
-      self.modificationDate = [NSDate date];
-    }
     [self _updateExpireState];
   }
 }
@@ -146,14 +142,14 @@
   self.updateTiming = YES;
 }
 
-- (void)wasModified {
+- (void)touchModified {
   if(!self.updateTiming) {
     return;
   }
   self.modificationDate = [NSDate date];
 }
 
-- (void)wasAccessed {
+- (void)touchAccessed {
   if(!self.updateTiming) {
     return;
   }
@@ -161,7 +157,7 @@
   self.accessDate = [NSDate date];
 }
 
-- (void)wasMoved {
+- (void)touchMoved {
   if(!self.updateTiming) {
     return;
   }

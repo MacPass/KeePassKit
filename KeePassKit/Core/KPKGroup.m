@@ -139,22 +139,17 @@
 }
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
-  KPKGroup *copy = [self _shallowCopyWithUUID:uuid];
-  copy->_entries = [[[NSMutableArray alloc] initWithArray:_entries copyItems:YES] mutableCopy];
-  copy->_groups = [[[NSMutableArray alloc] initWithArray:_groups copyItems:YES] mutableCopy];
-  
-  [copy _updateParents];
-  
-  return copy;
-}
-
-- (instancetype)_shallowCopyWithUUID:(NSUUID *)uuid {
-  KPKGroup *copy = [super _shallowCopyWithUUID:uuid];
+  KPKGroup *copy = [super _copyWithUUUD:uuid];
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
   copy.isExpanded = self.isExpanded;
   copy.lastTopVisibleEntry = self.lastTopVisibleEntry;
+  copy->_entries = [[[NSMutableArray alloc] initWithArray:_entries copyItems:YES] mutableCopy];
+  copy->_groups = [[[NSMutableArray alloc] initWithArray:_groups copyItems:YES] mutableCopy];
+  
+  [copy _updateParents];
+  
   return copy;
 }
 
@@ -237,11 +232,10 @@
   if(!group) {
     return; // No group
   }
-  //[super _updateToNode:node];
+  [self touchModified];
   self.isAutoTypeEnabled = group.isAutoTypeEnabled;
   self.isSearchEnabled = group.isSearchEnabled;
   self.defaultAutoTypeSequence = group.defaultAutoTypeSequence;
-  [self wasModified];
 }
 
 #pragma mark NSPasteboardWriting/Reading
@@ -280,8 +274,8 @@
 - (void)setNotes:(NSString *)notes {
   if(![_notes isEqualToString:notes]) {
     [[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
+    [self touchModified];
     _notes = [notes copy];
-    [self wasModified];
   }
 }
 
@@ -299,8 +293,8 @@
 
 - (void)setDefaultAutoTypeSequence:(NSString *)defaultAutoTypeSequence {
   [[self.undoManager prepareWithInvocationTarget:self] setDefaultAutoTypeSequence:_defaultAutoTypeSequence];
+  [self touchModified];
   _defaultAutoTypeSequence = defaultAutoTypeSequence;
-  [self wasModified];
 }
 
 - (BOOL)hasDefaultAutotypeSequence {
@@ -309,14 +303,14 @@
 
 - (void)setIsAutoTypeEnabled:(KPKInheritBool)isAutoTypeEnabled {
   [[self.undoManager prepareWithInvocationTarget:self] setIsAutoTypeEnabled:_isAutoTypeEnabled];
+  [self touchModified];
   _isAutoTypeEnabled = isAutoTypeEnabled;
-  [self wasModified];
 }
 
 - (void)setIsSearchEnabled:(KPKInheritBool)isSearchEnabled {
   [[self.undoManager prepareWithInvocationTarget:self] setIsSearchEnabled:_isSearchEnabled];
+  [self touchModified];
   _isSearchEnabled = isSearchEnabled;
-  [self wasModified];
 }
 
 - (KPKVersion)minimumVersion {
