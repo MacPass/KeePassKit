@@ -203,6 +203,7 @@
 }
 
 - (void)touchModified {
+  [self.delegate willModifyNode:self];
   [self.timeInfo touchModified];
 }
 
