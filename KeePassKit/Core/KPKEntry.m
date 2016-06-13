@@ -553,18 +553,17 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)addCustomAttribute:(KPKAttribute *)attribute {
-  /* TODO: sanity check if attribute has unique key */
+  [self touchModified];
   [self insertObject:attribute inMutableAttributesAtIndex:self.mutableAttributes.count];
   attribute.entry = self;
-  [self touchModified];
 }
 
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
   NSUInteger index = [self.mutableAttributes indexOfObject:attribute];
   if(NSNotFound != index) {
+    [self touchModified];
     attribute.entry = nil;
     [self removeObjectFromMutableAttributesAtIndex:index];
-    [self touchModified];
   }
 }
 #pragma mark Attachments
@@ -573,8 +572,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(nil == binary) {
     return; // nil not allowed
   }
-  [self insertObject:binary inBinariesAtIndex:_binaries.count];
   [self touchModified];
+  [self insertObject:binary inBinariesAtIndex:_binaries.count];
 }
 
 - (void)removeBinary:(KPKBinary *)attachment {
@@ -586,8 +585,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
    */
   NSUInteger index = [_binaries indexOfObject:attachment];
   if(index != NSNotFound) {
-    [self removeObjectFromBinariesAtIndex:index];
     [self touchModified];
+    [self removeObjectFromBinariesAtIndex:index];
   }
 }
 

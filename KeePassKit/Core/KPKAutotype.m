@@ -209,6 +209,10 @@
 }
 
 - (void)setDefaultKeystrokeSequence:(NSString *)defaultSequence {
+  if([_defaultKeystrokeSequence isEqualToString:defaultSequence]) {
+    return; // no changes
+  }
+  [self.entry touchModified];
   _defaultKeystrokeSequence = defaultSequence.length  > 0 ? [defaultSequence copy] : nil;
 }
 
@@ -221,6 +225,7 @@
 }
 
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index {
+  [self.entry touchModified];
   association.autotype = self;
   [self insertObject:association inAssociationsAtIndex:index];
 }
@@ -228,6 +233,7 @@
 - (void)removeAssociation:(KPKWindowAssociation *)association {
   NSUInteger index = [_associations indexOfObject:association];
   if(index != NSNotFound) {
+    [self.entry touchModified];
     association.autotype = nil;
     [self removeObjectFromAssociationsAtIndex:index];
   }

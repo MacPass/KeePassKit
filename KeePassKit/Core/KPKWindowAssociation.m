@@ -122,6 +122,7 @@
 - (void)setWindowTitle:(NSString *)windowTitle {
   if(![self.windowTitle isEqualToString:windowTitle]) {
     [self.autotype.entry.undoManager registerUndoWithTarget:self selector:@selector(setWindowTitle:) object:self.windowTitle];
+    [self.autotype.entry touchModified];
     _windowTitle = [windowTitle copy];
     _regularExpressionIsValid = NO;
   }
@@ -130,6 +131,7 @@
 - (void)setKeystrokeSequence:(NSString *)keystrokeSequence {
   if(![self.keystrokeSequence isEqualToString:keystrokeSequence]) {
     [self.autotype.entry.undoManager registerUndoWithTarget:self selector:@selector(setKeystrokeSequence:) object:self.keystrokeSequence];
+    [self.autotype.entry touchModified];
     _keystrokeSequence = [keystrokeSequence copy];
   }
 }
