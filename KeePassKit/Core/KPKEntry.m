@@ -163,7 +163,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (instancetype)_copyWithUUUD:(nullable NSUUID *)uuid {
-  KPKEntry *entry = [self _copyWithUUUD:uuid];
+  KPKEntry *entry = [super _copyWithUUUD:uuid];
   /* Default attributes */
   entry.overrideURL = self.overrideURL;
   
