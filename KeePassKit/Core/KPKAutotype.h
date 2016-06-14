@@ -29,8 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface KPKAutotype : NSObject <NSCopying, NSSecureCoding>
 
-@property (getter=isEnabled) BOOL enabled;
-@property BOOL obfuscateDataTransfer;
+@property (nonatomic, getter=isEnabled) BOOL enabled;
+@property (nonatomic) BOOL obfuscateDataTransfer;
 @property (null_resettable, nonatomic, copy) NSString *defaultKeystrokeSequence;
 @property (nonnull, nonatomic, strong, readonly) NSArray<KPKWindowAssociation *> *associations;
 @property (nonatomic, readonly) BOOL hasDefaultKeystrokeSequence;

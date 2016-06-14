@@ -407,7 +407,7 @@
     return;
   }
   KPKAutotype *autotype = [[KPKAutotype alloc] init];
-  autotype.isEnabled = KPKXmlBool(autotypeElement, kKPKXmlEnabled);
+  autotype.enabled = KPKXmlBool(autotypeElement, kKPKXmlEnabled);
   autotype.defaultKeystrokeSequence = KPKXmlNonEmptyString(autotypeElement, kKPKXmlDefaultSequence);
   NSInteger obfuscate = KPKXmlInteger(autotypeElement, kKPKXmlDataTransferObfuscation);
   autotype.obfuscateDataTransfer = obfuscate > 0;

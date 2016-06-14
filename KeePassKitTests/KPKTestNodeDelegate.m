@@ -51,7 +51,7 @@ static NSString *_kKPKDummyExceptionName = @"_kKPKDummyExceptionName";
 }
 
 - (void)testAutotypeModification {
-  XCTAssertThrows((self.entry.autotype.isEnabled = NO), @"Autotype enable is recorded!"); // default=YES
+  XCTAssertThrows((self.entry.autotype.enabled = NO), @"Autotype enable is recorded!"); // default=YES
   XCTAssertThrows((self.entry.autotype.obfuscateDataTransfer = YES), @"Autotype obfuscation is recorded!"); // default=NO
   XCTAssertThrows((self.entry.autotype.defaultKeystrokeSequence = @"KeyStrokeSequence"), @"changes in Autotype default keystroke sequence are recorded!"); // default=nil
   XCTAssertThrows((self.entry.autotype.defaultKeystrokeSequence = nil), @"changes in Autotype default keystroke sequence are recorded!"); // default=nil

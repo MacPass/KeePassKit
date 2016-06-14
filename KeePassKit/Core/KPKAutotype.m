@@ -131,7 +131,7 @@
 - (instancetype)init {
   self = [super init];
   if(self) {
-    _isEnabled = YES;
+    _enabled = YES;
     _obfuscateDataTransfer = NO;
     _mutableAssociations = [[NSMutableArray alloc] initWithCapacity:2];
   }
@@ -141,7 +141,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
-    _isEnabled = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isEnabled))];
+    _enabled = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isEnabled))];
     _obfuscateDataTransfer = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(obfuscateDataTransfer))];
     _defaultKeystrokeSequence = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))] copy];
     self.mutableAssociations = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(associations))];
@@ -150,7 +150,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  [aCoder encodeBool:_isEnabled forKey:NSStringFromSelector(@selector(isEnabled))];
+  [aCoder encodeBool:_enabled forKey:NSStringFromSelector(@selector(isEnabled))];
   [aCoder encodeBool:_obfuscateDataTransfer forKey:NSStringFromSelector(@selector(obfuscateDataTransfer))];
   [aCoder encodeObject:_mutableAssociations forKey:NSStringFromSelector(@selector(associations))];
   [aCoder encodeObject:_defaultKeystrokeSequence forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
@@ -158,7 +158,7 @@
 
 - (id)copyWithZone:(NSZone *)zone {
   KPKAutotype *copy = [[KPKAutotype alloc] init];
-  copy.isEnabled = _isEnabled;
+  copy.enabled = _enabled;
   copy.obfuscateDataTransfer = _obfuscateDataTransfer;
   copy.mutableAssociations = [[NSMutableArray alloc] initWithArray:self.mutableAssociations copyItems:YES];
   copy.defaultKeystrokeSequence = _defaultKeystrokeSequence;
@@ -203,10 +203,20 @@
 
 - (void)setEnabled:(BOOL)enabled {
   if(_enabled == enabled) {
-    return;
+    return; // no changes
   }
+  [[self.entry.undoManager prepareWithInvocationTarget:self] setEnabled:self.isEnabled];
   [self.entry touchModified];
   _enabled = enabled;
+}
+
+- (void)setObfuscateDataTransfer:(BOOL)obfuscateDataTransfer {
+  if(_obfuscateDataTransfer == obfuscateDataTransfer) {
+    return; // no changes
+  }
+  [[self.entry.undoManager prepareWithInvocationTarget:self] setObfuscateDataTransfer:self.obfuscateDataTransfer];
+  [self.entry touchModified];
+  _obfuscateDataTransfer = obfuscateDataTransfer;
 }
 
 - (NSString *)defaultKeystrokeSequence {
