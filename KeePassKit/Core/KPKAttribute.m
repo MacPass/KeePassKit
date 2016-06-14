@@ -142,7 +142,9 @@
 
 - (void)setValue:(NSString *)value {
   if(self.value != value) {
-    [[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
+    if(!self.isDefault) {
+      [[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
+    }
     [self.entry touchModified];
     [self _encodeValue:value];
   }
@@ -150,6 +152,7 @@
 
 - (void)setKey:(NSString *)key {
   if(![_key isEqualToString:key]) {
+    /* Key changes should never happen on default attributes */
     [[self.entry.undoManager prepareWithInvocationTarget:self] setKey:self.key];
     [self.entry touchModified];
     _key = [key copy];
