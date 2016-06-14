@@ -45,7 +45,7 @@
 */
 
 @interface KPKAttribute () {
-  NSUInteger _lenght;
+  NSUInteger _length;
   NSData *_xorPad;
   NSMutableData *_protectedData;
 }
@@ -84,7 +84,7 @@
     _xorPad = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"xorPad"];
     _protectedData = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"protectedData"];
     _isProtected = [aDecoder decodeBoolForKey:@"isProtected"];
-    _lenght = [aDecoder decodeIntegerForKey:@"lenght"];
+    _length = [aDecoder decodeIntegerForKey:@"lenght"];
   }
   return self;
 }
@@ -94,7 +94,7 @@
   [aCoder encodeObject:self.key forKey:@"key"];
   [aCoder encodeObject:_xorPad forKey:@"xorPad"];
   [aCoder encodeObject:_protectedData forKey:@"protectedData"];
-  [aCoder encodeInteger:_lenght forKey:@"lenght"];
+  [aCoder encodeInteger:_length forKey:@"lenght"];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
@@ -141,12 +141,16 @@
 }
 
 - (void)setValue:(NSString *)value {
-  [self.entry touchModified];
-  [self _encodeValue:value];
+  if(self.value != value) {
+    [[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
+    [self.entry touchModified];
+    [self _encodeValue:value];
+  }
 }
 
 - (void)setKey:(NSString *)key {
   if(![_key isEqualToString:key]) {
+    [[self.entry.undoManager prepareWithInvocationTarget:self] setKey:self.key];
     [self.entry touchModified];
     _key = [key copy];
   }
@@ -175,9 +179,9 @@
 
 - (void)_encodeValue:(NSString *)string {
   NSMutableData *stringData = [[string dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
-  _lenght = stringData.length;
-  if(_xorPad.length < _lenght) {
-    _xorPad = [NSData dataWithRandomBytes:_lenght];
+  _length = stringData.length;
+  if(_xorPad.length < _length) {
+    _xorPad = [NSData dataWithRandomBytes:_length];
   }
   [stringData xorWithKey:_xorPad];
   if(!_protectedData) {
@@ -189,7 +193,7 @@
 }
 
 - (NSString *)_decodedValue {
-  if(_lenght == 0) {
+  if(_length == 0) {
     return @"";
   }
   NSMutableData *stringData = [_protectedData mutableCopy];
