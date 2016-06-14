@@ -177,7 +177,7 @@
   if(!autotype) {
     return NO;
   }
-  if(self.isEnabled != autotype.isEnabled) {
+  if(self.enabled != autotype.enabled) {
     return NO;
   }
   if(self.obfuscateDataTransfer != autotype.obfuscateDataTransfer) {
@@ -205,7 +205,7 @@
   if(_enabled == enabled) {
     return; // no changes
   }
-  [[self.entry.undoManager prepareWithInvocationTarget:self] setEnabled:self.isEnabled];
+  [[self.entry.undoManager prepareWithInvocationTarget:self] setEnabled:self.enabled];
   [self.entry touchModified];
   _enabled = enabled;
 }

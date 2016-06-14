@@ -263,7 +263,7 @@
    </AutoType>
    */
   DDXMLElement *autotypeElement = [DDXMLElement elementWithName:kKPKXmlAutotype];
-  KPKAddXmlElement(autotypeElement, kKPKXmlEnabled, KPKStringFromBool(autotype.isEnabled));
+  KPKAddXmlElement(autotypeElement, kKPKXmlEnabled, KPKStringFromBool(autotype.enabled));
   NSString *obfuscate = autotype.obfuscateDataTransfer ? @"1" : @"0";
   KPKAddXmlElement(autotypeElement, kKPKXmlDataTransferObfuscation, obfuscate);
   NSString *keystrokes = autotype.hasDefaultKeystrokeSequence ? nil : autotype.defaultKeystrokeSequence.XMLCompatibleString;

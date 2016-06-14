@@ -451,7 +451,7 @@
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
       NSAssert([evaluatedObject isKindOfClass:[KPKEntry class]], @"entry array should contain only KPKEntry objects");
       KPKEntry *entry = evaluatedObject;
-      return entry.autotype.isEnabled;
+      return entry.autotype.enabled;
     }];
     autotypeEntries = [NSMutableArray arrayWithArray:[_entries filteredArrayUsingPredicate:predicate]];
   }
