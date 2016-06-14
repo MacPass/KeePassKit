@@ -49,6 +49,7 @@ NSString *const kKPKNotesKey     = @"Notes";
 NSString *const kKPKUUIDKey      = @"UUID";
 NSUInteger const kKPKDefaultEntryKeysCount = 5;
 
+
 #pragma mark Nodes
 NSString *const kKPKXmlKeePassFile = @"KeePassFile";
 NSString *const kKPKXmlRoot = @"Root";
@@ -97,8 +98,18 @@ NSString *const kKPKXmlNotes = @"Notes";
 NSString *const kKPKXmlIconId = @"IconID";
 
 #pragma mark Binaries
-NSString *const kKPKXmlBinary = @"Binary";
+NSString *const kKPKXmlBinary   = @"Binary";
 NSString *const kKPKXmlBinaries = @"Binaries";
+NSString *const kKPKXmlBinaryId = @"ID";
+
+#pragma mark CustomIcons
+NSString *const kKPKXmlCustomIcons = @"CustomIcons";
+NSString *const kKPKXmlIcon = @"Icon";
+
+#pragma mark DeletedObjects
+NSString *const kKPKXmlDeletedObjects = @"DeletedObjects";
+NSString *const kKPKXmlDeletedObject = @"DeletedObject";
+NSString *const kKPKXmlDeletionTime = @"DeletionTime";
 
 #pragma mark Time
 NSString *const kKPKXmlTimes = @"Times";
@@ -121,6 +132,7 @@ NSString *const kKPKXmlProtected        = @"Protected";
 NSString *const kKPKXMLProtectInMemory  = @"ProtectInMemory";
 NSString *const kKPKXmlTrue             = @"True";
 NSString *const kKPKXmlFalse            = @"False";
+NSString *const kKPKXmlCompressed       = @"Compressed";
 
 #pragma mark Reference Keys
 

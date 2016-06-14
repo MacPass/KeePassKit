@@ -46,6 +46,11 @@
 #pragma mark -
 #pragma mark Lifecylce
 
+- (instancetype)init {
+  self = [self initWithWindowTitle:nil keystrokeSequence:nil];
+  return self;
+}
+
 - (instancetype)initWithWindowTitle:(NSString *)windowTitle keystrokeSequence:(NSString *)strokes {
   self = [super init];
   if(self) {

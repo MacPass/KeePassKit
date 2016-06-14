@@ -40,7 +40,7 @@
 @property (weak, readonly) KPKAutotype *autotype;
 @property (nonatomic, readonly) BOOL hasDefaultKeystrokeSequence;
 
-- (instancetype)initWithWindowTitle:(NSString *)windowTitle keystrokeSequence:(NSString *)strokes;
+- (instancetype)initWithWindowTitle:(NSString *)windowTitle keystrokeSequence:(NSString *)strokes NS_DESIGNATED_INITIALIZER;
 
 - (BOOL)isEqualToWindowAssociation:(KPKWindowAssociation *)other;
 

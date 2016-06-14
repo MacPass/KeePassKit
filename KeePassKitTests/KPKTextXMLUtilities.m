@@ -24,7 +24,7 @@
   [super tearDown];
 }
 
-- (void)testExample {
+- (void)testUnsaveEscaping {
   NSString *unsave = @"*EORDIE\x10\x16\x12\x10";
   XCTAssertEqualObjects(@"*EORDIE", unsave.XMLCompatibleString);
 }

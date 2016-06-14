@@ -29,6 +29,7 @@
 #import "KPKLegacyHeaderReader.h"
 
 #import "KPKBinary.h"
+#import "KPKBinary+Private.h"
 #import "KPKEntry.h"
 #import "KPKErrors.h"
 #import "KPKGroup.h"
@@ -303,7 +304,7 @@
   // Parse the entries
   for (NSUInteger iEntryIndex = 0; iEntryIndex < _headerReader.numberOfEntries; iEntryIndex++) {
     KPKEntry *entry;
-    KPKBinary *binary; // placeholder for binary reading
+    KPKBinary *binary;
     
     // Parse the entry
     endOfStream = NO;
@@ -405,9 +406,7 @@
           break;
           
         case KPKFieldTypeEntryBinaryDescription: {
-          binary = [[KPKBinary alloc] init];
-          
-          binary.name = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          binary = [[KPKBinary alloc] initWithName:[_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding] data:nil];
           break;
         }
         case KPKFieldTypeEntryBinaryData:

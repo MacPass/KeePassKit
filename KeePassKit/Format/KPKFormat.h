@@ -112,6 +112,16 @@ FOUNDATION_EXTERN NSString *const kKPKXmlIconId;
 #pragma mark Binaries
 FOUNDATION_EXTERN NSString *const kKPKXmlBinary;
 FOUNDATION_EXTERN NSString *const kKPKXmlBinaries;
+FOUNDATION_EXTERN NSString *const kKPKXmlBinaryId;
+
+#pragma mark CustomIcons
+FOUNDATION_EXTERN NSString *const kKPKXmlCustomIcons;
+FOUNDATION_EXTERN NSString *const kKPKXmlIcon;
+
+#pragma mark DeletedObjects
+FOUNDATION_EXTERN NSString *const kKPKXmlDeletedObjects;
+FOUNDATION_EXTERN NSString *const kKPKXmlDeletedObject;
+FOUNDATION_EXTERN NSString *const kKPKXmlDeletionTime;
 
 #pragma mark Time
 FOUNDATION_EXTERN NSString *const kKPKXmlTimes;
@@ -133,6 +143,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlProtected; // Only used when stored as 
 FOUNDATION_EXTERN NSString *const kKPKXMLProtectInMemory; // Only used when stores as plain XML files.
 FOUNDATION_EXTERN NSString *const kKPKXmlTrue;
 FOUNDATION_EXTERN NSString *const kKPKXmlFalse;
+FOUNDATION_EXTERN NSString *const kKPKXmlCompressed;
 
 /**
  *  Referemce Keys used for Referencing attributes inside entries

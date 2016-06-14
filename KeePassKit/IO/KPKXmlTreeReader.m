@@ -27,6 +27,7 @@
 #import "KPKAttribute.h"
 #import "KPKAutotype.h"
 #import "KPKBinary.h"
+#import "KPKBinary+Private.h"
 #import "KPKDeletedNode.h"
 #import "KPKEntry.h"
 #import "KPKEntry+Private.h"
@@ -320,7 +321,7 @@
    </CustomIcons>
    */
   _iconMap = [[NSMutableDictionary alloc] init];
-  DDXMLElement *customIconsElement = [root elementForName:@"CustomIcons"];
+  DDXMLElement *customIconsElement = [root elementForName:kKPKXmlCustomIcons];
   for (DDXMLElement *iconElement in [customIconsElement elementsForName:@"Icon"]) {
     NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKXmlString(iconElement, kKPKXmlUUID)];
     KPKIcon *icon = [[KPKIcon alloc] initWithUUID:uuid encodedString:KPKXmlString(iconElement, @"Data")];
@@ -338,12 +339,12 @@
    </Binaries>
    */
   DDXMLElement *binariesElement = [root elementForName:kKPKXmlBinaries];
-  NSUInteger binaryCount = [binariesElement elementsForName:@"Binary"].count;
+  NSUInteger binaryCount = [binariesElement elementsForName:kKPKXmlBinary].count;
   _binaryMap = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,binaryCount)];
-  for (DDXMLElement *element in [binariesElement elementsForName:@"Binary"]) {
-    DDXMLNode *idAttribute = [element attributeForName:@"ID"];
+  for (DDXMLElement *element in [binariesElement elementsForName:kKPKXmlBinary]) {
+    DDXMLNode *idAttribute = [element attributeForName:kKPKXmlBinaryId];
     
-    KPKBinary *binary = [[KPKBinary alloc] initWithName:@"UNNAMED" value:[element stringValue] compressed:KPKXmlBoolAttribute(element, @"Compressed")];
+    KPKBinary *binary = [[KPKBinary alloc] initWithName:@"UNNAMED" string:[element stringValue] compressed:KPKXmlBoolAttribute(element, kKPKXmlCompressed)];
     NSUInteger index = [idAttribute stringValue].integerValue;
     _binaryMap[ @(index) ] = binary;
   }
@@ -357,7 +358,7 @@
    </Binary>
    */
   
-  for (DDXMLElement *binaryElement in [entryElement elementsForName:@"Binary"]) {
+  for (DDXMLElement *binaryElement in [entryElement elementsForName:kKPKXmlBinary]) {
     DDXMLElement *valueElement = [binaryElement elementForName:kKPKXmlValue];
     DDXMLNode *refAttribute = [valueElement attributeForName:@"Ref"];
     NSUInteger index = [refAttribute stringValue].integerValue;
@@ -379,7 +380,7 @@
      </Item>
      </CustomData>
      */
-    KPKBinary *customData = [[KPKBinary alloc] initWithName:KPKXmlString(dataElement, kKPKXmlKey) value:KPKXmlString(dataElement, kKPKXmlValue) compressed:NO];
+    KPKBinary *customData = [[KPKBinary alloc] initWithName:KPKXmlString(dataElement, kKPKXmlKey) string:KPKXmlString(dataElement, kKPKXmlValue) compressed:NO];
     [metaData.mutableCustomData addObject:customData];
   }
 }

@@ -24,6 +24,8 @@
 #import <Foundation/Foundation.h>
 #import "KPKVersion.h"
 #import "KPKModificationRecording.h"
+#import "KPKNodeDelegate.h"
+
 @class KPKEntry;
 @class KPKGroup;
 @class KPKIcon;
@@ -36,14 +38,6 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
   kKPKCopyOptionReferenceUsername  = 1<<1, // KPKEntry only - copy refernces the username of the source
   kKPKCopyOptionReferencePassword  = 1<<2, // KPKEntry only - copy references the password of the source
 };
-
-@class KPKNode;
-
-@protocol KPKModificationDelegate <NSObject>
-
-@required
-- (void)willModifyNode:(KPKNode *)node;
-@end
 
 /**
  *  Abstract base class for all Nodes (Entries and Groups)
@@ -65,7 +59,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 
 @property(nonatomic, readonly) NSUndoManager *undoManager;
 
-@property(nonatomic, weak) id<KPKModificationDelegate> delegate;
+@property(nonatomic, weak) id<KPKNodeDelegate> delegate;
 
 @property(nonatomic, readonly) BOOL hasDefaultIcon;
 @property(nonatomic, readonly) BOOL isEditable;

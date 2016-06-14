@@ -22,6 +22,7 @@
 
 
 #import "KPKBinary.h"
+#import "KPKBinary+Private.h"
 #import "NSData+Gzip.h"
 #import "NSMutableData+Base64.h"
 
@@ -31,42 +32,48 @@
   return YES;
 }
 
-- (instancetype)initWithName:(NSString *)name value:(NSString *)value compressed:(BOOL)compressed {
+- (instancetype)initWithName:(NSString *)name data:(NSData *)data {
   self = [super init];
   if(self) {
     _name = [name copy];
-    _data = [self _dataForEncodedString:value compressed:compressed];
+    _data = [data copy];
   }
+  return self;
+
+}
+
+- (instancetype)init {
+  self = [self initWithName:nil data:nil];
+  return self;
+}
+
+- (instancetype)initWithName:(NSString *)name string:(NSString *)value compressed:(BOOL)compressed {
+  NSData *data = [self _dataForEncodedString:value compressed:compressed];
+  self = [self initWithName:name data:data];
   return self;
 }
 
 - (instancetype)initWithContentsOfURL:(NSURL *)url {
-  self = [super init];
-  if(self) {
-    if(url) {
-      NSError *error = nil;
-      NSDictionary *resourceKeys = [url resourceValuesForKeys:@[NSURLIsDirectoryKey] error:&error];
-      if([resourceKeys[ NSURLIsDirectoryKey ] boolValue] == YES ) {
-        self = nil;
-        return nil; // no valid url
-      }
-      _data = [NSData dataWithContentsOfURL:url options:0 error:&error];
-      if(!_data) {
-        self = nil;
-        return self; // unable to read data
-      }
-      _name = url.lastPathComponent;
+  if(url) {
+    NSError *error = nil;
+    NSDictionary *resourceKeys = [url resourceValuesForKeys:@[NSURLIsDirectoryKey] error:&error];
+    if([resourceKeys[ NSURLIsDirectoryKey ] boolValue] == YES ) {
+      self = nil;
+      return nil; // no valid url
     }
+    self = [self initWithName:url.lastPathComponent data:[NSData dataWithContentsOfURL:url options:0 error:&error]];
+    return self;
   }
-  return self;
+  else {
+    self = nil;
+    return self;
+  }
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-  self = [self init];
-  if(self) {
-    _name = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(name))];
-    _data = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(data))];
-  }
+  NSString *name = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(name))];
+  NSData *data = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(data))];
+  self = [self initWithName:name data:data];
   return self;
 }
 

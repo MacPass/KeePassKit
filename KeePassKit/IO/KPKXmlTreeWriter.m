@@ -328,9 +328,9 @@
   
   BOOL compress = (self.tree.metaData.compressionAlgorithm == KPKCompressionGzip);
   for(KPKBinary *binary in _binaries) {
-    DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
-    KPKAddXmlAttribute(binaryElement, @"ID", KPKStringFromLong([_binaries indexOfObject:binary]));
-    KPKAddXmlAttribute(binaryElement, @"Compressed", KPKStringFromBool(compress));
+    DDXMLElement *binaryElement = [DDXMLElement elementWithName:kKPKXmlBinary];
+    KPKAddXmlAttribute(binaryElement, kKPKXmlBinaryId, KPKStringFromLong([_binaries indexOfObject:binary]));
+    KPKAddXmlAttribute(binaryElement, kKPKXmlCompressed, KPKStringFromBool(compress));
     binaryElement.stringValue = [binary encodedStringUsingCompression:compress];
     [binaryElements addChild:binaryElement];
   }
@@ -338,7 +338,7 @@
 }
 
 - (DDXMLElement *)_xmlBinary:(KPKBinary *)binary {
-  DDXMLElement *binaryElement = [DDXMLElement elementWithName:@"Binary"];
+  DDXMLElement *binaryElement = [DDXMLElement elementWithName:kKPKXmlBinary];
   KPKAddXmlElement(binaryElement, kKPKXmlKey, binary.name.XMLCompatibleString);
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue];
   [binaryElement addChild:valueElement];
@@ -349,9 +349,9 @@
 }
 
 - (DDXMLElement *)_xmlIcons {
-  DDXMLElement *customIconsElements = [DDXMLElement elementWithName:@"CustomIcons"];
+  DDXMLElement *customIconsElements = [DDXMLElement elementWithName:kKPKXmlCustomIcons];
   for (KPKIcon *icon in self.tree.metaData.mutableCustomIcons) {
-    DDXMLElement *iconElement = [DDXMLNode elementWithName:@"Icon"];
+    DDXMLElement *iconElement = [DDXMLNode elementWithName:kKPKXmlIcon];
     KPKAddXmlElement(iconElement, kKPKXmlUUID, [icon.uuid encodedString]);
     KPKAddXmlElement(iconElement, kKPKXmlData, icon.encodedString);
     [customIconsElements addChild:iconElement];
@@ -367,12 +367,12 @@
 }
 
 - (DDXMLElement *)_xmlDeletedObjects {
-  DDXMLElement *deletedObjectsElement = [DDXMLElement elementWithName:@"DeletedObjects"];
+  DDXMLElement *deletedObjectsElement = [DDXMLElement elementWithName:kKPKXmlDeletedObjects];
   for(NSUUID *uuid in self.tree.mutableDeletedObjects) {
     KPKDeletedNode *node = self.tree.mutableDeletedObjects[ uuid ];
-    DDXMLElement *deletedElement = [DDXMLNode elementWithName:@"DeletedObject"];
+    DDXMLElement *deletedElement = [DDXMLNode elementWithName:kKPKXmlDeletedObject];
     KPKAddXmlElement(deletedElement, kKPKXmlUUID,[node.uuid encodedString]);
-    KPKAddXmlElement(deletedElement, @"DeletionTime", KPKStringFromDate(_dateFormatter, node.deletionDate));
+    KPKAddXmlElement(deletedElement, kKPKXmlDeletionTime, KPKStringFromDate(_dateFormatter, node.deletionDate));
     [deletedObjectsElement addChild:deletedElement];
   }
   return deletedObjectsElement;
