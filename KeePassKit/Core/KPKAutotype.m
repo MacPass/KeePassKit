@@ -29,15 +29,18 @@
 #import "KPKWindowAssociation+Private.h"
 
 @interface KPKAutotype () {
-  NSMutableArray *_associations;
+  //NSMutableArray *_associations;
 }
 
 @end
 
 @implementation KPKAutotype
 
+@dynamic associations;
+
 @synthesize entry = _entry;
 @synthesize defaultKeystrokeSequence = _defaultKeystrokeSequence;
+@synthesize mutableAssociations = _mutableAssociations;
 
 + (BOOL)supportsSecureCoding {
   return YES;
@@ -45,6 +48,10 @@
 
 + (NSSet *)keyPathsForValuesAffectingHasDefaultKeystrokeSequence {
   return [NSSet setWithObject:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingAssociations {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAssociations))];
 }
 
 + (instancetype)autotypeFromNotes:(NSString *)notes {
@@ -126,7 +133,7 @@
   if(self) {
     _isEnabled = YES;
     _obfuscateDataTransfer = NO;
-    _associations = [[NSMutableArray alloc] initWithCapacity:2];
+    _mutableAssociations = [[NSMutableArray alloc] initWithCapacity:2];
   }
   return self;
 }
@@ -137,10 +144,7 @@
     _isEnabled = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isEnabled))];
     _obfuscateDataTransfer = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(obfuscateDataTransfer))];
     _defaultKeystrokeSequence = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))] copy];
-    _associations = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(associations))];
-    for(KPKWindowAssociation *association in _associations) {
-      association.autotype = self;
-    }
+    self.mutableAssociations = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(associations))];
   }
   return self;
 }
@@ -148,7 +152,7 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeBool:_isEnabled forKey:NSStringFromSelector(@selector(isEnabled))];
   [aCoder encodeBool:_obfuscateDataTransfer forKey:NSStringFromSelector(@selector(obfuscateDataTransfer))];
-  [aCoder encodeObject:_associations forKey:NSStringFromSelector(@selector(associations))];
+  [aCoder encodeObject:_mutableAssociations forKey:NSStringFromSelector(@selector(associations))];
   [aCoder encodeObject:_defaultKeystrokeSequence forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))];
 }
 
@@ -156,12 +160,9 @@
   KPKAutotype *copy = [[KPKAutotype alloc] init];
   copy.isEnabled = _isEnabled;
   copy.obfuscateDataTransfer = _obfuscateDataTransfer;
-  copy->_associations = [[NSMutableArray alloc] initWithArray:self.associations copyItems:YES];
+  copy.mutableAssociations = [[NSMutableArray alloc] initWithArray:self.mutableAssociations copyItems:YES];
   copy.defaultKeystrokeSequence = _defaultKeystrokeSequence;
   copy.entry = _entry;
-  for(KPKWindowAssociation *association in copy->_associations) {
-    association.autotype = copy;
-  }
   return copy;
 }
 
@@ -189,7 +190,7 @@
     /* no default so the sequences need to match */
     return NO;
   }
-  if(![self.associations isEqualToArray:autotype.associations]) {
+  if(![self.mutableAssociations isEqualToArray:autotype.mutableAssociations]) {
     return NO;
   }
   return YES;
@@ -216,31 +217,41 @@
   _defaultKeystrokeSequence = defaultSequence.length  > 0 ? [defaultSequence copy] : nil;
 }
 
+- (void)setMutableAssociations:(NSMutableArray<KPKWindowAssociation *> *)mutableAssociations {
+  if(self.mutableAssociations == mutableAssociations) {
+    return;
+  }
+  _mutableAssociations = mutableAssociations;
+  for(KPKWindowAssociation *association in _mutableAssociations) {
+    association.autotype = self;
+  }
+}
+
 - (NSArray *)associations {
-  return [_associations copy];
+  return [self.mutableAssociations copy];
 }
 
 - (void)addAssociation:(KPKWindowAssociation *)association {
-  [self addAssociation:association atIndex:_associations.count];
+  [self addAssociation:association atIndex:self.mutableAssociations.count];
 }
 
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index {
   [self.entry touchModified];
   association.autotype = self;
-  [self insertObject:association inAssociationsAtIndex:index];
+  [self insertObject:association inMutableAssociationsAtIndex:index];
 }
 
 - (void)removeAssociation:(KPKWindowAssociation *)association {
-  NSUInteger index = [_associations indexOfObject:association];
+  NSUInteger index = [self.mutableAssociations indexOfObject:association];
   if(index != NSNotFound) {
     [self.entry touchModified];
     association.autotype = nil;
-    [self removeObjectFromAssociationsAtIndex:index];
+    [self removeObjectFromMutableAssociationsAtIndex:index];
   }
 }
 
 - (KPKWindowAssociation *)windowAssociationMatchingWindowTitle:(NSString *)windowTitle {
-  for(KPKWindowAssociation *association in self.associations) {
+  for(KPKWindowAssociation *association in self.mutableAssociations) {
     if([association matchesWindowTitle:windowTitle]) {
       return association;
     }
@@ -255,15 +266,15 @@
 #pragma mark -
 #pragma mark KVO Compliance
 
-- (void)insertObject:(KPKWindowAssociation *)association inAssociationsAtIndex:(NSUInteger)index {
-  index = MIN(index, [_associations count]);
-  [_associations insertObject:association atIndex:index];
+- (void)insertObject:(KPKWindowAssociation *)association inMutableAssociationsAtIndex:(NSUInteger)index {
+  index = MIN(index, self.mutableAssociations.count);
+  [self.mutableAssociations insertObject:association atIndex:index];
 }
 
-- (void)removeObjectFromAssociationsAtIndex:(NSUInteger)index {
-  KPKWindowAssociation *association = _associations[index];
+- (void)removeObjectFromMutableAssociationsAtIndex:(NSUInteger)index {
+  KPKWindowAssociation *association = self.mutableAssociations[index];
   if(association) {
-    [_associations removeObjectAtIndex:index];
+    [self.mutableAssociations removeObjectAtIndex:index];
   }
 }
 

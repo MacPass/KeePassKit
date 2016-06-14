@@ -10,11 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class KPKWindowAssociation;
+
 @interface KPKAutotype ()
 
 @property (nullable, weak) KPKEntry *entry;
-
 @property (nullable, copy, readonly) NSString *autotypeNotes;
+@property (nonatomic, strong) NSMutableArray<KPKWindowAssociation *> *mutableAssociations;
 
 @end
 

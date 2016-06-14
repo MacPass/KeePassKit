@@ -11,6 +11,7 @@
 #import "KPKXmlTreeReader.h"
 
 #import "KPKAutotype+Private.h"
+#import "KPKBinary+Private.h"
 #import "KPKEntry+Private.h"
 #import "KPKGroup+Private.h"
 #import "KPKNode+Private.h"

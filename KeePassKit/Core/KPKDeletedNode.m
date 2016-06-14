@@ -37,8 +37,8 @@
 - (instancetype)initWithUUID:(NSUUID *)uuid date:(NSDate *)date {
   self = [super init];
   if(self) {
-    _deletionDate = date;
-    _uuid = uuid;
+    _deletionDate = [date copy];
+    _uuid = [uuid copy];
   }
   return self;
 }

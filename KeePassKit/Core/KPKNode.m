@@ -181,16 +181,16 @@
   if(self.asGroup) {
     [[self.undoManager prepareWithInvocationTarget:self] setIconId:self.iconId];
   }
-  _iconId = iconId;
   [self touchModified];
+  _iconId = iconId;
 }
 
 - (void)setIconUUID:(NSUUID *)iconUUID {
   if(self.asGroup) {
     [[self.undoManager prepareWithInvocationTarget:self] setIconUUID:self.iconUUID];
   }
-  _iconUUID = iconUUID;
   [self touchModified];
+  _iconUUID = iconUUID;
 }
 
 #pragma mark KPKTimerecording
@@ -203,7 +203,9 @@
 }
 
 - (void)touchModified {
-  [self.delegate willModifyNode:self];
+  if([self.delegate respondsToSelector:@selector(willModifyNode:)]) {
+    [self.delegate willModifyNode:self];
+  }
   [self.timeInfo touchModified];
 }
 

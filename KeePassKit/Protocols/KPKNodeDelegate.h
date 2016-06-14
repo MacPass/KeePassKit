@@ -12,7 +12,10 @@
 
 @protocol KPKNodeDelegate <NSObject>
 
-@required
+@optional
 - (void)willModifyNode:(KPKNode *)node;
+/*
+ TODO: Add modify and move calls
+ */
 
 @end

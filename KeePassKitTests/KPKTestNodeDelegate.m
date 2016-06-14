@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "KeePassKit.h"
+#import "KeePassKit+Private.h"
 
 static NSString *_kKPKDummyExceptionName = @"_kKPKDummyExceptionName";
 
