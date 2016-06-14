@@ -140,6 +140,10 @@
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
   KPKGroup *copy = [super _copyWithUUUD:uuid];
+  BOOL wasUndoEnabled = self.undoManager.isUndoRegistrationEnabled;
+  if(wasUndoEnabled) {
+    [self.undoManager disableUndoRegistration];
+  }
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
@@ -149,7 +153,9 @@
   copy->_groups = [[[NSMutableArray alloc] initWithArray:_groups copyItems:YES] mutableCopy];
   
   [copy _updateParents];
-  
+  if(wasUndoEnabled) {
+    [self.undoManager enableUndoRegistration];
+  }
   return copy;
 }
 

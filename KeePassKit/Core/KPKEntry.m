@@ -165,6 +165,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (instancetype)_copyWithUUUD:(nullable NSUUID *)uuid {
   KPKEntry *entry = [super _copyWithUUUD:uuid];
+  BOOL wasUndoEnabled = self.undoManager.isUndoRegistrationEnabled;
+  if(wasUndoEnabled) {
+    [self.undoManager disableUndoRegistration];
+  }
   /* Default attributes */
   entry.overrideURL = self.overrideURL;
   
@@ -183,6 +187,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   entry.mutableHistory = [[NSMutableArray alloc] initWithArray:self.mutableHistory copyItems:YES];
   entry.isHistory = self.isHistory;
   
+  if(wasUndoEnabled) {
+    [self.undoManager enableUndoRegistration];
+  }
   return entry;
 }
 
@@ -522,7 +529,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
   
   [self _addHistoryEntry:entry];
-
+  
   /* updates icon, iconID, note, title */
   self.iconId = entry.iconId;
   self.iconUUID = entry.iconUUID;

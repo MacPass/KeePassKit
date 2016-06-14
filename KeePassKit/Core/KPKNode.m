@@ -178,17 +178,13 @@
 }
 
 - (void)setIconId:(NSInteger)iconId {
-  if(self.asGroup) {
-    [[self.undoManager prepareWithInvocationTarget:self] setIconId:self.iconId];
-  }
+  [[self.undoManager prepareWithInvocationTarget:self] setIconId:self.iconId];
   [self touchModified];
   _iconId = iconId;
 }
 
 - (void)setIconUUID:(NSUUID *)iconUUID {
-  if(self.asGroup) {
-    [[self.undoManager prepareWithInvocationTarget:self] setIconUUID:self.iconUUID];
-  }
+  [[self.undoManager prepareWithInvocationTarget:self] setIconUUID:self.iconUUID];
   [self touchModified];
   _iconUUID = iconUUID;
 }
@@ -322,12 +318,19 @@
 
 - (instancetype)_copyWithUUUD:(NSUUID *)uuid {
   KPKNode *copy = [[[self class] alloc] _initWithUUID:uuid];
+  BOOL wasUndoEnabled = self.undoManager.isUndoRegistrationEnabled;
+  if(wasUndoEnabled) {
+    [self.undoManager disableUndoRegistration];
+  }
   copy.iconId = self.iconId;
   copy.iconUUID = self.iconUUID;
   copy.parent = self.parent;
   copy.notes = self.notes;
   copy.title = self.title;
   copy.timeInfo = self.timeInfo;
+  if(wasUndoEnabled) {
+    [self.undoManager enableUndoRegistration];
+  }
   return copy;
 }
 

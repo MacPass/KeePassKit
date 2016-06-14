@@ -28,12 +28,6 @@
 #import "KPKWindowAssociation.h"
 #import "KPKWindowAssociation+Private.h"
 
-@interface KPKAutotype () {
-  //NSMutableArray *_associations;
-}
-
-@end
-
 @implementation KPKAutotype
 
 @dynamic associations;

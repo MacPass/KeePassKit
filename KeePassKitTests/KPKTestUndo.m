@@ -92,6 +92,7 @@
   XCTAssertEqual(_tree.deletedObjects.count, 0, @"There are no deleted objects in the database");
   
   KPKEntry *entry = [_tree createEntry:_groupA];
+  KPKEntry *copy = [entry copy];
   [entry addToGroup:_groupA];
   
   XCTAssertTrue(_undoManager.canUndo, @"Undomanager can undo");
@@ -121,7 +122,10 @@
   XCTAssertEqual(_root.entries.count, 0, @"Root has no entries");
   XCTAssertFalse([_root.entries containsObject:entry], @"Created enty is not in group A");
   
-  XCTAssertEqual(_tree.deletedObjects.count, 0, @"There are no deleted objects in the database");
+  XCTAssertEqual(_tree.mutableDeletedObjects.count, 1, @"There are no deleted objects in the database");
+  XCTAssertEqual(_tree.mutableDeletedNodes.count, 1, @"There are no deleted objects in the database");
+  XCTAssertEqual(_tree.mutableDeletedNodes[entry.uuid], entry, @"Entry is stored in deletedNodes for tree!");
+  XCTAssertNotNil(_tree.mutableDeletedObjects[entry.uuid], @"DeletedObjects has record of deleted Entry");
   
   [_undoManager redo];
   
@@ -138,6 +142,8 @@
   XCTAssertFalse([_root.entries containsObject:entry], @"Created entry is not in root group");
   
   XCTAssertEqual(_tree.deletedObjects.count, 0, @"There are no deleted objects in the database");
+
+  XCTAssertEqualObjects(entry, copy, @"Entries has not changed fater undo/redo");
   
 }
 
@@ -350,6 +356,7 @@
 }
 
 - (void)testUndoRedoReorderGroups {
+  
   XCTFail(@"Missing test");
 }
 
@@ -359,8 +366,37 @@
 }
 
 - (void)testUndoRedoDeleteEntryWithoutTrash {
-  /* TODO: Deleting entries needs to be moved from MPDocument to KeePassKit */
-  XCTFail(@"Missing test");
+  XCTAssertFalse(_undoManager.canUndo, @"Undo stack is empty");
+  XCTAssertFalse(_undoManager.canRedo, @"Redo stack is empty");
+  
+  XCTAssertEqual(_tree.deletedObjects.count, 0, @"There are no deleted objects in the database");
+  
+  XCTAssertEqual(_groupA.entries.count, 1, @"Group A has one entry");
+  XCTAssertTrue([_groupA.entries containsObject:_entryA], @"Entry A is in group A");
+  
+  XCTAssertEqual(_groupB.entries.count, 1, @"Group B has one entry");
+  XCTAssertTrue([_groupB.entries containsObject:_entryB], @"Entry B is in group B");
+  
+  XCTAssertEqual(_root.entries.count, 0, @"Root has no entries");
+  XCTAssertFalse([_root.entries containsObject:_entryB], @"Entry A is not in root group");
+  XCTAssertFalse([_root.entries containsObject:_entryA], @"Entry A is not in root group");
+  
+  KPKEntry *copy = [_entryA copy];
+  [_entryA remove];
+  
+  XCTAssertTrue(_undoManager.canUndo, @"Deleting adds an item to the undo stack");
+  XCTAssertFalse(_undoManager.canRedo, @"Redo stack is empty");
+  
+  XCTAssertNotNil(_tree.mutableDeletedObjects[_entryA.uuid], @"Deleted Entry is registred in deleted nodes");
+  XCTAssertEqual(_tree.mutableDeletedNodes.count, 1, @"Deleted Entry node is stored in tree");
+  XCTAssertEqual(_tree.mutableDeletedNodes[_entryA.uuid], _entryA, @"Deleted entry node is stored in the tree");
+  
+  [_undoManager undo];
+
+  XCTAssertFalse(_undoManager.canUndo, @"Undo stack is empty after undo");
+  XCTAssertTrue(_undoManager.canRedo, @"Undomanager can redo after undo");
+  
+  XCTAssertEqualObjects(_entryA, copy, @"Entries has not changed fater undo/redo");
 }
 
 - (void)testUndoRedoDeleteGroupWithTrash {
