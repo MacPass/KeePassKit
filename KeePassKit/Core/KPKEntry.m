@@ -164,33 +164,27 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (instancetype)_copyWithUUUD:(nullable NSUUID *)uuid {
-  KPKEntry *entry = [super _copyWithUUUD:uuid];
-  BOOL wasUndoEnabled = self.undoManager.isUndoRegistrationEnabled;
-  if(wasUndoEnabled) {
-    [self.undoManager disableUndoRegistration];
-  }
+  KPKEntry *copy = [super _copyWithUUUD:uuid];
   /* Default attributes */
-  entry.overrideURL = self.overrideURL;
+  copy.overrideURL = self.overrideURL;
   
-  entry.binaries = [[NSMutableArray alloc] initWithArray:self->_binaries copyItems:YES];
-  entry.mutableAttributes = [[NSMutableArray alloc] initWithArray:self.mutableAttributes copyItems:YES];
-  entry.tags = self.tags;
-  entry.autotype = self.autotype;
+  copy.binaries = [[NSMutableArray alloc] initWithArray:self->_binaries copyItems:YES];
+  copy.mutableAttributes = [[NSMutableArray alloc] initWithArray:self.mutableAttributes copyItems:YES];
+  copy.tags = self.tags;
+  copy.autotype = self.autotype;
   /* Shallow copy skipps history */
-  entry.isHistory = NO;
+  copy.isHistory = NO;
   
   /* Color */
-  entry.foregroundColor = self.foregroundColor;
-  entry.backgroundColor = self.backgroundColor;
+  copy.foregroundColor = self.foregroundColor;
+  copy.backgroundColor = self.backgroundColor;
   
   /* History */
-  entry.mutableHistory = [[NSMutableArray alloc] initWithArray:self.mutableHistory copyItems:YES];
-  entry.isHistory = self.isHistory;
-  
-  if(wasUndoEnabled) {
-    [self.undoManager enableUndoRegistration];
-  }
-  return entry;
+  copy.mutableHistory = [[NSMutableArray alloc] initWithArray:self.mutableHistory copyItems:YES];
+  copy.isHistory = self.isHistory;
+  /* parent at last, to prevent undo/redo registration */
+  copy.parent = self.parent;
+  return copy;
 }
 
 #pragma mark NSCoding

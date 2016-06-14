@@ -318,19 +318,11 @@
 
 - (instancetype)_copyWithUUUD:(NSUUID *)uuid {
   KPKNode *copy = [[[self class] alloc] _initWithUUID:uuid];
-  BOOL wasUndoEnabled = self.undoManager.isUndoRegistrationEnabled;
-  if(wasUndoEnabled) {
-    [self.undoManager disableUndoRegistration];
-  }
   copy.iconId = self.iconId;
   copy.iconUUID = self.iconUUID;
-  copy.parent = self.parent;
   copy.notes = self.notes;
   copy.title = self.title;
   copy.timeInfo = self.timeInfo;
-  if(wasUndoEnabled) {
-    [self.undoManager enableUndoRegistration];
-  }
   return copy;
 }
 
