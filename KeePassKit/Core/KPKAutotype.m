@@ -201,6 +201,14 @@
   return nil;
 }
 
+- (void)setEnabled:(BOOL)enabled {
+  if(_enabled == enabled) {
+    return;
+  }
+  [self.entry touchModified];
+  _enabled = enabled;
+}
+
 - (NSString *)defaultKeystrokeSequence {
   /* The default sequence is inherited, so just bubble up */
   if(self.hasDefaultKeystrokeSequence) {

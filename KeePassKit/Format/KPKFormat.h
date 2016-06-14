@@ -64,6 +64,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlRoot;
 FOUNDATION_EXTERN NSString *const kKPKXmlHeaderHash;
 FOUNDATION_EXTERN NSString *const kKPKXmlMeta;
 FOUNDATION_EXTERN NSString *const kKPKXmlGroup;
+FOUNDATION_EXTERN NSString *const kKPKXmlEntry;
 
 #pragma mark Metainformation
 FOUNDATION_EXTERN NSString *const kKPKXmlGenerator;
@@ -115,8 +116,10 @@ FOUNDATION_EXTERN NSString *const kKPKXmlBinaries;
 FOUNDATION_EXTERN NSString *const kKPKXmlBinaryId;
 
 #pragma mark CustomIcons
+FOUNDATION_EXTERN NSString *const kKPKXmlCustomIconUUID;
 FOUNDATION_EXTERN NSString *const kKPKXmlCustomIcons;
 FOUNDATION_EXTERN NSString *const kKPKXmlIcon;
+FOUNDATION_EXTERN NSString *const kKPKXmlIconReference;
 
 #pragma mark DeletedObjects
 FOUNDATION_EXTERN NSString *const kKPKXmlDeletedObjects;
@@ -133,10 +136,23 @@ FOUNDATION_EXTERN NSString *const kKPKXmlExpires;
 FOUNDATION_EXTERN NSString *const kKPKXmlUsageCount;
 FOUNDATION_EXTERN NSString *const kKPKXmlLocationChanged;
 
+#pragma mark Autotype
+FOUNDATION_EXTERN NSString *const kKPKXmlAutotype;
+FOUNDATION_EXTERN NSString *const kKPKXmlDefaultSequence;
+FOUNDATION_EXTERN NSString *const kKPKXmlDataTransferObfuscation;
+FOUNDATION_EXTERN NSString *const kKPKXmlWindow;
+FOUNDATION_EXTERN NSString *const kKPKXmlAssociation;
+FOUNDATION_EXTERN NSString *const kKPKXmlKeystrokeSequence;
+
+#pragma mark History
+FOUNDATION_EXTERN NSString *const kKPKXmlHistory;
+
 #pragma mark Generic
+FOUNDATION_EXTERN NSString *const kKPKXmlVersion;
 FOUNDATION_EXTERN NSString *const kKPKXmlKey;
 FOUNDATION_EXTERN NSString *const kKPKXmlValue;
 FOUNDATION_EXTERN NSString *const kKPKXmlData;
+FOUNDATION_EXTERN NSString *const kKPKXmlEnabled;
 
 #pragma mark Attributes
 FOUNDATION_EXTERN NSString *const kKPKXmlProtected; // Only used when stored as kdbx files.

@@ -56,6 +56,7 @@ NSString *const kKPKXmlRoot = @"Root";
 NSString *const kKPKXmlHeaderHash = @"HeaderHash";
 NSString *const kKPKXmlMeta = @"Meta";
 NSString *const kKPKXmlGroup = @"Group";
+NSString *const kKPKXmlEntry = @"Entry";
 NSString *const kKPKXmlGenerator = @"Generator";
 NSString *const kKPKXmlDatabaseName = @"DatabaseName";
 NSString *const kKPKXmlDatabaseNameChanged = @"DatabaseNameChanged";
@@ -103,8 +104,10 @@ NSString *const kKPKXmlBinaries = @"Binaries";
 NSString *const kKPKXmlBinaryId = @"ID";
 
 #pragma mark CustomIcons
+NSString *const kKPKXmlCustomIconUUID = @"CustomIconUUID";
 NSString *const kKPKXmlCustomIcons = @"CustomIcons";
 NSString *const kKPKXmlIcon = @"Icon";
+NSString *const kKPKXmlIconReference = @"Ref";
 
 #pragma mark DeletedObjects
 NSString *const kKPKXmlDeletedObjects = @"DeletedObjects";
@@ -121,11 +124,23 @@ NSString *const kKPKXmlExpires = @"Expires";
 NSString *const kKPKXmlUsageCount = @"UsageCount";
 NSString *const kKPKXmlLocationChanged = @"LocationChanged";
 
+#pragma mark Autotype
+NSString *const kKPKXmlAutotype = @"Autotype";
+NSString *const kKPKXmlDefaultSequence = @"DefaultSequence";
+NSString *const kKPKXmlDataTransferObfuscation = @"DataTransferObfuscation";
+NSString *const kKPKXmlWindow = @"Window";
+NSString *const kKPKXmlAssociation = @"Association";
+NSString *const kKPKXmlKeystrokeSequence = @"KeystrokeSequence";
+
+#pragma mark History
+NSString *const kKPKXmlHistory = @"History";
 
 #pragma mark Generic
+NSString *const kKPKXmlVersion = @"Version";
 NSString *const kKPKXmlKey = @"Key";
 NSString *const kKPKXmlValue = @"Value";
 NSString *const kKPKXmlData = @"Data";
+NSString *const kKPKXmlEnabled = @"Enabled";
 
 #pragma mark Attributes
 NSString *const kKPKXmlProtected        = @"Protected";

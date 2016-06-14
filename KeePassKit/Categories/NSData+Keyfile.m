@@ -123,9 +123,9 @@
   // Get the root document element
   DDXMLElement *rootElement = [document rootElement];
   
-  DDXMLElement *metaElement = [rootElement elementForName:@"Meta"];
+  DDXMLElement *metaElement = [rootElement elementForName:kKPKXmlMeta];
   if(metaElement) {
-    DDXMLElement *versionElement = [metaElement elementForName:@"Version"];
+    DDXMLElement *versionElement = [metaElement elementForName:kKPKXmlVersion];
     NSScanner *versionScanner = [[NSScanner alloc] initWithString:[versionElement stringValue]];
     double version = 1;
     if(![versionScanner scanDouble:&version] || version > 1) {
@@ -140,7 +140,7 @@
     return nil;
   }
   
-  DDXMLElement *dataElement = [keyElement elementForName:@"Data"];
+  DDXMLElement *dataElement = [keyElement elementForName:kKPKXmlData];
   if (dataElement == nil) {
     KPKCreateError(error, KPKErrorXMLKeyDataElementMissing, @"ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT", "");
     return nil;

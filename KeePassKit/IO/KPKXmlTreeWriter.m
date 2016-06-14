@@ -209,13 +209,13 @@
 }
 
 - (DDXMLElement *)_xmlEntry:(KPKEntry *)entry skipHistory:(BOOL)skipHistory {
-  DDXMLElement *entryElement = [DDXMLNode elementWithName:@"Entry"];
+  DDXMLElement *entryElement = [DDXMLNode elementWithName:kKPKXmlEntry];
   
   // Add the standard properties
   KPKAddXmlElement(entryElement, kKPKXmlUUID, [entry.uuid encodedString]);
   KPKAddXmlElement(entryElement, kKPKXmlIconId, KPKStringFromLong(entry.iconId));
   if(entry.iconUUID) {
-    KPKAddXmlElement(entryElement, @"CustomIconUUID", [entry.iconUUID encodedString]);
+    KPKAddXmlElement(entryElement, kKPKXmlCustomIconUUID, [entry.iconUUID encodedString]);
   }
   KPKAddXmlElement(entryElement, @"ForegroundColor", [entry.foregroundColor hexString]);
   KPKAddXmlElement(entryElement, @"BackgroundColor", [entry.backgroundColor hexString]);
@@ -236,7 +236,7 @@
   
   // Add the history entries
   if(!skipHistory) {
-    DDXMLElement *historyElement = [DDXMLElement elementWithName:@"History"];
+    DDXMLElement *historyElement = [DDXMLElement elementWithName:kKPKXmlHistory];
     for (KPKEntry *historyEntry in entry.history) {
       [historyElement addChild:[self _xmlEntry:historyEntry skipHistory:YES]];
     }
@@ -262,19 +262,19 @@
    </Association>
    </AutoType>
    */
-  DDXMLElement *autotypeElement = [DDXMLElement elementWithName:@"AutoType"];
-  KPKAddXmlElement(autotypeElement, @"Enabled", KPKStringFromBool(autotype.isEnabled));
+  DDXMLElement *autotypeElement = [DDXMLElement elementWithName:kKPKXmlAutotype];
+  KPKAddXmlElement(autotypeElement, kKPKXmlEnabled, KPKStringFromBool(autotype.isEnabled));
   NSString *obfuscate = autotype.obfuscateDataTransfer ? @"1" : @"0";
-  KPKAddXmlElement(autotypeElement, @"DataTransferObfuscation", obfuscate);
+  KPKAddXmlElement(autotypeElement, kKPKXmlDataTransferObfuscation, obfuscate);
   NSString *keystrokes = autotype.hasDefaultKeystrokeSequence ? nil : autotype.defaultKeystrokeSequence.XMLCompatibleString;
-  KPKAddXmlElementIfNotNil(autotypeElement, @"DefaultSequence", keystrokes);
+  KPKAddXmlElementIfNotNil(autotypeElement, kKPKXmlDefaultSequence, keystrokes);
   
   if((autotype.associations).count > 0) {
     for(KPKWindowAssociation *association in autotype.associations) {
-      DDXMLElement *associationsElement = [DDXMLElement elementWithName:@"Association"];
-      KPKAddXmlElement(associationsElement, @"Window", association.windowTitle.XMLCompatibleString);
+      DDXMLElement *associationsElement = [DDXMLElement elementWithName:kKPKXmlAssociation];
+      KPKAddXmlElement(associationsElement, kKPKXmlWindow, association.windowTitle.XMLCompatibleString);
       NSString *keyStrokes = (association.hasDefaultKeystrokeSequence ? @"" : association.keystrokeSequence.XMLCompatibleString);
-      KPKAddXmlElement(associationsElement, @"KeystrokeSequence", keyStrokes);
+      KPKAddXmlElement(associationsElement, kKPKXmlKeystrokeSequence, keyStrokes);
       [autotypeElement addChild:associationsElement];
     }
   }
@@ -344,7 +344,7 @@
   [binaryElement addChild:valueElement];
   NSUInteger reference = [_binaries indexOfObject:binary];
   NSAssert(reference != NSNotFound, @"Binary has to be in binaries array");
-  KPKAddXmlAttribute(valueElement, @"Ref", KPKStringFromLong(reference));
+  KPKAddXmlAttribute(valueElement, kKPKXmlIconReference, KPKStringFromLong(reference));
   return binaryElement;
 }
 

@@ -64,8 +64,8 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
-    _windowTitle = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"windowTitle"];
-    _keystrokeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"keystrokeSequence"];
+    _windowTitle = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(windowTitle))];
+    _keystrokeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(keystrokeSequence))];
   }
   return self;
 }

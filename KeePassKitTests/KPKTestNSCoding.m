@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 
 #import "KeePassKit.h"
+#import "KeePassKit+Private.h"
 
 @interface KPKTestNSCoding : XCTestCase
 
