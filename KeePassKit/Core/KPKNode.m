@@ -235,6 +235,9 @@
 }
 
 - (void)remove {
+  if([self.delegate respondsToSelector:@selector(willRemoveNode:)]) {
+    [self.delegate willRemoveNode:self];
+  }
   [[self.undoManager prepareWithInvocationTarget:self] addToGroup:self.parent atIndex:[self.parent _indexForNode:self]];
   NSAssert(nil == self.tree.mutableDeletedObjects[self.uuid], @"Node already registered as deleted!");
   self.tree.mutableDeletedObjects[self.uuid] = [[KPKDeletedNode alloc] initWithNode:self];

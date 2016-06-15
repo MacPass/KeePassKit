@@ -17,5 +17,6 @@
 /*
  TODO: Add modify and move calls
  */
+- (void)willRemoveNode:(KPKNode *)node;
 
 @end
