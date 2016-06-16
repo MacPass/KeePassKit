@@ -280,6 +280,14 @@
   }
 }
 
+- (void)setTitle:(NSString *)title {
+  if(![_title isEqualToString:title]) {
+    [[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
+    [self touchModified];
+    _title = [title copy];
+  }
+}
+
 - (NSString *)defaultAutoTypeSequence {
   if(!self.hasDefaultAutotypeSequence) {
     return _defaultAutoTypeSequence;

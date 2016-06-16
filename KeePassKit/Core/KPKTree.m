@@ -106,19 +106,19 @@
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent {
   KPKGroup *group = [[KPKGroup alloc] init];
-  //group.tree = self;
   group.parent = parent;
   return group;
 }
 
 - (KPKEntry *)createEntry:(KPKGroup *)parent {
   KPKEntry *entry = [[KPKEntry alloc] init];
-  entry.parent = parent;
   //entry.tree = self;
   if(!parent.hasDefaultIcon) {
     entry.iconUUID = parent.iconUUID;
     entry.iconId = parent.iconId;
   }
+  /* set parent at the end to prefent undo registration */
+  entry.parent = parent;
   return entry;
 }
 

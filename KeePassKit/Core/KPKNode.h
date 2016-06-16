@@ -55,7 +55,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly) KPKVersion minimumVersion;
 @property(nonatomic, copy, readonly) KPKTimeInfo *timeInfo;
 
-@property(nonatomic, weak) KPKGroup *parent;
+@property(nonatomic, weak, readonly) KPKGroup *parent;
 
 @property(nonatomic, readonly) NSUndoManager *undoManager;
 

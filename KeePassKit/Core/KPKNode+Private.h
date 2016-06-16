@@ -15,6 +15,7 @@
 
 @property(nonatomic, readwrite, weak) KPKTree *tree;
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;
+@property(nonatomic, weak) KPKGroup *parent;
 
 #pragma mark Initalizer
 /* Subclasses have to override these initalizers */
