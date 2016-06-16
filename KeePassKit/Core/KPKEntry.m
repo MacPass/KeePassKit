@@ -560,6 +560,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)addCustomAttribute:(KPKAttribute *)attribute {
+  if(nil == attribute) {
+    return;
+  }
   [self touchModified];
   [self insertObject:attribute inMutableAttributesAtIndex:self.mutableAttributes.count];
   attribute.entry = self;
