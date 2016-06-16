@@ -486,12 +486,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)setTitle:(NSString *)title {
-  //[[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
+  [[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
   [self _setValue:title forAttributeWithKey:kKPKTitleKey];
 }
 
 - (void)setUsername:(NSString *)username {
-  //[[self.undoManager prepareWithInvocationTarget:self] setUsername:self.username];
+  [[self.undoManager prepareWithInvocationTarget:self] setUsername:self.username];
   [self _setValue:username forAttributeWithKey:kKPKUsernameKey];
 }
 
@@ -501,12 +501,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)setNotes:(NSString *)notes {
-  //[[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
+  [[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
   [self _setValue:notes forAttributeWithKey:kKPKNotesKey];
 }
 
 - (void)setUrl:(NSString *)url {
-  //[[self.undoManager prepareWithInvocationTarget:self] setUrl:self.url];
+  [[self.undoManager prepareWithInvocationTarget:self] setUrl:self.url];
   [self _setValue:url forAttributeWithKey:kKPKURLKey];
 }
 
