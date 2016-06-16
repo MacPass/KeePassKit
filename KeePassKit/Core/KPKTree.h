@@ -52,6 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)shouldEditTree:(KPKTree *)tree;
 /**
  *  Delegates can provide an Undo-Manager to enabel Undo-Redo registration inside the tree.
+ *  The provided item is not stored, so you can use this to disable undo/redo globally for a period by just providing nil
+ *  Alternativly you can disable and enable undoregistration on the provided NSUndoManager
  *
  *  @param tree Tree for which an undo manager is requested
  *
