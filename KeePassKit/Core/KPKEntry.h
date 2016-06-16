@@ -140,10 +140,6 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 
 #pragma mark History
 /**
- * Copies all data from the supplied entry and records a history entry
- */
-- (void)commitChangesFromEntry:(KPKEntry *)entry;
-/**
  * pushes the current state of the entry to the history. This should be done befor any user-initiated modifications are introduced
  */
 - (void)pushHistory;

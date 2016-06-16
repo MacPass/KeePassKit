@@ -515,7 +515,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 #pragma mark Editing
-- (void)commitChangesFromEntry:(KPKEntry *)entry {
+/*
+ - (void)commitChangesFromEntry:(KPKEntry *)entry {
   entry = entry.asEntry;
   NSAssert(entry, @"KPKEntry nodes can only update to KPKEntry nodes!");
   if(nil == entry) {
@@ -524,7 +525,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   
   [self _addHistoryEntry:entry];
   
-  /* updates icon, iconID, note, title */
+  // updates icon, iconID, note, title
   self.iconId = entry.iconId;
   self.iconUUID = entry.iconUUID;
   self.title = entry.title;
@@ -540,6 +541,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   
   [self touchModified];
 }
+*/
 
 #pragma mark CustomAttributes
 - (KPKAttribute *)customAttributeForKey:(NSString *)key {
