@@ -225,6 +225,7 @@
   if([_defaultKeystrokeSequence isEqualToString:defaultSequence]) {
     return; // no changes
   }
+  [[self.entry.undoManager prepareWithInvocationTarget:self] setDefaultKeystrokeSequence:_defaultKeystrokeSequence];
   [self.entry touchModified];
   _defaultKeystrokeSequence = defaultSequence.length  > 0 ? [defaultSequence copy] : nil;
 }
@@ -248,6 +249,7 @@
 }
 
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index {
+  [[self.entry.undoManager prepareWithInvocationTarget:self] removeAssociation:association];
   [self.entry touchModified];
   association.autotype = self;
   [self insertObject:association inMutableAssociationsAtIndex:index];
@@ -256,6 +258,7 @@
 - (void)removeAssociation:(KPKWindowAssociation *)association {
   NSUInteger index = [self.mutableAssociations indexOfObject:association];
   if(index != NSNotFound) {
+    [[self.entry.undoManager prepareWithInvocationTarget:self] addAssociation:association atIndex:index];
     [self.entry touchModified];
     association.autotype = nil;
     [self removeObjectFromMutableAssociationsAtIndex:index];

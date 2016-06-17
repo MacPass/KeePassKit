@@ -12,5 +12,6 @@
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSData *data;
+@property (weak) KPKEntry *entry;
 
 @end

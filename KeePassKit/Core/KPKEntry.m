@@ -562,17 +562,26 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)addCustomAttribute:(KPKAttribute *)attribute {
+  [self _addCustomAttribute:attribute atIndex:self.mutableAttributes.count];
+}
+
+- (void)_addCustomAttribute:(KPKAttribute *)attribute atIndex:(NSUInteger)index {
   if(nil == attribute) {
-    return;
+    return; // no attribute
   }
+  if(index > self.mutableAttributes.count) {
+    return; // index out of bounds
+  }
+  [[self.undoManager prepareWithInvocationTarget:self] removeCustomAttribute:attribute];
   [self touchModified];
-  [self insertObject:attribute inMutableAttributesAtIndex:self.mutableAttributes.count];
+  [self insertObject:attribute inMutableAttributesAtIndex:index];
   attribute.entry = self;
 }
 
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
   NSUInteger index = [self.mutableAttributes indexOfObject:attribute];
   if(NSNotFound != index) {
+    [[self.undoManager prepareWithInvocationTarget:self] _addCustomAttribute:attribute atIndex:index];
     [self touchModified];
     attribute.entry = nil;
     [self removeObjectFromMutableAttributesAtIndex:index];
@@ -581,22 +590,32 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark Attachments
 
 - (void)addBinary:(KPKBinary *)binary {
+  [self _addBinary:binary atIndex:_binaries.count];
+}
+
+- (void)_addBinary:(KPKBinary *)binary atIndex:(NSUInteger)index {
   if(nil == binary) {
     return; // nil not allowed
   }
+  if(index > _binaries.count) {
+    return; // index out of bounds!
+  }
   [self touchModified];
-  [self insertObject:binary inBinariesAtIndex:_binaries.count];
+  binary.entry = self;
+  [self insertObject:binary inBinariesAtIndex:index];
+
 }
 
-- (void)removeBinary:(KPKBinary *)attachment {
+- (void)removeBinary:(KPKBinary *)binary {
   /*
    Attachments are stored on entries.
    Only on load the binaries are stored ad meta entries to the tree
    So we do not need to take care of cleanup after we did
    delete an attachment
    */
-  NSUInteger index = [_binaries indexOfObject:attachment];
+  NSUInteger index = [_binaries indexOfObject:binary];
   if(index != NSNotFound) {
+    binary.entry = nil;
     [self touchModified];
     [self removeObjectFromBinariesAtIndex:index];
   }
