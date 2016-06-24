@@ -37,9 +37,6 @@
  */
 @property (nonatomic, readonly) NSString *evaluatedValue;
 
-
-@property (weak) KPKEntry *entry; /// Reference to entry to be able to validate keys
-
 /**
  *  Designates initalizer. Creats a Attribute with the given key, value and set the protetection
  *  @param key       Key for the attributes

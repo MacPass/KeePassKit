@@ -226,7 +226,7 @@
   [entryElement addChild:timesElement];
   
   for(KPKAttribute *attribute in entry.attributes) {
-    [entryElement addChild:[self _xmlAttribute:attribute]];
+    [entryElement addChild:[self _xmlAttribute:attribute metaData:entry.tree.metaData]];
   }
   for(KPKBinary *binary in entry.binaries) {
     [entryElement addChild:[self _xmlBinary:binary]];
@@ -282,11 +282,10 @@
   return autotypeElement;
 }
 
-- (DDXMLElement *)_xmlAttribute:(KPKAttribute *)attribute {
+- (DDXMLElement *)_xmlAttribute:(KPKAttribute *)attribute metaData:(KPKMetaData *)metaData{
   DDXMLElement *attributeElement = [DDXMLElement elementWithName:@"String"];
   KPKAddXmlElement(attributeElement, kKPKXmlKey, attribute.key);
   
-  KPKMetaData *metaData = attribute.entry.tree.metaData;
   NSAssert(metaData, @"Metadata needs to be present for attributes");
   BOOL isProtected = attribute.isProtected;
   if([attribute.key isEqualToString:kKPKNotesKey]) {

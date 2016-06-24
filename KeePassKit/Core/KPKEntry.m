@@ -27,6 +27,7 @@
 #import "KPKBinary.h"
 #import "KPKBinary+Private.h"
 #import "KPKAttribute.h"
+#import "KPKAttribute+Private.h"
 #import "KPKAutotype.h"
 #import "KPKAutotype+Private.h"
 #import "KPKWindowAssociation.h"
