@@ -10,6 +10,7 @@
 
 #import "KPKXmlTreeReader.h"
 
+#import "KPKAttribute+Private.h"
 #import "KPKAutotype+Private.h"
 #import "KPKBinary+Private.h"
 #import "KPKEntry+Private.h"
