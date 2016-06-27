@@ -65,6 +65,6 @@
 }
 
 
-- (void)_assertUndoRedoEmpty
+- (void)_assertUndoRedoEmpty {}
 
 @end

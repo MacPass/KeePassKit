@@ -28,7 +28,6 @@
 #import "KPKFormat.h"
 
 #import "DDXMLElementAdditions.h"
-#import "NSMutableData+Base64.h"
 #import "NSString+Hexdata.h"
 #import "NSData+Random.h"
 
@@ -60,9 +59,7 @@
 }
 
 + (NSData *)_xmlKeyForData:(NSData *)data {
-  NSMutableData *encodedData = [data mutableCopy];
-  [encodedData encodeBase64];
-  NSString *dataString = [[NSString alloc] initWithData:encodedData  encoding:NSUTF8StringEncoding];
+  NSString *dataString = [data base64Encoding];
   NSString *xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>1.00</Version></Meta><Key><Data>%@</Data></Key></KeyFile>", dataString];
   DDXMLDocument *keyDocument = [[DDXMLDocument alloc] initWithXMLString:xmlString options:0 error:NULL];
   return [keyDocument XMLDataWithOptions:DDXMLNodePrettyPrint];
@@ -152,7 +149,7 @@
     KPKCreateError(error, KPKErrorXMLKeyDataParsingError, @"ERROR_XML_KEYFILE_DATA_PARSING_ERROR", "");
     return nil;
   }
-  return [NSMutableData mutableDataWithBase64DecodedData:[dataString dataUsingEncoding:NSUTF8StringEncoding]];
+  return [[NSData alloc] initWithBase64Encoding:dataString];
 }
 
 + (NSData *)_keyDataFromHex:(NSData *)hexData {

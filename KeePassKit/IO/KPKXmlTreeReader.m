@@ -51,7 +51,6 @@
 #import "DDXML.h"
 #import "DDXMLElementAdditions.h"
 
-#import "NSMutableData+Base64.h"
 #import "NSData+CommonCrypto.h"
 #import "NSUUID+KeePassKit.h"
 #import "NSColor+KeePassKit.h"
@@ -121,8 +120,8 @@
     return nil;
   }
   NSString *headerHash = KPKXmlString(metaElement, kKPKXmlHeaderHash);
-  if(headerHash) {
-    NSData *expectedHash = [NSMutableData dataFromBase64EncodedString:headerHash encoding:NSUTF8StringEncoding];
+  if(headerHash) {    
+    NSData *expectedHash = [[NSData alloc] initWithBase64Encoding:headerHash];
     if(![_headerReader verifyHeader:expectedHash]) {
       KPKCreateError(error, KPKErrorXMLHeaderHashVerificationFailed, @"ERROR_HEADER_HASH_VERIFICATION_FAILED", "");
     }
@@ -154,8 +153,7 @@
   DDXMLNode *protectedAttribute = [element attributeForName:kKPKXmlProtected];
   if([[protectedAttribute stringValue] isEqualToString:kKPKXmlTrue]) {
     NSString *valueString = [element stringValue];
-    NSData *valueData = [valueString dataUsingEncoding:NSUTF8StringEncoding];
-    NSMutableData *decodedData = [NSMutableData mutableDataWithBase64DecodedData:valueData];
+    NSMutableData *decodedData = [[[NSData alloc] initWithBase64Encoding:valueString] mutableCopy];
     /*
      XOR the random stream against the data
      */

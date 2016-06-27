@@ -39,8 +39,6 @@
 		4C5CF3CF1BE10DF80019AA81 /* NSData+Random.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3B21BE10DF80019AA81 /* NSData+Random.m */; };
 		4C5CF3D01BE10DF80019AA81 /* NSDate+Packed.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3B31BE10DF80019AA81 /* NSDate+Packed.h */; };
 		4C5CF3D11BE10DF80019AA81 /* NSDate+Packed.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3B41BE10DF80019AA81 /* NSDate+Packed.m */; };
-		4C5CF3D21BE10DF80019AA81 /* NSMutableData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3B51BE10DF80019AA81 /* NSMutableData+Base64.h */; };
-		4C5CF3D31BE10DF80019AA81 /* NSMutableData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3B61BE10DF80019AA81 /* NSMutableData+Base64.m */; };
 		4C5CF3D41BE10DF80019AA81 /* NSMutableData+KeePassKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3B71BE10DF80019AA81 /* NSMutableData+KeePassKit.h */; };
 		4C5CF3D51BE10DF80019AA81 /* NSMutableData+KeePassKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3B81BE10DF80019AA81 /* NSMutableData+KeePassKit.m */; };
 		4C5CF3D61BE10DF80019AA81 /* NSString+Commands.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3B91BE10DF80019AA81 /* NSString+Commands.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -223,8 +221,6 @@
 		4C5CF3B21BE10DF80019AA81 /* NSData+Random.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Random.m"; sourceTree = "<group>"; };
 		4C5CF3B31BE10DF80019AA81 /* NSDate+Packed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Packed.h"; sourceTree = "<group>"; };
 		4C5CF3B41BE10DF80019AA81 /* NSDate+Packed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Packed.m"; sourceTree = "<group>"; };
-		4C5CF3B51BE10DF80019AA81 /* NSMutableData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableData+Base64.h"; sourceTree = "<group>"; };
-		4C5CF3B61BE10DF80019AA81 /* NSMutableData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableData+Base64.m"; sourceTree = "<group>"; };
 		4C5CF3B71BE10DF80019AA81 /* NSMutableData+KeePassKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableData+KeePassKit.h"; sourceTree = "<group>"; };
 		4C5CF3B81BE10DF80019AA81 /* NSMutableData+KeePassKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableData+KeePassKit.m"; sourceTree = "<group>"; };
 		4C5CF3B91BE10DF80019AA81 /* NSString+Commands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Commands.h"; sourceTree = "<group>"; };
@@ -521,8 +517,6 @@
 				4C5CF3B21BE10DF80019AA81 /* NSData+Random.m */,
 				4C5CF3B31BE10DF80019AA81 /* NSDate+Packed.h */,
 				4C5CF3B41BE10DF80019AA81 /* NSDate+Packed.m */,
-				4C5CF3B51BE10DF80019AA81 /* NSMutableData+Base64.h */,
-				4C5CF3B61BE10DF80019AA81 /* NSMutableData+Base64.m */,
 				4C5CF3B71BE10DF80019AA81 /* NSMutableData+KeePassKit.h */,
 				4C5CF3B81BE10DF80019AA81 /* NSMutableData+KeePassKit.m */,
 				4C5CF3B91BE10DF80019AA81 /* NSString+Commands.h */,
@@ -750,7 +744,6 @@
 				4C5CF4551BE10E100019AA81 /* KPKArc4RandomStream.h in Headers */,
 				4C5CF47F1BE10E200019AA81 /* KPKHeaderWriting.h in Headers */,
 				4C5CF47E1BE10E200019AA81 /* KPKHeaderReading.h in Headers */,
-				4C5CF3D21BE10DF80019AA81 /* NSMutableData+Base64.h in Headers */,
 				4C5CF3DA1BE10DF80019AA81 /* NSString+Hexdata.h in Headers */,
 				4C5CF3C61BE10DF80019AA81 /* NSData+CommonCrypto.h in Headers */,
 				4C5CF46F1BE10E100019AA81 /* KPKXmlTreeCryptor.h in Headers */,
@@ -949,7 +942,6 @@
 				4C5CF45C1BE10E100019AA81 /* KPKLegacyHeaderReader.m in Sources */,
 				4C5CF41E1BE10E000019AA81 /* KPKTag.m in Sources */,
 				4C5CF4701BE10E100019AA81 /* KPKXmlTreeCryptor.m in Sources */,
-				4C5CF3D31BE10DF80019AA81 /* NSMutableData+Base64.m in Sources */,
 				4C5CF3CB1BE10DF80019AA81 /* NSData+HashedData.m in Sources */,
 				4C4FF1BB1BE119E60015827B /* NSString+DDXML.m in Sources */,
 				4C5CF3D91BE10DF80019AA81 /* NSString+Empty.m in Sources */,

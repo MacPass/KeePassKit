@@ -21,7 +21,6 @@
 //
 
 #import "KPKIcon.h"
-#import "NSMutableData+Base64.h"
 
 @implementation KPKIcon
 
@@ -123,15 +122,7 @@
 }
 
 - (NSString *)encodedString {
-  NSData *data = self.pngData;
-  if(data) {
-    NSData *encoded = [NSMutableData mutableDataWithBase64EncodedData:data];
-    return [[NSString alloc] initWithData:encoded encoding:NSUTF8StringEncoding];
-  }
-  else {
-    /* Wrong representation */
-    return nil;
-  }
+  return [self.pngData base64Encoding];
 }
 
 - (NSData *)pngData {
@@ -147,7 +138,7 @@
 #pragma mark Private
 
 - (NSImage *)_decodeString:(NSString *)imageString {
-  NSData *data = [NSMutableData mutableDataWithBase64DecodedData:[imageString dataUsingEncoding:NSUTF8StringEncoding]];
+  NSData *data = [[NSData alloc] initWithBase64Encoding:imageString];
   return [[NSImage alloc] initWithData:data];
 }
 

@@ -24,7 +24,6 @@
 #import "KPKBinary.h"
 #import "KPKBinary+Private.h"
 #import "NSData+Gzip.h"
-#import "NSMutableData+Base64.h"
 
 @implementation KPKBinary
 
@@ -120,7 +119,7 @@
 }
 
 - (NSData *)_dataForEncodedString:(NSString *)string compressed:(BOOL)compressed {
-  NSData *data = [NSMutableData mutableDataWithBase64DecodedData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  NSData *data = [[NSData alloc] initWithBase64Encoding:string];
   if(data && compressed) {
     data = [data gzipInflate];
   }
@@ -128,14 +127,11 @@
 }
 
 - (NSString *)encodedStringUsingCompression:(BOOL)compress {
-  NSData *data;
   if(compress) {
-    data = [self.data gzipDeflate];
+    NSData *data = [self.data gzipDeflate];
+    return [data base64Encoding];
   }
-  else {
-    data = self.data;
-  }
-  return [[NSString alloc] initWithData:[NSMutableData mutableDataWithBase64EncodedData:data] encoding:NSUTF8StringEncoding];
+  return [self.data base64Encoding];
 }
 
 @end

@@ -28,7 +28,6 @@
 #import "DDXMLDocument.h"
 #import "DDXMLElementAdditions.h"
 #import "NSUUID+KeePassKit.h"
-#import "NSMutableData+Base64.h"
 
 #import "KPKXmlHeaderWriter.h"
 #import "KPKXmlFormat.h"
@@ -98,8 +97,7 @@
   KPKAddXmlElement(metaElement, kKPKXmlGenerator, metaData.generator);
   
   if(_headerWriter.headerHash) {
-    NSString *headerHash = [[NSString alloc] initWithData:[NSMutableData mutableDataWithBase64EncodedData:_headerWriter.headerHash] encoding:NSUTF8StringEncoding];
-    KPKAddXmlElement(metaElement, kKPKXmlHeaderHash, headerHash);
+    KPKAddXmlElement(metaElement, kKPKXmlHeaderHash, [_headerWriter.headerHash base64Encoding]);
   }
   
   
@@ -412,9 +410,7 @@
     [_randomStream xor:data];
     
     // Base64 encode the string
-    [data encodeBase64];
-    NSString *protected = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    [root setStringValue:protected];
+    [root setStringValue:[data base64Encoding]];
   }
   
   for(DDXMLNode *node in [root children]) {
