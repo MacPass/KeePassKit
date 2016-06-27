@@ -29,6 +29,16 @@
 #import "KPKMetaData.h"
 #import "KPKTimeInfo.h"
 
+/*
+NSString *const KPKWillRemoveNodeNotification = @"com.hicknhack.KeePassKit.KPKWillRemoveNodeNotification";
+NSString *const KPKDidRemoveNodeNotification  = @"com.hicknhack.KeePassKit.KPKDidRemoveNodeNotification";
+NSString *const KPKWillAddNodeNotification    = @"com.hicknhack.KeePassKit.KPKWillAddNodeNotification";
+NSString *const KPKDidAddNodeNotification     = @"com.hicknhack.KeePassKit.KPKDidAddNodeNotification";
+
+NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKNodeKey";
+NSString *const kKPKNodeUUIDKey               = @"com.hicknhack.KeePassKit.kKPKNodeUUIDKey";
+*/
+
 @interface KPKTree () {
   NSMutableDictionary *_tagsMap;
 }

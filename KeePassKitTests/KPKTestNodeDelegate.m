@@ -68,13 +68,6 @@ static NSString *_kKPKDummyExceptionName = @"_kKPKDummyExceptionName";
 - (void)testCustomAttributeModification {}
 
 - (void)testBinaryModification {
-  KPKBinary *binary = [[KPKBinary alloc] init];
-  XCTAssertThrows([self.entry addBinary:binary], @"Adding a binary modifies the entry!");
-  XCTAssertThrows(binary.name = @"New Name", @"Changing the name of the binary modifies the entry!");
-  XCTAssertThrows(binary.data = [NSData dataWithRandomBytes:10], @"Changing the data of the binary modifies the entry!");
-  XCTAssertThrows([self.entry removeBinary:binary], @"Removing a binary modifies the entry!");
-  XCTAssertNoThrow(binary.name = @"Another Name", @"Changing the name of the binary after removing it, does not modify the entry!");
-  XCTAssertNoThrow(binary.data = [NSData dataWithRandomBytes:10], @"Changing the data of the binary after removing it, does not modify the entry!");
 }
 
 @end

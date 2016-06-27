@@ -33,6 +33,14 @@ NS_ASSUME_NONNULL_BEGIN
 @class KPKIcon;
 @class KPKMetaData;
 
+FOUNDATION_EXPORT NSString *const KPKWillRemoveNodeNotification;
+FOUNDATION_EXPORT NSString *const KPKDidRemoveNodeNotification;
+FOUNDATION_EXPORT NSString *const KPKWillAddNodeNotification;
+FOUNDATION_EXPORT NSString *const KPKDidAddNodeNotification;
+
+FOUNDATION_EXPORT NSString *const kKPKNodeKey;
+FOUNDATION_EXPORT NSString *const kKPKNodeUUIDKey;
+
 @protocol KPKTreeDelegate <NSObject>
 
 @optional

@@ -601,8 +601,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(index > _binaries.count) {
     return; // index out of bounds!
   }
+  [[self.undoManager prepareWithInvocationTarget:self] removeBinary:binary];
   [self touchModified];
-  binary.entry = self;
   [self insertObject:binary inBinariesAtIndex:index];
 
 }
@@ -616,7 +616,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
    */
   NSUInteger index = [_binaries indexOfObject:binary];
   if(index != NSNotFound) {
-    binary.entry = nil;
     [self touchModified];
     [self removeObjectFromBinariesAtIndex:index];
   }
