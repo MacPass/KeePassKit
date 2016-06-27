@@ -122,7 +122,7 @@
 - (void)setColor:(NSColor *)color {
   if(![_color isEqual:color]) {
     /*
-     The color for databases does not support a alpha componentet
+     The color for databases does not support a alpha component
      thus we just stripp it
      */
     _color = [[color colorWithAlphaComponent:1.0] copy];
