@@ -199,9 +199,7 @@
 }
 
 - (void)touchModified {
-  if([self.delegate respondsToSelector:@selector(willModifyNode:)]) {
-    [self.delegate willModifyNode:self];
-  }
+  [[NSNotificationCenter defaultCenter] postNotificationName:KPKWillModifyNodeNotification object:self.tree userInfo:@{kKPKNodeKey: self}];
   [self.timeInfo touchModified];
 }
 

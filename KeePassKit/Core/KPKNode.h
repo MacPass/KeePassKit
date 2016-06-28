@@ -24,7 +24,6 @@
 #import <Foundation/Foundation.h>
 #import "KPKVersion.h"
 #import "KPKModificationRecording.h"
-#import "KPKNodeDelegate.h"
 
 @class KPKEntry;
 @class KPKGroup;
@@ -58,8 +57,6 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, weak, readonly) KPKGroup *parent;
 
 @property(nonatomic, readonly) NSUndoManager *undoManager;
-
-@property(nonatomic, weak) id<KPKNodeDelegate> delegate;
 
 @property(nonatomic, readonly) BOOL hasDefaultIcon;
 @property(nonatomic, readonly) BOOL isEditable;
