@@ -41,7 +41,6 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import "KPKWindowAssociation.h"
 
 #import "KPKModificationRecording.h"
-#import "KPKNodeDelegate.h"
 #import "KPKTreeDelegate.h"
 
 #import "KPKErrors.h"

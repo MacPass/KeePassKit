@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class KPKIcon;
 @class KPKMetaData;
 
+FOUNDATION_EXPORT NSString *const KPKWillRemoveNodeNotification;
 /* UserInfo contains node for kKPKNodeKey */
 FOUNDATION_EXPORT NSString *const KPKWillModifyNodeNotification;
 
