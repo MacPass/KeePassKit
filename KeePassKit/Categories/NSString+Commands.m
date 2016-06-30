@@ -91,7 +91,12 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                      kKPKAutotypeShortBackspace2 : kKPKAutotypeBackspace,
                      kKPKAutotypeShortDelete : kKPKAutotypeDelete,
                      kKPKAutotypeShortInsert : kKPKAutotypeInsert,
-                     kKPKAutotypeShortSpace : kKPKAutotypeSpace
+                     kKPKAutotypeShortSpace : kKPKAutotypeSpace,
+                     kKPKAutotypeShortPlus : kKPKAutotypePlus,
+                     kKPKAutotypeShortCaret : kKPKAutotypeCaret,
+                     kKPKAutotypeShortTilde : kKPKAutotypeTilde,
+                     kKPKAutotypeShortPercent : kKPKAutotypePercent,
+                     /* TODO short special, short brackets*/
                      };
   });
   return shortFormats;

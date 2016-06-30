@@ -220,6 +220,8 @@ NSString *const kKPKAutotypeShortBackspace = @"{BS}";
 NSString *const kKPKAutotypeShortBackspace2 = @"{BKSP}";
 NSString *const kKPKAutotypeShortCurlyBracketLeft = @"{{}";
 NSString *const kKPKAutotypeShortCurlyBracketRight = @"{}}";
+NSString *const kKPKAutotypeShortRoundBracketLeft = @"{(}";
+NSString *const kKPKAutotypeShortRoundBracketRight = @"{)}";
 NSString *const kKPKAutotypeShortSpace = @" ";
 NSString *const kKPKAutotypeShortPlus = @"{+}";
 NSString *const kKPKAutotypeShortCaret = @"{^}";
@@ -271,12 +273,12 @@ NSString *const kKPKAutotypePlus = @"{PLUS}";
 NSString *const kKPKAutotypeCaret = @"{CARET}";
 NSString *const kKPKAutotypePercent = @"{PERCENT}";
 NSString *const kKPKAutotypeTilde = @"{TILDE}";
-NSString *const kKPKAutotypeRoundBracketLeft = @"{(}";
-NSString *const kKPKAutotypeRoundBracketRight = @"{)}";
+NSString *const kKPKAutotypeRoundBracketLeft = @"{LEFTPAREN}";
+NSString *const kKPKAutotypeRoundBracketRight = @"{RIGHTPAREN}";
 NSString *const kKPKAutotypeSquareBracketLeft = @"{[}";
 NSString *const kKPKAutotypeSquareBracketRight = @"{]}";
-NSString *const kKPKAutotypeCurlyBracketLeft = @"{CURLYLEFT}";
-NSString *const kKPKAutotypeCurlyBracketRight = @"{CURLYRIGHT}";
+NSString *const kKPKAutotypeCurlyBracketLeft = @"{LEFTBRACE}";
+NSString *const kKPKAutotypeCurlyBracketRight = @"{RIGHTBRACE}";
 
 /* Special Commands */
 NSString *const kKPKAutotypeClearField = @"{CLEARFIELD}";
