@@ -221,6 +221,10 @@ NSString *const kKPKAutotypeShortBackspace2 = @"{BKSP}";
 NSString *const kKPKAutotypeShortCurlyBracketLeft = @"{{}";
 NSString *const kKPKAutotypeShortCurlyBracketRight = @"{}}";
 NSString *const kKPKAutotypeShortSpace = @" ";
+NSString *const kKPKAutotypeShortPlus = @"{+}";
+NSString *const kKPKAutotypeShortCaret = @"{^}";
+NSString *const kKPKAutotypeShortPercent = @"{%}";
+NSString *const kKPKAutotypeShortTilde = @"{~}";
 
 /* Extended Formats*/
 NSString *const kKPKAutotypeShift = @"{SHIFT}";
@@ -263,10 +267,10 @@ NSString *const kKPKAutotypeKeypaddDivide = @"{DIVIDE}";
 NSString *const kKPKAutotypeKeypaddNumberMask = @"\\{NUMPAD[0-9]\\}"; // 0-9
 
 /* Symbols */
-NSString *const kKPKAutotypePlus = @"{+}";
-NSString *const kKPKAutotypeOr = @"{^}";
-NSString *const kKPKAutotypePercent = @"{%}";
-NSString *const kKPKAutotypeTilde = @"{~}";
+NSString *const kKPKAutotypePlus = @"{PLUS}";
+NSString *const kKPKAutotypeCaret = @"{CARET}";
+NSString *const kKPKAutotypePercent = @"{PERCENT}";
+NSString *const kKPKAutotypeTilde = @"{TILDE}";
 NSString *const kKPKAutotypeRoundBracketLeft = @"{(}";
 NSString *const kKPKAutotypeRoundBracketRight = @"{)}";
 NSString *const kKPKAutotypeSquareBracketLeft = @"{[}";

@@ -80,7 +80,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 }
 
 /**
- *  Safe short-formats than can directly be repalced with theri long versions
+ *  Safe short-formats than can directly be repalced with their long versions
  */
 - (NSDictionary *)shortFormats {
   static NSDictionary *shortFormats;
@@ -235,6 +235,9 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   for(NSString *needle in repeaterValues) {
     [mutableCommand replaceOccurrencesOfString:needle withString:repeaterValues[needle] options:NSCaseInsensitiveSearch range:NSMakeRange(0, mutableCommand.length)];
   }
+
+  
+  /* TODO replace {+},{-},{^},{%} */
   
   NSDictionary *shortFormats = [self shortFormats];
   for(NSString *needle in shortFormats) {

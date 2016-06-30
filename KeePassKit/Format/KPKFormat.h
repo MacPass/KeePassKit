@@ -187,6 +187,10 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeShortDelete;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeShortBackspace;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeShortBackspace2;
 FOUNDATION_EXPORT NSString *const kKPKAutotypeShortSpace;
+FOUNDATION_EXPORT NSString *const kKPKAutotypeShortPlus;
+FOUNDATION_EXPORT NSString *const kKPKAutotypeShortCaret;
+FOUNDATION_EXPORT NSString *const kKPKAutotypeShortPercent;
+FOUNDATION_EXPORT NSString *const kKPKAutotypeShortTilde;
 
 /* Normalized */
 FOUNDATION_EXTERN NSString *const kKPKAutotypeEnter;
@@ -230,7 +234,7 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeKeypaddNumberMaskRegularExpression
 
 /* Symbols */
 FOUNDATION_EXTERN NSString *const kKPKAutotypePlus;
-FOUNDATION_EXTERN NSString *const kKPKAutotypeOr;
+FOUNDATION_EXTERN NSString *const kKPKAutotypeCaret;
 FOUNDATION_EXTERN NSString *const kKPKAutotypePercent;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeTilde;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeRoundBracketLeft;
