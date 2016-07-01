@@ -170,7 +170,7 @@
 		4C81382C1BE282DC001BF195 /* Test_Password_1234.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138211BE282DC001BF195 /* Test_Password_1234.kdbx */; };
 		4C81382D1BE282DC001BF195 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138231BE282DC001BF195 /* image.png */; };
 		4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138251BE282DC001BF195 /* Keepass2Key.xml */; };
-		4C835B521D22AA3B0037E4B8 /* KPKTreeDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C835B511D22AA3B0037E4B8 /* KPKTreeDelegate.h */; };
+		4C835B521D22AA3B0037E4B8 /* KPKTreeDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C835B511D22AA3B0037E4B8 /* KPKTreeDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C8F42321C7B2D0D0057AFBF /* KPKTestDatabaseSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8F42311C7B2D0D0057AFBF /* KPKTestDatabaseSize.m */; };
 		4CC34FE71D21290D00D79EC1 /* KPKTestUndoAutotype.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */; };
 /* End PBXBuildFile section */
@@ -719,6 +719,7 @@
 				4C5CF4071BE10E000019AA81 /* KPKAutotype.h in Headers */,
 				4C5CF4251BE10E000019AA81 /* KPKWindowAssociation.h in Headers */,
 				4C5CF4121BE10E000019AA81 /* KPKErrors.h in Headers */,
+				4C835B521D22AA3B0037E4B8 /* KPKTreeDelegate.h in Headers */,
 				4C5CF3CA1BE10DF80019AA81 /* NSData+HashedData.h in Headers */,
 				4C5CF3C41BE10DF80019AA81 /* NSColor+KeePassKit.h in Headers */,
 				4C5CF3CE1BE10DF80019AA81 /* NSData+Random.h in Headers */,
@@ -760,7 +761,6 @@
 				4C5CF42F1BE10E070019AA81 /* KPKLegacyFormat.h in Headers */,
 				4C5CF4831BE10E200019AA81 /* KPKTreeWriting.h in Headers */,
 				4C5CF41D1BE10E000019AA81 /* KPKTag.h in Headers */,
-				4C835B521D22AA3B0037E4B8 /* KPKTreeDelegate.h in Headers */,
 				4C5CF40F1BE10E000019AA81 /* KPKEntry+Private.h in Headers */,
 				4C5CF3D41BE10DF80019AA81 /* NSMutableData+KeePassKit.h in Headers */,
 				4C5CF41A1BE10E000019AA81 /* KPKNode+Private.h in Headers */,
