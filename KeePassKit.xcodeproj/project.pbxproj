@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4C15091D1C74AD10008A2C8E /* KPKMetaData+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C15091B1C74AD10008A2C8E /* KPKMetaData+Private.h */; };
 		4C152C5E1C7617D900380A3B /* KPKGroup+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C152C5C1C7617D900380A3B /* KPKGroup+Private.h */; };
+		4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */; };
 		4C21282E1C1F4F27006DE3C6 /* KPKTestNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */; };
 		4C4FF1B81BE119E60015827B /* DDXMLElementAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4FF1AA1BE119E60015827B /* DDXMLElementAdditions.h */; };
 		4C4FF1B91BE119E60015827B /* DDXMLElementAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4FF1AB1BE119E60015827B /* DDXMLElementAdditions.m */; };
@@ -159,7 +160,6 @@
 		4C5CF4BB1BE10F090019AA81 /* KPKTestXmlWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A71BE10F090019AA81 /* KPKTestXmlWriting.m */; };
 		4C5CF4BC1BE10F090019AA81 /* KPKTextXMLUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */; };
 		4C62F6251D1D77DE0031795C /* KPKAttribute+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C62F6231D1D77DE0031795C /* KPKAttribute+Private.h */; };
-		4C79310A1D0F0FA900A511E8 /* KPKTestNodeDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7931091D0F0FA900A511E8 /* KPKTestNodeDelegate.m */; };
 		4C79310D1D0FF42E00A511E8 /* KPKBinary+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C79310B1D0FF42E00A511E8 /* KPKBinary+Private.h */; };
 		4C8138261BE282DC001BF195 /* Autotype_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */; };
 		4C8138271BE282DC001BF195 /* CustomIcon_Password_1234.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */; };
@@ -188,6 +188,7 @@
 /* Begin PBXFileReference section */
 		4C15091B1C74AD10008A2C8E /* KPKMetaData+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KPKMetaData+Private.h"; sourceTree = "<group>"; };
 		4C152C5C1C7617D900380A3B /* KPKGroup+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KPKGroup+Private.h"; sourceTree = "<group>"; };
+		4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = AutotypeCustomKeystrokeSequence_1234.xml; sourceTree = "<group>"; };
 		4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestNode.m; sourceTree = "<group>"; };
 		4C4FF1AA1BE119E60015827B /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
 		4C4FF1AB1BE119E60015827B /* DDXMLElementAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElementAdditions.m; sourceTree = "<group>"; };
@@ -341,7 +342,6 @@
 		4C5CF4A71BE10F090019AA81 /* KPKTestXmlWriting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestXmlWriting.m; sourceTree = "<group>"; };
 		4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTextXMLUtilities.m; sourceTree = "<group>"; };
 		4C62F6231D1D77DE0031795C /* KPKAttribute+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KPKAttribute+Private.h"; sourceTree = "<group>"; };
-		4C7931091D0F0FA900A511E8 /* KPKTestNodeDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = KPKTestNodeDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C79310B1D0FF42E00A511E8 /* KPKBinary+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KPKBinary+Private.h"; sourceTree = "<group>"; };
 		4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Autotype_test.kdbx; sourceTree = "<group>"; };
 		4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = CustomIcon_Password_1234.kdbx; sourceTree = "<group>"; };
@@ -494,7 +494,6 @@
 				4C5CF4A71BE10F090019AA81 /* KPKTestXmlWriting.m */,
 				4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */,
 				4C8F42311C7B2D0D0057AFBF /* KPKTestDatabaseSize.m */,
-				4C7931091D0F0FA900A511E8 /* KPKTestNodeDelegate.m */,
 				4C5CF3291BE10B650019AA81 /* Info.plist */,
 			);
 			path = KeePassKitTests;
@@ -663,6 +662,7 @@
 			isa = PBXGroup;
 			children = (
 				4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */,
+				4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */,
 				4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */,
 				4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */,
 				4C81381E1BE282DC001BF195 /* KDB1_KeePassX_test.kdb */,
@@ -867,6 +867,7 @@
 			files = (
 				4C8138281BE282DC001BF195 /* CustomIcon_Password_1234.xml in Resources */,
 				4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */,
+				4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
 				4C8138291BE282DC001BF195 /* KDB1_KeePassX_test.kdb in Resources */,
 				4C81382B1BE282DC001BF195 /* Test_Password_1234.kdb in Resources */,
 				4C81382C1BE282DC001BF195 /* Test_Password_1234.kdbx in Resources */,
@@ -964,7 +965,6 @@
 			files = (
 				4C5CF4B61BE10F090019AA81 /* KPKTestReference.m in Sources */,
 				4C5CF4B91BE10F090019AA81 /* KPKTestXmlLoading.m in Sources */,
-				4C79310A1D0F0FA900A511E8 /* KPKTestNodeDelegate.m in Sources */,
 				4C5CF4B31BE10F090019AA81 /* KPKTestNSCopying.m in Sources */,
 				4C5CF4B01BE10F090019AA81 /* KPKTestLegacyWriting.m in Sources */,
 				4C5CF4AA1BE10F090019AA81 /* KPKIconLoading.m in Sources */,

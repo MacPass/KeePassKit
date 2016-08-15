@@ -19,7 +19,7 @@
 @implementation KPKTestXmlWriting
 
 - (void)testXmlWriting {
-  NSData *data = [self _loadTestDataBase:@"CustomIcon_Password_1234" extension:@"kdbx"];
+  NSData *data = [self _loadBundleData:@"CustomIcon_Password_1234" extension:@"kdbx"];
   NSError *error;
   KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   KPKTree *tree = [[KPKTree alloc] initWithData:data password:password error:&error];
@@ -34,6 +34,37 @@
   NSURL *url = [NSURL fileURLWithPath:tempFile];
   KPKTree *reloadedTree = [[KPKTree alloc] initWithContentsOfUrl:url password:password error:&error];
   XCTAssertNotNil(reloadedTree, @"Reloaded tree should not be nil");
+}
+
+- (void)testCustomAutotypeKeystrokeSequenceLoading {
+  NSError *error;
+  KPKTree *tree = [[KPKTree alloc] initWithXmlContentsOfURL:[self _bundleURLForData:@"AutotypeCustomKeystrokeSequence_1234" extension:@"xml"] error:&error];
+  XCTAssertNotNil(tree, @"Tree from XML should not be nil!");
+}
+
+- (void)testAutotypeCustomKeystrokeSequenceSerialization{
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.root = [[KPKGroup alloc] init];
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  NSUUID *uuid = entry.uuid;
+  
+  NSString *sequence = @"{Title}{Title}{Title}";
+  XCTAssertTrue(entry.autotype.hasDefaultKeystrokeSequence, @"Initalized Autotype has default (==nil) sequence");
+  entry.autotype.defaultKeystrokeSequence = sequence;
+  [entry addToGroup:tree.root];
+  
+  XCTAssertEqualObjects(entry.autotype.defaultKeystrokeSequence, sequence);
+  
+  KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  NSError *error;
+  NSData *data = [tree encryptWithPassword:password forVersion:KPKXmlVersion error:&error];
+  XCTAssertNotNil(data, @"Tree encryption yields data!");
+  
+  KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data password:password error:&error];
+  XCTAssertNotNil(decryptedTree, @"Initalized tree from data is present!");
+  KPKEntry *decryptedEntry = [tree.root entryForUUID:uuid];
+  XCTAssertNotNil(entry, @"Encrypted entry is decryted!");
+  XCTAssertEqualObjects(entry, decryptedEntry, @"Decrypted entry is the same as the encrypted one");
 }
 
 - (void)testWindowAssociationWriting {
@@ -60,13 +91,15 @@
   KPKEntry *decryptedEntry = [tree.root entryForUUID:uuid];
   XCTAssertNotNil(entry, @"Encrypted entry is decryted!");
   XCTAssertEqualObjects(entry, decryptedEntry, @"Decrypted entry is the same as the encrypted one");
-  
 }
 
-- (NSData *)_loadTestDataBase:(NSString *)name extension:(NSString *)extension {
+- (NSData *)_loadBundleData:(NSString *)name extension:(NSString *)extension {
+  return [NSData dataWithContentsOfURL:[self _bundleURLForData:name extension:extension]];
+}
+
+- (NSURL *)_bundleURLForData:(NSString *)name extension:(NSString *)extension {
   NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
-  NSURL *url = [myBundle URLForResource:name withExtension:extension];
-  return [NSData dataWithContentsOfURL:url];
+  return [myBundle URLForResource:name withExtension:extension];
 }
 
 @end

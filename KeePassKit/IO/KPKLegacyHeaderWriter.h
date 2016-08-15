@@ -36,7 +36,7 @@
 - (instancetype)initWithTree:(KPKTree *)tree;
 - (void)writeHeaderData:(NSMutableData *)data;
 
-- (void)setContentHash:(NSData *)hash;
+@property (nonatomic, copy) NSData *contentHash;
 @property (nonatomic, readonly, copy) NSData *headerHash;
 
 @end

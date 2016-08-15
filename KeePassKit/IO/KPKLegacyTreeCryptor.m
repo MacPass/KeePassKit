@@ -72,7 +72,7 @@
   
   // Serialize the tree
   KPKLegacyTreeWriter *treeWriter = [[KPKLegacyTreeWriter alloc] initWithTree:tree];
-  NSData *treeData = [treeWriter treeData];
+  NSData *treeData = treeWriter.treeData;
 
   /* Create the key to encrypt the data stream from the password */
   NSData *keyData = [password finalDataForVersion:KPKLegacyVersion
@@ -93,8 +93,7 @@
   }
   
   /* Calculate the content hash */
-  NSData *contentHash = [treeData SHA256Hash];
-  [treeWriter.headerWriter setContentHash:contentHash];
+  treeWriter.headerWriter.contentHash = treeData.SHA256Hash;
   [treeWriter.headerWriter writeHeaderData:fileData];
   [fileData appendData:encryptedTreeData];
   return fileData;

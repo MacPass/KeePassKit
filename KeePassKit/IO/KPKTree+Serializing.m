@@ -49,7 +49,6 @@
 }
 
 - (instancetype)initWithXmlContentsOfURL:(NSURL *)url error:(NSError *__autoreleasing *)error {
-  NSAssert(NO, @"Not implemented");
   NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:error];
   if(!data) {
     return nil;

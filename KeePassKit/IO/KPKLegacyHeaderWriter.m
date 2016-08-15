@@ -39,6 +39,8 @@
 
 @implementation KPKLegacyHeaderWriter
 
+@dynamic contentHash;
+
 - (instancetype)initWithTree:(KPKTree *)tree {
   self = [super init];
   if(self) {
@@ -61,6 +63,10 @@
   // Write out the header
   KPKLegacyHeader header = self.header;
   [data appendBytes:&header length:sizeof(header)];
+}
+
+- (NSData *)contentHash {
+  return [NSData dataWithBytes:_header.contentsHash length:32];
 }
 
 - (void)setContentHash:(NSData *)hash {
