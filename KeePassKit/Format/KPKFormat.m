@@ -125,7 +125,7 @@ NSString *const kKPKXmlUsageCount = @"UsageCount";
 NSString *const kKPKXmlLocationChanged = @"LocationChanged";
 
 #pragma mark Autotype
-NSString *const kKPKXmlAutotype = @"Autotype";
+NSString *const kKPKXmlAutotype = @"AutoType";
 NSString *const kKPKXmlDefaultSequence = @"DefaultSequence";
 NSString *const kKPKXmlDataTransferObfuscation = @"DataTransferObfuscation";
 NSString *const kKPKXmlWindow = @"Window";
