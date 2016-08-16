@@ -100,7 +100,9 @@ BOOL KPKXmlBool(DDXMLElement *element, NSString *name) {
 
 BOOL KPKXmlBoolAttribute(DDXMLElement *element, NSString *attribute) {
   DDXMLNode *node = [element attributeForName:attribute];
-  if(KPKXmlTrue(node)) return YES;
+  if(KPKXmlTrue(node)) {
+    return YES;
+  }
   return NO;
 }
 
@@ -114,7 +116,11 @@ KPKInheritBool parseInheritBool(DDXMLElement *element, NSString *name) {
     return KPKInherit;
   }
   
-  if (KPKXmlTrue(element)) return KPKInheritYES;
-  if (KPKXmlFalse(element)) return KPKInherit;
+  if(KPKXmlTrue(element)) {
+    return KPKInheritYES;
+  }
+  if(KPKXmlFalse(element)) {
+    return KPKInheritNO;
+  }
   return KPKInherit;
 }
