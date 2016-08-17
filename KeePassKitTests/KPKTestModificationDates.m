@@ -31,7 +31,6 @@
 }
 
 - (void)tearDown {
-  // Put teardown code here. This method is called after the invocation of each test method in the class.
   [super tearDown];
   self.group = nil,
   self.entry = nil;
@@ -67,7 +66,7 @@
   XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing node iconUUID");
 }
 
-- (void)testNodeTitleModificationDate {
+- (void)testEntryTitleModificationDate {
   XCTAssertTrue(self.entry.updateTiming, @"updateTiming is enabled");
   NSDate *before = self.entry.timeInfo.modificationDate;
   self.entry.title = @"NewTitle";
@@ -75,7 +74,23 @@
   XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing node title");
 }
 
-- (void)testGroupeNotesModificationDate {
+- (void)testGroupTitleModificationDate {
+  XCTAssertTrue(self.group.updateTiming, @"updateTiming is enabled");
+  NSDate *before = self.group.timeInfo.modificationDate;
+  self.group.title = @"NewTitle";
+  NSComparisonResult compare = [before compare:self.group.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing node title");
+}
+
+- (void)testEntryNotesModificationDate {
+  XCTAssertTrue(self.entry.updateTiming, @"updateTiming is enabled");
+  NSDate *before = self.entry.timeInfo.modificationDate;
+  self.entry.notes = @"NewTitle";
+  NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing group notes");
+}
+
+- (void)testGroupNotesModificationDate {
   XCTAssertTrue(self.group.updateTiming, @"updateTiming is enabled");
   NSDate *before = self.group.timeInfo.modificationDate;
   self.group.notes = @"NewTitle";
@@ -83,8 +98,7 @@
   XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing group notes");
 }
 
-
-- (void)testGroupEntryModificationDate {
+- (void)testGroupEntryRemoveAddModificationDateInvariance {
   XCTAssertTrue(self.group.updateTiming, @"updateTiming is enabled");
   NSDate *before = self.group.timeInfo.modificationDate;
   KPKEntry *entry = [[KPKEntry alloc] init];
@@ -96,7 +110,6 @@
   [entry remove];
   compare = [before compare:self.group.timeInfo.modificationDate];
   XCTAssertTrue(compare == NSOrderedSame, @"Modification of a group does not change when entry is removed");
-
 }
 
 - (void)testEntryDefaultAttributesModifiationDate {
@@ -109,4 +122,39 @@
     XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after modification");
   }
 }
+
+- (void)testEntryCustomAttributeModificationDate {
+  /* add custom attribute */
+  NSDate *before = [self.entry.timeInfo.modificationDate copy];
+  KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:@"key" value:@"value"];
+  [self.entry addCustomAttribute:attribute];
+  NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after adding custom attribute");
+  
+  /* change value of custom attribute */
+  before = [self.entry.timeInfo.modificationDate copy];
+  attribute.value = @"newValue";
+  compare = [before compare:self.entry.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after change in value of custom attribute");
+  
+  /* change key of custom attribute */
+  before = [self.entry.timeInfo.modificationDate copy];
+  attribute.key = @"newKey";
+  compare = [before compare:self.entry.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after change in key of custom attribute");
+  
+  /* remove custom attribute */
+  before = [self.entry.timeInfo.modificationDate copy];
+  [self.entry removeCustomAttribute:attribute];
+  compare = [before compare:self.entry.timeInfo.modificationDate];
+  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after custom attribute was removed");
+}
+
+- (void)testEntryAutotypeModificationDate {
+  NSDate *before = [self.entry.timeInfo.modificationDate copy];
+  self.entry.autotype.defaultKeystrokeSequence = @"newKeyStrokeSequence";
+  KPKWindowAssociation *association = [[KPKWindowAssociation  alloc] initWithWindowTitle:@"windowTitle" keystrokeSequence:@"keys"];
+  [self.entry.autotype addAssociation:association];
+}
+
 @end
