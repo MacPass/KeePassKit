@@ -515,35 +515,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return self;
 }
 
-#pragma mark Editing
-/*
- - (void)commitChangesFromEntry:(KPKEntry *)entry {
-  entry = entry.asEntry;
-  NSAssert(entry, @"KPKEntry nodes can only update to KPKEntry nodes!");
-  if(nil == entry) {
-    return; // only KPKEntry can be used
-  }
-  
-  [self _addHistoryEntry:entry];
-  
-  // updates icon, iconID, note, title
-  self.iconId = entry.iconId;
-  self.iconUUID = entry.iconUUID;
-  self.title = entry.title;
-  self.notes = entry.notes;
-  
-  self.tags = entry.tags;
-  self.foregroundColor = entry.foregroundColor;
-  self.backgroundColor = entry.backgroundColor;
-  self.overrideURL = entry.overrideURL;
-  self.autotype = entry.autotype;
-  self.binaries = [[NSMutableArray alloc] initWithArray:entry->_binaries copyItems:YES];
-  self.mutableAttributes = [[NSMutableArray alloc] initWithArray:self.mutableAttributes copyItems:YES];
-  
-  [self touchModified];
-}
-*/
-
 #pragma mark CustomAttributes
 - (KPKAttribute *)customAttributeForKey:(NSString *)key {
   KPKAttribute *attribute = [self attributeWithKey:key];
@@ -604,7 +575,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [[self.undoManager prepareWithInvocationTarget:self] removeBinary:binary];
   [self touchModified];
   [self insertObject:binary inBinariesAtIndex:index];
-
+  
 }
 
 - (void)removeBinary:(KPKBinary *)binary {
