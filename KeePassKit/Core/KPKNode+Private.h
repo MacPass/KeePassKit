@@ -27,7 +27,7 @@
 - (instancetype)_initWithCoder:(NSCoder *)aDecoder;
 - (void)_encodeWithCoder:(NSCoder *)aCoder;
 
-#pragma makr Copy Helper
+#pragma mark Copy Helper
 /**
  *  Creates a deep copy of the Node.
  *  If a subclass implements this, it's mandatory to also override _init and _initWithUUID:
