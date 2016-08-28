@@ -594,23 +594,58 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark History
 - (void)_addHistoryEntry:(KPKEntry *)entry {
-  [self insertObject:entry inHistoryAtIndex:self.mutableHistory.count];
+  [self insertObject:entry inMutableHistoryAtIndex:self.mutableHistory.count];
 }
 
 - (void)_removeHistoryEntry:(KPKEntry *)entry {
   NSUInteger index = [self.mutableHistory indexOfObject:entry];
   if(index != NSNotFound) {
-    [self removeObjectFromHistoryAtIndex:index];
+    [self removeObjectFromMutableHistoryAtIndex:index];
   }
 }
 - (void)pushHistory {
+  if(!self.tree.metaData.isHistoryEnabled) {
+    return; // Pushing history but it's disabled
+  }
   [self _addHistoryEntry:[self _copyWithUUUD:self.uuid]];
+  [self _maintainHistory];
 }
 
 - (void)clearHistory {
   NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.mutableHistory.count)];
-  [self removeHistoryAtIndexes:indexes];
+  [self removeMutableHistoryAtIndexes:indexes];
 }
+
+- (void)_maintainHistory {
+  if(!self.tree.metaData) {
+    return;
+  }
+  /* if size or count is set to zero, just clear the history */
+  if(self.tree.metaData.historyMaxItems <= 0 || self.tree.metaData.historyMaxSize <= 0) {
+    [self clearHistory];
+  }
+  /* remove item if cout is too high */
+  NSInteger removeCount = self.mutableHistory.count - self.tree.metaData.historyMaxItems;
+  if(removeCount > 0) {
+    [self removeMutableHistoryAtIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(self.mutableHistory.count, removeCount)]];
+  }
+  /* remove items is size it to big */
+  NSUInteger historySize = 0;
+  NSUInteger removeIndex = -1;
+  NSEnumerator *enumerator = [self.mutableHistory reverseObjectEnumerator];
+  KPKEntry *historyEntry;
+  while(historyEntry = [enumerator nextObject]){
+    historySize += historyEntry.estimatedByteSize;
+    if(historySize > self.tree.metaData.historyMaxSize) {
+      removeIndex = [self.mutableHistory indexOfObject:historyEntry];
+      break;
+    }
+  }
+  if(removeIndex > 0) {
+    [self removeMutableHistoryAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(removeIndex, self.mutableHistory.count - removeIndex)]];
+  }
+}
+
 
 - (NSUInteger)estimatedByteSize {
   
@@ -689,11 +724,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 /* History */
-- (NSUInteger)countOfHistory {
+- (NSUInteger)countOfMutableHistory {
   return self.mutableHistory.count;
 }
 
-- (void)insertObject:(KPKEntry *)entry inHistoryAtIndex:(NSUInteger)index {
+- (void)insertObject:(KPKEntry *)entry inMutableHistoryAtIndex:(NSUInteger)index {
   index = MIN(self.mutableHistory.count, index);
   /* Entries in history should not have a history of their own */
   [entry clearHistory];
@@ -703,11 +738,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [self.mutableHistory insertObject:entry atIndex:index];
 }
 
-- (void)removeObjectFromHistoryAtIndex:(NSUInteger)index {
-  [self removeHistoryAtIndexes:[NSIndexSet indexSetWithIndex:index]];
+- (void)removeObjectFromMutableHistoryAtIndex:(NSUInteger)index {
+  [self removeMutableHistoryAtIndexes:[NSIndexSet indexSetWithIndex:index]];
 }
 
-- (void)removeHistoryAtIndexes:(NSIndexSet *)indexes {
+- (void)removeMutableHistoryAtIndexes:(NSIndexSet *)indexes {
   [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
     KPKEntry *historyEntry = self.mutableHistory[idx];
     NSAssert(historyEntry != nil, @"History indexes need to be valid!");

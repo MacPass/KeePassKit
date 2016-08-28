@@ -141,6 +141,10 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 #pragma mark History
 /**
  * pushes the current state of the entry to the history. This should be done befor any user-initiated modifications are introduced
+ * Settings for entry size or count will be considered!
+ * If only the count is too high, the oldest history entry will be removed after the new one was added.
+ * If the size it so high, KeePassKit removed the oldes entry until the size limit is meet again.
+ * This might result in no history entry at all, depending on the settings!
  */
 - (void)pushHistory;
 /**
