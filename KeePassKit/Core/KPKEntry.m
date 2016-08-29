@@ -623,15 +623,18 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   /* if size or count is set to zero, just clear the history */
   if(self.tree.metaData.historyMaxItems <= 0 || self.tree.metaData.historyMaxSize <= 0) {
     [self clearHistory];
+    return;
   }
-  /* remove item if cout is too high */
+  NSAssert(self.tree.metaData.historyMaxItems > 0, @"Invalid maxium history count!");
+  NSAssert(self.tree.metaData.historyMaxSize > 0, @"Invalid maxium history size!");
+  /* remove item if count is too high */
   NSInteger removeCount = self.mutableHistory.count - self.tree.metaData.historyMaxItems;
   if(removeCount > 0) {
-    [self removeMutableHistoryAtIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(self.mutableHistory.count, removeCount)]];
+    [self removeMutableHistoryAtIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(self.tree.metaData.historyMaxItems - 1, removeCount)]];
   }
   /* remove items is size it to big */
   NSUInteger historySize = 0;
-  NSUInteger removeIndex = -1;
+  NSInteger removeIndex = -1;
   NSEnumerator *enumerator = [self.mutableHistory reverseObjectEnumerator];
   KPKEntry *historyEntry;
   while(historyEntry = [enumerator nextObject]){
@@ -641,7 +644,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
       break;
     }
   }
-  if(removeIndex > 0) {
+  if(removeIndex >= 0) {
     [self removeMutableHistoryAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(removeIndex, self.mutableHistory.count - removeIndex)]];
   }
 }
