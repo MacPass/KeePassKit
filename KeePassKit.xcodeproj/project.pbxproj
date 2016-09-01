@@ -173,6 +173,7 @@
 		4C835B521D22AA3B0037E4B8 /* KPKTreeDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C835B511D22AA3B0037E4B8 /* KPKTreeDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C8F42321C7B2D0D0057AFBF /* KPKTestDatabaseSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8F42311C7B2D0D0057AFBF /* KPKTestDatabaseSize.m */; };
 		4CC34FE71D21290D00D79EC1 /* KPKTestUndoAutotype.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */; };
+		4CCE00C71D78598800B8D50A /* KPKTimeInfo+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCE00C51D78598800B8D50A /* KPKTimeInfo+Private.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -355,6 +356,7 @@
 		4C835B511D22AA3B0037E4B8 /* KPKTreeDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKTreeDelegate.h; sourceTree = "<group>"; };
 		4C8F42311C7B2D0D0057AFBF /* KPKTestDatabaseSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestDatabaseSize.m; sourceTree = "<group>"; };
 		4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestUndoAutotype.m; sourceTree = "<group>"; };
+		4CCE00C51D78598800B8D50A /* KPKTimeInfo+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KPKTimeInfo+Private.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -567,6 +569,7 @@
 				4C5CF3FA1BE10E000019AA81 /* KPKTag.h */,
 				4C5CF3FB1BE10E000019AA81 /* KPKTag.m */,
 				4C5CF3FC1BE10E000019AA81 /* KPKTimeInfo.h */,
+				4CCE00C51D78598800B8D50A /* KPKTimeInfo+Private.h */,
 				4C5CF3FD1BE10E000019AA81 /* KPKTimeInfo.m */,
 				4C5CF3FE1BE10E000019AA81 /* KPKTree+Private.h */,
 				4C5CF3FF1BE10E000019AA81 /* KPKTree.h */,
@@ -756,6 +759,7 @@
 				4C5CF45B1BE10E100019AA81 /* KPKLegacyHeaderReader.h in Headers */,
 				4C5CF46D1BE10E100019AA81 /* KPKXmlHeaderWriter.h in Headers */,
 				4C5CF4631BE10E100019AA81 /* KPKLegacyTreeWriter.h in Headers */,
+				4CCE00C71D78598800B8D50A /* KPKTimeInfo+Private.h in Headers */,
 				4C5CF48E1BE10E250019AA81 /* KPKLegacyHeaderUtility.h in Headers */,
 				4C5CF4571BE10E100019AA81 /* KPKDataStreamReader.h in Headers */,
 				4C5CF42F1BE10E070019AA81 /* KPKLegacyFormat.h in Headers */,

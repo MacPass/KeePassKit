@@ -28,6 +28,7 @@
 #import "KPKGroup+Private.h"
 #import "KPKIconTypes.h"
 #import "KPKTimeInfo.h"
+#import "KPKTimeInfo+Private.h"
 #import "KPKTree.h"
 #import "KPKTree+Private.h"
 #import "KPKMetaData.h"
@@ -187,6 +188,13 @@
   _iconUUID = iconUUID;
 }
 
+- (void)setTimeInfo:(KPKTimeInfo *)timeInfo {
+  if(self.timeInfo != timeInfo) {
+    _timeInfo = [timeInfo copy];
+    timeInfo.node = self;
+  }
+}
+
 #pragma mark KPKTimerecording
 - (void)setUpdateTiming:(BOOL)updateTiming {
   self.timeInfo.updateTiming = updateTiming;
@@ -286,7 +294,7 @@
   self = [super init];
   if (self) {
     _uuid = uuid ? [uuid copy] : [[[NSUUID alloc] init] copy];
-    _timeInfo = [[[KPKTimeInfo alloc] init] copy];
+    self.timeInfo = [[KPKTimeInfo alloc] init];
     _iconId = [[self class] defaultIcon];
   }
   return self;
@@ -299,7 +307,7 @@
     _iconId = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(iconId))];
     _iconUUID = [[aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))] copy];
     /* decode time info at last */
-    _timeInfo = [[aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))] copy];
+    self.timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
   }
   return self;
 }

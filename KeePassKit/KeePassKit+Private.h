@@ -17,6 +17,7 @@
 #import "KPKGroup+Private.h"
 #import "KPKNode+Private.h"
 #import "KPKTree+Private.h"
+#import "KPKTimeInfo+Private.h"
 #import "KPKMetaData+Private.h"
 #import "KPKWindowAssociation+Private.h"
 

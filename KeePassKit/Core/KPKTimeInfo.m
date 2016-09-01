@@ -21,6 +21,7 @@
 //
 
 #import "KPKTimeInfo.h"
+#import "KPKTimeInfo+Private.h"
 #import "KPKNode.h"
 #import "KPKTree.h"
 
@@ -118,6 +119,7 @@
 #pragma mark Properties
 - (void)setExpires:(BOOL)expires {
   if(self.expires != expires) {
+    [[self.node.undoManager prepareWithInvocationTarget:self] setExpires:self.expires];
     [self touchModified];
     _expires = expires;
     [self _updateExpireState];
@@ -126,6 +128,7 @@
 
 - (void)setExpirationDate:(NSDate *)expirationDate {
   if(self.expirationDate != expirationDate) {
+    [[self.node.undoManager prepareWithInvocationTarget:self] setExpirationDate:self.expirationDate];
     [self touchModified];
     _expirationDate = expirationDate;
     [self _updateExpireState];
