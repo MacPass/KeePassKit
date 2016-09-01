@@ -179,7 +179,10 @@
   XCTAssertEqual(_tree.root.groups.count, 2, @"Root has 2 child groups");
   XCTAssertFalse([_tree.root.groups containsObject:group], @"Created group is not in root after undo");
   
-  XCTAssertEqual(_tree.deletedObjects.count, 0, @"There are no deleted objects in the database");
+  XCTAssertEqual(_tree.mutableDeletedObjects.count, 1, @"1 deleten object in tree");
+  XCTAssertEqual(_tree.mutableDeletedNodes.count, 1, @"One deleted node in tree");
+  XCTAssertEqual(_tree.mutableDeletedNodes[group.uuid], group, @"Group is stored in deletedNodes for tree!");
+  XCTAssertNotNil(_tree.mutableDeletedObjects[group.uuid], @"DeletedObjects has record of deleted Group");
   
   [_undoManager redo];
   
