@@ -35,11 +35,9 @@
 #import "NSUUID+KeePassKit.h"
 
 @implementation KPKNode {
-  BOOL _deleted;
   KPKTree *_tree;
 }
 
-//@synthesize deleted = _deleted;
 @dynamic notes;
 @dynamic title;
 @dynamic minimumVersion;
@@ -97,7 +95,7 @@
   }
   /* We do not compare UUIDs as those are supposed to be different for nodes unless they are encoded/decoded */
   NSAssert([aNode isKindOfClass:[KPKNode class]], @"Unsupported type for quality test");
-  //BOOL isEqual = [_timeInfo isEqual:aNode->_timeInfo]
+  
   BOOL isEqual = (_iconId == aNode->_iconId)
   && (_iconUUID == aNode.iconUUID || [_iconUUID isEqual:aNode->_iconUUID])
   && (self.title == aNode.title || [self.title isEqual:aNode.title])
@@ -290,7 +288,6 @@
     _uuid = uuid ? [uuid copy] : [[[NSUUID alloc] init] copy];
     _timeInfo = [[[KPKTimeInfo alloc] init] copy];
     _iconId = [[self class] defaultIcon];
-    _deleted = NO;
   }
   return self;
 }
