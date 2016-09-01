@@ -191,7 +191,7 @@
 - (void)setTimeInfo:(KPKTimeInfo *)timeInfo {
   if(self.timeInfo != timeInfo) {
     _timeInfo = [timeInfo copy];
-    timeInfo.node = self;
+    _timeInfo.node = self;
   }
 }
 
