@@ -29,8 +29,9 @@
 
 @interface KPKMetaData : NSObject <KPKModificationRecording>
 
-@property(nonatomic) uint64_t rounds;
-@property(nonatomic) uint32_t compressionAlgorithm;
+@property(assign) uint64_t rounds;
+@property(assign) uint32_t compressionAlgorithm;
+@property(copy) NSUUID *cipherUUID;
 
 @property(nonatomic, copy) NSString *generator;
 
@@ -66,11 +67,11 @@
 @property(nonatomic, copy) NSDate *entryTemplatesGroupChanged;
 
 @property(nonatomic, readonly) BOOL isHistoryEnabled;
-@property(nonatomic) NSInteger historyMaxItems;
-@property(nonatomic) NSInteger historyMaxSize; // Megabytes
+@property NSInteger historyMaxItems;
+@property NSInteger historyMaxSize; // Megabytes
 
-@property(nonatomic, copy) NSUUID *lastSelectedGroup;
-@property(nonatomic, copy) NSUUID *lastTopVisibleGroup;
+@property(copy) NSUUID *lastSelectedGroup;
+@property(copy) NSUUID *lastTopVisibleGroup;
 
 @property(nonatomic, copy, readonly) NSArray<KPKBinary *> *customData;
 @property(nonatomic, copy, readonly) NSArray<KPKIcon *> *customIcons;

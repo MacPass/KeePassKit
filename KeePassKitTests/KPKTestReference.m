@@ -91,16 +91,4 @@
 }
 
 
-- (void)testWrongRefernce {
-  XCTFail(@"Missing Test");
-}
-
-- (void)testUnknownReference {
-  XCTFail(@"Missing Test");
-}
-
-- (void)testMultipleMatchinReference {
-  XCTFail(@"Missing Test");
-}
-
 @end

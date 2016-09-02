@@ -21,8 +21,6 @@
 //
 
 @import Foundation;
-#import "KPKVersion.h"
-
 /**
  *  Signatures for the Binary (Keepass1) file format
  */
@@ -34,8 +32,11 @@ FOUNDATION_EXTERN uint32_t const kKPKBinarySignature2;
 /**
  *  Signatrues and Data for the XML (Keepass2) file format
  */
-FOUNDATION_EXTERN uint32_t const  kKPKXMLFileVersion;
-FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersionCriticalMax;
+FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion3;
+FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion3CriticalMax;
+FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion4;
+FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion4CriticalMax;
+
 FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersionCriticalMask;
 
 FOUNDATION_EXTERN uint32_t const kKPKXMLSignature1;
@@ -148,7 +149,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlKeystrokeSequence;
 FOUNDATION_EXTERN NSString *const kKPKXmlHistory;
 
 #pragma mark Generic
-FOUNDATION_EXTERN NSString *const kKPKXmlVersion;
+FOUNDATION_EXTERN NSString *const kKPKDatabaseTypeXml;
 FOUNDATION_EXTERN NSString *const kKPKXmlKey;
 FOUNDATION_EXTERN NSString *const kKPKXmlValue;
 FOUNDATION_EXTERN NSString *const kKPKXmlData;
@@ -255,6 +256,18 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualKey;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualNonExtendedKey;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualExtendedKey;
 
+typedef NS_ENUM( NSUInteger, KPKDatabaseType ) {
+  KPKDatabaseTypeUnknown,
+  KPKDatabaseTypeBinary,
+  KPKDatabaseTypeXml,
+};
+
+
+typedef struct {
+  KPKDatabaseType type;
+  NSUInteger version;
+} KPKFileInfo;
+
 /**
  Format class.
  Holds all allowed keys for an element.
@@ -265,16 +278,7 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualExtendedKey;
  */
 + (instancetype)sharedFormat;
 
-/**
- @param data The input data to read
- @returns the Version for this file type
- */
-- (KPKVersion)databaseVersionForData:(NSData *)data;
-/**
- @param data The input data of a kdb file
- @returns the interla veriosn number, NOT if it's a Version1 or Version2 file. Use databaseVersionForData to dertmine the Version
- */
-- (uint32_t)fileVersionForData:(NSData *)data;
+- (KPKFileInfo)fileInfoForData:(NSData *)data;
 /**
  @returns A set containing the strings that are default keys for enty attributes
  */

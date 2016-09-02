@@ -41,6 +41,21 @@
 
 @implementation KPKXmlHeaderReader
 
+@dynamic headerHash;
+@dynamic contentsHash;
+@dynamic numberOfGroups;
+@dynamic numberOfEntries;
+
+@synthesize encryptionIV = _encryptionIV;
+@synthesize masterSeed = _masterSeed;
+@synthesize transformSeed = _transformSeed;
+@synthesize cipherUUID = _cipherUUID;
+@synthesize compressionAlgorithm = _compressionAlgorithm;
+@synthesize streamStartBytes = _streamStartBytes;
+@synthesize protectedStreamKey = _protectedStreamKey;
+@synthesize rounds = _rounds;
+@synthesize randomStreamID = _randomStreamID;
+
 - (instancetype)init {
   self = [super init];
   if(self) {
@@ -86,9 +101,9 @@
 
 - (BOOL)_parseHeader:(NSError *__autoreleasing *)error {
   KPKFormat *format = [KPKFormat sharedFormat];
-  uint32_t version = [format fileVersionForData:_data];
+  KPKFileInfo info = [format fileInfoForData:_data];
   
-  if ((version & kKPKXMLFileVersionCriticalMask) > (kKPKXMLFileVersionCriticalMax & kKPKXMLFileVersionCriticalMask)) {
+  if ((info.version & kKPKXMLFileVersionCriticalMask) > (kKPKXMLFileVersion3CriticalMax & kKPKXMLFileVersionCriticalMask)) {
     KPKCreateError(error, KPKErrorUnsupportedDatabaseVersion, @"ERROR_UNSUPPORTED_DATABASER_VERSION", "");
     return NO;
   }
@@ -118,16 +133,11 @@
         break;
         
       case KPKHeaderKeyCipherId: {
-        BOOL cipherOk = YES;
         if(fieldSize == 16) {
           _cipherUUID = [[NSUUID alloc] initWithData:[_dataStreamer dataWithLength:fieldSize]];
-          cipherOk = [[NSUUID AESUUID] isEqual:_cipherUUID];
         }
         else {
-          cipherOk = NO;
-        }
-        if(!cipherOk) {
-          KPKCreateError(error, KPKErrorUnsupportedCipher, @"ERROR_UNSUPPORTED_CHIPHER", "");
+          KPKCreateError(error, KPKErrorXMLInvalidHeaderFieldSize, @"ERROR_INVALID_HEADER_FIELD_SIZE", "");
           return NO;
         }
         break;

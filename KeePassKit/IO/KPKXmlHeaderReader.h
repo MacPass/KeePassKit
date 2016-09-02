@@ -26,18 +26,6 @@
 
 @interface KPKXmlHeaderReader : NSObject <KPKHeaderReading>
 
-@property (nonatomic, readonly, strong) NSUUID *cipherUUID;
-
-@property (nonatomic, readonly, strong) NSData *masterSeed;
-@property (nonatomic, readonly, strong) NSData *transformSeed;
-@property (nonatomic, readonly, strong) NSData *encryptionIV;
-@property (nonatomic, readonly, strong) NSData *protectedStreamKey;
-@property (nonatomic, readonly, strong) NSData *streamStartBytes;
-
-@property (nonatomic, readonly, assign) uint32_t compressionAlgorithm; // KPKCompression
-@property (nonatomic, readonly, assign) uint32_t randomStreamID; // KPKRandomStreamType
-@property (nonatomic, readonly, assign) uint64_t rounds;
-
 /**
  Initalizes a new Chipher information with random seeds
  @returns the initalized instance

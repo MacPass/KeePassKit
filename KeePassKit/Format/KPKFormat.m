@@ -25,14 +25,16 @@
 #import "KPKXmlFormat.h"
 
 #pragma mark Signatures/Format
-uint32_t const kKPKBinaryFileVersion      = 0x00030004;
-uint32_t const kKPKBinaryFileVersionMask  = 0xFFFFFF00;
-uint32_t const kKPKBinarySignature1       = 0x9AA2D903;
-uint32_t const kKPKBinarySignature2       = 0xB54BFB65;
+uint32_t const kKPKBinaryFileVersion            = 0x00030004;
+uint32_t const kKPKBinaryFileVersionMask        = 0xFFFFFF00;
+uint32_t const kKPKBinarySignature1             = 0x9AA2D903;
+uint32_t const kKPKBinarySignature2             = 0xB54BFB65;
 
-uint32_t const kKPKXMLFileVersion             = 0x00030001;
-uint32_t const kKPKXMLFileVersionCriticalMax  = 0x00030000;
-uint32_t const kKPKXMLFileVersionCriticalMask = 0xFFFF0000;
+uint32_t const kKPKXMLFileVersion3              = 0x00030001;
+uint32_t const kKPKXMLFileVersion3CriticalMax   = 0x00030000;
+uint32_t const kKPKXMLFileVersion4              = 0x00040000;
+uint32_t const kKPKXMLFileVersion4CriticalMax   = 0x00030000;
+uint32_t const kKPKXMLFileVersionCriticalMask   = 0xFFFF0000;
 
 uint32_t const kKPKXMLSignature1 = 0x9AA2D903;
 uint32_t const kKPKXMLSignature2 = 0xB54BFB67;
@@ -136,7 +138,7 @@ NSString *const kKPKXmlKeystrokeSequence = @"KeystrokeSequence";
 NSString *const kKPKXmlHistory = @"History";
 
 #pragma mark Generic
-NSString *const kKPKXmlVersion = @"Version";
+NSString *const kKPKDatabaseTypeXml = @"Version";
 NSString *const kKPKXmlKey = @"Key";
 NSString *const kKPKXmlValue = @"Value";
 NSString *const kKPKXmlData = @"Data";
@@ -333,12 +335,19 @@ NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
   return [self.entryDefaultKeys indexOfObject:key];
 }
 
-- (KPKVersion)databaseVersionForData:(NSData *)data {
+- (KPKFileInfo)fileInfoForData:(NSData *)data {
+  KPKFileInfo info;
+  info.type = [self _databaseTypeForData:data];
+  info.version = [self _fileVersionForData:data];
+  return info;
+}
+
+- (KPKDatabaseType)_databaseTypeForData:(NSData *)data {
   uint32_t signature1;
   uint32_t signature2;
   
   if(data.length < 7 ) {
-    return KPKUnknownVersion;
+    return KPKDatabaseTypeUnknown;
   }
   
   [data getBytes:&signature1 range:NSMakeRange(0, 4)];
@@ -347,15 +356,15 @@ NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
   signature2 = CFSwapInt32LittleToHost(signature2);
   
   if (signature1 == kKPKBinarySignature1 && signature2 == kKPKBinarySignature2) {
-    return KPKLegacyVersion;
+    return KPKDatabaseTypeBinary;
   }
   if (signature1 == kKPKXMLSignature1 && signature2 == kKPKXMLSignature2 ) {
-    return KPKXmlVersion;
+    return KPKDatabaseTypeXml;
   }
-  return KPKUnknownVersion;
+  return KPKDatabaseTypeUnknown;
 }
 
-- (uint32_t)fileVersionForData:(NSData *)data {
+- (uint32_t)_fileVersionForData:(NSData *)data {
   uint32_t version;
   [data getBytes:&version range:NSMakeRange(8, 4)];
   version = CFSwapInt32LittleToHost(version);

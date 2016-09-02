@@ -25,6 +25,24 @@
 @protocol KPKHeaderReading <NSObject>
 
 @required
+@property (nonatomic, readonly, strong) NSUUID *cipherUUID;
+
+@property (nonatomic, readonly, strong) NSData *masterSeed;
+@property (nonatomic, readonly, strong) NSData *transformSeed;
+@property (nonatomic, readonly, strong) NSData *encryptionIV;
+@property (nonatomic, readonly, strong) NSData *protectedStreamKey;
+@property (nonatomic, readonly, strong) NSData *streamStartBytes;
+
+@property (nonatomic, readonly, assign) uint32_t compressionAlgorithm; // KPKCompression
+@property (nonatomic, readonly, assign) uint32_t randomStreamID; // KPKRandomStreamType
+@property (nonatomic, readonly, assign) uint64_t rounds;
+
+@property (nonatomic, readonly, strong) NSData *contentsHash;
+@property (nonatomic, readonly, strong) NSData *headerHash;
+
+@property (nonatomic, readonly) NSUInteger numberOfEntries;
+@property (nonatomic, readonly) NSUInteger numberOfGroups;
+
 - (instancetype)initWithData:(NSData *)data error:(NSError **)error;
 /**
  @returns the data with the header data removed.

@@ -84,13 +84,13 @@
   _compositeDataVersion2 = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
 }
 
-- (NSData *)finalDataForVersion:(KPKVersion)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
+- (NSData *)finalDataForVersion:(KPKDatabaseType)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
   uint8_t masterKey[kKPKKeyFileLength];
-  if(version == KPKLegacyVersion) {
+  if(version == KPKDatabaseTypeBinary) {
     [_compositeDataVersion1 getBytes:masterKey length:kKPKKeyFileLength];
   }
-  else if(version == KPKXmlVersion) {
+  else if(version == KPKDatabaseTypeXml) {
     [_compositeDataVersion2 getBytes:masterKey length:kKPKKeyFileLength];
   }
   else {
@@ -121,20 +121,20 @@
   return [NSData dataWithBytes:finalKey length: kKPKKeyFileLength];
 }
 
-- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version {
+- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseType)version {
   NSData *data;
   switch(version) {
-    case KPKLegacyVersion:
+    case KPKDatabaseTypeBinary:
       data = [self _createVersion1CompositeDataWithPassword:password keyFile:key];
       break;
-    case KPKXmlVersion:
+    case KPKDatabaseTypeXml:
       data = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
       break;
     default:
       return NO;
   }
   if(data) {
-    NSData *compare = (version == KPKLegacyVersion) ? _compositeDataVersion1 : _compositeDataVersion2;
+    NSData *compare = (version == KPKDatabaseTypeBinary) ? _compositeDataVersion1 : _compositeDataVersion2;
     return [data isEqualToData:compare];
   }
   return NO;
@@ -153,7 +153,7 @@
   else if(!password && keyURL) {
     /* Get the bytes from the keyfile */
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKLegacyVersion error:&error];
+    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKDatabaseTypeBinary error:&error];
     if(!keyFileData) {
       NSLog(@"Error while trying to load keyfile:%@", error.localizedDescription);
       return nil;
@@ -168,7 +168,7 @@
     
     /* Get the bytes from the keyfile */
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKLegacyVersion error:&error];
+    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKDatabaseTypeBinary error:&error];
     if( keyFileData == nil) {
       return nil;
     }
@@ -209,7 +209,7 @@
   if (keyURL) {
     // Get the bytes from the keyfile
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKXmlVersion error:&error];
+    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKDatabaseTypeXml error:&error];
     if(!keyURL) {
       return nil;
     }

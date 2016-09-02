@@ -24,7 +24,7 @@
   KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   KPKTree *tree = [[KPKTree alloc] initWithData:data password:password error:&error];
   error = nil;
-  NSData *saveData = [tree encryptWithPassword:password forVersion:KPKXmlVersion error:&error];
+  NSData *saveData = [tree encryptWithPassword:password forVersion:KPKDatabaseTypeXml error:&error];
   XCTAssertNotNil(saveData, @"Serialization should yield data");
   NSString *tempFile = [NSTemporaryDirectory() stringByAppendingString:@"CustomIcon_Password_1234_save.kdbx"];
   NSLog(@"Saved file to %@", tempFile);
@@ -57,7 +57,7 @@
   
   KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   NSError *error;
-  NSData *data = [tree encryptWithPassword:password forVersion:KPKXmlVersion error:&error];
+  NSData *data = [tree encryptWithPassword:password forVersion:KPKDatabaseTypeXml error:&error];
   XCTAssertNotNil(data, @"Tree encryption yields data!");
   
   KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data password:password error:&error];
@@ -83,7 +83,7 @@
   
   KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   NSError *error;
-  NSData *data = [tree encryptWithPassword:password forVersion:KPKXmlVersion error:&error];
+  NSData *data = [tree encryptWithPassword:password forVersion:KPKDatabaseTypeXml error:&error];
   XCTAssertNotNil(data, @"Tree encryption yields data!");
   
   KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data password:password error:&error];

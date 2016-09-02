@@ -41,7 +41,7 @@
 
 @dynamic notes;
 @dynamic title;
-@dynamic minimumVersion;
+@dynamic minimumType;
 @dynamic updateTiming;
 
 + (NSUInteger)defaultIcon {
@@ -315,7 +315,6 @@
 - (void)_encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeObject:self.timeInfo forKey:NSStringFromSelector(@selector(timeInfo))];
   [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
-  [aCoder encodeInteger:self.minimumVersion forKey:NSStringFromSelector(@selector(minimumVersion))];
   [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
 }

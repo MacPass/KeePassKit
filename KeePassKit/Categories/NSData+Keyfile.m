@@ -33,24 +33,24 @@
 
 @implementation NSData (Keyfile)
 
-+ (NSData *)dataWithContentsOfKeyFile:(NSURL *)url version:(KPKVersion)version error:(NSError *__autoreleasing *)error {
++ (NSData *)dataWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseType)version error:(NSError *__autoreleasing *)error {
   switch (version) {
-    case KPKLegacyVersion:
+    case KPKDatabaseTypeBinary:
       return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
-    case KPKXmlVersion:
+    case KPKDatabaseTypeXml:
       return [self _dataVersion2WithWithContentsOfKeyFile:url error:error];
     default:
       return nil;
   }
 }
 
-+ (NSData *)generateKeyfiledataForVersion:(KPKVersion)version {
++ (NSData *)generateKeyfiledataForVersion:(KPKDatabaseType)version {
   NSData *data = [NSData dataWithRandomBytes:32];
   switch(version) {
-    case KPKLegacyVersion:
+    case KPKDatabaseTypeBinary:
       return [[NSString hexstringFromData:data] dataUsingEncoding:NSUTF8StringEncoding];
       
-    case KPKXmlVersion:
+    case KPKDatabaseTypeXml:
       return [self _xmlKeyForData:data];
     
     default:
@@ -122,7 +122,7 @@
   
   DDXMLElement *metaElement = [rootElement elementForName:kKPKXmlMeta];
   if(metaElement) {
-    DDXMLElement *versionElement = [metaElement elementForName:kKPKXmlVersion];
+    DDXMLElement *versionElement = [metaElement elementForName:kKPKDatabaseTypeXml];
     NSScanner *versionScanner = [[NSScanner alloc] initWithString:[versionElement stringValue]];
     double version = 1;
     if(![versionScanner scanDouble:&version] || version > 1) {

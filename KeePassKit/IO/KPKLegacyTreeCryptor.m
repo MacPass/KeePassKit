@@ -26,7 +26,7 @@
 #import "KPKLegacyTreeReader.h"
 #import "KPKLegacyTreeWriter.h"
 #import "KPKCompositeKey.h"
-#import "KPKVersion.h"
+#import "KPKFormat.h"
 #import "KPKErrors.h"
 
 #import "NSData+CommonCrypto.h"
@@ -41,7 +41,7 @@
     return nil;
   }
   // Create the final key and initialize the AES input stream
-  NSData *keyData = [password finalDataForVersion:KPKLegacyVersion
+  NSData *keyData = [password finalDataForVersion:KPKDatabaseTypeBinary
                                         masterSeed:headerReader.masterSeed
                                      transformSeed:headerReader.transformSeed
                                             rounds:headerReader.rounds];
@@ -75,7 +75,7 @@
   NSData *treeData = treeWriter.treeData;
 
   /* Create the key to encrypt the data stream from the password */
-  NSData *keyData = [password finalDataForVersion:KPKLegacyVersion
+  NSData *keyData = [password finalDataForVersion:KPKDatabaseTypeBinary
                                             masterSeed:treeWriter.headerWriter.masterSeed
                                          transformSeed:treeWriter.headerWriter.transformSeed
                                                 rounds:treeWriter.headerWriter.transformationRounds];

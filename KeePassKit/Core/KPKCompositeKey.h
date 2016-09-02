@@ -22,7 +22,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import "KPKVersion.h"
+#import "KPKFormat.h"
 /**
  *  The Composite Key to be used for encryption and decryption of databases
  *  It does not store key  nor password strings rather creates a composite key
@@ -56,7 +56,7 @@
 /*
  @return the final Data to use to en/decrypt the database
  */
-- (NSData *)finalDataForVersion:(KPKVersion )version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger )rounds;
+- (NSData *)finalDataForVersion:(KPKDatabaseType )version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger )rounds;
 
 /**
  *  Updates the password and keyfile for the composite key
@@ -68,7 +68,7 @@
 /*
  @return YES if the password and/or key are correct for this composite key
  */
-- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKVersion)version;
+- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseType)version;
 
 
 @end

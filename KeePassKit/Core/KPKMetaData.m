@@ -25,6 +25,7 @@
 #import "KPKXmlFormat.h"
 #import "KPKIcon.h"
 #import "KPKTree.h"
+#import "KPKCipher.h"
 
 #import "NSUUID+KeePassKit.h"
 
@@ -64,6 +65,7 @@
     _customIconCache = [[NSMutableDictionary alloc] init];
     _rounds = 50000;
     _compressionAlgorithm = KPKCompressionGzip;
+    _cipherUUID = [[KPKCipher aesCipher] uuid];
     _protectNotes = NO;
     _protectPassword = YES;
     _protectTitle = NO;
@@ -184,6 +186,7 @@
   /* no tree comparison, since the pointers cannot be encoded persitently */
   return self.rounds == other.rounds &&
   self.compressionAlgorithm == other.compressionAlgorithm &&
+  [self.cipherUUID isEqual:other.cipherUUID] &&
   [self.generator isEqualToString:other.generator] &&
   [self.databaseName isEqualToString:other.databaseName] &&
   [self.databaseNameChanged isEqualToDate:other.databaseNameChanged] &&

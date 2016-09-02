@@ -25,7 +25,6 @@
 @interface NSUUID (KeePassKit)
 
 + (NSUUID *)nullUUID;
-+ (NSUUID *)AESUUID;
 + (NSUUID *)uuidWithEncodedString:(NSString *)string;
 
 @property (nonatomic, readonly, copy) NSData *uuidData;

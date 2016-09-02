@@ -26,6 +26,7 @@
 #import "KPKDataStreamWriter.h"
 #import "KPKXmlFormat.h"
 #import "KPKFormat.h"
+#import "KPKCipher.h"
 
 #import "NSData+CommonCrypto.h"
 #import "NSData+Random.h"
@@ -62,11 +63,11 @@
   /* Version and Signature */
   [_writer write4Bytes:CFSwapInt32HostToLittle(kKPKXMLSignature1)];
   [_writer write4Bytes:CFSwapInt32HostToLittle(kKPKXMLSignature2)];
-  [_writer write4Bytes:CFSwapInt32HostToLittle(kKPKXMLFileVersion)];
+  [_writer write4Bytes:CFSwapInt32HostToLittle(kKPKXMLFileVersion3)];
   
   @autoreleasepool {
     uuid_t uuidBytes;
-    [[NSUUID AESUUID] getUUIDBytes:uuidBytes];
+    [[[KPKCipher aesCipher] uuid] getUUIDBytes:uuidBytes];
     NSData *headerData = [NSData dataWithBytesNoCopy:&uuidBytes length:sizeof(uuid_t) freeWhenDone:NO];
     [self _writerHeaderField:KPKHeaderKeyCipherId data:headerData];
     

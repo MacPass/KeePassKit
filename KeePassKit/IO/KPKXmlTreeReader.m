@@ -112,6 +112,7 @@
   /* Set the information we got from the header */
   tree.metaData.rounds = _headerReader.rounds;
   tree.metaData.compressionAlgorithm = _headerReader.compressionAlgorithm;
+  tree.metaData.cipherUUID = _headerReader.cipherUUID;
   
   /* Parse the rest of the metadata from the file */
   DDXMLElement *metaElement = [rootElement elementForName:kKPKXmlMeta];

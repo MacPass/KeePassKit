@@ -425,13 +425,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return YES;
 }
 
-- (KPKVersion)minimumVersion {
+- (KPKDatabaseType)minimumType {
   if(self.binaries.count > 1 ||
      self.customAttributes.count > 0 ||
      self.history.count > 0 ) {
-    return KPKXmlVersion;
+    return KPKDatabaseTypeXml;
   }
-  return KPKLegacyVersion;
+  return KPKDatabaseTypeBinary;
 }
 
 - (void)setMutableAttributes:(NSMutableArray<KPKAttribute *> *)mutableAttributes {

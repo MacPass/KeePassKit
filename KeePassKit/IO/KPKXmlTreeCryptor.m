@@ -23,7 +23,7 @@
 #import "KPKXmlTreeCryptor.h"
 #import "KPKXmlHeaderReader.h"
 #import "KPKCompositeKey.h"
-#import "KPKVersion.h"
+#import "KPKFormat.h"
 #import "KPKErrors.h"
 #import "KPKXmlFormat.h"
 #import "KPKTree.h"
@@ -36,6 +36,8 @@
 #import "KPKXmlTreeReader.h"
 #import "KPKXmlTreeWriter.h"
 #import "KPKXmlHeaderWriter.h"
+
+#import "KPKCipher.h"
 
 #import "DDXMLDocument.h"
 
@@ -53,28 +55,24 @@
    Create the Key
    Supply the Data found in the header
    */
-  NSData *keyData = [password finalDataForVersion:KPKXmlVersion
+  NSData *keyData = [password finalDataForVersion:KPKDatabaseTypeXml
                                        masterSeed:headerReader.masterSeed
                                     transformSeed:headerReader.transformSeed
                                            rounds:headerReader.rounds];
   
-  /*
-   The datastream is AES encrypted. Decrypt using the supplied
-   */
-  CCCryptorStatus cryptoError = kCCSuccess;
-  NSData *aesDecrypted = [[headerReader dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
-                                                                                   key:keyData
-                                                                  initializationVector:headerReader.encryptionIV
-                                                                               options:kCCOptionPKCS7Padding
-                                                                                 error:&cryptoError];
-  if(cryptoError != kCCSuccess) {
-    KPKCreateError(error, KPKErrorDecryptionFaild, @"ERROR_DECRYPTION_FAILED", "");
+  KPKCipher *cipher = [KPKCipher chipherForUUID:headerReader.cipherUUID];
+  if(!cipher) {
+    KPKCreateError(error, KPKErrorUnsupportedCipher, @"ERROR_UNSUPPORTED_CHIPHER", "");
+  }
+  NSData *decryptedData = [cipher decryptDataWithHeaderReader:headerReader withKey:keyData error:error];
+  if(!decryptedData) {
     return nil;
   }
+
   /*
    Compare the first Streambytes with the ones stores in the header
    */
-  NSData *startBytes = [aesDecrypted subdataWithRange:NSMakeRange(0, 32)];
+  NSData *startBytes = [decryptedData subdataWithRange:NSMakeRange(0, 32)];
   if(![headerReader.streamStartBytes isEqualToData:startBytes]) {
     KPKCreateError(error, KPKErrorPasswordAndOrKeyfileWrong, @"ERROR_PASSWORD_OR_KEYFILE_WRONG", "");
     return nil;
@@ -83,7 +81,10 @@
    The Stream is Hashed, read the data and verify it.
    If the Stream was Gzipped, uncrompress it.
    */
-  NSData *unhashedData = [[aesDecrypted subdataWithRange:NSMakeRange(32, aesDecrypted.length - 32)] unhashedData];
+  
+  /* TODO decide what hash to use based on file version */
+  
+  NSData *unhashedData = [[decryptedData subdataWithRange:NSMakeRange(32, decryptedData.length - 32)] unhashedData];
   if(headerReader.compressionAlgorithm == KPKCompressionGzip) {
     unhashedData = [unhashedData gzipInflate];
   }
@@ -106,7 +107,7 @@
     // create Error
     return nil;
   }
-  NSData *key = [password finalDataForVersion:KPKXmlVersion
+  NSData *key = [password finalDataForVersion:KPKDatabaseTypeXml
                                    masterSeed:treeWriter.headerWriter.masterSeed
                                 transformSeed:treeWriter.headerWriter.transformSeed
                                        rounds:treeWriter.tree.metaData.rounds];

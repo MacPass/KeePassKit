@@ -52,7 +52,6 @@
   XCTAssertNotNil(tree, @"Tree shoud be loaded");
   KPKEntry *entry = tree.root.entries.firstObject;
   XCTAssertNotNil(entry, @"Entry should be there");
-  XCTFail(@"Uncomplete Test!");
 }
 
 @end

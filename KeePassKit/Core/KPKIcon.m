@@ -74,17 +74,17 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [[KPKIcon alloc] init];
   if(self) {
-    NSData *imageData = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"image"];
+    NSData *imageData = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(image))];
     _image = [[NSImage alloc] initWithData:imageData];
-    _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:@"uuid"];
+    _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))];
   }
   return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
-    [aCoder encodeObject:self.pngData forKey:@"image"];
-    [aCoder encodeObject:self.uuid forKey:@"uuid"];
+    [aCoder encodeObject:self.pngData forKey:NSStringFromSelector(@selector(image))];
+    [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
   }
 }
 

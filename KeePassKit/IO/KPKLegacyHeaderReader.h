@@ -26,20 +26,6 @@
 
 @interface KPKLegacyHeaderReader : NSObject <KPKHeaderReading>
 
-@property (nonatomic, readonly, strong) NSUUID *cipherUUID;
-
-@property (nonatomic, readonly, strong) NSData *masterSeed;
-@property (nonatomic, readonly, strong) NSData *transformSeed;
-@property (nonatomic, readonly, strong) NSData *encryptionIV;
-
-@property (nonatomic, readonly, assign) uint64_t rounds;
-
-@property (nonatomic, readonly, strong) NSData *contentsHash;
-@property (nonatomic, readonly, strong) NSData *headerHash;
-
-@property (nonatomic, readonly) NSUInteger numberOfEntries;
-@property (nonatomic, readonly) NSUInteger numberOfGroups;
-
 /**
  Initalizes a new Chipher information with random seeds
  @returns the initalized instance

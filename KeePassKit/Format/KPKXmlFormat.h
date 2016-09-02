@@ -40,6 +40,7 @@ typedef NS_ENUM(NSUInteger, KPKHeaderKey ) {
   KPKHeaderKeyProtectedKey,
   KPKHeaderKeyStartBytes,
   KPKHeaderKeyRandomStreamId
+  /* todo add kdbx4 fields */
 };
 
 typedef NS_ENUM(NSUInteger, KPKCompression) {
@@ -52,6 +53,7 @@ typedef NS_ENUM(NSUInteger, KPKRandomStreamType) {
   KPKRandomStreamNone,
   KPKRandomStreamArc4,
   KPKRandomStreamSalsa20,
+  /* todo add chacha */
   KPKRandomStreamCount
 };
 

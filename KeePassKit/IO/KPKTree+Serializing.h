@@ -54,7 +54,7 @@
  *	@param	error	error that might occur
  *	@return	data with the encrypted tree
  */
-- (NSData *)encryptWithPassword:(KPKCompositeKey *)password forVersion:(KPKVersion)version error:(NSError **)error;
+- (NSData *)encryptWithPassword:(KPKCompositeKey *)password forVersion:(KPKDatabaseType)version error:(NSError **)error;
 /**
  *	Serializes the tree into the KeePass xml file
  *	@return	XML file string. Pretty printed

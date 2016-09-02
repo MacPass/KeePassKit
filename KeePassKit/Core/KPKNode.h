@@ -22,7 +22,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import "KPKVersion.h"
+#import "KPKFormat.h"
 #import "KPKModificationRecording.h"
 
 @class KPKEntry;
@@ -51,7 +51,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *notes;
 
-@property(nonatomic, readonly) KPKVersion minimumVersion;
+@property(nonatomic, readonly) KPKDatabaseType minimumType;
 @property(nonatomic, copy, readonly) KPKTimeInfo *timeInfo;
 
 @property(nonatomic, weak, readonly) KPKGroup *parent;

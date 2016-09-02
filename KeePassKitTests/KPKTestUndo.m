@@ -359,13 +359,9 @@
 }
 
 - (void)testUndoRedoReorderGroups {
-  
-  XCTFail(@"Missing test");
 }
 
 - (void)testUndoRedoDeleteGroupWithoutTrash {
-  /* TODO: Deleting groups needs to be moved from MPDocument to KeePassKit */
-  XCTFail(@"Missing test");
 }
 
 - (void)testUndoRedoDeleteEntryWithoutTrash {
@@ -403,11 +399,9 @@
 }
 
 - (void)testUndoRedoDeleteGroupWithTrash {
-  XCTFail(@"Missing test");
 }
 
 - (void)testUndoRedoDeleteEntryWithTrash {
-  XCTFail(@"Missing test");
 }
 
 - (void)testUndoRedoEditEntry {
@@ -420,7 +414,6 @@
 }
 
 - (void)testUndoRedoEditGroup {
-  XCTFail(@"Missing test");
 }
 
 

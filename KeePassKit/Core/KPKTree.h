@@ -21,7 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKVersion.h"
+#import "KPKFormat.h"
 #import "KPKNode.h"
 #import "KPKTreeDelegate.h"
 
@@ -76,7 +76,7 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
  *	The minimum Version of the tree. If any node uses higher
  *  featuers, the whole tree needs to have the highest version
  */
-@property(nonatomic) KPKVersion minimumVersion;
+@property(nonatomic) KPKDatabaseType minimumType;
 
 - (instancetype)initWithTemplateContents;
 

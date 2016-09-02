@@ -36,6 +36,19 @@
 
 @implementation KPKLegacyHeaderReader
 
+@synthesize cipherUUID = _cipherUUID;
+@synthesize masterSeed = _masterSeed;
+@synthesize transformSeed = _transformSeed;
+@synthesize encryptionIV = _encryptionIV;
+@synthesize contentsHash = _contentsHash;
+@synthesize rounds = _rounds;
+@synthesize headerHash = _headerHash;
+
+@dynamic protectedStreamKey;
+@dynamic streamStartBytes;
+@dynamic compressionAlgorithm;
+@dynamic randomStreamID;
+
 - (instancetype)init {
   self = [super init];
   if(self) {

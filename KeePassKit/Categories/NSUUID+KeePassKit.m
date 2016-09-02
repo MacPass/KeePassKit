@@ -24,20 +24,11 @@
 #import "KPKUTIs.h"
 #import "NSString+Hexdata.h"
 
-static NSUUID *aesUUID = nil;
 
 @implementation NSUUID (KeePassKit)
 
 + (NSUUID *)nullUUID {
   return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-0000-0000-000000000000"];
-}
-
-+ (NSUUID *)AESUUID {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    aesUUID = [[NSUUID alloc] initWithUUIDString:@"31C1F2E6-BF71-4350-BE58-05216AFC5AFF"];
-  });
-  return aesUUID;
 }
 
 + (NSUUID *)uuidWithEncodedString:(NSString *)string {

@@ -322,13 +322,13 @@
   _isSearchEnabled = isSearchEnabled;
 }
 
-- (KPKVersion)minimumVersion {
-  KPKVersion version = KPKLegacyVersion;
+- (KPKDatabaseType)minimumType {
+  KPKDatabaseType version = KPKDatabaseTypeBinary;
   for(KPKGroup *group in self.groups) {
-    version = MAX(version, group.minimumVersion);
+    version = MAX(version, group.minimumType);
   }
   for(KPKEntry *entry in self.entries) {
-    version = MAX(version, entry.minimumVersion);
+    version = MAX(version, entry.minimumType);
   }
   return version;
 }
