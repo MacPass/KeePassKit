@@ -41,7 +41,7 @@
   KPKTree *tree = [[KPKTree alloc] initWithData:data password:nil error:&error];
   XCTAssertNil(tree, @"Tree should be nil with invalid data");
   XCTAssertNotNil(error, @"Error object should have been created");
-  XCTAssertTrue(KPKErrorUnknownFileFormat == [error code], @"Error should be Unknown file format");
+  XCTAssertEqual(KPKErrorUnknownFileFormat, error.code, @"Error should be Unknown file format");
 }
 
 
@@ -49,7 +49,7 @@
   NSData *data = [self _loadTestDataBase:@"KDB1_KeePassX_test" extension:@"kdb"];
   KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
   KPKTree *tree = [[KPKTree alloc] initWithData:data password:password error:NULL];
-  XCTAssertNotNil(tree, @"Tree shoudl be loaded" );
+  XCTAssertNotNil(tree, @"Tree should be loaded" );
   
   KPKIcon *icon = (tree.metaData.customIcons).lastObject;
   XCTAssertNotNil(icon, @"Should load one Icon");

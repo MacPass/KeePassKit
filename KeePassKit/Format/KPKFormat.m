@@ -30,6 +30,7 @@ uint32_t const kKPKBinaryFileVersionMask        = 0xFFFFFF00;
 uint32_t const kKPKBinarySignature1             = 0x9AA2D903;
 uint32_t const kKPKBinarySignature2             = 0xB54BFB65;
 
+uint32_t const kKPKInvalidFileVersion           = UINT32_MAX;
 uint32_t const kKPKXMLFileVersion3              = 0x00030001;
 uint32_t const kKPKXMLFileVersion3CriticalMax   = 0x00030000;
 uint32_t const kKPKXMLFileVersion4              = 0x00040000;
@@ -346,7 +347,7 @@ NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
   uint32_t signature1;
   uint32_t signature2;
   
-  if(data.length < 7 ) {
+  if(data.length < 8 ) {
     return KPKDatabaseTypeUnknown;
   }
   
@@ -365,6 +366,9 @@ NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
 }
 
 - (uint32_t)_fileVersionForData:(NSData *)data {
+  if(data.length < 12) {
+    return kKPKInvalidFileVersion;
+  }
   uint32_t version;
   [data getBytes:&version range:NSMakeRange(8, 4)];
   version = CFSwapInt32LittleToHost(version);

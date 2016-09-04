@@ -32,6 +32,7 @@ FOUNDATION_EXTERN uint32_t const kKPKBinarySignature2;
 /**
  *  Signatrues and Data for the XML (Keepass2) file format
  */
+FOUNDATION_EXPORT uint32_t const kKPKInvalidFileVersion;
 FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion3;
 FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion3CriticalMax;
 FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion4;
@@ -41,6 +42,17 @@ FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersionCriticalMask;
 
 FOUNDATION_EXTERN uint32_t const kKPKXMLSignature1;
 FOUNDATION_EXTERN uint32_t const kKPKXMLSignature2;
+
+typedef NS_ENUM( NSUInteger, KPKDatabaseType ) {
+  KPKDatabaseTypeUnknown,
+  KPKDatabaseTypeBinary,
+  KPKDatabaseTypeXml,
+};
+
+typedef struct {
+  KPKDatabaseType type; // KPDatabaseTypeUnknown if not determined (e.g. signatures don't match or file too small)
+  NSUInteger version; // kKPKInvalidFileVersion if version cannot be read (e.g. file too small)
+} KPKFileInfo;
 
 /**
  *  Key
@@ -255,18 +267,6 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeDelay;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualKey;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualNonExtendedKey;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualExtendedKey;
-
-typedef NS_ENUM( NSUInteger, KPKDatabaseType ) {
-  KPKDatabaseTypeUnknown,
-  KPKDatabaseTypeBinary,
-  KPKDatabaseTypeXml,
-};
-
-
-typedef struct {
-  KPKDatabaseType type;
-  NSUInteger version;
-} KPKFileInfo;
 
 /**
  Format class.
