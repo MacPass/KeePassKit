@@ -1,5 +1,7 @@
 #KeePassKit
 
+[![Build Status](https://travis-ci.org/mstarke/KeePassKit.svg?branch=master)](https://travis-ci.org/mstarke/KeePassKit)
+
 KeePass database loading, storing and manipulation framework.
 It's borrowing a lot of code from [MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) and [KeePass Database Library](https://github.com/mpowrie/KeePassLib).
 
