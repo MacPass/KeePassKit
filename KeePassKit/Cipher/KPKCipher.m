@@ -56,12 +56,12 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
   return [[self class] uuid];
 }
 
-- (NSData *)decryptDataWithHeaderReader:(id<KPKHeaderReading>)headerReader withKey:(NSData *)key error:(NSError * _Nullable __autoreleasing *)error {
+- (NSData *)decryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError *__autoreleasing  _Nullable *)error {
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
   return nil;
 }
 
-- (NSData *)encryptDataWithHeaderReader:(id<KPKHeaderReading>)headerReader withKey:(NSData *)key error:(NSError *__autoreleasing  _Nullable *)error {
+- (NSData *)encryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError *__autoreleasing  _Nullable *)error {
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
   return nil;
 }

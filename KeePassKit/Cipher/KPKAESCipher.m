@@ -35,13 +35,13 @@
   return aesUUID;
 }
 
-- (NSData *)decryptDataWithHeaderReader:(id<KPKHeaderReading>)headerReader withKey:(NSData *)key error:(NSError *__autoreleasing  _Nullable *)error {
+- (NSData *)decryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError *__autoreleasing  _Nullable *)error {
   CCCryptorStatus cryptoError = kCCSuccess;
-  NSData *decryptedData = [[headerReader dataWithoutHeader] decryptedDataUsingAlgorithm:kCCAlgorithmAES128
-                                                                                   key:key
-                                                                  initializationVector:headerReader.encryptionIV
-                                                                               options:kCCOptionPKCS7Padding
-                                                                                 error:&cryptoError];
+  NSData *decryptedData = [data decryptedDataUsingAlgorithm:kCCAlgorithmAES128
+                                                        key:key
+                                       initializationVector:iv
+                                                    options:kCCOptionPKCS7Padding
+                                                      error:&cryptoError];
   if(cryptoError != kCCSuccess) {
     KPKCreateError(error, KPKErrorDecryptionFaild, @"ERROR_DECRYPTION_FAILED", "");
     return nil;

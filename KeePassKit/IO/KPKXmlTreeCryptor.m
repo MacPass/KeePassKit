@@ -64,7 +64,11 @@
   if(!cipher) {
     KPKCreateError(error, KPKErrorUnsupportedCipher, @"ERROR_UNSUPPORTED_CHIPHER", "");
   }
-  NSData *decryptedData = [cipher decryptDataWithHeaderReader:headerReader withKey:keyData error:error];
+  NSData *decryptedData = [cipher decryptData:headerReader.dataWithoutHeader
+                                      withKey:keyData
+                         initializationVector:headerReader.encryptionIV
+                                        error:error];
+  
   if(!decryptedData) {
     return nil;
   }
