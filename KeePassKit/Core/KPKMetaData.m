@@ -65,7 +65,7 @@
     _customIconCache = [[NSMutableDictionary alloc] init];
     _rounds = 50000;
     _compressionAlgorithm = KPKCompressionGzip;
-    _cipherUUID = [[KPKCipher aesCipher] uuid];
+    _cipherUUID = [[KPKCipher aesCipher] uuid]; // default Cipher is AES
     _protectNotes = NO;
     _protectPassword = YES;
     _protectTitle = NO;

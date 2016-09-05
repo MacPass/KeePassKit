@@ -616,6 +616,29 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [self removeMutableHistoryAtIndexes:indexes];
 }
 
+- (void)revertToEntry:(KPKEntry *)entry {
+  NSAssert([self.mutableHistory containsObject:entry], @"Supplied entry is not part of history of this entry!");
+  NSAssert([entry.uuid isEqual:self.uuid], @"UUID of history entry needs to be the same as receivers");
+  self.password = entry.password;
+  self.username = entry.username;
+  self.url = entry.url;
+  self.tags = entry.tags;
+  self.foregroundColor = entry.foregroundColor;
+  self.backgroundColor = entry.backgroundColor;
+  self.overrideURL = entry.overrideURL;
+  
+  self.autotype = entry.autotype;
+  
+  self.timeInfo.expires = entry.timeInfo.expires;
+  self.timeInfo.expirationDate = entry.timeInfo.expirationDate;
+
+  if(self.mutableAttributes.count != entry.mutableAttributes.count) {
+    
+  }
+  // TODO copy binaries
+  // TODO copy custom attributes
+}
+
 - (void)_maintainHistory {
   if(!self.tree.metaData) {
     return;

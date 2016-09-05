@@ -23,6 +23,9 @@
 
 #import "KPKCompositeKey.h"
 #import "KPKFormat.h"
+#import "KPKNumber.h"
+#import "KPKAESKeyDerivation.h"
+
 #import "NSData+Keyfile.h"
 
 #import <CommonCrypto/CommonCrypto.h>
@@ -86,39 +89,18 @@
 
 - (NSData *)finalDataForVersion:(KPKDatabaseType)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
-  uint8_t masterKey[kKPKKeyFileLength];
+  KPKKeyDerivation *keyDerivation = [[KPKAESKeyDerivation alloc] init];
+  NSDictionary *options = @{ kKPKAESSeedKey: transformSeed, kKPKAESRoundsKey: [KPKNumber numberWithUnsignedLongLong:rounds] };
+
   if(version == KPKDatabaseTypeBinary) {
-    [_compositeDataVersion1 getBytes:masterKey length:kKPKKeyFileLength];
+    return [keyDerivation deriveData:_compositeDataVersion1 options:options];
   }
   else if(version == KPKDatabaseTypeXml) {
-    [_compositeDataVersion2 getBytes:masterKey length:kKPKKeyFileLength];
+    return [keyDerivation deriveData:_compositeDataVersion2 options:options];
   }
   else {
     return nil; // Wrong Version
   }
-  
-  /* Transform the key */
-  CCCryptorRef cryptorRef;
-  CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES128, kCCOptionECBMode, transformSeed.bytes, kCCKeySizeAES256, nil, &cryptorRef);
-  
-  size_t tmp;
-  for(int i = 0; i < rounds; i++) {
-    CCCryptorUpdate(cryptorRef, masterKey, kKPKKeyFileLength, masterKey, kKPKKeyFileLength, &tmp);
-  }
-  
-  CCCryptorRelease(cryptorRef);
-  uint8_t transformedKey[kKPKKeyFileLength];
-  CC_SHA256(masterKey, kKPKKeyFileLength, transformedKey);
-  
-  /* Hash the master seed with the transformed key into the final key */
-  uint8_t finalKey[kKPKKeyFileLength];
-  CC_SHA256_CTX ctx;
-  CC_SHA256_Init(&ctx);
-  CC_SHA256_Update(&ctx, masterSeed.bytes, (CC_LONG)masterSeed.length);
-  CC_SHA256_Update(&ctx, transformedKey,  kKPKKeyFileLength);
-  CC_SHA256_Final(finalKey, &ctx);
-  
-  return [NSData dataWithBytes:finalKey length: kKPKKeyFileLength];
 }
 
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseType)version {

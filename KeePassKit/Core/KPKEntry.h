@@ -151,6 +151,12 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *	Clears the history and removes all entries
  */
 - (void)clearHistory;
+/**
+ *  Reverts the Entry to an entry in it's history.
+ *
+ *  @param entry The history entry to revert to. If the entry is not part of the history of the receiving entry, an assertion is raised.
+ */
+- (void)revertToEntry:(KPKEntry *)entry;
 
 #pragma mark Maintainance
 /**
