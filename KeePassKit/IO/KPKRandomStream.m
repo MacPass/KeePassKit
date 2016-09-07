@@ -24,41 +24,41 @@
 @implementation KPKRandomStream
 
 - (void)reset {
-    [self doesNotRecognizeSelector:_cmd];
+  [self doesNotRecognizeSelector:_cmd];
 }
 
 - (uint8_t)getByte {
-    [self doesNotRecognizeSelector:_cmd];
-    return 0;
+  [self doesNotRecognizeSelector:_cmd];
+  return 0;
 }
 
 - (uint16_t)getShort {
-    uint16_t value = 0;
-    
-    value |= [self getByte] << 8;
-    value |= [self getByte];
-    
-    return value;
+  uint16_t value = 0;
+  
+  value |= [self getByte] << 8;
+  value |= [self getByte];
+  
+  return value;
 }
 
 - (uint32_t)getInt {
-    uint32_t value = 0;
-    
-    value |= [self getByte] << 24;
-    value |= [self getByte] << 16;
-    value |= [self getByte] << 8;
-    value |= [self getByte];
-    
-    return value;
+  uint32_t value = 0;
+  
+  value |= [self getByte] << 24;
+  value |= [self getByte] << 16;
+  value |= [self getByte] << 8;
+  value |= [self getByte];
+  
+  return value;
 }
 
 - (void)xor:(NSMutableData*)data {
-    uint8_t *bytes = (uint8_t*)data.mutableBytes;
-    NSUInteger length = data.length;
-    
-    for (int i = 0; i < length; i++) {
-        bytes[i] ^= [self getByte];
-    }
+  uint8_t *bytes = (uint8_t*)data.mutableBytes;
+  NSUInteger length = data.length;
+  
+  for (int i = 0; i < length; i++) {
+    bytes[i] ^= [self getByte];
+  }
 }
 
 @end

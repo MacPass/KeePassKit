@@ -23,7 +23,7 @@
 
 #import "KPKCompositeKey.h"
 #import "KPKFormat.h"
-#import "KPKNumber.h"
+#import "NSNumber+TypedNumber.h"
 #import "KPKAESKeyDerivation.h"
 
 #import "NSData+Keyfile.h"
@@ -90,7 +90,7 @@
 - (NSData *)finalDataForVersion:(KPKDatabaseType)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
   KPKKeyDerivation *keyDerivation = [[KPKAESKeyDerivation alloc] init];
-  NSDictionary *options = @{ kKPKAESSeedKey: transformSeed, kKPKAESRoundsKey: [KPKNumber numberWithUnsignedLongLong:rounds] };
+  NSDictionary *options = @{ kKPKAESSeedKey: transformSeed, kKPKAESRoundsKey: [NSNumber typedNumberWithUnsignedLongLong:rounds] };
 
   if(version == KPKDatabaseTypeBinary) {
     return [keyDerivation deriveData:_compositeDataVersion1 options:options];

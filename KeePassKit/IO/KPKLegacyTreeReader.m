@@ -623,7 +623,7 @@
 
 - (BOOL)_parseKPXCustomIcon:(NSData *)data metaData:(KPKMetaData *)metaData {
   
-  /* Theoretical structures, variable data sizes are mapped to fixed arrays with size 1
+  /* Theoretical structures
    
    struct KPXCustomIconData {
    uint32_t dataSize;

@@ -248,11 +248,11 @@
 #pragma mark Metadata Helper
 
 - (NSData *)_customIconData {
-  /* Theoretica structures, variabel data sizes are mapped to fixed arrays with size 1
+  /* Theoretica structure
    
    struct KPXCustomIconData {
    uint32_t dataSize;
-   uint8_t data[1];
+   uint8_t data[dataSize];
    };
    
    struct KPXEntryIconInfo {
@@ -269,9 +269,9 @@
    uint32_t iconCount;
    uint32_t entryCount;
    uint32_t groupCount;
-   struct KPXCustomIconData data[1]; // 1 -> iconCount
-   struct KPXEntryIconInfo entryIcon[1]; // 1 -> entryCount
-   struct KPXGroupIconInfo groupIcon[1]; // 1 -> groupCount
+   struct KPXCustomIconData data[iconCount];
+   struct KPXEntryIconInfo entryIcon[entryCount];
+   struct KPXGroupIconInfo groupIcon[groupCount];
    };
    */
   NSMutableArray *_iconEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,[_allEntries count])];
@@ -366,7 +366,7 @@
    
    struct KPXTreeState {
    uint32 numerOfEntries;
-   struct KPXGroupState states[];
+   struct KPXGroupState states[numberOfEntries];
    };
    */
   KPKDataStreamWriter *writer = [KPKDataStreamWriter streamWriter];

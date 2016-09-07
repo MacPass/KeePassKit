@@ -10,7 +10,7 @@
 #import "KPKKeyDerivation_Private.h"
 #import "NSData+CommonCrypto.h"
 
-#import "KPKNumber.h"
+#import "NSNumber+TypedNumber.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 
@@ -27,7 +27,7 @@ NSString *const kKPKAESRoundsKey = @"R"; // KPKNumber
 
 - (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
   
-  KPKNumber *rounds = options[kKPKAESRoundsKey];
+  NSNumber *rounds = options[kKPKAESRoundsKey];
   if(!rounds) {
     return nil;
   }
