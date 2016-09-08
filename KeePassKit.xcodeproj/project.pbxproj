@@ -744,11 +744,11 @@
 		4C7C3F891D81D620008D8961 /* Keyderivation */ = {
 			isa = PBXGroup;
 			children = (
+				4C7C3F8C1D81D620008D8961 /* KPKKeyDerivation.h */,
+				4C7C3F8E1D81D620008D8961 /* KPKKeyDerivation_Private.h */,
+				4C7C3F8D1D81D620008D8961 /* KPKKeyDerivation.m */,
 				4C7C3F8A1D81D620008D8961 /* KPKAESKeyDerivation.h */,
 				4C7C3F8B1D81D620008D8961 /* KPKAESKeyDerivation.m */,
-				4C7C3F8C1D81D620008D8961 /* KPKKeyDerivation.h */,
-				4C7C3F8D1D81D620008D8961 /* KPKKeyDerivation.m */,
-				4C7C3F8E1D81D620008D8961 /* KPKKeyDerivation_Private.h */,
 			);
 			path = Keyderivation;
 			sourceTree = "<group>";

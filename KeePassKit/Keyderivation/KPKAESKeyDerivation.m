@@ -25,6 +25,36 @@ NSString *const kKPKAESRoundsKey = @"R"; // KPKNumber
   [KPKKeyDerivation _registerKeyDerivation:self];
 }
 
++ (void)benchmarkWithOptions:(NSDictionary *)options completionHandler:(void(^)(NSDictionary *results))completionHandler {
+  NSNumber *secondsNumber = options[kKPKKeyDerivationBenchmarkSeconds];
+  if(!secondsNumber) {
+    return;
+  }
+  NSUInteger seconds = secondsNumber.unsignedIntegerValue;
+  // Transform the key
+  dispatch_queue_t normalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+  dispatch_async(normalQueue, ^{
+    /* dispatch the benchmark to the background */
+    size_t seed = 0xAF09F49F;
+    CCCryptorRef cryptorRef;
+    CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES128, kCCOptionECBMode, &seed, sizeof(seed), nil, &cryptorRef);
+    size_t tmp;
+    size_t key = 0x8934BBCD;
+    NSUInteger completedRounds = 0;
+    NSDate *date = [[NSDate alloc] init];
+    /* run transformations until our set time is over */
+    while(-date.timeIntervalSinceNow < seconds) {
+      completedRounds++;
+      CCCryptorUpdate(cryptorRef, &key, sizeof(size_t), &key, sizeof(size_t), &tmp);
+    }
+    CCCryptorRelease(cryptorRef);
+    dispatch_async(dispatch_get_main_queue(), ^{
+      /* call the block on the main thread to return the results */
+      completionHandler(@{ kKPKAESRoundsKey: @(completedRounds) });
+    });
+  });
+}
+
 - (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
   
   NSNumber *rounds = options[kKPKAESRoundsKey];

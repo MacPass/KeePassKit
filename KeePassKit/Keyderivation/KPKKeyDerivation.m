@@ -8,6 +8,9 @@
 
 #import "KPKKeyDerivation.h"
 
+NSString *const kKPKKeyDerivationUUID             = @"kKPKKeyDerivationUUID";
+NSString *const kKPKKeyDerivationBenchmarkSeconds = @"kKPKKeyDerivationBenchmarkSeconds";
+
 @implementation KPKKeyDerivation
 
 + (NSUUID *)_uuid {

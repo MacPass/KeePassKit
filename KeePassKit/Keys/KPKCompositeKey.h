@@ -35,6 +35,7 @@
  */
 @property (nonatomic, readonly) BOOL hasPasswordOrKeyFile;
 
+@property (nonatomic, readonly, getter=isValid) BOOL valid;
 /**
  *  YES if the composite key has a password with a lenght longer than 0.
  *  Since a composite key can be created with am empty string as password or without one,
@@ -42,8 +43,6 @@
  */
 @property (nonatomic, readonly) BOOL hasPassword;
 @property (nonatomic, readonly) BOOL hasKeyFile;
-
-+ (void)benchmarkTransformationRounds:(NSUInteger)seconds completionHandler:(void(^)(NSUInteger rounds))completionHandler;
 
 /*
  The password class to be able to decrypt and encrypt databses
@@ -57,7 +56,6 @@
  @return the final Data to use to en/decrypt the database
  */
 - (NSData *)finalDataForVersion:(KPKDatabaseType )version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger )rounds;
-
 /**
  *  Updates the password and keyfile for the composite key
  *  @param password the new password, can be nil
