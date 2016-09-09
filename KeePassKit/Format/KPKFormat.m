@@ -139,7 +139,7 @@ NSString *const kKPKXmlKeystrokeSequence = @"KeystrokeSequence";
 NSString *const kKPKXmlHistory = @"History";
 
 #pragma mark Generic
-NSString *const kKPKDatabaseTypeXml = @"Version";
+NSString *const kKPKXmlVersion = @"Version";
 NSString *const kKPKXmlKey = @"Key";
 NSString *const kKPKXmlValue = @"Value";
 NSString *const kKPKXmlData = @"Data";

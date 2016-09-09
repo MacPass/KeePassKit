@@ -122,7 +122,7 @@
   
   DDXMLElement *metaElement = [rootElement elementForName:kKPKXmlMeta];
   if(metaElement) {
-    DDXMLElement *versionElement = [metaElement elementForName:kKPKDatabaseTypeXml];
+    DDXMLElement *versionElement = [metaElement elementForName:kKPKXmlVersion];
     NSScanner *versionScanner = [[NSScanner alloc] initWithString:[versionElement stringValue]];
     double version = 1;
     if(![versionScanner scanDouble:&version] || version > 1) {
