@@ -55,7 +55,7 @@ NSString *const kKPKAESRoundsKey = @"R"; // KPKNumber
   });
 }
 
-- (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
++ (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
   
   NSNumber *rounds = options[kKPKAESRoundsKey];
   if(!rounds) {

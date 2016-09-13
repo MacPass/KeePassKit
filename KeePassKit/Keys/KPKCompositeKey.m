@@ -64,14 +64,13 @@
 
 - (NSData *)finalDataForVersion:(KPKDatabaseType)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
-  KPKKeyDerivation *keyDerivation = [[KPKAESKeyDerivation alloc] init];
-  NSDictionary *options = @{ kKPKAESSeedKey: transformSeed, kKPKAESRoundsKey: [NSNumber typedNumberWithUnsignedLongLong:rounds] };
+  NSDictionary *options = @{  kKPKAESSeedKey: transformSeed, kKPKAESRoundsKey: [NSNumber typedNumberWithUnsignedLongLong:rounds] };
 
   if(version == KPKDatabaseTypeBinary) {
-    return [keyDerivation deriveData:_compositeDataVersion1 options:options];
+    return [KPKAESKeyDerivation deriveData:_compositeDataVersion1 options:options];
   }
   else if(version == KPKDatabaseTypeXml) {
-    return [keyDerivation deriveData:_compositeDataVersion2 options:options];
+    return [KPKAESKeyDerivation deriveData:_compositeDataVersion2 options:options];
   }
   else {
     return nil; // Wrong Version
