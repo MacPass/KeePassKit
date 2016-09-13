@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface KPKCipher : NSObject
 
-+ (NSUUID *) uuid;
++ (NSUUID *)uuid;
 + (KPKCipher * _Nullable)chipherForUUID:(NSUUID *)uuid;
 + (KPKCipher *)aesCipher;
 + (KPKCipher *)chaChaCipher;

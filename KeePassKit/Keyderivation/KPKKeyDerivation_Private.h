@@ -10,7 +10,6 @@
 
 @interface KPKKeyDerivation ()
 
-+ (NSUUID *)_uuid;
 + (void)_registerKeyDerivation:(Class)derivationClass;
 
 @end

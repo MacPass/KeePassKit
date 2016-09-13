@@ -15,6 +15,7 @@ FOUNDATION_EXPORT NSString *const kKPKKeyDerivationBenchmarkSeconds; // Option t
 
 @interface KPKKeyDerivation : NSObject
 
++ (NSUUID *)uuid;
 + (void)benchmarkWithOptions:(NSDictionary *)options completionHandler:(void(^)(NSDictionary *results))completionHandler;
 + (NSData * _Nullable)deriveData:(NSData *)data options:(NSDictionary *)options;
 

@@ -1,3 +1,6 @@
 [submodule "KissXML"]
 	path = KissXML
 	url = https://github.com/robbiehanson/KissXML.git
+[submodule "Argon2"]
+	path = Argon2
+	url = https://github.com/P-H-C/phc-winner-argon2.git

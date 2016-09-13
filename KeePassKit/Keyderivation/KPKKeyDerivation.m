@@ -20,14 +20,14 @@ static NSMutableDictionary *_keyDerivations;
 }
 
 + (void)_registerKeyDerivation:(Class)derivationClass {
-  if(![derivationClass isKindOfClass:self]) {
-    NSAssert(NO, @"%@ is no valid key derivation class", derivationClass);
-    return;
-  }
+//  if(![derivationClass isKindOfClass:[KPKKeyDerivation class]]) {
+//    NSAssert(NO, @"%@ is no valid key derivation class", derivationClass);
+//    return;
+//  }
   if(!_keyDerivations) {
     _keyDerivations = [[NSMutableDictionary alloc] init];
   }
-  NSUUID *uuid = [derivationClass _uuid];
+  NSUUID *uuid = [derivationClass uuid];
   if(!uuid) {
     NSAssert(uuid, @"%@ does not provide a valid uuid", derivationClass);
     return;

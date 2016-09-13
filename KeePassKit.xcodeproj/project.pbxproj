@@ -200,6 +200,24 @@
 		4C9466231D78923A00F70457 /* KPKTestUndoTimeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9466221D78923A00F70457 /* KPKTestUndoTimeInfo.m */; };
 		4CA1E3441D87F5ED00100002 /* KPKArgon2KeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E3421D87F5ED00100002 /* KPKArgon2KeyDerivation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CA1E3451D87F5ED00100002 /* KPKArgon2KeyDerivation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E3431D87F5ED00100002 /* KPKArgon2KeyDerivation.m */; };
+		4CA1E4841D8832BA00100002 /* argon2.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E46C1D8832BA00100002 /* argon2.h */; };
+		4CA1E4851D8832BA00100002 /* argon2.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E46E1D8832BA00100002 /* argon2.c */; };
+		4CA1E4871D8832BA00100002 /* blake2-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4711D8832BA00100002 /* blake2-impl.h */; };
+		4CA1E4881D8832BA00100002 /* blake2.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4721D8832BA00100002 /* blake2.h */; };
+		4CA1E4891D8832BA00100002 /* blake2b.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E4731D8832BA00100002 /* blake2b.c */; };
+		4CA1E48A1D8832BA00100002 /* blamka-round-opt.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4741D8832BA00100002 /* blamka-round-opt.h */; };
+		4CA1E48B1D8832BA00100002 /* blamka-round-ref.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4751D8832BA00100002 /* blamka-round-ref.h */; };
+		4CA1E48C1D8832BA00100002 /* core.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E4761D8832BA00100002 /* core.c */; };
+		4CA1E48D1D8832BA00100002 /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4771D8832BA00100002 /* core.h */; };
+		4CA1E48E1D8832BA00100002 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E4781D8832BA00100002 /* encoding.c */; };
+		4CA1E48F1D8832BA00100002 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4791D8832BA00100002 /* encoding.h */; };
+		4CA1E4901D8832BA00100002 /* genkat.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E47A1D8832BA00100002 /* genkat.c */; };
+		4CA1E4911D8832BA00100002 /* genkat.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E47B1D8832BA00100002 /* genkat.h */; };
+		4CA1E4921D8832BA00100002 /* opt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E47C1D8832BA00100002 /* opt.c */; };
+		4CA1E4931D8832BA00100002 /* opt.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E47D1D8832BA00100002 /* opt.h */; };
+		4CA1E4981D8832BA00100002 /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E4821D8832BA00100002 /* thread.c */; };
+		4CA1E4991D8832BA00100002 /* thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4831D8832BA00100002 /* thread.h */; };
+		4CA1E49C1D8838BC00100002 /* KPKTextArgon2.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E49B1D8838BC00100002 /* KPKTextArgon2.m */; };
 		4CAD945F1D7F14F800CD3FD1 /* NSNumber+TypedNumber.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CAD945D1D7F14F700CD3FD1 /* NSNumber+TypedNumber.h */; };
 		4CAD94601D7F14F800CD3FD1 /* NSNumber+TypedNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CAD945E1D7F14F700CD3FD1 /* NSNumber+TypedNumber.m */; };
 		4CC34FE71D21290D00D79EC1 /* KPKTestUndoAutotype.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */; };
@@ -413,6 +431,24 @@
 		4C9466221D78923A00F70457 /* KPKTestUndoTimeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KPKTestUndoTimeInfo.m; path = Keyfiles/KPKTestUndoTimeInfo.m; sourceTree = "<group>"; };
 		4CA1E3421D87F5ED00100002 /* KPKArgon2KeyDerivation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKArgon2KeyDerivation.h; sourceTree = "<group>"; };
 		4CA1E3431D87F5ED00100002 /* KPKArgon2KeyDerivation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKArgon2KeyDerivation.m; sourceTree = "<group>"; };
+		4CA1E46C1D8832BA00100002 /* argon2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = argon2.h; sourceTree = "<group>"; };
+		4CA1E46E1D8832BA00100002 /* argon2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = argon2.c; sourceTree = "<group>"; };
+		4CA1E4711D8832BA00100002 /* blake2-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "blake2-impl.h"; sourceTree = "<group>"; };
+		4CA1E4721D8832BA00100002 /* blake2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blake2.h; sourceTree = "<group>"; };
+		4CA1E4731D8832BA00100002 /* blake2b.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = blake2b.c; sourceTree = "<group>"; };
+		4CA1E4741D8832BA00100002 /* blamka-round-opt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "blamka-round-opt.h"; sourceTree = "<group>"; };
+		4CA1E4751D8832BA00100002 /* blamka-round-ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "blamka-round-ref.h"; sourceTree = "<group>"; };
+		4CA1E4761D8832BA00100002 /* core.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = core.c; sourceTree = "<group>"; };
+		4CA1E4771D8832BA00100002 /* core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = core.h; sourceTree = "<group>"; };
+		4CA1E4781D8832BA00100002 /* encoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = encoding.c; sourceTree = "<group>"; };
+		4CA1E4791D8832BA00100002 /* encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encoding.h; sourceTree = "<group>"; };
+		4CA1E47A1D8832BA00100002 /* genkat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = genkat.c; sourceTree = "<group>"; };
+		4CA1E47B1D8832BA00100002 /* genkat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = genkat.h; sourceTree = "<group>"; };
+		4CA1E47C1D8832BA00100002 /* opt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = opt.c; sourceTree = "<group>"; };
+		4CA1E47D1D8832BA00100002 /* opt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opt.h; sourceTree = "<group>"; };
+		4CA1E4821D8832BA00100002 /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
+		4CA1E4831D8832BA00100002 /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread.h; sourceTree = "<group>"; };
+		4CA1E49B1D8838BC00100002 /* KPKTextArgon2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTextArgon2.m; sourceTree = "<group>"; };
 		4CAD945D1D7F14F700CD3FD1 /* NSNumber+TypedNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+TypedNumber.h"; sourceTree = "<group>"; };
 		4CAD945E1D7F14F700CD3FD1 /* NSNumber+TypedNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+TypedNumber.m"; sourceTree = "<group>"; };
 		4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestUndoAutotype.m; sourceTree = "<group>"; };
@@ -508,6 +544,7 @@
 		4C5CF30E1BE10B650019AA81 = {
 			isa = PBXGroup;
 			children = (
+				4CA1E49A1D8832C400100002 /* Argon2 */,
 				4C4FF1A81BE119E60015827B /* KissXML */,
 				4C5CF31A1BE10B650019AA81 /* KeePassKit */,
 				4C5CF3261BE10B650019AA81 /* KeePassKitTests */,
@@ -550,6 +587,7 @@
 				4C81381A1BE282DC001BF195 /* Databases */,
 				4C8138221BE282DC001BF195 /* Images */,
 				4C8138241BE282DC001BF195 /* Keyfiles */,
+				4CA1E49B1D8838BC00100002 /* KPKTextArgon2.m */,
 				4C5CF4951BE10F090019AA81 /* KPKHashedDataTest.m */,
 				4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */,
 				4C5CF4961BE10F090019AA81 /* KPKIconLoading.m */,
@@ -806,6 +844,56 @@
 			path = Keyfiles;
 			sourceTree = "<group>";
 		};
+		4CA1E46B1D8832BA00100002 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				4CA1E46C1D8832BA00100002 /* argon2.h */,
+			);
+			name = include;
+			path = Argon2/include;
+			sourceTree = "<group>";
+		};
+		4CA1E46D1D8832BA00100002 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				4CA1E46E1D8832BA00100002 /* argon2.c */,
+				4CA1E4701D8832BA00100002 /* blake2 */,
+				4CA1E4761D8832BA00100002 /* core.c */,
+				4CA1E4771D8832BA00100002 /* core.h */,
+				4CA1E4781D8832BA00100002 /* encoding.c */,
+				4CA1E4791D8832BA00100002 /* encoding.h */,
+				4CA1E47A1D8832BA00100002 /* genkat.c */,
+				4CA1E47B1D8832BA00100002 /* genkat.h */,
+				4CA1E47C1D8832BA00100002 /* opt.c */,
+				4CA1E47D1D8832BA00100002 /* opt.h */,
+				4CA1E4821D8832BA00100002 /* thread.c */,
+				4CA1E4831D8832BA00100002 /* thread.h */,
+			);
+			name = src;
+			path = Argon2/src;
+			sourceTree = "<group>";
+		};
+		4CA1E4701D8832BA00100002 /* blake2 */ = {
+			isa = PBXGroup;
+			children = (
+				4CA1E4711D8832BA00100002 /* blake2-impl.h */,
+				4CA1E4721D8832BA00100002 /* blake2.h */,
+				4CA1E4731D8832BA00100002 /* blake2b.c */,
+				4CA1E4741D8832BA00100002 /* blamka-round-opt.h */,
+				4CA1E4751D8832BA00100002 /* blamka-round-ref.h */,
+			);
+			path = blake2;
+			sourceTree = "<group>";
+		};
+		4CA1E49A1D8832C400100002 /* Argon2 */ = {
+			isa = PBXGroup;
+			children = (
+				4CA1E46B1D8832BA00100002 /* include */,
+				4CA1E46D1D8832BA00100002 /* src */,
+			);
+			name = Argon2;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -818,6 +906,9 @@
 				4C5CF4041BE10E000019AA81 /* KPKAttribute.h in Headers */,
 				4C5CF4091BE10E000019AA81 /* KPKBinary.h in Headers */,
 				4C5CF4161BE10E000019AA81 /* KPKIcon.h in Headers */,
+				4CA1E4911D8832BA00100002 /* genkat.h in Headers */,
+				4CA1E4991D8832BA00100002 /* thread.h in Headers */,
+				4CA1E4881D8832BA00100002 /* blake2.h in Headers */,
 				4C5CF4901BE10E250019AA81 /* KPKTypes.h in Headers */,
 				4C5CF4911BE10E250019AA81 /* KPKUTIs.h in Headers */,
 				4C5CF48D1BE10E250019AA81 /* KPKIconTypes.h in Headers */,
@@ -841,6 +932,7 @@
 				4C5CF4251BE10E000019AA81 /* KPKWindowAssociation.h in Headers */,
 				4C2ADBED1D7C6495002C3190 /* KPKTreeArchiver.h in Headers */,
 				4C5CF4121BE10E000019AA81 /* KPKErrors.h in Headers */,
+				4CA1E4931D8832BA00100002 /* opt.h in Headers */,
 				4C835B521D22AA3B0037E4B8 /* KPKTreeDelegate.h in Headers */,
 				4C5CF3CA1BE10DF80019AA81 /* NSData+HashedData.h in Headers */,
 				4C5CF3C41BE10DF80019AA81 /* NSColor+KeePassKit.h in Headers */,
@@ -852,6 +944,7 @@
 				4C5CF3CC1BE10DF80019AA81 /* NSData+Keyfile.h in Headers */,
 				4C5C82A21D79C13800A1DEA6 /* KPKAESCipher.h in Headers */,
 				4C62F6251D1D77DE0031795C /* KPKAttribute+Private.h in Headers */,
+				4CA1E4841D8832BA00100002 /* argon2.h in Headers */,
 				4C7C3FA51D81D620008D8961 /* KPKPasswordKey.h in Headers */,
 				4C5CF3DE1BE10DF80019AA81 /* NSUUID+KeePassKit.h in Headers */,
 				4C5CF3D81BE10DF80019AA81 /* NSString+Empty.h in Headers */,
@@ -860,9 +953,11 @@
 				4C5CF4311BE10E070019AA81 /* KPKXmlFormat.h in Headers */,
 				4C7C3FA41D81D620008D8961 /* KPKKey_Private.h in Headers */,
 				4C4FF1BC1BE119E60015827B /* DDXML.h in Headers */,
+				4CA1E48F1D8832BA00100002 /* encoding.h in Headers */,
 				4C4FF1BD1BE119E60015827B /* DDXMLDocument.h in Headers */,
 				4C2ADBF41D7C6665002C3190 /* KPKTreeArchiver_Private.h in Headers */,
 				4C4FF1BF1BE119E60015827B /* DDXMLElement.h in Headers */,
+				4CA1E4871D8832BA00100002 /* blake2-impl.h in Headers */,
 				4C4FF1C11BE119E60015827B /* DDXMLNode.h in Headers */,
 				4C5CF42D1BE10E070019AA81 /* KPKFormat.h in Headers */,
 				4C4FF1C31BE119E60015827B /* DDXMLPrivate.h in Headers */,
@@ -880,6 +975,7 @@
 				4C2ADBF11D7C649F002C3190 /* KPKTreeUnarchiver.h in Headers */,
 				4C5CF4711BE10E100019AA81 /* KPKXmlTreeReader.h in Headers */,
 				4C4FF1B81BE119E60015827B /* DDXMLElementAdditions.h in Headers */,
+				4CA1E48D1D8832BA00100002 /* core.h in Headers */,
 				4C5CF3C81BE10DF80019AA81 /* NSData+Gzip.h in Headers */,
 				4C5CF4591BE10E100019AA81 /* KPKDataStreamWriter.h in Headers */,
 				4C5CF4811BE10E200019AA81 /* KPKTreeCrypting.h in Headers */,
@@ -893,6 +989,7 @@
 				4C5CF42F1BE10E070019AA81 /* KPKLegacyFormat.h in Headers */,
 				4C5C82A41D79C13800A1DEA6 /* KPKChaChaCipher.h in Headers */,
 				4C5CF4831BE10E200019AA81 /* KPKTreeWriting.h in Headers */,
+				4CA1E48B1D8832BA00100002 /* blamka-round-ref.h in Headers */,
 				4C5CF41D1BE10E000019AA81 /* KPKTag.h in Headers */,
 				4C5CF40F1BE10E000019AA81 /* KPKEntry+Private.h in Headers */,
 				4C5CF3D41BE10DF80019AA81 /* NSMutableData+KeePassKit.h in Headers */,
@@ -905,6 +1002,7 @@
 				4C4FF1BA1BE119E60015827B /* NSString+DDXML.h in Headers */,
 				4C5CF4821BE10E200019AA81 /* KPKTreeReading.h in Headers */,
 				4C5CF4611BE10E100019AA81 /* KPKLegacyTreeReader.h in Headers */,
+				4CA1E48A1D8832BA00100002 /* blamka-round-opt.h in Headers */,
 				4C5CF45D1BE10E100019AA81 /* KPKLegacyHeaderWriter.h in Headers */,
 				4C5CF3D01BE10DF80019AA81 /* NSDate+Packed.h in Headers */,
 				4C5C82A81D79C13800A1DEA6 /* KPKCipher_Private.h in Headers */,
@@ -1047,10 +1145,12 @@
 				4C7C3F9C1D81D620008D8961 /* KPKKeyDerivation.m in Sources */,
 				4C5CF4681BE10E100019AA81 /* KPKSalsa20RandomStream.m in Sources */,
 				4C5C82A71D79C13800A1DEA6 /* KPKCipher.m in Sources */,
+				4CA1E48C1D8832BA00100002 /* core.c in Sources */,
 				4C5CF46A1BE10E100019AA81 /* KPKTree+Serializing.m in Sources */,
 				4C5CF3CD1BE10DF80019AA81 /* NSData+Keyfile.m in Sources */,
 				4C5CF3C71BE10DF80019AA81 /* NSData+CommonCrypto.m in Sources */,
 				4C5CF4661BE10E100019AA81 /* KPKRandomStream.m in Sources */,
+				4CA1E4891D8832BA00100002 /* blake2b.c in Sources */,
 				4C5CF41C1BE10E000019AA81 /* KPKNode.m in Sources */,
 				4C2ADBF21D7C649F002C3190 /* KPKTreeUnarchiver.m in Sources */,
 				4C5CF4261BE10E000019AA81 /* KPKWindowAssociation.m in Sources */,
@@ -1065,6 +1165,7 @@
 				4C5CF4111BE10E000019AA81 /* KPKEntry.m in Sources */,
 				4C4FF1C01BE119E60015827B /* DDXMLElement.m in Sources */,
 				4C7C3FA11D81D620008D8961 /* KPKFileKey.m in Sources */,
+				4CA1E4981D8832BA00100002 /* thread.c in Sources */,
 				4C5CF45E1BE10E100019AA81 /* KPKLegacyHeaderWriter.m in Sources */,
 				4C5CF4131BE10E000019AA81 /* KPKErrors.m in Sources */,
 				4C5CF3CF1BE10DF80019AA81 /* NSData+Random.m in Sources */,
@@ -1084,21 +1185,25 @@
 				4C5CF3D71BE10DF80019AA81 /* NSString+Commands.m in Sources */,
 				4C5CF4191BE10E000019AA81 /* KPKMetaData.m in Sources */,
 				4CAD94601D7F14F800CD3FD1 /* NSNumber+TypedNumber.m in Sources */,
+				4CA1E48E1D8832BA00100002 /* encoding.c in Sources */,
 				4C5CF45C1BE10E100019AA81 /* KPKLegacyHeaderReader.m in Sources */,
 				4C5CF41E1BE10E000019AA81 /* KPKTag.m in Sources */,
 				4C5CF4701BE10E100019AA81 /* KPKXmlTreeCryptor.m in Sources */,
 				4C5CF3CB1BE10DF80019AA81 /* NSData+HashedData.m in Sources */,
 				4C7C3FA31D81D620008D8961 /* KPKKey.m in Sources */,
 				4C4FF1BB1BE119E60015827B /* NSString+DDXML.m in Sources */,
+				4CA1E4851D8832BA00100002 /* argon2.c in Sources */,
 				4C7C3FA61D81D620008D8961 /* KPKPasswordKey.m in Sources */,
 				4C5CF3D91BE10DF80019AA81 /* NSString+Empty.m in Sources */,
 				4C5CF4201BE10E000019AA81 /* KPKTimeInfo.m in Sources */,
 				4C5C82A31D79C13800A1DEA6 /* KPKAESCipher.m in Sources */,
+				4CA1E4921D8832BA00100002 /* opt.c in Sources */,
 				4C5CF4151BE10E000019AA81 /* KPKGroup.m in Sources */,
 				4C5CF4641BE10E100019AA81 /* KPKLegacyTreeWriter.m in Sources */,
 				4C5CF4051BE10E000019AA81 /* KPKAttribute.m in Sources */,
 				4C2ADBEE1D7C6495002C3190 /* KPKTreeArchiver.m in Sources */,
 				4C5CF46E1BE10E100019AA81 /* KPKXmlHeaderWriter.m in Sources */,
+				4CA1E4901D8832BA00100002 /* genkat.c in Sources */,
 				4C5CF3DB1BE10DF80019AA81 /* NSString+Hexdata.m in Sources */,
 				4C5CF40A1BE10E000019AA81 /* KPKBinary.m in Sources */,
 				4C5CF4941BE10E250019AA81 /* KPKXmlUtilities.m in Sources */,
@@ -1133,6 +1238,7 @@
 				4C5CF4BC1BE10F090019AA81 /* KPKTextXMLUtilities.m in Sources */,
 				4C5CF4B81BE10F090019AA81 /* KPKTestUUIDAdditions.m in Sources */,
 				4C5CF4A91BE10F090019AA81 /* KPKHashedDataTest.m in Sources */,
+				4CA1E49C1D8838BC00100002 /* KPKTextArgon2.m in Sources */,
 				4C5CF4AB1BE10F090019AA81 /* KPKTestAutotype.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
