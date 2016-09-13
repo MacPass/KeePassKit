@@ -8,7 +8,7 @@ It's borrowing a lot of code from [MiniKeePass](https://github.com/MiniKeePass/M
 ##License
 
 KeePassKit - Cocoa KeePass Library
-Copyright (c) 2012-2014  Michael Starke, HicknHack Software GmbH
+Copyright (c) 2012-2016  Michael Starke, HicknHack Software GmbH
   
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
