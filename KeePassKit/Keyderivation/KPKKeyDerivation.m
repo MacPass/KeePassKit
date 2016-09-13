@@ -39,18 +39,22 @@ static NSMutableDictionary *_keyDerivations;
   return _keyDerivations[uuid];
 }
 
-+ (void)benchmarkWithOptions:(NSDictionary *)options completionHandler:(void(^)(NSDictionary *results))completionHandler {
++ (Class)_keyDerivationForOptions:(NSDictionary *)options {
+  NSUUID *uuid = options[kKPKKeyDerivationUUID];
+  if(!uuid) {
+    return nil;
+  }
+  return [self _keyDerivationForUUID:uuid];
+}
 
++ (void)benchmarkWithOptions:(NSDictionary *)options completionHandler:(void(^)(NSDictionary *results))completionHandler {
+  Class class = [self _keyDerivationForOptions:options];
+  [class benchmarkWithOptions:options completionHandler:completionHandler];
 }
 
 + (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
-  NSUUID *uuid = options[kKPKKeyDerivationUUID];
-  if(!uuid) {
-    [[NSException exceptionWithName:NSInvalidArgumentException reason:nil userInfo:nil] raise];
-    return nil;
-  }
-  Class derivationClass = [self _keyDerivationForUUID:uuid];
-  return [derivationClass deriveData:data options:options];
+  return [[self _keyDerivationForOptions:options] deriveData:data options:options];
 }
+
 
 @end

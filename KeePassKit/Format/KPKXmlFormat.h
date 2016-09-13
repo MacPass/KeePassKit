@@ -29,18 +29,19 @@
  Header keys for KDBX files
  */
 typedef NS_ENUM(NSUInteger, KPKHeaderKey ) {
-  KPKHeaderKeyEndOfHeader,
-  KPKHeaderKeyComment,
-  KPKHeaderKeyCipherId,
-  KPKHeaderKeyCompression,
-  KPKHeaderKeyMasterSeed,
-  KPKHeaderKeyTransformSeed,
-  KPKHeaderKeyTransformRounds,
-  KPKHeaderKeyEncryptionIV,
-  KPKHeaderKeyProtectedKey,
-  KPKHeaderKeyStartBytes,
-  KPKHeaderKeyRandomStreamId
-  /* todo add kdbx4 fields */
+  KPKHeaderKeyEndOfHeader       = 0,
+  KPKHeaderKeyComment           = 1,
+  KPKHeaderKeyCipherId          = 2,
+  KPKHeaderKeyCompression       = 3,
+  KPKHeaderKeyMasterSeed        = 4,
+  KPKHeaderKeyTransformSeed     = 5,  // KDBX 3.1, for backward compatibility only
+  KPKHeaderKeyTransformRounds   = 6,  // KDBX 3.1, for backward compatibility only
+  KPKHeaderKeyEncryptionIV      = 7,
+  KPKHeaderKeyProtectedKey      = 8,
+  KPKHeaderKeyStartBytes        = 9,  // KDBX 3.1, for backward compatibility only
+  KPKHeaderKeyRandomStreamId    = 10,
+  KPKHeaderKeyKdfParameters     = 11, // KDBX 4
+  KPKHeaderKeyPublicCustomData  = 12  // KDBX 4
 };
 
 typedef NS_ENUM(NSUInteger, KPKCompression) {
@@ -53,7 +54,6 @@ typedef NS_ENUM(NSUInteger, KPKRandomStreamType) {
   KPKRandomStreamNone,
   KPKRandomStreamArc4,
   KPKRandomStreamSalsa20,
-  /* todo add chacha */
   KPKRandomStreamCount
 };
 

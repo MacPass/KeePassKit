@@ -76,7 +76,6 @@ NSString *const kKPKAESRoundsKey = @"R"; // KPKNumber
     seed = seed.SHA256Hash;
   }
   
-  
   if(data.length != 32) {
     NSLog(@"Data to derive is not 32 bytes long. Hashing data!");
     data = data.SHA256Hash;
