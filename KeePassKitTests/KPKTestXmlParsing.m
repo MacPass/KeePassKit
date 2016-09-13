@@ -7,7 +7,7 @@
 //
 
 
-#import <XCTest/XCTest.h>
+@import XCTest;
 
 #import "KeePassKit.h"
 #import "KeePassKit+Private.h"

@@ -21,8 +21,10 @@
 //
 
 
-#import <Foundation/Foundation.h>
-#import "KPKFormat.h"
+@import Foundation;
+
+#import "KeePassKit.h"
+
 /**
  *  The Composite Key to be used for encryption and decryption of databases
  *  It does not store key  nor password strings rather creates a composite key

@@ -7,7 +7,8 @@
 //
 
 @import  XCTest;
-@import KeePassKit;
+
+#import "KeePassKit.h"
 
 @interface KPKTestReference : XCTestCase
 @property (strong) KPKTree *tree;

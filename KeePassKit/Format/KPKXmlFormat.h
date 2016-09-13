@@ -23,7 +23,7 @@
 #ifndef MacPass_KPKHeaderFields_h
 #define MacPass_KPKHeaderFields_h
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 /**
  Header keys for KDBX files
