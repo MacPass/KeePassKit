@@ -34,7 +34,7 @@ uint32_t const kKPKInvalidFileVersion           = UINT32_MAX;
 uint32_t const kKPKXMLFileVersion3              = 0x00030001;
 uint32_t const kKPKXMLFileVersion3CriticalMax   = 0x00030000;
 uint32_t const kKPKXMLFileVersion4              = 0x00040000;
-uint32_t const kKPKXMLFileVersion4CriticalMax   = 0x00030000;
+uint32_t const kKPKXMLFileVersion4CriticalMax   = 0x00040000;
 uint32_t const kKPKXMLFileVersionCriticalMask   = 0xFFFF0000;
 
 uint32_t const kKPKXMLSignature1 = 0x9AA2D903;
