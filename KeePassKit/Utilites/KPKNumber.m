@@ -86,6 +86,31 @@
   return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+  KPKNumber *copy = [[KPKNumber alloc] init];
+  copy.number = self.number;
+  copy.type = self.type;
+  return copy;
+}
+
+- (NSUInteger)hash {
+  return (self.type ^ self.number.hash);
+}
+
+- (BOOL)isEqual:(id)object {
+  if(![object isKindOfClass:[KPKNumber class]]) {
+    return NO;
+  }
+  return [self isEqualToNumber:object];
+}
+
+- (BOOL)isEqualToNumber:(KPKNumber *)number {
+  if(self.type != number.type) {
+    return NO;
+  }
+  return [self.number isEqualToNumber:number.number];
+}
+
 - (int32_t)integer32Value {
   /* explicit cast for 64bit systems */
   return (int32_t)self.number.longValue;

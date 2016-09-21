@@ -20,7 +20,7 @@ typedef NS_ENUM(NSUInteger, KPKNumberType) {
 /**
  *  Composite Class to hold type and Number information. Subclassing NSNumber would yield undefined behaviour since it's optimized for storage.
  */
-@interface KPKNumber : NSObject
+@interface KPKNumber : NSObject <NSCopying>
 
 @property (readonly) KPKNumberType type;
 
@@ -45,5 +45,6 @@ typedef NS_ENUM(NSUInteger, KPKNumberType) {
 - (instancetype)initWithUnsignedInteger64:(uint64_t)value NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithBool:(BOOL)value NS_DESIGNATED_INITIALIZER;
 
+- (BOOL)isEqualToNumber:(KPKNumber *)number;
 
 @end
