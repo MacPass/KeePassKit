@@ -30,7 +30,8 @@
 - (instancetype)initWithData:(NSData *)data;
 
 - (NSData *)dataWithLength:(NSUInteger)length;
-- (NSString *)stringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding;
+- (NSString *)stringFromNullTerminatedCStringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding;
+- (NSString *)stringFromBytesWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding;
 - (void)readBytes:(void *)buffer length:(NSUInteger)length;
 
 @property (nonatomic, readonly) uint8_t readByte;

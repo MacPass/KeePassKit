@@ -202,7 +202,7 @@
         }
           
         case KPKFieldTypeGroupName:
-          group.title = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          group.title = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeGroupCreationTime:
@@ -349,23 +349,23 @@
           break;
           
         case KPKFieldTypeEntryTitle:
-          entry.title = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          entry.title = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryURL:
-          entry.url = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          entry.url = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryUsername:
-          entry.username = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          entry.username = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryPassword:
-          entry.password = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          entry.password = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryNotes:
-          entry.notes = [_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          entry.notes = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           [self _parseAutotype:entry];
           break;
           
@@ -406,7 +406,7 @@
           break;
           
         case KPKFieldTypeEntryBinaryDescription: {
-          binary = [[KPKBinary alloc] initWithName:[_dataStreamer stringWithLength:fieldSize encoding:NSUTF8StringEncoding] data:nil];
+          binary = [[KPKBinary alloc] initWithName:[_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding] data:nil];
           break;
         }
         case KPKFieldTypeEntryBinaryData:

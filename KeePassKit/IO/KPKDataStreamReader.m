@@ -45,16 +45,19 @@
 
 - (NSData *)dataWithLength:(NSUInteger)length {
   // FIXME: test for maxsize
-  length = MIN([_data length] - _location, length);
+  length = MIN(_data.length - _location, length);
   NSData *data = [_data subdataWithRange:NSMakeRange(_location, length)];
   _location += length;
   return data;
 }
-
-- (NSString *)stringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding {
+- (NSString *)stringFromNullTerminatedCStringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding {
   char characters[length];
   [self _getBytes:characters length:length];
   return [NSString stringWithCString:characters encoding:encoding];
+}
+
+- (NSString *)stringFromBytesWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding {
+  return [[NSString alloc] initWithData:[self dataWithLength:length] encoding:encoding];
 }
 
 - (void)readBytes:(void *)buffer length:(NSUInteger)length {
@@ -93,7 +96,7 @@
 
 - (void)skipBytes:(NSUInteger)numberOfBytes {
   _location += numberOfBytes;
-  _location = MIN([_data length], _location);
+  _location = MIN(_data.length, _location);
 }
 
 - (BOOL)reachedEndOfData {

@@ -59,7 +59,12 @@
   _location += data.length;
 }
 
-- (void)writeString:(NSString *)string encoding:(NSStringEncoding)encoding {
+- (void)writeStringAsNullTerminatedCString:(NSString *)string encoding:(NSStringEncoding)encoding {
+  const char* buffer = [string cStringUsingEncoding:encoding];
+  [self writeBytes:buffer length:strlen(buffer)];
+}
+
+- (void)writeStringData:(NSString *)string encoding:(NSStringEncoding)encoding {
   [self writeData:[string dataUsingEncoding:encoding]];
 }
 

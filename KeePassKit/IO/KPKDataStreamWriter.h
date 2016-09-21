@@ -30,7 +30,8 @@
 - (instancetype)initWithData:(NSMutableData *)data;
 
 - (void)writeData:(NSData *)data;
-- (void)writeString:(NSString *)string encoding:(NSStringEncoding)encoding;
+- (void)writeStringAsNullTerminatedCString:(NSString *)string encoding:(NSStringEncoding)encoding;
+- (void)writeStringData:(NSString *)string encoding:(NSStringEncoding)encoding;
 - (void)writeBytes:(const void *)buffer length:(NSUInteger)lenght;
 - (void)writeByte:(uint8)byte;
 - (void)write2Bytes:(uint16)bytes;
