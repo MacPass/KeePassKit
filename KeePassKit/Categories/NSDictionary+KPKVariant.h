@@ -10,8 +10,10 @@
 
 @interface NSDictionary (KPKVariant)
 
++ (instancetype)dictionaryWithVariantDictionaryData:(NSData *)data;
 - (instancetype)initWithVariantDictionaryData:(NSData *)data;
 
 @property (copy, readonly) NSData *variantDictionaryData;
+@property (nonatomic, readonly) BOOL isValidVariantDictionary;
 
 @end

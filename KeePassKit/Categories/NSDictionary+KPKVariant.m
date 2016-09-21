@@ -37,67 +37,199 @@ typedef NS_ENUM(uint8_t, KPKVariantType ) {
   
   // Array mask: 0x40
   KPKVariantTypeByteArray = 0x42
-
+  
 };
 
-static const ushort kKPKVariantDictionaryVersion = 0x0100;
-static const ushort kKPKVariantDictionaryCritical = 0xFF00;
-static const ushort kKPKVariantDictionaryInfo = 0x00FF;
+static const uint16_t kKPKVariantDictionaryVersion = 0x0100;
+static const uint16_t kKPKVariantDictionaryCritical = 0xFF00;
+static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
 
 @implementation NSDictionary (KPKVariant)
 
 
++ (instancetype)dictionaryWithVariantDictionaryData:(NSData *)data {
+  return [[NSDictionary alloc] initWithVariantDictionaryData:data];
+}
+
 - (instancetype)initWithVariantDictionaryData:(NSData *)data {
-  self = [self init];
+  NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+  KPKDataStreamReader *reader = [[KPKDataStreamReader alloc] initWithData:data];
+  if(reader.readableBytes < 2) {
+    [[NSException exceptionWithName:NSInvalidArgumentException reason:nil userInfo:nil] raise];
+    self = [self init];
+    return self;
+  }
+  uint16_t version = CFSwapInt16LittleToHost(reader.read2Bytes);
+  if( (version & kKPKVariantDictionaryCritical) > (kKPKVariantDictionaryVersion & kKPKVariantDictionaryCritical) ) {
+    NSLog(@"Unsupported Version for Variant Dictionary found.");
+    self = [self init];
+    return self;
+  }
+  while(!reader.reachedEndOfData) {
+    uint8 type = reader.readByte;
+    if(type == 0) {
+      // end of data
+      break;
+    }
+    switch(type) {
+      case KPKVariantTypeBool: {
+        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        if(dataSize != 1) {
+          NSLog(@"Unexpected byte size != 1 for bool data!");
+          return @{};
+        }
+        
+        dictionary[key] = [[KPKNumber alloc] initWithBool:reader.readByte ? YES : NO ];
+        break;
+      }
+      case KPKVariantTypeInt32: {
+        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        if(dataSize != 4) {
+          NSLog(@"Unexpected byte size != 4 for int32 data!");
+          return @{};
+        }
+        
+        dictionary[key] = [[KPKNumber alloc] initWithInteger32:CFSwapInt32LittleToHost(reader.read4Bytes)];
+        break;
+      }
+      case KPKVariantTypeUInt32: {
+        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        if(dataSize != 4) {
+          NSLog(@"Unexpected byte size != 4 for uint32 data!");
+          return @{};
+        }
+        
+        dictionary[key] = [[KPKNumber alloc] initWithUnsignedInteger32:CFSwapInt32LittleToHost(reader.read4Bytes)];
+        break;
+      }
+      case KPKVariantTypeInt64: {
+        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        if(dataSize != 8) {
+          NSLog(@"Unexpected byte size != 8 for int64 data!");
+          return @{};
+        }
+        
+        dictionary[key] = [[KPKNumber alloc] initWithInteger64:CFSwapInt64LittleToHost(reader.read8Bytes)];
+        break;
+      }
+      case KPKVariantTypeUInt64: {
+        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        if(dataSize != 8) {
+          NSLog(@"Unexpected byte size != 8 for uint64 data!");
+          return @{};
+        }
+        dictionary[key] = [[KPKNumber alloc] initWithUnsignedInteger64:CFSwapInt64LittleToHost(reader.read8Bytes)];
+        break;
+      }
+      case KPKVariantTypeString: {
+        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        dictionary[key] = [reader stringFromBytesWithLength:dataSize encoding:NSUTF8StringEncoding];
+        break;
+      }
+      case KPKVariantTypeByteArray:  {
+        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
+        dictionary[key] = [reader dataWithLength:dataSize];
+        break;
+      }
+      default:
+        break;
+    }
+  }
+  self = [self initWithDictionary:dictionary];
   return self;
 }
 
 - (NSData *)variantDictionaryData {
+  
+  if(!self.isValidVariantDictionary) {
+    return nil;
+  }
+  
   NSMutableData *data = [[NSMutableData alloc] init];
   KPKDataStreamWriter *writer = [[KPKDataStreamWriter alloc] initWithData:data];
   
   [writer write2Bytes:CFSwapInt16HostToLittle(kKPKVariantDictionaryVersion)];
   
-  for(id item in self) {
+  for(NSString *key in self) {
+    
+    NSData *keyStringData = [key dataUsingEncoding:NSUTF8StringEncoding];
+    
+    id value = self[key];
     /* Data */
-    if([item isKindOfClass:[NSData class]]) {
+    if([value isKindOfClass:[NSData class]]) {
       [writer writeByte:KPKVariantTypeByteArray];
-      [writer writeData:item];
+      [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)keyStringData.length)];
+      [writer writeData:keyStringData];
+      [writer writeData:value];
     }
     /* String */
-    else if([item isKindOfClass:[NSString class]]) {
+    else if([value isKindOfClass:[NSString class]]) {
       [writer writeByte:KPKVariantTypeString];
-      [writer writeString:item encoding:NSUTF8StringEncoding];
+      [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)keyStringData.length)];
+      [writer writeData:keyStringData];
+      NSData *stringData = [value dataUsingEncoding:NSUTF8StringEncoding];
+      NSAssert(stringData.length <= UINT32_MAX, @"Maximums size of string data is exceeede!");
+      [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)stringData.length)];
+      [writer writeData:stringData];
     }
     /* Number */
-    else if([item isKindOfClass:[KPKNumber class]]) {
-      KPKNumber *number = item;
+    else if([value isKindOfClass:[KPKNumber class]]) {
+      KPKNumber *number = value;
       switch(number.type) {
         case KPKNumberTypeBool:
           [writer writeByte:KPKVariantTypeBool];
+          [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)keyStringData.length)];
+          [writer writeData:keyStringData];
           [writer write4Bytes:CFSwapInt32HostToLittle(1)];
-          [writer writeByte:number.boolValue ? CFSwapInt32HostToLittle(1) : CFSwapInt32HostToLittle(0)];
+          [writer writeByte:number.boolValue ? 0x01 : 0x00 ];
+          break;
         case KPKNumberTypeInteger32:
           [writer writeByte:KPKVariantTypeInt32];
+          [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)keyStringData.length)];
+          [writer writeData:keyStringData];
           [writer write4Bytes:CFSwapInt32HostToLittle(4)];
           [writer write4Bytes:CFSwapInt32HostToLittle(number.integer32Value)];
+          break;
         case KPKNumberTypeInteger64:
           [writer writeByte:KPKVariantTypeInt64];
+          [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)keyStringData.length)];
+          [writer writeData:keyStringData];
           [writer write4Bytes:CFSwapInt32HostToLittle(8)];
           [writer write8Bytes:CFSwapInt64HostToLittle(number.integer64Value)];
+          break;
         case KPKNumberTypeUnsignedInteger32:
           [writer writeByte:KPKVariantTypeUInt32];
+          [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)keyStringData.length)];
+          [writer writeData:keyStringData];
           [writer write4Bytes:CFSwapInt32HostToLittle(4)];
           [writer write4Bytes:CFSwapInt32HostToLittle(number.unsignedInteger32Value)];
+          break;
         case KPKNumberTypeUnsignedInteger64:
           [writer writeByte:KPKVariantTypeUInt64];
+          [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)keyStringData.length)];
+          [writer writeData:keyStringData];
           [writer write4Bytes:CFSwapInt32HostToLittle(8)];
           [writer write8Bytes:CFSwapInt64HostToLittle(number.unsignedInteger64Value)];
+          break;
         default:
           break;
       }
     }
-
+    
     else {
       // bad
     }
@@ -121,97 +253,20 @@ static const ushort kKPKVariantDictionaryInfo = 0x00FF;
  } Dictionary;
  
  */
-- (NSDictionary *)dictionaryWithData:(NSData *)data {
-  NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-  KPKDataStreamReader *reader = [[KPKDataStreamReader alloc] initWithData:data];
-  if(reader.readableBytes < 2) {
-    [[NSException exceptionWithName:NSInvalidArgumentException reason:nil userInfo:nil] raise];
-    return @{};
-  }
-  uint16_t version = CFSwapInt16LittleToHost(reader.read2Bytes);
-  if(version & kKPKVariantDictionaryCritical) {
-    NSLog(@"Unsupported Version for Variant Dictionary found.");
-    return @{};
-  }
-  while(!reader.reachedEndOfData) {
-    uint8 type = reader.readByte;
-    if(type == 0) {
-      // end of data
-      break;
-    }
-    switch(type) {
-      case KPKVariantTypeBool: {
-        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringWithLength:keySize encoding:NSUTF8StringEncoding];
-        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        if(dataSize != 1) {
-          NSLog(@"Unexpected byte size != 1 for bool data!");
-          return @{};
-        }
-        
-        dictionary[key] = [[KPKNumber alloc] initWithBool:(BOOL)reader.readByte];
-      }
-      case KPKVariantTypeInt32: {
-        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringWithLength:keySize encoding:NSUTF8StringEncoding];
-        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        if(dataSize != 4) {
-          NSLog(@"Unexpected byte size != 4 for int32 data!");
-          return @{};
-        }
-        
-        dictionary[key] = [[KPKNumber alloc] initWithInteger32:CFSwapInt32LittleToHost(reader.read4Bytes)];
-      }
-      case KPKVariantTypeUInt32: {
-        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringWithLength:keySize encoding:NSUTF8StringEncoding];
-        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        if(dataSize != 4) {
-          NSLog(@"Unexpected byte size != 4 for uint32 data!");
-          return @{};
-        }
-        
-        dictionary[key] = [[KPKNumber alloc] initWithUnsignedInteger32:CFSwapInt32LittleToHost(reader.read4Bytes)];
-      }
-      case KPKVariantTypeInt64: {
-        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringWithLength:keySize encoding:NSUTF8StringEncoding];
-        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        if(dataSize != 8) {
-          NSLog(@"Unexpected byte size != 8 for int64 data!");
-          return @{};
-        }
-        
-        dictionary[key] = [[KPKNumber alloc] initWithInteger64:CFSwapInt64LittleToHost(reader.read8Bytes)];
-      }
-      case KPKVariantTypeUInt64: {
-        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringWithLength:keySize encoding:NSUTF8StringEncoding];
-        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        if(dataSize != 8) {
-          NSLog(@"Unexpected byte size != 8 for uint64 data!");
-          return @{};
-        }
-        dictionary[key] = [[KPKNumber alloc] initWithUnsignedInteger64:CFSwapInt64LittleToHost(reader.read8Bytes)];
-      }
-      case KPKVariantTypeString: {
-        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringWithLength:keySize encoding:NSUTF8StringEncoding];
-        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        dictionary[key] = [reader stringWithLength:dataSize encoding:NSUTF8StringEncoding];
-      }
-      case KPKVariantTypeByteArray:  {
-        uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringWithLength:keySize encoding:NSUTF8StringEncoding];
-        uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        dictionary[key] = [reader dataWithLength:dataSize];
-      }
-      default:
-        break;
-    }
-  }
 
-  return [[NSDictionary alloc] initWithDictionary:dictionary copyItems:NO];
+- (BOOL)isValidVariantDictionary {
+  for(id key in self) {
+    if(![key isKindOfClass:[NSString class]]) {
+      return NO; // only string as keys allowed!
+    }
+    id value = self[key];
+    if(![value isKindOfClass:[NSData class]] &&
+       ![value isKindOfClass:[NSString class]] &&
+       ![value isKindOfClass:[KPKNumber class]]) {
+      return NO;
+    }
+  }
+  return YES;
 }
 
 /*
