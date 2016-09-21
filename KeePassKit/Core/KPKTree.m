@@ -108,7 +108,6 @@ NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKN
 
 - (void)dealloc {
   self.metaData = nil;
-  _mutableDeletedObjects = nil;
   self.root = nil;
 }
 
@@ -219,7 +218,7 @@ NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKN
 - (NSArray *)allHistoryEntries {
   NSArray *allEntries = self.allEntries;
   if(allEntries.count == 0) {
-    return nil;
+    return @[];
   }
   NSMutableArray *historyEntries = [[NSMutableArray alloc] init];
   for(KPKEntry *entry in allEntries) {

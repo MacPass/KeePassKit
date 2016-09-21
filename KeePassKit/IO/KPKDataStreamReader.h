@@ -32,6 +32,7 @@
 - (NSData *)dataWithLength:(NSUInteger)length;
 - (NSString *)stringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding;
 - (void)readBytes:(void *)buffer length:(NSUInteger)length;
+
 @property (nonatomic, readonly) uint8_t readByte;
 @property (nonatomic, readonly) uint16_t read2Bytes;
 @property (nonatomic, readonly) uint32_t read4Bytes;

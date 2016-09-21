@@ -27,7 +27,11 @@
 
 + (NSData *)dataWithRandomBytes:(NSUInteger)length {
   uint8_t *bytes = malloc(sizeof(uint8_t) * length);
-  SecRandomCopyBytes(kSecRandomDefault, length, bytes);
+  int ret = SecRandomCopyBytes(kSecRandomDefault, length, bytes);
+  if(ret != 0) {
+    free(bytes);
+    return nil;
+  }
   return [NSData dataWithBytesNoCopy:bytes length:length freeWhenDone:YES];
 }
 

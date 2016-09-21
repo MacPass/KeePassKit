@@ -7,6 +7,7 @@
 //
 
 #import "KPKKeyDerivation.h"
+#import "NSUUID+KeePassKit.h"
 
 NSString *const kKPKKeyDerivationUUID             = @"kKPKKeyDerivationUUID";
 NSString *const kKPKKeyDerivationBenchmarkSeconds = @"kKPKKeyDerivationBenchmarkSeconds";
@@ -15,8 +16,8 @@ NSString *const kKPKKeyDerivationBenchmarkSeconds = @"kKPKKeyDerivationBenchmark
 
 static NSMutableDictionary *_keyDerivations;
 
-+ (NSUUID *)_uuid {
-  return nil;
++ (NSUUID *)uuid {
+  return [NSUUID nullUUID];
 }
 
 + (void)_registerKeyDerivation:(Class)derivationClass {

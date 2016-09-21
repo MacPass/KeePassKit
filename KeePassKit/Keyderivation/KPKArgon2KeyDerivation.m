@@ -7,7 +7,7 @@
 //
 
 #import "KPKArgon2KeyDerivation.h"
-#import "NSNumber+TypedNumber.h"
+#import "KPKNumber.h"
 #import "argon2.h"
 
 NSString *const KPKArgon2SaltOption             = @"S";
@@ -38,12 +38,23 @@ NSString *const KPKArgon2AssociativeDataOption  = @"A";
   if(salt.length == 0) {
     return nil;
   }
-  NSNumber *parallelismOptionNmb = options[KPKArgon2ParallelismOption];
-  if(!parallelismOptionNmb || parallelismOptionNmb.type != kKPKNumberTypeUInt32) {
+  KPKNumber *parallelismOptionNmb = options[KPKArgon2ParallelismOption];
+  if(!parallelismOptionNmb || parallelismOptionNmb.type != KPKNumberTypeUnsignedInteger32) {
     return nil;
   }
-  uint32_t parallelism = parallelismOptionNmb.unsignedIntValue;
+  uint32_t parallelism = parallelismOptionNmb.unsignedInteger32Value;
   return nil;
+
+  /*
+  FOUNDATION_EXPORT NSString *const KPKArgon2SaltOption; // NSData
+  FOUNDATION_EXPORT NSString *const KPKArgon2ParallelismOption; // uint32_t
+  FOUNDATION_EXPORT NSString *const KPKArgon2MemoryOption; // utin64_t
+  FOUNDATION_EXPORT NSString *const KPKArgon2IterationsOption; // utin64_t
+  FOUNDATION_EXPORT NSString *const KPKArgon2VersionOption; // uint32_t
+  FOUNDATION_EXPORT NSString *const KPKArgon2KeyOption; // NSData
+  FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataOption; // NSData
+*/
+
 }
 
 + (void)_test {

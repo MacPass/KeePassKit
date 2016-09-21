@@ -47,7 +47,7 @@
 }
 
 - (NSData *)data {
-  return _data;
+  return [_data copy];
 }
 
 - (NSData *)writtenData {

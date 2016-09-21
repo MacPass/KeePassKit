@@ -23,10 +23,11 @@
 
 #import "KPKCompositeKey.h"
 #import "KPKFormat.h"
-#import "NSNumber+TypedNumber.h"
+#import "KPKNumber.h"
 #import "KPKAESKeyDerivation.h"
 
 #import "NSData+Keyfile.h"
+#import "NSData+CommonCrypto.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 
@@ -64,17 +65,23 @@
 
 - (NSData *)finalDataForVersion:(KPKDatabaseType)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
-  NSDictionary *options = @{  kKPKAESSeedKey: transformSeed, kKPKAESRoundsKey: [NSNumber typedNumberWithUnsignedLongLong:rounds] };
+  NSDictionary *options = @{  kKPKAESSeedKey: transformSeed, kKPKAESRoundsKey: [KPKNumber numberWithUnsignedInteger64:rounds] };
 
+  /* TODO add password hast do master seed */
+  
+  NSMutableData *keyData = [[NSMutableData alloc] init];
+  
   if(version == KPKDatabaseTypeBinary) {
-    return [KPKAESKeyDerivation deriveData:_compositeDataVersion1 options:options];
+     [keyData appendData:[KPKAESKeyDerivation deriveData:_compositeDataVersion1 options:options]];
   }
   else if(version == KPKDatabaseTypeXml) {
-    return [KPKAESKeyDerivation deriveData:_compositeDataVersion2 options:options];
+    [keyData appendData:[KPKAESKeyDerivation deriveData:_compositeDataVersion2 options:options]];
   }
   else {
-    return nil; // Wrong Version
   }
+  
+  [keyData appendData:masterSeed];
+  return keyData.SHA256Hash;
 }
 
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseType)version {

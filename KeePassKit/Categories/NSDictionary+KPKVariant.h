@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSMutableDictionary (KPKVersioned)
+@interface NSDictionary (KPKVariant)
 
 - (instancetype)initWithVariantDictionaryData:(NSData *)data;
 

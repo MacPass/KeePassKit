@@ -451,11 +451,11 @@
 - (BOOL)_setupRandomStream {
   switch(_headerReader.randomStreamID ) {
     case KPKRandomStreamSalsa20:
-      _randomStream = [[KPKSalsa20RandomStream alloc] init:_headerReader.protectedStreamKey];
+      _randomStream = [[KPKSalsa20RandomStream alloc] initWithKeyData:_headerReader.protectedStreamKey];
       return YES;
       
     case KPKRandomStreamArc4:
-      _randomStream = [[KPKArc4RandomStream alloc] init:_headerReader.protectedStreamKey];
+      _randomStream = [[KPKArc4RandomStream alloc] initWithKeyData:_headerReader.protectedStreamKey];
       return YES;
       
     default:

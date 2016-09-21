@@ -426,11 +426,11 @@
   }
   switch(_headerWriter.randomStreamID ) {
     case KPKRandomStreamSalsa20:
-      _randomStream = [[KPKSalsa20RandomStream alloc] init:_headerWriter.protectedStreamKey];
+      _randomStream = [[KPKSalsa20RandomStream alloc] initWithKeyData:_headerWriter.protectedStreamKey];
       return YES;
       
     case KPKRandomStreamArc4:
-      _randomStream = [[KPKArc4RandomStream alloc] init:_headerWriter.protectedStreamKey];
+      _randomStream = [[KPKArc4RandomStream alloc] initWithKeyData:_headerWriter.protectedStreamKey];
       return YES;
       
     default:

@@ -88,14 +88,14 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
  *
  *  @return the Trash group or nil if usage of trash is disabled
  */
-- (KPKGroup *)createTrash;
+- (KPKGroup * _Nullable)createTrash;
 
 /**
  *  Returns the defautl autotype squence for this tree. If a delegate is set, it is asked for the sequence.
  *
  *  @return defautl sequence, or nil if none is set
  */
-- (NSString *)defaultAutotypeSequence;
+- (NSString * _Nullable)defaultAutotypeSequence;
 
 @end
 

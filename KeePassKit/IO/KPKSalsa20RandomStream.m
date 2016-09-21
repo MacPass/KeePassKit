@@ -39,12 +39,16 @@ static uint32_t SIGMA[4] = {0x61707865, 0x3320646E, 0x79622D32, 0x6B206574};
 - (instancetype)init {
     uint8_t buffer[256];
     
-    SecRandomCopyBytes(kSecRandomDefault, sizeof(buffer), buffer);
+    int ret = SecRandomCopyBytes(kSecRandomDefault, sizeof(buffer), buffer);
+  if(ret != 0) {
+    self = nil;
+    return self;
+  }
     
-    return [self init:[NSData dataWithBytes:buffer length:sizeof(buffer)]];
+    return [self initWithKeyData:[NSData dataWithBytes:buffer length:sizeof(buffer)]];
 }
 
-- (instancetype)init:(NSData*)key {
+- (instancetype)initWithKeyData:(NSData*)key {
     self = [super init];
     if (self) {
         uint8_t key32[32];

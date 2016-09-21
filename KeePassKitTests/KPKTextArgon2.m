@@ -6,7 +6,8 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import <XCTest/XCTest.h>
+@import XCTest;
+
 #import "KeePassKit.h"
 
 @interface KPKTextArgon2 : XCTestCase
