@@ -20,18 +20,22 @@ NSString *const KPKArgon2AssociativeDataOption  = @"A";
 
 @implementation KPKArgon2KeyDerivation
 
-  + (NSUUID *)uuid {
-    static const uuid_t bytes = {
-      0xEF, 0x63, 0x6D, 0xDF, 0x8C, 0x29, 0x44, 0x4B,
-      0x91, 0xF7, 0xA9, 0xA4, 0x03, 0xE3, 0x0A, 0x0C
-    };
-    static NSUUID *argon2UUID = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-      argon2UUID = [[NSUUID alloc] initWithUUIDBytes:bytes];
-    });
-    return argon2UUID;
-  }
++ (NSDictionary *)defaultParameters {
+  return @{};
+}
+
++ (NSUUID *)uuid {
+  static const uuid_t bytes = {
+    0xEF, 0x63, 0x6D, 0xDF, 0x8C, 0x29, 0x44, 0x4B,
+    0x91, 0xF7, 0xA9, 0xA4, 0x03, 0xE3, 0x0A, 0x0C
+  };
+  static NSUUID *argon2UUID = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    argon2UUID = [[NSUUID alloc] initWithUUIDBytes:bytes];
+  });
+  return argon2UUID;
+}
 
 + (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
   NSData *salt = options[KPKArgon2SaltOption];
@@ -44,17 +48,17 @@ NSString *const KPKArgon2AssociativeDataOption  = @"A";
   }
   uint32_t parallelism = parallelismOptionNmb.unsignedInteger32Value;
   return nil;
-
+  
   /*
-  FOUNDATION_EXPORT NSString *const KPKArgon2SaltOption; // NSData
-  FOUNDATION_EXPORT NSString *const KPKArgon2ParallelismOption; // uint32_t
-  FOUNDATION_EXPORT NSString *const KPKArgon2MemoryOption; // utin64_t
-  FOUNDATION_EXPORT NSString *const KPKArgon2IterationsOption; // utin64_t
-  FOUNDATION_EXPORT NSString *const KPKArgon2VersionOption; // uint32_t
-  FOUNDATION_EXPORT NSString *const KPKArgon2KeyOption; // NSData
-  FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataOption; // NSData
-*/
-
+   FOUNDATION_EXPORT NSString *const KPKArgon2SaltOption; // NSData
+   FOUNDATION_EXPORT NSString *const KPKArgon2ParallelismOption; // uint32_t
+   FOUNDATION_EXPORT NSString *const KPKArgon2MemoryOption; // utin64_t
+   FOUNDATION_EXPORT NSString *const KPKArgon2IterationsOption; // utin64_t
+   FOUNDATION_EXPORT NSString *const KPKArgon2VersionOption; // uint32_t
+   FOUNDATION_EXPORT NSString *const KPKArgon2KeyOption; // NSData
+   FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataOption; // NSData
+   */
+  
 }
 
 + (void)_test {

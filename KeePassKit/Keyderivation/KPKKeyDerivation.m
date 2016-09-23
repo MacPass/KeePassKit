@@ -16,6 +16,10 @@ NSString *const kKPKKeyDerivationBenchmarkSeconds = @"kKPKKeyDerivationBenchmark
 
 static NSMutableDictionary *_keyDerivations;
 
++ (NSDictionary *)defaultParameters {
+  return @{};
+}
+
 + (NSUUID *)uuid {
   return [NSUUID nullUUID];
 }
@@ -56,6 +60,5 @@ static NSMutableDictionary *_keyDerivations;
 + (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
   return [[self _keyDerivationForOptions:options] deriveData:data options:options];
 }
-
 
 @end

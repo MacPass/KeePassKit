@@ -66,22 +66,27 @@
 - (NSData *)finalDataForVersion:(KPKDatabaseType)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
   NSDictionary *options = @{  kKPKAESSeedKey: transformSeed, kKPKAESRoundsKey: [KPKNumber numberWithUnsignedInteger64:rounds] };
-
-  /* TODO add password hast do master seed */
   
-  NSMutableData *keyData = [[NSMutableData alloc] init];
-  
+  NSData *derivedData;
+  // TODO supply key derivation!
   if(version == KPKDatabaseTypeBinary) {
-     [keyData appendData:[KPKAESKeyDerivation deriveData:_compositeDataVersion1 options:options]];
+    derivedData = [KPKAESKeyDerivation deriveData:_compositeDataVersion1 options:options];
   }
   else if(version == KPKDatabaseTypeXml) {
-    [keyData appendData:[KPKAESKeyDerivation deriveData:_compositeDataVersion2 options:options]];
+    derivedData = [KPKAESKeyDerivation deriveData:_compositeDataVersion2 options:options];
   }
   else {
+    derivedData = nil;
   }
   
-  [keyData appendData:masterSeed];
-  return keyData.SHA256Hash;
+  uint8_t hashedKey[CC_SHA256_DIGEST_LENGTH];
+  CC_SHA256_CTX sha256ctx;
+  CC_SHA256_Init(&sha256ctx);
+  CC_SHA256_Update(&sha256ctx, masterSeed.bytes, (CC_LONG)masterSeed.length);
+  CC_SHA256_Update(&sha256ctx, derivedData.bytes, (CC_LONG)derivedData.length);
+  CC_SHA256_Final(hashedKey, &sha256ctx);
+  
+  return [NSData dataWithBytes:hashedKey length:CC_SHA256_DIGEST_LENGTH];
 }
 
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseType)version {
