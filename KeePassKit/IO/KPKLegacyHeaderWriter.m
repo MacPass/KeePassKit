@@ -104,7 +104,7 @@
   NSAssert(_entryCount != -1, @"Entry count needs to be initalized");
   _header.signature1 = CFSwapInt32HostToLittle(kKPKBinarySignature1);
   _header.signature2 = CFSwapInt32HostToLittle(kKPKBinarySignature2);
-  _header.flags = CFSwapInt32HostToLittle( KPKLegacyEncryptionSHA2 | KPKLegacyEncryptionRijndael );
+  _header.flags = CFSwapInt32HostToLittle( KPKLegacyEncryptionSHA2 | KPKLegacyEncryptionAES );
   _header.version = CFSwapInt32HostToLittle(kKPKBinaryFileVersion);
   
   /* Master seed and encryption iv */

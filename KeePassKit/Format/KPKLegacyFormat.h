@@ -102,7 +102,7 @@ typedef NS_ENUM(NSUInteger, KPKLegacyFieldType) {
 
 typedef NS_OPTIONS(NSUInteger, KPKLegacyEncryptionFlags) {
   KPKLegacyEncryptionSHA2       = 1<<0,
-  KPKLegacyEncryptionRijndael   = 1<<1,
+  KPKLegacyEncryptionAES        = 1<<1,
   KPKLegacyEncryptionArcFour    = 1<<2,
   KPKLegacyEncryptionTwoFish    = 1<<3
 };
