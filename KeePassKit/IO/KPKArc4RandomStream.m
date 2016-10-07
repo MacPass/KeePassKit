@@ -24,6 +24,7 @@
 #import <Security/Security.h>
 #import <Security/SecRandom.h>
 
+
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
@@ -54,7 +55,9 @@
   return [self initWithKeyData:[NSData dataWithBytes:buffer length:sizeof(buffer)]];
 }
 
-- (instancetype)initWithKeyData:(NSData *)key:(NSData*)key {
+- (instancetype)initWithKeyData:(NSData*)key {
+  
+  
   self = [super init];
   if (self) {
     const uint8_t *bytes = key.bytes;
