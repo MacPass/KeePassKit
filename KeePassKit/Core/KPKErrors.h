@@ -34,8 +34,8 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorUnknownFileFormat, // The file format is unknown
   KPKErrorHeaderCorrupted, // The header is Corrupted
   KPKErrorWriteFailed, // Could write the File
-  KPKErrorDecryptionFaild, // Failed to decrypt the data stream
-  KPKErrorEncryptionFaild, // Faled to encrypt the data stream
+  KPKErrorDecryptionFailed, // Failed to decrypt the data stream
+  KPKErrorEncryptionFailed, // Faled to encrypt the data stream
   KPKErrorDatabaseParsingFailed, // The XML-Database couldn be parsed
   KPKErrorXMLKeyUnsupportedVersion, // The XML-Keyfile is an usupported version
   KPKErrorXMLKeyKeyElementMissing, // The XML-Keyfile has no key element
@@ -46,7 +46,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorUnsupportedCompressionAlgorithm, // The header specifies an unsupporte and/or wrong compressoing algorithm
   KPKErrorUnsupportedRandomStream, // The header specifies an unsupporte stream or it's corrupted
   KPKErrorPasswordAndOrKeyfileWrong, // Password and or keyfile is wrong
-  KPKErrorIntegrityCheckFaild, // The startbytes in the header aren't matching the AES stream-start
+  KPKErrorIntegrityCheckFailed, // The startbytes in the header aren't matching the AES stream-start
   KPKErrorXMLHeaderHashVerificationFailed, // The header hash does not match the one provieded in the database
   KPKErrorXMLKeePassFileElementMissing, // the Keepass root element is missing
   KPKErrorXMLRootElementMissing, // The root Elemetn is missing;

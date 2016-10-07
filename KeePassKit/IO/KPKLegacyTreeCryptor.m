@@ -59,7 +59,7 @@
                                                                                     options:kCCOptionPKCS7Padding
                                                                                       error:&cryptoStatus];
   if(cryptoStatus != kCCSuccess ) {
-    KPKCreateError(error, KPKErrorDecryptionFaild, @"ERROR_DECRYPTION_FAILED", "");
+    KPKCreateError(error, KPKErrorDecryptionFailed, @"ERROR_DECRYPTION_FAILED", "");
     return nil;
   }
   
@@ -88,7 +88,7 @@
                                                             options:kCCOptionPKCS7Padding
                                                               error:&cryptoError];
   if(cryptoError != kCCSuccess) {
-    KPKCreateError(error, KPKErrorDecryptionFaild, @"ERROR_ENCRYPTION_FAILED", "");
+    KPKCreateError(error, KPKErrorDecryptionFailed, @"ERROR_ENCRYPTION_FAILED", "");
     return nil;
   }
   

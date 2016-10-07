@@ -94,7 +94,7 @@
   }
   
   if(!unhashedData) {
-    KPKCreateError(error, KPKErrorIntegrityCheckFaild, @"ERROR_INTEGRITY_CHECK_FAILED", "");
+    KPKCreateError(error, KPKErrorIntegrityCheckFailed, @"ERROR_INTEGRITY_CHECK_FAILED", "");
     return nil;
   }
   KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:unhashedData headerReader:headerReader];
