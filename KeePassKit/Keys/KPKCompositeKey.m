@@ -89,6 +89,12 @@
   return [NSData dataWithBytes:hashedKey length:CC_SHA256_DIGEST_LENGTH];
 }
 
+
+- (NSData *)transformForType:(KPKDatabaseType) metaData:(KPKMetaData *)metaData {
+
+}
+
+
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseType)version {
   NSData *data;
   switch(version) {

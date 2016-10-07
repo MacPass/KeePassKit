@@ -58,6 +58,7 @@
  @return the final Data to use to en/decrypt the database
  */
 - (NSData *)finalDataForVersion:(KPKDatabaseType )version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger )rounds;
+- (NSData *)transformForType:(KPKDatabaseType) metaData:(KPKMetaData *)metaData;
 /**
  *  Updates the password and keyfile for the composite key
  *  @param password the new password, can be nil
