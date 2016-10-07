@@ -52,6 +52,7 @@
     _encryptionIv = [NSData dataWithRandomBytes:16];
     _protectedStreamKey = [NSData dataWithRandomBytes:32];
     _streamStartBytes = [NSData dataWithRandomBytes:32];
+    /* random stream defaults to salsa20 */
     _randomStreamID = KPKRandomStreamSalsa20;
   }
   return self;
