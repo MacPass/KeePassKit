@@ -10,6 +10,8 @@
 
 @interface KPKKeyDerivation ()
 
+@property (copy) NSDictionary *options;
+
 + (void)_registerKeyDerivation:(Class)derivationClass;
 
 - (KPKKeyDerivation *)_init;

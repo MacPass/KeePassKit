@@ -79,6 +79,7 @@
 - (KPKKeyDerivation *)_initWithOptions:(NSDictionary *)options {
   self = [super _init];
   if(self) {
+    self.options = [options copy];
     NSDictionary *defaults = [self.class defaultParameters];
     _seed = [options[KPKAESSeedOption] copy];
     _rounds = [options[KPKAESRoundsOption] copy];

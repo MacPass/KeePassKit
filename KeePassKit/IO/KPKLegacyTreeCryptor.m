@@ -41,10 +41,12 @@
     return nil;
   }
   // Create the final key and initialize the AES input stream
-  NSData *keyData = [password finalDataForVersion:KPKDatabaseTypeBinary
-                                        masterSeed:headerReader.masterSeed
-                                     transformSeed:headerReader.transformSeed
-                                            rounds:headerReader.rounds];
+  NSData *keyData = [password transformForType:KPKDatabaseTypeBinary withKeyDerivationUUID:headerReader.keyDerivationUUID options:headerReader.keyDerivationOptions error:error];
+  
+//  NSData *keyData = [password finalDataForVersion:KPKDatabaseTypeBinary
+//                                        masterSeed:headerReader.masterSeed
+//                                     transformSeed:headerReader.transformSeed
+//                                            rounds:headerReader.rounds];
   
 
   /*

@@ -41,7 +41,6 @@
 @synthesize transformSeed = _transformSeed;
 @synthesize encryptionIV = _encryptionIV;
 @synthesize contentsHash = _contentsHash;
-@synthesize rounds = _rounds;
 @synthesize headerHash = _headerHash;
 
 @dynamic protectedStreamKey;

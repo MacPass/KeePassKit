@@ -23,8 +23,11 @@
 #import "KPKErrors.h"
 
 #import "NSData+Gzip.h"
+#import "NSData+CommonCrypto.h"
 
 #import "DDXMLDocument.h"
+
+#import <CommonCrypto/CommonCrypto.h>
 
 @implementation KPKTreeArchiver
 
@@ -37,6 +40,11 @@
   KPKTreeArchiver *archiver = [[KPKTreeArchiver alloc] initWithTree:tree];
   return [archiver archiveWithKey:key error:error];
   
+}
+
+- (instancetype)init {
+  self = [self initWithTree:nil];
+  return self;
 }
 
 - (instancetype)initWithTree:(KPKTree *)tree {
@@ -69,10 +77,12 @@
     }
     //NSDictionary *cipherOptions =
     
-    NSData *keyData = [key finalDataForVersion:fileInfo.type
-                                     masterSeed:treeWriter.headerWriter.masterSeed
-                                  transformSeed:treeWriter.headerWriter.transformSeed
-                                         rounds:treeWriter.tree.metaData.rounds];
+    NSData *keyData = [key transformForType:fileInfo.type withKeyDerivationUUID:self.tree.metaData.keyDerivationUUID options:self.tree.metaData.keyDerivationOptions error:error];
+    
+//    NSData *keyData = [key finalDataForVersion:fileInfo.type
+//                                     masterSeed:treeWriter.headerWriter.masterSeed
+//                                  transformSeed:treeWriter.headerWriter.transformSeed
+//                                         rounds:treeWriter.tree.metaData.rounds];
     
     
     NSMutableData *contentData = [[NSMutableData alloc] initWithData:treeWriter.headerWriter.streamStartBytes];

@@ -27,6 +27,9 @@
 @required
 @property (nonatomic, readonly, strong) NSUUID *cipherUUID;
 
+@property (nonatomic, readonly, copy) NSUUID *keyDerivationUUID;
+@property (nonatomic, readonly, copy) NSDictionary *keyDerivationOptions; // contains rounds for aes
+
 @property (nonatomic, readonly, strong) NSData *masterSeed;
 @property (nonatomic, readonly, strong) NSData *transformSeed;
 @property (nonatomic, readonly, strong) NSData *encryptionIV;
@@ -34,17 +37,14 @@
 @property (nonatomic, readonly, strong) NSData *streamStartBytes;
 
 @property (nonatomic, readonly, assign) uint32_t compressionAlgorithm; // KPKCompression
-@property (nonatomic, readonly, assign) uint32_t randomStreamID; // KPKRandomStreamType
-@property (nonatomic, readonly, assign) uint64_t rounds;
+@property (nonatomic, readonly, assign) uint32_t randomStreamID;
+//@property (nonatomic, readonly, assign) uint64_t rounds;
 
 @property (nonatomic, readonly, strong) NSData *contentsHash;
 @property (nonatomic, readonly, strong) NSData *headerHash;
 
 @property (nonatomic, readonly) NSUInteger numberOfEntries;
 @property (nonatomic, readonly) NSUInteger numberOfGroups;
-
-@property (nonatomic, readonly) NSUUID *chipherUUID;
-@property (nonatomic, readonly) NSDictionary *cipherOptions;
 
 - (instancetype)initWithData:(NSData *)data error:(NSError **)error;
 /**

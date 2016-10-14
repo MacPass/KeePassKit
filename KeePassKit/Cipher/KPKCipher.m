@@ -11,7 +11,7 @@
 #import "KPKHeaderReading.h"
 
 #import "KPKAESCipher.h"
-#import "KPKChaChaCipher.h"
+#import "KPKChaCha20Cipher.h"
 
 #import "NSUUID+KeePassKit.h"
 
@@ -35,8 +35,8 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
   return [[KPKAESCipher alloc] init];
 }
 
-+ (KPKCipher *)chaChaCipher {
-  return [[KPKChaChaCipher alloc] init];
++ (KPKCipher *)chaCha20Cipher {
+  return [[KPKChaCha20Cipher alloc] init];
 }
 
 + (NSUInteger)IVLength {

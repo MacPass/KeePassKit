@@ -111,6 +111,7 @@
   
   /* Set the information we got from the header */
   tree.metaData.rounds = _headerReader.rounds;
+  tree.metaData.keyDerivationOptions = _headerReader.keyDerivationOptions;
   tree.metaData.compressionAlgorithm = _headerReader.compressionAlgorithm;
   tree.metaData.cipherUUID = _headerReader.cipherUUID;
   

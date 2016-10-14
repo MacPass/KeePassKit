@@ -31,7 +31,7 @@ uint32_t const kKPKBinarySignature1             = 0x9AA2D903;
 uint32_t const kKPKBinarySignature2             = 0xB54BFB65;
 
 uint32_t const kKPKInvalidFileVersion           = UINT32_MAX;
-uint32_t const kKPKXMLFileVersion3              = 0x00030001;
+uint32_t const kKPKXMLFileVersion3              = 0x00030001; // TODO check if this is correct!
 uint32_t const kKPKXMLFileVersion3CriticalMax   = 0x00030000;
 uint32_t const kKPKXMLFileVersion4              = 0x00040000;
 uint32_t const kKPKXMLFileVersion4CriticalMax   = 0x00040000;
@@ -304,6 +304,16 @@ NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
  {, }	{{}, {}}
  
  */
+
+BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
+  switch(fileInfo.type) {
+    case KPKDatabaseTypeXml:
+      
+    case KPKDatabaseTypeBinary:
+    default:
+      return NO;
+  }
+}
 
 @implementation KPKFormat
 

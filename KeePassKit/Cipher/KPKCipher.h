@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (KPKCipher * _Nullable)cipherWithUUID:(NSUUID *)uuid;
 + (KPKCipher * _Nullable)cipherWithUUID:(NSUUID *)uuid options:(NSDictionary *)options;
 + (KPKCipher *)aesCipher;
-+ (KPKCipher *)chaChaCipher;
++ (KPKCipher *)chaCha20Cipher;
 
 + (NSUInteger)keyLength;
 + (NSUInteger)IVLength;

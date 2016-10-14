@@ -41,7 +41,6 @@ FOUNDATION_EXPORT NSString *const KPKAESRoundsOption; // KPKNumber uint64_t
 + (KPKKeyDerivation * _Nullable)keyDerivationWithUUID:(NSUUID *)uuid;
 + (KPKKeyDerivation * _Nullable)keyDerivationWithUUID:(NSUUID *)uuid options:(NSDictionary *)options;
 
-
 - (KPKKeyDerivation *)initWithUUID:(NSUUID *)uuid;
 - (KPKKeyDerivation *)initWithUUID:(NSUUID *)uuid options:(NSDictionary *)options NS_DESIGNATED_INITIALIZER;
 
@@ -49,7 +48,10 @@ FOUNDATION_EXPORT NSString *const KPKAESRoundsOption; // KPKNumber uint64_t
 - (NSData * _Nullable)deriveData:(NSData *)data options:(NSDictionary *)options;
 - (void)benchmarkWithOptions:(NSDictionary *)options completionHandler:(void(^)(NSDictionary *results))completionHandler;
 
+- (void)randomize; // initalize with random data!
+
 @property (readonly, copy, nonatomic) NSUUID *uuid;
+@property (readonly, copy) NSDictionary *options;
 
 @end
 

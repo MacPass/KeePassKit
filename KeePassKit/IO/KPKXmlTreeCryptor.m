@@ -111,11 +111,8 @@
     // create Error
     return nil;
   }
-  NSData *key = [password finalDataForVersion:KPKDatabaseTypeXml
-                                   masterSeed:treeWriter.headerWriter.masterSeed
-                                transformSeed:treeWriter.headerWriter.transformSeed
-                                       rounds:treeWriter.tree.metaData.rounds];
   
+  NSData *key = [password transformForType:KPKDatabaseTypeXml withKeyDerivationUUID:tree.metaData.keyDerivationUUID options:tree.metaData.keyDerivationOptions error:error];
   
   NSMutableData *contentData = [[NSMutableData alloc] initWithData:treeWriter.headerWriter.streamStartBytes];
   if(tree.metaData.compressionAlgorithm == KPKCompressionGzip) {

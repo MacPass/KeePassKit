@@ -54,8 +54,9 @@
 @synthesize compressionAlgorithm = _compressionAlgorithm;
 @synthesize streamStartBytes = _streamStartBytes;
 @synthesize protectedStreamKey = _protectedStreamKey;
-@synthesize rounds = _rounds;
 @synthesize randomStreamID = _randomStreamID;
+
+@synthesize keyDerivationOptions = _keyDerivationOptions;
 
 - (instancetype)init {
   self = [super init];
@@ -65,6 +66,7 @@
     _encryptionIV = [NSData dataWithRandomBytes:16];
     _protectedStreamKey = [NSData dataWithRandomBytes:32];
     _streamStartBytes = [NSData dataWithRandomBytes:32];
+    
   }
   return self;
 }

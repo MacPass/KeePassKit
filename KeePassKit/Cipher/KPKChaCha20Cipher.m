@@ -6,10 +6,11 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKChaChaCipher.h"
+#import "KPKChaCha20Cipher.h"
 #import "KPKCipher_Private.h"
+#import "chacha20_simple.h"
 
-@implementation KPKChaChaCipher
+@implementation KPKChaCha20Cipher
 
 + (void)load {
   [KPKCipher _registerCipher:self];

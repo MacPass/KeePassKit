@@ -8,6 +8,6 @@
 
 #import "KPKCipher.h"
 
-@interface KPKChaChaCipher : KPKCipher
+@interface KPKChaCha20Cipher : KPKCipher
 
 @end
