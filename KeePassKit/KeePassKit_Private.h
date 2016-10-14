@@ -10,12 +10,12 @@
 
 #import "KPKXmlTreeReader.h"
 
-#import "KPKAttribute+Private.h"
+#import "KPKAttribute_Private.h"
 #import "KPKAutotype+Private.h"
 #import "KPKBinary+Private.h"
 #import "KPKEntry+Private.h"
 #import "KPKGroup+Private.h"
-#import "KPKNode+Private.h"
+#import "KPKNode_Private.h"
 #import "KPKTree+Private.h"
 #import "KPKTimeInfo+Private.h"
 #import "KPKMetaData+Private.h"

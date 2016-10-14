@@ -1,5 +1,5 @@
 //
-//  KPKGroup+Private.h
+//  KPKGroup_Private.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 18/02/16.

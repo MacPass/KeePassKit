@@ -1,5 +1,5 @@
 //
-//  KPKBinary+Private.h
+//  KPKBinary_Private.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 14/06/16.

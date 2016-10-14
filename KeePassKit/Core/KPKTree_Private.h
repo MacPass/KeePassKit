@@ -1,5 +1,5 @@
 //
-//  KPKTree+Private.h
+//  KPKTree_Private.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 13/10/15.
