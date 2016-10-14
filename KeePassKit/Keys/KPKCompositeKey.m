@@ -65,15 +65,16 @@
 
 - (NSData *)finalDataForVersion:(KPKDatabaseType)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
   // Generate the master key from the credentials
-  NSDictionary *options = @{  kKPKAESSeedKey: transformSeed, kKPKAESRoundsKey: [KPKNumber numberWithUnsignedInteger64:rounds] };
+  NSDictionary *options = @{  KPKAESSeedOption: transformSeed, KPKAESRoundsOption: [KPKNumber numberWithUnsignedInteger64:rounds] };
   
   NSData *derivedData;
+  KPKKeyDerivation *aesKeyDerivation = [[KPKKeyDerivation alloc] initWithUUID:[KPKAESKeyDerivation uuid] options:options];
   // TODO supply key derivation!
   if(version == KPKDatabaseTypeBinary) {
-    derivedData = [KPKAESKeyDerivation deriveData:_compositeDataVersion1 options:options];
+    derivedData = [aesKeyDerivation deriveData:_compositeDataVersion1 options:options];
   }
   else if(version == KPKDatabaseTypeXml) {
-    derivedData = [KPKAESKeyDerivation deriveData:_compositeDataVersion2 options:options];
+    derivedData = [aesKeyDerivation deriveData:_compositeDataVersion2 options:options];
   }
   else {
     derivedData = nil;
@@ -90,10 +91,23 @@
 }
 
 
-- (NSData *)transformForType:(KPKDatabaseType) metaData:(KPKMetaData *)metaData {
-
+- (NSData *)transformForType:(KPKDatabaseType)type withKeyDerivationUUID:(NSUUID *)uuid options:(NSDictionary *)options error:(NSError *__autoreleasing*)error {
+  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithUUID:uuid options:options];
+  switch(type) {
+    case KPKDatabaseTypeBinary:
+      return [keyDerivation deriveData:_compositeDataVersion2];
+  
+      break;
+    case KPKDatabaseTypeXml: {
+  
+      break;
+    }
+    default:
+      return nil;
+      break;
+  }
+  return nil;
 }
-
 
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseType)version {
   NSData *data;

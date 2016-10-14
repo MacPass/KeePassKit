@@ -22,10 +22,10 @@
 
 #import "KPKDataStreamReader.h"
 
-@interface KPKDataStreamReader () {
-  NSUInteger _location;
-  NSData *_data;
-}
+@interface KPKDataStreamReader ()
+
+@property (nonatomic) NSUInteger offset;
+@property (nonatomic, copy) NSData *data;
 
 @end
 
@@ -34,30 +34,27 @@
 - (instancetype)initWithData:(NSData *)data {
   self = [super init];
   if(self) {
-    _location = 0;
-    _data = data;
+    _offset = 0;
+    _data = [data copy];
   }
   return self;
 }
-- (NSUInteger)location {
-  return _location;
-}
 
-- (NSData *)dataWithLength:(NSUInteger)length {
+- (NSData *)readDataWithLength:(NSUInteger)length {
   // FIXME: test for maxsize
-  length = MIN(_data.length - _location, length);
-  NSData *data = [_data subdataWithRange:NSMakeRange(_location, length)];
-  _location += length;
+  length = MIN(self.data.length - self.offset, length);
+  NSData *data = [self.data subdataWithRange:NSMakeRange(self.offset, length)];
+  self.offset += length;
   return data;
 }
-- (NSString *)stringFromNullTerminatedCStringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding {
+- (NSString *)readStringFromNullTerminatedCStringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding {
   char characters[length];
   [self _getBytes:characters length:length];
   return [NSString stringWithCString:characters encoding:encoding];
 }
 
-- (NSString *)stringFromBytesWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding {
-  return [[NSString alloc] initWithData:[self dataWithLength:length] encoding:encoding];
+- (NSString *)readStringFromBytesWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding {
+  return [[NSString alloc] initWithData:[self readDataWithLength:length] encoding:encoding];
 }
 
 - (void)readBytes:(void *)buffer length:(NSUInteger)length {
@@ -65,60 +62,71 @@
 }
 
 - (uint8_t)readByte {
-  uint8_t buffer;
-  [self _getBytes:&buffer length:1];
+  uint8_t buffer = 0;
+  if(self.readableBytes < sizeof(uint8_t)) {
+    return buffer;
+  }
+  [self _getBytes:&buffer length:sizeof(uint8_t)];
   return buffer;
 }
 
 - (uint16_t)read2Bytes {
-  uint16_t buffer;
-  [self _getBytes:&buffer length:2];
+  uint16_t buffer = 0;
+  if(self.readableBytes < sizeof(uint16_t)) {
+    return buffer;
+  }
+  [self _getBytes:&buffer length:sizeof(uint16_t)];
   return buffer;
 }
 
 - (uint32_t)read4Bytes {
-  uint32_t buffer;
-  [self _getBytes:&buffer length:4];
+  uint32_t buffer = 0;
+  if(self.readableBytes < sizeof(uint32_t)) {
+    return buffer;
+  }
+  [self _getBytes:&buffer length:sizeof(uint32_t)];
   return buffer;
 }
 
 - (uint64_t)read8Bytes {
-  uint64_t buffer;
-  [self _getBytes:&buffer length:8];
+  uint64_t buffer = 0;
+  if(self.readableBytes < sizeof(uint64_t)) {
+    return 0;
+  }
+  [self _getBytes:&buffer length:sizeof(uint64_t)];
   return buffer;
 }
 
-- (NSUInteger)integer {
+- (NSUInteger)readInteger {
   NSUInteger integer = 0;
+  if(self.readableBytes < sizeof(NSUInteger)) {
+    return integer;
+  }
   [self _getBytes:&integer length:sizeof(NSUInteger)];
   return integer;
 }
 
 - (void)skipBytes:(NSUInteger)numberOfBytes {
-  _location += numberOfBytes;
-  _location = MIN(_data.length, _location);
+  self.offset += numberOfBytes;
+  self.offset = MIN(self.data.length, self.offset);
 }
 
-- (BOOL)reachedEndOfData {
-  return (_location == _data.length);
+- (BOOL)hasBytesAvailable {
+  return (self.offset == self.data.length);
 }
 
 - (NSUInteger)readableBytes {
-  if(self.reachedEndOfData) {
+  if(!self.hasBytesAvailable) {
     return 0;
   }
-  return (_data.length - _location);
-}
-
-- (void)reset {
-  _location = 0;
+  return (self.data.length - self.offset);
 }
 
 - (NSUInteger)_getBytes:(void *)buffer length:(NSUInteger)length {
-  NSUInteger maxLength = _data.length - _location;
-  length = MIN(maxLength, length);
-  [_data getBytes:buffer range:NSMakeRange(_location, length)];
-  _location += length;
+  NSUInteger maxLength = self.data.length - self.offset;
+  length = MIN(maxLength, MAX(0,length));
+  [self.data getBytes:buffer range:NSMakeRange(self.offset, length)];
+  self.offset += length;
   return length;
 }
 

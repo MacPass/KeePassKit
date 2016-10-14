@@ -21,7 +21,7 @@
 //
 
 #import "NSString+Commands.h"
-#import "KPKNode+Private.h"
+#import "KPKNode_Private.h"
 #import "KPKEntry.h"
 #import "KPKAttribute.h"
 #import "KPKTree.h"

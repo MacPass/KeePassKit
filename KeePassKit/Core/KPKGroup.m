@@ -21,8 +21,8 @@
 //
 
 #import "KPKGroup.h"
-#import "KPKGroup+Private.h"
-#import "KPKNode+Private.h"
+#import "KPKGroup_Private.h"
+#import "KPKNode_Private.h"
 
 #import "KPKAutotype.h"
 #import "KPKDeletedNode.h"
@@ -30,7 +30,7 @@
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
 #import "KPKTree.h"
-#import "KPKTree+Private.h"
+#import "KPKTree_Private.h"
 #import "KPKTimeInfo.h"
 
 #import "NSUUID+KeePassKit.h"
@@ -311,15 +311,27 @@
 }
 
 - (KPKDatabaseType)minimumType {
-  KPKDatabaseType version = KPKDatabaseTypeBinary;
+  KPKDatabaseType type = KPKDatabaseTypeBinary;
   for(KPKGroup *group in self.groups) {
-    version = MAX(version, group.minimumType);
+    type = MAX(type, group.minimumType);
   }
   for(KPKEntry *entry in self.entries) {
-    version = MAX(version, entry.minimumType);
+    type = MAX(type, entry.minimumType);
   }
-  return version;
+  return type;
 }
+
+- (NSUInteger)minimumVersion {
+  switch (self.minimumType) {
+    case KPKDatabaseTypeXml:
+      break;
+      
+    default:
+      break;
+  }
+  return kKPKBinaryFileVersion;
+}
+
 
 #pragma mark -
 #pragma mark Accessors

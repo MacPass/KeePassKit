@@ -21,6 +21,7 @@
 //
 
 #import "KPKXmlHeaderReader.h"
+#import "KPKCipher.h"
 #import "KPKFormat.h"
 #import "KPKErrors.h"
 #import "KPKXmlFormat.h"
@@ -119,22 +120,26 @@
     uint8_t fieldType = [_dataStreamer readByte];
     uint16_t fieldSize = [_dataStreamer read2Bytes];
     fieldSize = CFSwapInt16LittleToHost(fieldSize);
-  
+    
     //NSRange readRange = NSMakeRange(location, fieldSize);
-
+    
     switch (fieldType) {
       case KPKHeaderKeyEndOfHeader:
         [_dataStreamer skipBytes:fieldSize];
-        _endOfHeader = _dataStreamer.location;
+        _endOfHeader = _dataStreamer.offset;
         return YES; // Done
         
       case KPKHeaderKeyComment:
-        _comment = [_dataStreamer dataWithLength:fieldSize];
+        _comment = [_dataStreamer readDataWithLength:fieldSize];
         break;
         
       case KPKHeaderKeyCipherId: {
         if(fieldSize == 16) {
-          _cipherUUID = [[NSUUID alloc] initWithData:[_dataStreamer dataWithLength:fieldSize]];
+          _cipherUUID = [[NSUUID alloc] initWithData:[_dataStreamer readDataWithLength:fieldSize]];
+          KPKCipher *cipher = [[KPKCipher alloc] initWithUUID:_cipherUUID];
+          if(!cipher) {
+            KPKCreateError(error, KPKErrorUnsupportedCipher, @"ERROR_UNSUPPORTED_CIPHER", "");
+          }
         }
         else {
           KPKCreateError(error, KPKErrorXMLInvalidHeaderFieldSize, @"ERROR_INVALID_HEADER_FIELD_SIZE", "");
@@ -147,25 +152,30 @@
           KPKCreateError(error, KPKErrorXMLInvalidHeaderFieldSize, @"ERROR_INVALID_HEADER_FIELD_SIZE", "");
           return NO;
         }
-        _masterSeed = [_dataStreamer dataWithLength:fieldSize];
+        _masterSeed = [_dataStreamer readDataWithLength:fieldSize];
         break;
       case KPKHeaderKeyTransformSeed:
         if (fieldSize != 32) {
           KPKCreateError(error, KPKErrorXMLInvalidHeaderFieldSize, @"ERROR_INVALID_HEADER_FIELD_SIZE", "");
           return NO;
         }
-        _transformSeed =  [_dataStreamer dataWithLength:fieldSize];
+        _transformSeed =  [_dataStreamer readDataWithLength:fieldSize];
         break;
         
-      case KPKHeaderKeyEncryptionIV:
-        _encryptionIV = [_dataStreamer dataWithLength:fieldSize];
+      case KPKHeaderKeyEncryptionIV: {
+        KPKCipher *cipher = [[KPKCipher alloc] initWithUUID:_cipherUUID];
+        if( fieldSize != cipher.IVLength ) {
+          KPKCreateError(error, KPKErrorWrongIVVectorSize, @"ERROR_INVALID_HEADER_IV_SIZE", "");
+          return NO;
+        }
+        _encryptionIV = [_dataStreamer readDataWithLength:fieldSize];
         break;
-        
+      }
       case KPKHeaderKeyProtectedKey:
-        _protectedStreamKey = [_dataStreamer dataWithLength:fieldSize];
+        _protectedStreamKey = [_dataStreamer readDataWithLength:fieldSize];
         break;
       case KPKHeaderKeyStartBytes:
-        _streamStartBytes = [_dataStreamer dataWithLength:fieldSize];
+        _streamStartBytes = [_dataStreamer readDataWithLength:fieldSize];
         break;
         
       case KPKHeaderKeyTransformRounds:

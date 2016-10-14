@@ -1,5 +1,5 @@
 //
-//  KPKAutotype+Private.h
+//  KPKAutotype_Private.h
 //  MacPass
 //
 //  Created by Michael Starke on 30/09/15.

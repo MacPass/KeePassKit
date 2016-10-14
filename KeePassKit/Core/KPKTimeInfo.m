@@ -21,7 +21,7 @@
 //
 
 #import "KPKTimeInfo.h"
-#import "KPKTimeInfo+Private.h"
+#import "KPKTimeInfo_Private.h"
 #import "KPKNode.h"
 #import "KPKTree.h"
 

@@ -26,6 +26,9 @@
 #import "KPKFormat.h"
 #import "KPKTree.h"
 #import "KPKMetaData.h"
+#import "KPKNumber.h"
+
+#import "KPKAESKeyDerivation.h"
 
 #import "NSData+Random.h"
 
@@ -104,6 +107,7 @@
   NSAssert(_entryCount != -1, @"Entry count needs to be initalized");
   _header.signature1 = CFSwapInt32HostToLittle(kKPKBinarySignature1);
   _header.signature2 = CFSwapInt32HostToLittle(kKPKBinarySignature2);
+  /* kdx is stored with AES encryption and SHA hash */
   _header.flags = CFSwapInt32HostToLittle( KPKLegacyEncryptionSHA2 | KPKLegacyEncryptionAES );
   _header.version = CFSwapInt32HostToLittle(kKPKBinaryFileVersion);
   
@@ -128,8 +132,18 @@
    we have to clamp to the maxium possible
    size in 32 bit legacy format
    */
-  uint32_t rounds = (uint32_t)MIN(_tree.metaData.rounds, UINT32_MAX);
-  _header.keyEncRounds = CFSwapInt32HostToLittle(rounds);
+  
+  /* we only support aes cipher for the legacy writer */
+  NSAssert([_tree.metaData.keyDerivationUUID isEqual:[KPKAESKeyDerivation uuid]], @"");
+  
+  KPKNumber *rounds = _tree.metaData.keyDerivationOptions[KPKAESRoundsOption];
+  
+  if(!rounds) {
+    rounds = [KPKAESKeyDerivation defaultParameters][KPKAESRoundsOption];
+  }
+  
+  uint32_t clampedRounds = (uint32_t)MIN(rounds.unsignedInteger64Value, UINT32_MAX);
+  _header.keyEncRounds = CFSwapInt32HostToLittle(clampedRounds);
 }
 
 @end

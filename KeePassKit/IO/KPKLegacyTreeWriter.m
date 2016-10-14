@@ -28,8 +28,8 @@
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKMetaData.h"
-#import "KPKMetaData+Private.h"
-#import "KPKNode+Private.h"
+#import "KPKMetaData_Private.h"
+#import "KPKNode_Private.h"
 #import "KPKTimeInfo.h"
 #import "KPKTree.h"
 

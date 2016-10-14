@@ -9,7 +9,7 @@
 @import XCTest;
 
 #import "KeePassKit.h"
-#import "KeePassKit+Private.h"
+#import "KeePassKit_Private.h"
 
 @interface KPKTestUndo : XCTestCase <KPKTreeDelegate> {
   NSUndoManager *_undoManager;

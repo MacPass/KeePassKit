@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+@class KPKCompositeKey;
+@class KPKTree;
+
 @interface KPKTreeUnarchiver : NSObject
 
 @property (nonatomic, readonly, strong) NSUUID *cipherUUID;
@@ -32,4 +35,5 @@
 
 - (instancetype)initWithData:(NSData *)data error:(NSError **)error;
 
+- (KPKTree *)unarchiveTreeWithKey:(KPKCompositeKey *)key error:(NSError **)error;
 @end

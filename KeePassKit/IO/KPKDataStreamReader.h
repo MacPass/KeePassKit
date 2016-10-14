@@ -25,23 +25,24 @@
 @interface KPKDataStreamReader : NSObject
 
 @property (nonatomic, readonly) NSUInteger readableBytes;
-@property (nonatomic, readonly) BOOL reachedEndOfData;
+@property (nonatomic, readonly) BOOL hasBytesAvailable;
 
 - (instancetype)initWithData:(NSData *)data;
 
-- (NSData *)dataWithLength:(NSUInteger)length;
-- (NSString *)stringFromNullTerminatedCStringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding;
-- (NSString *)stringFromBytesWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding;
+- (NSData *)readDataWithLength:(NSUInteger)length;
+- (NSString *)readStringFromNullTerminatedCStringWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding;
+- (NSString *)readStringFromBytesWithLength:(NSUInteger)length encoding:(NSStringEncoding)encoding;
+
 - (void)readBytes:(void *)buffer length:(NSUInteger)length;
+- (void)skipBytes:(NSUInteger)numberOfBytes;
 
 @property (nonatomic, readonly) uint8_t readByte;
 @property (nonatomic, readonly) uint16_t read2Bytes;
 @property (nonatomic, readonly) uint32_t read4Bytes;
 @property (nonatomic, readonly) uint64_t read8Bytes;
-@property (nonatomic, readonly) NSUInteger integer;
+@property (nonatomic, readonly) NSUInteger readInteger;
 
-@property (nonatomic, readonly) NSUInteger location;
-- (void)skipBytes:(NSUInteger)numberOfBytes;
-- (void)reset;
+@property (nonatomic, readonly) NSUInteger offset;
+
 
 @end

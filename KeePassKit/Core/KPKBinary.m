@@ -22,7 +22,7 @@
 
 
 #import "KPKBinary.h"
-#import "KPKBinary+Private.h"
+#import "KPKBinary_Private.h"
 #import "NSData+Gzip.h"
 
 @implementation KPKBinary

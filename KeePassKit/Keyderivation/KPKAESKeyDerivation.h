@@ -8,9 +8,11 @@
 
 #import "KPKKeyDerivation.h"
 
-FOUNDATION_EXPORT NSString *const kKPKAESSeedKey; // NSData 32 bytes
-FOUNDATION_EXPORT NSString *const kKPKAESRoundsKey; // KPKNumber unsigned long long
+@class KPKNumber;
 
 @interface KPKAESKeyDerivation : KPKKeyDerivation
+
+@property (readonly, copy) KPKNumber *rounds;
+@property (readonly, copy) NSData *seed;
 
 @end

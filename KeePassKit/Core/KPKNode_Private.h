@@ -1,5 +1,5 @@
 //
-//  KPKNode+Private.h
+//  KPKNode_Private.h
 //  MacPass
 //
 //  Created by Michael Starke on 12/08/15.
@@ -16,6 +16,8 @@
 @property(nonatomic, readwrite, weak) KPKTree *tree;
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;
 @property(nonatomic, weak) KPKGroup *parent;
+@property(nonatomic, readonly) KPKDatabaseType minimumType;
+@property(nonatomic, readonly) NSUInteger minimumVersion;
 
 #pragma mark Initalizer
 /* Subclasses have to override these initalizers */

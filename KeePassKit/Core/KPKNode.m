@@ -22,15 +22,15 @@
 
 
 #import "KPKNode.h"
-#import "KPKNode+Private.h"
+#import "KPKNode_Private.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
-#import "KPKGroup+Private.h"
+#import "KPKGroup_Private.h"
 #import "KPKIconTypes.h"
 #import "KPKTimeInfo.h"
-#import "KPKTimeInfo+Private.h"
+#import "KPKTimeInfo_Private.h"
 #import "KPKTree.h"
-#import "KPKTree+Private.h"
+#import "KPKTree_Private.h"
 #import "KPKMetaData.h"
 
 #import "NSUUID+KeePassKit.h"
@@ -42,6 +42,7 @@
 @dynamic notes;
 @dynamic title;
 @dynamic minimumType;
+@dynamic minimumVersion;
 @dynamic updateTiming;
 
 + (NSUInteger)defaultIcon {

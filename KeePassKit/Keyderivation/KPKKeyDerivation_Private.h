@@ -12,4 +12,7 @@
 
 + (void)_registerKeyDerivation:(Class)derivationClass;
 
+- (KPKKeyDerivation *)_init;
+- (KPKKeyDerivation *)_initWithOptions:(NSDictionary *)options;
+
 @end

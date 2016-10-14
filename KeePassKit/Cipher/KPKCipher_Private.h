@@ -11,5 +11,6 @@
 @interface KPKCipher ()
 
 + (void)_registerCipher:(Class)cipherClass;
+- (KPKCipher *)_initWithOptions:(NSDictionary *)options;
 
 @end

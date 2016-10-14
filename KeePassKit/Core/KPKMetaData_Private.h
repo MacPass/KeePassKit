@@ -1,5 +1,5 @@
 //
-//  KPKMetaData+Private.h
+//  KPKMetaData_Private.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 17/02/16.

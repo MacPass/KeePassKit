@@ -10,14 +10,6 @@
 #import "KPKNumber.h"
 #import "argon2.h"
 
-NSString *const KPKArgon2SaltOption             = @"S";
-NSString *const KPKArgon2ParallelismOption      = @"P";
-NSString *const KPKArgon2MemoryOption           = @"M";
-NSString *const KPKArgon2IterationsOption       = @"I";
-NSString *const KPKArgon2VersionOption          = @"V";
-NSString *const KPKArgon2KeyOption              = @"K";
-NSString *const KPKArgon2AssociativeDataOption  = @"A";
-
 @implementation KPKArgon2KeyDerivation
 
 + (NSDictionary *)defaultParameters {
@@ -37,7 +29,7 @@ NSString *const KPKArgon2AssociativeDataOption  = @"A";
   return argon2UUID;
 }
 
-+ (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
+- (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
   NSData *salt = options[KPKArgon2SaltOption];
   if(salt.length == 0) {
     return nil;

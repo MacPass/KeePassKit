@@ -1,5 +1,5 @@
 //
-//  KPKTimeInfo+Private.h
+//  KPKTimeInfo_Private.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 01/09/16.

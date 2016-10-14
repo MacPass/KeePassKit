@@ -21,7 +21,7 @@
 //
 
 #import "KPKWindowAssociation.h"
-#import "KPKWindowAssociation+Private.h"
+#import "KPKWindowAssociation_Private.h"
 #import "KPKEntry.h"
 #import "KPKAutotype.h"
 #import "KPKErrors.h"

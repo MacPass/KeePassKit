@@ -20,9 +20,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKNode+Private.h"
+#import "KPKNode_Private.h"
 #import "KPKTree.h"
-#import "KPKTree+Private.h"
+#import "KPKTree_Private.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
@@ -233,6 +233,10 @@ NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKN
     return KPKDatabaseTypeXml;
   }
   return self.root.minimumType;
+}
+
+- (NSUInteger)minimumVersion {
+  return 0;
 }
 
 - (NSString *)defaultAutotypeSequence {

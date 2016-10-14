@@ -21,11 +21,12 @@
 //
 
 #import "KPKMetaData.h"
-#import "KPKMetaData+Private.h"
+#import "KPKMetaData_Private.h"
 #import "KPKXmlFormat.h"
 #import "KPKIcon.h"
 #import "KPKTree.h"
-#import "KPKCipher.h"
+#import "KPKAESCipher.h"
+#import "KPKAESKeyDerivation.h"
 
 #import "NSUUID+KeePassKit.h"
 
@@ -63,9 +64,10 @@
     _mutableCustomIcons = [[NSMutableArray alloc] init];
     _mutableUnknownMetaEntryData = [[NSMutableArray alloc] init];
     _customIconCache = [[NSMutableDictionary alloc] init];
-    _rounds = 50000;
+    _keyDerivationUUID = [[KPKAESKeyDerivation uuid] copy];
+    _keyDerivationOptions = [[KPKAESKeyDerivation defaultParameters] copy];
+    _cipherUUID = [[KPKAESCipher uuid] copy];
     _compressionAlgorithm = KPKCompressionGzip;
-    _cipherUUID = [[KPKCipher aesCipher] uuid]; // default Cipher is AES
     _protectNotes = NO;
     _protectPassword = YES;
     _protectTitle = NO;
@@ -184,7 +186,8 @@
     return YES; // Pointers match
   }
   /* no tree comparison, since the pointers cannot be encoded persitently */
-  return self.rounds == other.rounds &&
+  return [self.keyDerivationUUID isEqual:other.keyDerivationUUID] &&
+  [self.keyDerivationOptions isEqualToDictionary:other.keyDerivationOptions] &&
   self.compressionAlgorithm == other.compressionAlgorithm &&
   [self.cipherUUID isEqual:other.cipherUUID] &&
   [self.generator isEqualToString:other.generator] &&

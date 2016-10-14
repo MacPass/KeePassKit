@@ -51,7 +51,6 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *notes;
 
-@property(nonatomic, readonly) KPKDatabaseType minimumType;
 @property(nonatomic, copy, readonly) KPKTimeInfo *timeInfo;
 
 @property(nonatomic, weak, readonly) KPKGroup *parent;

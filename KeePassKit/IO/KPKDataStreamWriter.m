@@ -89,14 +89,6 @@
   [self _writeBytes:&integer length:sizeof(NSUInteger)];
 }
 
-- (NSUInteger)location {
-  return _location;
-}
-
-- (void)reset {
-  _location = 0;
-}
-
 - (NSUInteger)_writeBytes:(const void *)buffer length:(NSUInteger)length {
   [_data appendBytes:buffer length:length];
   _location += length;

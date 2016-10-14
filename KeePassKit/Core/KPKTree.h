@@ -72,11 +72,16 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
  *  NSArray of KPKEntries that are History elements
  */
 @property(nonatomic, readonly) NSArray<KPKEntry *> *allHistoryEntries;
+
 /**
- *	The minimum Version of the tree. If any node uses higher
- *  featuers, the whole tree needs to have the highest version
+ Returns the minium database type (KDB oder KDBX) the tree can be saved without data loss
  */
 @property(nonatomic) KPKDatabaseType minimumType;
+/**
+ Returns the minimum database version (tied to the minimum Type) to store the tree without data loss.
+ This always returns the maxium supported KDB version for a KDB type, KDBX results depend on data (settings, loaded data, etc.)
+ */
+@property(nonatomic) NSUInteger minimumVersion;
 
 - (instancetype)initWithTemplateContents;
 

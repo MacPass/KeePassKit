@@ -21,7 +21,7 @@
 //
 
 #import "KPKAttribute.h"
-#import "KPKAttribute+Private.h"
+#import "KPKAttribute_Private.h"
 #import "KPKEntry.h"
 #import "KPKFormat.h"
 #import "KPKGroup.h"

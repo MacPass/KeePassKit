@@ -29,14 +29,14 @@
 #import "KPKLegacyHeaderReader.h"
 
 #import "KPKBinary.h"
-#import "KPKBinary+Private.h"
+#import "KPKBinary_Private.h"
 #import "KPKEntry.h"
 #import "KPKErrors.h"
 #import "KPKGroup.h"
 #import "KPKIcon.h"
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
-#import "KPKMetaData+Private.h"
+#import "KPKMetaData_Private.h"
 #import "KPKTimeInfo.h"
 #import "KPKTree.h"
 
@@ -94,7 +94,8 @@
 
 - (KPKTree *)_buildTree:(NSError **)error {
   KPKTree *tree = [[KPKTree alloc] init];
-  tree.metaData.rounds = _headerReader.rounds;
+  tree.metaData.keyDerivationUUID = [KPKAESKeyDerivation uuid];
+  tree.metaData.keyDerivationOptions = @{ KPKAESRoundsOption: [[KPKNumber alloc] initWithUnsignedInteger64:_headerReader.rounds] };
   /* Read the meta entries after all groups
    and entries are parsed to be able to search for them
    since KeePassX Stores custom icons for entries and groups
@@ -202,7 +203,7 @@
         }
           
         case KPKFieldTypeGroupName:
-          group.title = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          group.title = [_dataStreamer readStringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeGroupCreationTime:
@@ -349,23 +350,23 @@
           break;
           
         case KPKFieldTypeEntryTitle:
-          entry.title = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          entry.title = [_dataStreamer readStringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryURL:
-          entry.url = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          entry.url = [_dataStreamer readStringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryUsername:
-          entry.username = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          entry.username = [_dataStreamer readStringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryPassword:
-          entry.password = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          entry.password = [_dataStreamer readStringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           break;
           
         case KPKFieldTypeEntryNotes:
-          entry.notes = [_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
+          entry.notes = [_dataStreamer readStringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding];
           [self _parseAutotype:entry];
           break;
           
@@ -406,13 +407,13 @@
           break;
           
         case KPKFieldTypeEntryBinaryDescription: {
-          binary = [[KPKBinary alloc] initWithName:[_dataStreamer stringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding] data:nil];
+          binary = [[KPKBinary alloc] initWithName:[_dataStreamer readStringFromNullTerminatedCStringWithLength:fieldSize encoding:NSUTF8StringEncoding] data:nil];
           break;
         }
         case KPKFieldTypeEntryBinaryData:
           NSAssert(binary != nil, @"Description field has to be read fist");
           if (fieldSize > 0) {
-            binary.data = [_dataStreamer dataWithLength:fieldSize];
+            binary.data = [_dataStreamer readDataWithLength:fieldSize];
             [entry addBinary:binary];
           }
           break;
@@ -471,7 +472,7 @@
           KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
           return NO;
         }
-        headerHash = [_dataStreamer dataWithLength:fieldSize];
+        headerHash = [_dataStreamer readDataWithLength:fieldSize];
         if(![headerHash isEqualToData:_headerReader.headerHash]) {
           KPKCreateError(error, KPKErrorPasswordAndOrKeyfileWrong, @"ERROR_PASSWORD_OR_KEYFILE_WRONG", "");
           return NO;
@@ -589,13 +590,13 @@
   NSData *uuidData;
   NSUUID *lastSelectedEntryUUID;
   if(dataReader.readableBytes >= 16) {
-    uuidData = [dataReader dataWithLength:16];
+    uuidData = [dataReader readDataWithLength:16];
     lastSelectedEntryUUID = [[NSUUID alloc] initWithData:uuidData];
     // right now this data is ignored.
   }
   NSUUID *lastVisibleEntryUUID;
   if(dataReader.readableBytes >= 16) {
-    uuidData = [dataReader dataWithLength:16];
+    uuidData = [dataReader readDataWithLength:16];
     lastVisibleEntryUUID = [[NSUUID alloc] initWithData:uuidData];
   }
   for(KPKGroup *group in _groups) {
@@ -669,7 +670,7 @@
     if(dataReader.readableBytes < iconDataSize) {
       return NO; // Data is truncated
     }
-    KPKIcon *icon = [[KPKIcon alloc] initWithData:[dataReader dataWithLength:iconDataSize]];
+    KPKIcon *icon = [[KPKIcon alloc] initWithData:[dataReader readDataWithLength:iconDataSize]];
     [metaData addCustomIcon:icon];
     [iconUUIDs addObject:icon.uuid];
   }
@@ -679,7 +680,7 @@
   }
   /* Read Entries */
   for(NSUInteger entryIndex = 0; entryIndex < numberOfEntries; entryIndex++) {
-    NSUUID *entryUUID = [[NSUUID alloc] initWithData:[dataReader dataWithLength:16]];
+    NSUUID *entryUUID = [[NSUUID alloc] initWithData:[dataReader readDataWithLength:16]];
     uint32_t iconId = CFSwapInt32LittleToHost([dataReader read4Bytes]);
     KPKEntry *entry = [self _findEntryForUUID:entryUUID];
     if(iconUUIDs.count <= iconId) {

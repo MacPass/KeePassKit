@@ -43,6 +43,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorXMLKeyDataParsingError, // The XML-data element couldn't be parsed
   KPKErrorUnsupportedDatabaseVersion, // The database version is to high/low
   KPKErrorUnsupportedCipher, // The header specifies a unsupported and/or wrong chipher methed
+  KPKErrorWrongIVVectorSize, // the header has a wrong size of the IV vector for the specified cipher
   KPKErrorUnsupportedCompressionAlgorithm, // The header specifies an unsupporte and/or wrong compressoing algorithm
   KPKErrorUnsupportedRandomStream, // The header specifies an unsupporte stream or it's corrupted
   KPKErrorPasswordAndOrKeyfileWrong, // Password and or keyfile is wrong

@@ -8,8 +8,10 @@
 
 #import "KPKTreeArchiver.h"
 
+@class KPKTree;
+
 @interface KPKTreeArchiver ()
 
-
+@property (strong) KPKTree *tree;
 
 @end

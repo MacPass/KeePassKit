@@ -27,6 +27,8 @@
 #import "KPKXmlFormat.h"
 #import "KPKFormat.h"
 #import "KPKCipher.h"
+#import "KPKKeyDerivation.h"
+#import "KPKNumber.h"
 
 #import "NSData+CommonCrypto.h"
 #import "NSData+Random.h"
@@ -78,7 +80,8 @@
     [self _writerHeaderField:KPKHeaderKeyMasterSeed data:_masterSeed];
     [self _writerHeaderField:KPKHeaderKeyTransformSeed data:_transformSeed];
     
-    uint64_t rounds = CFSwapInt64HostToLittle(_tree.metaData.rounds);
+    KPKNumber *roundsOption = _tree.metaData.keyDerivationOptions[KPKAESRoundsOption];
+    uint64_t rounds = CFSwapInt64HostToLittle(roundsOption.unsignedInteger64Value);
     headerData = [NSData dataWithBytesNoCopy:&rounds length:sizeof(uint64_t) freeWhenDone:NO];
     [self _writerHeaderField:KPKHeaderKeyTransformRounds data:headerData];
     [self _writerHeaderField:KPKHeaderKeyEncryptionIV data:_encryptionIv];

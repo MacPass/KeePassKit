@@ -65,7 +65,7 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
     self = [self init];
     return self;
   }
-  while(!reader.reachedEndOfData) {
+  while(!reader.hasBytesAvailable) {
     uint8 type = reader.readByte;
     if(type == 0) {
       // end of data
@@ -74,7 +74,7 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
     switch(type) {
       case KPKVariantTypeBool: {
         uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        NSString *key = [reader readStringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
         uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
         if(dataSize != 1) {
           NSLog(@"Unexpected byte size != 1 for bool data!");
@@ -86,7 +86,7 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
       }
       case KPKVariantTypeInt32: {
         uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        NSString *key = [reader readStringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
         uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
         if(dataSize != 4) {
           NSLog(@"Unexpected byte size != 4 for int32 data!");
@@ -98,7 +98,7 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
       }
       case KPKVariantTypeUInt32: {
         uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        NSString *key = [reader readStringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
         uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
         if(dataSize != 4) {
           NSLog(@"Unexpected byte size != 4 for uint32 data!");
@@ -110,7 +110,7 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
       }
       case KPKVariantTypeInt64: {
         uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        NSString *key = [reader readStringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
         uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
         if(dataSize != 8) {
           NSLog(@"Unexpected byte size != 8 for int64 data!");
@@ -122,7 +122,7 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
       }
       case KPKVariantTypeUInt64: {
         uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        NSString *key = [reader readStringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
         uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
         if(dataSize != 8) {
           NSLog(@"Unexpected byte size != 8 for uint64 data!");
@@ -133,16 +133,16 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
       }
       case KPKVariantTypeString: {
         uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        NSString *key = [reader readStringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
         uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        dictionary[key] = [reader stringFromBytesWithLength:dataSize encoding:NSUTF8StringEncoding];
+        dictionary[key] = [reader readStringFromBytesWithLength:dataSize encoding:NSUTF8StringEncoding];
         break;
       }
       case KPKVariantTypeByteArray:  {
         uint32_t keySize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        NSString *key = [reader stringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
+        NSString *key = [reader readStringFromBytesWithLength:keySize encoding:NSUTF8StringEncoding];
         uint32_t dataSize = CFSwapInt32LittleToHost(reader.read4Bytes);
-        dictionary[key] = [reader dataWithLength:dataSize];
+        dictionary[key] = [reader readDataWithLength:dataSize];
         break;
       }
       default:

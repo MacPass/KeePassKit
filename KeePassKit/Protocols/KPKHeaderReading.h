@@ -43,6 +43,9 @@
 @property (nonatomic, readonly) NSUInteger numberOfEntries;
 @property (nonatomic, readonly) NSUInteger numberOfGroups;
 
+@property (nonatomic, readonly) NSUUID *chipherUUID;
+@property (nonatomic, readonly) NSDictionary *cipherOptions;
+
 - (instancetype)initWithData:(NSData *)data error:(NSError **)error;
 /**
  @returns the data with the header data removed.

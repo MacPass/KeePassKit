@@ -10,13 +10,16 @@
 #import "KPKFormat.h"
 
 @class KPKTree;
+@class KPKCompositeKey;
 
 @interface KPKTreeArchiver : NSObject
 
-+ (NSData *)dataForTree:(NSData *)data fileInfo:(KPKFileInfo)fileInfo;
++ (NSData *)archiveTree:(KPKTree *)tree withKey:(KPKCompositeKey *)key forFileInfo:(KPKFileInfo)fileInfo error:(NSError *__autoreleasing *)error;
++ (NSData *)archiveTree:(KPKTree *)tree withKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error;
 
-- (instancetype)initWithTree:(KPKTree *)tree;
+- (instancetype)initWithTree:(KPKTree *)tree NS_DESIGNATED_INITIALIZER;
 
-- (NSData *)dataWithFileInfo:(KPKFileInfo)fileInfo;
+- (NSData *)archiveWithKey:(KPKCompositeKey *)key forFileInfo:(KPKFileInfo)fileInfo error:(NSError *__autoreleasing *)error;
+- (NSData *)archiveWithKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error;
 
 @end

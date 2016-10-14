@@ -42,6 +42,5 @@
 @property (nonatomic, readonly, copy) NSData *data;
 @property (nonatomic, readonly, copy) NSData *writtenData;
 @property (nonatomic, readonly) NSUInteger location;
-- (void)reset;
 
 @end

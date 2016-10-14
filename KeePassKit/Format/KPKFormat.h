@@ -54,6 +54,8 @@ typedef struct {
   NSUInteger version; // kKPKInvalidFileVersion if version cannot be read (e.g. file too small)
 } KPKFileInfo;
 
+FOUNDATION_EXTERN static bool KPKIsValidFileInfo(KPKFileInfo);
+
 /**
  *  Key
  */

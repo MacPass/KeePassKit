@@ -23,7 +23,7 @@
 #import "KPKXmlTreeWriter.h"
 #import "KPKXmlHeaderWriter.h"
 #import "KPKTree.h"
-#import "KPKTree+Private.h"
+#import "KPKTree_Private.h"
 
 #import "DDXMLDocument.h"
 #import "DDXMLElementAdditions.h"
@@ -31,12 +31,12 @@
 
 #import "KPKXmlHeaderWriter.h"
 #import "KPKXmlFormat.h"
-#import "KPKNode+Private.h"
+#import "KPKNode_Private.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"
 #import "KPKFormat.h"
 #import "KPKMetaData.h"
-#import "KPKMetaData+Private.h"
+#import "KPKMetaData_Private.h"
 #import "KPKTimeInfo.h"
 #import "KPKDeletedNode.h"
 #import "KPKAttribute.h"

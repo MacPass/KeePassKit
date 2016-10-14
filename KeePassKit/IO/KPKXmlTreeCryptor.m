@@ -60,7 +60,7 @@
                                     transformSeed:headerReader.transformSeed
                                            rounds:headerReader.rounds];
   
-  KPKCipher *cipher = [KPKCipher chipherForUUID:headerReader.cipherUUID];
+  KPKCipher *cipher = [KPKCipher cipherWithUUID:headerReader.cipherUUID];
   if(!cipher) {
     KPKCreateError(error, KPKErrorUnsupportedCipher, @"ERROR_UNSUPPORTED_CHIPHER", "");
   }

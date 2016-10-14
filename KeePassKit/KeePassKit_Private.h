@@ -1,5 +1,5 @@
 //
-//  KeePassKit+Private.h
+//  KeePassKit_Private.h
 //  MacPass
 //
 //  Created by Michael Starke on 28/10/15.
@@ -11,13 +11,13 @@
 #import "KPKXmlTreeReader.h"
 
 #import "KPKAttribute_Private.h"
-#import "KPKAutotype+Private.h"
-#import "KPKBinary+Private.h"
-#import "KPKEntry+Private.h"
-#import "KPKGroup+Private.h"
+#import "KPKAutotype_Private.h"
+#import "KPKBinary_Private.h"
+#import "KPKEntry_Private.h"
+#import "KPKGroup_Private.h"
 #import "KPKNode_Private.h"
-#import "KPKTree+Private.h"
-#import "KPKTimeInfo+Private.h"
-#import "KPKMetaData+Private.h"
-#import "KPKWindowAssociation+Private.h"
+#import "KPKTree_Private.h"
+#import "KPKTimeInfo_Private.h"
+#import "KPKMetaData_Private.h"
+#import "KPKWindowAssociation_Private.h"
 

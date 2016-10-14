@@ -1,5 +1,5 @@
 //
-//  KPKAttribute+Private.h
+//  KPKAttribute_Private.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 24/06/16.

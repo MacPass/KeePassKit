@@ -1,5 +1,5 @@
 //
-//  KPKWindowAssociation+Private.h
+//  KPKWindowAssociation_Private.h
 //  MacPass
 //
 //  Created by Michael Starke on 30/09/15.

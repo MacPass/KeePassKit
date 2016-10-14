@@ -21,12 +21,12 @@
 //
 
 #import "KPKAutotype.h"
-#import "KPKAutotype+Private.h"
+#import "KPKAutotype_Private.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKTree.h"
 #import "KPKWindowAssociation.h"
-#import "KPKWindowAssociation+Private.h"
+#import "KPKWindowAssociation_Private.h"
 
 @implementation KPKAutotype
 

@@ -23,9 +23,12 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
   return [NSUUID nullUUID];
 }
 
-+ (KPKCipher *)chipherForUUID:(NSUUID *)uuid {
-  Class chipherClass = _ciphers[uuid];
-  return [[chipherClass alloc] init];
++ (KPKCipher *)cipherWithUUID:(NSUUID *)uuid {
+  return [self cipherWithUUID:uuid options:@{}];
+}
+
++ (KPKCipher *)cipherWithUUID:(NSUUID *)uuid options:(NSDictionary *)options {
+  return [[self alloc] initWithUUID:uuid options:options];
 }
 
 + (KPKCipher *)aesCipher {
@@ -34,6 +37,14 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
 
 + (KPKCipher *)chaChaCipher {
   return [[KPKChaChaCipher alloc] init];
+}
+
++ (NSUInteger)IVLength {
+  return 16;
+}
+
++ (NSUInteger)keyLength {
+  return 32;
 }
 
 + (void)_registerCipher:(Class)cipherClass {
@@ -52,8 +63,35 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
   }
 }
 
+- (KPKCipher *)initWithUUID:(NSUUID *)uuid {
+  return [self initWithUUID:uuid options:@{}];
+}
+
+- (KPKCipher *)initWithUUID:(NSUUID *)uuid options:(NSDictionary *)options {
+  self = nil;
+  Class cipherClass = _ciphers[uuid];
+  self = [((KPKCipher *)[cipherClass alloc]) _initWithOptions:options];
+  return self;
+}
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
+- (KPKCipher *)_initWithOptions:(NSDictionary *)options {
+  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
+  return nil;
+}
+#pragma clang diagnostic pop
+
 - (NSUUID *)uuid {
-  return [[self class] uuid];
+  return [self.class uuid];
+}
+
+- (NSUInteger)IVLength {
+  return  [self.class IVLength];
+}
+
+- (NSUInteger)keyLength {
+  return [self.class keyLength];
 }
 
 - (NSData *)decryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError *__autoreleasing  _Nullable *)error {
