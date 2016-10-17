@@ -310,8 +310,8 @@
   _isSearchEnabled = isSearchEnabled;
 }
 
-- (KPKDatabaseType)minimumType {
-  KPKDatabaseType type = KPKDatabaseTypeBinary;
+- (KPKDatabaseFormat)minimumType {
+  KPKDatabaseFormat type = KPKDatabaseFormatKdb;
   for(KPKGroup *group in self.groups) {
     type = MAX(type, group.minimumType);
   }
@@ -323,7 +323,7 @@
 
 - (NSUInteger)minimumVersion {
   switch (self.minimumType) {
-    case KPKDatabaseTypeXml:
+    case KPKDatabaseFormatKdbx:
       break;
       
     default:

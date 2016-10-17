@@ -104,6 +104,10 @@ static NSMutableDictionary *_keyDerivations;
   return nil;
 }
 
+- (void)randomize {
+  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
+}
+
 - (NSUUID *)uuid {
   return [self.class uuid];
 }

@@ -308,9 +308,9 @@ NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
 
 BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
   switch(fileInfo.type) {
-    case KPKDatabaseTypeXml:
+    case KPKDatabaseFormatKdbx:
       
-    case KPKDatabaseTypeBinary:
+    case KPKDatabaseFormatKdb:
     default:
       return NO;
   }
@@ -354,12 +354,12 @@ BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
   return info;
 }
 
-- (KPKDatabaseType)_databaseTypeForData:(NSData *)data {
+- (KPKDatabaseFormat)_databaseTypeForData:(NSData *)data {
   uint32_t signature1;
   uint32_t signature2;
   
   if(data.length < 8 ) {
-    return KPKDatabaseTypeUnknown;
+    return KPKDatabaseFormatUnknown;
   }
   
   [data getBytes:&signature1 range:NSMakeRange(0, 4)];
@@ -368,12 +368,12 @@ BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
   signature2 = CFSwapInt32LittleToHost(signature2);
   
   if (signature1 == kKPKKdbSignature1 && signature2 == kKPKKdbSignature2) {
-    return KPKDatabaseTypeBinary;
+    return KPKDatabaseFormatKdb;
   }
   if (signature1 == kKPKKdbxSignature1 && signature2 == kKPKKdbxSignature2 ) {
-    return KPKDatabaseTypeXml;
+    return KPKDatabaseFormatKdbx;
   }
-  return KPKDatabaseTypeUnknown;
+  return KPKDatabaseFormatUnknown;
 }
 
 - (uint32_t)_fileVersionForData:(NSData *)data {

@@ -26,7 +26,7 @@
 #import "KPKDataStreamReader.h"
 #import "KPKLegacyTreeReader.h"
 #import "KPKLegacyFormat.h"
-#import "KPKLegacyHeaderReader.h"
+#import "KPKKdbHeaderReader.h"
 
 #import "KPKBinary.h"
 #import "KPKBinary_Private.h"
@@ -47,7 +47,7 @@
 @interface KPKLegacyTreeReader () {
   NSData *_data;
   KPKDataStreamReader *_dataStreamer;
-  KPKLegacyHeaderReader *_headerReader;
+  KPKKdbHeaderReader *_headerReader;
   NSMutableArray *_groupLevels;
   NSMutableArray *_groups;
   NSMutableArray *_entries;
@@ -60,12 +60,12 @@
 @implementation KPKLegacyTreeReader
 
 - (instancetype)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader {
-  NSAssert([headerReader isKindOfClass:[KPKLegacyHeaderReader class]], @"Incompatible header reader type supplied");
+  NSAssert([headerReader isKindOfClass:[KPKKdbHeaderReader class]], @"Incompatible header reader type supplied");
   self = [super init];
   if(self) {
     _data = data;
     _dataStreamer = [[KPKDataStreamReader alloc] initWithData:_data];
-    _headerReader = (KPKLegacyHeaderReader *)headerReader;
+    _headerReader = (KPKKdbHeaderReader *)headerReader;
     _groupLevels = [[NSMutableArray alloc] initWithCapacity:MAX(1,_headerReader.numberOfGroups)];
     _groups = [[NSMutableArray alloc] initWithCapacity:MAX(1,_headerReader.numberOfGroups)];
     _groupIdToUUID = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,_headerReader.numberOfGroups)];

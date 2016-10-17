@@ -23,7 +23,6 @@
 #import <Foundation/Foundation.h>
 #import "KPKTreeReading.h"
 @class KPKTree;
-@class KPKLegacyHeaderReader;
 
 /**
  *	Tree reader capable of loading Legacy (KDB) file formats

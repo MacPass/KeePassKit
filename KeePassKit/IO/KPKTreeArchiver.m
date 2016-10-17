@@ -65,7 +65,7 @@
 - (NSData *)archiveWithKey:(KPKCompositeKey *)key forFileInfo:(KPKFileInfo)fileInfo error:(NSError *__autoreleasing *)error {
   NSMutableData *data = [[NSMutableData alloc] init];
   
-  if(fileInfo.type == KPKDatabaseTypeXml) {
+  if(fileInfo.type == KPKDatabaseFormatKdbx) {
     KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self.tree];
     NSData *xmlData = [[treeWriter protectedXmlDocument] XMLDataWithOptions:DDXMLNodeCompactEmptyElement];
     
@@ -100,7 +100,7 @@
     [data appendData:encryptedData];
     return data;
   }
-  else if(fileInfo.type == KPKDatabaseTypeBinary) {
+  else if(fileInfo.type == KPKDatabaseFormatKdb) {
     
   }
   return nil;

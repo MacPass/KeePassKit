@@ -79,7 +79,7 @@
 - (KPKKeyDerivation *)_initWithOptions:(NSDictionary *)options {
   self = [super _init];
   if(self) {
-    self.options = [options copy];
+    self.options = options;
     NSDictionary *defaults = [self.class defaultParameters];
     _seed = [options[KPKAESSeedOption] copy];
     _rounds = [options[KPKAESRoundsOption] copy];
@@ -146,6 +146,10 @@
   CC_SHA256(derivedData, 32, hash);
   
   return [NSData dataWithBytes:hash length:CC_SHA256_DIGEST_LENGTH];
+}
+
+- (void)randomize {
+  _seed = [NSData dataWithRandomBytes:32];
 }
 
 @end

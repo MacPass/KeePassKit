@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#import "KPKFormat.h"
+
 @class KPKTree;
-
-
 /**
  File header object to load/save header data
  use initWithData:error: to load the header from the data or
@@ -20,30 +20,30 @@
 
 @property (nonatomic, readonly, strong) NSUUID *cipherUUID;
 
-@property (nonatomic, readonly, copy) NSUUID *keyDerivationUUID;
-@property (nonatomic, readonly, copy) NSDictionary *keyDerivationOptions; // contains rounds for aes
+@property (nonatomic, readonly, copy) NSUUID *keyDerivationUUID; // fixed for KDB and KDBX3.1
+@property (nonatomic, readonly, copy) NSDictionary *keyDerivationOptions;
 
-@property (nonatomic, readonly, strong) NSData *masterSeed;
-@property (nonatomic, readonly, strong) NSData *encryptionIV;
-@property (nonatomic, readonly, strong) NSData *protectedStreamKey;
-@property (nonatomic, readonly, strong) NSData *streamStartBytes;
+@property (nonatomic, readonly, copy) NSData *masterSeed;
+@property (nonatomic, readonly, copy) NSData *encryptionIV;
+@property (nonatomic, readonly, copy) NSData *protectedStreamKey;
+@property (nonatomic, readonly, copy) NSData *streamStartBytes;
 
 @property (nonatomic, readonly, assign) uint32_t compressionAlgorithm; // KPKCompression
 @property (nonatomic, readonly, assign) uint32_t randomStreamID;
 
-@property (nonatomic, readonly, strong) NSData *contentsHash;
+@property (nonatomic, readonly, copy) NSData *contentsHash; // only KDBX 3.1
+@property (nonatomic, readonly, strong) NSData *headerHash; // KDB only
 
 // Obsolte since KDBX4
 //@property (nonatomic, readonly, strong) NSData *transformSeed;
 //@property (nonatomic, readonly, assign) uint64_t rounds;
-//@property (nonatomic, readonly, strong) NSData *headerHash;
 
 @property (nonatomic, readonly) NSUInteger numberOfEntries;
 @property (nonatomic, readonly) NSUInteger numberOfGroups;
 
-- (instancetype)initWithData:(NSData *)data error:(NSError **)error NS_DESIGNATED_INITIALIZER;
-- (instancetype)initWithTree:(KPKTree *)tree NS_DESIGNATED_INITIALIZER;
+@property (readonly, copy) NSData *headerData;
 
-- (NSData *)headerData;
+- (instancetype)initWithData:(NSData *)data error:(NSError **)error NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithTree:(KPKTree *)tree fileInfo:(KPKFileInfo)fileInfo NS_DESIGNATED_INITIALIZER;
 
 @end

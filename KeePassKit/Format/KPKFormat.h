@@ -43,14 +43,14 @@ FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersionCriticalMask;
 FOUNDATION_EXTERN uint32_t const kKPKKdbxSignature1;
 FOUNDATION_EXTERN uint32_t const kKPKKdbxSignature2;
 
-typedef NS_ENUM( NSUInteger, KPKDatabaseType ) {
-  KPKDatabaseTypeUnknown,
-  KPKDatabaseTypeBinary,
-  KPKDatabaseTypeXml,
+typedef NS_ENUM( NSUInteger, KPKDatabaseFormat ) {
+  KPKDatabaseFormatUnknown,
+  KPKDatabaseFormatKdb,
+  KPKDatabaseFormatKdbx,
 };
 
 typedef struct {
-  KPKDatabaseType type; // KPDatabaseTypeUnknown if not determined (e.g. signatures don't match or file too small)
+  KPKDatabaseFormat type; // KPDatabaseTypeUnknown if not determined (e.g. signatures don't match or file too small)
   NSUInteger version; // kKPKInvalidFileVersion if version cannot be read (e.g. file too small)
 } KPKFileInfo;
 

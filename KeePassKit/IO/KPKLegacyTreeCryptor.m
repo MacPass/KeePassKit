@@ -21,8 +21,8 @@
 //
 
 #import "KPKLegacyTreeCryptor.h"
-#import "KPKLegacyHeaderReader.h"
-#import "KPKLegacyHeaderWriter.h"
+#import "KPKKdbHeaderReader.h"
+#import "KPKKdbHeaderWriter.h"
 #import "KPKLegacyTreeReader.h"
 #import "KPKLegacyTreeWriter.h"
 #import "KPKCompositeKey.h"
@@ -36,14 +36,14 @@
 @implementation KPKLegacyTreeCryptor
 
 + (KPKTree *)decryptTreeData:(NSData *)data withPassword:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
-  KPKLegacyHeaderReader *headerReader = [[KPKLegacyHeaderReader alloc] initWithData:data error:error];
+  KPKKdbHeaderReader *headerReader = [[KPKKdbHeaderReader alloc] initWithData:data error:error];
   if(!headerReader) {
     return nil;
   }
   // Create the final key and initialize the AES input stream
-  NSData *keyData = [password transformForType:KPKDatabaseTypeBinary withKeyDerivationUUID:headerReader.keyDerivationUUID options:headerReader.keyDerivationOptions error:error];
+  NSData *keyData = [password transformForType:KPKDatabaseFormatKdb withKeyDerivationUUID:headerReader.keyDerivationUUID options:headerReader.keyDerivationOptions error:error];
   
-//  NSData *keyData = [password finalDataForVersion:KPKDatabaseTypeBinary
+//  NSData *keyData = [password finalDataForVersion:KPKDatabaseFormatKdb
 //                                        masterSeed:headerReader.masterSeed
 //                                     transformSeed:headerReader.transformSeed
 //                                            rounds:headerReader.rounds];
@@ -77,7 +77,7 @@
   NSData *treeData = treeWriter.treeData;
 
   /* Create the key to encrypt the data stream from the password */
-  NSData *keyData = [password finalDataForVersion:KPKDatabaseTypeBinary
+  NSData *keyData = [password finalDataForVersion:KPKDatabaseFormatKdb
                                             masterSeed:treeWriter.headerWriter.masterSeed
                                          transformSeed:treeWriter.headerWriter.transformSeed
                                                 rounds:treeWriter.headerWriter.transformationRounds];

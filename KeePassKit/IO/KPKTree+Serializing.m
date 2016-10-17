@@ -58,11 +58,11 @@
   return self;
 }
 
-- (NSData *)encryptWithPassword:(KPKCompositeKey *)password forVersion:(KPKDatabaseType)version error:(NSError **)error {
+- (NSData *)encryptWithPassword:(KPKCompositeKey *)password forVersion:(KPKDatabaseFormat)version error:(NSError **)error {
   switch(version) {
-    case KPKDatabaseTypeBinary:
+    case KPKDatabaseFormatKdb:
       return [KPKLegacyTreeCryptor encryptTree:self password:password error:error];
-    case KPKDatabaseTypeXml:
+    case KPKDatabaseFormatKdbx:
       return [KPKXmlTreeCryptor encryptTree:self password:password error:error];
     default:
       KPKCreateError(error, KPKErrorUnknownFileFormat, @"ERROR_UNKNOWN_FILE_FORMAT", "");
@@ -79,10 +79,10 @@
 - (KPKTree *)_decryptorForData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError **)error {
   KPKFileInfo info = [[KPKFormat sharedFormat] fileInfoForData:data];
   
-  if(info.type == KPKDatabaseTypeBinary) {
+  if(info.type == KPKDatabaseFormatKdb) {
     return [KPKLegacyTreeCryptor decryptTreeData:data withPassword:password error:error];
   }
-  if(info.type == KPKDatabaseTypeXml) {
+  if(info.type == KPKDatabaseFormatKdbx) {
     return [KPKXmlTreeCryptor decryptTreeData:data withPassword:password error:error];
   }
   KPKCreateError(error, KPKErrorUnknownFileFormat, @"ERROR_UNKNOWN_FILE_FORMAT", "");

@@ -13,6 +13,7 @@
 		4C09B2F01DB12AF3007EE26A /* KPKKdbFileHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C09B2EE1DB12AF3007EE26A /* KPKKdbFileHeader.m */; };
 		4C09B2F31DB12B06007EE26A /* KPKKdbxFileHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C09B2F11DB12B06007EE26A /* KPKKdbxFileHeader.h */; };
 		4C09B2F41DB12B06007EE26A /* KPKKdbxFileHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C09B2F21DB12B06007EE26A /* KPKKdbxFileHeader.m */; };
+		4C1341361DB50B5C00C24112 /* KPKFileHeader_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1341351DB50B5C00C24112 /* KPKFileHeader_Private.h */; };
 		4C15091D1C74AD10008A2C8E /* KPKMetaData_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */; };
 		4C152C5E1C7617D900380A3B /* KPKGroup_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */; };
 		4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */; };
@@ -253,6 +254,7 @@
 		4C09B2EE1DB12AF3007EE26A /* KPKKdbFileHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKKdbFileHeader.m; sourceTree = "<group>"; };
 		4C09B2F11DB12B06007EE26A /* KPKKdbxFileHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKKdbxFileHeader.h; sourceTree = "<group>"; };
 		4C09B2F21DB12B06007EE26A /* KPKKdbxFileHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKKdbxFileHeader.m; sourceTree = "<group>"; };
+		4C1341351DB50B5C00C24112 /* KPKFileHeader_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKFileHeader_Private.h; sourceTree = "<group>"; };
 		4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKMetaData_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKGroup_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = AutotypeCustomKeystrokeSequence_1234.xml; sourceTree = "<group>"; };
@@ -750,6 +752,7 @@
 			isa = PBXGroup;
 			children = (
 				4C09B2E91DB1293A007EE26A /* KPKFileHeader.h */,
+				4C1341351DB50B5C00C24112 /* KPKFileHeader_Private.h */,
 				4C09B2EA1DB1293A007EE26A /* KPKFileHeader.m */,
 				4C09B2ED1DB12AF3007EE26A /* KPKKdbFileHeader.h */,
 				4C09B2EE1DB12AF3007EE26A /* KPKKdbFileHeader.m */,
@@ -1006,6 +1009,7 @@
 				4C2ADBF41D7C6665002C3190 /* KPKTreeArchiver_Private.h in Headers */,
 				4C4FF1BF1BE119E60015827B /* DDXMLElement.h in Headers */,
 				4CA1E4871D8832BA00100002 /* blake2-impl.h in Headers */,
+				4C1341361DB50B5C00C24112 /* KPKFileHeader_Private.h in Headers */,
 				4C4FF1C11BE119E60015827B /* DDXMLNode.h in Headers */,
 				4C5CF42D1BE10E070019AA81 /* KPKFormat.h in Headers */,
 				4C4FF1C31BE119E60015827B /* DDXMLPrivate.h in Headers */,

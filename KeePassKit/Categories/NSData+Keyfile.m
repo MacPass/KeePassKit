@@ -33,24 +33,24 @@
 
 @implementation NSData (Keyfile)
 
-+ (NSData *)dataWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseType)version error:(NSError *__autoreleasing *)error {
++ (NSData *)dataWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseFormat)version error:(NSError *__autoreleasing *)error {
   switch (version) {
-    case KPKDatabaseTypeBinary:
+    case KPKDatabaseFormatKdb:
       return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
-    case KPKDatabaseTypeXml:
+    case KPKDatabaseFormatKdbx:
       return [self _dataVersion2WithWithContentsOfKeyFile:url error:error];
     default:
       return nil;
   }
 }
 
-+ (NSData *)generateKeyfiledataForVersion:(KPKDatabaseType)version {
++ (NSData *)generateKeyfiledataForVersion:(KPKDatabaseFormat)version {
   NSData *data = [NSData dataWithRandomBytes:32];
   switch(version) {
-    case KPKDatabaseTypeBinary:
+    case KPKDatabaseFormatKdb:
       return [[NSString hexstringFromData:data] dataUsingEncoding:NSUTF8StringEncoding];
       
-    case KPKDatabaseTypeXml:
+    case KPKDatabaseFormatKdbx:
       return [self _xmlKeyForData:data];
     
     default:

@@ -57,8 +57,8 @@
 /*
  @return the final Data to use to en/decrypt the database
  */
-- (NSData *)finalDataForVersion:(KPKDatabaseType )version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger )rounds;
-- (NSData *)transformForType:(KPKDatabaseType)type withKeyDerivationUUID:(NSUUID *)uuid options:(NSDictionary *)options error:(NSError *__autoreleasing*)error;
+- (NSData *)finalDataForVersion:(KPKDatabaseFormat )version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger )rounds;
+- (NSData *)transformForType:(KPKDatabaseFormat)type withKeyDerivationUUID:(NSUUID *)uuid options:(NSDictionary *)options error:(NSError *__autoreleasing*)error;
 /**
  *  Updates the password and keyfile for the composite key
  *  @param password the new password, can be nil
@@ -69,7 +69,7 @@
 /*
  @return YES if the password and/or key are correct for this composite key
  */
-- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseType)version;
+- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseFormat)version;
 
 
 @end

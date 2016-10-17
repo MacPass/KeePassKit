@@ -21,7 +21,7 @@
    Create the Key
    Supply the Data found in the header
    */
-  NSData *keyData = [password finalDataForVersion:KPKDatabaseTypeXml
+  NSData *keyData = [password finalDataForVersion:KPKDatabaseFormatKdbx
                                        masterSeed:headerReader.masterSeed
                                     transformSeed:headerReader.transformSeed
                                            rounds:headerReader.rounds];
