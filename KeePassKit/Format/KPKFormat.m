@@ -25,20 +25,20 @@
 #import "KPKXmlFormat.h"
 
 #pragma mark Signatures/Format
-uint32_t const kKPKBinaryFileVersion            = 0x00030004;
-uint32_t const kKPKBinaryFileVersionMask        = 0xFFFFFF00;
-uint32_t const kKPKBinarySignature1             = 0x9AA2D903;
-uint32_t const kKPKBinarySignature2             = 0xB54BFB65;
+uint32_t const kKPKKdbFileVersion            = 0x00030004;
+uint32_t const kKPKKdbFileVersionMask        = 0xFFFFFF00;
+uint32_t const kKPKKdbSignature1             = 0x9AA2D903;
+uint32_t const kKPKKdbSignature2             = 0xB54BFB65;
 
 uint32_t const kKPKInvalidFileVersion           = UINT32_MAX;
-uint32_t const kKPKXMLFileVersion3              = 0x00030001; // TODO check if this is correct!
-uint32_t const kKPKXMLFileVersion3CriticalMax   = 0x00030000;
-uint32_t const kKPKXMLFileVersion4              = 0x00040000;
-uint32_t const kKPKXMLFileVersion4CriticalMax   = 0x00040000;
-uint32_t const kKPKXMLFileVersionCriticalMask   = 0xFFFF0000;
+uint32_t const kKPKKdbxFileVersion3              = 0x00030001; //3.1 used since KeePass 2.20
+uint32_t const kKPKKdbxFileVersion3CriticalMax   = 0x00030000;
+uint32_t const kKPKKdbxFileVersion4              = 0x00040000;
+uint32_t const kKPKKdbxFileVersion4CriticalMax   = 0x00040000;
+uint32_t const kKPKKdbxFileVersionCriticalMask   = 0xFFFF0000;
 
-uint32_t const kKPKXMLSignature1 = 0x9AA2D903;
-uint32_t const kKPKXMLSignature2 = 0xB54BFB67;
+uint32_t const kKPKKdbxSignature1 = 0x9AA2D903;
+uint32_t const kKPKKdbxSignature2 = 0xB54BFB67;
 
 uint32_t const kKPKKeyFileLength = 32;
 
@@ -61,6 +61,7 @@ NSString *const kKPKXmlMeta = @"Meta";
 NSString *const kKPKXmlGroup = @"Group";
 NSString *const kKPKXmlEntry = @"Entry";
 NSString *const kKPKXmlGenerator = @"Generator";
+NSString *const kKPKXmlSettingsChanged = @"SettingsChanged;";
 NSString *const kKPKXmlDatabaseName = @"DatabaseName";
 NSString *const kKPKXmlDatabaseNameChanged = @"DatabaseNameChanged";
 NSString *const kKPKXmlDatabaseDescription = @"DatabaseDescription";
@@ -147,7 +148,7 @@ NSString *const kKPKXmlEnabled = @"Enabled";
 
 #pragma mark Attributes
 NSString *const kKPKXmlProtected        = @"Protected";
-NSString *const kKPKXMLProtectInMemory  = @"ProtectInMemory";
+NSString *const kKPKXmlProtectInMemory  = @"ProtectInMemory";
 NSString *const kKPKXmlTrue             = @"True";
 NSString *const kKPKXmlFalse            = @"False";
 NSString *const kKPKXmlCompressed       = @"Compressed";
@@ -366,10 +367,10 @@ BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
   signature1 = CFSwapInt32LittleToHost(signature1);
   signature2 = CFSwapInt32LittleToHost(signature2);
   
-  if (signature1 == kKPKBinarySignature1 && signature2 == kKPKBinarySignature2) {
+  if (signature1 == kKPKKdbSignature1 && signature2 == kKPKKdbSignature2) {
     return KPKDatabaseTypeBinary;
   }
-  if (signature1 == kKPKXMLSignature1 && signature2 == kKPKXMLSignature2 ) {
+  if (signature1 == kKPKKdbxSignature1 && signature2 == kKPKKdbxSignature2 ) {
     return KPKDatabaseTypeXml;
   }
   return KPKDatabaseTypeUnknown;

@@ -20,21 +20,21 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKLegacyHeaderReader.h"
+#import "KPKKdbHeaderReader.h"
 #import "KPKLegacyFormat.h"
 #import "KPKLegacyHeaderUtility.h"
 #import "KPKFormat.h"
 
 #import "KPKErrors.h"
 
-@interface KPKLegacyHeaderReader () {
+@interface KPKKdbHeaderReader () {
   KPKLegacyHeader _header;
   NSData *_data;
 }
 
 @end
 
-@implementation KPKLegacyHeaderReader
+@implementation KPKKdbHeaderReader
 
 @synthesize cipherUUID = _cipherUUID;
 @synthesize masterSeed = _masterSeed;
@@ -100,7 +100,7 @@
   
   // Check the version
   _header.version = CFSwapInt32LittleToHost(_header.version);
-  if ((_header.version & kKPKBinaryFileVersionMask) != (kKPKBinaryFileVersion & kKPKBinaryFileVersionMask)) {
+  if ((_header.version & kKPKKdbFileVersionMask) != (kKPKKdbFileVersion & kKPKKdbFileVersionMask)) {
     KPKCreateError(error, KPKErrorUnsupportedDatabaseVersion, @"ERROR_UNSUPPORTED_DATABASER_VERSION", "");
   }
   

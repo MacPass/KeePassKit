@@ -329,7 +329,7 @@
     default:
       break;
   }
-  return kKPKBinaryFileVersion;
+  return kKPKKdbFileVersion;
 }
 
 

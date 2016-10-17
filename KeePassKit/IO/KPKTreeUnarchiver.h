@@ -13,27 +13,9 @@
 
 @interface KPKTreeUnarchiver : NSObject
 
-@property (nonatomic, readonly, strong) NSUUID *cipherUUID;
++ (KPKTree *)unarchiveTreeData:(NSData *)data withKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error;
 
-@property (nonatomic, readonly, strong) NSData *masterSeed;
-@property (nonatomic, readonly, strong) NSData *transformSeed;
-@property (nonatomic, readonly, strong) NSData *encryptionIV;
-@property (nonatomic, readonly, strong) NSData *protectedStreamKey;
-@property (nonatomic, readonly, strong) NSData *streamStartBytes;
+//- (instancetype)initWithData:(NSData *)data error:(NSError **)error;
+//- (KPKTree *)unarchiveTreeWithKey:(KPKCompositeKey *)key error:(NSError **)error;
 
-@property (nonatomic, readonly, assign) uint32_t compressionAlgorithm; // KPKCompression
-@property (nonatomic, readonly, assign) uint32_t randomStreamID; // KPKRandomStreamType
-@property (nonatomic, readonly, assign) uint64_t rounds;
-
-@property (nonatomic, readonly, strong) NSData *contentsHash;
-@property (nonatomic, readonly, strong) NSData *headerHash;
-
-@property (nonatomic, readonly) NSUInteger numberOfEntries;
-@property (nonatomic, readonly) NSUInteger numberOfGroups;
-
-@property (nonatomic, readonly, copy) NSData *dataWithoutHeader;
-
-- (instancetype)initWithData:(NSData *)data error:(NSError **)error;
-
-- (KPKTree *)unarchiveTreeWithKey:(KPKCompositeKey *)key error:(NSError **)error;
 @end

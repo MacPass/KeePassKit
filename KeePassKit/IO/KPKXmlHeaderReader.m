@@ -106,7 +106,7 @@
   KPKFormat *format = [KPKFormat sharedFormat];
   KPKFileInfo info = [format fileInfoForData:_data];
   
-  if ((info.version & kKPKXMLFileVersionCriticalMask) > (kKPKXMLFileVersion3CriticalMax & kKPKXMLFileVersionCriticalMask)) {
+  if ((info.version & kKPKKdbxFileVersionCriticalMask) > (kKPKKdbxFileVersion3CriticalMax & kKPKKdbxFileVersionCriticalMask)) {
     KPKCreateError(error, KPKErrorUnsupportedDatabaseVersion, @"ERROR_UNSUPPORTED_DATABASER_VERSION", "");
     return NO;
   }
@@ -117,11 +117,16 @@
    Hence skipt first 12 bytes;
    */
   [_dataStreamer skipBytes:12];
-  //NSUInteger location = 12;
   while (true) {
+    
     uint8_t fieldType = [_dataStreamer readByte];
-    uint16_t fieldSize = [_dataStreamer read2Bytes];
-    fieldSize = CFSwapInt16LittleToHost(fieldSize);
+    uint32_t fieldSize;
+    if(info.version >= kKPKKdbxFileVersion4) {
+      fieldSize = CFSwapInt32LittleToHost([_dataStreamer read4Bytes]);
+    }
+    else {
+      fieldSize = CFSwapInt16LittleToHost([_dataStreamer read2Bytes]);
+    }
     
     //NSRange readRange = NSMakeRange(location, fieldSize);
     

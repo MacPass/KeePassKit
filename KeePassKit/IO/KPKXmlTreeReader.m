@@ -276,7 +276,7 @@
   
   for (DDXMLElement *element in [entryElement elementsForName:@"String"]) {
     DDXMLElement *valueElement = [element elementForName:kKPKXmlValue];
-    BOOL isProtected = KPKXmlBoolAttribute(valueElement, kKPKXmlProtected) || KPKXmlBoolAttribute(valueElement, kKPKXMLProtectInMemory);
+    BOOL isProtected = KPKXmlBoolAttribute(valueElement, kKPKXmlProtected) || KPKXmlBoolAttribute(valueElement, kKPKXmlProtectInMemory);
     KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKXmlString(element, kKPKXmlKey)
                                                           value:[valueElement stringValue]
                                                     isProtected:isProtected];

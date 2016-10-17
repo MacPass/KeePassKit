@@ -23,7 +23,7 @@
 #import <Foundation/Foundation.h>
 #import "KPKHeaderWriting.h"
 
-@interface KPKLegacyHeaderWriter : NSObject <KPKHeaderWriting>
+@interface KPKKdbHeaderWriter : NSObject <KPKHeaderWriting>
 
 @property (nonatomic, strong, readonly) NSData *masterSeed;
 @property (nonatomic, strong, readonly) NSData *encryptionIv;

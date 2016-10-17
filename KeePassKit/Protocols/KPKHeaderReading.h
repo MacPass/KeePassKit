@@ -43,6 +43,7 @@
 @property (nonatomic, readonly, strong) NSData *contentsHash;
 @property (nonatomic, readonly, strong) NSData *headerHash;
 
+@optional
 @property (nonatomic, readonly) NSUInteger numberOfEntries;
 @property (nonatomic, readonly) NSUInteger numberOfGroups;
 

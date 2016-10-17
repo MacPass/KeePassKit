@@ -74,6 +74,7 @@
     _protectUrl = NO;
     _protectUserName = NO;
     _generator = [@"MacPass" copy];
+    _settingsChanged = [[NSDate date ] copy];
     _databaseName = [NSLocalizedString(@"DATABASE", "") copy];
     _databaseNameChanged = [[NSDate date] copy];
     _databaseDescription = [@"" copy];

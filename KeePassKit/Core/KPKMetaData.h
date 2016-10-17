@@ -37,6 +37,8 @@
 
 @property(nonatomic, copy) NSString *generator;
 
+@property(copy) NSDate *settingsChanged;
+
 @property(nonatomic, copy) NSString *databaseName;
 @property(nonatomic, copy) NSDate *databaseNameChanged;
 @property(nonatomic, copy) NSString *databaseDescription;

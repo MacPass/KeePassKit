@@ -20,7 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKLegacyHeaderWriter.h"
+#import "KPKKdbHeaderWriter.h"
 #import "KPKLegacyHeaderUtility.h"
 #import "KPKLegacyFormat.h"
 #import "KPKFormat.h"
@@ -32,7 +32,7 @@
 
 #import "NSData+Random.h"
 
-@interface KPKLegacyHeaderWriter () {
+@interface KPKKdbHeaderWriter () {
   KPKLegacyHeader _header;
   BOOL _headerValid;
 }
@@ -40,7 +40,7 @@
 @property (weak) KPKTree *tree;
 @end
 
-@implementation KPKLegacyHeaderWriter
+@implementation KPKKdbHeaderWriter
 
 @dynamic contentHash;
 
@@ -105,11 +105,11 @@
 - (void)_updateHeader {
   NSAssert(_groupCount != -1, @"Group count needs to be initalized");
   NSAssert(_entryCount != -1, @"Entry count needs to be initalized");
-  _header.signature1 = CFSwapInt32HostToLittle(kKPKBinarySignature1);
-  _header.signature2 = CFSwapInt32HostToLittle(kKPKBinarySignature2);
+  _header.signature1 = CFSwapInt32HostToLittle(kKPKKdbSignature1);
+  _header.signature2 = CFSwapInt32HostToLittle(kKPKKdbSignature2);
   /* kdx is stored with AES encryption and SHA hash */
   _header.flags = CFSwapInt32HostToLittle( KPKLegacyEncryptionSHA2 | KPKLegacyEncryptionAES );
-  _header.version = CFSwapInt32HostToLittle(kKPKBinaryFileVersion);
+  _header.version = CFSwapInt32HostToLittle(kKPKKdbFileVersion);
   
   /* Master seed and encryption iv */
   [_masterSeed getBytes:_header.masterSeed length:sizeof(_header.masterSeed)];

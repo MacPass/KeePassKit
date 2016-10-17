@@ -24,24 +24,24 @@
 /**
  *  Signatures for the Binary (Keepass1) file format
  */
-FOUNDATION_EXTERN uint32_t const kKPKBinaryFileVersion;
-FOUNDATION_EXTERN uint32_t const kKPKBinaryFileVersionMask;
-FOUNDATION_EXTERN uint32_t const kKPKBinarySignature1;
-FOUNDATION_EXTERN uint32_t const kKPKBinarySignature2;
+FOUNDATION_EXTERN uint32_t const kKPKKdbFileVersion;
+FOUNDATION_EXTERN uint32_t const kKPKKdbFileVersionMask;
+FOUNDATION_EXTERN uint32_t const kKPKKdbSignature1;
+FOUNDATION_EXTERN uint32_t const kKPKKdbSignature2;
 
 /**
  *  Signatrues and Data for the XML (Keepass2) file format
  */
 FOUNDATION_EXPORT uint32_t const kKPKInvalidFileVersion;
-FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion3;
-FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion3CriticalMax;
-FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion4;
-FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersion4CriticalMax;
+FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersion3;
+FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersion3CriticalMax;
+FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersion4;
+FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersion4CriticalMax;
 
-FOUNDATION_EXTERN uint32_t const kKPKXMLFileVersionCriticalMask;
+FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersionCriticalMask;
 
-FOUNDATION_EXTERN uint32_t const kKPKXMLSignature1;
-FOUNDATION_EXTERN uint32_t const kKPKXMLSignature2;
+FOUNDATION_EXTERN uint32_t const kKPKKdbxSignature1;
+FOUNDATION_EXTERN uint32_t const kKPKKdbxSignature2;
 
 typedef NS_ENUM( NSUInteger, KPKDatabaseType ) {
   KPKDatabaseTypeUnknown,
@@ -82,6 +82,8 @@ FOUNDATION_EXTERN NSString *const kKPKXmlGroup;
 FOUNDATION_EXTERN NSString *const kKPKXmlEntry;
 
 #pragma mark Metainformation
+FOUNDATION_EXTERN NSString *const kKPKXmlSettingsChanged;
+
 FOUNDATION_EXTERN NSString *const kKPKXmlGenerator;
 FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseName;
 FOUNDATION_EXTERN NSString *const kKPKXmlDatabaseNameChanged;
@@ -171,7 +173,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlEnabled;
 
 #pragma mark Attributes
 FOUNDATION_EXTERN NSString *const kKPKXmlProtected; // Only used when stored as kdbx files.
-FOUNDATION_EXTERN NSString *const kKPKXMLProtectInMemory; // Only used when stores as plain XML files.
+FOUNDATION_EXTERN NSString *const kKPKXmlProtectInMemory; // Only used when stores as plain XML files.
 FOUNDATION_EXTERN NSString *const kKPKXmlTrue;
 FOUNDATION_EXTERN NSString *const kKPKXmlFalse;
 FOUNDATION_EXTERN NSString *const kKPKXmlCompressed;

@@ -310,7 +310,7 @@
   NSString *attributeValue = (usesRandomStream && isProtected) ? attribute.value : attribute.value.XMLCompatibleString;
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue stringValue:attributeValue];
   if(isProtected) {
-    NSString *attributeName = usesRandomStream ? kKPKXmlProtected : kKPKXMLProtectInMemory;
+    NSString *attributeName = usesRandomStream ? kKPKXmlProtected : kKPKXmlProtectInMemory;
     KPKAddXmlAttribute(valueElement, attributeName, kKPKXmlTrue);
   }
   [attributeElement addChild:valueElement];

@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C09B2EB1DB1293A007EE26A /* KPKFileHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C09B2E91DB1293A007EE26A /* KPKFileHeader.h */; };
+		4C09B2EC1DB1293A007EE26A /* KPKFileHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C09B2EA1DB1293A007EE26A /* KPKFileHeader.m */; };
+		4C09B2EF1DB12AF3007EE26A /* KPKKdbFileHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C09B2ED1DB12AF3007EE26A /* KPKKdbFileHeader.h */; };
+		4C09B2F01DB12AF3007EE26A /* KPKKdbFileHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C09B2EE1DB12AF3007EE26A /* KPKKdbFileHeader.m */; };
+		4C09B2F31DB12B06007EE26A /* KPKKdbxFileHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C09B2F11DB12B06007EE26A /* KPKKdbxFileHeader.h */; };
+		4C09B2F41DB12B06007EE26A /* KPKKdbxFileHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C09B2F21DB12B06007EE26A /* KPKKdbxFileHeader.m */; };
 		4C15091D1C74AD10008A2C8E /* KPKMetaData_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */; };
 		4C152C5E1C7617D900380A3B /* KPKGroup_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */; };
 		4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */; };
@@ -111,10 +117,10 @@
 		4C5CF4581BE10E100019AA81 /* KPKDataStreamReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4371BE10E100019AA81 /* KPKDataStreamReader.m */; };
 		4C5CF4591BE10E100019AA81 /* KPKDataStreamWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF4381BE10E100019AA81 /* KPKDataStreamWriter.h */; };
 		4C5CF45A1BE10E100019AA81 /* KPKDataStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4391BE10E100019AA81 /* KPKDataStreamWriter.m */; };
-		4C5CF45B1BE10E100019AA81 /* KPKLegacyHeaderReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF43A1BE10E100019AA81 /* KPKLegacyHeaderReader.h */; };
-		4C5CF45C1BE10E100019AA81 /* KPKLegacyHeaderReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF43B1BE10E100019AA81 /* KPKLegacyHeaderReader.m */; };
-		4C5CF45D1BE10E100019AA81 /* KPKLegacyHeaderWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF43C1BE10E100019AA81 /* KPKLegacyHeaderWriter.h */; };
-		4C5CF45E1BE10E100019AA81 /* KPKLegacyHeaderWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF43D1BE10E100019AA81 /* KPKLegacyHeaderWriter.m */; };
+		4C5CF45B1BE10E100019AA81 /* KPKKdbHeaderReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF43A1BE10E100019AA81 /* KPKKdbHeaderReader.h */; };
+		4C5CF45C1BE10E100019AA81 /* KPKKdbHeaderReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF43B1BE10E100019AA81 /* KPKKdbHeaderReader.m */; };
+		4C5CF45D1BE10E100019AA81 /* KPKKdbHeaderWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF43C1BE10E100019AA81 /* KPKKdbHeaderWriter.h */; };
+		4C5CF45E1BE10E100019AA81 /* KPKKdbHeaderWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF43D1BE10E100019AA81 /* KPKKdbHeaderWriter.m */; };
 		4C5CF45F1BE10E100019AA81 /* KPKLegacyTreeCryptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF43E1BE10E100019AA81 /* KPKLegacyTreeCryptor.h */; };
 		4C5CF4601BE10E100019AA81 /* KPKLegacyTreeCryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF43F1BE10E100019AA81 /* KPKLegacyTreeCryptor.m */; };
 		4C5CF4611BE10E100019AA81 /* KPKLegacyTreeReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF4401BE10E100019AA81 /* KPKLegacyTreeReader.h */; };
@@ -241,6 +247,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4C09B2E91DB1293A007EE26A /* KPKFileHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKFileHeader.h; sourceTree = "<group>"; };
+		4C09B2EA1DB1293A007EE26A /* KPKFileHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKFileHeader.m; sourceTree = "<group>"; };
+		4C09B2ED1DB12AF3007EE26A /* KPKKdbFileHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKKdbFileHeader.h; sourceTree = "<group>"; };
+		4C09B2EE1DB12AF3007EE26A /* KPKKdbFileHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKKdbFileHeader.m; sourceTree = "<group>"; };
+		4C09B2F11DB12B06007EE26A /* KPKKdbxFileHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKKdbxFileHeader.h; sourceTree = "<group>"; };
+		4C09B2F21DB12B06007EE26A /* KPKKdbxFileHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKKdbxFileHeader.m; sourceTree = "<group>"; };
 		4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKMetaData_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKGroup_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = AutotypeCustomKeystrokeSequence_1234.xml; sourceTree = "<group>"; };
@@ -338,7 +350,7 @@
 		4C5CF4011BE10E000019AA81 /* KPKWindowAssociation_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKWindowAssociation_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C5CF4021BE10E000019AA81 /* KPKWindowAssociation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKWindowAssociation.h; sourceTree = "<group>"; };
 		4C5CF4031BE10E000019AA81 /* KPKWindowAssociation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = KPKWindowAssociation.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		4C5CF4281BE10E070019AA81 /* KPKFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKFormat.h; sourceTree = "<group>"; };
+		4C5CF4281BE10E070019AA81 /* KPKFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKFormat.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C5CF4291BE10E070019AA81 /* KPKFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = KPKFormat.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C5CF42A1BE10E070019AA81 /* KPKLegacyFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKLegacyFormat.h; sourceTree = "<group>"; };
 		4C5CF42C1BE10E070019AA81 /* KPKXmlFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKXmlFormat.h; sourceTree = "<group>"; };
@@ -348,10 +360,10 @@
 		4C5CF4371BE10E100019AA81 /* KPKDataStreamReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKDataStreamReader.m; sourceTree = "<group>"; };
 		4C5CF4381BE10E100019AA81 /* KPKDataStreamWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKDataStreamWriter.h; sourceTree = "<group>"; };
 		4C5CF4391BE10E100019AA81 /* KPKDataStreamWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKDataStreamWriter.m; sourceTree = "<group>"; };
-		4C5CF43A1BE10E100019AA81 /* KPKLegacyHeaderReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKLegacyHeaderReader.h; sourceTree = "<group>"; };
-		4C5CF43B1BE10E100019AA81 /* KPKLegacyHeaderReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKLegacyHeaderReader.m; sourceTree = "<group>"; };
-		4C5CF43C1BE10E100019AA81 /* KPKLegacyHeaderWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKLegacyHeaderWriter.h; sourceTree = "<group>"; };
-		4C5CF43D1BE10E100019AA81 /* KPKLegacyHeaderWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKLegacyHeaderWriter.m; sourceTree = "<group>"; };
+		4C5CF43A1BE10E100019AA81 /* KPKKdbHeaderReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKKdbHeaderReader.h; sourceTree = "<group>"; };
+		4C5CF43B1BE10E100019AA81 /* KPKKdbHeaderReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = KPKKdbHeaderReader.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		4C5CF43C1BE10E100019AA81 /* KPKKdbHeaderWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKKdbHeaderWriter.h; sourceTree = "<group>"; };
+		4C5CF43D1BE10E100019AA81 /* KPKKdbHeaderWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = KPKKdbHeaderWriter.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C5CF43E1BE10E100019AA81 /* KPKLegacyTreeCryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKLegacyTreeCryptor.h; sourceTree = "<group>"; };
 		4C5CF43F1BE10E100019AA81 /* KPKLegacyTreeCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKLegacyTreeCryptor.m; sourceTree = "<group>"; };
 		4C5CF4401BE10E100019AA81 /* KPKLegacyTreeReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKLegacyTreeReader.h; sourceTree = "<group>"; };
@@ -367,7 +379,7 @@
 		4C5CF44A1BE10E100019AA81 /* KPKXmlHeaderReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKXmlHeaderReader.h; sourceTree = "<group>"; };
 		4C5CF44B1BE10E100019AA81 /* KPKXmlHeaderReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = KPKXmlHeaderReader.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C5CF44C1BE10E100019AA81 /* KPKXmlHeaderWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKXmlHeaderWriter.h; sourceTree = "<group>"; };
-		4C5CF44D1BE10E100019AA81 /* KPKXmlHeaderWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKXmlHeaderWriter.m; sourceTree = "<group>"; };
+		4C5CF44D1BE10E100019AA81 /* KPKXmlHeaderWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = KPKXmlHeaderWriter.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C5CF44E1BE10E100019AA81 /* KPKXmlTreeCryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKXmlTreeCryptor.h; sourceTree = "<group>"; };
 		4C5CF44F1BE10E100019AA81 /* KPKXmlTreeCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKXmlTreeCryptor.m; sourceTree = "<group>"; };
 		4C5CF4501BE10E100019AA81 /* KPKXmlTreeReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKXmlTreeReader.h; sourceTree = "<group>"; };
@@ -737,16 +749,22 @@
 		4C5CF4321BE10E100019AA81 /* IO */ = {
 			isa = PBXGroup;
 			children = (
+				4C09B2E91DB1293A007EE26A /* KPKFileHeader.h */,
+				4C09B2EA1DB1293A007EE26A /* KPKFileHeader.m */,
+				4C09B2ED1DB12AF3007EE26A /* KPKKdbFileHeader.h */,
+				4C09B2EE1DB12AF3007EE26A /* KPKKdbFileHeader.m */,
+				4C09B2F11DB12B06007EE26A /* KPKKdbxFileHeader.h */,
+				4C09B2F21DB12B06007EE26A /* KPKKdbxFileHeader.m */,
 				4C5CF4341BE10E100019AA81 /* KPKArc4RandomStream.h */,
 				4C5CF4351BE10E100019AA81 /* KPKArc4RandomStream.m */,
 				4C5CF4361BE10E100019AA81 /* KPKDataStreamReader.h */,
 				4C5CF4371BE10E100019AA81 /* KPKDataStreamReader.m */,
 				4C5CF4381BE10E100019AA81 /* KPKDataStreamWriter.h */,
 				4C5CF4391BE10E100019AA81 /* KPKDataStreamWriter.m */,
-				4C5CF43A1BE10E100019AA81 /* KPKLegacyHeaderReader.h */,
-				4C5CF43B1BE10E100019AA81 /* KPKLegacyHeaderReader.m */,
-				4C5CF43C1BE10E100019AA81 /* KPKLegacyHeaderWriter.h */,
-				4C5CF43D1BE10E100019AA81 /* KPKLegacyHeaderWriter.m */,
+				4C5CF43A1BE10E100019AA81 /* KPKKdbHeaderReader.h */,
+				4C5CF43B1BE10E100019AA81 /* KPKKdbHeaderReader.m */,
+				4C5CF43C1BE10E100019AA81 /* KPKKdbHeaderWriter.h */,
+				4C5CF43D1BE10E100019AA81 /* KPKKdbHeaderWriter.m */,
 				4C5CF43E1BE10E100019AA81 /* KPKLegacyTreeCryptor.h */,
 				4C5CF43F1BE10E100019AA81 /* KPKLegacyTreeCryptor.m */,
 				4C5CF4401BE10E100019AA81 /* KPKLegacyTreeReader.h */,
@@ -959,10 +977,12 @@
 				4C2ADBED1D7C6495002C3190 /* KPKTreeArchiver.h in Headers */,
 				4C5CF4121BE10E000019AA81 /* KPKErrors.h in Headers */,
 				4CA1E4931D8832BA00100002 /* opt.h in Headers */,
+				4C09B2EB1DB1293A007EE26A /* KPKFileHeader.h in Headers */,
 				4C835B521D22AA3B0037E4B8 /* KPKTreeDelegate.h in Headers */,
 				4C5D91E41D89519C00029558 /* KPKNumber.h in Headers */,
 				4C5CF3CA1BE10DF80019AA81 /* NSData+HashedData.h in Headers */,
 				4C4E23031D7DC10700E58983 /* NSDictionary+KPKVariant.h in Headers */,
+				4C09B2F31DB12B06007EE26A /* KPKKdbxFileHeader.h in Headers */,
 				4C5CF3C41BE10DF80019AA81 /* NSColor+KeePassKit.h in Headers */,
 				4C5CF3CE1BE10DF80019AA81 /* NSData+Random.h in Headers */,
 				4C7C3F9E1D81D620008D8961 /* KPKCompositeKey.h in Headers */,
@@ -973,6 +993,7 @@
 				4C5C82A21D79C13800A1DEA6 /* KPKAESCipher.h in Headers */,
 				4C62F6251D1D77DE0031795C /* KPKAttribute_Private.h in Headers */,
 				4CA1E4841D8832BA00100002 /* argon2.h in Headers */,
+				4C09B2EF1DB12AF3007EE26A /* KPKKdbFileHeader.h in Headers */,
 				4C7C3FA51D81D620008D8961 /* KPKPasswordKey.h in Headers */,
 				4C5CF3DE1BE10DF80019AA81 /* NSUUID+KeePassKit.h in Headers */,
 				4C5CF3D81BE10DF80019AA81 /* NSString+Empty.h in Headers */,
@@ -1007,7 +1028,7 @@
 				4C5CF3C81BE10DF80019AA81 /* NSData+Gzip.h in Headers */,
 				4C5CF4591BE10E100019AA81 /* KPKDataStreamWriter.h in Headers */,
 				4C5CF4811BE10E200019AA81 /* KPKTreeCrypting.h in Headers */,
-				4C5CF45B1BE10E100019AA81 /* KPKLegacyHeaderReader.h in Headers */,
+				4C5CF45B1BE10E100019AA81 /* KPKKdbHeaderReader.h in Headers */,
 				4C5CF46D1BE10E100019AA81 /* KPKXmlHeaderWriter.h in Headers */,
 				4C5CF4631BE10E100019AA81 /* KPKLegacyTreeWriter.h in Headers */,
 				4CCE00C71D78598800B8D50A /* KPKTimeInfo_Private.h in Headers */,
@@ -1031,7 +1052,7 @@
 				4C5CF4821BE10E200019AA81 /* KPKTreeReading.h in Headers */,
 				4C5CF4611BE10E100019AA81 /* KPKLegacyTreeReader.h in Headers */,
 				4CA1E48A1D8832BA00100002 /* blamka-round-opt.h in Headers */,
-				4C5CF45D1BE10E100019AA81 /* KPKLegacyHeaderWriter.h in Headers */,
+				4C5CF45D1BE10E100019AA81 /* KPKKdbHeaderWriter.h in Headers */,
 				4C5CF3D01BE10DF80019AA81 /* NSDate+Packed.h in Headers */,
 				4C5C82A81D79C13800A1DEA6 /* KPKCipher_Private.h in Headers */,
 			);
@@ -1172,6 +1193,7 @@
 				4C2602191DB110930069B059 /* chacha20_simple.c in Sources */,
 				4C7C3F9F1D81D620008D8961 /* KPKCompositeKey.m in Sources */,
 				4C7C3F9C1D81D620008D8961 /* KPKKeyDerivation.m in Sources */,
+				4C09B2F01DB12AF3007EE26A /* KPKKdbFileHeader.m in Sources */,
 				4C5CF4681BE10E100019AA81 /* KPKSalsa20RandomStream.m in Sources */,
 				4C5C82A71D79C13800A1DEA6 /* KPKCipher.m in Sources */,
 				4CA1E48C1D8832BA00100002 /* core.c in Sources */,
@@ -1196,7 +1218,7 @@
 				4C4FF1C01BE119E60015827B /* DDXMLElement.m in Sources */,
 				4C7C3FA11D81D620008D8961 /* KPKFileKey.m in Sources */,
 				4CA1E4981D8832BA00100002 /* thread.c in Sources */,
-				4C5CF45E1BE10E100019AA81 /* KPKLegacyHeaderWriter.m in Sources */,
+				4C5CF45E1BE10E100019AA81 /* KPKKdbHeaderWriter.m in Sources */,
 				4C5CF4131BE10E000019AA81 /* KPKErrors.m in Sources */,
 				4C5CF3CF1BE10DF80019AA81 /* NSData+Random.m in Sources */,
 				4CF5EB4C1D9582050044F0F9 /* KPKRC4Cipher.m in Sources */,
@@ -1216,10 +1238,11 @@
 				4C5CF3D71BE10DF80019AA81 /* NSString+Commands.m in Sources */,
 				4C5CF4191BE10E000019AA81 /* KPKMetaData.m in Sources */,
 				4CA1E48E1D8832BA00100002 /* encoding.c in Sources */,
-				4C5CF45C1BE10E100019AA81 /* KPKLegacyHeaderReader.m in Sources */,
+				4C5CF45C1BE10E100019AA81 /* KPKKdbHeaderReader.m in Sources */,
 				4C5CF41E1BE10E000019AA81 /* KPKTag.m in Sources */,
 				4C5CF4701BE10E100019AA81 /* KPKXmlTreeCryptor.m in Sources */,
 				4C5CF3CB1BE10DF80019AA81 /* NSData+HashedData.m in Sources */,
+				4C09B2EC1DB1293A007EE26A /* KPKFileHeader.m in Sources */,
 				4C7C3FA31D81D620008D8961 /* KPKKey.m in Sources */,
 				4C4FF1BB1BE119E60015827B /* NSString+DDXML.m in Sources */,
 				4CA1E4851D8832BA00100002 /* argon2.c in Sources */,
@@ -1227,6 +1250,7 @@
 				4C5CF3D91BE10DF80019AA81 /* NSString+Empty.m in Sources */,
 				4C5CF4201BE10E000019AA81 /* KPKTimeInfo.m in Sources */,
 				4C5C82A31D79C13800A1DEA6 /* KPKAESCipher.m in Sources */,
+				4C09B2F41DB12B06007EE26A /* KPKKdbxFileHeader.m in Sources */,
 				4CA1E4921D8832BA00100002 /* opt.c in Sources */,
 				4C5CF4151BE10E000019AA81 /* KPKGroup.m in Sources */,
 				4C5CF4641BE10E100019AA81 /* KPKLegacyTreeWriter.m in Sources */,

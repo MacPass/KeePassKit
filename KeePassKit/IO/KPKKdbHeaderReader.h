@@ -24,7 +24,7 @@
 #import "KPKHeaderReading.h"
 #import "KPKHeaderWriting.h"
 
-@interface KPKLegacyHeaderReader : NSObject <KPKHeaderReading>
+@interface KPKKdbHeaderReader : NSObject <KPKHeaderReading>
 
 /**
  Initalizes a new Chipher information with random seeds
