@@ -18,8 +18,6 @@
 
 @dynamic masterSeed;
 @dynamic encryptionIV;
-@dynamic contentsHash;
-@dynamic headerHash;
 
 - (instancetype)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error {
   KPKFileInfo fileInfo = [[KPKFormat sharedFormat] fileInfoForData:data];

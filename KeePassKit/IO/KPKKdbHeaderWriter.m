@@ -139,7 +139,7 @@
   KPKNumber *rounds = _tree.metaData.keyDerivationOptions[KPKAESRoundsOption];
   
   if(!rounds) {
-    rounds = [KPKAESKeyDerivation defaultParameters][KPKAESRoundsOption];
+    rounds = [KPKAESKeyDerivation defaultOptions][KPKAESRoundsOption];
   }
   
   uint32_t clampedRounds = (uint32_t)MIN(rounds.unsignedInteger64Value, UINT32_MAX);

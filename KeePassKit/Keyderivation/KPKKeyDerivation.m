@@ -59,21 +59,22 @@ static NSMutableDictionary *_keyDerivations;
   return [[self alloc] initWithUUID:uuid options:options];
 }
 
-- (void)benchmarkWithOptions:(NSDictionary *)options completionHandler:(void (^)(NSDictionary * _Nonnull))completionHandler {
++ (void)parametersForDelay:(NSUInteger)seconds completionHandler:(void (^)(NSDictionary * _Nonnull))completionHandler {
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
 }
 
-- (NSData *)deriveData:(NSData *)data {
-  return [self deriveData:data options:@{}];
++ (NSData * _Nullable)deriveData:(NSData *)data withUUID:(NSUUID *)uuid options:(NSDictionary *)options {
+  KPKKeyDerivation *derivation = [self keyDerivationWithUUID:uuid options:options];
+  return [derivation deriveData:data];
 }
 
-- (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
+- (NSData *)deriveData:(NSData *)data {
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
   return nil;
 }
 
 - (KPKKeyDerivation *)initWithUUID:(NSUUID *)uuid {
-  self = [self initWithUUID:uuid options:@{}];
+  self = [self initWithUUID:uuid options:[self.class defaultOptions]];
   return self;
 }
 
@@ -102,10 +103,6 @@ static NSMutableDictionary *_keyDerivations;
   self = nil;
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
   return nil;
-}
-
-- (void)randomize {
-  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
 }
 
 - (NSUUID *)uuid {

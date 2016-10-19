@@ -53,6 +53,10 @@
   
 }
 
+- (instancetype)initWithOptions:(NSDictionary *)options {
+  return nil;
+}
+
 + (void)_test {
 #define HASHLEN 32
 #define SALTLEN 16

@@ -10,4 +10,9 @@
 
 @interface KPKKdbFileHeader : KPKFileHeader
 
+@property (nonatomic, readonly, copy) NSData *headerData;
+@property (nonatomic, readonly, copy) NSData *headerHash;
+@property (nonatomic, readonly) NSUInteger numberOfEntries;
+@property (nonatomic, readonly) NSUInteger numberOfGroups;
+
 @end

@@ -31,17 +31,12 @@
 @property (nonatomic, readonly, assign) uint32_t compressionAlgorithm; // KPKCompression
 @property (nonatomic, readonly, assign) uint32_t randomStreamID;
 
-@property (nonatomic, readonly, copy) NSData *contentsHash; // only KDBX 3.1
-@property (nonatomic, readonly, strong) NSData *headerHash; // KDB only
-
 // Obsolte since KDBX4
 //@property (nonatomic, readonly, strong) NSData *transformSeed;
 //@property (nonatomic, readonly, assign) uint64_t rounds;
 
-@property (nonatomic, readonly) NSUInteger numberOfEntries;
-@property (nonatomic, readonly) NSUInteger numberOfGroups;
-
 @property (readonly, copy) NSData *headerData;
+@property (readonly) NSUInteger length;
 
 - (instancetype)initWithData:(NSData *)data error:(NSError **)error NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithTree:(KPKTree *)tree fileInfo:(KPKFileInfo)fileInfo NS_DESIGNATED_INITIALIZER;

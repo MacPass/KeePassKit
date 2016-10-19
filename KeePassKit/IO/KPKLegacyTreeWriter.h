@@ -22,12 +22,12 @@
 
 #import <Foundation/Foundation.h>
 @class KPKTree;
-@class KPKLegacyHeaderWriter;
+@class KPKKdbHeaderWriter;
 
 @interface KPKLegacyTreeWriter : NSObject
 
 @property (strong, readonly) KPKTree *tree;
-@property (strong, readonly) KPKLegacyHeaderWriter *headerWriter;
+@property (strong, readonly) KPKKdbHeaderWriter *headerWriter;
 
 - (instancetype)initWithTree:(KPKTree *)tree;
 @property (nonatomic, readonly, copy) NSData *treeData;

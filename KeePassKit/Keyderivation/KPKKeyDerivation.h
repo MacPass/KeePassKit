@@ -10,9 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// Common options keys
-FOUNDATION_EXPORT NSString *const KPKKeyDerivationBenchmarkSecondsOptions; // NSNumber
-
 // Argon2 Options
 FOUNDATION_EXPORT NSString *const KPKArgon2SaltOption; // NSData
 FOUNDATION_EXPORT NSString *const KPKArgon2ParallelismOption; // KPKNumber uint32_t
@@ -26,7 +23,6 @@ FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataOption; // NSData
 FOUNDATION_EXPORT NSString *const KPKAESSeedOption; // NSData 32 bytes
 FOUNDATION_EXPORT NSString *const KPKAESRoundsOption; // KPKNumber uint64_t
 
-
 @interface KPKKeyDerivation : NSObject
 
 /**
@@ -34,21 +30,20 @@ FOUNDATION_EXPORT NSString *const KPKAESRoundsOption; // KPKNumber uint64_t
 
  @return NSDictionary(Variant) with default parameters
  */
-+ (NSDictionary *)defaultParameters;
++ (NSDictionary *)defaultOptions;
 
 + (NSUUID *)uuid;
++ (void)parametersForDelay:(NSUInteger)seconds completionHandler:(void(^)(NSDictionary *options))completionHandler;
 
 + (KPKKeyDerivation * _Nullable)keyDerivationWithUUID:(NSUUID *)uuid;
 + (KPKKeyDerivation * _Nullable)keyDerivationWithUUID:(NSUUID *)uuid options:(NSDictionary *)options;
+
++ (NSData * _Nullable)deriveData:(NSData *)data withUUID:(NSUUID *)uuid options:(NSDictionary *)options;
 
 - (KPKKeyDerivation *)initWithUUID:(NSUUID *)uuid;
 - (KPKKeyDerivation *)initWithUUID:(NSUUID *)uuid options:(NSDictionary *)options NS_DESIGNATED_INITIALIZER;
 
 - (NSData * _Nullable)deriveData:(NSData *)data;
-- (NSData * _Nullable)deriveData:(NSData *)data options:(NSDictionary *)options;
-- (void)benchmarkWithOptions:(NSDictionary *)options completionHandler:(void(^)(NSDictionary *results))completionHandler;
-
-- (void)randomize; // initalize with random data!
 
 @property (readonly, copy, nonatomic) NSUUID *uuid;
 @property (readonly, copy) NSDictionary *options;

@@ -11,6 +11,8 @@
 
 @interface KPKArgon2KeyDerivation : KPKKeyDerivation
 
+
+- (instancetype)initWithOptions:(NSDictionary *)options;
 + (void)_test;
 
 @end

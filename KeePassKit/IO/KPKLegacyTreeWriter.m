@@ -22,7 +22,7 @@
 
 #import "KPKLegacyTreeWriter.h"
 #import "KPKLegacyFormat.h"
-#import "KPKLegacyHeaderWriter.h"
+#import "KPKKdbHeaderWriter.h"
 
 #import "KPKBinary.h"
 #import "KPKEntry.h"
@@ -58,7 +58,7 @@
   self = [super init];
   if(self) {
     _tree = tree;
-    _headerWriter = [[KPKLegacyHeaderWriter alloc] initWithTree:_tree];
+    _headerWriter = [[KPKKdbHeaderWriter alloc] initWithTree:_tree];
   }
   return self;
 }

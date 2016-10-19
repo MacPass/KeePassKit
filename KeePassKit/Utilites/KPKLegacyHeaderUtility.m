@@ -39,7 +39,7 @@
   CC_SHA256_Update(&ctx, buffer + (sizeof(KPKLegacyHeader) - endCount), (CC_LONG)endCount);
   CC_SHA256_Final(hash, &ctx);
   
-  return [NSData dataWithBytes:hash length:sizeof(hash)];
+  return [[NSData alloc] initWithBytes:hash length:sizeof(hash)];
 }
 
 @end

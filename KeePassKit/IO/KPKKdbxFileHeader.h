@@ -10,4 +10,6 @@
 
 @interface KPKKdbxFileHeader : KPKFileHeader
 
+@property (nonatomic, readonly, copy) NSData *contentHash; // only KDBX 3.1
+
 @end

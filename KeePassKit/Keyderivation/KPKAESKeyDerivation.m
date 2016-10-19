@@ -16,11 +16,16 @@
 
 @implementation KPKAESKeyDerivation
 
-+ (NSDictionary *)defaultParameters {
++ (NSDictionary *)optionsWithSeed:(NSData *)seed rounds:(NSUInteger)rounds {
+  NSAssert(seed.length == 32, @"Unsupported seed size");
   return @{
-           KPKAESRoundsOption: [[KPKNumber alloc] initWithUnsignedInteger64:50000],
-           KPKAESSeedOption: [NSData dataWithRandomBytes:32]
+           KPKAESRoundsOption: [[KPKNumber alloc] initWithUnsignedInteger64:rounds],
+           KPKAESSeedOption: seed
            };
+}
+
++ (NSDictionary *)defaultParameters {
+  return [self optionsWithSeed:[NSData dataWithRandomBytes:32] rounds:50000];
 }
 
 + (NSUUID *)uuid {
@@ -40,12 +45,7 @@
   [KPKKeyDerivation _registerKeyDerivation:self];
 }
 
-+ (void)benchmarkWithOptions:(NSDictionary *)options completionHandler:(void(^)(NSDictionary *results))completionHandler {
-  NSNumber *secondsNumber = options[KPKKeyDerivationBenchmarkSecondsOptions];
-  if(!secondsNumber) {
-    return;
-  }
-  NSUInteger seconds = secondsNumber.unsignedIntegerValue;
+- (void)parametersForDelay:(NSUInteger)seconds completionHandler:(void (^)(NSDictionary * _Nonnull options))completionHandler {
   // Transform the key
   dispatch_queue_t normalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
   dispatch_async(normalQueue, ^{
@@ -65,51 +65,46 @@
     CCCryptorRelease(cryptorRef);
     dispatch_async(dispatch_get_main_queue(), ^{
       /* call the block on the main thread to return the results */
-      completionHandler(@{ KPKAESRoundsOption: @(completedRounds) });
+      completionHandler(@{ KPKAESRoundsOption: [[KPKNumber alloc] initWithUnsignedInteger64:completedRounds] });
     });
   });
 }
 
+- (instancetype)initWithOptions:(NSDictionary *)options {
+  self = [self _initWithOptions:options];
+  return self;
+}
+
 - (instancetype)init {
   /* initialize a default parameterized key derivation */
-  self = [self _initWithOptions:@{}];
+  self = [self _initWithOptions:[self.class defaultParameters]];
   return self;
 }
 
 - (KPKKeyDerivation *)_initWithOptions:(NSDictionary *)options {
+  NSAssert(options[KPKAESRoundsOption], @"Rounds option is missing!");
+  NSAssert(options[KPKAESSeedOption], @"Seed option is missing!");
   self = [super _init];
   if(self) {
     self.options = options;
-    NSDictionary *defaults = [self.class defaultParameters];
-    _seed = [options[KPKAESSeedOption] copy];
-    _rounds = [options[KPKAESRoundsOption] copy];
-    if( ! self.seed ) {
-      _seed = [defaults[KPKAESSeedOption] copy];
-    }
-    if( ! self.rounds ) {
-      _rounds = [defaults[KPKAESRoundsOption] copy];
-    }
   }
   return self;
 }
 
-- (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
-  KPKNumber *roundsObj = options[KPKAESRoundsOption];
-  if(roundsObj && roundsObj.type != KPKNumberTypeUnsignedInteger64 ) {
-    _rounds = [roundsObj copy];
-  }
-  else {
-    return nil;
-  }
+- (NSData *)seed {
+  return self.options[KPKAESSeedOption];
+}
+
+- (uint64_t)rounds {
+  return [self.options[KPKAESRoundsOption] unsignedInteger64Value];
+}
+
+- (NSData *)deriveData:(NSData *)data {
   
-  NSData *seed = options[KPKAESSeedOption];
-  if(seed && [seed isKindOfClass:[NSData class]]) {
-    _seed = [seed copy];
-  }
-  
-  if(self.seed.length != 32 ) {
+  NSData *seed = self.seed;
+  if(seed.length != 32 ) {
     NSLog(@"Key derivations seed is not 32 bytes. Hashing seed!");
-    _seed = [seed.SHA256Hash copy];
+    seed = seed.SHA256Hash;
   }
   
   if(data.length != 32) {
@@ -118,7 +113,7 @@
   }
   
   CCCryptorRef cryptorRef;
-  CCCryptorStatus status = CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES, kCCOptionECBMode, self.seed.bytes, kCCKeySizeAES256, NULL, &cryptorRef);
+  CCCryptorStatus status = CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES, kCCOptionECBMode, seed.bytes, kCCKeySizeAES256, NULL, &cryptorRef);
   if(kCCSuccess != status) {
     CCCryptorRelease(cryptorRef);
     return nil;
@@ -126,7 +121,7 @@
   uint8_t derivedData[32];
   [data getBytes:derivedData length:32];
   size_t tmp;
-  uint64_t rounds = self.rounds.unsignedInteger64Value;
+  uint64_t rounds = self.rounds;
   while(rounds--) {
     status = CCCryptorUpdate(cryptorRef, derivedData, 32, derivedData, 32, &tmp);
     if(kCCSuccess != status) {
@@ -146,10 +141,6 @@
   CC_SHA256(derivedData, 32, hash);
   
   return [NSData dataWithBytes:hash length:CC_SHA256_DIGEST_LENGTH];
-}
-
-- (void)randomize {
-  _seed = [NSData dataWithRandomBytes:32];
 }
 
 @end
