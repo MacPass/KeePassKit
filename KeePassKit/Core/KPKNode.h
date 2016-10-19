@@ -44,6 +44,8 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 @interface KPKNode : NSObject <KPKModificationRecording>
 
+@property(nonatomic, readonly) NSUInteger index; // position of the node in it's parent container (groups, entries)
+
 @property(nonatomic) NSInteger iconId;
 @property(nonatomic, copy) NSUUID *iconUUID;
 @property(nonatomic, readonly, strong) KPKIcon *icon;

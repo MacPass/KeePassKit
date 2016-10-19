@@ -124,6 +124,13 @@
   return [self.tree.metaData findIcon:self.iconUUID];
 }
 
+- (NSUInteger)index {
+  if(self.parent) {
+    return [self.parent _indexForNode:self];
+  }
+  return 0;
+}
+
 - (BOOL)isTrash {
   return [self.asGroup.uuid isEqual:self.tree.metaData.trashUuid];
 }
@@ -240,7 +247,7 @@
 
 - (void)remove {
   [[NSNotificationCenter defaultCenter] postNotificationName:KPKWillRemoveNodeNotification object:self.tree userInfo:@{kKPKNodeKey: self}];
-  [[self.undoManager prepareWithInvocationTarget:self] addToGroup:self.parent atIndex:[self.parent _indexForNode:self]];
+  [[self.undoManager prepareWithInvocationTarget:self] addToGroup:self.parent atIndex:self.index];
   NSAssert(nil == self.tree.mutableDeletedObjects[self.uuid], @"Node already registered as deleted!");
   self.tree.mutableDeletedObjects[self.uuid] = [[KPKDeletedNode alloc] initWithNode:self];
   /* keep a strong reference for undo support in the tree */
@@ -255,7 +262,7 @@
 
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   /* TODO handle moving accross trees! */
-  [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:[self.parent _indexForNode:self]];
+  [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:self.index];
   [self.parent _removeChild:self];
   [group _addChild:self atIndex:index];
   [self touchMoved];
