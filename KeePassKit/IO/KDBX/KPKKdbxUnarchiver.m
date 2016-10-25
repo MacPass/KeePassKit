@@ -6,13 +6,13 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKKdbxTreeUnarchiver.h"
-#import "KPKTreeUnarchiver_Private.h"
+#import "KPKKdbxUnarchiver.h"
+#import "KPKUnarchiver_Private.h"
 
 #import "KPKDataStreamReader.h"
 
 #import "KPKFormat.h"
-#import "KPKXmlFormat.h"
+#import "KPKKdbxFormat.h"
 #import "KPKErrors.h"
 
 #import "KPKCipher.h"
@@ -32,7 +32,7 @@
 
 #import "KPKNumber.h"
 
-@interface KPKKdbxTreeUnarchiver ()
+@interface KPKKdbxUnarchiver ()
 
 @property (copy) NSUUID *cipherUUID;
 @property (copy) NSData *masterSeed;
@@ -46,7 +46,7 @@
 @property (nonatomic,readonly,copy) NSData *headerData;
 @end
 
-@implementation KPKKdbxTreeUnarchiver
+@implementation KPKKdbxUnarchiver
 
 - (instancetype)_initWithData:(NSData *)data version:(NSUInteger)version key:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
   if((version & kKPKKdbxFileVersionCriticalMask) > (kKPKKdbxFileVersion3CriticalMax & kKPKKdbxFileVersionCriticalMask)) {

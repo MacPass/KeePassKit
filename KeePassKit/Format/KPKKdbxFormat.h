@@ -1,5 +1,5 @@
 //
-//  KPKXmlFormat.h
+//  KPKKdbxFormat.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 20.07.13.
@@ -20,8 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef MacPass_KPKXmlFormat_h
-#define MacPass_KPKXmlFormat_h
+#ifndef MacPass_KPKKdbxFormat_h
+#define MacPass_KPKKdbxFormat_h
 
 @import Foundation;
 

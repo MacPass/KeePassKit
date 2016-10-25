@@ -27,7 +27,7 @@
 /**
  *	Tree reader capable of loading Legacy (KDB) file formats
  */
-@interface KPKLegacyTreeReader : NSObject
+@interface KPKKdbTreeReader : NSObject
 
 @property (readonly, copy) NSData *headerHash;
 

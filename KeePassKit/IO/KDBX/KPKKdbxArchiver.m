@@ -6,8 +6,8 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKKdbxTreeArchiver.h"
-#import "KPKTreeArchiver_Private.h"
+#import "KPKKdbxArchiver.h"
+#import "KPKArchiver_Private.h"
 
 #import "KPKCompositeKey.h"
 
@@ -17,7 +17,7 @@
 
 #import "KPKDataStreamWriter.h"
 
-#import "KPKXmlFormat.h"
+#import "KPKKdbxFormat.h"
 #import "KPKErrors.h"
 
 #import "NSData+Random.h"
@@ -27,7 +27,7 @@
 
 #import "DDXMLDocument.h"
 
-@interface KPKKdbxTreeArchiver ()
+@interface KPKKdbxArchiver ()
 
 @property (strong) KPKDataStreamWriter *dataWriter;
 @property (copy) NSData *randomStreamKey;
@@ -38,7 +38,7 @@
 
 @end
 
-@implementation KPKKdbxTreeArchiver
+@implementation KPKKdbxArchiver
 
 @synthesize masterSeed = _masterSeed;
 @synthesize encryptionIV = _encryptionIV;

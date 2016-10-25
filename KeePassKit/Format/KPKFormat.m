@@ -21,8 +21,8 @@
 //
 
 #import "KPKFormat.h"
-#import "KPKLegacyFormat.h"
-#import "KPKXmlFormat.h"
+#import "KPKKdbFormat.h"
+#import "KPKKdbxFormat.h"
 
 #pragma mark Signatures/Format
 uint32_t const kKPKKdbFileVersion            = 0x00030004;
@@ -307,7 +307,7 @@ NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
  */
 
 BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
-  switch(fileInfo.type) {
+  switch(fileInfo.format) {
     case KPKDatabaseFormatKdbx:
       
     case KPKDatabaseFormatKdb:
@@ -349,12 +349,12 @@ BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
 
 - (KPKFileInfo)fileInfoForData:(NSData *)data {
   KPKFileInfo info;
-  info.type = [self _databaseTypeForData:data];
+  info.format = [self _databaseFormatForData:data];
   info.version = [self _fileVersionForData:data];
   return info;
 }
 
-- (KPKDatabaseFormat)_databaseTypeForData:(NSData *)data {
+- (KPKDatabaseFormat)_databaseFormatForData:(NSData *)data {
   uint32_t signature1;
   uint32_t signature2;
   

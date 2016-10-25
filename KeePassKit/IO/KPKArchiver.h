@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class KPKTree;
 @class KPKCompositeKey;
 
-@interface KPKTreeArchiver : NSObject
+@interface KPKArchiver : NSObject
 
 @property (nonatomic, readonly) KPKDatabaseFormat format;
 

@@ -6,8 +6,8 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKTreeArchiver.h"
+#import "KPKArchiver.h"
 
-@interface KPKKdbxTreeArchiver : KPKTreeArchiver
+@interface KPKKdbxArchiver : KPKArchiver
 
 @end

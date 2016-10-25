@@ -22,7 +22,7 @@
 
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
-#import "KPKXmlFormat.h"
+#import "KPKKdbxFormat.h"
 #import "KPKIcon.h"
 #import "KPKTree.h"
 #import "KPKAESCipher.h"

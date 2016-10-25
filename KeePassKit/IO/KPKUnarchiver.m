@@ -6,31 +6,31 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKTreeUnarchiver.h"
-#import "KPKTreeUnarchiver_Private.h"
+#import "KPKUnarchiver.h"
+#import "KPKUnarchiver_Private.h"
 
-#import "KPKKdbTreeUnarchiver.h"
-#import "KPKKdbxTreeUnarchiver.h"
+#import "KPKKdbUnarchiver.h"
+#import "KPKKdbxUnarchiver.h"
 
 #import "KPKFormat.h"
 #import "KPKErrors.h"
 
-@implementation KPKTreeUnarchiver
+@implementation KPKUnarchiver
 
 + (KPKTree *)unarchiveTreeData:(NSData *)data withKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
-  KPKTreeUnarchiver *unarchiver = [[KPKTreeUnarchiver alloc] initWithData:data key:key error:error];
+  KPKUnarchiver *unarchiver = [[KPKUnarchiver alloc] initWithData:data key:key error:error];
   return [unarchiver tree:error];
 }
 
 - (instancetype)initWithData:(NSData *)data key:(KPKCompositeKey *)key error:(NSError * _Nullable __autoreleasing *)error {
   KPKFileInfo fileInfo = [[KPKFormat sharedFormat] fileInfoForData:data];
-  switch (fileInfo.type) {
+  switch (fileInfo.format) {
     case KPKDatabaseFormatKdb:
-      self = [[KPKKdbTreeUnarchiver alloc] _initWithData:data version:fileInfo.version key:key error:error];
+      self = [[KPKKdbUnarchiver alloc] _initWithData:data version:fileInfo.version key:key error:error];
       break;
      
     case KPKDatabaseFormatKdbx:
-      self = [[KPKKdbxTreeUnarchiver alloc] _initWithData:data version:fileInfo.version key:key error:error];
+      self = [[KPKKdbxUnarchiver alloc] _initWithData:data version:fileInfo.version key:key error:error];
       break;
       
     case KPKDatabaseFormatUnknown:

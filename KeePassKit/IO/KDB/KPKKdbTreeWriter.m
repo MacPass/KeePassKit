@@ -20,8 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKLegacyTreeWriter.h"
-#import "KPKLegacyFormat.h"
+#import "KPKKdbTreeWriter.h"
+#import "KPKKdbFormat.h"
 
 #import "KPKBinary.h"
 #import "KPKEntry.h"
@@ -41,7 +41,7 @@
 
 #import "NSUUID+KeePassKit.h"
 
-@interface KPKLegacyTreeWriter ()
+@interface KPKKdbTreeWriter ()
 @property (strong) KPKDataStreamWriter *dataWriter;
 @property (copy) NSArray *entries;
 @property (copy) NSArray *groups;
@@ -52,7 +52,7 @@
 
 @end
 
-@implementation KPKLegacyTreeWriter
+@implementation KPKKdbTreeWriter
 
 - (instancetype)initWithTree:(KPKTree *)tree {
   self = [super init];

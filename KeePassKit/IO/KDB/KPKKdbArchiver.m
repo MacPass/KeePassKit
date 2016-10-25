@@ -6,11 +6,11 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKKdbTreeArchiver.h"
-#import "KPKTreeArchiver_Private.h"
+#import "KPKKdbArchiver.h"
+#import "KPKArchiver_Private.h"
 
-#import "KPKLegacyTreeWriter.h"
-#import "KPKLegacyFormat.h"
+#import "KPKKdbTreeWriter.h"
+#import "KPKKdbFormat.h"
 #import "KPKKeyDerivation.h"
 #import "KPKAESKeyDerivation.h"
 #import "KPKCipher.h"
@@ -29,12 +29,12 @@
 #import <CommonCrypto/CommonCrypto.h>
 #import <CommonCrypto/CommonCryptoError.h>
 
-@interface KPKKdbTreeArchiver () {
+@interface KPKKdbArchiver () {
   KPKLegacyHeader _header;
 }
 @end
 
-@implementation KPKKdbTreeArchiver
+@implementation KPKKdbArchiver
 
 - (NSData *)archiveTree:(NSError *__autoreleasing *)error {
   _header.signature1 = CFSwapInt32HostToLittle(kKPKKdbSignature1);
@@ -51,7 +51,7 @@
   [[NSData dataWithRandomBytes:sizeof(_header.encryptionIv)] getBytes:_header.encryptionIv length:sizeof(_header.encryptionIv)];
   
   /* initalize the tree writer to get the count of meta entries */
-  KPKLegacyTreeWriter *treeWriter = [[KPKLegacyTreeWriter alloc] initWithTree:self.tree];
+  KPKKdbTreeWriter *treeWriter = [[KPKKdbTreeWriter alloc] initWithTree:self.tree];
   
   _header.groups = (uint32_t)self.tree.allGroups.count;
   _header.entries = (uint32_t)(self.tree.allEntries.count + treeWriter.metaEntryCount);

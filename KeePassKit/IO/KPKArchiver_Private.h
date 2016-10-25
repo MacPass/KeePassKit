@@ -6,11 +6,11 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKTreeArchiver.h"
+#import "KPKArchiver.h"
 
 @class KPKTree;
 
-@interface KPKTreeArchiver ()
+@interface KPKArchiver ()
 
 @property (strong) KPKTree *tree;
 @property (strong) KPKCompositeKey *key;

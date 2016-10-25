@@ -28,7 +28,7 @@
 #import "DDXMLElementAdditions.h"
 #import "NSUUID+KeePassKit.h"
 
-#import "KPKXmlFormat.h"
+#import "KPKKdbxFormat.h"
 #import "KPKNode_Private.h"
 #import "KPKGroup.h"
 #import "KPKEntry.h"

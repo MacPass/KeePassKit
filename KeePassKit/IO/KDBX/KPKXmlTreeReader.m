@@ -44,7 +44,7 @@
 #import "KPKTree.h"
 #import "KPKTree_Private.h"
 #import "KPKWindowAssociation.h"
-#import "KPKXmlFormat.h"
+#import "KPKKdbxFormat.h"
 #import "KPKXmlUtilities.h"
 
 #import "DDXML.h"

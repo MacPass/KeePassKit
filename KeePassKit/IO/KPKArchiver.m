@@ -6,22 +6,22 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKTreeArchiver.h"
-#import "KPKTreeArchiver_Private.h"
+#import "KPKArchiver.h"
+#import "KPKArchiver_Private.h"
 
-#import "KPKKdbTreeArchiver.h"
-#import "KPKKdbxTreeArchiver.h"
+#import "KPKKdbArchiver.h"
+#import "KPKKdbxArchiver.h"
 
 #import "KPKTree.h"
 #import "KPKErrors.h"
 
-@implementation KPKTreeArchiver
+@implementation KPKArchiver
 
 @dynamic masterSeed;
 @dynamic encryptionIV;
 
 + (NSData *)archiveTree:(KPKTree *)tree withKey:(KPKCompositeKey *)key format:(KPKDatabaseFormat)format error:(NSError *__autoreleasing *)error {
-  KPKTreeArchiver *archiver = [[KPKTreeArchiver alloc] initWithTree:tree key:key format:format];
+  KPKArchiver *archiver = [[KPKArchiver alloc] initWithTree:tree key:key format:format];
   if(!archiver) {
       KPKCreateError(error, KPKErrorUnknownFileFormat);
   }
@@ -29,7 +29,7 @@
 }
 
 + (NSData *)archiveTree:(KPKTree *)tree withKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
-  KPKTreeArchiver *archiver = [[KPKTreeArchiver alloc] initWithTree:tree key:key];
+  KPKArchiver *archiver = [[KPKArchiver alloc] initWithTree:tree key:key];
   return [archiver archiveTree:error];
 }
 
@@ -41,9 +41,9 @@
 - (instancetype)initWithTree:(KPKTree *)tree key:(KPKCompositeKey *)key format:(KPKDatabaseFormat)format {
   switch(format) {
     case KPKDatabaseFormatKdb:
-      self = [[KPKKdbTreeArchiver alloc] _initWithTree:tree key:key];
+      self = [[KPKKdbArchiver alloc] _initWithTree:tree key:key];
     case KPKDatabaseFormatKdbx:
-      self = [[KPKKdbxTreeArchiver alloc] _initWithTree:tree key:key];
+      self = [[KPKKdbxArchiver alloc] _initWithTree:tree key:key];
     default:
       self = nil;
   }

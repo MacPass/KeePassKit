@@ -6,11 +6,11 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKTreeUnarchiver.h"
+#import "KPKUnarchiver.h"
 
 @class KPKCompositeKey;
 
-@interface KPKTreeUnarchiver ()
+@interface KPKUnarchiver ()
 
 @property (copy) NSData *data;
 @property (strong) KPKCompositeKey *key;

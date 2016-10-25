@@ -24,8 +24,8 @@
 //
 
 #import "KPKDataStreamReader.h"
-#import "KPKLegacyTreeReader.h"
-#import "KPKLegacyFormat.h"
+#import "KPKKdbTreeReader.h"
+#import "KPKKdbFormat.h"
 
 #import "KPKBinary.h"
 #import "KPKBinary_Private.h"
@@ -43,7 +43,7 @@
 #import "NSUUID+KeePassKit.h"
 #import "NSColor+KeePassKit.h"
 
-@interface KPKLegacyTreeReader () {
+@interface KPKKdbTreeReader () {
   NSData *_data;
   KPKDataStreamReader *_dataStreamer;
   NSMutableArray *_groupLevels;
@@ -59,7 +59,7 @@
 
 @end
 
-@implementation KPKLegacyTreeReader
+@implementation KPKKdbTreeReader
 
 - (instancetype)initWithData:(NSData *)data numberOfEntries:(NSUInteger)entries numberOfGroups:(NSUInteger)groups {
   if(data.length == 0) {

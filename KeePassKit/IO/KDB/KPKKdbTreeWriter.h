@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class KPKTree;
 
-@interface KPKLegacyTreeWriter : NSObject
+@interface KPKKdbTreeWriter : NSObject
 
 @property (strong, readonly, nullable) KPKTree *tree;
 @property (readonly) NSUInteger metaEntryCount;

@@ -50,7 +50,7 @@ typedef NS_ENUM( NSUInteger, KPKDatabaseFormat ) {
 };
 
 typedef struct {
-  KPKDatabaseFormat type; // KPDatabaseTypeUnknown if not determined (e.g. signatures don't match or file too small)
+  KPKDatabaseFormat format; // KPDatabaseTypeUnknown if not determined (e.g. signatures don't match or file too small)
   NSUInteger version; // kKPKInvalidFileVersion if version cannot be read (e.g. file too small)
 } KPKFileInfo;
 

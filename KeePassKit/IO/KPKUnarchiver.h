@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class KPKCompositeKey;
 @class KPKTree;
 
-@interface KPKTreeUnarchiver : NSObject
+@interface KPKUnarchiver : NSObject
 
 + (KPKTree *_Nullable)unarchiveTreeData:(NSData *)data withKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error;
 

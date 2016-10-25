@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import "KPKTreeReading.h"
-#import "KPKXmlFormat.h"
+#import "KPKKdbxFormat.h"
 
 @class KPKTree;
 @class KPKKdbxFileHeader;

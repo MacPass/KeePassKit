@@ -20,8 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef MacPass_KPKLegacyFieldTypes_h
-#define MacPass_KPKLegacyFieldTypes_h
+#ifndef MacPass_KPKKdbFormat_h
+#define MacPass_KPKKdbFormat_h
 
 #import <Foundation/Foundation.h>
 

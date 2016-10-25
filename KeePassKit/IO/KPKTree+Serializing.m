@@ -22,8 +22,8 @@
 
 #import "KPKTree+Serializing.h"
 
-#import "KPKTreeArchiver.h"
-#import "KPKTreeUnarchiver.h"
+#import "KPKArchiver.h"
+#import "KPKUnarchiver.h"
 #import "KPKXmlTreeWriter.h"
 #import "KPKXmlTreeReader.h"
 #import "DDXMLDocument.h"
@@ -55,7 +55,7 @@
 }
 
 - (NSData *)encryptWithPassword:(KPKCompositeKey *)password forVersion:(KPKDatabaseFormat)version error:(NSError **)error {
-  return [KPKTreeArchiver archiveTree:self withKey:password error:error];
+  return [KPKArchiver archiveTree:self withKey:password error:error];
 }
 
 - (NSData *)xmlData {
@@ -64,6 +64,6 @@
 }
 
 - (KPKTree *)_decryptorForData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError **)error {
-  return [KPKTreeUnarchiver unarchiveTreeData:(NSData *)data withKey:password error:error];
+  return [KPKUnarchiver unarchiveTreeData:(NSData *)data withKey:password error:error];
 }
 @end
