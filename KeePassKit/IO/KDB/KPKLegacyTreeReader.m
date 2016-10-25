@@ -62,6 +62,10 @@
 @implementation KPKLegacyTreeReader
 
 - (instancetype)initWithData:(NSData *)data numberOfEntries:(NSUInteger)entries numberOfGroups:(NSUInteger)groups {
+  if(data.length == 0) {
+    self = nil;
+    return self;
+  }
   self = [super init];
   if(self) {
     _data = data;
