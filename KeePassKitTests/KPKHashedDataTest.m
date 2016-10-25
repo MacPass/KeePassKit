@@ -16,12 +16,17 @@
 
 @implementation KPKHashedDataTest
 
-- (void)testHashedData {
-  
+- (void)testSHA256Hashing {
   NSData *data = [NSData dataWithRandomBytes:10000];
-  NSData *hashedData = [data hashedDataWithBlockSize:512];
-  NSData *unhashedData = hashedData.unhashedData;
+  NSData *hashedData = data.hashedSha256Data;
+  NSData *unhashedData = hashedData.unhashedSha256Data;
   XCTAssertTrue([unhashedData isEqualToData:data], @"Data needs to be the same after hashing and unhashing");
 }
 
+- (void)testHMACSHA256Data {
+  NSData *data = [NSData dataWithRandomBytes:10000];
+  NSData *hashedData = data.hashedHmacSha256Data;
+  NSData *unhashedData = hashedData.unhashedHmacSha256Data;
+  XCTAssertTrue([unhashedData isEqualToData:data], @"Data needs to be the same after hashing and unhashing");
+}
 @end

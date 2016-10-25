@@ -22,7 +22,7 @@
 
 - (void)testEmptyXmlFile {
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:@"" options:0 error:NULL];
-  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:[document XMLData] headerReader:nil];
+  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:[document XMLData]];
   NSError *error;
   KPKTree *tree = [reader tree:&error];
   XCTAssertNil(tree, @"No Tree from empty data");
@@ -32,7 +32,7 @@
 
 - (void)testNoNodeXmlFile {
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?><root></root>" options:0 error:NULL];
-  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:[document XMLData] headerReader:nil];
+  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:[document XMLData]];
   NSError *error;
   KPKTree *tree = [reader tree:&error];
   XCTAssertNil(tree, @"No Tree from empty data");
@@ -40,9 +40,9 @@
   XCTAssertTrue([error code] == KPKErrorKdbxKeePassFileElementMissing, @"Error Code should be KeePassFile root missing");
 }
 
-- (void)testNoRoodXmlFil {
+- (void)testNoMetaElementXmlFile {
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?><KeePassFile><Root></Root></KeePassFile>" options:0 error:NULL];
-  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:[document XMLData] headerReader:nil];
+  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:[document XMLData]];
   NSError *error;
   KPKTree *tree = [reader tree:&error];
   XCTAssertNil(tree, @"No Tree from empty data");
