@@ -8,14 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class KPKCompositeKey;
 @class KPKTree;
 
 @interface KPKTreeUnarchiver : NSObject
 
-+ (KPKTree *)unarchiveTreeData:(NSData *)data withKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error;
++ (KPKTree *_Nullable)unarchiveTreeData:(NSData *)data withKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error;
 
-//- (instancetype)initWithData:(NSData *)data error:(NSError **)error;
-//- (KPKTree *)unarchiveTreeWithKey:(KPKCompositeKey *)key error:(NSError **)error;
+- (instancetype)initWithData:(NSData *)data key:(KPKCompositeKey *)key error:(NSError *__autoreleasing*)error;
+- (instancetype)initWithError:(NSError **)error NS_UNAVAILABLE;
+
+- (KPKTree *)tree:(NSError **)error;
 
 @end
+
+NS_ASSUME_NONNULL_END

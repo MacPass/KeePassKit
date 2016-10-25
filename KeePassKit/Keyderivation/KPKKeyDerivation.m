@@ -27,7 +27,7 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
 
 static NSMutableDictionary *_keyDerivations;
 
-+ (NSDictionary *)defaultParameters {
++ (NSDictionary *)defaultOptions {
   return @{};
 }
 
@@ -51,6 +51,14 @@ static NSMutableDictionary *_keyDerivations;
   _keyDerivations[uuid] = derivationClass;
 }
 
++ (NSArray<KPKKeyDerivation *> *)availableKeyDerivations {
+  NSMutableArray *keyDerivations;
+  for(NSUUID *uuid in _keyDerivations) {
+    [keyDerivations addObject:[[_keyDerivations[uuid] alloc] init]];
+  }
+  return [NSArray arrayWithArray:keyDerivations];
+}
+
 + (KPKKeyDerivation *)keyDerivationWithUUID:(NSUUID *)uuid {
   return [self keyDerivationWithUUID:uuid options:@{}];
 }
@@ -66,11 +74,6 @@ static NSMutableDictionary *_keyDerivations;
 + (NSData * _Nullable)deriveData:(NSData *)data withUUID:(NSUUID *)uuid options:(NSDictionary *)options {
   KPKKeyDerivation *derivation = [self keyDerivationWithUUID:uuid options:options];
   return [derivation deriveData:data];
-}
-
-- (NSData *)deriveData:(NSData *)data {
-  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
-  return nil;
 }
 
 - (KPKKeyDerivation *)initWithUUID:(NSUUID *)uuid {
@@ -101,6 +104,11 @@ static NSMutableDictionary *_keyDerivations;
 - (instancetype)init {
   self = [self initWithUUID:self.uuid options:@{}];
   self = nil;
+  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
+  return nil;
+}
+
+- (NSData *)deriveData:(NSData *)data {
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
   return nil;
 }

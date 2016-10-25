@@ -29,7 +29,16 @@
 
 @implementation NSData (HashedData)
 
-- (NSData *)unhashedData {
+- (NSData *)unhashedHmacSha256Data {
+  /*
+  The HMAC is computed over i ‖ n ‖ C (where little-endian encoding is used for the 64-bit sequence number i and the 32-bit block size n; i is implicit and does not need to be stored).
+  The key for the HMAC is different for each block; it is computed as Ki := SHA-512(i ‖ K), where K is a 512-bit key derived from the user's composite master key and the master seed stored in the KDBX header.
+  */
+  NSAssert(NO, @"Not implemented!");
+  return nil;
+}
+
+- (NSData *)unhashedSha256Data {
   NSUInteger blockIndex = 0;
   NSUInteger location = 0;
   uint32_t indexBuffer = 0;
@@ -83,7 +92,13 @@
   }
 }
 
-- (NSData *)hashedDataWithBlockSize:(NSUInteger)blockSize {
+- (NSData *)hashedHmacSha256Data {
+  NSAssert(NO, @"Not Implemented!");
+  return nil;
+}
+
+- (NSData *)hashedSha256Data {
+  NSUInteger blockSize = 1024*1024;
   uint32_t blockCount = ceil((CGFloat)self.length / (CGFloat)blockSize);
   uint32_t location = 0;
   NSMutableData *outputData = [[NSMutableData alloc] initWithCapacity:blockCount * blockSize + 33 ];

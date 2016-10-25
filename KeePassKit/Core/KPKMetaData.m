@@ -64,8 +64,8 @@
     _mutableCustomIcons = [[NSMutableArray alloc] init];
     _mutableUnknownMetaEntryData = [[NSMutableArray alloc] init];
     _customIconCache = [[NSMutableDictionary alloc] init];
-    _keyDerivationUUID = [[KPKAESKeyDerivation uuid] copy];
-    _keyDerivationOptions = [[KPKAESKeyDerivation defaultParameters] copy];
+    _keyDerivationUUID = [[KPKAESKeyDerivation uuid] copy]; // aesUUID is default for new files
+    _keyDerivationOptions = [[KPKAESKeyDerivation defaultOptions] copy]; // aes parameters are used as default
     _cipherUUID = [[KPKAESCipher uuid] copy];
     _compressionAlgorithm = KPKCompressionGzip;
     _protectNotes = NO;

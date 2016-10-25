@@ -22,7 +22,6 @@
 
 #import "KPKLegacyTreeWriter.h"
 #import "KPKLegacyFormat.h"
-#import "KPKKdbHeaderWriter.h"
 
 #import "KPKBinary.h"
 #import "KPKEntry.h"
@@ -42,13 +41,14 @@
 
 #import "NSUUID+KeePassKit.h"
 
-@interface KPKLegacyTreeWriter () {
-  KPKDataStreamWriter *_dataWriter;
-  NSArray *_allEntries;
-  NSArray *_allGroups;
-}
+@interface KPKLegacyTreeWriter ()
+@property (strong) KPKDataStreamWriter *dataWriter;
+@property (copy) NSArray *entries;
+@property (copy) NSArray *groups;
 
-@property (nonatomic, strong, readwrite) KPKLegacyHeaderWriter *headerWriter;
+@property (strong) KPKTree *tree;
+@property NSUInteger metaEntryCount;
+@property (nonatomic, readonly) BOOL writeRootGroup;
 
 @end
 
@@ -58,55 +58,41 @@
   self = [super init];
   if(self) {
     _tree = tree;
-    _headerWriter = [[KPKKdbHeaderWriter alloc] initWithTree:_tree];
+    /*
+     The root Group doesn't get written out
+     
+     Keepass doesn't allow entries in the root group.
+     Only Meta-Entries are inside the root group.
+     If a Tree with entries in the root group is saved,
+     those groups should be placed inside another group,
+     or discarded.
+     */
+    
+    _groups = self.writeRootGroup ? [@[self.tree.root] copy] : [self.tree.allGroups copy];
+    /* collect meta entries after groups are initalized */
+    NSArray *metaEntries = [self _collectMetaEntries];
+    _metaEntryCount = metaEntries.count;
+    _entries = [[self.tree.allEntries arrayByAddingObjectsFromArray:metaEntries] copy];
   }
   return self;
 }
 
-- (NSData *)treeData {
-  /*
-   The root Group doesn't get written out
-   
-   Keepass doesn't allow entries in the root group.
-   Only Meta-Entries are inside the root group.
-   If a Tree with entries in the root group is saved,
-   those groups should be placed inside another group,
-   or discarded.
-   */
-  _allEntries = _tree.allEntries;
-  BOOL writeRootGroup = ((_tree.root.entries).count > 0 && (_tree.root.groups).count == 0);
-  _allGroups = writeRootGroup ? @[_tree.root] : _tree.allGroups;
-  
-  
-  NSArray *metaEntries = [self _collectMetaEntries];
-  self.headerWriter.groupCount = _allGroups.count;
-  self.headerWriter.entryCount =  _allEntries.count + metaEntries.count;
-  
+- (NSData *)treeDataWithHeaderHash:(NSData *)hash {
   /* Having calculated all entries, we can now write the header hash */
-  _dataWriter = [KPKDataStreamWriter streamWriter];
-  [_dataWriter write2Bytes:KPKFieldTypeCommonHash];
-  /*
-   2 byte hash field type
-   4 byte hash field lenght
-   32 byte hash
-   2 byte random filed type
-   4 byte random field length
-   32 byte random data
-   2 byte stop field type
-   4 byte stop field length (0)
-   */
-  [_dataWriter write4Bytes:82];
-  [self _writeHeaderHash];
+  self.dataWriter = [KPKDataStreamWriter streamWriter];
+  [self _writeHeaderHash:hash];
   
-  BOOL success = writeRootGroup ? [self _writeGroups:@[self.tree.root]] : [self _writeGroups:self.tree.root.groups];
+  BOOL success = self.writeRootGroup ? [self _writeGroups:@[self.tree.root]] : [self _writeGroups:self.tree.root.groups];
   
-  for(KPKEntry *entry in _allEntries) {
+  for(KPKEntry *entry in self.entries) {
     success &= [self _writeEntry:entry];
   }
-  for(KPKEntry *metaEntry in metaEntries){
-    success &= [self _writeEntry:metaEntry];
-  }
-  return success ? [_dataWriter data] : nil;
+  return success ? [self.dataWriter data] : nil;
+}
+
+- (BOOL)writeRootGroup {
+  NSAssert(self.tree, @"Tree cannot be nil!");
+  return ((self.tree.root.entries.count > 0) && (self.tree.root.groups.count == 0));
 }
 
 #pragma mark Group/Entry Writing
@@ -168,13 +154,12 @@
 }
 
 - (BOOL)_writeEntry:(KPKEntry *)entry {
-  [self _writeField:KPKFieldTypeEntryUUID data:[entry.uuid uuidData]];
+  [self _writeField:KPKFieldTypeEntryUUID data:entry.uuid.uuidData];
   
   /* Shift all entries in the root group inside the first group */
   uint32_t groupId = [self _groupIdForGroup:entry.parent];
-  if([_tree.root.entries containsObject:entry]) {
-    KPKGroup *firstGroup = _allGroups[0];
-    groupId = [self _groupIdForGroup:firstGroup];
+  if([self.tree.root.entries containsObject:entry]) {
+    groupId = [self _groupIdForGroup:self.groups.firstObject];
   }
   if(groupId == 0) {
     return NO; // Error
@@ -196,9 +181,9 @@
   [self _writeTimeInfo:entry];
   
   /* We only save the last binary if there is more than one */
-  KPKBinary *firstBinary = (entry.binaries).lastObject;
+  KPKBinary *firstBinary = entry.binaries.lastObject;
   [self _writeString:firstBinary.name forField:KPKFieldTypeEntryBinaryDescription];
-  if(firstBinary && (firstBinary.data).length > 0) {
+  if(firstBinary && firstBinary.data.length > 0) {
     [self _writeField:KPKFieldTypeEntryBinaryData data:firstBinary.data];
   }
   else {
@@ -237,7 +222,7 @@
     KPKEntry *metaEntry = [KPKEntry metaEntryWithData:metaBinary.data name:metaBinary.name];
     [metaEntries addObject:metaEntry];
   }
-  KPKGroup *firstGroup = _allGroups[0];
+  KPKGroup *firstGroup = self.groups.firstObject;
   NSAssert(firstGroup != nil, @"Cannot write tree without any groups");
   for(KPKEntry *entry in metaEntries) {
     entry.parent = firstGroup;
@@ -274,14 +259,14 @@
    struct KPXGroupIconInfo groupIcon[groupCount];
    };
    */
-  NSMutableArray *_iconEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,[_allEntries count])];
-  NSMutableArray *_iconGroups = [[NSMutableArray alloc] initWithCapacity:MAX(1,[_allGroups count])];
-  for(KPKNode *node in _allEntries) {
+  NSMutableArray *_iconEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,self.entries.count)];
+  NSMutableArray *_iconGroups = [[NSMutableArray alloc] initWithCapacity:MAX(1,self.groups.count)];
+  for(KPKNode *node in self.entries) {
     if(node.iconUUID) {
       [_iconEntries addObject:node];
     }
   }
-  for(KPKNode *node in _allGroups) {
+  for(KPKNode *node in self.groups) {
     if(node.iconUUID) {
       [_iconGroups addObject:node];
     }
@@ -370,8 +355,8 @@
    };
    */
   KPKDataStreamWriter *writer = [KPKDataStreamWriter streamWriter];
-  [writer write4Bytes:(uint32_t)_allGroups.count];
-  for(KPKGroup *group in _allGroups) {
+  [writer write4Bytes:(uint32_t)self.groups.count];
+  for(KPKGroup *group in self.groups) {
     uint32_t groupId = [self _groupIdForGroup:group];
     [writer write4Bytes:(uint32_t)groupId];
     [writer writeByte:group.isExpanded];
@@ -381,9 +366,21 @@
 
 #pragma mark Header
 
-- (void)_writeHeaderHash {
+- (void)_writeHeaderHash:(NSData *)hash {
+  [self.dataWriter write2Bytes:KPKFieldTypeCommonHash];
+  /*
+   2 byte hash field type
+   4 byte hash field lenght
+   32 byte hash
+   2 byte random filed type
+   4 byte random field length
+   32 byte random data
+   2 byte stop field type
+   4 byte stop field length (0)
+   */
+  [self.dataWriter write4Bytes:82];
   /* Compute a sha256 hash of the header up to but not including the contentsHash */
-  [self _writeField:KPKHeaderHashFieldTypeHeaderHash data:[_headerWriter headerHash]];
+  [self _writeField:KPKHeaderHashFieldTypeHeaderHash data:hash];
   
   /* Generate some random data to prevent guessing attacks that use the content hash */
   [self _writeField:KPKHeaderHashFieldTypeRandomData data:[NSData dataWithRandomBytes:32]];
@@ -427,10 +424,10 @@
 }
 
 - (void)_writeField:(KPKLegacyFieldType)type bytes:(const void *)bytes length:(NSUInteger)length {
-  [_dataWriter write2Bytes:(uint16_t)type];
-  [_dataWriter write4Bytes:(uint32_t)length];
+  [self.dataWriter write2Bytes:(uint16_t)type];
+  [self.dataWriter write4Bytes:(uint32_t)length];
   if(length > 0) {
-    [_dataWriter writeBytes:bytes length:length];
+    [self.dataWriter writeBytes:bytes length:length];
   }
 }
 
@@ -439,7 +436,7 @@
   if(nil == group) {
     return 0;
   }
-  NSUInteger groupId = [_allGroups indexOfObject:group];
+  NSUInteger groupId = [self.groups indexOfObject:group];
   if(groupId == NSNotFound) {
     return 0;
   }

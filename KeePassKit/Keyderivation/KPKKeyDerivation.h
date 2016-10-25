@@ -23,15 +23,22 @@ FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataOption; // NSData
 FOUNDATION_EXPORT NSString *const KPKAESSeedOption; // NSData 32 bytes
 FOUNDATION_EXPORT NSString *const KPKAESRoundsOption; // KPKNumber uint64_t
 
+/**
+ Common interface to create and work with key derivations.
+ */
 @interface KPKKeyDerivation : NSObject
 
 /**
- Returns a Variant dictionary with the default parameters
+ Returns a VariantDictionary with all required options initialized with default values.
+ The seed is also included and randomized.
 
  @return NSDictionary(Variant) with default parameters
  */
 + (NSDictionary *)defaultOptions;
 
+/**
+ @return the UUID identifiying the key derivation.
+ */
 + (NSUUID *)uuid;
 + (void)parametersForDelay:(NSUInteger)seconds completionHandler:(void(^)(NSDictionary *options))completionHandler;
 
@@ -40,10 +47,18 @@ FOUNDATION_EXPORT NSString *const KPKAESRoundsOption; // KPKNumber uint64_t
 
 + (NSData * _Nullable)deriveData:(NSData *)data withUUID:(NSUUID *)uuid options:(NSDictionary *)options;
 
+
+/**
+ @return an NSArray containing default initalizied instances of all known key derivations
+ */
++ (NSArray<KPKKeyDerivation *> *)availableKeyDerivations;
+
 - (KPKKeyDerivation *)initWithUUID:(NSUUID *)uuid;
 - (KPKKeyDerivation *)initWithUUID:(NSUUID *)uuid options:(NSDictionary *)options NS_DESIGNATED_INITIALIZER;
 
 - (NSData * _Nullable)deriveData:(NSData *)data;
+
+- (void)randomize;
 
 @property (readonly, copy, nonatomic) NSUUID *uuid;
 @property (readonly, copy) NSDictionary *options;

@@ -22,15 +22,11 @@
 
 #import "KPKTree+Serializing.h"
 
-#import "KPKXmlTreeCryptor.h"
-#import "KPKLegacyTreeCryptor.h"
-#import "KPKFormat.h"
-#import "KPKMetaData.h"
+#import "KPKTreeArchiver.h"
+#import "KPKTreeUnarchiver.h"
 #import "KPKXmlTreeWriter.h"
 #import "KPKXmlTreeReader.h"
 #import "DDXMLDocument.h"
-#import "KPKCompositeKey.h"
-#import "KPKErrors.h"
 
 @implementation KPKTree (Serializing)
 
@@ -53,22 +49,13 @@
   if(!data) {
     return nil;
   }
-  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:data headerReader:nil];
+  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:data];
   self = [reader tree:error];
   return self;
 }
 
 - (NSData *)encryptWithPassword:(KPKCompositeKey *)password forVersion:(KPKDatabaseFormat)version error:(NSError **)error {
-  switch(version) {
-    case KPKDatabaseFormatKdb:
-      return [KPKLegacyTreeCryptor encryptTree:self password:password error:error];
-    case KPKDatabaseFormatKdbx:
-      return [KPKXmlTreeCryptor encryptTree:self password:password error:error];
-    default:
-      KPKCreateError(error, KPKErrorUnknownFileFormat, @"ERROR_UNKNOWN_FILE_FORMAT", "");
-      return nil;
-  }
-  return nil;
+  return [KPKTreeArchiver archiveTree:self withKey:password error:error];
 }
 
 - (NSData *)xmlData {
@@ -77,15 +64,6 @@
 }
 
 - (KPKTree *)_decryptorForData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError **)error {
-  KPKFileInfo info = [[KPKFormat sharedFormat] fileInfoForData:data];
-  
-  if(info.type == KPKDatabaseFormatKdb) {
-    return [KPKLegacyTreeCryptor decryptTreeData:data withPassword:password error:error];
-  }
-  if(info.type == KPKDatabaseFormatKdbx) {
-    return [KPKXmlTreeCryptor decryptTreeData:data withPassword:password error:error];
-  }
-  KPKCreateError(error, KPKErrorUnknownFileFormat, @"ERROR_UNKNOWN_FILE_FORMAT", "");
-  return nil;
+  return [KPKTreeUnarchiver unarchiveTreeData:(NSData *)data withKey:password error:error];
 }
 @end

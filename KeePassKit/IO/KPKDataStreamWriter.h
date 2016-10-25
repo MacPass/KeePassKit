@@ -27,6 +27,7 @@
 + (instancetype)streamWriterWithData:(NSMutableData *)data;
 + (instancetype)streamWriter;
 
+- (instancetype)init;
 - (instancetype)initWithData:(NSMutableData *)data;
 
 - (void)writeData:(NSData *)data;

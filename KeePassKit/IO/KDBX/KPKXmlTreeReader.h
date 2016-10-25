@@ -1,8 +1,8 @@
 //
-//  KPKXmlDataCryptor.h
+//  KPXmlTreeReader.h
 //  KeePassKit
 //
-//  Created by Michael Starke on 21.07.13.
+//  Created by Michael Starke on 20.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -21,12 +21,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "KPKTreeReading.h"
+#import "KPKXmlFormat.h"
 
-#import "KPKTreeCrypting.h"
+@class KPKTree;
+@class KPKKdbxFileHeader;
 
-@interface KPKXmlTreeCryptor : NSObject <KPKTreeCrypting>
+@interface KPKXmlTreeReader : NSObject
 
-+ (KPKTree *)decryptTreeData:(NSData *)data withPassword:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error;
-+ (NSData *)encryptTree:(KPKTree *)tree password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error;
+@property (readonly, copy) NSData *headerHash;
+
+- (instancetype)initWithData:(NSData *)data randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key compression:(KPKCompression)compression NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithData:(NSData *)data;
+
+- (KPKTree *)tree:(NSError *__autoreleasing *)error;
 
 @end

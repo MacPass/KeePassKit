@@ -48,6 +48,9 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
 
 
 + (instancetype)dictionaryWithVariantDictionaryData:(NSData *)data {
+  if([self isSubclassOfClass:[NSMutableDictionary class]]) {
+    return [[NSMutableDictionary alloc] initWithVariantDictionaryData:data];
+  }
   return [[NSDictionary alloc] initWithVariantDictionaryData:data];
 }
 
@@ -149,7 +152,14 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
         break;
     }
   }
-  self = [self initWithDictionary:dictionary];
+  /* If we get called on NSMutableDictionary vent the NSMutableDictionary instead of a immutable one */
+  if([self.class isSubclassOfClass:[NSMutableDictionary class]]) {
+    self = dictionary;
+  }
+  else {
+    self = [self initWithDictionary:dictionary];
+  }
+  
   return self;
 }
 

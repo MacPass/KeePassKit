@@ -7,64 +7,54 @@
 //
 
 #import "KPKTreeUnarchiver.h"
-#import "KPKFileHeader.h"
+#import "KPKTreeUnarchiver_Private.h"
+
+#import "KPKKdbTreeUnarchiver.h"
+#import "KPKKdbxTreeUnarchiver.h"
+
+#import "KPKFormat.h"
+#import "KPKErrors.h"
 
 @implementation KPKTreeUnarchiver
 
 + (KPKTree *)unarchiveTreeData:(NSData *)data withKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
-  KPKFileHeader *header = [[KPKFileHeader alloc] initWithData:data error:error];
-  if(!header) {
-    return nil;
+  KPKTreeUnarchiver *unarchiver = [[KPKTreeUnarchiver alloc] initWithData:data key:key error:error];
+  return [unarchiver tree:error];
+}
+
+- (instancetype)initWithData:(NSData *)data key:(KPKCompositeKey *)key error:(NSError * _Nullable __autoreleasing *)error {
+  KPKFileInfo fileInfo = [[KPKFormat sharedFormat] fileInfoForData:data];
+  switch (fileInfo.type) {
+    case KPKDatabaseFormatKdb:
+      self = [[KPKKdbTreeUnarchiver alloc] _initWithData:data version:fileInfo.version key:key error:error];
+      break;
+     
+    case KPKDatabaseFormatKdbx:
+      self = [[KPKKdbxTreeUnarchiver alloc] _initWithData:data version:fileInfo.version key:key error:error];
+      break;
+      
+    case KPKDatabaseFormatUnknown:
+    default:
+      self = nil;
+      KPKCreateError(error, KPKErrorUnknownFileFormat);
+      break;
   }
-  
-  /*
-   Create the Key
-   Supply the Data found in the header
-   */
-  NSData *keyData = [password finalDataForVersion:KPKDatabaseFormatKdbx
-                                       masterSeed:headerReader.masterSeed
-                                    transformSeed:headerReader.transformSeed
-                                           rounds:headerReader.rounds];
-  
-  KPKCipher *cipher = [KPKCipher cipherWithUUID:headerReader.cipherUUID];
-  if(!cipher) {
-    KPKCreateError(error, KPKErrorUnsupportedCipher, @"ERROR_UNSUPPORTED_CHIPHER", "");
+  return self;
+}
+
+- (instancetype)_initWithData:(NSData *)data version:(NSUInteger)version key:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
+  self = [super init];
+  if(self) {
+    _data = [data copy];
+    _key = key;
+    _version = version;
   }
-  NSData *decryptedData = [cipher decryptData:headerReader.dataWithoutHeader
-                                      withKey:keyData
-                         initializationVector:headerReader.encryptionIV
-                                        error:error];
-  
-  if(!decryptedData) {
-    return nil;
-  }
-  
-  /*
-   Compare the first Streambytes with the ones stores in the header
-   */
-  NSData *startBytes = [decryptedData subdataWithRange:NSMakeRange(0, 32)];
-  if(![headerReader.streamStartBytes isEqualToData:startBytes]) {
-    KPKCreateError(error, KPKErrorPasswordAndOrKeyfileWrong, @"ERROR_PASSWORD_OR_KEYFILE_WRONG", "");
-    return nil;
-  }
-  /*
-   The Stream is Hashed, read the data and verify it.
-   If the Stream was Gzipped, uncrompress it.
-   */
-  
-  /* TODO decide what hash to use based on file version */
-  
-  NSData *unhashedData = [[decryptedData subdataWithRange:NSMakeRange(32, decryptedData.length - 32)] unhashedData];
-  if(headerReader.compressionAlgorithm == KPKCompressionGzip) {
-    unhashedData = [unhashedData gzipInflate];
-  }
-  
-  if(!unhashedData) {
-    KPKCreateError(error, KPKErrorIntegrityCheckFailed, @"ERROR_INTEGRITY_CHECK_FAILED", "");
-    return nil;
-  }
-  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:unhashedData headerReader:headerReader];
-  return [reader tree:error];
+  return self;
+}
+
+- (KPKTree *)tree:(NSError * _Nullable __autoreleasing *)error {
+  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
+  return nil;
 }
 
 @end

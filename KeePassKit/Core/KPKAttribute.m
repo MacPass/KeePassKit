@@ -117,7 +117,7 @@
 
 - (BOOL)validateKey:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError {
   if(![*ioValue isKindOfClass:[NSString class]] ) {
-    KPKCreateError(outError, KPKErrorAttributeKeyValidationFailed, @"ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED", "");
+    KPKCreateError(outError, KPKErrorAttributeKeyValidationFailed);
     return NO; // No string, so we cannot process it further
   }
   /* We need to make the key valid, as they are never protected */

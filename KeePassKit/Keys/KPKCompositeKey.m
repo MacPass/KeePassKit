@@ -63,51 +63,34 @@
   _compositeDataVersion2 = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
 }
 
-- (NSData *)finalDataForVersion:(KPKDatabaseFormat)version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger)rounds {
-  // Generate the master key from the credentials
-  NSDictionary *options = @{  KPKAESSeedOption: transformSeed, KPKAESRoundsOption: [KPKNumber numberWithUnsignedInteger64:rounds] };
-  
+- (NSData *)transformForFormat:(KPKDatabaseFormat)type seed:(NSData *)seed keyDerivation:(KPKKeyDerivation *)keyDerivation error:(NSError *__autoreleasing *)error {
   NSData *derivedData;
-  KPKKeyDerivation *aesKeyDerivation = [[KPKKeyDerivation alloc] initWithUUID:[KPKAESKeyDerivation uuid] options:options];
-  // TODO supply key derivation!
-  if(version == KPKDatabaseFormatKdb) {
-    derivedData = [aesKeyDerivation deriveData:_compositeDataVersion1 options:options];
+  switch(type) {
+    case KPKDatabaseFormatKdb:
+    derivedData = [keyDerivation deriveData:_compositeDataVersion1];
+      break;
+    case KPKDatabaseFormatKdbx:
+      derivedData = [keyDerivation deriveData:_compositeDataVersion2];
+      break;
+    case KPKDatabaseFormatUnknown:
+    default:
+      KPKCreateError(error, KPKErrorUnknownFileFormat);
+      return nil;
   }
-  else if(version == KPKDatabaseFormatKdbx) {
-    derivedData = [aesKeyDerivation deriveData:_compositeDataVersion2 options:options];
+  
+  if(!derivedData) {
+    KPKCreateError(error, KPKErrorKeyDerivationFailed);
   }
-  else {
-    derivedData = nil;
-  }
+  
   
   uint8_t hashedKey[CC_SHA256_DIGEST_LENGTH];
   CC_SHA256_CTX sha256ctx;
   CC_SHA256_Init(&sha256ctx);
-  CC_SHA256_Update(&sha256ctx, masterSeed.bytes, (CC_LONG)masterSeed.length);
+  CC_SHA256_Update(&sha256ctx, seed.bytes, (CC_LONG)seed.length);
   CC_SHA256_Update(&sha256ctx, derivedData.bytes, (CC_LONG)derivedData.length);
   CC_SHA256_Final(hashedKey, &sha256ctx);
   
-  return [NSData dataWithBytes:hashedKey length:CC_SHA256_DIGEST_LENGTH];
-}
-
-
-- (NSData *)transformForType:(KPKDatabaseFormat)type withKeyDerivationUUID:(NSUUID *)uuid options:(NSDictionary *)options error:(NSError *__autoreleasing*)error {
-  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithUUID:uuid options:options];
-  switch(type) {
-    case KPKDatabaseFormatKdb:
-      return [keyDerivation deriveData:_compositeDataVersion2];
-  
-      break;
-    case KPKDatabaseFormatKdbx: {
-  
-      break;
-    }
-    default:
-      return nil;
-      break;
-  }
-  return nil;
-}
+  return [NSData dataWithBytes:hashedKey length:CC_SHA256_DIGEST_LENGTH];}
 
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseFormat)version {
   NSData *data;

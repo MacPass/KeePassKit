@@ -39,7 +39,7 @@ typedef struct {
   
 	uint8_t contentsHash[32];
   
-	uint8_t masterSeed2[32];
+	uint8_t transformationSeed[32];
 	uint32_t keyEncRounds;
 } KPKLegacyHeader;
 

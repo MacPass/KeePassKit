@@ -30,12 +30,16 @@
 @implementation KPKDataStreamWriter
 
 + (instancetype)streamWriter {
-  NSMutableData *mutableData = [[NSMutableData alloc] init];
-  return [self streamWriterWithData:mutableData];
+  return [[KPKDataStreamWriter alloc] init];
 }
 
 + (instancetype)streamWriterWithData:(NSMutableData *)data {
   return [[KPKDataStreamWriter alloc] initWithData:data];
+}
+
+- (instancetype)init {
+  self = [self initWithData:[[NSMutableData alloc] init]];
+  return self;
 }
 
 - (instancetype)initWithData:(NSMutableData *)data {

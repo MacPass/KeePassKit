@@ -126,27 +126,27 @@
     NSScanner *versionScanner = [[NSScanner alloc] initWithString:[versionElement stringValue]];
     double version = 1;
     if(![versionScanner scanDouble:&version] || version > 1) {
-      KPKCreateError(error, KPKErrorXMLKeyUnsupportedVersion, @"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION", "");
+      KPKCreateError(error, KPKErrorKdbxKeyUnsupportedVersion);
       return nil;
     }
   }
   
   DDXMLElement *keyElement = [rootElement elementForName:kKPKXmlKey];
   if (keyElement == nil) {
-    KPKCreateError(error, KPKErrorXMLKeyKeyElementMissing, @"ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT", "");
+    KPKCreateError(error, KPKErrorKdbxKeyKeyElementMissing);
     return nil;
   }
   
   DDXMLElement *dataElement = [keyElement elementForName:kKPKXmlData];
   if (dataElement == nil) {
-    KPKCreateError(error, KPKErrorXMLKeyDataElementMissing, @"ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT", "");
+    KPKCreateError(error, KPKErrorKdbxKeyDataElementMissing);
     return nil;
     
   }
   
   NSString *dataString = [dataElement stringValue];
   if (dataString == nil) {
-    KPKCreateError(error, KPKErrorXMLKeyDataParsingError, @"ERROR_XML_KEYFILE_DATA_PARSING_ERROR", "");
+    KPKCreateError(error, KPKErrorKdbxKeyDataParsingError);
     return nil;
   }
   return [[NSData alloc] initWithBase64Encoding:dataString];

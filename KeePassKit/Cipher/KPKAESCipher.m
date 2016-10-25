@@ -43,7 +43,7 @@
                                                     options:kCCOptionPKCS7Padding
                                                       error:&cryptoError];
   if(cryptoError != kCCSuccess) {
-    KPKCreateError(error, KPKErrorDecryptionFailed, @"ERROR_DECRYPTION_FAILED", "");
+    KPKCreateError(error, KPKErrorAESDecryptionFailed);
     return nil;
   }
   return decryptedData;

@@ -24,7 +24,7 @@
            };
 }
 
-+ (NSDictionary *)defaultParameters {
++ (NSDictionary *)defaultOptions {
   return [self optionsWithSeed:[NSData dataWithRandomBytes:32] rounds:50000];
 }
 
@@ -77,7 +77,7 @@
 
 - (instancetype)init {
   /* initialize a default parameterized key derivation */
-  self = [self _initWithOptions:[self.class defaultParameters]];
+  self = [self _initWithOptions:[self.class defaultOptions]];
   return self;
 }
 
@@ -86,17 +86,14 @@
   NSAssert(options[KPKAESSeedOption], @"Seed option is missing!");
   self = [super _init];
   if(self) {
-    self.options = options;
+    self.seed = options[KPKAESSeedOption];
+    self.rounds = [((KPKNumber *)options[KPKAESRoundsOption]) unsignedInteger64Value];
   }
   return self;
 }
 
-- (NSData *)seed {
-  return self.options[KPKAESSeedOption];
-}
-
-- (uint64_t)rounds {
-  return [self.options[KPKAESRoundsOption] unsignedInteger64Value];
+- (void)randomize {
+  self.seed = [NSData dataWithRandomBytes:32];
 }
 
 - (NSData *)deriveData:(NSData *)data {

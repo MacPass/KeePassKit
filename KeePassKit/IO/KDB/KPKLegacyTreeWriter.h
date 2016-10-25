@@ -1,8 +1,8 @@
 //
-//  KPKXmlHeaderWriter.h
+//  KPKBinaryTreeWriter.h
 //  KeePassKit
 //
-//  Created by Michael Starke on 31.07.13.
+//  Created by Michael Starke on 20.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -21,16 +21,20 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKHeaderWriting.h"
 
-@interface KPKXmlHeaderWriter : NSObject <KPKHeaderWriting>
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, readonly, strong) NSData *headerHash;
-@property (nonatomic, readonly, strong) NSData *masterSeed;
-@property (nonatomic, readonly, strong) NSData *transformSeed;
-@property (nonatomic, readonly, strong) NSData *encryptionIv;
-@property (nonatomic, readonly, assign) uint32_t randomStreamID;
-@property (nonatomic, readonly, strong) NSData *streamStartBytes;
-@property (nonatomic, readonly, strong) NSData *protectedStreamKey;
+@class KPKTree;
+
+@interface KPKLegacyTreeWriter : NSObject
+
+@property (strong, readonly, nullable) KPKTree *tree;
+@property (readonly) NSUInteger metaEntryCount;
+
+- (instancetype)initWithTree:(KPKTree *)tree;
+
+- (NSData *)treeDataWithHeaderHash:(NSData *)hash;
 
 @end
+
+NS_ASSUME_NONNULL_END

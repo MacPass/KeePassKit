@@ -37,7 +37,7 @@
   KPKTree *tree = [reader tree:&error];
   XCTAssertNil(tree, @"No Tree from empty data");
   XCTAssertNotNil(error, @"Error Object should be provided");
-  XCTAssertTrue([error code] == KPKErrorXMLKeePassFileElementMissing, @"Error Code should be KeePassFile root missing");
+  XCTAssertTrue([error code] == KPKErrorKdbxKeePassFileElementMissing, @"Error Code should be KeePassFile root missing");
 }
 
 - (void)testNoRoodXmlFil {
@@ -47,7 +47,7 @@
   KPKTree *tree = [reader tree:&error];
   XCTAssertNil(tree, @"No Tree from empty data");
   XCTAssertNotNil(error, @"Error Object should be provided");
-  XCTAssertTrue([error code] == KPKErrorXMLMetaElementMissing, @"Error Code should be KeePassFile root missing");
+  XCTAssertTrue([error code] == KPKErrorKdbxMetaElementMissing, @"Error Code should be KeePassFile root missing");
 }
 
 @end

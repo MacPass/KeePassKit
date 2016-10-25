@@ -1,8 +1,8 @@
 //
-//  KPKBinaryCipherInformation.h
+//  KPKXmlTreeWriter.h
 //  KeePassKit
 //
-//  Created by Michael Starke on 21.07.13.
+//  Created by Michael Starke on 16.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -21,26 +21,24 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKHeaderReading.h"
-#import "KPKHeaderWriting.h"
 
-@interface KPKKdbHeaderReader : NSObject <KPKHeaderReading>
+#import "KPKXmlFormat.h"
 
-/**
- Initalizes a new Chipher information with random seeds
- @returns the initalized instance
- */
-- (instancetype)init;
-/**
- Initalizes a new Chipher information with the information found in the header
- @param data The file input to read (raw file data)
- @param error Occuring errors. Suppy NULL if you're not interested in any errors
- @returns the initalized instance
- */
-- (instancetype)initWithData:(NSData *)data error:(NSError **)error;
-/**
- @returns the data with the header data removed.
- */
-@property (nonatomic, readonly, copy) NSData *dataWithoutHeader;
+NS_ASSUME_NONNULL_BEGIN
+
+@class KPKTree;
+@class DDXMLDocument;
+@class KPKXmlHeaderWriter;
+
+@interface KPKXmlTreeWriter : NSObject
+
+@property (strong, readonly) KPKTree *tree;
+
+- (instancetype)initWithTree:(KPKTree *)tree randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *_Nullable)key headerHash:(NSData *_Nullable)hash;
+- (instancetype)initWithTree:(KPKTree *)tree;
+
+@property (nonatomic, readonly, copy) DDXMLDocument *xmlDocument;
 
 @end
+
+NS_ASSUME_NONNULL_END

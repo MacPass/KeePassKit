@@ -54,11 +54,8 @@
  The Final key is then created before a write or read gets performend
  */
 - (instancetype)initWithPassword:(NSString *)password key:(NSURL *)url;
-/*
- @return the final Data to use to en/decrypt the database
- */
-- (NSData *)finalDataForVersion:(KPKDatabaseFormat )version masterSeed:(NSData *)masterSeed transformSeed:(NSData *)transformSeed rounds:(NSUInteger )rounds;
-- (NSData *)transformForType:(KPKDatabaseFormat)type withKeyDerivationUUID:(NSUUID *)uuid options:(NSDictionary *)options error:(NSError *__autoreleasing*)error;
+
+- (NSData *)transformForFormat:(KPKDatabaseFormat)type seed:(NSData *)seed keyDerivation:(KPKKeyDerivation *)keyDerivation error:(NSError *__autoreleasing*)error;
 /**
  *  Updates the password and keyfile for the composite key
  *  @param password the new password, can be nil

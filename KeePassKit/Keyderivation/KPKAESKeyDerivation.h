@@ -12,8 +12,8 @@
 
 @interface KPKAESKeyDerivation : KPKKeyDerivation
 
-@property (nonatomic, readonly) uint64_t rounds;
-@property (nonatomic, readonly) NSData *seed;
+@property uint64_t rounds;
+@property (copy) NSData *seed;
 
 + (NSDictionary *)optionsWithSeed:(NSData *)seed rounds:(NSUInteger)rounds;
 

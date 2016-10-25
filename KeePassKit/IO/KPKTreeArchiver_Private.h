@@ -13,5 +13,11 @@
 @interface KPKTreeArchiver ()
 
 @property (strong) KPKTree *tree;
+@property (strong) KPKCompositeKey *key;
+
+@property (nonatomic, copy) NSData *masterSeed;
+@property (nonatomic, copy) NSData *encryptionIV;
+
+- (instancetype)_initWithTree:(KPKTree *)tree key:(KPKCompositeKey *)key NS_DESIGNATED_INITIALIZER;
 
 @end

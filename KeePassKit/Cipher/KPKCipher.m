@@ -31,14 +31,6 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
   return [[self alloc] initWithUUID:uuid options:options];
 }
 
-+ (KPKCipher *)aesCipher {
-  return [[KPKAESCipher alloc] init];
-}
-
-+ (KPKCipher *)chaCha20Cipher {
-  return [[KPKChaCha20Cipher alloc] init];
-}
-
 + (NSUInteger)IVLength {
   return 16;
 }

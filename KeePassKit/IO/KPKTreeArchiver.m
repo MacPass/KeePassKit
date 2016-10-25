@@ -8,103 +8,60 @@
 
 #import "KPKTreeArchiver.h"
 #import "KPKTreeArchiver_Private.h"
-#import "KPKXmlTreeWriter.h"
-#import "KPKXmlHeaderWriter.h"
-#import "KPKLegacyTreeWriter.h"
-#import "KPKFormat.h"
+
+#import "KPKKdbTreeArchiver.h"
+#import "KPKKdbxTreeArchiver.h"
 
 #import "KPKTree.h"
-#import "KPKMetaData.h"
-
-#import "KPKCompositeKey.h"
-#import "KPKCipher.h"
-#import "KPKKeyDerivation.h"
-
 #import "KPKErrors.h"
-
-#import "NSData+Gzip.h"
-#import "NSData+CommonCrypto.h"
-
-#import "DDXMLDocument.h"
-
-#import <CommonCrypto/CommonCrypto.h>
 
 @implementation KPKTreeArchiver
 
-+ (NSData *)archiveTree:(KPKTree *)tree withKey:(KPKCompositeKey *)key forFileInfo:(KPKFileInfo)fileInfo error:(NSError *__autoreleasing *)error {
-  KPKTreeArchiver *archiver = [[KPKTreeArchiver alloc] initWithTree:tree];
-  return [archiver archiveWithKey:key forFileInfo:fileInfo error:error];
+@dynamic masterSeed;
+@dynamic encryptionIV;
+
++ (NSData *)archiveTree:(KPKTree *)tree withKey:(KPKCompositeKey *)key format:(KPKDatabaseFormat)format error:(NSError *__autoreleasing *)error {
+  KPKTreeArchiver *archiver = [[KPKTreeArchiver alloc] initWithTree:tree key:key format:format];
+  if(!archiver) {
+      KPKCreateError(error, KPKErrorUnknownFileFormat);
+  }
+  return [archiver archiveTree:error];
 }
 
 + (NSData *)archiveTree:(KPKTree *)tree withKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
-  KPKTreeArchiver *archiver = [[KPKTreeArchiver alloc] initWithTree:tree];
-  return [archiver archiveWithKey:key error:error];
-  
+  KPKTreeArchiver *archiver = [[KPKTreeArchiver alloc] initWithTree:tree key:key];
+  return [archiver archiveTree:error];
 }
 
-- (instancetype)init {
-  self = [self initWithTree:nil];
+- (instancetype)initWithTree:(KPKTree *)tree key:(KPKCompositeKey *)key {
+  self = [self initWithTree:tree key:key format:tree.minimumType];
   return self;
 }
 
-- (instancetype)initWithTree:(KPKTree *)tree {
+- (instancetype)initWithTree:(KPKTree *)tree key:(KPKCompositeKey *)key format:(KPKDatabaseFormat)format {
+  switch(format) {
+    case KPKDatabaseFormatKdb:
+      self = [[KPKKdbTreeArchiver alloc] _initWithTree:tree key:key];
+    case KPKDatabaseFormatKdbx:
+      self = [[KPKKdbxTreeArchiver alloc] _initWithTree:tree key:key];
+    default:
+      self = nil;
+  }
+  return self;
+}
+
+- (instancetype)_initWithTree:(KPKTree *)tree key:(KPKCompositeKey *)key {
   self = [super init];
   if(self) {
     _tree = tree;
+    _key = key;
   }
   return self;
 }
 
-- (NSData *)archiveWithKey:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
-  KPKFileInfo fileInfo;
-  fileInfo.type = self.tree.minimumType;
-  fileInfo.version =  self.tree.minimumVersion;
-  return [self archiveWithKey:key forFileInfo:fileInfo error:error];
-}
-
-- (NSData *)archiveWithKey:(KPKCompositeKey *)key forFileInfo:(KPKFileInfo)fileInfo error:(NSError *__autoreleasing *)error {
-  NSMutableData *data = [[NSMutableData alloc] init];
-  
-  if(fileInfo.type == KPKDatabaseFormatKdbx) {
-    KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self.tree];
-    NSData *xmlData = [[treeWriter protectedXmlDocument] XMLDataWithOptions:DDXMLNodeCompactEmptyElement];
-    
-    KPKKeyDerivation *keyDerivation = nil;
-    KPKCipher *cipher = [KPKCipher cipherWithUUID:self.tree.metaData.cipherUUID];
-    if(!cipher) {
-      KPKCreateError(error, KPKErrorUnsupportedCipher, @"Unkown Cipher", "");
-      return nil;
-    }
-    //NSDictionary *cipherOptions =
-    
-    NSData *keyData = [key transformForType:fileInfo.type withKeyDerivationUUID:self.tree.metaData.keyDerivationUUID options:self.tree.metaData.keyDerivationOptions error:error];
-    
-//    NSData *keyData = [key finalDataForVersion:fileInfo.type
-//                                     masterSeed:treeWriter.headerWriter.masterSeed
-//                                  transformSeed:treeWriter.headerWriter.transformSeed
-//                                         rounds:treeWriter.tree.metaData.rounds];
-    
-    
-    NSMutableData *contentData = [[NSMutableData alloc] initWithData:treeWriter.headerWriter.streamStartBytes];
-    if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
-      xmlData = [xmlData gzipDeflate];
-    }
-    NSData *hashedData = [xmlData hashedDataWithBlockSize:1024*1024];
-    [contentData appendData:hashedData];
-    NSData *encryptedData = [contentData dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
-                                                                 key:keyData
-                                                initializationVector:treeWriter.headerWriter.encryptionIv
-                                                             options:kCCOptionPKCS7Padding
-                                                               error:NULL];
-    [treeWriter.headerWriter writeHeaderData:data];
-    [data appendData:encryptedData];
-    return data;
-  }
-  else if(fileInfo.type == KPKDatabaseFormatKdb) {
-    
-  }
+- (NSData *)archiveTree:(NSError *__autoreleasing *)error {
+  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
   return nil;
 }
-
 
 @end

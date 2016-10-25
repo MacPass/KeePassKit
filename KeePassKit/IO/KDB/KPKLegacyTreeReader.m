@@ -26,7 +26,6 @@
 #import "KPKDataStreamReader.h"
 #import "KPKLegacyTreeReader.h"
 #import "KPKLegacyFormat.h"
-#import "KPKKdbHeaderReader.h"
 
 #import "KPKBinary.h"
 #import "KPKBinary_Private.h"
@@ -47,7 +46,6 @@
 @interface KPKLegacyTreeReader () {
   NSData *_data;
   KPKDataStreamReader *_dataStreamer;
-  KPKKdbHeaderReader *_headerReader;
   NSMutableArray *_groupLevels;
   NSMutableArray *_groups;
   NSMutableArray *_entries;
@@ -55,21 +53,25 @@
   NSMutableDictionary *_iconUUIDMap;
 }
 
+@property (copy) NSData *headerHash;
+@property NSUInteger numberOfGroups;
+@property NSUInteger numberOfEntries;
+
 @end
 
 @implementation KPKLegacyTreeReader
 
-- (instancetype)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader {
-  NSAssert([headerReader isKindOfClass:[KPKKdbHeaderReader class]], @"Incompatible header reader type supplied");
+- (instancetype)initWithData:(NSData *)data numberOfEntries:(NSUInteger)entries numberOfGroups:(NSUInteger)groups {
   self = [super init];
   if(self) {
     _data = data;
+    _numberOfGroups = groups;
+    _numberOfEntries = entries;
     _dataStreamer = [[KPKDataStreamReader alloc] initWithData:_data];
-    _headerReader = (KPKKdbHeaderReader *)headerReader;
-    _groupLevels = [[NSMutableArray alloc] initWithCapacity:MAX(1,_headerReader.numberOfGroups)];
-    _groups = [[NSMutableArray alloc] initWithCapacity:MAX(1,_headerReader.numberOfGroups)];
-    _groupIdToUUID = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,_headerReader.numberOfGroups)];
-    _entries = [[NSMutableArray alloc] initWithCapacity:MAX(1,_headerReader.numberOfEntries)];
+    _groupLevels = [[NSMutableArray alloc] initWithCapacity:MAX(1,self.numberOfGroups)];
+    _groups = [[NSMutableArray alloc] initWithCapacity:MAX(1,self.numberOfGroups)];
+    _groupIdToUUID = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,self.numberOfGroups)];
+    _entries = [[NSMutableArray alloc] initWithCapacity:MAX(1,self.numberOfEntries)];
     
   }
   return self;
@@ -94,8 +96,6 @@
 
 - (KPKTree *)_buildTree:(NSError **)error {
   KPKTree *tree = [[KPKTree alloc] init];
-  tree.metaData.keyDerivationUUID = [KPKAESKeyDerivation uuid];
-  tree.metaData.keyDerivationOptions = @{ KPKAESRoundsOption: [[KPKNumber alloc] initWithUnsignedInteger64:_headerReader.rounds] };
   /* Read the meta entries after all groups
    and entries are parsed to be able to search for them
    since KeePassX Stores custom icons for entries and groups
@@ -131,7 +131,7 @@
       parentLevel = [_groupLevels[parentIndex] integerValue];
       if (parentLevel < groupLevel) {
         if (groupLevel - parentLevel != 1) {
-          KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
+          KPKCreateError(error, KPKErrorKdbCorruptTree);
           return nil;
         }
         else {
@@ -140,7 +140,7 @@
       }
       if(parentIndex == 0) {
         /*
-         KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_KDB_CORRUPT_TREE", "");
+         KPKCreateError(error, KPKErrorKdbCorruptTree);
          return nil;
          */
         foundLostGroup = YES;
@@ -173,7 +173,7 @@
   uint8_t dateBuffer[5];
   
   // Parse the groups
-  for (NSUInteger groupIndex = 0; groupIndex < _headerReader.numberOfGroups; groupIndex++) {
+  for (NSUInteger groupIndex = 0; groupIndex < self.numberOfGroups; groupIndex++) {
     /* create a new group with a random UUID */
     KPKGroup *group = [[KPKGroup alloc] init];
     group.updateTiming = NO;
@@ -208,7 +208,7 @@
           
         case KPKFieldTypeGroupCreationTime:
           if(fieldSize != 5) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
@@ -217,7 +217,7 @@
           
         case KPKFieldTypeGroupModificationTime:
           if(fieldSize != 5) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
@@ -226,7 +226,7 @@
           
         case KPKFieldTypeGroupAccessTime:
           if(fieldSize != 5) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
@@ -235,7 +235,7 @@
           
         case KPKFieldTypeGroupExpiryDate:
           if(fieldSize != 5) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
@@ -244,7 +244,7 @@
           
         case KPKFieldTypeGroupImage:
           if(fieldSize != 4) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           group.iconId = [_dataStreamer read4Bytes];
@@ -253,7 +253,7 @@
           
         case KPKFieldTypeGroupLevel: {
           if(fieldSize != 2) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           uint16_t level = [_dataStreamer read2Bytes];
@@ -276,7 +276,7 @@
         case KPKFieldTypeCommonStop:
           if (fieldSize != 0) {
             group = nil;
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           [_groups addObject:group];
@@ -285,7 +285,7 @@
           
         default:
           group = nil;
-          KPKCreateError(error, KPKErrorLegacyInvalidFieldType, @"ERROR_INVALID_FIELD_TYPE", "");
+          KPKCreateError(error, KPKErrorKdbInvalidFieldType);
           return NO;
       }
     }
@@ -303,7 +303,7 @@
   
   
   // Parse the entries
-  for (NSUInteger iEntryIndex = 0; iEntryIndex < _headerReader.numberOfEntries; iEntryIndex++) {
+  for (NSUInteger iEntryIndex = 0; iEntryIndex < self.numberOfEntries; iEntryIndex++) {
     KPKEntry *entry;
     KPKBinary *binary;
     
@@ -311,7 +311,7 @@
     endOfStream = NO;
     while (!endOfStream) {
       if(_dataStreamer.readableBytes == 0) {
-        KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_CORRUPT_DATA", "");
+        KPKCreateError(error, KPKErrorKdbCorruptTree);
         return NO;
       }
       fieldType = [_dataStreamer read2Bytes];
@@ -331,7 +331,7 @@
           
         case KPKFieldTypeEntryUUID:
           if (fieldSize != 16) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
@@ -372,7 +372,7 @@
           
         case KPKFieldTypeEntryCreationTime:
           if (fieldSize != 5) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
@@ -381,7 +381,7 @@
           
         case KPKFieldTypeEntryModificationTime:
           if (fieldSize != 5) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
@@ -390,7 +390,7 @@
           
         case KPKFieldTypeEntryAccessTime:
           if (fieldSize != 5) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
@@ -399,7 +399,7 @@
           
         case KPKFieldTypeEntryExpiryDate:
           if (fieldSize != 5) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
@@ -420,7 +420,7 @@
           
         case KPKFieldTypeCommonStop:
           if (fieldSize != 0) {
-            KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
             return NO;
           }
           /* Only add non-meta entries to the groups as the other are stored separately */
@@ -439,7 +439,7 @@
           break;
           
         default:
-          KPKCreateError(error, KPKErrorLegacyInvalidFieldType, @"ERROR_INVALID_FIELD_TYPE", "");
+          KPKCreateError(error, KPKErrorKdbInvalidFieldType);
           return NO;
       }
     }
@@ -450,11 +450,10 @@
 - (BOOL)_readHashData:(NSError **)error {
   uint16_t fieldType;
   uint32_t fieldSize;
-  NSData *headerHash;
   
   while(YES) {
     if(_dataStreamer.readableBytes == 0) {
-      KPKCreateError(error, KPKErrorLegacyCorruptTree, @"ERROR_CORRUPT_DATA", "");
+      KPKCreateError(error, KPKErrorKdbCorruptTree);
       return NO;
     }
     fieldType = [_dataStreamer read2Bytes];
@@ -469,14 +468,10 @@
         
       case KPKHeaderHashFieldTypeHeaderHash:
         if (fieldSize != 32) {
-          KPKCreateError(error, KPKErrorLegacyInvalidFieldSize, @"ERROR_INVALID_FIELD_SIZE", "");
+          KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
           return NO;
         }
-        headerHash = [_dataStreamer readDataWithLength:fieldSize];
-        if(![headerHash isEqualToData:_headerReader.headerHash]) {
-          KPKCreateError(error, KPKErrorPasswordAndOrKeyfileWrong, @"ERROR_PASSWORD_OR_KEYFILE_WRONG", "");
-          return NO;
-        }
+        self.headerHash = [_dataStreamer readDataWithLength:fieldSize];
         break;
         
       case KPKHeaderHashFieldTypeRandomData:
@@ -488,7 +483,7 @@
         return YES;
         
       default:
-        KPKCreateError(error, KPKErrorLegacyInvalidFieldType, @"ERROR_INVALID_FIELD_TYPE", "");
+        KPKCreateError(error, KPKErrorKdbInvalidFieldType);
         return NO;
     }
   }

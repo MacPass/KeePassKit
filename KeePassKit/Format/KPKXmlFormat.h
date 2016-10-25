@@ -1,5 +1,5 @@
 //
-//  KPKHeaderFields.h
+//  KPKXmlFormat.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 20.07.13.
@@ -20,8 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef MacPass_KPKHeaderFields_h
-#define MacPass_KPKHeaderFields_h
+#ifndef MacPass_KPKXmlFormat_h
+#define MacPass_KPKXmlFormat_h
 
 @import Foundation;
 
@@ -30,7 +30,7 @@
  */
 typedef NS_ENUM(NSUInteger, KPKHeaderKey ) {
   KPKHeaderKeyEndOfHeader       = 0,
-  KPKHeaderKeyComment           = 1,
+  KPKHeaderKeyComment           = 1,  // Ignored, KDBX3.1 does not use this!
   KPKHeaderKeyCipherId          = 2,
   KPKHeaderKeyCompression       = 3,
   KPKHeaderKeyMasterSeed        = 4,
@@ -44,16 +44,17 @@ typedef NS_ENUM(NSUInteger, KPKHeaderKey ) {
   KPKHeaderKeyPublicCustomData  = 12  // KDBX 4
 };
 
-typedef NS_ENUM(NSUInteger, KPKCompression) {
+typedef NS_ENUM(uint32_t, KPKCompression) {
   KPKCompressionNone,
   KPKCompressionGzip,
   KPKCompressionCount,
 };
 
-typedef NS_ENUM(NSUInteger, KPKRandomStreamType) {
+typedef NS_ENUM(uint32_t, KPKRandomStreamType) {
   KPKRandomStreamNone,
   KPKRandomStreamArc4,
   KPKRandomStreamSalsa20,
+  KPKRandomStreamChaCha20,
   KPKRandomStreamCount
 };
 

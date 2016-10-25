@@ -27,43 +27,44 @@
 
 FOUNDATION_EXPORT NSString *const KPKErrorDomain;
 
-void KPKCreateError( NSError **errorPtr, NSInteger errorCode, NSString *localizedKey, char *comment);
+//void KPKCreateError( NSError **errorPtr, NSInteger errorCode, NSString *localizedKey, char *comment);
+void KPKCreateError( NSError **errorPtr, NSInteger errorCode);
 
 typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorNoData = 1000, // No data given
   KPKErrorUnknownFileFormat, // The file format is unknown
-  KPKErrorHeaderCorrupted, // The header is Corrupted
-  KPKErrorWriteFailed, // Could write the File
+  KPKErrorEncryptionFailed, // Failed to encrypt the data
+  KPKErrorAESEncryptionFailed, // Failed to encrypt the data using AES
   KPKErrorDecryptionFailed, // Failed to decrypt the data stream
-  KPKErrorEncryptionFailed, // Faled to encrypt the data stream
-  KPKErrorDatabaseParsingFailed, // The XML-Database couldn be parsed
-  KPKErrorXMLKeyUnsupportedVersion, // The XML-Keyfile is an usupported version
-  KPKErrorXMLKeyKeyElementMissing, // The XML-Keyfile has no key element
-  KPKErrorXMLKeyDataElementMissing, // The XML-Keyfile has no data element
-  KPKErrorXMLKeyDataParsingError, // The XML-data element couldn't be parsed
+  KPKErrorAESDecryptionFailed, // Failed to decrypt the file using AES
+  KPKErrorKdbxKeyUnsupportedVersion, // The XML-Keyfile is an usupported version
+  KPKErrorKdbxKeyKeyElementMissing, // The XML-Keyfile has no key element
+  KPKErrorKdbxKeyDataElementMissing, // The XML-Keyfile has no data element
+  KPKErrorKdbxKeyDataParsingError, // The XML-data element couldn't be parsed
   KPKErrorUnsupportedDatabaseVersion, // The database version is to high/low
   KPKErrorUnsupportedCipher, // The header specifies a unsupported and/or wrong chipher methed
-  KPKErrorWrongIVVectorSize, // the header has a wrong size of the IV vector for the specified cipher
+  KPKErrorUnsupportedKeyDerivation, // The header specifies an unsupported and/or wrong key derivation method
+  KPKErrorKeyDerivationFailed, // The key derivation failed
+  KPKErrorWrongIVVectorSize, // The header has a wrong size of the IV vector for the specified cipher
   KPKErrorUnsupportedCompressionAlgorithm, // The header specifies an unsupporte and/or wrong compressoing algorithm
   KPKErrorUnsupportedRandomStream, // The header specifies an unsupporte stream or it's corrupted
   KPKErrorPasswordAndOrKeyfileWrong, // Password and or keyfile is wrong
   KPKErrorIntegrityCheckFailed, // The startbytes in the header aren't matching the AES stream-start
-  KPKErrorXMLHeaderHashVerificationFailed, // The header hash does not match the one provieded in the database
-  KPKErrorXMLKeePassFileElementMissing, // the Keepass root element is missing
-  KPKErrorXMLRootElementMissing, // The root Elemetn is missing;
-  KPKErrorXMLMetaElementMissing, // The root element has no meta entry
-  KPKErrorXMLGroupElementMissing, // no Group element found
-  KPKErrorXMLInvalidHeaderFieldSize, // KDBX Header field size missmatch
-  KPKErrorXMLInvalidHeaderFieldType, // KDBX Header field type unknown
-  KPKErrorLegacyInvalidFieldType, // KDB Invalid field type
-  KPKErrorLegacyInvalidFieldSize, // KDB Invalid field size
-  KPKErrorLegacyHeaderHashCorrupted, // Header missmatch
-  KPKErrorLegacyCorruptTree, // Tree sturcture is corrupted
+  KPKErrorKdbxHeaderHashVerificationFailed, // The header hash does not match the one provieded in the database
+  KPKErrorKdbxKeePassFileElementMissing, // the Keepass root element is missing
+  KPKErrorKdbxRootElementMissing, // The root Elemetn is missing;
+  KPKErrorKdbxMetaElementMissing, // The root element has no meta entry
+  KPKErrorKdbxGroupElementMissing, // no Group element found
+  KPKErrorKdbxInvalidHeaderFieldSize, // KDBX Header field size missmatch
+  KPKErrorKdbxInvalidHeaderFieldType, // KDBX Header field type unknown
+  KPKErrorKdbHeaderTruncated, // The header (and thus the file) was truncated
+  KPKErrorKdbInvalidFieldType, // KDB Invalid field type
+  KPKErrorKdbInvalidFieldSize, // KDB Invalid field size
+  KPKErrorKdbCorruptTree, // Tree sturcture is corrupted
 
   /* Validation error */
   KPKErrorAttributeKeyValidationFailed, // Validation of attribute key failed
   KPKErrorWindowTitleFormatValidationFailed, // The Window title for autotype is not supported
-  KPKErrorAutotypeSequenceValidationFailed // The autotype sequence wasn't valid
 };
 
 #endif

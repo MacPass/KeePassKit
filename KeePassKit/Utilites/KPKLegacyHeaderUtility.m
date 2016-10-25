@@ -29,7 +29,7 @@
     return nil; // Data size missmatch;
   }
   uint8_t *buffer = (uint8_t *)header;
-  size_t endCount = sizeof((*header).masterSeed2) + sizeof((*header).keyEncRounds);
+  size_t endCount = sizeof((*header).transformationSeed) + sizeof((*header).keyEncRounds);
   size_t startCount = sizeof(KPKLegacyHeader) - sizeof((*header).contentsHash) - endCount;
   uint8_t hash[32];
   

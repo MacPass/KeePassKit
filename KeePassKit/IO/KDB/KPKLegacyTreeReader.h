@@ -1,5 +1,5 @@
 //
-//  KPXmlTreeReader.h
+//  KPKBinaryTreeReader.h
 //  KeePassKit
 //
 //  Created by Michael Starke on 20.07.13.
@@ -22,18 +22,16 @@
 
 #import <Foundation/Foundation.h>
 #import "KPKTreeReading.h"
-
 @class KPKTree;
-
-@interface KPKXmlTreeReader : NSObject <KPKTreeReading>
-
+@class KPKKdbFileHeader;
 /**
- Inilializes the XML Reader with the raw xml data and the random stream
- used to protect containing string fields
- @param data The raw XML data. Make sure to decrypt the data before passing it in
- @param cipherInformation Chipher information to handle the writing
+ *	Tree reader capable of loading Legacy (KDB) file formats
  */
--(instancetype)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader;
+@interface KPKLegacyTreeReader : NSObject
+
+@property (readonly, copy) NSData *headerHash;
+
+- (instancetype)initWithData:(NSData *)data numberOfEntries:(NSUInteger)entries numberOfGroups:(NSUInteger)groups;
 - (KPKTree *)tree:(NSError *__autoreleasing *)error;
 
 @end

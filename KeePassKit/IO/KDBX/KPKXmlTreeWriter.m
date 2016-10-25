@@ -21,7 +21,6 @@
 //
 
 #import "KPKXmlTreeWriter.h"
-#import "KPKXmlHeaderWriter.h"
 #import "KPKTree.h"
 #import "KPKTree_Private.h"
 
@@ -29,7 +28,6 @@
 #import "DDXMLElementAdditions.h"
 #import "NSUUID+KeePassKit.h"
 
-#import "KPKXmlHeaderWriter.h"
 #import "KPKXmlFormat.h"
 #import "KPKNode_Private.h"
 #import "KPKGroup.h"
@@ -59,18 +57,22 @@
   NSMutableArray *_binaries;
   KPKRandomStream *_randomStream;
 }
-@property (strong, readwrite) KPKXmlHeaderWriter *headerWriter;
+
 @property (strong, readwrite) KPKTree *tree;
+@property (copy) NSData *headerHash;
+@property (copy) NSData *randomStreamKey;
+@property (assign) KPKRandomStreamType randomType;
 
 @end
 
 @implementation KPKXmlTreeWriter
-
-- (instancetype)initWithTree:(KPKTree *)tree {
+- (instancetype)initWithTree:(KPKTree *)tree randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key headerHash:(NSData *)hash {
   self = [super init];
   if(self) {
     _tree = tree;
-    _headerWriter = [[KPKXmlHeaderWriter alloc] initWithTree:_tree];
+    _headerHash = [hash copy];
+    _randomType = randomType;
+    _randomStreamKey = [key copy];
     _dateFormatter = [[NSDateFormatter alloc] init];
     _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
     _dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
@@ -78,15 +80,12 @@
   return self;
 }
 
-- (DDXMLDocument *)protectedXmlDocument {
-  return [self _xmlDocumentUsingRandomStream:YES];
+- (instancetype)initWithTree:(KPKTree *)tree {
+  self = [self initWithTree:tree randomStreamType:KPKRandomStreamNone randomStreamKey:nil headerHash:nil];
+  return self;
 }
 
 - (DDXMLDocument *)xmlDocument {
-  return  [self _xmlDocumentUsingRandomStream:NO];
-}
-
-- (DDXMLDocument *)_xmlDocumentUsingRandomStream:(BOOL)useRandomStream {
   NSString *xmlRootString = [NSString stringWithFormat:@"<%@></%@>", kKPKXmlKeePassFile, kKPKXmlKeePassFile];
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithXMLString:xmlRootString options:0 error:nil];
   
@@ -96,10 +95,9 @@
   DDXMLElement *metaElement = [DDXMLNode elementWithName:kKPKXmlMeta];
   KPKAddXmlElement(metaElement, kKPKXmlGenerator, metaData.generator);
   
-  if(_headerWriter.headerHash) {
-    KPKAddXmlElement(metaElement, kKPKXmlHeaderHash, [_headerWriter.headerHash base64Encoding]);
+  if(self.headerHash) {
+    KPKAddXmlElement(metaElement, kKPKXmlHeaderHash, [self.headerHash base64Encoding]);
   }
-  
   
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseName, metaData.databaseName.XMLCompatibleString);
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseNameChanged, KPKStringFromDate(_dateFormatter, metaData.databaseNameChanged));
@@ -149,10 +147,8 @@
   DDXMLElement *rootElement = [DDXMLNode elementWithName:kKPKXmlRoot];
   
   /* Before storing, we need to setup the random stream */
-  if(useRandomStream) {
-    if(![self _setupRandomStream]) {
-      return nil;
-    }
+  if(![self _setupRandomStream]) {
+     return nil;
   }
   
   /* Create XML nodes for all Groups and Entries */
@@ -421,18 +417,20 @@
 }
 
 - (BOOL)_setupRandomStream {
-  if(_headerWriter == nil) {
-    return NO;
-  }
-  switch(_headerWriter.randomStreamID ) {
+  switch(self.randomType ) {
+    case KPKRandomStreamNone:
+      /* no random stream set, all good */
+      return YES;
+      
     case KPKRandomStreamSalsa20:
-      _randomStream = [[KPKSalsa20RandomStream alloc] initWithKeyData:_headerWriter.protectedStreamKey];
+      _randomStream = [[KPKSalsa20RandomStream alloc] initWithKeyData:self.randomStreamKey];
       return YES;
       
     case KPKRandomStreamArc4:
-      _randomStream = [[KPKArc4RandomStream alloc] initWithKeyData:_headerWriter.protectedStreamKey];
+      _randomStream = [[KPKArc4RandomStream alloc] initWithKeyData:self.randomStreamKey];
       return YES;
       
+    case KPKRandomStreamChaCha20:
     default:
       return NO;
   }

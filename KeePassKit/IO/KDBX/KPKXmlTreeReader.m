@@ -1,5 +1,5 @@
-//
 //  KPXmlTreeReader.m
+//
 //  KeePassKit
 //
 //  Created by Michael Starke on 20.07.13.
@@ -45,7 +45,6 @@
 #import "KPKTree_Private.h"
 #import "KPKWindowAssociation.h"
 #import "KPKXmlFormat.h"
-#import "KPKXmlHeaderReader.h"
 #import "KPKXmlUtilities.h"
 
 #import "DDXML.h"
@@ -55,33 +54,35 @@
 #import "NSUUID+KeePassKit.h"
 #import "NSColor+KeePassKit.h"
 
-@interface KPKXmlTreeReader () {
-@private
-  DDXMLDocument *_document;
-  KPKXmlHeaderReader *_headerReader;
-  KPKRandomStream *_randomStream;
-  NSDateFormatter *_dateFormatter;
-  NSMutableDictionary *_binaryMap;
-  NSMutableDictionary *_iconMap;
-}
+@interface KPKXmlTreeReader ()
+
+@property (strong) DDXMLDocument *document;
+@property (strong) KPKRandomStream *randomStream;
+@property (strong) NSDateFormatter *dateFormatter;
+@property (strong) NSMutableDictionary *binaryMap;
+@property (strong) NSMutableDictionary *iconMap;
+
+@property (copy) NSData *headerHash;
+@property (copy) NSData *randomStreamKey;
+@property (assign) KPKCompression compressionAlgorithm;
+@property (assign) KPKRandomStreamType randomStreamID;
+
 @end
 
 @implementation KPKXmlTreeReader
 
-- (instancetype)initWithData:(NSData *)data headerReader:(id<KPKHeaderReading>)headerReader {
+- (instancetype)initWithData:(NSData *)data {
+  self = [self initWithData:data randomStreamType:KPKRandomStreamNone randomStreamKey:nil compression:KPKCompressionNone];
+  return self;
+}
+
+- (instancetype)initWithData:(NSData *)data randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key compression:(KPKCompression)compression {
   self = [super init];
   if(self) {
+    _compressionAlgorithm = compression;
+    _randomStreamKey = key;
+    _randomStreamID = randomType;
     _document = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
-    if(headerReader) {
-      NSAssert([headerReader isKindOfClass:[KPKXmlHeaderReader class]], @"Headerreader needs to be XML header reader");
-      _headerReader = (KPKXmlHeaderReader *)headerReader;
-      if(![self _setupRandomStream]) {
-        _document = nil;
-        _headerReader = nil;
-        self = nil;
-        return nil;
-      }
-    }
     _dateFormatter = [[NSDateFormatter alloc] init];
     _dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
     _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
@@ -90,18 +91,22 @@
 }
 
 - (KPKTree *)tree:(NSError *__autoreleasing *)error {
-  if(!_document) {
-    KPKCreateError(error, KPKErrorNoData, @"ERROR_NO_DATA", "");
+  if(!self.document) {
+    KPKCreateError(error, KPKErrorNoData);
     return nil;
   }
   
-  DDXMLElement *rootElement = [_document rootElement];
+  DDXMLElement *rootElement = [self.document rootElement];
   if(![[rootElement name] isEqualToString:kKPKXmlKeePassFile]) {
-    KPKCreateError(error, KPKErrorXMLKeePassFileElementMissing, @"ERROR_KEEPASSFILE_ELEMENT_MISSING", "");
+    KPKCreateError(error, KPKErrorKdbxKeePassFileElementMissing);
     return nil;
   }
   
-  if(_headerReader) {
+  if([self _setupRandomStream:error]) {
+    return nil;
+  }
+  
+  if(self.randomStream) {
     [self _decodeProtected:rootElement];
   }
   
@@ -110,36 +115,29 @@
   tree.metaData.updateTiming = NO;
   
   /* Set the information we got from the header */
-  tree.metaData.rounds = _headerReader.rounds;
-  tree.metaData.keyDerivationOptions = _headerReader.keyDerivationOptions;
-  tree.metaData.compressionAlgorithm = _headerReader.compressionAlgorithm;
-  tree.metaData.cipherUUID = _headerReader.cipherUUID;
   
   /* Parse the rest of the metadata from the file */
   DDXMLElement *metaElement = [rootElement elementForName:kKPKXmlMeta];
   if(!metaElement) {
-    KPKCreateError(error, KPKErrorXMLMetaElementMissing, @"ERROR_META_ELEMENT_MISSING", "");
+    KPKCreateError(error, KPKErrorKdbxMetaElementMissing);
     return nil;
   }
   NSString *headerHash = KPKXmlString(metaElement, kKPKXmlHeaderHash);
-  if(headerHash) {    
-    NSData *expectedHash = [[NSData alloc] initWithBase64Encoding:headerHash];
-    if(![_headerReader verifyHeader:expectedHash]) {
-      KPKCreateError(error, KPKErrorXMLHeaderHashVerificationFailed, @"ERROR_HEADER_HASH_VERIFICATION_FAILED", "");
-    }
+  if(headerHash) {
+    self.headerHash = [[NSData alloc] initWithBase64Encoding:headerHash];
   }
   
   [self _parseMeta:metaElement metaData:tree.metaData];
   
   DDXMLElement *root = [rootElement elementForName:kKPKXmlRoot];
   if(!root) {
-    KPKCreateError(error, KPKErrorXMLRootElementMissing, @"ERROR_ROOT_ELEMENT_MISSING", "");
+    KPKCreateError(error, KPKErrorKdbxRootElementMissing);
     return nil;
   }
   
   DDXMLElement *rootGroup = [root elementForName:kKPKXmlGroup];
   if(!rootGroup) {
-    KPKCreateError(error, KPKErrorXMLGroupElementMissing, @"ERROR_GROUP_ELEMENT_MISSING", "");
+    KPKCreateError(error, KPKErrorKdbxGroupElementMissing);
     return nil;
   }
   
@@ -152,6 +150,9 @@
 }
 
 - (void)_decodeProtected:(DDXMLElement *)element {
+  if(!self.randomStream) {
+    return; // not configured to decorde
+  }
   DDXMLNode *protectedAttribute = [element attributeForName:kKPKXmlProtected];
   if([[protectedAttribute stringValue] isEqualToString:kKPKXmlTrue]) {
     NSString *valueString = [element stringValue];
@@ -159,7 +160,7 @@
     /*
      XOR the random stream against the data
      */
-    [_randomStream xor:decodedData];
+    [self.randomStream xor:decodedData];
     NSString *unprotected = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
     [element setStringValue:unprotected];
   }
@@ -175,17 +176,17 @@
   
   data.generator = KPKXmlString(metaElement, kKPKXmlGenerator);
   data.databaseName = KPKXmlString(metaElement, kKPKXmlDatabaseName);
-  data.databaseNameChanged = KPKXmlDate(_dateFormatter, metaElement, kKPKXmlDatabaseNameChanged);
+  data.databaseNameChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlDatabaseNameChanged);
   data.databaseDescription = KPKXmlString(metaElement, kKPKXmlDatabaseDescription);
-  data.databaseDescriptionChanged = KPKXmlDate(_dateFormatter, metaElement, kKPKXmlDatabaseDescriptionChanged);
+  data.databaseDescriptionChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlDatabaseDescriptionChanged);
   data.defaultUserName = KPKXmlString(metaElement, kKPKXmlDefaultUserName);
-  data.defaultUserNameChanged = KPKXmlDate(_dateFormatter, metaElement, kKPKXmlDefaultUserNameChanged);
+  data.defaultUserNameChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlDefaultUserNameChanged);
   data.maintenanceHistoryDays = KPKXmlInteger(metaElement, kKPKXmlMaintenanceHistoryDays);
   /*
    Color is coded in Hex #001122
    */
   data.color = [NSColor colorWithHexString:KPKXmlString(metaElement, kKPKXmlColor)];
-  data.masterKeyChanged = KPKXmlDate(_dateFormatter, metaElement, kKPKXmlMasterKeyChanged);
+  data.masterKeyChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlMasterKeyChanged);
   data.masterKeyChangeRecommendationInterval = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeRecommendationInterval);
   data.masterKeyChangeEnforcementInterval = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeForceInterval);
   
@@ -199,9 +200,9 @@
   
   data.useTrash = KPKXmlBool(metaElement, kKPKXmlRecycleBinEnabled);
   data.trashUuid = [NSUUID uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlRecycleBinUUID)];
-  data.trashChanged = KPKXmlDate(_dateFormatter, metaElement, kKPKXmlRecycleBinChanged);
+  data.trashChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlRecycleBinChanged);
   data.entryTemplatesGroup = [NSUUID uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlEntryTemplatesGroup)];
-  data.entryTemplatesGroupChanged = KPKXmlDate(_dateFormatter, metaElement, kKPKXmlEntryTemplatesGroupChanged);
+  data.entryTemplatesGroupChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlEntryTemplatesGroupChanged);
   data.historyMaxItems = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxItems);
   data.historyMaxSize = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxSize);
   data.lastSelectedGroup = [NSUUID uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlLastSelectedGroup)];
@@ -302,13 +303,13 @@
 }
 
 - (void)_parseTimes:(KPKTimeInfo *)timeInfo element:(DDXMLElement *)nodeElement {
-  timeInfo.modificationDate = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLastModificationDate);
-  timeInfo.creationDate = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlCreationDate);
-  timeInfo.accessDate = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLastAccessDate);
-  timeInfo.expirationDate = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlExpirationDate);
+  timeInfo.modificationDate = KPKXmlDate(self.dateFormatter, nodeElement, kKPKXmlLastModificationDate);
+  timeInfo.creationDate = KPKXmlDate(self.dateFormatter, nodeElement, kKPKXmlCreationDate);
+  timeInfo.accessDate = KPKXmlDate(self.dateFormatter, nodeElement, kKPKXmlLastAccessDate);
+  timeInfo.expirationDate = KPKXmlDate(self.dateFormatter, nodeElement, kKPKXmlExpirationDate);
   timeInfo.expires = KPKXmlBool(nodeElement, kKPKXmlExpires);
   timeInfo.usageCount = KPKXmlInteger(nodeElement, kKPKXmlUsageCount);
-  timeInfo.locationChanged = KPKXmlDate(_dateFormatter, nodeElement, kKPKXmlLocationChanged);
+  timeInfo.locationChanged = KPKXmlDate(self.dateFormatter, nodeElement, kKPKXmlLocationChanged);
 }
 
 - (void)_parseCustomIcons:(DDXMLElement *)root meta:(KPKMetaData *)metaData {
@@ -320,13 +321,13 @@
    </Icon>
    </CustomIcons>
    */
-  _iconMap = [[NSMutableDictionary alloc] init];
+  self.iconMap = [[NSMutableDictionary alloc] init];
   DDXMLElement *customIconsElement = [root elementForName:kKPKXmlCustomIcons];
   for (DDXMLElement *iconElement in [customIconsElement elementsForName:kKPKXmlIcon]) {
     NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKXmlString(iconElement, kKPKXmlUUID)];
     KPKIcon *icon = [[KPKIcon alloc] initWithUUID:uuid encodedString:KPKXmlString(iconElement, kKPKXmlData)];
     [metaData addCustomIcon:icon];
-    _iconMap[ icon.uuid ] = icon;
+    self.iconMap[ icon.uuid ] = icon;
   }
 }
 
@@ -340,13 +341,13 @@
    */
   DDXMLElement *binariesElement = [root elementForName:kKPKXmlBinaries];
   NSUInteger binaryCount = [binariesElement elementsForName:kKPKXmlBinary].count;
-  _binaryMap = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,binaryCount)];
+  self.binaryMap = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,binaryCount)];
   for (DDXMLElement *element in [binariesElement elementsForName:kKPKXmlBinary]) {
     DDXMLNode *idAttribute = [element attributeForName:kKPKXmlBinaryId];
     
     KPKBinary *binary = [[KPKBinary alloc] initWithName:@"UNNAMED" string:[element stringValue] compressed:KPKXmlBoolAttribute(element, kKPKXmlCompressed)];
     NSUInteger index = [idAttribute stringValue].integerValue;
-    _binaryMap[ @(index) ] = binary;
+    self.binaryMap[ @(index) ] = binary;
   }
 }
 
@@ -363,7 +364,7 @@
     DDXMLNode *refAttribute = [valueElement attributeForName:kKPKXmlIconReference];
     NSUInteger index = [refAttribute stringValue].integerValue;
     
-    KPKBinary *binary = _binaryMap[ @(index) ];
+    KPKBinary *binary = self.binaryMap[ @(index) ];
     binary.name = KPKXmlString(binaryElement, kKPKXmlKey);
     [entry addBinary:binary];
   }
@@ -443,23 +444,30 @@
   DDXMLElement *deletedObjects = [root elementForName:kKPKXmlDeletedObjects];
   for(DDXMLElement *deletedObject in [deletedObjects elementsForName:kKPKXmlDeletedObject]) {
     NSUUID *uuid = [[NSUUID alloc] initWithEncodedUUIDString:KPKXmlString(deletedObject, kKPKXmlUUID)];
-    NSDate *date = KPKXmlDate(_dateFormatter, deletedObject, kKPKXmlDeletionTime);
+    NSDate *date = KPKXmlDate(self.dateFormatter, deletedObject, kKPKXmlDeletionTime);
     KPKDeletedNode *deletedNode = [[KPKDeletedNode alloc] initWithUUID:uuid date:date];
     tree.mutableDeletedObjects[ deletedNode.uuid ] = deletedNode;
   }
 }
 
-- (BOOL)_setupRandomStream {
-  switch(_headerReader.randomStreamID ) {
+- (BOOL)_setupRandomStream:(NSError **)error {
+  switch(self.randomStreamID ) {
     case KPKRandomStreamSalsa20:
-      _randomStream = [[KPKSalsa20RandomStream alloc] initWithKeyData:_headerReader.protectedStreamKey];
+      NSAssert(self.randomStreamKey, @"Protetect stream key has to be set");
+      self.randomStream = [[KPKSalsa20RandomStream alloc] initWithKeyData:self.randomStreamKey];
       return YES;
       
     case KPKRandomStreamArc4:
-      _randomStream = [[KPKArc4RandomStream alloc] initWithKeyData:_headerReader.protectedStreamKey];
+      NSAssert(self.randomStreamKey, @"Protetect stream key has to be set");
+      self.randomStream = [[KPKArc4RandomStream alloc] initWithKeyData:self.randomStreamKey];
       return YES;
       
+    case KPKRandomStreamNone:
+      return YES;
+      
+    case KPKRandomStreamChaCha20:
     default:
+      KPKCreateError(error, KPKErrorUnsupportedRandomStream);
       return NO;
   }
 }

@@ -109,7 +109,7 @@
 
 - (BOOL)validateWindowTitle:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError {
   if(![*ioValue isKindOfClass:[NSString class]]) {
-    KPKCreateError(outError, KPKErrorWindowTitleFormatValidationFailed, @"ERROR_WINDOW_TITLE_VALIDATION_FAILED", "");
+    KPKCreateError(outError, KPKErrorWindowTitleFormatValidationFailed);
     return NO;
   }
   return YES;
