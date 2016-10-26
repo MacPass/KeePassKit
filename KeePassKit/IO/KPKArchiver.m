@@ -42,8 +42,12 @@
   switch(format) {
     case KPKDatabaseFormatKdb:
       self = [[KPKKdbArchiver alloc] _initWithTree:tree key:key];
+      break;
+      
     case KPKDatabaseFormatKdbx:
       self = [[KPKKdbxArchiver alloc] _initWithTree:tree key:key];
+      break;
+      
     default:
       self = nil;
   }

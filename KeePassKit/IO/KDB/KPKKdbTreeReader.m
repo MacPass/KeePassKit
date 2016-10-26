@@ -201,6 +201,10 @@
           break;
           
         case KPKFieldTypeGroupId: {
+          if(fieldSize != 4) {
+            KPKCreateError(error, KPKErrorKdbInvalidFieldSize);
+            return NO;
+          }
           uint32_t groupId = CFSwapInt32LittleToHost([_dataStreamer read4Bytes]);
           _groupIdToUUID[@(groupId)] = group.uuid;
           break;

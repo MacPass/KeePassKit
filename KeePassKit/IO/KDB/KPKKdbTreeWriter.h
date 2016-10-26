@@ -29,7 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface KPKKdbTreeWriter : NSObject
 
 @property (strong, readonly, nullable) KPKTree *tree;
-@property (readonly) NSUInteger metaEntryCount;
+@property (readonly) NSUInteger numberOfEntries;
+@property (readonly) NSUInteger numberOfGroups;
 
 - (instancetype)initWithTree:(KPKTree *)tree;
 

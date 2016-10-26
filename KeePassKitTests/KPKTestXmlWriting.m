@@ -21,10 +21,10 @@
 - (void)testXmlWriting {
   NSData *data = [self _loadBundleData:@"CustomIcon_Password_1234" extension:@"kdbx"];
   NSError *error;
-  KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
-  KPKTree *tree = [[KPKTree alloc] initWithData:data password:password error:&error];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   error = nil;
-  NSData *saveData = [tree encryptWithPassword:password forVersion:KPKDatabaseFormatKdbx error:&error];
+  NSData *saveData = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
   XCTAssertNotNil(saveData, @"Serialization should yield data");
   NSString *tempFile = [NSTemporaryDirectory() stringByAppendingString:@"CustomIcon_Password_1234_save.kdbx"];
   NSLog(@"Saved file to %@", tempFile);
@@ -32,7 +32,7 @@
   
   error = nil;
   NSURL *url = [NSURL fileURLWithPath:tempFile];
-  KPKTree *reloadedTree = [[KPKTree alloc] initWithContentsOfUrl:url password:password error:&error];
+  KPKTree *reloadedTree = [[KPKTree alloc] initWithContentsOfUrl:url key:key error:&error];
   XCTAssertNotNil(reloadedTree, @"Reloaded tree should not be nil");
 }
 
@@ -55,12 +55,12 @@
   
   XCTAssertEqualObjects(entry.autotype.defaultKeystrokeSequence, sequence);
   
-  KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   NSError *error;
-  NSData *data = [tree encryptWithPassword:password forVersion:KPKDatabaseFormatKdbx error:&error];
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
   XCTAssertNotNil(data, @"Tree encryption yields data!");
   
-  KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data password:password error:&error];
+  KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(decryptedTree, @"Initalized tree from data is present!");
   KPKEntry *decryptedEntry = [tree.root entryForUUID:uuid];
   XCTAssertNotNil(entry, @"Encrypted entry is decryted!");
@@ -81,12 +81,12 @@
   
   [entry addToGroup:tree.root];
   
-  KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   NSError *error;
-  NSData *data = [tree encryptWithPassword:password forVersion:KPKDatabaseFormatKdbx error:&error];
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
   XCTAssertNotNil(data, @"Tree encryption yields data!");
   
-  KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data password:password error:&error];
+  KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(decryptedTree, @"Initalized tree from data is present!");
   KPKEntry *decryptedEntry = [tree.root entryForUUID:uuid];
   XCTAssertNotNil(entry, @"Encrypted entry is decryted!");

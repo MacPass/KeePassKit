@@ -22,11 +22,4 @@
   NSData *unhashedData = hashedData.unhashedSha256Data;
   XCTAssertTrue([unhashedData isEqualToData:data], @"Data needs to be the same after hashing and unhashing");
 }
-
-- (void)testHMACSHA256Data {
-  NSData *data = [NSData dataWithRandomBytes:10000];
-  NSData *hashedData = data.hashedHmacSha256Data;
-  NSData *unhashedData = hashedData.unhashedHmacSha256Data;
-  XCTAssertTrue([unhashedData isEqualToData:data], @"Data needs to be the same after hashing and unhashing");
-}
 @end

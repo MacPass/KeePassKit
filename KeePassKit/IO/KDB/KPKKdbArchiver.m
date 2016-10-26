@@ -53,13 +53,13 @@
   /* initalize the tree writer to get the count of meta entries */
   KPKKdbTreeWriter *treeWriter = [[KPKKdbTreeWriter alloc] initWithTree:self.tree];
   
-  _header.groups = (uint32_t)self.tree.allGroups.count;
-  _header.entries = (uint32_t)(self.tree.allEntries.count + treeWriter.metaEntryCount);
-  _header.version = kKPKKdbFileVersion;
+  _header.groups = CFSwapInt32HostToLittle((uint32_t)treeWriter.numberOfGroups);
+  _header.entries = CFSwapInt32HostToLittle((uint32_t)treeWriter.numberOfEntries);
+  _header.version = CFSwapInt32HostToLittle(kKPKKdbFileVersion);
   
   /* we only support AES cipher for the KDB  */
   KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithOptions:self.tree.metaData.keyDerivationOptions];
-  if(!keyDerivation || [keyDerivation.uuid isEqual:[KPKAESKeyDerivation uuid]]) {
+  if(!keyDerivation || ![keyDerivation.uuid isEqual:[KPKAESKeyDerivation uuid]]) {
     keyDerivation = [[KPKAESKeyDerivation alloc] init];
   }
   /* randomize key derivation */

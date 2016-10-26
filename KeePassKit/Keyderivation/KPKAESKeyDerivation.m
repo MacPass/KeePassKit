@@ -72,7 +72,6 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
 - (KPKKeyDerivation *)_initWithOptions:(NSDictionary *)options {
   NSAssert([options[KPKKeyDerivationOptionUUID] isEqualToData:self.uuid.uuidData], @"AES KeyDerivation UUID mismatch!");
   NSAssert(options[KPKAESRoundsOption], @"Rounds option is missing!");
-  NSAssert(options[KPKAESSeedOption], @"Seed option is missing!");
   self = [super _initWithOptions:options];
   return self;
 }
@@ -82,6 +81,7 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
 }
 
 - (NSData *)deriveData:(NSData *)data {
+  NSAssert(self.options[KPKAESSeedOption], @"Seed option is missing!");
   NSData *seed = self.mutableOptions[KPKAESSeedOption];
   if(seed.length != 32 ) {
     NSLog(@"Key derivations seed is not 32 bytes. Hashing seed!");

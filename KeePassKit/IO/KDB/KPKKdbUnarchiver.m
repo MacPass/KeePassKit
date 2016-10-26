@@ -105,7 +105,7 @@
 }
 
 - (NSData *)encryptionIV {
-  return [NSData dataWithBytes:_header.masterSeed length:sizeof(_header.encryptionIV)];
+  return [NSData dataWithBytes:_header.encryptionIV length:sizeof(_header.encryptionIV)];
 }
 
 - (uint32_t)numberOfGroups {

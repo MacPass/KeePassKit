@@ -19,16 +19,16 @@
 - (void)testWriting {
   NSError __autoreleasing *error = nil;
   NSURL *dbUrl = [self _urlForFile:@"CustomIcon_Password_1234" extension:@"kdbx"];
-  KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
-  KPKTree *tree = [[KPKTree alloc] initWithContentsOfUrl:dbUrl password:password error:&error];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  KPKTree *tree = [[KPKTree alloc] initWithContentsOfUrl:dbUrl key:key error:&error];
   XCTAssertNotNil(tree, @"Tree should be created");
   error = nil;
-  NSData *data = [tree encryptWithPassword:password forVersion:KPKDatabaseFormatKdb error:&error];
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:&error];
   XCTAssertNotNil(data, @"Serialized Data should be created");
   NSString *tempFile = [NSTemporaryDirectory() stringByAppendingString:@"CustomIcon_Password_1234.kdb"];
   NSLog(@"Saved to %@", tempFile);
   [data writeToFile:tempFile atomically:YES];
-  KPKTree *loadTree = [[KPKTree alloc] initWithData:data password:password error:&error];
+  KPKTree *loadTree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(loadTree, @"Tree should be loadable from kdb file data");
 }
 

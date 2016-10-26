@@ -14,7 +14,7 @@
 @interface KPKTestXmlLoading : XCTestCase {
 @private
   NSData *_data;
-  KPKCompositeKey *_password;
+  KPKCompositeKey *_key;
 }
 
 @end
@@ -26,17 +26,17 @@
   NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
   NSURL *url = [myBundle URLForResource:@"Test_Password_1234" withExtension:@"kdbx"];
   _data = [NSData dataWithContentsOfURL:url];
-  _password = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  _key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
 }
 
 - (void)tearDown {
   _data = nil;
-  _password = nil;
+  _key = nil;
 }
 
 - (void)testLoading {
   NSError *error;
-  KPKTree *tree = [[KPKTree alloc] initWithData:_data password:_password error:&error];
+  KPKTree *tree = [[KPKTree alloc] initWithData:_data key:_key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
 
   XCTAssertEqual(tree.root.groups.count, 0, @"Tree contains just root group");
@@ -46,9 +46,9 @@
 - (void)testAutotypeLoading {
   NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
   NSURL *url = [myBundle URLForResource:@"Autotype_test" withExtension:@"kdbx"];
-  KPKCompositeKey *password = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
   NSError *error;
-  KPKTree *tree = [[KPKTree alloc] initWithContentsOfUrl:url password:password error:&error];
+  KPKTree *tree = [[KPKTree alloc] initWithContentsOfUrl:url key:key error:&error];
   XCTAssertNotNil(tree, @"Tree shoud be loaded");
   KPKEntry *entry = tree.root.entries.firstObject;
   XCTAssertNotNil(entry, @"Entry should be there");

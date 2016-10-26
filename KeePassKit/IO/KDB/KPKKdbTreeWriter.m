@@ -47,7 +47,7 @@
 @property (copy) NSArray *groups;
 
 @property (strong) KPKTree *tree;
-@property NSUInteger metaEntryCount;
+
 @property (nonatomic, readonly) BOOL writeRootGroup;
 
 @end
@@ -64,17 +64,26 @@
      Keepass doesn't allow entries in the root group.
      Only Meta-Entries are inside the root group.
      If a Tree with entries in the root group is saved,
-     those groups should be placed inside another group,
-     or discarded.
+     those groups should be placed inside another group.
+     
+     If no other groups are present, we use the root group,
+     to prevent data loss!
      */
     
     _groups = self.writeRootGroup ? [@[self.tree.root] copy] : [self.tree.allGroups copy];
     /* collect meta entries after groups are initalized */
     NSArray *metaEntries = [self _collectMetaEntries];
-    _metaEntryCount = metaEntries.count;
     _entries = [[self.tree.allEntries arrayByAddingObjectsFromArray:metaEntries] copy];
   }
   return self;
+}
+
+- (NSUInteger)numberOfGroups {
+  return self.groups.count;
+}
+
+- (NSUInteger)numberOfEntries {
+  return self.entries.count;
 }
 
 - (NSData *)treeDataWithHeaderHash:(NSData *)hash {

@@ -30,17 +30,17 @@
 
 @implementation KPKTree (Serializing)
 
-- (instancetype)initWithContentsOfUrl:(NSURL *)url password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
+- (instancetype)initWithContentsOfUrl:(NSURL *)url key:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
   NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingUncached error:error];
   if(!data) {
     return nil;
   }
-  self = [self initWithData:data password:password error:error];
+  self = [self initWithData:data key:key error:error];
   return self;
 }
 
-- (instancetype)initWithData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
-  self = [KPKUnarchiver unarchiveTreeData:(NSData *)data withKey:password error:error];
+- (instancetype)initWithData:(NSData *)data key:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
+  self = [KPKUnarchiver unarchiveTreeData:(NSData *)data withKey:key error:error];
   return self;
 }
 
@@ -54,8 +54,8 @@
   return self;
 }
 
-- (NSData *)encryptWithPassword:(KPKCompositeKey *)password forVersion:(KPKDatabaseFormat)version error:(NSError **)error {
-  return [KPKArchiver archiveTree:self withKey:password error:error];
+- (NSData *)encryptWithKey:(KPKCompositeKey *)key format:(KPKDatabaseFormat)format error:(NSError *__autoreleasing *)error {
+  return [KPKArchiver archiveTree:self withKey:key format:format error:error];
 }
 
 - (NSData *)xmlData {

@@ -73,6 +73,7 @@
   }
   [keyDerivation randomize];
   
+  self.masterSeed = [NSData dataWithRandomBytes:32];
   self.encryptionIV = [NSData dataWithRandomBytes:cipher.IVLength];
   self.randomStreamKey = [NSData dataWithRandomBytes:32];
   
