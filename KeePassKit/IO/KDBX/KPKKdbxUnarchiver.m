@@ -33,12 +33,11 @@
 #import "KPKNumber.h"
 
 @interface KPKKdbxUnarchiver ()
-
-@property (copy) NSUUID *cipherUUID;
 @property (copy) NSData *masterSeed;
 @property (copy) NSData *streamStartBytes;
 @property (copy) NSData *protectedStreamKey;
 @property (copy) NSData *encryptionIV;
+@property (strong) NSMutableDictionary *customData;
 @property KPKRandomStreamType randomStreamID;
 @property KPKCompression compressionAlgorithm;
 
@@ -56,14 +55,17 @@
   }
   self = [super _initWithData:data version:version key:key error:error];
   if(self) {
-    [self _parseHeader:data error:error];
+    self.mutableKeyDerivationOptions = [[KPKAESKeyDerivation defaultOptions] mutableCopy];
+    if(![self _parseHeader:data error:error]) {
+      self = nil;
+    }
   }
   return self;
 }
 
 
 - (KPKTree *)tree:(NSError * _Nullable __autoreleasing *)error {
-  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithUUID:self.keyDerivationUUID options:self.mutableKeyDerivationOptions];
+  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithOptions:self.mutableKeyDerivationOptions];
   if(!keyDerivation) {
     KPKCreateError(error, KPKErrorUnsupportedKeyDerivation);
     return nil;
@@ -86,6 +88,7 @@
     return nil;
   }
   
+  /* StartBytes are only stored in KDBX3.1 */
   if(self.version < kKPKKdbxFileVersion4) {
     /* KDBX 3.1 */
     NSData *startBytes = [decryptedData subdataWithRange:NSMakeRange(0, 32)];
@@ -207,6 +210,7 @@
       case KPKHeaderKeyProtectedKey:
         self.protectedStreamKey = [dataReader readDataWithLength:fieldSize];
         break;
+        
       case KPKHeaderKeyStartBytes:
         self.streamStartBytes = [dataReader readDataWithLength:fieldSize];
         break;
@@ -216,7 +220,7 @@
           return NO;
         }
         else {
-          if(fieldSize != 64) {
+          if(fieldSize != 8) {
             KPKCreateError(error, KPKErrorKdbxInvalidHeaderFieldSize);
             return NO;
           }
@@ -225,7 +229,7 @@
         break;
         
       case KPKHeaderKeyCompression:
-        if(fieldSize != 32) {
+        if(fieldSize != 4) {
           KPKCreateError(error, KPKErrorKdbxInvalidHeaderFieldSize);
           return NO;
         }
@@ -236,7 +240,7 @@
         }
         break;
       case KPKHeaderKeyRandomStreamId:
-        if(fieldSize != 32) {
+        if(fieldSize != 4) {
           KPKCreateError(error, KPKErrorKdbxInvalidHeaderFieldSize);
           return NO;
         }
@@ -247,6 +251,22 @@
         }
         break;
         
+      case KPKHeaderKeyKdfParameters:
+        NSAssert(self.version >= kKPKKdbxFileVersion4, @"File version doesn allow KDFParameter header field");
+        self.mutableKeyDerivationOptions = [[NSMutableDictionary alloc] initWithVariantDictionaryData:[dataReader readDataWithLength:fieldSize]];
+        if(!self.mutableKeyDerivationOptions || !self.mutableKeyDerivationOptions.isValidVariantDictionary) {
+          KPKCreateError(error,KPKErrorKdbxInvalidKeyDerivationData);
+          return NO;
+        }
+        break;
+        
+      case KPKHeaderKeyPublicCustomData:
+        NSAssert(self.version >= kKPKKdbxFileVersion4, @"File version doesn allow PublictCustomData header field");
+        self.customData = [[NSMutableDictionary alloc] initWithVariantDictionaryData:[dataReader readDataWithLength:fieldSize]];
+        if(!self.customData) {
+          KPKCreateError(error, KPKErrorKdbxCorrutpedPublicCustomData);
+          return NO;
+        }
       default:
         KPKCreateError(error,KPKErrorKdbxInvalidHeaderFieldType);
         return NO;

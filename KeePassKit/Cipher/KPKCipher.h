@@ -14,20 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface KPKCipher : NSObject
 
-+ (NSUUID *)uuid;
-
-+ (KPKCipher * _Nullable)cipherWithUUID:(NSUUID *)uuid;
-+ (KPKCipher * _Nullable)cipherWithUUID:(NSUUID *)uuid options:(NSDictionary *)options;
-
-+ (NSUInteger)keyLength;
-+ (NSUInteger)IVLength;
-
 @property (nonatomic, readonly, copy) NSUUID *uuid;
 @property (nonatomic, readonly) NSUInteger keyLength;
 @property (nonatomic, readonly) NSUInteger IVLength;
 
++ (NSUUID *)uuid;
++ (KPKCipher * _Nullable)cipherWithUUID:(NSUUID *)uuid;
+
 - (KPKCipher *)initWithUUID:(NSUUID *)uuid;
-- (KPKCipher *)initWithUUID:(NSUUID *)uuid options:(NSDictionary *)options NS_DESIGNATED_INITIALIZER;
 
 - (NSData * _Nullable)decryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError * _Nullable __autoreleasing *)error;
 - (NSData * _Nullable)encryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError * _Nullable __autoreleasing *)error;

@@ -68,7 +68,7 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
     self = [self init];
     return self;
   }
-  while(!reader.hasBytesAvailable) {
+  while(reader.hasBytesAvailable) {
     uint8 type = reader.readByte;
     if(type == 0) {
       // end of data

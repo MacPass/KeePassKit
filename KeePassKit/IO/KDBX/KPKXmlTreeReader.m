@@ -102,7 +102,7 @@
     return nil;
   }
   
-  if([self _setupRandomStream:error]) {
+  if(![self _setupRandomStream:error]) {
     return nil;
   }
   

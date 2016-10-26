@@ -40,7 +40,7 @@
 }
 
 - (instancetype)initWithData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError *__autoreleasing *)error {
-  self = [self _decryptorForData:data password:password error:error];
+  self = [KPKUnarchiver unarchiveTreeData:(NSData *)data withKey:password error:error];
   return self;
 }
 
@@ -63,7 +63,4 @@
   return [[treeWriter xmlDocument] XMLDataWithOptions:DDXMLNodeCompactEmptyElement|DDXMLNodePrettyPrint];
 }
 
-- (KPKTree *)_decryptorForData:(NSData *)data password:(KPKCompositeKey *)password error:(NSError **)error {
-  return [KPKUnarchiver unarchiveTreeData:(NSData *)data withKey:password error:error];
-}
 @end

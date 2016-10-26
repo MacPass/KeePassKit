@@ -14,6 +14,8 @@
 #import "KPKXmlTreeWriter.h"
 #import "KPKCipher.h"
 #import "KPKKeyDerivation.h"
+#import "KPKMetaData.h"
+#import "KPKMetaData_Private.h"
 
 #import "KPKDataStreamWriter.h"
 
@@ -31,10 +33,10 @@
 
 @property (strong) KPKDataStreamWriter *dataWriter;
 @property (copy) NSData *randomStreamKey;
-@property (copy) NSData *randomStartBytes;
+@property (copy) NSData *streamStartBytes;
 @property (assign) KPKRandomStreamType randomStreamID;
 
-@property (assign) BOOL isVersion4;
+@property (assign) BOOL outputVersion4;
 
 @end
 
@@ -43,17 +45,44 @@
 @synthesize masterSeed = _masterSeed;
 @synthesize encryptionIV = _encryptionIV;
 
+- (instancetype)_initWithTree:(KPKTree *)tree key:(KPKCompositeKey *)key {
+  self = [super _initWithTree:tree key:key];
+  if(self) {
+    if(self.tree.minimumType == KPKDatabaseFormatKdbx) {
+      _outputVersion4 = NO;
+    }
+    else {
+      _outputVersion4 = self.tree.minimumVersion <= kKPKKdbxFileVersion4;
+    }
+  }
+  return self;
+}
+
 - (NSData *)archiveTree:(NSError *__autoreleasing *)error {
 
-  _masterSeed = [NSData dataWithRandomBytes:32];
-  _encryptionIV = [[NSData dataWithRandomBytes:16] copy];
-  _randomStreamKey = [[NSData dataWithRandomBytes:32] copy];
-  _randomStartBytes = [[NSData dataWithRandomBytes:32] copy];
-  /* random stream defaults to salsa20 */
-  _randomStreamID = self.isVersion4 ? KPKRandomStreamChaCha20 : KPKRandomStreamSalsa20;
+  KPKCipher *cipher = [KPKCipher cipherWithUUID:self.tree.metaData.cipherUUID];
+  if(!cipher) {
+    KPKCreateError(error, KPKErrorUnsupportedCipher);
+    return nil;
+  }
   
-  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithUUID:self.tree.metaData.keyDerivationUUID options:self.tree.metaData.keyDerivationOptions];
+  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithOptions:self.tree.metaData.keyDerivationOptions];
+  if(!keyDerivation) {
+    KPKCreateError(error, KPKErrorUnsupportedKeyDerivation);
+    return nil;
+  }
   [keyDerivation randomize];
+  
+  self.encryptionIV = [NSData dataWithRandomBytes:cipher.IVLength];
+  self.randomStreamKey = [NSData dataWithRandomBytes:32];
+  
+  if(self.outputVersion4) {
+    self.randomStreamID = KPKRandomStreamChaCha20;
+  }
+  else {
+    self.streamStartBytes = [NSData dataWithRandomBytes:32];
+    self.randomStreamID = KPKRandomStreamArc4;
+  }
   
   NSMutableData *data = [[NSMutableData alloc] init];
   
@@ -64,57 +93,51 @@
   [self.dataWriter write4Bytes:CFSwapInt32HostToLittle(kKPKKdbxFileVersion3)];
   
   @autoreleasepool {
-    uuid_t uuidBytes;
-    [self.tree.metaData.cipherUUID getUUIDBytes:uuidBytes];
-    NSData *headerData = [NSData dataWithBytesNoCopy:&uuidBytes length:sizeof(uuid_t) freeWhenDone:NO];
-    [self _writerHeaderField:KPKHeaderKeyCipherId data:headerData];
-    
+    [self _writerHeaderField:KPKHeaderKeyCipherId data:self.tree.metaData.cipherUUID.uuidData];
     uint32_t compressionAlgorithm = CFSwapInt32HostToLittle(self.tree.metaData.compressionAlgorithm);
-    headerData = [NSData dataWithBytesNoCopy:&compressionAlgorithm length:sizeof(uint32_t) freeWhenDone:NO];
+    NSData *headerData = [NSData dataWithBytesNoCopy:&compressionAlgorithm length:sizeof(uint32_t) freeWhenDone:NO];
     [self _writerHeaderField:KPKHeaderKeyCompression data:headerData];
     [self _writerHeaderField:KPKHeaderKeyMasterSeed data:self.masterSeed];
-    if(self.isVersion4) {
+    if(!self.outputVersion4) {
       [self _writerHeaderField:KPKHeaderKeyTransformSeed data:keyDerivation.options[KPKAESSeedOption]];
-      KPKNumber *roundsOption = self.tree.metaData.keyDerivationOptions[KPKAESRoundsOption];
+      KPKNumber *roundsOption = keyDerivation.options[KPKAESRoundsOption];
       uint64_t rounds = CFSwapInt64HostToLittle(roundsOption.unsignedInteger64Value);
       headerData = [NSData dataWithBytesNoCopy:&rounds length:sizeof(uint64_t) freeWhenDone:NO];
       [self _writerHeaderField:KPKHeaderKeyTransformRounds data:headerData];
     }
-    else {
-      [self _writerHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.options.variantDictionaryData];
-    }
     [self _writerHeaderField:KPKHeaderKeyEncryptionIV data:self.encryptionIV];
     [self _writerHeaderField:KPKHeaderKeyProtectedKey data:self.randomStreamKey];
-    [self _writerHeaderField:KPKHeaderKeyStartBytes data:self.randomStartBytes];
+    [self _writerHeaderField:KPKHeaderKeyStartBytes data:self.streamStartBytes];
     
     uint32_t randomStreamId = CFSwapInt32HostToLittle(_randomStreamID);
     headerData = [NSData dataWithBytesNoCopy:&randomStreamId length:sizeof(uint32_t) freeWhenDone:NO];
     [self _writerHeaderField:KPKHeaderKeyRandomStreamId data:headerData];
     
+    if(self.outputVersion4) {
+      [self _writerHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.options.variantDictionaryData];
+    }
+    if(self.tree.metaData.customPublicData.count > 0) {
+      NSAssert(self.outputVersion4, @"Custom data reuqires KDBX version 4");
+      [self _writerHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.variantDictionaryData];
+    }
     uint8_t endBuffer[] = { NSCarriageReturnCharacter, NSNewlineCharacter, NSCarriageReturnCharacter, NSNewlineCharacter };
     headerData = [NSData dataWithBytesNoCopy:endBuffer length:4 freeWhenDone:NO];
     [self _writerHeaderField:KPKHeaderKeyEndOfHeader data:headerData];
   }
   
-  NSData *headerHash = self.isVersion4 ? nil : self.dataWriter.writtenData.SHA256Hash;
+  NSData *headerHash = self.outputVersion4 ? nil : self.dataWriter.writtenData.SHA256Hash;
   KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self.tree randomStreamType:self.randomStreamID randomStreamKey:self.randomStreamKey headerHash:headerHash];
   NSData *xmlData = [treeWriter.xmlDocument XMLDataWithOptions:DDXMLNodeCompactEmptyElement];
   
-  NSData *keyData = [self.key transformForFormat:KPKDatabaseFormatKdbx seed:self.masterSeed keyDerivation:nil error:error];
-
-  KPKCipher *cipher = [KPKCipher cipherWithUUID:self.tree.metaData.cipherUUID];
-  if(!cipher) {
-    KPKCreateError(error, KPKErrorUnsupportedCipher);
-    return nil;
-  }
+  NSData *keyData = [self.key transformForFormat:KPKDatabaseFormatKdbx seed:self.masterSeed keyDerivation:keyDerivation error:error];
   
-  NSMutableData *contentData = [[NSMutableData alloc] initWithData:self.randomStartBytes];
+  NSMutableData *contentData = [[NSMutableData alloc] initWithData:self.streamStartBytes];
   if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
     xmlData = [xmlData gzipDeflate];
   }
   
   [contentData appendData:xmlData.hashedSha256Data];
-
+  
   NSData *encryptedData = [cipher encryptData:contentData withKey:keyData initializationVector:self.encryptionIV error:error];
   [data appendData:encryptedData];
   return data;
@@ -122,12 +145,7 @@
 
 - (void)_writerHeaderField:(KPKHeaderKey)key data:(NSData *)data {
   [self.dataWriter writeByte:key];
-  if(self.isVersion4) {
-    [self.dataWriter write4Bytes:CFSwapInt16HostToLittle(data.length)];
-  }
-  else {
-    [self.dataWriter write2Bytes:CFSwapInt16HostToLittle(data.length)];
-  }
+  self.outputVersion4 ? [self.dataWriter write4Bytes:CFSwapInt16HostToLittle(data.length)] : [self.dataWriter write2Bytes:CFSwapInt16HostToLittle(data.length)];
   if (data.length > 0) {
     [self.dataWriter writeData:data];
   }

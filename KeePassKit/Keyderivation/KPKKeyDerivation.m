@@ -10,25 +10,14 @@
 #import "KPKKeyDerivation_Private.h"
 #import "NSUUID+KeePassKit.h"
 
-NSString *const KPKKeyDerivationBenchmarkSeconds = @"KPKKeyDerivationBenchmarkSeconds";
-
-NSString *const KPKArgon2SaltOption             = @"S";
-NSString *const KPKArgon2ParallelismOption      = @"P";
-NSString *const KPKArgon2MemoryOption           = @"M";
-NSString *const KPKArgon2IterationsOption       = @"I";
-NSString *const KPKArgon2VersionOption          = @"V";
-NSString *const KPKArgon2KeyOption              = @"K";
-NSString *const KPKArgon2AssociativeDataOption  = @"A";
-
-NSString *const KPKAESSeedOption                = @"S"; // NSData
-NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in KPKNumber
+NSString *const KPKKeyDerivationOptionUUID = @"$UUID";
 
 @implementation KPKKeyDerivation
 
 static NSMutableDictionary *_keyDerivations;
 
 + (NSDictionary *)defaultOptions {
-  return @{};
+  return @{ KPKKeyDerivationOptionUUID: [self.class uuid].uuidData };
 }
 
 + (NSUUID *)uuid {
@@ -59,53 +48,50 @@ static NSMutableDictionary *_keyDerivations;
   return [NSArray arrayWithArray:keyDerivations];
 }
 
-+ (KPKKeyDerivation *)keyDerivationWithUUID:(NSUUID *)uuid {
-  return [self keyDerivationWithUUID:uuid options:@{}];
-}
-
-+ (KPKKeyDerivation *)keyDerivationWithUUID:(NSUUID *)uuid options:(NSDictionary *)options {
-  return [[self alloc] initWithUUID:uuid options:options];
++ (KPKKeyDerivation *)keyDerivationWithOptions:(NSDictionary *)options {
+  return [[KPKKeyDerivation alloc] initWithOptions:options];
 }
 
 + (void)parametersForDelay:(NSUInteger)seconds completionHandler:(void (^)(NSDictionary * _Nonnull))completionHandler {
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
 }
 
-+ (NSData * _Nullable)deriveData:(NSData *)data withUUID:(NSUUID *)uuid options:(NSDictionary *)options {
-  KPKKeyDerivation *derivation = [self keyDerivationWithUUID:uuid options:options];
++ (NSData * _Nullable)deriveData:(NSData *)data wihtOptions:(NSDictionary *)options {
+  KPKKeyDerivation *derivation = [[KPKKeyDerivation alloc] initWithOptions:options];
   return [derivation deriveData:data];
 }
 
-- (KPKKeyDerivation *)initWithUUID:(NSUUID *)uuid {
-  self = [self initWithUUID:uuid options:[self.class defaultOptions]];
-  return self;
-}
-
-- (KPKKeyDerivation *)initWithUUID:(NSUUID *)uuid options:(NSDictionary *)options {
-  self = nil;
+- (KPKKeyDerivation *)initWithOptions:(NSDictionary *)options {
+  NSData *uuidData = options[KPKKeyDerivationOptionUUID];
+  if(!uuidData || ![uuidData isKindOfClass:[NSData class]]) {
+    self = nil;
+    return self;
+  }
+  NSUUID *uuid = [[NSUUID alloc] initWithData:uuidData];
   Class keyDerivationClass = _keyDerivations[uuid];
   self = [(KPKKeyDerivation *)[keyDerivationClass alloc] _initWithOptions:options];
   return self;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
 - (KPKKeyDerivation *)_initWithOptions:(NSDictionary *)options {
-  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
-  return nil;
+  self = [self _init];
+  if(self) {
+    self.mutableOptions  = [options mutableCopy];
+  }
+  return self;
 }
 
 - (KPKKeyDerivation *)_init {
   self = [super init];
+  if(self) {
+    _mutableOptions = [[NSMutableDictionary alloc] init];
+  }
   return self;
 }
-#pragma clang diagnostic pop
 
 - (instancetype)init {
-  self = [self initWithUUID:self.uuid options:@{}];
-  self = nil;
-  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
-  return nil;
+  self = [self initWithOptions:[self.class defaultOptions]];
+  return self;
 }
 
 - (NSData *)deriveData:(NSData *)data {
@@ -115,6 +101,14 @@ static NSMutableDictionary *_keyDerivations;
 
 - (NSUUID *)uuid {
   return [self.class uuid];
+}
+
+- (void)randomize {
+  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
+}
+
+- (NSDictionary *)options {
+  return [self.mutableOptions copy];
 }
 
 @end

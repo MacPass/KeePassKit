@@ -350,7 +350,7 @@ BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
 - (KPKFileInfo)fileInfoForData:(NSData *)data {
   KPKFileInfo info;
   info.format = [self _databaseFormatForData:data];
-  info.version = [self _fileVersionForData:data];
+  info.version = [self _fileVersionForData:data format:info.format];
   return info;
 }
 
@@ -376,13 +376,25 @@ BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
   return KPKDatabaseFormatUnknown;
 }
 
-- (uint32_t)_fileVersionForData:(NSData *)data {
-  if(data.length < 12) {
-    return kKPKInvalidFileVersion;
+- (uint32_t)_fileVersionForData:(NSData *)data format:(KPKDatabaseFormat)format{
+  uint32_t version = kKPKInvalidFileVersion;
+  if(format == KPKDatabaseFormatUnknown) {
+    return version;
   }
-  uint32_t version;
-  [data getBytes:&version range:NSMakeRange(8, 4)];
-  version = CFSwapInt32LittleToHost(version);
+  if(format == KPKDatabaseFormatKdb) {
+    if(data.length < 16) {
+      return version;
+    }
+    [data getBytes:&version range:NSMakeRange(12, 4)];
+    version = CFSwapInt32LittleToHost(version);
+  }
+  else {
+    if(data.length < 12) {
+      return version;
+    }
+    [data getBytes:&version range:NSMakeRange(8, 4)];
+    version = CFSwapInt32LittleToHost(version);
+  }  
   return version;
 }
 

@@ -10,13 +10,10 @@
 
 @class KPKNumber;
 
+// AES Options
+FOUNDATION_EXPORT NSString *const KPKAESSeedOption; // NSData 32 bytes
+FOUNDATION_EXPORT NSString *const KPKAESRoundsOption; // KPKNumber uint64_t
+
 @interface KPKAESKeyDerivation : KPKKeyDerivation
-
-@property uint64_t rounds;
-@property (copy) NSData *seed;
-
-+ (NSDictionary *)optionsWithSeed:(NSData *)seed rounds:(NSUInteger)rounds;
-
-- (instancetype)initWithOptions:(NSDictionary *)options;
 
 @end

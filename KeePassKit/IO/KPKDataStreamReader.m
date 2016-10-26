@@ -112,7 +112,7 @@
 }
 
 - (BOOL)hasBytesAvailable {
-  return (self.offset == self.data.length);
+  return (self.offset < self.data.length);
 }
 
 - (NSUInteger)readableBytes {

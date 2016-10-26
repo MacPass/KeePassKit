@@ -8,9 +8,16 @@
 
 #import "KPKKeyDerivation.h"
 
+// Argon2 Options
+FOUNDATION_EXPORT NSString *const KPKArgon2SaltOption; // NSData
+FOUNDATION_EXPORT NSString *const KPKArgon2ParallelismOption; // KPKNumber uint32_t
+FOUNDATION_EXPORT NSString *const KPKArgon2MemoryOption; // KPKNumber utin64_t
+FOUNDATION_EXPORT NSString *const KPKArgon2IterationsOption; // KPKNumber utin64_t
+FOUNDATION_EXPORT NSString *const KPKArgon2VersionOption; // KPKNumber uint32_t
+FOUNDATION_EXPORT NSString *const KPKArgon2KeyOption; // NSData
+FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataOption; // NSData
 
 @interface KPKArgon2KeyDerivation : KPKKeyDerivation
-
 
 - (instancetype)initWithOptions:(NSDictionary *)options;
 + (void)_test;

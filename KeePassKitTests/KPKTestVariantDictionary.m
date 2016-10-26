@@ -9,11 +9,11 @@
 #import <XCTest/XCTest.h>
 @import KeePassKit;
 
-@interface KPKVariantDictionary : XCTestCase
+@interface KPKTestVariantDictionary : XCTestCase
 
 @end
 
-@implementation KPKVariantDictionary
+@implementation KPKTestVariantDictionary
 
 - (void)setUp {
   [super setUp];

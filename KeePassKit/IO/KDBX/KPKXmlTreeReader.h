@@ -33,6 +33,7 @@
 
 - (instancetype)initWithData:(NSData *)data randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key compression:(KPKCompression)compression NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithData:(NSData *)data;
+- (instancetype)init NS_UNAVAILABLE;
 
 - (KPKTree *)tree:(NSError *__autoreleasing *)error;
 

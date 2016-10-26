@@ -48,7 +48,7 @@
   
   /* randomize Master seed and encryption iv */
   [[NSData dataWithRandomBytes:sizeof(_header.masterSeed)] getBytes:_header.masterSeed length:sizeof(_header.masterSeed)];
-  [[NSData dataWithRandomBytes:sizeof(_header.encryptionIv)] getBytes:_header.encryptionIv length:sizeof(_header.encryptionIv)];
+  [[NSData dataWithRandomBytes:sizeof(_header.encryptionIV)] getBytes:_header.encryptionIV length:sizeof(_header.encryptionIV)];
   
   /* initalize the tree writer to get the count of meta entries */
   KPKKdbTreeWriter *treeWriter = [[KPKKdbTreeWriter alloc] initWithTree:self.tree];
@@ -58,7 +58,7 @@
   _header.version = kKPKKdbFileVersion;
   
   /* we only support AES cipher for the KDB  */
-  KPKAESKeyDerivation *keyDerivation = (KPKAESKeyDerivation *)[[KPKKeyDerivation alloc] initWithUUID:self.tree.metaData.keyDerivationUUID options:self.tree.metaData.keyDerivationOptions];
+  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithOptions:self.tree.metaData.keyDerivationOptions];
   if(!keyDerivation || [keyDerivation.uuid isEqual:[KPKAESKeyDerivation uuid]]) {
     keyDerivation = [[KPKAESKeyDerivation alloc] init];
   }
@@ -69,7 +69,9 @@
   NSAssert(seed, @"AESKeyDerivation is missing a seed option!");
   [seed getBytes:_header.transformationSeed length:seed.length];
   
-  uint32_t clampedRounds = (uint32_t)MIN(keyDerivation.rounds, UINT32_MAX);
+  KPKNumber *rounds = keyDerivation.options[KPKAESRoundsOption];
+  NSAssert(rounds, @"AESKeyDerivation is missing a rounds options!");
+  uint32_t clampedRounds = (uint32_t)MIN(rounds.unsignedInteger64Value, UINT32_MAX);
   _header.keyEncRounds = CFSwapInt32HostToLittle(clampedRounds);
   
   NSData *headerHash = [KPKLegacyHeaderUtility hashForHeader:&_header];
@@ -102,7 +104,7 @@
 }
 
 - (NSData *)encryptionIV {
-  return [[NSData alloc] initWithBytes:_header.encryptionIv length:sizeof(_header.encryptionIv)];
+  return [[NSData alloc] initWithBytes:_header.encryptionIV length:sizeof(_header.encryptionIV)];
 }
 
 

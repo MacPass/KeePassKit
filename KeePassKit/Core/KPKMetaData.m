@@ -56,17 +56,17 @@
   return [NSSet setWithObject:NSStringFromSelector(@selector(historyMaxItems))];
 }
 
-
 - (instancetype)init {
   self = [super init];
   if(self){
     _mutableCustomData = [[NSMutableArray alloc] init];
+    _mutableCustomPublicData = [[NSMutableDictionary alloc] init];
     _mutableCustomIcons = [[NSMutableArray alloc] init];
     _mutableUnknownMetaEntryData = [[NSMutableArray alloc] init];
     _customIconCache = [[NSMutableDictionary alloc] init];
     _keyDerivationUUID = [[KPKAESKeyDerivation uuid] copy]; // aesUUID is default for new files
     _keyDerivationOptions = [[KPKAESKeyDerivation defaultOptions] copy]; // aes parameters are used as default
-    _cipherUUID = [[KPKAESCipher uuid] copy];
+    _cipherUUID = [[KPKAESCipher alloc] init].uuid;
     _compressionAlgorithm = KPKCompressionGzip;
     _protectNotes = NO;
     _protectPassword = YES;
@@ -101,15 +101,19 @@
 #pragma mark -
 #pragma mark Properties
 - (NSArray *)customIcons {
-  return [_mutableCustomIcons copy];
+  return [self.mutableCustomIcons copy];
 }
 
 - (NSArray<KPKBinary *> *)customData {
-  return [_mutableCustomData copy];
+  return [self.mutableCustomData copy];
+}
+
+- (NSDictionary *)customPublicData {
+  return [self.mutableCustomPublicData copy];
 }
 
 - (NSArray<KPKBinary *> *)unknownMetaEntryData {
-  return [_mutableUnknownMetaEntryData copy];
+  return [self.mutableUnknownMetaEntryData copy];
 }
 
 - (BOOL)isHistoryEnabled {
@@ -221,6 +225,7 @@
   [self.lastSelectedGroup isEqualTo:other.lastSelectedGroup] &&
   [self.lastTopVisibleGroup isEqualTo:other.lastTopVisibleGroup] &&
   [self.mutableCustomData isEqualToArray:other.mutableCustomData] &&
+  [self.mutableCustomPublicData isEqualToDictionary:other.mutableCustomPublicData] &&
   [self.mutableCustomIcons isEqualToArray:other.mutableCustomIcons] &&
   [self.mutableUnknownMetaEntryData isEqualToArray:other.mutableUnknownMetaEntryData] &&
   self.updateTiming == other.updateTiming;

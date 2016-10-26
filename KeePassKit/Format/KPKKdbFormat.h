@@ -32,7 +32,7 @@ typedef struct {
 	uint32_t version;
   
 	uint8_t masterSeed[16];
-	uint8_t encryptionIv[16];
+	uint8_t encryptionIV[16];
   
 	uint32_t groups;
 	uint32_t entries;

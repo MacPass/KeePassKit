@@ -16,12 +16,19 @@
 
 #import "KPKTree.h"
 #import "KPKMetaData.h"
+#import "KPKCompositeKey.h"
 
+#import "KPKAESCipher.h"
 #import "KPKAESKeyDerivation.h"
 
 @interface KPKKdbUnarchiver () {
   KPKLegacyHeader _header;
 }
+@property (readonly) NSUInteger headerLength;
+@property (copy, nonatomic, readonly) NSData *masterSeed;
+@property (copy, nonatomic, readonly) NSData *encryptionIV;
+@property (readonly) uint32_t numberOfEntries;
+@property (readonly) uint32_t numberOfGroups;
 
 @end
 
@@ -48,6 +55,10 @@
     
     // Check the encryption algorithm
     _header.flags = CFSwapInt32LittleToHost(_header.flags);
+    if(_header.flags & KPKLegacyEncryptionAES) {
+      self.cipherUUID = [KPKAESCipher uuid];
+    }
+    
     if (!(_header.flags & KPKLegacyEncryptionAES)) {
       KPKCreateError(error, KPKErrorUnsupportedCipher);
       self = nil;
@@ -57,19 +68,56 @@
     _header.groups = CFSwapInt32LittleToHost(_header.groups);
     _header.entries = CFSwapInt32LittleToHost(_header.entries);
     
-    self.keyDerivationUUID = [KPKAESKeyDerivation uuid]; // KDB only supports AES key derivation
-    self.mutableKeyDerivationOptions = [[KPKAESKeyDerivation optionsWithSeed:[[NSData alloc] initWithBytes:_header.transformationSeed length:sizeof(_header.transformationSeed)]
-                                                                      rounds:CFSwapInt32LittleToHost(_header.keyEncRounds)] mutableCopy];
+    _header.keyEncRounds = CFSwapInt32LittleToHost(_header.keyEncRounds);
+    self.mutableKeyDerivationOptions = [[KPKAESKeyDerivation defaultOptions] mutableCopy];
+    self.mutableKeyDerivationOptions[KPKAESRoundsOption] = [[KPKNumber alloc] initWithInteger64:_header.keyEncRounds];
+    self.mutableKeyDerivationOptions[KPKAESSeedOption] = [[NSData alloc] initWithBytes:_header.transformationSeed length:sizeof(_header.transformationSeed)];    
   }
   return self;
 }
 - (KPKTree *)tree:(NSError * _Nullable __autoreleasing *)error {
   /* todo encrypt */
-  NSData *decryptedData;
-  KPKKdbTreeReader *treeReader = [[KPKKdbTreeReader alloc] initWithData:decryptedData numberOfEntries:_header.entries numberOfGroups:_header.groups];
+  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithOptions:self.mutableKeyDerivationOptions];
+  if(!keyDerivation) {
+    KPKCreateError(error, KPKErrorUnsupportedKeyDerivation);
+    return nil;
+  }
+  NSData *keyData = [self.key transformForFormat:KPKDatabaseFormatKdb seed:self.masterSeed keyDerivation:keyDerivation error:error];
+  if(!keyData) {
+    return nil;
+  }
+  
+  KPKCipher *cipher = [[KPKAESCipher alloc] init];
+  NSData *contentData = [self.data subdataWithRange:NSMakeRange(self.headerLength, self.data.length - self.headerLength)];
+  NSData *decryptedData = [cipher decryptData:contentData withKey:keyData initializationVector:self.encryptionIV error:error];
+  if(!decryptedData) {
+    return nil;
+  }
+  
+  KPKKdbTreeReader *treeReader = [[KPKKdbTreeReader alloc] initWithData:decryptedData numberOfEntries:self.numberOfEntries numberOfGroups:self.numberOfGroups];
   KPKTree *tree = [treeReader tree:error];
-  tree.metaData.keyDerivationUUID = self.keyDerivationUUID;
-  tree.metaData.keyDerivationOptions = self.mutableKeyDerivationOptions;
+  tree.metaData.keyDerivationOptions = [self.mutableKeyDerivationOptions copy];
   return tree;
 }
+
+- (NSData *)masterSeed {
+  return [NSData dataWithBytes:_header.masterSeed length:sizeof(_header.masterSeed)];
+}
+
+- (NSData *)encryptionIV {
+  return [NSData dataWithBytes:_header.masterSeed length:sizeof(_header.encryptionIV)];
+}
+
+- (uint32_t)numberOfGroups {
+  return _header.groups;
+}
+
+- (uint32_t)numberOfEntries {
+  return _header.entries;
+}
+
+- (NSUInteger)headerLength {
+  return sizeof(_header);
+}
+
 @end

@@ -49,4 +49,19 @@
   return decryptedData;
 }
 
+- (NSData *)encryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError *__autoreleasing  _Nullable *)error {
+  CCCryptorStatus cryptoError = kCCSuccess;
+  NSData *encryptedData = [data dataEncryptedUsingAlgorithm:kCCAlgorithmAES128
+                                                        key:key
+                                       initializationVector:iv
+                                                    options:kCCOptionPKCS7Padding
+                                                      error:&cryptoError];
+  if(cryptoError != kCCSuccess) {
+    KPKCreateError(error, KPKErrorAESDecryptionFailed);
+    return nil;
+  }
+  return encryptedData;
+}
+
+
 @end

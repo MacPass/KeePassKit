@@ -19,24 +19,12 @@
 
 static NSMutableDictionary<NSUUID *, Class> *_ciphers;
 
-+ (NSUUID *) uuid {
++ (NSUUID *)uuid {
   return [NSUUID nullUUID];
 }
 
 + (KPKCipher *)cipherWithUUID:(NSUUID *)uuid {
-  return [self cipherWithUUID:uuid options:@{}];
-}
-
-+ (KPKCipher *)cipherWithUUID:(NSUUID *)uuid options:(NSDictionary *)options {
-  return [[self alloc] initWithUUID:uuid options:options];
-}
-
-+ (NSUInteger)IVLength {
-  return 16;
-}
-
-+ (NSUInteger)keyLength {
-  return 32;
+  return [[KPKCipher alloc] initWithUUID:uuid];
 }
 
 + (void)_registerCipher:(Class)cipherClass {
@@ -56,13 +44,9 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
 }
 
 - (KPKCipher *)initWithUUID:(NSUUID *)uuid {
-  return [self initWithUUID:uuid options:@{}];
-}
-
-- (KPKCipher *)initWithUUID:(NSUUID *)uuid options:(NSDictionary *)options {
   self = nil;
   Class cipherClass = _ciphers[uuid];
-  self = [((KPKCipher *)[cipherClass alloc]) _initWithOptions:options];
+  self = [((KPKCipher *)[cipherClass alloc]) init];
   return self;
 }
 
@@ -79,11 +63,11 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
 }
 
 - (NSUInteger)IVLength {
-  return  [self.class IVLength];
+  return 16;
 }
 
 - (NSUInteger)keyLength {
-  return [self.class keyLength];
+  return 32;
 }
 
 - (NSData *)decryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError *__autoreleasing  _Nullable *)error {

@@ -13,5 +13,6 @@
 @property(nonatomic, strong) NSMutableArray<KPKBinary *> *mutableCustomData;
 @property(nonatomic, strong) NSMutableArray<KPKIcon *> *mutableCustomIcons;
 @property(nonatomic, strong) NSMutableArray<KPKBinary *> *mutableUnknownMetaEntryData;
+@property(nonatomic, strong) NSMutableDictionary *mutableCustomPublicData;
 
 @end
