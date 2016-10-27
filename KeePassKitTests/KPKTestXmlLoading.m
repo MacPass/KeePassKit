@@ -34,11 +34,19 @@
   _key = nil;
 }
 
-- (void)testLoading {
+- (void)testLoadingVersion4 {
+  NSError *error;
+  NSData *data =  [self _loadTestDataBase:@"Argon2KDF_AES_Cipher_test" extension:@"kdbx"];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(tree, @"Loading should result in a tree object");
+}
+
+- (void)testLoadingVersion3 {
   NSError *error;
   KPKTree *tree = [[KPKTree alloc] initWithData:_data key:_key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
-
+  
   XCTAssertEqual(tree.root.groups.count, 0, @"Tree contains just root group");
   XCTAssertEqual(tree.root.entries.count, 1, @"Tree has only one entry");
 }
@@ -52,6 +60,12 @@
   XCTAssertNotNil(tree, @"Tree shoud be loaded");
   KPKEntry *entry = tree.root.entries.firstObject;
   XCTAssertNotNil(entry, @"Entry should be there");
+}
+
+- (NSData *)_loadTestDataBase:(NSString *)name extension:(NSString *)extension {
+  NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
+  NSURL *url = [myBundle URLForResource:name withExtension:extension];
+  return [NSData dataWithContentsOfURL:url];
 }
 
 @end

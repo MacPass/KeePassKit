@@ -23,7 +23,7 @@ FOUNDATION_EXTERN NSString *const KPKKeyDerivationOptionUUID;
 
  @return NSDictionary(Variant) with default parameters
  */
-+ (NSDictionary *)defaultOptions;
++ (NSDictionary *)defaultParameters;
 
 /**
  @return the UUID identifiying the key derivation.
@@ -31,22 +31,22 @@ FOUNDATION_EXTERN NSString *const KPKKeyDerivationOptionUUID;
 + (NSUUID *)uuid;
 + (void)parametersForDelay:(NSUInteger)seconds completionHandler:(void(^)(NSDictionary *options))completionHandler;
 
-+ (KPKKeyDerivation * _Nullable)keyDerivationWithOptions:(NSDictionary *)options;
-+ (NSData * _Nullable)deriveData:(NSData *)data wihtOptions:(NSDictionary *)options;
++ (KPKKeyDerivation * _Nullable)keyDerivationWithParameters:(NSDictionary *)parameters;
++ (NSData * _Nullable)deriveData:(NSData *)data withParameters:(NSDictionary *)parameters;
 
 /**
  @return an NSArray containing default initalizied instances of all known key derivations
  */
 + (NSArray<KPKKeyDerivation *> *)availableKeyDerivations;
 
-- (KPKKeyDerivation *)initWithOptions:(NSDictionary *)options;
+- (KPKKeyDerivation *)initWithParameters:(NSDictionary *)parameters;
 
 - (NSData * _Nullable)deriveData:(NSData *)data;
 
 - (void)randomize;
 
 @property (readonly, copy, nonatomic) NSUUID *uuid;
-@property (readonly, copy) NSDictionary *options;
+@property (readonly, copy) NSDictionary *parameters;
 
 @end
 

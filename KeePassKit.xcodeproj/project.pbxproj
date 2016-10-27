@@ -30,6 +30,8 @@
 		4C0B9DB71DBFB4FC00E66CD6 /* KPKKdbTreeReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0B9DA51DBFB4FC00E66CD6 /* KPKKdbTreeReader.m */; };
 		4C0B9DB81DBFB4FC00E66CD6 /* KPKKdbTreeWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C0B9DA61DBFB4FC00E66CD6 /* KPKKdbTreeWriter.h */; };
 		4C0B9DB91DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */; };
+		4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */; };
+		4C0BF1531DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */; };
 		4C15091D1C74AD10008A2C8E /* KPKMetaData_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */; };
 		4C152C5E1C7617D900380A3B /* KPKGroup_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */; };
 		4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */; };
@@ -257,9 +259,11 @@
 		4C0B9DA51DBFB4FC00E66CD6 /* KPKKdbTreeReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKKdbTreeReader.m; sourceTree = "<group>"; };
 		4C0B9DA61DBFB4FC00E66CD6 /* KPKKdbTreeWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKKdbTreeWriter.h; sourceTree = "<group>"; };
 		4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKKdbTreeWriter.m; sourceTree = "<group>"; };
+		4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argon2KDF_AES_Cipher_test.kdbx; sourceTree = "<group>"; };
+		4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argon2KDF_ChaCha_Cipher_test.kdbx; sourceTree = "<group>"; };
 		4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKMetaData_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKGroup_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = AutotypeCustomKeystrokeSequence_1234.xml; sourceTree = "<group>"; };
+		4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AutotypeCustomKeystrokeSequence_1234.xml; path = Kdbx3/AutotypeCustomKeystrokeSequence_1234.xml; sourceTree = "<group>"; };
 		4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestNode.m; sourceTree = "<group>"; };
 		4C2602111DB110930069B059 /* chacha20_simple.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = chacha20_simple.c; sourceTree = "<group>"; };
 		4C2602121DB110930069B059 /* chacha20_simple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chacha20_simple.h; sourceTree = "<group>"; };
@@ -418,13 +422,13 @@
 		4C7C3F961D81D620008D8961 /* KPKKey_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKKey_Private.h; sourceTree = "<group>"; };
 		4C7C3F971D81D620008D8961 /* KPKPasswordKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKPasswordKey.h; sourceTree = "<group>"; };
 		4C7C3F981D81D620008D8961 /* KPKPasswordKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKPasswordKey.m; sourceTree = "<group>"; };
-		4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Autotype_test.kdbx; sourceTree = "<group>"; };
-		4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = CustomIcon_Password_1234.kdbx; sourceTree = "<group>"; };
-		4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = CustomIcon_Password_1234.xml; sourceTree = "<group>"; };
-		4C81381E1BE282DC001BF195 /* KDB1_KeePassX_test.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = KDB1_KeePassX_test.kdb; sourceTree = "<group>"; };
-		4C81381F1BE282DC001BF195 /* KeePass1_native_test.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = KeePass1_native_test.kdb; sourceTree = "<group>"; };
-		4C8138201BE282DC001BF195 /* Test_Password_1234.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; path = Test_Password_1234.kdb; sourceTree = "<group>"; };
-		4C8138211BE282DC001BF195 /* Test_Password_1234.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Test_Password_1234.kdbx; sourceTree = "<group>"; };
+		4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; name = Autotype_test.kdbx; path = Kdbx3/Autotype_test.kdbx; sourceTree = "<group>"; };
+		4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; name = CustomIcon_Password_1234.kdbx; path = Kdbx3/CustomIcon_Password_1234.kdbx; sourceTree = "<group>"; };
+		4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = CustomIcon_Password_1234.xml; path = Kdbx3/CustomIcon_Password_1234.xml; sourceTree = "<group>"; };
+		4C81381E1BE282DC001BF195 /* KDB1_KeePassX_test.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; name = KDB1_KeePassX_test.kdb; path = Kdb/KDB1_KeePassX_test.kdb; sourceTree = "<group>"; };
+		4C81381F1BE282DC001BF195 /* KeePass1_native_test.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; name = KeePass1_native_test.kdb; path = Kdb/KeePass1_native_test.kdb; sourceTree = "<group>"; };
+		4C8138201BE282DC001BF195 /* Test_Password_1234.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; name = Test_Password_1234.kdb; path = Kdb/Test_Password_1234.kdb; sourceTree = "<group>"; };
+		4C8138211BE282DC001BF195 /* Test_Password_1234.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; name = Test_Password_1234.kdbx; path = Kdbx3/Test_Password_1234.kdbx; sourceTree = "<group>"; };
 		4C8138231BE282DC001BF195 /* image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image.png; sourceTree = "<group>"; };
 		4C8138251BE282DC001BF195 /* Keepass2Key.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Keepass2Key.xml; sourceTree = "<group>"; };
 		4C835B511D22AA3B0037E4B8 /* KPKTreeDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKTreeDelegate.h; sourceTree = "<group>"; };
@@ -516,6 +520,37 @@
 				4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */,
 			);
 			path = KDB;
+			sourceTree = "<group>";
+		};
+		4C0BF14F1DC1199900193AD1 /* Kdbx4 */ = {
+			isa = PBXGroup;
+			children = (
+				4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */,
+				4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */,
+			);
+			path = Kdbx4;
+			sourceTree = "<group>";
+		};
+		4C0BF1541DC119E800193AD1 /* Kdbx3 */ = {
+			isa = PBXGroup;
+			children = (
+				4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */,
+				4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */,
+				4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */,
+				4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */,
+				4C8138211BE282DC001BF195 /* Test_Password_1234.kdbx */,
+			);
+			name = Kdbx3;
+			sourceTree = "<group>";
+		};
+		4C0BF1551DC11A3000193AD1 /* Kdb */ = {
+			isa = PBXGroup;
+			children = (
+				4C81381E1BE282DC001BF195 /* KDB1_KeePassX_test.kdb */,
+				4C81381F1BE282DC001BF195 /* KeePass1_native_test.kdb */,
+				4C8138201BE282DC001BF195 /* Test_Password_1234.kdb */,
+			);
+			name = Kdb;
 			sourceTree = "<group>";
 		};
 		4C2602101DB110930069B059 /* ChaCha20 */ = {
@@ -849,14 +884,9 @@
 		4C81381A1BE282DC001BF195 /* Databases */ = {
 			isa = PBXGroup;
 			children = (
-				4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */,
-				4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */,
-				4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */,
-				4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */,
-				4C81381E1BE282DC001BF195 /* KDB1_KeePassX_test.kdb */,
-				4C81381F1BE282DC001BF195 /* KeePass1_native_test.kdb */,
-				4C8138201BE282DC001BF195 /* Test_Password_1234.kdb */,
-				4C8138211BE282DC001BF195 /* Test_Password_1234.kdbx */,
+				4C0BF1551DC11A3000193AD1 /* Kdb */,
+				4C0BF1541DC119E800193AD1 /* Kdbx3 */,
+				4C0BF14F1DC1199900193AD1 /* Kdbx4 */,
 			);
 			path = Databases;
 			sourceTree = "<group>";
@@ -1133,11 +1163,13 @@
 				4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */,
 				4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
 				4C8138291BE282DC001BF195 /* KDB1_KeePassX_test.kdb in Resources */,
+				4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
 				4C81382B1BE282DC001BF195 /* Test_Password_1234.kdb in Resources */,
 				4C81382C1BE282DC001BF195 /* Test_Password_1234.kdbx in Resources */,
 				4C8138261BE282DC001BF195 /* Autotype_test.kdbx in Resources */,
 				4C81382A1BE282DC001BF195 /* KeePass1_native_test.kdb in Resources */,
 				4C8138271BE282DC001BF195 /* CustomIcon_Password_1234.kdbx in Resources */,
+				4C0BF1531DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
 				4C81382D1BE282DC001BF195 /* image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,11 +10,11 @@
 
 @interface KPKKeyDerivation ()
 
-@property (strong) NSMutableDictionary *mutableOptions;
+@property (strong) NSMutableDictionary *mutableParameters;
 
 + (void)_registerKeyDerivation:(Class)derivationClass;
 
 - (KPKKeyDerivation *)_init;
-- (KPKKeyDerivation *)_initWithOptions:(NSDictionary *)options;
+- (KPKKeyDerivation *)_initWithParameters:(NSDictionary *)parameters;
 
 @end

@@ -113,23 +113,34 @@
 
 - (int32_t)integer32Value {
   /* explicit cast for 64bit systems */
+  [self _checkTypeConversion:KPKNumberTypeInteger32];
   return (int32_t)self.number.longValue;
 }
 
 - (uint32_t)unsignedInteger32Value {
+  [self _checkTypeConversion:KPKNumberTypeUnsignedInteger32];
   return (uint32_t)self.number.unsignedLongLongValue;
 }
 
 - (int64_t)integer64Value {
+  [self _checkTypeConversion:KPKNumberTypeInteger64];
   return self.number.longLongValue;
 }
 
 - (uint64_t)unsignedInteger64Value {
+  [self _checkTypeConversion:KPKNumberTypeUnsignedInteger64];
   return self.number.unsignedLongLongValue;
 }
 
 - (BOOL)boolValue {
+  [self _checkTypeConversion:KPKNumberTypeBool];
   return self.number.boolValue;
+}
+
+- (void)_checkTypeConversion:(KPKNumberType)type {
+  if(self.type != type) {
+    NSLog(@"Warnging. Requesting casted type:%ld. Native type:%ld", type, self.type);
+  }
 }
 
 @end

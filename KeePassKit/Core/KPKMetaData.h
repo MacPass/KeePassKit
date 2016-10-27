@@ -30,8 +30,7 @@
 @interface KPKMetaData : NSObject <KPKModificationRecording>
 
 /* Setting for cipher */
-@property(copy) NSUUID *keyDerivationUUID; // UUID for the key derivation function to use, KDB and KDBX3 default ist AES, KDBX4 should default to Argon2
-@property(copy) NSDictionary *keyDerivationOptions; // NSDictionary(Variant) with parameters for the key derivation operation
+@property(copy) NSDictionary *keyDerivationParameters; // NSDictionary(Variant) with parameters for the key derivation operation
 @property(copy) NSUUID *cipherUUID; // UUID for the chipher used to encrypt the content, defaults are AES (KDB, KDBX3.1) and ChaCha20 (KDBX4)
 @property(assign) uint32_t compressionAlgorithm;
 

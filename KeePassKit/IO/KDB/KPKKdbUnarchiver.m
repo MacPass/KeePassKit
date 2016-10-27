@@ -69,15 +69,15 @@
     _header.entries = CFSwapInt32LittleToHost(_header.entries);
     
     _header.keyEncRounds = CFSwapInt32LittleToHost(_header.keyEncRounds);
-    self.mutableKeyDerivationOptions = [[KPKAESKeyDerivation defaultOptions] mutableCopy];
-    self.mutableKeyDerivationOptions[KPKAESRoundsOption] = [[KPKNumber alloc] initWithInteger64:_header.keyEncRounds];
-    self.mutableKeyDerivationOptions[KPKAESSeedOption] = [[NSData alloc] initWithBytes:_header.transformationSeed length:sizeof(_header.transformationSeed)];    
+    self.mutableKeyDerivationParameters = [[KPKAESKeyDerivation defaultParameters] mutableCopy];
+    self.mutableKeyDerivationParameters[KPKAESRoundsOption] = [[KPKNumber alloc] initWithInteger64:_header.keyEncRounds];
+    self.mutableKeyDerivationParameters[KPKAESSeedOption] = [[NSData alloc] initWithBytes:_header.transformationSeed length:sizeof(_header.transformationSeed)];
   }
   return self;
 }
 - (KPKTree *)tree:(NSError * _Nullable __autoreleasing *)error {
   /* todo encrypt */
-  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithOptions:self.mutableKeyDerivationOptions];
+  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithParameters:self.mutableKeyDerivationParameters];
   if(!keyDerivation) {
     KPKCreateError(error, KPKErrorUnsupportedKeyDerivation);
     return nil;
@@ -96,7 +96,7 @@
   
   KPKKdbTreeReader *treeReader = [[KPKKdbTreeReader alloc] initWithData:decryptedData numberOfEntries:self.numberOfEntries numberOfGroups:self.numberOfGroups];
   KPKTree *tree = [treeReader tree:error];
-  tree.metaData.keyDerivationOptions = [self.mutableKeyDerivationOptions copy];
+  tree.metaData.keyDerivationParameters = [self.mutableKeyDerivationParameters copy];
   return tree;
 }
 

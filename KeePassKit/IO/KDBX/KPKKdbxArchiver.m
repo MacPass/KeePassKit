@@ -66,7 +66,7 @@
     return nil;
   }
   
-  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithOptions:self.tree.metaData.keyDerivationOptions];
+  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithParameters:self.tree.metaData.keyDerivationParameters];
   if(!keyDerivation) {
     KPKCreateError(error, KPKErrorUnsupportedKeyDerivation);
     return nil;
@@ -100,8 +100,8 @@
     [self _writerHeaderField:KPKHeaderKeyCompression data:headerData];
     [self _writerHeaderField:KPKHeaderKeyMasterSeed data:self.masterSeed];
     if(!self.outputVersion4) {
-      [self _writerHeaderField:KPKHeaderKeyTransformSeed data:keyDerivation.options[KPKAESSeedOption]];
-      KPKNumber *roundsOption = keyDerivation.options[KPKAESRoundsOption];
+      [self _writerHeaderField:KPKHeaderKeyTransformSeed data:keyDerivation.parameters[KPKAESSeedOption]];
+      KPKNumber *roundsOption = keyDerivation.parameters[KPKAESRoundsOption];
       uint64_t rounds = CFSwapInt64HostToLittle(roundsOption.unsignedInteger64Value);
       headerData = [NSData dataWithBytesNoCopy:&rounds length:sizeof(uint64_t) freeWhenDone:NO];
       [self _writerHeaderField:KPKHeaderKeyTransformRounds data:headerData];
@@ -115,7 +115,7 @@
     [self _writerHeaderField:KPKHeaderKeyRandomStreamId data:headerData];
     
     if(self.outputVersion4) {
-      [self _writerHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.options.variantDictionaryData];
+      [self _writerHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.parameters.variantDictionaryData];
     }
     if(self.tree.metaData.customPublicData.count > 0) {
       NSAssert(self.outputVersion4, @"Custom data reuqires KDBX version 4");

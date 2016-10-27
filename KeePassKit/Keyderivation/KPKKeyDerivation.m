@@ -16,7 +16,7 @@ NSString *const KPKKeyDerivationOptionUUID = @"$UUID";
 
 static NSMutableDictionary *_keyDerivations;
 
-+ (NSDictionary *)defaultOptions {
++ (NSDictionary *)defaultParameters {
   return @{ KPKKeyDerivationOptionUUID: [self.class uuid].uuidData };
 }
 
@@ -48,35 +48,35 @@ static NSMutableDictionary *_keyDerivations;
   return [NSArray arrayWithArray:keyDerivations];
 }
 
-+ (KPKKeyDerivation *)keyDerivationWithOptions:(NSDictionary *)options {
-  return [[KPKKeyDerivation alloc] initWithOptions:options];
++ (KPKKeyDerivation *)keyDerivationWithParameters:(NSDictionary *)parameters {
+  return [[KPKKeyDerivation alloc] initWithParameters:parameters];
 }
 
 + (void)parametersForDelay:(NSUInteger)seconds completionHandler:(void (^)(NSDictionary * _Nonnull))completionHandler {
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
 }
 
-+ (NSData * _Nullable)deriveData:(NSData *)data wihtOptions:(NSDictionary *)options {
-  KPKKeyDerivation *derivation = [[KPKKeyDerivation alloc] initWithOptions:options];
++ (NSData * _Nullable)deriveData:(NSData *)data withParameters:(NSDictionary *)parameters {
+  KPKKeyDerivation *derivation = [[KPKKeyDerivation alloc] initWithParameters:parameters];
   return [derivation deriveData:data];
 }
 
-- (KPKKeyDerivation *)initWithOptions:(NSDictionary *)options {
-  NSData *uuidData = options[KPKKeyDerivationOptionUUID];
+- (KPKKeyDerivation *)initWithParameters:(NSDictionary *)parameters {
+  NSData *uuidData = parameters[KPKKeyDerivationOptionUUID];
   if(!uuidData || ![uuidData isKindOfClass:[NSData class]]) {
     self = nil;
     return self;
   }
   NSUUID *uuid = [[NSUUID alloc] initWithData:uuidData];
   Class keyDerivationClass = _keyDerivations[uuid];
-  self = [(KPKKeyDerivation *)[keyDerivationClass alloc] _initWithOptions:options];
+  self = [(KPKKeyDerivation *)[keyDerivationClass alloc] _initWithParameters:parameters];
   return self;
 }
 
-- (KPKKeyDerivation *)_initWithOptions:(NSDictionary *)options {
+- (KPKKeyDerivation *)_initWithParameters:(NSDictionary *)parameters{
   self = [self _init];
   if(self) {
-    self.mutableOptions  = [options mutableCopy];
+    self.mutableParameters  = [parameters mutableCopy];
   }
   return self;
 }
@@ -84,13 +84,13 @@ static NSMutableDictionary *_keyDerivations;
 - (KPKKeyDerivation *)_init {
   self = [super init];
   if(self) {
-    _mutableOptions = [[NSMutableDictionary alloc] init];
+    _mutableParameters = [[NSMutableDictionary alloc] init];
   }
   return self;
 }
 
 - (instancetype)init {
-  self = [self initWithOptions:[self.class defaultOptions]];
+  self = [self initWithParameters:[self.class defaultParameters]];
   return self;
 }
 
@@ -107,8 +107,8 @@ static NSMutableDictionary *_keyDerivations;
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
 }
 
-- (NSDictionary *)options {
-  return [self.mutableOptions copy];
+- (NSDictionary *)parameters {
+  return [self.mutableParameters copy];
 }
 
 @end

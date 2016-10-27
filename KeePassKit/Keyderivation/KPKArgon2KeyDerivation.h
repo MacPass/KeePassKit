@@ -19,7 +19,4 @@ FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataOption; // NSData
 
 @interface KPKArgon2KeyDerivation : KPKKeyDerivation
 
-- (instancetype)initWithOptions:(NSDictionary *)options;
-+ (void)_test;
-
 @end

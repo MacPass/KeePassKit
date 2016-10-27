@@ -64,8 +64,7 @@
     _mutableCustomIcons = [[NSMutableArray alloc] init];
     _mutableUnknownMetaEntryData = [[NSMutableArray alloc] init];
     _customIconCache = [[NSMutableDictionary alloc] init];
-    _keyDerivationUUID = [[KPKAESKeyDerivation uuid] copy]; // aesUUID is default for new files
-    _keyDerivationOptions = [[KPKAESKeyDerivation defaultOptions] copy]; // aes parameters are used as default
+    _keyDerivationParameters = [[KPKAESKeyDerivation defaultParameters] copy]; // aes parameters are used as default
     _cipherUUID = [[KPKAESCipher alloc] init].uuid;
     _compressionAlgorithm = KPKCompressionGzip;
     _protectNotes = NO;
@@ -191,8 +190,7 @@
     return YES; // Pointers match
   }
   /* no tree comparison, since the pointers cannot be encoded persitently */
-  return [self.keyDerivationUUID isEqual:other.keyDerivationUUID] &&
-  [self.keyDerivationOptions isEqualToDictionary:other.keyDerivationOptions] &&
+  return [self.keyDerivationParameters isEqualToDictionary:other.keyDerivationParameters] &&
   self.compressionAlgorithm == other.compressionAlgorithm &&
   [self.cipherUUID isEqual:other.cipherUUID] &&
   [self.generator isEqualToString:other.generator] &&

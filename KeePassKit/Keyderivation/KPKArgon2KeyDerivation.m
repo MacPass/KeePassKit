@@ -7,7 +7,12 @@
 //
 
 #import "KPKArgon2KeyDerivation.h"
+#import "KPKKeyDerivation_Private.h"
+
 #import "KPKNumber.h"
+
+#import "NSData+Random.h"
+
 #import "argon2.h"
 
 NSString *const KPKArgon2SaltOption             = @"S";
@@ -18,10 +23,36 @@ NSString *const KPKArgon2VersionOption          = @"V";
 NSString *const KPKArgon2KeyOption              = @"K";
 NSString *const KPKArgon2AssociativeDataOption  = @"A";
 
+const uint32_t KPKArgon2MinSaltLength = 8;
+const uint32_t KPKArgon2MaxSaltLength = INT32_MAX;
+const uint64_t KPKArgon2MinIterations = 1;
+const uint64_t KPKArgon2MaxIterations = UINT32_MAX;
+
+const uint64_t KPKArgon2MinMemory = 1024 * 8;
+const uint64_t KPKArgon2MaxMemory = INT32_MAX;
+
+const uint32_t KPKArgon2MinParallelism = 1;
+const uint32_t KPKArgon2MaxParallelism = (1 << 24) - 1;
+
+const uint64_t KPKArgon2DefaultIterations = 2;
+const uint64_t KPKArgon2DefaultMemory = 1024 * 1024; // 1 MB
+const uint32_t KPKArgon2DefaultParallelism = 2;
+
+#define KPK_ARGON2_CHECK_INVERVALL(min,max,value) ( (value >= min) && (value <= max) )
+
 @implementation KPKArgon2KeyDerivation
 
++ (void)load {
+  [KPKKeyDerivation _registerKeyDerivation:self];
+}
+
 + (NSDictionary *)defaultParameters {
-  return @{};
+  NSMutableDictionary *parameters = [[super defaultParameters] mutableCopy];
+  parameters[KPKArgon2VersionOption] = [KPKNumber numberWithInteger32:ARGON2_VERSION_10];
+  parameters[KPKArgon2IterationsOption] = [KPKNumber numberWithInteger64:KPKArgon2DefaultIterations];
+  parameters[KPKArgon2MemoryOption] = [KPKNumber numberWithInteger64:KPKArgon2DefaultMemory];
+  parameters[KPKArgon2ParallelismOption] = [KPKNumber numberWithInteger32:KPKArgon2DefaultParallelism];
+  return [parameters copy];
 }
 
 + (NSUUID *)uuid {
@@ -37,88 +68,70 @@ NSString *const KPKArgon2AssociativeDataOption  = @"A";
   return argon2UUID;
 }
 
-- (NSData *)deriveData:(NSData *)data options:(NSDictionary *)options {
-  NSData *salt = options[KPKArgon2SaltOption];
-  if(salt.length == 0) {
-    return nil;
-  }
-  KPKNumber *parallelismOptionNmb = options[KPKArgon2ParallelismOption];
-  if(!parallelismOptionNmb || parallelismOptionNmb.type != KPKNumberTypeUnsignedInteger32) {
-    return nil;
-  }
-  uint32_t parallelism = parallelismOptionNmb.unsignedInteger32Value;
-  return nil;
-  
-  /*
-   FOUNDATION_EXPORT NSString *const KPKArgon2SaltOption; // NSData
-   FOUNDATION_EXPORT NSString *const KPKArgon2ParallelismOption; // uint32_t
-   FOUNDATION_EXPORT NSString *const KPKArgon2MemoryOption; // utin64_t
-   FOUNDATION_EXPORT NSString *const KPKArgon2IterationsOption; // utin64_t
-   FOUNDATION_EXPORT NSString *const KPKArgon2VersionOption; // uint32_t
-   FOUNDATION_EXPORT NSString *const KPKArgon2KeyOption; // NSData
-   FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataOption; // NSData
-   */
-  
+- (void)randomize {
+  self.mutableParameters[KPKArgon2SaltOption] = [NSData dataWithRandomBytes:32];
 }
 
-- (instancetype)initWithOptions:(NSDictionary *)options {
-  return nil;
-}
+- (NSData *)deriveData:(NSData *)data {
+  NSAssert(self.mutableParameters[KPKArgon2AssociativeDataOption], @"Associative Data parameter is missing");
+  NSAssert(self.mutableParameters[KPKArgon2IterationsOption],@"Iterations option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2KeyOption],@"Key option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2MemoryOption],@"Memory option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2ParallelismOption],@"Paralelism option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2SaltOption],@"Salt option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2VersionOption],@"Version option is missing!");
+  
+  uint32_t version = [self.mutableParameters[KPKArgon2VersionOption] unsignedInteger32Value];
+  if(KPK_ARGON2_CHECK_INVERVALL(ARGON2_VERSION_10, ARGON2_VERSION_13, version)) {
+    return nil;
+  }
+  
+  NSData *saltData = self.mutableParameters[KPKArgon2SaltOption];
+  if(KPK_ARGON2_CHECK_INVERVALL(KPKArgon2MinSaltLength, KPKArgon2MaxSaltLength, saltData.length)) {
+    return nil;
+  }
+  uint32_t parallelism = [self.mutableParameters[KPKArgon2ParallelismOption] unsignedInteger32Value];
+  if(KPK_ARGON2_CHECK_INVERVALL(KPKArgon2MinParallelism, KPKArgon2MaxParallelism, parallelism)) {
+    return nil;
+  }
+  
+  uint64_t memory = [self.mutableParameters[KPKArgon2MemoryOption] unsignedInteger64Value];
+  if(KPK_ARGON2_CHECK_INVERVALL(KPKArgon2MinMemory, KPKArgon2MaxMemory, memory)) {
+    return nil;
+  }
+  uint64_t iterations = [self.mutableParameters[KPKArgon2IterationsOption] unsignedInteger64Value];
+  if(KPK_ARGON2_CHECK_INVERVALL(KPKArgon2MinIterations, KPKArgon2MaxIterations, iterations)) {
+    return nil;
+  }
+  
+  NSData *associativeData = self.mutableParameters[KPKArgon2AssociativeDataOption];
+  NSData *keyData = self.mutableParameters[KPKArgon2KeyOption];
 
-+ (void)_test {
-#define HASHLEN 32
-#define SALTLEN 16
-#define PWD "password"
-  
-  uint8_t hash1[HASHLEN];
-  uint8_t hash2[HASHLEN];
-  
-  uint8_t salt[SALTLEN];
-  memset( salt, 0x00, SALTLEN );
-  
-  uint8_t *pwd = (uint8_t *)strdup(PWD);
-  uint32_t pwdlen = (uint32_t)strlen((char *)pwd);
-  
-  uint32_t t_cost = 2;            // 1-pass computation
-  uint32_t m_cost = (1<<16);      // 64 mebibytes memory usage
-  uint32_t parallelism = 1;       // number of threads and lanes
-  
-  // high-level API
-  argon2i_hash_raw(t_cost, m_cost, parallelism, pwd, pwdlen, salt, SALTLEN, hash1, HASHLEN);
-  
-  // low-level API
+  uint8_t hash[32];
   argon2_context context = {
-    hash2,  /* output array, at least HASHLEN in size */
-    HASHLEN, /* digest length */
-    pwd, /* password array */
-    pwdlen, /* password length */
-    salt,  /* salt array */
-    SALTLEN, /* salt length */
-    NULL, 0, /* optional secret data */
-    NULL, 0, /* optional associated data */
-    t_cost, m_cost, parallelism, parallelism,
-    ARGON2_VERSION_13, /* algorithm version */
+    hash,  /* output array, at least HASHLEN in size */
+    sizeof(hash), /* digest length */
+    (uint8_t *)data.bytes, /* password array */
+    (uint32_t)data.length, /* password length */
+    (uint8_t *)saltData.bytes, /* salt array */
+    (uint32_t)saltData.length, /* salt length */
+    (uint8_t *)keyData.bytes, (uint32_t)keyData.length, /* optional secret data */
+    (uint8_t *)associativeData.bytes, (uint32_t)associativeData.length, /* optional associated data */
+    (uint32_t)iterations,
+    (uint32_t)memory,
+    parallelism,
+    parallelism,
+    version, /* algorithm version */
     NULL, NULL, /* custom memory allocation / deallocation functions */
     ARGON2_DEFAULT_FLAGS /* by default the password is zeroed on exit */
   };
   
-  int rc = argon2i_ctx( &context );
-  if(ARGON2_OK != rc) {
-    printf("Error: %s\n", argon2_error_message(rc));
-    exit(1);
+  int returnCode = argon2d_ctx( &context );
+  if(ARGON2_OK != returnCode) {
+    NSLog(@"%s", argon2_error_message(returnCode));
+    return nil;
   }
-  free(pwd);
-  
-  for( int i=0; i<HASHLEN; ++i ) printf( "%02x", hash1[i] ); printf( "\n" );
-  if (memcmp(hash1, hash2, HASHLEN)) {
-    for( int i=0; i<HASHLEN; ++i ) {
-      printf( "%02x", hash2[i] );
-    }
-    printf("\nfail\n");
-  }
-  else printf("ok\n");
+  return [NSData dataWithBytes:hash length:sizeof(hash)];
 }
-
-
 
 @end

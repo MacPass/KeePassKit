@@ -47,7 +47,7 @@
 - (instancetype)_initWithData:(NSData *)data version:(NSUInteger)version key:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
   self = [super init];
   if(self) {
-    _mutableKeyDerivationOptions = [@{} mutableCopy];
+    _mutableKeyDerivationParameters = [@{} mutableCopy];
     _data = [data copy];
     _key = key;
     _version = version;

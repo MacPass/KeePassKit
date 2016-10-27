@@ -16,7 +16,7 @@
 @property (strong) KPKCompositeKey *key;
 
 @property (copy) NSUUID *cipherUUID;
-@property (strong) NSMutableDictionary *mutableKeyDerivationOptions;
+@property (strong) NSMutableDictionary *mutableKeyDerivationParameters;
 @property (assign) NSUInteger version;
 
 - (instancetype)_initWithData:(NSData *)data version:(NSUInteger)version key:(KPKCompositeKey *)key error:(NSError **)error;

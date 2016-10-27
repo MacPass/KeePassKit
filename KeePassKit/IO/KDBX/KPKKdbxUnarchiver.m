@@ -48,14 +48,14 @@
 @implementation KPKKdbxUnarchiver
 
 - (instancetype)_initWithData:(NSData *)data version:(NSUInteger)version key:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error {
-  if((version & kKPKKdbxFileVersionCriticalMask) > (kKPKKdbxFileVersion3CriticalMax & kKPKKdbxFileVersionCriticalMask)) {
+  if((version & kKPKKdbxFileVersionCriticalMask) > (kKPKKdbxFileVersion4CriticalMax & kKPKKdbxFileVersionCriticalMask)) {
     KPKCreateError(error, KPKErrorUnsupportedDatabaseVersion);
     self = nil;
     return self;
   }
   self = [super _initWithData:data version:version key:key error:error];
   if(self) {
-    self.mutableKeyDerivationOptions = [[KPKAESKeyDerivation defaultOptions] mutableCopy];
+    self.mutableKeyDerivationParameters = [[KPKAESKeyDerivation defaultParameters] mutableCopy];
     if(![self _parseHeader:data error:error]) {
       self = nil;
     }
@@ -65,7 +65,7 @@
 
 
 - (KPKTree *)tree:(NSError * _Nullable __autoreleasing *)error {
-  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithOptions:self.mutableKeyDerivationOptions];
+  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithParameters:self.mutableKeyDerivationParameters];
   if(!keyDerivation) {
     KPKCreateError(error, KPKErrorUnsupportedKeyDerivation);
     return nil;
@@ -109,7 +109,7 @@
     KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:unhashedData randomStreamType:self.randomStreamID randomStreamKey:self.protectedStreamKey compression:self.compressionAlgorithm];
     KPKTree *tree = [reader tree:error];
     if(tree) {
-      tree.metaData.keyDerivationOptions = self.mutableKeyDerivationOptions;
+      tree.metaData.keyDerivationParameters = self.mutableKeyDerivationParameters;
       tree.metaData.compressionAlgorithm = self.compressionAlgorithm;
       tree.metaData.cipherUUID = self.cipherUUID;
       
@@ -195,7 +195,7 @@
           KPKCreateError(error, KPKErrorKdbxInvalidHeaderFieldSize);
           return NO;
         }
-        self.mutableKeyDerivationOptions[KPKAESSeedOption] = [dataReader readDataWithLength:fieldSize];
+        self.mutableKeyDerivationParameters[KPKAESSeedOption] = [dataReader readDataWithLength:fieldSize];
         break;
         
       case KPKHeaderKeyEncryptionIV: {
@@ -224,7 +224,7 @@
             KPKCreateError(error, KPKErrorKdbxInvalidHeaderFieldSize);
             return NO;
           }
-          self.mutableKeyDerivationOptions[KPKAESRoundsOption] = [KPKNumber numberWithInteger64:CFSwapInt64LittleToHost([dataReader read8Bytes])];
+          self.mutableKeyDerivationParameters[KPKAESRoundsOption] = [KPKNumber numberWithInteger64:CFSwapInt64LittleToHost([dataReader read8Bytes])];
         }
         break;
         
@@ -253,8 +253,8 @@
         
       case KPKHeaderKeyKdfParameters:
         NSAssert(self.version >= kKPKKdbxFileVersion4, @"File version doesn allow KDFParameter header field");
-        self.mutableKeyDerivationOptions = [[NSMutableDictionary alloc] initWithVariantDictionaryData:[dataReader readDataWithLength:fieldSize]];
-        if(!self.mutableKeyDerivationOptions || !self.mutableKeyDerivationOptions.isValidVariantDictionary) {
+        self.mutableKeyDerivationParameters = [[NSMutableDictionary alloc] initWithVariantDictionaryData:[dataReader readDataWithLength:fieldSize]];
+        if(!self.mutableKeyDerivationParameters || !self.mutableKeyDerivationParameters.isValidVariantDictionary) {
           KPKCreateError(error,KPKErrorKdbxInvalidKeyDerivationData);
           return NO;
         }

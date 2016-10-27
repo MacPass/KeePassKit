@@ -21,10 +21,10 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
 
 @implementation KPKAESKeyDerivation
 
-+ (NSDictionary *)defaultOptions {
-  NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithDictionary:[super defaultOptions]];
-  options[KPKAESRoundsOption] = [[KPKNumber alloc] initWithInteger64:50000];
-  return [options copy];
++ (NSDictionary *)defaultParameters {
+  NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:[super defaultParameters]];
+  parameters[KPKAESRoundsOption] = [[KPKNumber alloc] initWithInteger64:50000];
+  return [parameters copy];
 }
 
 + (NSUUID *)uuid {
@@ -69,20 +69,20 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
   });
 }
 
-- (KPKKeyDerivation *)_initWithOptions:(NSDictionary *)options {
-  NSAssert([options[KPKKeyDerivationOptionUUID] isEqualToData:self.uuid.uuidData], @"AES KeyDerivation UUID mismatch!");
-  NSAssert(options[KPKAESRoundsOption], @"Rounds option is missing!");
-  self = [super _initWithOptions:options];
+- (KPKKeyDerivation *)_initWithParameters:(NSDictionary *)parameters {
+  NSAssert([parameters[KPKKeyDerivationOptionUUID] isEqualToData:self.uuid.uuidData], @"AES KeyDerivation UUID mismatch!");
+  NSAssert(parameters[KPKAESRoundsOption], @"Rounds option is missing!");
+  self = [super _initWithParameters:parameters];
   return self;
 }
 
 - (void)randomize {
-  self.mutableOptions[KPKAESSeedOption] = [NSData dataWithRandomBytes:32];
+  self.mutableParameters[KPKAESSeedOption] = [NSData dataWithRandomBytes:32];
 }
 
 - (NSData *)deriveData:(NSData *)data {
-  NSAssert(self.options[KPKAESSeedOption], @"Seed option is missing!");
-  NSData *seed = self.mutableOptions[KPKAESSeedOption];
+  NSAssert(self.mutableParameters[KPKAESSeedOption], @"Seed option is missing!");
+  NSData *seed = self.mutableParameters[KPKAESSeedOption];
   if(seed.length != 32 ) {
     NSLog(@"Key derivations seed is not 32 bytes. Hashing seed!");
     seed = seed.SHA256Hash;
@@ -102,7 +102,7 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
   uint8_t derivedData[32];
   [data getBytes:derivedData length:32];
   size_t tmp;
-  uint64_t rounds = ((KPKNumber *)self.mutableOptions[KPKAESRoundsOption]).unsignedInteger64Value;
+  uint64_t rounds = ((KPKNumber *)self.mutableParameters[KPKAESRoundsOption]).unsignedInteger64Value;
   while(rounds--) {
     status = CCCryptorUpdate(cryptorRef, derivedData, 32, derivedData, 32, &tmp);
     if(kCCSuccess != status) {

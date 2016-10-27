@@ -58,18 +58,18 @@
   _header.version = CFSwapInt32HostToLittle(kKPKKdbFileVersion);
   
   /* we only support AES cipher for the KDB  */
-  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithOptions:self.tree.metaData.keyDerivationOptions];
+  KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithParameters:self.tree.metaData.keyDerivationParameters];
   if(!keyDerivation || ![keyDerivation.uuid isEqual:[KPKAESKeyDerivation uuid]]) {
     keyDerivation = [[KPKAESKeyDerivation alloc] init];
   }
   /* randomize key derivation */
   [keyDerivation randomize];
   
-  NSData *seed = keyDerivation.options[KPKAESSeedOption];
+  NSData *seed = keyDerivation.parameters[KPKAESSeedOption];
   NSAssert(seed, @"AESKeyDerivation is missing a seed option!");
   [seed getBytes:_header.transformationSeed length:seed.length];
   
-  KPKNumber *rounds = keyDerivation.options[KPKAESRoundsOption];
+  KPKNumber *rounds = keyDerivation.parameters[KPKAESRoundsOption];
   NSAssert(rounds, @"AESKeyDerivation is missing a rounds options!");
   uint32_t clampedRounds = (uint32_t)MIN(rounds.unsignedInteger64Value, UINT32_MAX);
   _header.keyEncRounds = CFSwapInt32HostToLittle(clampedRounds);
