@@ -10,11 +10,11 @@
 
 #import "KeePassKit.h"
 
-@interface KPKHashedDataTest : XCTestCase
+@interface KPKTestHashedData : XCTestCase
 
 @end
 
-@implementation KPKHashedDataTest
+@implementation KPKTestHashedData
 
 - (void)testSHA256Hashing {
   NSData *data = [NSData dataWithRandomBytes:10000];
