@@ -40,7 +40,7 @@ typedef struct
 } chacha20_ctx;
 
 //Call this to initilize a chacha20_ctx, must be called before all other functions
-void chacha20_setup(chacha20_ctx *ctx, const uint8_t *key, size_t length, uint8_t nonce[8]);
+void chacha20_setup(chacha20_ctx *ctx, const uint8_t *key, size_t keyLength, const uint8_t *nonce, size_t nonceLength);
 
 //Call this if you need to process a particular block number
 void chacha20_counter_set(chacha20_ctx *ctx, uint64_t counter);
