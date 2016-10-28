@@ -24,6 +24,7 @@
 @interface KPKRandomStream : NSObject
 
 - (void)reset;
+- (instancetype)initWithKeyData:(NSData*)key;
 
 - (uint8_t)getByte;
 - (uint16_t)getShort;

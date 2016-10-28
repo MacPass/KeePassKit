@@ -23,6 +23,11 @@
 
 @implementation KPKRandomStream
 
+- (instancetype)initWithKeyData:(NSData *)key {
+  [self doesNotRecognizeSelector:_cmd];
+  return nil;
+}
+
 - (void)reset {
   [self doesNotRecognizeSelector:_cmd];
 }

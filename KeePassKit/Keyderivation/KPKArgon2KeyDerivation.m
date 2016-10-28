@@ -74,7 +74,7 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
 
 - (NSData *)deriveData:(NSData *)data {
   NSAssert(self.mutableParameters[KPKArgon2IterationsParameter],@"Iterations option is missing!");
-  NSAssert(self.mutableParameters[KPKArgon2SecretKeyParameter],@"SecretKey option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2SaltParameter],@"Salt option is missing!");
   NSAssert(self.mutableParameters[KPKArgon2MemoryParameter],@"Memory option is missing!");
   NSAssert(self.mutableParameters[KPKArgon2ParallelismParameter],@"Parallelism option is missing!");
   NSAssert(self.mutableParameters[KPKArgon2VersionParameter],@"Version option is missing!");

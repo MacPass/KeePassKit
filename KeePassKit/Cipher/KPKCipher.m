@@ -50,13 +50,18 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
   return self;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
-- (KPKCipher *)_initWithOptions:(NSDictionary *)options {
-  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
-  return nil;
+- (KPKCipher *)initWithKey:(NSData *)key initializationVector:(NSData *)iv {
+  if(self.class == [KPKCipher class]) {
+    NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
+    return nil;
+  }
+  self = [super init];
+  if(self) {
+    _key = [key copy];
+    _initializationVector = [iv copy];
+  }
+  return self;
 }
-#pragma clang diagnostic pop
 
 - (NSUUID *)uuid {
   return [self.class uuid];
@@ -79,5 +84,16 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
   return nil;
 }
+
+- (NSData * _Nullable)decryptData:(NSData *)data error:(NSError * _Nullable __autoreleasing *)error {
+  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
+  return nil;
+}
+
+- (NSData * _Nullable)encryptData:(NSData *)data error:(NSError * _Nullable __autoreleasing *)error {
+  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
+  return nil;
+}
+
 
 @end

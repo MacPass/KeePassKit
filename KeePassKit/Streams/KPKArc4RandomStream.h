@@ -26,6 +26,5 @@
 @interface KPKArc4RandomStream : KPKRandomStream 
 
 - (instancetype)init;
-- (instancetype)initWithKeyData:(NSData*)key;
 
 @end

@@ -34,7 +34,6 @@
   });
   return aesUUID;
 }
-
 - (NSData *)decryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError *__autoreleasing  _Nullable *)error {
   CCCryptorStatus cryptoError = kCCSuccess;
   NSData *decryptedData = [data decryptedDataUsingAlgorithm:kCCAlgorithmAES128

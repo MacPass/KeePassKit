@@ -10,7 +10,9 @@
 
 @interface KPKCipher ()
 
+@property (nonatomic, copy) NSData *key;
+@property (nonatomic, copy) NSData *initializationVector;
+
 + (void)_registerCipher:(Class)cipherClass;
-- (KPKCipher *)_initWithOptions:(NSDictionary *)options;
 
 @end

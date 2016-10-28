@@ -32,6 +32,8 @@
 
 #import "KPKNumber.h"
 
+#import <CommonCrypto/CommonCrypto.h>
+
 @interface KPKKdbxUnarchiver ()
 @property (copy) NSData *masterSeed;
 @property (copy) NSData *streamStartBytes;
@@ -81,15 +83,18 @@
     KPKCreateError(error, KPKErrorUnsupportedCipher);
     return nil;
   }
-  NSData *encryptedData = [self.data subdataWithRange:NSMakeRange(self.headerLength, self.data.length - self.headerLength)];
   
-  NSData *decryptedData = [cipher decryptData:encryptedData withKey:keyData initializationVector:self.encryptionIV error:error];
-  if(!decryptedData) {
-    return nil;
-  }
-  
-  /* StartBytes are only stored in KDBX3.1 */
   if(self.version < kKPKKdbxFileVersion4) {
+    
+    /* header | encrypted(hashed(zipped(data))) */
+    
+    
+    NSData *encryptedData = [self.data subdataWithRange:NSMakeRange(self.headerLength, self.data.length - self.headerLength)];
+    
+    NSData *decryptedData = [cipher decryptData:encryptedData withKey:keyData initializationVector:self.encryptionIV error:error];
+    if(!decryptedData) {
+      return nil;
+    }
     /* KDBX 3.1 */
     NSData *startBytes = [decryptedData subdataWithRange:NSMakeRange(0, 32)];
     if(![self.streamStartBytes isEqualToData:startBytes]) {
@@ -122,7 +127,24 @@
     return tree;
   }
   else {
-    /* KDBX 4 */
+    /*  header | sha256(header) | hmacsha256(header) | hashed(encrypted(zipped(data))) */
+    
+    NSData *exptectedHash = [self.data subdataWithRange:NSMakeRange(self.headerLength, 32)];
+    NSData *actualHash = [self.data subdataWithRange:NSMakeRange(0, self.headerLength)].SHA256Hash;
+    if(![exptectedHash isEqualToData:actualHash]) {
+      KPKCreateError(error, KPKErrorKdbxHeaderHashVerificationFailed);
+      return nil;
+    }
+    NSData *expectedHeaderHmac = [self.data subdataWithRange:NSMakeRange(self.headerLength + 32, 32)];
+    /* compute hmac */
+    
+    /* unhash stream */
+    
+    /* decrypt stream */
+    
+    /* take binaries */
+    
+    /* build tree */
     return nil;
   }
   return nil;
