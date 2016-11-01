@@ -10,4 +10,7 @@
 
 @interface NSData (KPKResize)
 
+- (NSData *)deriveKeyWithLength:(NSUInteger)length fromRange:(NSRange)range;
+- (NSData *)deriveKeyWithLength:(NSUInteger)length;
+
 @end
