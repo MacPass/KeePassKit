@@ -190,6 +190,8 @@
 		4C7C3FA41D81D620008D8961 /* KPKKey_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7C3F961D81D620008D8961 /* KPKKey_Private.h */; };
 		4C7C3FA51D81D620008D8961 /* KPKPasswordKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7C3F971D81D620008D8961 /* KPKPasswordKey.h */; };
 		4C7C3FA61D81D620008D8961 /* KPKPasswordKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7C3F981D81D620008D8961 /* KPKPasswordKey.m */; };
+		4C7F84291DC8B6D2000B6EF7 /* NSData+KPKResize.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7F84271DC8B6D2000B6EF7 /* NSData+KPKResize.h */; };
+		4C7F842A1DC8B6D2000B6EF7 /* NSData+KPKResize.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F84281DC8B6D2000B6EF7 /* NSData+KPKResize.m */; };
 		4C8138261BE282DC001BF195 /* Autotype_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */; };
 		4C8138271BE282DC001BF195 /* CustomIcon_Password_1234.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */; };
 		4C8138281BE282DC001BF195 /* CustomIcon_Password_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */; };
@@ -425,6 +427,8 @@
 		4C7C3F961D81D620008D8961 /* KPKKey_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKKey_Private.h; sourceTree = "<group>"; };
 		4C7C3F971D81D620008D8961 /* KPKPasswordKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKPasswordKey.h; sourceTree = "<group>"; };
 		4C7C3F981D81D620008D8961 /* KPKPasswordKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKPasswordKey.m; sourceTree = "<group>"; };
+		4C7F84271DC8B6D2000B6EF7 /* NSData+KPKResize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+KPKResize.h"; sourceTree = "<group>"; };
+		4C7F84281DC8B6D2000B6EF7 /* NSData+KPKResize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+KPKResize.m"; sourceTree = "<group>"; };
 		4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; name = Autotype_test.kdbx; path = Kdbx3/Autotype_test.kdbx; sourceTree = "<group>"; };
 		4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; name = CustomIcon_Password_1234.kdbx; path = Kdbx3/CustomIcon_Password_1234.kdbx; sourceTree = "<group>"; };
 		4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = CustomIcon_Password_1234.xml; path = Kdbx3/CustomIcon_Password_1234.xml; sourceTree = "<group>"; };
@@ -748,6 +752,8 @@
 				4C5CF3C21BE10DF80019AA81 /* NSUUID+KeePassKit.m */,
 				4C4E23011D7DC10700E58983 /* NSDictionary+KPKVariant.h */,
 				4C4E23021D7DC10700E58983 /* NSDictionary+KPKVariant.m */,
+				4C7F84271DC8B6D2000B6EF7 /* NSData+KPKResize.h */,
+				4C7F84281DC8B6D2000B6EF7 /* NSData+KPKResize.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1033,6 +1039,7 @@
 				4C5CF4311BE10E070019AA81 /* KPKKdbxFormat.h in Headers */,
 				4C7C3FA41D81D620008D8961 /* KPKKey_Private.h in Headers */,
 				4C4FF1BC1BE119E60015827B /* DDXML.h in Headers */,
+				4C7F84291DC8B6D2000B6EF7 /* NSData+KPKResize.h in Headers */,
 				4CA1E48F1D8832BA00100002 /* encoding.h in Headers */,
 				4C0B9DB61DBFB4FC00E66CD6 /* KPKKdbTreeReader.h in Headers */,
 				4C4FF1BD1BE119E60015827B /* DDXMLDocument.h in Headers */,
@@ -1220,6 +1227,7 @@
 				4C5C82A71D79C13800A1DEA6 /* KPKCipher.m in Sources */,
 				4CA1E48C1D8832BA00100002 /* core.c in Sources */,
 				4C5CF46A1BE10E100019AA81 /* KPKTree+Serializing.m in Sources */,
+				4C7F842A1DC8B6D2000B6EF7 /* NSData+KPKResize.m in Sources */,
 				4C5CF3CD1BE10DF80019AA81 /* NSData+Keyfile.m in Sources */,
 				4C5CF3C71BE10DF80019AA81 /* NSData+CommonCrypto.m in Sources */,
 				4C0B9DAF1DBFB4FC00E66CD6 /* KPKXmlTreeReader.m in Sources */,
