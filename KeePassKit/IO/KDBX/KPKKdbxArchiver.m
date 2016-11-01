@@ -26,6 +26,7 @@
 #import "NSData+Gzip.h"
 #import "NSData+HashedData.h"
 #import "NSData+CommonCrypto.h"
+#import "NSData+KPKResize.h"
 
 #import "DDXMLDocument.h"
 
@@ -130,7 +131,16 @@
   KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self.tree randomStreamType:self.randomStreamID randomStreamKey:self.randomStreamKey headerHash:headerHash];
   NSData *xmlData = [treeWriter.xmlDocument XMLDataWithOptions:DDXMLNodeCompactEmptyElement];
   
-  NSData *keyData = [self.key transformForFormat:KPKDatabaseFormatKdbx seed:self.masterSeed keyDerivation:keyDerivation error:error];
+  NSData *userKeyData = [self.key transformForFormat:KPKDatabaseFormatKdbx keyDerivation:keyDerivation error:error];
+  if(!userKeyData) {
+    if(!error) {
+      KPKCreateError(error, KPKErrorKeyDerivationFailed);
+    }
+    return nil;
+  }
+  NSMutableData *workingData = [self.masterSeed mutableCopy];
+  [workingData appendData:userKeyData];
+  NSData *keyData = [workingData deriveKeyWithLength:cipher.keyLength];
   
   NSMutableData *contentData = [[NSMutableData alloc] initWithData:self.streamStartBytes];
   if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {

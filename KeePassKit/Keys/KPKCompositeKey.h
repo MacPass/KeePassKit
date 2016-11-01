@@ -55,7 +55,7 @@
  */
 - (instancetype)initWithPassword:(NSString *)password key:(NSURL *)url;
 
-- (NSData *)transformForFormat:(KPKDatabaseFormat)type seed:(NSData *)seed keyDerivation:(KPKKeyDerivation *)keyDerivation error:(NSError *__autoreleasing*)error;
+- (NSData *)transformForFormat:(KPKDatabaseFormat)type keyDerivation:(KPKKeyDerivation *)keyDerivation error:(NSError *__autoreleasing*)error;
 /**
  *  Updates the password and keyfile for the composite key
  *  @param password the new password, can be nil

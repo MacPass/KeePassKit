@@ -21,6 +21,8 @@
 #import "KPKAESCipher.h"
 #import "KPKAESKeyDerivation.h"
 
+#import "NSData+KPKResize.h"
+
 @interface KPKKdbUnarchiver () {
   KPKLegacyHeader _header;
 }
@@ -82,12 +84,19 @@
     KPKCreateError(error, KPKErrorUnsupportedKeyDerivation);
     return nil;
   }
-  NSData *keyData = [self.key transformForFormat:KPKDatabaseFormatKdb seed:self.masterSeed keyDerivation:keyDerivation error:error];
+  
+  KPKCipher *cipher = [[KPKAESCipher alloc] init];
+  
+  NSData *userKeyData = [self.key transformForFormat:KPKDatabaseFormatKdb keyDerivation:keyDerivation error:error];
+  NSMutableData *workingData = [self.masterSeed mutableCopy];
+  [workingData appendData:userKeyData];
+  
+  NSData *keyData = [workingData deriveKeyWithLength:cipher.keyLength];
+ 
   if(!keyData) {
     return nil;
   }
   
-  KPKCipher *cipher = [[KPKAESCipher alloc] init];
   NSData *contentData = [self.data subdataWithRange:NSMakeRange(self.headerLength, self.data.length - self.headerLength)];
   NSData *decryptedData = [cipher decryptData:contentData withKey:keyData initializationVector:self.encryptionIV error:error];
   if(!decryptedData) {

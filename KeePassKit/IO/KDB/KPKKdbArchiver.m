@@ -25,6 +25,7 @@
 
 #import "NSData+Random.h"
 #import "NSData+CommonCrypto.h"
+#import "NSData+KPKResize.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 #import <CommonCrypto/CommonCryptoError.h>
@@ -80,11 +81,17 @@
   /* Save the content hash in the header */
   [treeData.SHA256Hash getBytes:_header.contentsHash length:sizeof(_header.contentsHash)];
   
+  KPKCipher *cipher = [[KPKAESCipher alloc] init];
+  
   /* Create the key to encrypt the data stream from the password */
-  NSData *keyData = [self.key transformForFormat:KPKDatabaseFormatKdb seed:self.masterSeed keyDerivation:keyDerivation error:error];
+  NSData *userKeyData = [self.key transformForFormat:KPKDatabaseFormatKdb keyDerivation:keyDerivation error:error];
+  
+  NSMutableData *workingData = [self.masterSeed mutableCopy];
+  [workingData appendData:userKeyData];
+  
+  NSData *keyData = [workingData deriveKeyWithLength:cipher.keyLength];
   
   CCCryptorStatus cryptoError = kCCSuccess;
-  KPKCipher *cipher = [[KPKAESCipher alloc] init];
   NSData *encryptedTreeData = [cipher encryptData:treeData withKey:keyData initializationVector:self.encryptionIV error:error];
   
   if(cryptoError != kCCSuccess) {

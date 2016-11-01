@@ -63,34 +63,27 @@
   _compositeDataVersion2 = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
 }
 
-- (NSData *)transformForFormat:(KPKDatabaseFormat)type seed:(NSData *)seed keyDerivation:(KPKKeyDerivation *)keyDerivation error:(NSError *__autoreleasing *)error {
+- (NSData *)transformForFormat:(KPKDatabaseFormat)type keyDerivation:(KPKKeyDerivation *)keyDerivation error:(NSError *__autoreleasing *)error {
   NSData *derivedData;
   switch(type) {
     case KPKDatabaseFormatKdb:
-    derivedData = [keyDerivation deriveData:_compositeDataVersion1];
+      derivedData = [keyDerivation deriveData:_compositeDataVersion1];
       break;
+      
     case KPKDatabaseFormatKdbx:
       derivedData = [keyDerivation deriveData:_compositeDataVersion2];
       break;
+      
     case KPKDatabaseFormatUnknown:
     default:
       KPKCreateError(error, KPKErrorUnknownFileFormat);
       return nil;
   }
-  
   if(!derivedData) {
     KPKCreateError(error, KPKErrorKeyDerivationFailed);
   }
-  
-  
-  uint8_t hashedKey[CC_SHA256_DIGEST_LENGTH];
-  CC_SHA256_CTX sha256ctx;
-  CC_SHA256_Init(&sha256ctx);
-  CC_SHA256_Update(&sha256ctx, seed.bytes, (CC_LONG)seed.length);
-  CC_SHA256_Update(&sha256ctx, derivedData.bytes, (CC_LONG)derivedData.length);
-  CC_SHA256_Final(hashedKey, &sha256ctx);
-  
-  return [NSData dataWithBytes:hashedKey length:CC_SHA256_DIGEST_LENGTH];}
+  return derivedData;
+}
 
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseFormat)version {
   NSData *data;
@@ -158,7 +151,7 @@
   if(!password && !keyURL) {
     return nil;
   }
-
+  
   // Initialize the master hash
   CC_SHA256_CTX ctx;
   CC_SHA256_Init(&ctx);
