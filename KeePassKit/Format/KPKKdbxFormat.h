@@ -44,6 +44,18 @@ typedef NS_ENUM(NSUInteger, KPKHeaderKey ) {
   KPKHeaderKeyPublicCustomData  = 12  // KDBX 4
 };
 
+typedef NS_ENUM(uint8_t, KPKInnerHeaderKey) {
+  KPKInnerHeaderKeyEndOfHeader      = 0,
+  KPKInnerHeaderKeyRandomStreamId   = 1,
+  KPKInnerHeaderKeyRandomStreamKey  = 2,
+  KPKInnerHeaderKeyBinary           = 3
+};
+
+typedef NS_OPTIONS(uint8_t, KPKBinaryFlags) {
+  KPKBinaryNoFlag             = 0,
+  KPKBinaryProtectMemoryFlag  = 1,
+};
+
 typedef NS_ENUM(uint32_t, KPKCompression) {
   KPKCompressionNone,
   KPKCompressionGzip,

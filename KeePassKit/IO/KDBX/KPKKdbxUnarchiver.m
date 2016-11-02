@@ -94,7 +94,7 @@
     KPKCreateError(error, KPKErrorUnsupportedCipher);
     return nil;
   }
-  
+  NSData *xmlData;
   if(self.version < kKPKKdbxFileVersion4) {
     
     /* header | encrypted(hashed(zipped(data))) */
@@ -111,29 +111,15 @@
       return nil;
     }
     
-    NSData *unhashedData = [[decryptedData subdataWithRange:NSMakeRange(32, decryptedData.length - 32)] unhashedSha256Data];
+    xmlData = [[decryptedData subdataWithRange:NSMakeRange(32, decryptedData.length - 32)] unhashedSha256Data];
     if(self.compressionAlgorithm == KPKCompressionGzip) {
-      unhashedData = [unhashedData gzipInflate];
+      xmlData = [xmlData gzipInflate];
     }
     
-    if(!unhashedData) {
+    if(!xmlData) {
       KPKCreateError(error, KPKErrorIntegrityCheckFailed);
       return nil;
     }
-    KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:unhashedData randomStreamType:self.randomStreamID randomStreamKey:self.protectedStreamKey compression:self.compressionAlgorithm];
-    KPKTree *tree = [reader tree:error];
-    if(tree) {
-      tree.metaData.keyDerivationParameters = self.mutableKeyDerivationParameters;
-      tree.metaData.compressionAlgorithm = self.compressionAlgorithm;
-      tree.metaData.cipherUUID = self.cipherUUID;
-      
-      /* todo header hash might be missing! */
-      if(![self.headerData.SHA256Hash isEqualToData:reader.headerHash]) {
-        KPKCreateError(error, KPKErrorKdbxHeaderHashVerificationFailed);
-        return nil;
-      }
-    }
-    return tree;
   }
   else {
     /*  header | sha256(header) | hmacsha256(header) | hashed(encrypted(zipped(data))) */
@@ -160,12 +146,25 @@
     if(self.compressionAlgorithm == KPKCompressionGzip) {
       decryptedData = [decryptedData gzipInflate];
     }
-    /* take binaries */
-    
-    /* build tree */
-    return nil;
+    NSUInteger xmlOffset = [self _parseInnerHeader:decryptedData error:error];
+    if(xmlOffset == 0) {
+      return nil;
+    }
+    xmlData = [decryptedData subdataWithRange:NSMakeRange(xmlOffset, decryptedData.length - xmlOffset)];
   }
-  return nil;
+  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:xmlData randomStreamType:self.randomStreamID randomStreamKey:self.protectedStreamKey];
+  KPKTree *tree = [reader tree:error];
+  if(tree) {
+    tree.metaData.keyDerivationParameters = self.mutableKeyDerivationParameters;
+    tree.metaData.compressionAlgorithm = self.compressionAlgorithm;
+    tree.metaData.cipherUUID = self.cipherUUID;
+    
+    if(reader.headerHash && ![self.headerData.SHA256Hash isEqualToData:reader.headerHash]) {
+      KPKCreateError(error, KPKErrorKdbxHeaderHashVerificationFailed);
+      return nil;
+    }
+  }
+  return tree;
 }
 
 - (NSData *)headerData {
@@ -312,5 +311,58 @@
         return NO;
     }
   }
+}
+
+- (NSUInteger)_parseInnerHeader:(NSData *)data error:(NSError **)error {
+  /*
+   struct innerHeaderElement {
+   uint8_t type;
+   uint32_t length; // LE
+   uint8_t data[length];
+   };
+   
+   0x00: End of header.
+   0x01: Inner random stream ID (this supersedes the inner random stream ID stored in the outer header of a KDBX 3.1 file).
+   0x02: Inner random stream key (this supersedes the inner random stream key stored in the outer header of a KDBX 3.1 file).
+   0x03: Binary (entry attachment). D = F ‖ M, where F is one byte and M is the binary content (i.e. the actual entry attachment data). F stores flags for the binary; supported flags are:
+   0x01: The user has turned on process memory protection for this binary.
+   The inner header must end with an item of type 0x00 (and n = 0).
+   */
+  KPKDataStreamReader *reader = [[KPKDataStreamReader alloc] initWithData:data];
+  uint8_t type;
+  uint32_t length;
+  NSMutableArray *binaries = [[NSMutableArray alloc] init];
+  while(reader.hasBytesAvailable) {
+    type = [reader readByte];
+    length = CFSwapInt32LittleToHost([reader read4Bytes]);
+    switch(type) {
+      case KPKInnerHeaderKeyEndOfHeader:
+        if(length == 0) {
+          return reader.offset;
+        }
+        KPKCreateError(error, KPKErrorKdbxCorruptedInnerHeader);
+        return 0;
+      case KPKInnerHeaderKeyBinary:
+        [reader readDataWithLength:length];
+        break;
+        
+      case KPKInnerHeaderKeyRandomStreamId:
+        if(length == 4) {
+          self.randomStreamID = CFSwapInt32LittleToHost([reader read4Bytes]);
+        }
+        else if(length > 0){
+          [binaries addObject:[reader readDataWithLength:length]];
+        }
+        break;
+      case KPKInnerHeaderKeyRandomStreamKey:
+        if(length > 0) {
+          self.protectedStreamKey = [reader readDataWithLength:length];
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  return 0;
 }
 @end

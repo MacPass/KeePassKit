@@ -20,12 +20,12 @@
 @implementation KPKChaCha20RandomStream
 
 - (instancetype)init {
-  return [self initWithKeyData:[NSData dataWithRandomBytes:128]];
+  return [self initWithKeyData:[NSData dataWithRandomBytes:64]];
 }
 
 - (instancetype)initWithKeyData:(NSData*)key {
   self = [super init];
-  if (self) {
+  if(self) {
     NSData *hash = key.SHA512Hash;
     _cipher = [[KPKChaCha20Cipher alloc] initWithKey:[hash subdataWithRange:NSMakeRange(0, 32)] initializationVector:[hash subdataWithRange:NSMakeRange(32, 12)]];
   }

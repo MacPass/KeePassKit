@@ -31,7 +31,7 @@
 
 @property (readonly, copy) NSData *headerHash;
 
-- (instancetype)initWithData:(NSData *)data randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key compression:(KPKCompression)compression NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithData:(NSData *)data randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key  NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithData:(NSData *)data;
 - (instancetype)init NS_UNAVAILABLE;
 

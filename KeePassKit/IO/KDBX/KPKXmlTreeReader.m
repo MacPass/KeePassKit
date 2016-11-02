@@ -28,6 +28,7 @@
 #import "KPKAutotype.h"
 #import "KPKBinary.h"
 #import "KPKBinary_Private.h"
+#import "KPKChaCha20RandomStream.h"
 #import "KPKDeletedNode.h"
 #import "KPKEntry.h"
 #import "KPKEntry_Private.h"
@@ -64,7 +65,6 @@
 
 @property (copy) NSData *headerHash;
 @property (copy) NSData *randomStreamKey;
-@property (assign) KPKCompression compressionAlgorithm;
 @property (assign) KPKRandomStreamType randomStreamID;
 
 @end
@@ -72,14 +72,13 @@
 @implementation KPKXmlTreeReader
 
 - (instancetype)initWithData:(NSData *)data {
-  self = [self initWithData:data randomStreamType:KPKRandomStreamNone randomStreamKey:nil compression:KPKCompressionNone];
+  self = [self initWithData:data randomStreamType:KPKRandomStreamNone randomStreamKey:nil];
   return self;
 }
 
-- (instancetype)initWithData:(NSData *)data randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key compression:(KPKCompression)compression {
+- (instancetype)initWithData:(NSData *)data randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key  {
   self = [super init];
   if(self) {
-    _compressionAlgorithm = compression;
     _randomStreamKey = key;
     _randomStreamID = randomType;
     _document = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
@@ -462,10 +461,14 @@
       self.randomStream = [[KPKArc4RandomStream alloc] initWithKeyData:self.randomStreamKey];
       return YES;
       
+    case KPKRandomStreamChaCha20:
+      NSAssert(self.randomStreamKey, @"Protetect stream key has to be set");
+      self.randomStream = [[KPKChaCha20RandomStream alloc] initWithKeyData:self.randomStreamKey];
+      return YES;
+      
     case KPKRandomStreamNone:
       return YES;
       
-    case KPKRandomStreamChaCha20:
     default:
       KPKCreateError(error, KPKErrorUnsupportedRandomStream);
       return NO;
