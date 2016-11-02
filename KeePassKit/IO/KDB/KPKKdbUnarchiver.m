@@ -21,7 +21,9 @@
 #import "KPKAESCipher.h"
 #import "KPKAESKeyDerivation.h"
 
-#import "NSData+KPKResize.h"
+#import "KPKNumber.h"
+
+#import "NSData+KPKKeyComputation.h"
 
 @interface KPKKdbUnarchiver () {
   KPKLegacyHeader _header;
@@ -86,13 +88,12 @@
   }
   
   KPKCipher *cipher = [[KPKAESCipher alloc] init];
-  
-  NSData *userKeyData = [self.key transformForFormat:KPKDatabaseFormatKdb keyDerivation:keyDerivation error:error];
-  NSMutableData *workingData = [self.masterSeed mutableCopy];
-  [workingData appendData:userKeyData];
-  
-  NSData *keyData = [workingData deriveKeyWithLength:cipher.keyLength];
- 
+  NSData *keyData = [self.key computeKeyDataForFormat:KPKDatabaseFormatKdb
+                                           masterseed:self.masterSeed
+                                               cipher:cipher
+                                        keyDerivation:keyDerivation
+                                              hmacKey:nil
+                                                error:error];
   if(!keyData) {
     return nil;
   }

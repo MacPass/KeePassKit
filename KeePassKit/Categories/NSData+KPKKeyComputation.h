@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSData (KPKResize)
+@interface NSData (KPKKeyComputation)
 
-- (NSData *)deriveKeyWithLength:(NSUInteger)length fromRange:(NSRange)range;
-- (NSData *)deriveKeyWithLength:(NSUInteger)length;
+- (NSData *)resizeKeyDataRange:(NSRange)range toLength:(NSUInteger)length;
+- (NSData *)resizeKeyDataTo:(NSUInteger)length;
 
 @end

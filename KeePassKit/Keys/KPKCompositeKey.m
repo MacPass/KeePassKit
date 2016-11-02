@@ -24,16 +24,22 @@
 #import "KPKCompositeKey.h"
 #import "KPKFormat.h"
 #import "KPKNumber.h"
+
+#import "KPKKeyDerivation.h"
 #import "KPKAESKeyDerivation.h"
+#import "KPKCipher.h"
+
+#import "KPKErrors.h"
 
 #import "NSData+Keyfile.h"
+#import "NSData+KPKKeyComputation.h"
 #import "NSData+CommonCrypto.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 
 @interface KPKCompositeKey () {
-  NSData *_compositeDataVersion1;
-  NSData *_compositeDataVersion2;
+  NSData *_kdbKeyData;
+  NSData *_kdbxKeyData;
 }
 
 @property (nonatomic) BOOL hasKeyFile;
@@ -57,54 +63,61 @@
 }
 
 - (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key {
-  self.hasPassword = (password.length > 0);
-  self.hasKeyFile = (key != nil);
-  _compositeDataVersion1 = [self _createVersion1CompositeDataWithPassword:password keyFile:key];
-  _compositeDataVersion2 = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
-}
-
-- (NSData *)transformForFormat:(KPKDatabaseFormat)type keyDerivation:(KPKKeyDerivation *)keyDerivation error:(NSError *__autoreleasing *)error {
-  NSData *derivedData;
-  switch(type) {
-    case KPKDatabaseFormatKdb:
-      derivedData = [keyDerivation deriveData:_compositeDataVersion1];
-      break;
-      
-    case KPKDatabaseFormatKdbx:
-      derivedData = [keyDerivation deriveData:_compositeDataVersion2];
-      break;
-      
-    case KPKDatabaseFormatUnknown:
-    default:
-      KPKCreateError(error, KPKErrorUnknownFileFormat);
-      return nil;
-  }
-  if(!derivedData) {
-    KPKCreateError(error, KPKErrorKeyDerivationFailed);
-  }
-  return derivedData;
+  _hasPassword = (password.length > 0);
+  _hasKeyFile = (key != nil);
+  _kdbKeyData = [self _createKdbDataWithPassword:password keyFile:key];
+  _kdbxKeyData = [self _createKdbxDataWithPassword:password keyFile:key];
 }
 
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseFormat)version {
   NSData *data;
   switch(version) {
     case KPKDatabaseFormatKdb:
-      data = [self _createVersion1CompositeDataWithPassword:password keyFile:key];
+      data = [self _createKdbDataWithPassword:password keyFile:key];
       break;
     case KPKDatabaseFormatKdbx:
-      data = [self _createVersion2CompositeDataWithPassword:password keyFile:key];
+      data = [self _createKdbxDataWithPassword:password keyFile:key];
       break;
     default:
       return NO;
   }
   if(data) {
-    NSData *compare = (version == KPKDatabaseFormatKdb) ? _compositeDataVersion1 : _compositeDataVersion2;
+    NSData *compare = (version == KPKDatabaseFormatKdb) ? _kdbKeyData : _kdbxKeyData;
     return [data isEqualToData:compare];
   }
   return NO;
 }
 
-- (NSData *)_createVersion1CompositeDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
+- (NSData *)computeKeyDataForFormat:(KPKDatabaseFormat)format masterseed:(NSData *)seed cipher:(KPKCipher *)cipher keyDerivation:(KPKKeyDerivation *)keyDerivation hmacKey:(NSData *__autoreleasing *)hmacKey error:(NSError *__autoreleasing *)error {
+  NSAssert(seed.length == 32 || seed.length == 16, @"Unexpected seed length");
+  /* KDBX uses 32 byte seeds, KDB only 16 */
+  if(format != KPKDatabaseFormatKdbx && format != KPKDatabaseFormatKdb) {
+    KPKCreateError(error, KPKErrorUnknownFileFormat);
+    return nil;
+  }
+  NSData *derivedData = (format == KPKDatabaseFormatKdb) ? [keyDerivation deriveData:_kdbKeyData] : [keyDerivation deriveData:_kdbxKeyData];
+  if(!derivedData) {
+    KPKCreateError(error, KPKErrorKeyDerivationFailed);
+    return nil;
+  }
+  NSAssert(derivedData.length == 32, @"Invalid key size after key derivation!");
+  NSMutableData *workingData = [seed mutableCopy];
+  [workingData appendData:derivedData];
+  
+  /* add 1 null byte for Hmac */
+  uint8_t nullByte = 0;
+  [workingData appendBytes:&nullByte length:1];
+  if(hmacKey) {
+    uint8_t hmacBuffer[64];
+    /* full 65 bytes for Hmac */
+    CC_SHA512(workingData.bytes, (CC_LONG)workingData.length, hmacBuffer);
+    *hmacKey = [NSData dataWithBytes:hmacBuffer length:64];
+  }
+  /* do not use last 0-byte for key computation */
+  return [workingData resizeKeyDataRange:NSMakeRange(0, workingData.length - 1) toLength:cipher.keyLength];
+}
+
+- (NSData *)_createKdbDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
   if(!password && !keyURL) {
     return nil;
   }
@@ -147,7 +160,7 @@
   return [NSData dataWithBytes:masterKey length:kKPKKeyFileLength];
 }
 
-- (NSData *)_createVersion2CompositeDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
+- (NSData *)_createKdbxDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
   if(!password && !keyURL) {
     return nil;
   }

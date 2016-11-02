@@ -20,10 +20,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 @import Foundation;
 
-#import "KeePassKit.h"
+#import "KPKFormat.h"
+
+@class KPKKeyDerivation;
+@class KPKCipher;
 
 /**
  *  The Composite Key to be used for encryption and decryption of databases
@@ -31,7 +33,6 @@
  *  every time the password or keyfile is set.
  */
 @interface KPKCompositeKey : NSObject
-
 /**
  *  YES if the composite key has a password or keyfile set - that is, it's considered usable
  */
@@ -45,7 +46,6 @@
  */
 @property (nonatomic, readonly) BOOL hasPassword;
 @property (nonatomic, readonly) BOOL hasKeyFile;
-
 /*
  The password class to be able to decrypt and encrypt databses
  Neither the password nor the keyfile are stored and just read
@@ -54,8 +54,6 @@
  The Final key is then created before a write or read gets performend
  */
 - (instancetype)initWithPassword:(NSString *)password key:(NSURL *)url;
-
-- (NSData *)transformForFormat:(KPKDatabaseFormat)type keyDerivation:(KPKKeyDerivation *)keyDerivation error:(NSError *__autoreleasing*)error;
 /**
  *  Updates the password and keyfile for the composite key
  *  @param password the new password, can be nil
@@ -68,5 +66,7 @@
  */
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseFormat)version;
 
+
+- (NSData *)computeKeyDataForFormat:(KPKDatabaseFormat)format masterseed:(NSData *)seed cipher:(KPKCipher *)cipher keyDerivation:(KPKKeyDerivation *)keyDerivation hmacKey:(NSData **)hmacKey error:(NSError **)error;
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "NSData+KPKResize.h"
+#import "NSData+KPKKeyComputation.h"
 #import "NSData+Random.h"
 #import "NSData+CommonCrypto.h"
 
@@ -17,18 +17,18 @@
 
 @implementation KPKTestDeriveKeyData
 
-- (void)testExample {
+- (void)testKeyResizing {
   NSData *data = [NSData dataWithRandomBytes:128];
-  NSData *result = [data deriveKeyWithLength:32 fromRange:NSMakeRange(0,128)];
+  NSData *result = [data resizeKeyDataTo:32];
   XCTAssertEqualObjects(result, data.SHA256Hash);
-  result = [data deriveKeyWithLength:64 fromRange:NSMakeRange(0, 128)];
+  result = [data resizeKeyDataTo:64];
   XCTAssertEqualObjects(result, data.SHA512Hash);
   NSRange range = NSMakeRange(32, 64);
-  result = [data deriveKeyWithLength:32 fromRange:range];
+  result = [data resizeKeyDataRange:range toLength:32];
   XCTAssertEqualObjects(result, [data subdataWithRange:range].SHA256Hash);
-  result = [data deriveKeyWithLength:50 fromRange:NSMakeRange(0, 128)];
+  result = [data resizeKeyDataTo:50];
   XCTAssertEqualObjects(result, [data.SHA512Hash subdataWithRange:NSMakeRange(0, 50)]);
-  result = [data deriveKeyWithLength:110 fromRange:NSMakeRange(0, 128)];
+  result = [data resizeKeyDataTo:110];
 }
 
 

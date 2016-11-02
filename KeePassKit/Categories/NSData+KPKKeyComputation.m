@@ -6,16 +6,16 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "NSData+KPKResize.h"
+#import "NSData+KPKKeyComputation.h"
 #import <CommonCrypto/CommonCrypto.h>
 
-@implementation NSData (KPKResize)
+@implementation NSData (KPKKeyComputation)
 
-- (NSData *)deriveKeyWithLength:(NSUInteger)length {
-  return [self deriveKeyWithLength:length fromRange:NSMakeRange(0, self.length)];
+- (NSData *)resizeKeyDataTo:(NSUInteger)length {
+  return [self resizeKeyDataRange:NSMakeRange(0, self.length) toLength:length];
 }
 
-- (NSData *)deriveKeyWithLength:(NSUInteger)length fromRange:(NSRange)range {
+- (NSData *)resizeKeyDataRange:(NSRange)range toLength:(NSUInteger)length {
   
   NSAssert((range.location + range.length) <= self.length, @"");
   
@@ -49,4 +49,5 @@
   
   return [NSData dataWithBytes:output length:length];
 }
+
 @end

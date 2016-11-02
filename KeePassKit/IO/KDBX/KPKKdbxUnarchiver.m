@@ -17,6 +17,7 @@
 
 #import "KPKCipher.h"
 #import "KPKKeyDerivation.h"
+#import "KPKAESKeyDerivation.h"
 
 #import "KPKXmlTreeReader.h"
 
@@ -29,7 +30,9 @@
 #import "NSData+CommonCrypto.h"
 #import "NSData+Gzip.h"
 #import "NSData+HashedData.h"
-#import "NSData+KPKResize.h"
+#import "NSData+KPKKeyComputation.h"
+
+#import "NSDictionary+KPKVariant.h"
 
 #import "KPKNumber.h"
 
@@ -75,11 +78,13 @@
   }
   
   KPKCipher *cipher = [[KPKCipher alloc] initWithUUID:self.cipherUUID];
-  
-  NSData *userKeyData = [self.key transformForFormat:KPKDatabaseFormatKdbx keyDerivation:keyDerivation error:error];
-  NSMutableData *workingData = [self.masterSeed mutableCopy];
-  [workingData appendData:userKeyData];
-  NSData *keyData = [workingData deriveKeyWithLength:cipher.keyLength];
+  NSData *hmacKey;
+  NSData *keyData = [self.key computeKeyDataForFormat:KPKDatabaseFormatKdbx
+                                           masterseed:self.masterSeed
+                                               cipher:cipher
+                                        keyDerivation:keyDerivation
+                                              hmacKey:&hmacKey
+                                                error:error];
   
   if(!keyData) {
     return nil;
