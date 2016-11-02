@@ -54,9 +54,9 @@
 
 /* block sizes are defaulted per stream */
 @property (nonatomic, readonly) NSData *hashedSha256Data;
-@property (nonatomic, readonly) NSData *hashedHmacSha256Data;
-
 @property (nonatomic, readonly) NSData *unhashedSha256Data;
-@property (nonatomic, readonly) NSData *unhashedHmacSha256Data;
+
+- (NSData *)hashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error;
+- (NSData *)unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error;
 
 @end

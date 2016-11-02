@@ -59,6 +59,8 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorKdbxInvalidHeaderFieldType, // KDBX Header field type unknown
   KPKErrorKdbxInvalidKeyDerivationData, // The key derivation header data is invalid
   KPKErrorKdbxCorrutpedPublicCustomData, // The custom data stored in the header is corrupted
+  KPKErrorKdbxCorruptedEncryptionStream, // The encrypted data was corrupted (KDBX4)
+  KPKErrorKdbxCorruptedContentStream, // The content data was corrupted (KDBX3.1)
   KPKErrorKdbHeaderTruncated, // The header (and thus the file) was truncated
   KPKErrorKdbInvalidFieldType, // KDB Invalid field type
   KPKErrorKdbInvalidFieldSize, // KDB Invalid field size

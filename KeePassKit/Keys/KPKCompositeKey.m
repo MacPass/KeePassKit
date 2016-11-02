@@ -105,8 +105,8 @@
   [workingData appendData:derivedData];
   
   /* add 1 null byte for Hmac */
-  uint8_t nullByte = 0;
-  [workingData appendBytes:&nullByte length:1];
+  uint8_t oneByte = 0x01;
+  [workingData appendBytes:&oneByte length:1];
   if(hmacKey) {
     uint8_t hmacBuffer[64];
     /* full 65 bytes for Hmac */

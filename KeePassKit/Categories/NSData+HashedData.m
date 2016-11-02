@@ -22,97 +22,78 @@
 
 #import "NSData+HashedData.h"
 
-#import <CommonCrypto/CommonDigest.h>
+#import "KPKDataStreamReader.h"
+#import "KPKErrors.h"
+
 #import "NSData+CommonCrypto.h"
+#import "NSData+KPKKeyComputation.h"
+
+#import <CommonCrypto/CommonHMAC.h>
+#import <CommonCrypto/CommonDigest.h>
 
 #define KPKValidateLength(length, location, offset) if(length < location + offset ) { return nil; }
 
 @implementation NSData (HashedData)
 
-- (NSData *)unhashedHmacSha256Data {
+- (NSData *)unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error {
   /*
    The HMAC is computed over i ‖ n ‖ C (where little-endian encoding is used for the 64-bit sequence number i and the 32-bit block size n; i is implicit and does not need to be stored).
    The key for the HMAC is different for each block; it is computed as Ki := SHA-512(i ‖ K), where K is a 512-bit key derived from the user's composite master key and the master seed stored in the KDBX header.
    */
+  KPKDataStreamReader *reader = [[KPKDataStreamReader alloc] initWithData:self];
+  NSMutableData *unhashedData = [[NSMutableData alloc] initWithCapacity:self.length];
   
-  NSUInteger blockIndex;
-  while(YES) {
-    break;
+  uint64_t blockIndex = 0;
+  uint8_t expectedHmac[32];
+  uint8_t computedHmac[32];
+  uint32_t blockLength;
+  
+  @autoreleasepool {
+    while(reader.hasBytesAvailable) {
+      if(reader.readableBytes < 32) {
+        KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
+        return nil;
+      }
+      /* hmac */
+      [reader readBytes:expectedHmac length:32];
+      /* size */
+      if(reader.readableBytes < 4) {
+        KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
+        return nil;
+      }
+      blockLength = CFSwapInt32LittleToHost(reader.read4Bytes);
+      if(reader.readableBytes < blockLength) {
+        KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
+        return nil;
+      }
+      
+      if(blockLength == 0) {
+        /* verify hash? */
+        return [unhashedData copy];
+      }
+      
+      NSData *content = [reader readDataWithLength:blockLength];
+      NSData *hmacKey = [key hmacKeyForIndex:blockIndex];
+      
+      CCHmacContext context;
+      uint64_t LEblockIndex = CFSwapInt64HostToLittle(blockIndex);
+      uint64_t LEblockLength = CFSwapInt32HostToLittle(blockLength);
+      CCHmacInit(&context, kCCHmacAlgSHA256, hmacKey.bytes, (CC_LONG)hmacKey.length);
+      CCHmacUpdate(&context, &LEblockIndex, 8);
+      CCHmacUpdate(&context, &LEblockLength, 4);
+      if(content.length > 0) {
+        CCHmacUpdate(&context, content.bytes, (CC_LONG)content.length);
+      }
+      CCHmacFinal(&context, computedHmac);
+      if(memcmp(expectedHmac, computedHmac, 32)) {
+        KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
+        return nil;
+      }
+      [unhashedData appendData:content];
+      blockIndex++;
+    }
   }
-  
-  
-  
-  NSAssert(NO, @"Not implemented!");
   return nil;
-  
-  /*
-   private bool ReadSafeBlock()
-   {
-   if(m_bEos) return false; // End of stream reached already
-   
-   byte[] pbStoredHmac = MemUtil.Read(m_sBase, 32);
-   if((pbStoredHmac == null) || (pbStoredHmac.Length != 32))
-   throw new EndOfStreamException();
-   
-   // Block index is implicit: it's used in the HMAC computation,
-   // but does not need to be stored
-   // byte[] pbBlockIndex = MemUtil.Read(m_sBase, 8);
-   // if((pbBlockIndex == null) || (pbBlockIndex.Length != 8))
-   //	throw new EndOfStreamException();
-   // ulong uBlockIndex = MemUtil.BytesToUInt64(pbBlockIndex);
-   // if((uBlockIndex != m_uBlockIndex) && m_bVerify)
-   //	throw new InvalidDataException();
-   byte[] pbBlockIndex = MemUtil.UInt64ToBytes(m_uBlockIndex);
-   
-   byte[] pbBlockSize = MemUtil.Read(m_sBase, 4);
-   if((pbBlockSize == null) || (pbBlockSize.Length != 4))
-   throw new EndOfStreamException();
-   int nBlockSize = MemUtil.BytesToInt32(pbBlockSize);
-   if(nBlockSize < 0)
-   throw new InvalidDataException(KLRes.FileCorrupted);
-   
-   m_iBufferPos = 0;
-   
-   m_pbBuffer = MemUtil.Read(m_sBase, nBlockSize);
-   if((m_pbBuffer == null) || ((m_pbBuffer.Length != nBlockSize) && m_bVerify))
-   throw new EndOfStreamException();
-   
-   if(m_bVerify)
-   {
-   byte[] pbCmpHmac;
-   byte[] pbBlockKey = GetHmacKey64(m_pbKey, m_uBlockIndex);
-   using(HMACSHA256 h = new HMACSHA256(pbBlockKey))
-   {
-   h.TransformBlock(pbBlockIndex, 0, pbBlockIndex.Length,
-   pbBlockIndex, 0);
-   h.TransformBlock(pbBlockSize, 0, pbBlockSize.Length,
-   pbBlockSize, 0);
-   
-   if(m_pbBuffer.Length > 0)
-   h.TransformBlock(m_pbBuffer, 0, m_pbBuffer.Length,
-   m_pbBuffer, 0);
-   
-   h.TransformFinalBlock(MemUtil.EmptyByteArray, 0, 0);
-   
-   pbCmpHmac = h.Hash;
-   }
-   MemUtil.ZeroByteArray(pbBlockKey);
-   
-   if(!MemUtil.ArraysEqual(pbCmpHmac, pbStoredHmac))
-   throw new InvalidDataException(KLRes.FileCorrupted);
-   }
-   
-   ++m_uBlockIndex;
-   
-   if(nBlockSize == 0)
-   {
-   m_bEos = true;
-   return false; // No further data available
-   }
-   return true;
-   }
-   
-   */
 }
 
 - (NSData *)unhashedSha256Data {
@@ -169,9 +150,12 @@
   }
 }
 
-- (NSData *)hashedHmacSha256Data {
+- (NSData *)hashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error {
   NSUInteger blockSize = 1024*1024;
   uint32_t blockCount = ceil((CGFloat)self.length / (CGFloat)blockSize);
+  uint64_t blockIndex = 0;
+  
+  
   
   
   

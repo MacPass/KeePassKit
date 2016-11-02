@@ -13,4 +13,7 @@
 - (NSData *)resizeKeyDataRange:(NSRange)range toLength:(NSUInteger)length;
 - (NSData *)resizeKeyDataTo:(NSUInteger)length;
 
+- (NSData *)hmacKeyForIndex:(uint64_t)index;
+- (NSData *)headerHmacWithKey:(NSData *)key;
+
 @end

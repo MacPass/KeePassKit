@@ -99,9 +99,7 @@
     
     /* header | encrypted(hashed(zipped(data))) */
     
-    
     NSData *encryptedData = [self.data subdataWithRange:NSMakeRange(self.headerLength, self.data.length - self.headerLength)];
-    
     NSData *decryptedData = [cipher decryptData:encryptedData withKey:keyData initializationVector:self.encryptionIV error:error];
     if(!decryptedData) {
       return nil;
@@ -147,12 +145,21 @@
       return nil;
     }
     NSData *expectedHeaderHmac = [self.data subdataWithRange:NSMakeRange(self.headerLength + 32, 32)];
-    /* compute hmac */
+    NSData *headerMac = [self.headerData headerHmacWithKey:hmacKey];
+    if(![headerMac isEqualToData:expectedHeaderHmac]) {
+      KPKCreateError(error, KPKErrorKdbxHeaderHashVerificationFailed);
+      return nil;
+    }
     
-    /* unhash stream */
-    
-    /* decrypt stream */
-    
+    NSData *hashedData = [self.data subdataWithRange:NSMakeRange(self.headerLength + 64, self.data.length - self.headerLength - 64)];
+    NSData *unhashedData = [hashedData unhashedHmacSha256DataWithKey:hmacKey error:error];
+    if(!unhashedData) {
+      return nil;
+    }
+    NSData *decryptedData = [cipher decryptData:unhashedData withKey:keyData initializationVector:self.encryptionIV error:error];
+    if(self.compressionAlgorithm == KPKCompressionGzip) {
+      decryptedData = [decryptedData gzipInflate];
+    }
     /* take binaries */
     
     /* build tree */
@@ -306,63 +313,4 @@
     }
   }
 }
-
-- (void)_computeHMACKey {
-  if(self.masterSeed.length != 32) {
-    return;
-  }
-  
-  uint8_t temp[65];
-  [self.masterSeed getBytes:temp length:self.masterSeed.length];
-  
-  /* gernate master key */
-  NSData *keyData;
-  [keyData getBytes:(uint8_t *)(temp+32) range:NSMakeRange(32, 32)];
-  
-  uint8_t hmacBytes[64];
-  CC_SHA512(temp, sizeof(temp), hmacBytes);
-
-  /*
-		private void ComputeKeys(out byte[] pbCipherKey, int cbCipherKey,
-                             out byte[] pbHmacKey64)
-		{
-      byte[] pbCmp = new byte[32 + 32 + 1];
-      try
-      {
-        Debug.Assert(m_pbMasterSeed != null);
-        if(m_pbMasterSeed == null)
-          throw new ArgumentNullException("m_pbMasterSeed");
-        Debug.Assert(m_pbMasterSeed.Length == 32);
-        if(m_pbMasterSeed.Length != 32)
-          throw new FormatException(KLRes.MasterSeedLengthInvalid);
-        Array.Copy(m_pbMasterSeed, 0, pbCmp, 0, 32);
-        
-        Debug.Assert(m_pwDatabase != null);
-        Debug.Assert(m_pwDatabase.MasterKey != null);
-        ProtectedBinary pbinUser = m_pwDatabase.MasterKey.GenerateKey32(
-                                                                        m_pwDatabase.KdfParameters);
-        Debug.Assert(pbinUser != null);
-        if(pbinUser == null)
-          throw new SecurityException(KLRes.InvalidCompositeKey);
-        byte[] pUserKey32 = pbinUser.ReadData();
-        if((pUserKey32 == null) || (pUserKey32.Length != 32))
-          throw new SecurityException(KLRes.InvalidCompositeKey);
-        Array.Copy(pUserKey32, 0, pbCmp, 32, 32);
-        MemUtil.ZeroByteArray(pUserKey32);
-        
-        pbCipherKey = CryptoUtil.ResizeKey(pbCmp, 0, 64, cbCipherKey);
-        
-        pbCmp[64] = 1;
-        using(SHA512Managed h = new SHA512Managed())
-        {
-          pbHmacKey64 = h.ComputeHash(pbCmp);
-        }
-      }
-      finally { MemUtil.ZeroByteArray(pbCmp); }
-    }
-  */
-
-}
-
-
 @end
