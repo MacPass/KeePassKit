@@ -173,6 +173,7 @@
 		4C5CF4BC1BE10F090019AA81 /* KPKTextXMLUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */; };
 		4C5D91E41D89519C00029558 /* KPKNumber.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5D91E21D89519C00029558 /* KPKNumber.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C5D91E51D89519C00029558 /* KPKNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5D91E31D89519C00029558 /* KPKNumber.m */; };
+		4C5FFA911DCB5597004EF778 /* BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */; };
 		4C62F6251D1D77DE0031795C /* KPKAttribute_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C62F6231D1D77DE0031795C /* KPKAttribute_Private.h */; };
 		4C70F4551D92BF56003564E2 /* KPKTestVariantDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C70F4541D92BF56003564E2 /* KPKTestVariantDictionary.m */; };
 		4C79310D1D0FF42E00A511E8 /* KPKBinary_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C79310B1D0FF42E00A511E8 /* KPKBinary_Private.h */; };
@@ -412,6 +413,7 @@
 		4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTextXMLUtilities.m; sourceTree = "<group>"; };
 		4C5D91E21D89519C00029558 /* KPKNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKNumber.h; sourceTree = "<group>"; };
 		4C5D91E31D89519C00029558 /* KPKNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKNumber.m; sourceTree = "<group>"; };
+		4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = BinaryAttachments_test.kdbx; sourceTree = "<group>"; };
 		4C62F6231D1D77DE0031795C /* KPKAttribute_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKAttribute_Private.h; sourceTree = "<group>"; };
 		4C70F4541D92BF56003564E2 /* KPKTestVariantDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestVariantDictionary.m; sourceTree = "<group>"; };
 		4C79310B1D0FF42E00A511E8 /* KPKBinary_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKBinary_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -541,6 +543,7 @@
 		4C0BF14F1DC1199900193AD1 /* Kdbx4 */ = {
 			isa = PBXGroup;
 			children = (
+				4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */,
 				4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */,
 				4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */,
 			);
@@ -1191,6 +1194,7 @@
 				4C81382C1BE282DC001BF195 /* Test_Password_1234.kdbx in Resources */,
 				4C8138261BE282DC001BF195 /* Autotype_test.kdbx in Resources */,
 				4C81382A1BE282DC001BF195 /* KeePass1_native_test.kdb in Resources */,
+				4C5FFA911DCB5597004EF778 /* BinaryAttachments_test.kdbx in Resources */,
 				4C8138271BE282DC001BF195 /* CustomIcon_Password_1234.kdbx in Resources */,
 				4C0BF1531DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
 				4C81382D1BE282DC001BF195 /* image.png in Resources */,

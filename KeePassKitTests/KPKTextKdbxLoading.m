@@ -50,6 +50,14 @@
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
 }
 
+- (void)testLoadingBinaries {
+  NSError *error;
+  NSData *data =  [self _loadTestDataBase:@"BinaryAttachments_test" extension:@"kdbx"];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(tree, @"Loading should result in a tree object");
+}
+
 - (void)testLoadingVersion3 {
   NSError *error;
   KPKTree *tree = [[KPKTree alloc] initWithData:_data key:_key error:&error];
