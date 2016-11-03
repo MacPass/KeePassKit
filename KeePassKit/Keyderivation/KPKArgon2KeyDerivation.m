@@ -48,10 +48,10 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
 
 + (NSDictionary *)defaultParameters {
   NSMutableDictionary *parameters = [[super defaultParameters] mutableCopy];
-  parameters[KPKArgon2VersionParameter] = [KPKNumber numberWithInteger32:ARGON2_VERSION_10];
-  parameters[KPKArgon2IterationsParameter] = [KPKNumber numberWithInteger64:KPKArgon2DefaultIterations];
-  parameters[KPKArgon2MemoryParameter] = [KPKNumber numberWithInteger64:KPKArgon2DefaultMemory];
-  parameters[KPKArgon2ParallelismParameter] = [KPKNumber numberWithInteger32:KPKArgon2DefaultParallelism];
+  parameters[KPKArgon2VersionParameter] = [KPKNumber numberWithUnsignedInteger32:ARGON2_VERSION_10];
+  parameters[KPKArgon2IterationsParameter] = [KPKNumber numberWithUnsignedInteger64:KPKArgon2DefaultIterations];
+  parameters[KPKArgon2MemoryParameter] = [KPKNumber numberWithUnsignedInteger64:KPKArgon2DefaultMemory];
+  parameters[KPKArgon2ParallelismParameter] = [KPKNumber numberWithUnsignedInteger32:KPKArgon2DefaultParallelism];
   return [parameters copy];
 }
 
