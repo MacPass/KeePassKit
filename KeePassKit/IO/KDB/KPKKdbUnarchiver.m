@@ -74,7 +74,7 @@
     
     _header.keyEncRounds = CFSwapInt32LittleToHost(_header.keyEncRounds);
     self.mutableKeyDerivationParameters = [[KPKAESKeyDerivation defaultParameters] mutableCopy];
-    self.mutableKeyDerivationParameters[KPKAESRoundsOption] = [[KPKNumber alloc] initWithInteger64:_header.keyEncRounds];
+    self.mutableKeyDerivationParameters[KPKAESRoundsOption] = [[KPKNumber alloc] initWithUnsignedInteger64:_header.keyEncRounds];
     self.mutableKeyDerivationParameters[KPKAESSeedOption] = [[NSData alloc] initWithBytes:_header.transformationSeed length:sizeof(_header.transformationSeed)];
   }
   return self;

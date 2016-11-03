@@ -159,6 +159,7 @@
     tree.metaData.compressionAlgorithm = self.compressionAlgorithm;
     tree.metaData.cipherUUID = self.cipherUUID;
     
+    /* TODO check file format when header hash is mandatory */
     if(reader.headerHash && ![self.headerData.SHA256Hash isEqualToData:reader.headerHash]) {
       KPKCreateError(error, KPKErrorKdbxHeaderHashVerificationFailed);
       return nil;
@@ -263,7 +264,7 @@
             KPKCreateError(error, KPKErrorKdbxInvalidHeaderFieldSize);
             return NO;
           }
-          self.mutableKeyDerivationParameters[KPKAESRoundsOption] = [KPKNumber numberWithInteger64:CFSwapInt64LittleToHost([dataReader read8Bytes])];
+          self.mutableKeyDerivationParameters[KPKAESRoundsOption] = [KPKNumber numberWithUnsignedInteger64:CFSwapInt64LittleToHost([dataReader read8Bytes])];
         }
         break;
         
