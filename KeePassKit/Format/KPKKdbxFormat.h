@@ -52,8 +52,7 @@ typedef NS_ENUM(uint8_t, KPKInnerHeaderKey) {
 };
 
 typedef NS_OPTIONS(uint8_t, KPKBinaryFlags) {
-  KPKBinaryNoFlag             = 0,
-  KPKBinaryProtectMemoryFlag  = 1,
+  KPKBinaryProtectMemoryFlag = 1 << 0
 };
 
 typedef NS_ENUM(uint32_t, KPKCompression) {
