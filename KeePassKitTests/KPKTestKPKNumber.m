@@ -49,7 +49,7 @@
   XCTAssertEqual(KPKNumberTypeInteger64, one_int64.type, @"Type is int64!");
   
   KPKNumber *one_uint64 = [[KPKNumber alloc] initWithUnsignedInteger64:1];
-  XCTAssertEqual(1, one_uint64.unsignedInteger32Value, @"Value is 1");
+  XCTAssertEqual(1, one_uint64.unsignedInteger64Value, @"Value is 1");
   XCTAssertEqual(KPKNumberTypeUnsignedInteger64, one_uint64.type, @"Type is int32!");
 }
 
