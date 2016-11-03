@@ -62,6 +62,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorKdbxCorruptedEncryptionStream, // The encrypted data was corrupted (KDBX4)
   KPKErrorKdbxCorruptedContentStream, // The content data was corrupted (KDBX3.1)
   KPKErrorKdbxCorruptedInnerHeader, // the inner header is corrupted
+  KPKErrorKdbxInvalidInnerHeaderFieldType, // invalid field type in the inner header
   KPKErrorKdbHeaderTruncated, // The header (and thus the file) was truncated
   KPKErrorKdbInvalidFieldType, // KDB Invalid field type
   KPKErrorKdbInvalidFieldSize, // KDB Invalid field size
