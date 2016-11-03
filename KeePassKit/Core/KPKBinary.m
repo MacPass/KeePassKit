@@ -36,9 +36,9 @@
   if(self) {
     _name = [name copy];
     _data = [data copy];
+    _protectInMemory = NO;
   }
   return self;
-
 }
 
 - (instancetype)init {
@@ -72,13 +72,16 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   NSString *name = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(name))];
   NSData *data = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(data))];
+  BOOL protected = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(protectInMemory))];
   self = [self initWithName:name data:data];
+  self.protectInMemory = protected;
   return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeObject:self.name forKey:NSStringFromSelector(@selector(name))];
   [aCoder encodeObject:self.data forKey:NSStringFromSelector(@selector(data))];
+  [aCoder encodeBool:self.protectInMemory forKey:NSStringFromSelector(@selector(protectInMemory))];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
@@ -86,6 +89,7 @@
   if(copy) {
     copy.name = _name;
     copy.data = _data;
+    copy.protectInMemory = _protectInMemory;
   }
   return copy;
 }
@@ -101,7 +105,7 @@
 }
 
 - (BOOL)isEqualtoBinary:(KPKBinary *)binary {
-  return [self.name isEqualToString:binary.name] && [self.data isEqualToData:binary.data];
+  return [self.name isEqualToString:binary.name] && [self.data isEqualToData:binary.data] && (self.protectInMemory == binary.protectInMemory);
 }
 
 -(NSUInteger)hash {
@@ -110,6 +114,7 @@
   
   result = prime * result + (self.name).hash;
   result = prime * result + (self.data).hash;
+  result = prime * result + self.protectInMemory;
   
   return result;
 }
