@@ -167,7 +167,7 @@
 		4C5CF4B61BE10F090019AA81 /* KPKTestReference.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A21BE10F090019AA81 /* KPKTestReference.m */; };
 		4C5CF4B71BE10F090019AA81 /* KPKTestUndo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A31BE10F090019AA81 /* KPKTestUndo.m */; };
 		4C5CF4B81BE10F090019AA81 /* KPKTestUUIDAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A41BE10F090019AA81 /* KPKTestUUIDAdditions.m */; };
-		4C5CF4B91BE10F090019AA81 /* KPKTestXmlLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A51BE10F090019AA81 /* KPKTestXmlLoading.m */; };
+		4C5CF4B91BE10F090019AA81 /* KPKTextKdbxLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A51BE10F090019AA81 /* KPKTextKdbxLoading.m */; };
 		4C5CF4BA1BE10F090019AA81 /* KPKTestXmlParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A61BE10F090019AA81 /* KPKTestXmlParsing.m */; };
 		4C5CF4BB1BE10F090019AA81 /* KPKTestXmlWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A71BE10F090019AA81 /* KPKTestXmlWriting.m */; };
 		4C5CF4BC1BE10F090019AA81 /* KPKTextXMLUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */; };
@@ -406,7 +406,7 @@
 		4C5CF4A21BE10F090019AA81 /* KPKTestReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestReference.m; sourceTree = "<group>"; };
 		4C5CF4A31BE10F090019AA81 /* KPKTestUndo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestUndo.m; sourceTree = "<group>"; };
 		4C5CF4A41BE10F090019AA81 /* KPKTestUUIDAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestUUIDAdditions.m; sourceTree = "<group>"; };
-		4C5CF4A51BE10F090019AA81 /* KPKTestXmlLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestXmlLoading.m; sourceTree = "<group>"; };
+		4C5CF4A51BE10F090019AA81 /* KPKTextKdbxLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTextKdbxLoading.m; sourceTree = "<group>"; };
 		4C5CF4A61BE10F090019AA81 /* KPKTestXmlParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestXmlParsing.m; sourceTree = "<group>"; };
 		4C5CF4A71BE10F090019AA81 /* KPKTestXmlWriting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestXmlWriting.m; sourceTree = "<group>"; };
 		4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTextXMLUtilities.m; sourceTree = "<group>"; };
@@ -715,7 +715,7 @@
 				4C9466221D78923A00F70457 /* KPKTestUndoTimeInfo.m */,
 				4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */,
 				4C5CF4A41BE10F090019AA81 /* KPKTestUUIDAdditions.m */,
-				4C5CF4A51BE10F090019AA81 /* KPKTestXmlLoading.m */,
+				4C5CF4A51BE10F090019AA81 /* KPKTextKdbxLoading.m */,
 				4C5CF4A61BE10F090019AA81 /* KPKTestXmlParsing.m */,
 				4C5CF4A71BE10F090019AA81 /* KPKTestXmlWriting.m */,
 				4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */,
@@ -1303,7 +1303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C5CF4B61BE10F090019AA81 /* KPKTestReference.m in Sources */,
-				4C5CF4B91BE10F090019AA81 /* KPKTestXmlLoading.m in Sources */,
+				4C5CF4B91BE10F090019AA81 /* KPKTextKdbxLoading.m in Sources */,
 				4C5CF4B31BE10F090019AA81 /* KPKTestNSCopying.m in Sources */,
 				4C70F4551D92BF56003564E2 /* KPKTestVariantDictionary.m in Sources */,
 				4C5CF4B01BE10F090019AA81 /* KPKTestLegacyWriting.m in Sources */,
