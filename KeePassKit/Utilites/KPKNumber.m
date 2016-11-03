@@ -8,6 +8,8 @@
 
 #import "KPKNumber.h"
 
+
+
 @interface KPKNumber ()
 
 @property (copy) NSNumber *number;
@@ -138,8 +140,16 @@
 }
 
 - (void)_checkTypeConversion:(KPKNumberType)type {
+  static NSDictionary *typeNames;
+  if(!typeNames) {
+    typeNames = @{ @(KPKNumberTypeBool) : @"Bool",
+                   @(KPKNumberTypeInteger32) : @"int32_t",
+                   @(KPKNumberTypeInteger64) : @"int64_t",
+                   @(KPKNumberTypeUnsignedInteger32) : @"uint32_t",
+                   @(KPKNumberTypeUnsignedInteger64) : @"uint64_t" };
+  }
   if(self.type != type) {
-    NSLog(@"Warnging. Requesting casted type:%ld. Native type:%ld", type, self.type);
+    NSLog(@"Warnging. Requesting casted type %@. Native type is %@", typeNames[@(type)], typeNames[@(self.type)]);
   }
 }
 
