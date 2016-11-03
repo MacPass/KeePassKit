@@ -39,6 +39,8 @@
 @property (copy) NSData *headerHash;
 @property (assign) BOOL outputVersion4;
 
+@property (readonly,nonatomic,copy) NSArray *binaries;
+
 @end
 
 @implementation KPKKdbxArchiver
@@ -55,6 +57,17 @@
     else {
       _outputVersion4 = self.tree.minimumVersion <= kKPKKdbxFileVersion4;
     }
+    
+    NSArray *allEntries = [self.tree.allEntries arrayByAddingObjectsFromArray:self.tree.allHistoryEntries];
+    NSMutableArray *tempBinaries = [[NSMutableArray alloc] init];
+    for(KPKEntry *entry in allEntries) {
+      for(KPKBinary *binary in entry.binaries) {
+        if(![tempBinaries containsObject:binary]) {
+          [tempBinaries addObject:binary];
+        }
+      }
+    }
+    _binaries = [tempBinaries copy];
   }
   return self;
 }
@@ -77,11 +90,23 @@
   return [self.headerHash copy];
 }
 
+- (NSUInteger)writer:(KPKXmlTreeWriter *)writer referenceForBinary:(KPKBinary *)binary {
+  return [self.binaries indexOfObject:binary];
+}
+
+- (NSArray *)binariesForWriter:(KPKXmlTreeWriter *)writer {
+  if(self.outputVersion4) {
+    return @[];
+  }
+  return self.binaries;
+}
+
+
 #pragma mark -
 
 
 - (NSData *)archiveTree:(NSError *__autoreleasing *)error {
-
+  
   KPKCipher *cipher = [KPKCipher cipherWithUUID:self.tree.metaData.cipherUUID];
   if(!cipher) {
     KPKCreateError(error, KPKErrorUnsupportedCipher);
