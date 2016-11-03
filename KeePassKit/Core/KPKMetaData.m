@@ -194,6 +194,7 @@
   self.compressionAlgorithm == other.compressionAlgorithm &&
   [self.cipherUUID isEqual:other.cipherUUID] &&
   [self.generator isEqualToString:other.generator] &&
+  [self.settingsChanged isEqualToDate:other.settingsChanged] &&
   [self.databaseName isEqualToString:other.databaseName] &&
   [self.databaseNameChanged isEqualToDate:other.databaseNameChanged] &&
   [self.databaseDescription isEqualToString:other.databaseDescription] &&
