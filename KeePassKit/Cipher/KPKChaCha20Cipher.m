@@ -45,6 +45,15 @@
   return self;
 }
 
+- (NSUInteger)IVLength {
+  return 12;
+}
+
+
+- (NSUInteger)keyLength {
+  return 32;
+}
+
 - (NSData *)decryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError *__autoreleasing  _Nullable *)error {
   return [self encryptData:data withKey:key initializationVector:iv error:error];
 }
