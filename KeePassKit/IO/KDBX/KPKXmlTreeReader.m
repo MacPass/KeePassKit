@@ -66,7 +66,6 @@
 @property (copy) NSData *headerHash;
 @property (readonly, copy) NSData *randomStreamKey;
 @property (readonly, assign) KPKRandomStreamType randomStreamID;
-@property (readonly, copy) NSArray *binaries;
 
 @end
 
@@ -95,10 +94,6 @@
 
 - (NSData *)randomStreamKey {
   return [[self.delegate randomStreamKeyForReader:self] copy];
-}
-
-- (NSArray *)binaries {
-  return [[self.delegate binariesForReader:self] copy];
 }
 
 - (KPKTree *)tree:(NSError *__autoreleasing *)error {
@@ -375,6 +370,13 @@
     NSUInteger index = [refAttribute stringValue].integerValue;
     
     KPKBinary *binary = self.binaryMap[ @(index) ];
+    if(!binary) {
+      binary = [self.delegate writer:self binaryForReference:index];
+    }
+    NSAssert(binary, @"Unable to dereference binary!");
+    if(!binary) {
+      continue;
+    }
     binary.name = KPKXmlString(binaryElement, kKPKXmlKey);
     [entry addBinary:binary];
   }

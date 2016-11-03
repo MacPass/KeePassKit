@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class KPKTree;
 @class DDXMLDocument;
 @class KPKXmlTreeWriter;
+@class KPKBinary;
 
 @protocol KPKXmlTreeWriterDelegate <NSObject>
 
@@ -36,6 +37,24 @@ NS_ASSUME_NONNULL_BEGIN
 - (KPKRandomStreamType)randomStreamTypeForWriter:(KPKXmlTreeWriter *)writer ;
 - (NSData *)randomStreamKeyForWriter:(KPKXmlTreeWriter *)writer;
 - (NSData *)headerHashForWriter:(KPKXmlTreeWriter *)writer;
+/**
+ Called by the writer to retrieve information who to write entry attachments (KPKBinary)
+ If nil is returned by the delegate, the writer will not write any information about binaries into the file (e.g. KDBX4)
+ If no binaries are present, return an empty array @[] instead of nil! (e.g. KDBX3.1)
+ 
+ @param writer the calling writer
+ @return NSArray containgin the binaries.
+ */
+- (NSArray *)binariesForWriter:(KPKXmlTreeWriter *)writer;
+
+/**
+ Called by the writer to retrieve a unique refernce for a given binary.
+ 
+ @param writer Calling writer
+ @param binary The binary to get a reference key for
+ @return the unique reference for the binary.
+ */
+- (NSUInteger)writer:(KPKXmlTreeWriter *)writer referenceForBinary:(KPKBinary *)binary;
 @end
 
 @interface KPKXmlTreeWriter : NSObject
@@ -47,7 +66,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithTree:(KPKTree *)tree;
 
 @property (nonatomic, readonly, copy) DDXMLDocument *xmlDocument;
-@property NSMutableArray *binaries;
 
 @end
 

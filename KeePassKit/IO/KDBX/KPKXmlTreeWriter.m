@@ -60,11 +60,15 @@
 @property (strong, readwrite) KPKTree *tree;
 @property (readonly, copy) NSData *headerHash;
 @property (readonly, copy) NSData *randomStreamKey;
+@property (readonly, copy) NSArray *binaries;
 @property (readonly, assign) KPKRandomStreamType randomType;
 
 @end
 
 @implementation KPKXmlTreeWriter
+
+@synthesize binaries = _binaries;
+
 - (instancetype)initWithTree:(KPKTree *)tree delegate:(id<KPKXmlTreeWriterDelegate>)delegate {
   self = [super init];
   if(self) {
@@ -81,6 +85,8 @@
   return self;
 }
 
+#pragma Delegation
+
 - (NSData *)headerHash {
   return [[self.delegate headerHashForWriter:self] copy];
 }
@@ -95,6 +101,13 @@
   }
   return KPKRandomStreamNone;
 }
+
+- (NSArray *)binaries {
+  return [[self.delegate binariesForWriter:self] copy];
+}
+
+#pragma mark -
+#pragma mark Serialisation
 
 - (DDXMLDocument *)xmlDocument {
   NSString *xmlRootString = [NSString stringWithFormat:@"<%@></%@>", kKPKXmlKeePassFile, kKPKXmlKeePassFile];
@@ -145,8 +158,10 @@
   KPKAddXmlElement(metaElement, kKPKXmlLastSelectedGroup, [metaData.lastSelectedGroup encodedString]);
   KPKAddXmlElement(metaElement, kKPKXmlLastTopVisibleGroup, [metaData.lastTopVisibleGroup encodedString]);
   
-  /* Custom Data is stored as KPKBinaries in the meta object */
-  [metaElement addChild:[self _xmlBinaries]];
+  /* only add binaries if we actuall should, ask the delegate! */
+  if(self.binaries) {
+    [metaElement addChild:[self _xmlBinaries]];
+  }
   DDXMLElement *customDataElement = [DDXMLElement elementWithName:@"CustomData"];
   for (KPKBinary *binary in metaData.mutableCustomData) {
     [customDataElement addChild:[self _xmlCustomData:binary]];
@@ -159,7 +174,7 @@
   
   /* Before storing, we need to setup the random stream */
   if(![self _setupRandomStream]) {
-     return nil;
+    return nil;
   }
   
   /* Create XML nodes for all Groups and Entries */
@@ -326,14 +341,12 @@
 }
 
 - (DDXMLElement *)_xmlBinaries {
-  
-  [self _prepareBinaries];
   DDXMLElement *binaryElements = [DDXMLElement elementWithName:kKPKXmlBinaries];
   
   BOOL compress = (self.tree.metaData.compressionAlgorithm == KPKCompressionGzip);
-  for(KPKBinary *binary in _binaries) {
+  for(KPKBinary *binary in self.binaries) {
     DDXMLElement *binaryElement = [DDXMLElement elementWithName:kKPKXmlBinary];
-    KPKAddXmlAttribute(binaryElement, kKPKXmlBinaryId, KPKStringFromLong([_binaries indexOfObject:binary]));
+    KPKAddXmlAttribute(binaryElement, kKPKXmlBinaryId, KPKStringFromLong([self.binaries indexOfObject:binary]));
     KPKAddXmlAttribute(binaryElement, kKPKXmlCompressed, KPKStringFromBool(compress));
     binaryElement.stringValue = [binary encodedStringUsingCompression:compress];
     [binaryElements addChild:binaryElement];
@@ -346,7 +359,7 @@
   KPKAddXmlElement(binaryElement, kKPKXmlKey, binary.name.XMLCompatibleString);
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue];
   [binaryElement addChild:valueElement];
-  NSUInteger reference = [_binaries indexOfObject:binary];
+  NSUInteger reference = [self.delegate writer:self referenceForBinary:binary];
   NSAssert(reference != NSNotFound, @"Binary has to be in binaries array");
   KPKAddXmlAttribute(valueElement, kKPKXmlIconReference, KPKStringFromLong(reference));
   return binaryElement;
@@ -392,19 +405,6 @@
   KPKAddXmlElement(timesElement, kKPKXmlUsageCount, KPKStringFromLong(timeInfo.usageCount));
   KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLocationChanged, KPKStringFromDate(_dateFormatter, timeInfo.locationChanged));
   return timesElement;
-}
-
-- (void)_prepareBinaries {
-  NSArray *entries = self.tree.allEntries;
-  NSArray *allEntries = [entries arrayByAddingObjectsFromArray:self.tree.allHistoryEntries];
-  _binaries = [[NSMutableArray alloc] init];
-  for(KPKEntry *entry in allEntries) {
-    for(KPKBinary *binary in entry.binaries) {
-      if(![_binaries containsObject:binary]) {
-        [_binaries addObject:binary];
-      }
-    }
-  }
 }
 
 - (void)_encodeProtected:(DDXMLElement *)root {

@@ -47,6 +47,7 @@
 @property (strong) NSMutableDictionary *customData;
 @property KPKRandomStreamType randomStreamID;
 @property KPKCompression compressionAlgorithm;
+@property (strong) NSMutableArray *binaries;
 
 @property NSUInteger headerLength;
 @property (nonatomic,readonly,copy) NSData *headerData;
@@ -73,8 +74,11 @@
 #pragma mark -
 #pragma mark KPKXmlTreeReaderDelegate
 
-- (NSArray *)binariesForReader:(KPKXmlTreeReader *)reader {
-  return @[];
+- (KPKBinary *)writer:(KPKXmlTreeReader *)writer binaryForReference:(NSUInteger)reference {
+  if(self.binaries.count <= reference) {
+    return nil;
+  }
+  return self.binaries[reference];
 }
 
 - (NSData *)randomStreamKeyForReader:(KPKXmlTreeReader *)reader {
@@ -114,7 +118,6 @@
     return nil;
   }
   NSData *xmlData;
-  NSMutableArray *binaries;
   if(self.version < kKPKKdbxFileVersion4) {
     
     /* header | encrypted(hashed(zipped(data))) */
@@ -166,9 +169,7 @@
     if(self.compressionAlgorithm == KPKCompressionGzip) {
       decryptedData = [decryptedData gzipInflate];
     }
-    NSUInteger xmlOffset;
-    
-    binaries = [self _parseInnerHeader:decryptedData offset:&xmlOffset error:error];
+    NSUInteger xmlOffset = [self _parseInnerHeader:decryptedData error:error];
     if(xmlOffset == 0) {
       return nil;
     }
@@ -343,7 +344,7 @@
   }
 }
 
-- (NSMutableArray *)_parseInnerHeader:(NSData *)data offset:(NSUInteger *)offset error:(NSError **)error {
+- (NSUInteger)_parseInnerHeader:(NSData *)data error:(NSError **)error {
   /*
    struct innerHeaderElement {
    uint8_t type;
@@ -358,31 +359,21 @@
    0x01: The user has turned on process memory protection for this binary.
    The inner header must end with an item of type 0x00 (and n = 0).
    */
-  NSAssert(offset, @"Offset parameter missing!");
-  
-  /* initalize offset to error (0) */
-  if(offset) {
-    *offset = 0;
-  }
-  
   KPKDataStreamReader *reader = [[KPKDataStreamReader alloc] initWithData:data];
   
   uint8_t type;
   uint32_t length;
-  NSMutableArray *binaries = [[NSMutableArray alloc] init];
+  self.binaries = [[NSMutableArray alloc] init];
   while(reader.hasBytesAvailable) {
     type = [reader readByte];
     length = CFSwapInt32LittleToHost([reader read4Bytes]);
     switch(type) {
       case KPKInnerHeaderKeyEndOfHeader:
         if(length == 0) {
-          if(offset) {
-            *offset = reader.offset;
-          }
-          return binaries;
+          return reader.offset;
         }
         KPKCreateError(error, KPKErrorKdbxCorruptedInnerHeader);
-        return binaries;
+        return 0;
         
       case KPKInnerHeaderKeyBinary:
         if(length > 1) {
@@ -390,7 +381,7 @@
           NSData *data = [reader readDataWithLength:length - 1];
           KPKBinary *binary = [[KPKBinary alloc] initWithName:@"INNER_HEADER_DATA" data:data];
           binary.protectInMemory = (flags & KPKBinaryProtectMemoryFlag);
-          [binaries addObject:binary];
+          [self.binaries addObject:binary];
         }
         else {
           /* no binary to read */
@@ -412,10 +403,10 @@
         
       default:
         KPKCreateError(error, KPKErrorKdbxCorruptedInnerHeader);
-        return binaries;
+        return 0;
         break;
     }
   }
-  return binaries;
+  return 0;
 }
 @end
