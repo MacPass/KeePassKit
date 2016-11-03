@@ -30,13 +30,13 @@
 
 #import "DDXMLDocument.h"
 
-@interface KPKKdbxArchiver ()
+@interface KPKKdbxArchiver () <KPKXmlTreeWriterDelegate>
 
 @property (strong) KPKDataStreamWriter *dataWriter;
 @property (copy) NSData *randomStreamKey;
 @property (copy) NSData *streamStartBytes;
 @property (assign) KPKRandomStreamType randomStreamID;
-
+@property (copy) NSData *headerHash;
 @property (assign) BOOL outputVersion4;
 
 @end
@@ -58,6 +58,27 @@
   }
   return self;
 }
+
+#pragma mark -
+#pragma mark KPKXmlTreeWriterDelegate
+
+- (KPKRandomStreamType)randomStreamTypeForWriter:(KPKXmlTreeWriter *)writer {
+  return self.randomStreamID;
+}
+
+- (NSData *)randomStreamKeyForWriter:(KPKXmlTreeWriter *)writer {
+  return [self.randomStreamKey copy];
+}
+
+- (NSData *)headerHashForWriter:(KPKXmlTreeWriter *)writer {
+  if(self.outputVersion4) {
+    return nil;
+  }
+  return [self.headerHash copy];
+}
+
+#pragma mark -
+
 
 - (NSData *)archiveTree:(NSError *__autoreleasing *)error {
 
@@ -127,8 +148,9 @@
     [self _writerHeaderField:KPKHeaderKeyEndOfHeader data:headerData];
   }
   
-  NSData *headerHash = self.outputVersion4 ? nil : self.dataWriter.writtenData.SHA256Hash;
-  KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self.tree randomStreamType:self.randomStreamID randomStreamKey:self.randomStreamKey headerHash:headerHash];
+  self.headerHash = self.dataWriter.writtenData.SHA256Hash;
+  
+  KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self.tree delegate:self];
   NSData *xmlData = [treeWriter.xmlDocument XMLDataWithOptions:DDXMLNodeCompactEmptyElement];
   
   NSData *hmacKey;

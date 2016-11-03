@@ -54,25 +54,21 @@
 
 @interface KPKXmlTreeWriter () {
   NSDateFormatter *_dateFormatter;
-  NSMutableArray *_binaries;
   KPKRandomStream *_randomStream;
 }
 
 @property (strong, readwrite) KPKTree *tree;
-@property (copy) NSData *headerHash;
-@property (copy) NSData *randomStreamKey;
-@property (assign) KPKRandomStreamType randomType;
+@property (readonly, copy) NSData *headerHash;
+@property (readonly, copy) NSData *randomStreamKey;
+@property (readonly, assign) KPKRandomStreamType randomType;
 
 @end
 
 @implementation KPKXmlTreeWriter
-- (instancetype)initWithTree:(KPKTree *)tree randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key headerHash:(NSData *)hash {
+- (instancetype)initWithTree:(KPKTree *)tree delegate:(id<KPKXmlTreeWriterDelegate>)delegate {
   self = [super init];
   if(self) {
     _tree = tree;
-    _headerHash = [hash copy];
-    _randomType = randomType;
-    _randomStreamKey = [key copy];
     _dateFormatter = [[NSDateFormatter alloc] init];
     _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
     _dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
@@ -81,8 +77,23 @@
 }
 
 - (instancetype)initWithTree:(KPKTree *)tree {
-  self = [self initWithTree:tree randomStreamType:KPKRandomStreamNone randomStreamKey:nil headerHash:nil];
+  self = [self initWithTree:tree delegate:nil];
   return self;
+}
+
+- (NSData *)headerHash {
+  return [[self.delegate headerHashForWriter:self] copy];
+}
+
+- (NSData *)randomStreamKey {
+  return [[self.delegate randomStreamKeyForWriter:self] copy];
+}
+
+- (KPKRandomStreamType)randomStreamType {
+  if(self.delegate) {
+    return [self.delegate randomStreamTypeForWriter:self];
+  }
+  return KPKRandomStreamNone;
 }
 
 - (DDXMLDocument *)xmlDocument {

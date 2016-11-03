@@ -24,6 +24,7 @@
 #import "KPKTree.h"
 #import "KPKMetaData.h"
 #import "KPKCompositeKey.h"
+#import "KPKBinary.h"
 
 #import "NSUUID+KeePassKit.h"
 
@@ -38,7 +39,7 @@
 
 #import <CommonCrypto/CommonCrypto.h>
 
-@interface KPKKdbxUnarchiver ()
+@interface KPKKdbxUnarchiver () <KPKXmlTreeReaderDelegate>
 @property (copy) NSData *masterSeed;
 @property (copy) NSData *streamStartBytes;
 @property (copy) NSData *protectedStreamKey;
@@ -69,6 +70,24 @@
   return self;
 }
 
+#pragma mark -
+#pragma mark KPKXmlTreeReaderDelegate
+
+- (NSArray *)binariesForReader:(KPKXmlTreeReader *)reader {
+  return @[];
+}
+
+- (NSData *)randomStreamKeyForReader:(KPKXmlTreeReader *)reader {
+  return self.protectedStreamKey;
+}
+
+- (KPKRandomStreamType)randomStreamTypeForReader:(KPKXmlTreeReader *)reader {
+  return self.randomStreamID;
+}
+
+#pragma mark -
+#pragma mark Deserilization
+
 
 - (KPKTree *)tree:(NSError * _Nullable __autoreleasing *)error {
   KPKKeyDerivation *keyDerivation = [[KPKKeyDerivation alloc] initWithParameters:self.mutableKeyDerivationParameters];
@@ -95,6 +114,7 @@
     return nil;
   }
   NSData *xmlData;
+  NSMutableArray *binaries;
   if(self.version < kKPKKdbxFileVersion4) {
     
     /* header | encrypted(hashed(zipped(data))) */
@@ -146,13 +166,17 @@
     if(self.compressionAlgorithm == KPKCompressionGzip) {
       decryptedData = [decryptedData gzipInflate];
     }
-    NSUInteger xmlOffset = [self _parseInnerHeader:decryptedData error:error];
+    NSUInteger xmlOffset;
+    
+    binaries = [self _parseInnerHeader:decryptedData offset:&xmlOffset error:error];
     if(xmlOffset == 0) {
       return nil;
     }
     xmlData = [decryptedData subdataWithRange:NSMakeRange(xmlOffset, decryptedData.length - xmlOffset)];
   }
-  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:xmlData randomStreamType:self.randomStreamID randomStreamKey:self.protectedStreamKey];
+  //KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:xmlData randomStreamType:self.randomStreamID randomStreamKey:self.protectedStreamKey];
+  KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:xmlData delegate:self];
+  
   KPKTree *tree = [reader tree:error];
   if(tree) {
     tree.metaData.keyDerivationParameters = self.mutableKeyDerivationParameters;
@@ -248,6 +272,9 @@
         break;
       }
       case KPKHeaderKeyProtectedKey:
+        if(isVersion4) {
+          NSLog(@"Unexptected Public Header field ProtectedKey in KDBX4 public header!");
+        }
         self.protectedStreamKey = [dataReader readDataWithLength:fieldSize];
         break;
         
@@ -257,15 +284,14 @@
         
       case KPKHeaderKeyTransformRounds:
         if(isVersion4) {
+          KPKCreateError(error, KPKErrorKdbxInvalidHeaderFieldType);
           return NO;
         }
-        else {
-          if(fieldSize != 8) {
-            KPKCreateError(error, KPKErrorKdbxInvalidHeaderFieldSize);
-            return NO;
-          }
-          self.mutableKeyDerivationParameters[KPKAESRoundsOption] = [KPKNumber numberWithUnsignedInteger64:CFSwapInt64LittleToHost([dataReader read8Bytes])];
+        if(fieldSize != 8) {
+          KPKCreateError(error, KPKErrorKdbxInvalidHeaderFieldSize);
+          return NO;
         }
+        self.mutableKeyDerivationParameters[KPKAESRoundsOption] = [KPKNumber numberWithUnsignedInteger64:CFSwapInt64LittleToHost([dataReader read8Bytes])];
         break;
         
       case KPKHeaderKeyCompression:
@@ -280,6 +306,9 @@
         }
         break;
       case KPKHeaderKeyRandomStreamId:
+        if(isVersion4) {
+          NSLog(@"Unexptected Public Header filed RandomStreamID in KDBX4 public header!");
+        }
         if(fieldSize != 4) {
           KPKCreateError(error, KPKErrorKdbxInvalidHeaderFieldSize);
           return NO;
@@ -314,7 +343,7 @@
   }
 }
 
-- (NSUInteger)_parseInnerHeader:(NSData *)data error:(NSError **)error {
+- (NSMutableArray *)_parseInnerHeader:(NSData *)data offset:(NSUInteger *)offset error:(NSError **)error {
   /*
    struct innerHeaderElement {
    uint8_t type;
@@ -329,7 +358,15 @@
    0x01: The user has turned on process memory protection for this binary.
    The inner header must end with an item of type 0x00 (and n = 0).
    */
+  NSAssert(offset, @"Offset parameter missing!");
+  
+  /* initalize offset to error (0) */
+  if(offset) {
+    *offset = 0;
+  }
+  
   KPKDataStreamReader *reader = [[KPKDataStreamReader alloc] initWithData:data];
+  
   uint8_t type;
   uint32_t length;
   NSMutableArray *binaries = [[NSMutableArray alloc] init];
@@ -339,31 +376,46 @@
     switch(type) {
       case KPKInnerHeaderKeyEndOfHeader:
         if(length == 0) {
-          return reader.offset;
+          if(offset) {
+            *offset = reader.offset;
+          }
+          return binaries;
         }
         KPKCreateError(error, KPKErrorKdbxCorruptedInnerHeader);
-        return 0;
+        return binaries;
+        
       case KPKInnerHeaderKeyBinary:
-        [reader readDataWithLength:length];
+        if(length > 1) {
+          uint8_t flags = [reader readByte];
+          NSData *data = [reader readDataWithLength:length - 1];
+          KPKBinary *binary = [[KPKBinary alloc] initWithName:@"INNER_HEADER_DATA" data:data];
+          binary.protectInMemory = (flags & KPKBinaryProtectMemoryFlag);
+          [binaries addObject:binary];
+        }
+        else {
+          /* no binary to read */
+          [reader skipBytes:1];
+        }
         break;
         
       case KPKInnerHeaderKeyRandomStreamId:
         if(length == 4) {
           self.randomStreamID = CFSwapInt32LittleToHost([reader read4Bytes]);
         }
-        else if(length > 0){
-          [binaries addObject:[reader readDataWithLength:length]];
-        }
         break;
+        
       case KPKInnerHeaderKeyRandomStreamKey:
         if(length > 0) {
           self.protectedStreamKey = [reader readDataWithLength:length];
         }
         break;
+        
       default:
+        KPKCreateError(error, KPKErrorKdbxCorruptedInnerHeader);
+        return binaries;
         break;
     }
   }
-  return 0;
+  return binaries;
 }
 @end

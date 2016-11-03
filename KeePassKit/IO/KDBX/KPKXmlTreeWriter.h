@@ -28,16 +28,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class KPKTree;
 @class DDXMLDocument;
-@class KPKXmlHeaderWriter;
+@class KPKXmlTreeWriter;
+
+@protocol KPKXmlTreeWriterDelegate <NSObject>
+
+@required
+- (KPKRandomStreamType)randomStreamTypeForWriter:(KPKXmlTreeWriter *)writer ;
+- (NSData *)randomStreamKeyForWriter:(KPKXmlTreeWriter *)writer;
+- (NSData *)headerHashForWriter:(KPKXmlTreeWriter *)writer;
+@end
 
 @interface KPKXmlTreeWriter : NSObject
 
 @property (strong, readonly) KPKTree *tree;
+@property (weak) id<KPKXmlTreeWriterDelegate> delegate;
 
-- (instancetype)initWithTree:(KPKTree *)tree randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *_Nullable)key headerHash:(NSData *_Nullable)hash;
+- (instancetype)initWithTree:(KPKTree *)tree delegate:(id<KPKXmlTreeWriterDelegate> _Nullable)delegate;
 - (instancetype)initWithTree:(KPKTree *)tree;
 
 @property (nonatomic, readonly, copy) DDXMLDocument *xmlDocument;
+@property NSMutableArray *binaries;
 
 @end
 

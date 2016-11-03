@@ -25,13 +25,22 @@
 #import "KPKKdbxFormat.h"
 
 @class KPKTree;
-@class KPKKdbxFileHeader;
+@class KPKXmlTreeReader;
+
+@protocol KPKXmlTreeReaderDelegate <NSObject>
+
+@required
+- (KPKRandomStreamType)randomStreamTypeForReader:(KPKXmlTreeReader *)reader ;
+- (NSData *)randomStreamKeyForReader:(KPKXmlTreeReader *)reader;
+- (NSArray *)binariesForReader:(KPKXmlTreeReader *)reader;
+@end
 
 @interface KPKXmlTreeReader : NSObject
 
 @property (readonly, copy) NSData *headerHash;
+@property (weak) id<KPKXmlTreeReaderDelegate> delegate;
 
-- (instancetype)initWithData:(NSData *)data randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key  NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithData:(NSData *)data delegate:(id<KPKXmlTreeReaderDelegate>)delegate NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithData:(NSData *)data;
 - (instancetype)init NS_UNAVAILABLE;
 

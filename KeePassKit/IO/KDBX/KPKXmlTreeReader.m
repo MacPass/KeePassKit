@@ -64,29 +64,41 @@
 @property (strong) NSMutableDictionary *iconMap;
 
 @property (copy) NSData *headerHash;
-@property (copy) NSData *randomStreamKey;
-@property (assign) KPKRandomStreamType randomStreamID;
+@property (readonly, copy) NSData *randomStreamKey;
+@property (readonly, assign) KPKRandomStreamType randomStreamID;
+@property (readonly, copy) NSArray *binaries;
 
 @end
 
 @implementation KPKXmlTreeReader
 
 - (instancetype)initWithData:(NSData *)data {
-  self = [self initWithData:data randomStreamType:KPKRandomStreamNone randomStreamKey:nil];
+  self = [self initWithData:data delegate:nil];
   return self;
 }
 
-- (instancetype)initWithData:(NSData *)data randomStreamType:(KPKRandomStreamType)randomType randomStreamKey:(NSData *)key  {
+- (instancetype)initWithData:(NSData *)data delegate:(id<KPKXmlTreeReaderDelegate>)delegate {
   self = [super init];
   if(self) {
-    _randomStreamKey = key;
-    _randomStreamID = randomType;
+    _delegate = delegate;
     _document = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
     _dateFormatter = [[NSDateFormatter alloc] init];
     _dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
     _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
   }
   return self;
+}
+
+- (KPKRandomStreamType)randomStreamID {
+  return [self.delegate randomStreamTypeForReader:self];
+}
+
+- (NSData *)randomStreamKey {
+  return [[self.delegate randomStreamKeyForReader:self] copy];
+}
+
+- (NSArray *)binaries {
+  return [[self.delegate binariesForReader:self] copy];
 }
 
 - (KPKTree *)tree:(NSError *__autoreleasing *)error {
@@ -295,7 +307,6 @@
   if(!ignoreHistory) {
     [self _parseHistory:entryElement entry:entry];
   }
-  
   
   entry.updateTiming = YES;
   return entry;
