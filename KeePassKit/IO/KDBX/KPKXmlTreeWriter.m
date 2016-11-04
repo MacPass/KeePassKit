@@ -47,35 +47,25 @@
 #import "NSString+XMLUtilities.h"
 
 #import "KPKRandomStream.h"
-#import "KPKSalsa20RandomStream.h"
-#import "KPKArc4RandomStream.h"
 
 #import "KPKXmlUtilities.h"
 
-@interface KPKXmlTreeWriter () {
-  NSDateFormatter *_dateFormatter;
-  KPKRandomStream *_randomStream;
-}
+@interface KPKXmlTreeWriter ()
 
 @property (strong, readwrite) KPKTree *tree;
 @property (readonly, copy) NSData *headerHash;
-@property (readonly, copy) NSData *randomStreamKey;
+@property (readonly, strong) KPKRandomStream *randomStream;
+@property (readonly, strong) NSDateFormatter *dateFormatter;
 @property (readonly, copy) NSArray *binaries;
-@property (readonly, assign) KPKRandomStreamType randomType;
 
 @end
 
 @implementation KPKXmlTreeWriter
 
-@synthesize binaries = _binaries;
-
 - (instancetype)initWithTree:(KPKTree *)tree delegate:(id<KPKXmlTreeWriterDelegate>)delegate {
   self = [super init];
   if(self) {
     _tree = tree;
-    _dateFormatter = [[NSDateFormatter alloc] init];
-    _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
-    _dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
   }
   return self;
 }
@@ -91,19 +81,16 @@
   return [[self.delegate headerHashForWriter:self] copy];
 }
 
-- (NSData *)randomStreamKey {
-  return [[self.delegate randomStreamKeyForWriter:self] copy];
-}
-
-- (KPKRandomStreamType)randomStreamType {
-  if(self.delegate) {
-    return [self.delegate randomStreamTypeForWriter:self];
-  }
-  return KPKRandomStreamNone;
+- (KPKRandomStream *)randomStream {
+  return [self.delegate randomStreamForWriter:self];
 }
 
 - (NSArray *)binaries {
   return [[self.delegate binariesForWriter:self] copy];
+}
+
+- (NSDateFormatter *)dateFormatter {
+  return [self.delegate dateFormatterForWriter:self];
 }
 
 #pragma mark -
@@ -124,14 +111,14 @@
   }
   
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseName, metaData.databaseName.XMLCompatibleString);
-  KPKAddXmlElement(metaElement, kKPKXmlDatabaseNameChanged, KPKStringFromDate(_dateFormatter, metaData.databaseNameChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlDatabaseNameChanged, KPKStringFromDate(self.dateFormatter, metaData.databaseNameChanged));
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescription, metaData.databaseDescription.XMLCompatibleString);
-  KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescriptionChanged, KPKStringFromDate(_dateFormatter, metaData.databaseDescriptionChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescriptionChanged, KPKStringFromDate(self.dateFormatter, metaData.databaseDescriptionChanged));
   KPKAddXmlElement(metaElement, kKPKXmlDefaultUserName, metaData.defaultUserName.XMLCompatibleString);
-  KPKAddXmlElement(metaElement, kKPKXmlDefaultUserNameChanged, KPKStringFromDate(_dateFormatter, metaData.defaultUserNameChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlDefaultUserNameChanged, KPKStringFromDate(self.dateFormatter, metaData.defaultUserNameChanged));
   KPKAddXmlElement(metaElement, kKPKXmlMaintenanceHistoryDays, KPKStringFromLong(metaData.maintenanceHistoryDays));
   KPKAddXmlElement(metaElement, kKPKXmlColor, [metaData.color hexString]);
-  KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChanged, KPKStringFromDate(_dateFormatter, metaData.masterKeyChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChanged, KPKStringFromDate(self.dateFormatter, metaData.masterKeyChanged));
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeRecommendationInterval, KPKStringFromLong(metaData.masterKeyChangeRecommendationInterval));
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeForceInterval, KPKStringFromLong(metaData.masterKeyChangeEnforcementInterval));
   
@@ -150,9 +137,9 @@
   
   KPKAddXmlElement(metaElement, kKPKXmlRecycleBinEnabled, KPKStringFromBool(metaData.useTrash));
   KPKAddXmlElement(metaElement, kKPKXmlRecycleBinUUID, [metaData.trashUuid encodedString]);
-  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinChanged, KPKStringFromDate(_dateFormatter, metaData.trashChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinChanged, KPKStringFromDate(self.dateFormatter, metaData.trashChanged));
   KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroup, [metaData.entryTemplatesGroup encodedString]);
-  KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroupChanged, KPKStringFromDate(_dateFormatter, metaData.entryTemplatesGroupChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroupChanged, KPKStringFromDate(self.dateFormatter, metaData.entryTemplatesGroupChanged));
   KPKAddXmlElement(metaElement, kKPKXmlHistoryMaxItems, KPKStringFromLong(metaData.historyMaxItems));
   KPKAddXmlElement(metaElement, kKPKXmlHistoryMaxSize, KPKStringFromLong(metaData.historyMaxSize));
   KPKAddXmlElement(metaElement, kKPKXmlLastSelectedGroup, [metaData.lastSelectedGroup encodedString]);
@@ -173,9 +160,6 @@
   DDXMLElement *rootElement = [DDXMLNode elementWithName:kKPKXmlRoot];
   
   /* Before storing, we need to setup the random stream */
-  if(![self _setupRandomStream]) {
-    return nil;
-  }
   
   /* Create XML nodes for all Groups and Entries */
   [rootElement addChild:[self _xmlGroup:self.tree.root]];
@@ -187,7 +171,7 @@
   /*
    Encode all Data that is marked protetected
    */
-  if(_randomStream) {
+  if(self.randomStream) {
     [self _encodeProtected:[document rootElement]];
   }
   
@@ -328,7 +312,7 @@
    e.g. direct output to XML we need to strip any invalid characters
    to prevent XML malformation
    */
-  BOOL usesRandomStream = (_randomStream != nil);
+  BOOL usesRandomStream = (self.randomStream != nil);
   NSString *attributeValue = (usesRandomStream && isProtected) ? attribute.value : attribute.value.XMLCompatibleString;
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue stringValue:attributeValue];
   if(isProtected) {
@@ -389,7 +373,7 @@
     KPKDeletedNode *node = self.tree.mutableDeletedObjects[ uuid ];
     DDXMLElement *deletedElement = [DDXMLNode elementWithName:kKPKXmlDeletedObject];
     KPKAddXmlElement(deletedElement, kKPKXmlUUID,[node.uuid encodedString]);
-    KPKAddXmlElement(deletedElement, kKPKXmlDeletionTime, KPKStringFromDate(_dateFormatter, node.deletionDate));
+    KPKAddXmlElement(deletedElement, kKPKXmlDeletionTime, KPKStringFromDate(self.dateFormatter, node.deletionDate));
     [deletedObjectsElement addChild:deletedElement];
   }
   return deletedObjectsElement;
@@ -397,13 +381,13 @@
 
 - (DDXMLElement *)_xmlTimeinfo:(KPKTimeInfo *)timeInfo {
   DDXMLElement *timesElement = [DDXMLNode elementWithName:kKPKXmlTimes];
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastModificationDate, KPKStringFromDate(_dateFormatter, timeInfo.modificationDate));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlCreationDate, KPKStringFromDate(_dateFormatter, timeInfo.creationDate));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastAccessDate, KPKStringFromDate(_dateFormatter, timeInfo.accessDate));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlExpirationDate, KPKStringFromDate(_dateFormatter, timeInfo.expirationDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastModificationDate, KPKStringFromDate(self.dateFormatter, timeInfo.modificationDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlCreationDate, KPKStringFromDate(self.dateFormatter, timeInfo.creationDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastAccessDate, KPKStringFromDate(self.dateFormatter, timeInfo.accessDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlExpirationDate, KPKStringFromDate(self.dateFormatter, timeInfo.expirationDate));
   KPKAddXmlElement(timesElement, kKPKXmlExpires, KPKStringFromBool(timeInfo.expires));
   KPKAddXmlElement(timesElement, kKPKXmlUsageCount, KPKStringFromLong(timeInfo.usageCount));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLocationChanged, KPKStringFromDate(_dateFormatter, timeInfo.locationChanged));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLocationChanged, KPKStringFromDate(self.dateFormatter, timeInfo.locationChanged));
   return timesElement;
 }
 
@@ -414,7 +398,7 @@
     NSMutableData *data = [[str dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
     
     // Protect the password
-    [_randomStream xor:data];
+    [self.randomStream xor:data];
     
     // Base64 encode the string
     [root setStringValue:[data base64Encoding]];
@@ -426,26 +410,5 @@
     }
   }
 }
-
-- (BOOL)_setupRandomStream {
-  switch(self.randomType ) {
-    case KPKRandomStreamNone:
-      /* no random stream set, all good */
-      return YES;
-      
-    case KPKRandomStreamSalsa20:
-      _randomStream = [[KPKSalsa20RandomStream alloc] initWithKeyData:self.randomStreamKey];
-      return YES;
-      
-    case KPKRandomStreamArc4:
-      _randomStream = [[KPKArc4RandomStream alloc] initWithKeyData:self.randomStreamKey];
-      return YES;
-      
-    case KPKRandomStreamChaCha20:
-    default:
-      return NO;
-  }
-}
-
 
 @end

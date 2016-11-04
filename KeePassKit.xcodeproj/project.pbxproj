@@ -32,6 +32,12 @@
 		4C0B9DB91DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */; };
 		4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */; };
 		4C0BF1531DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */; };
+		4C1118451DCCD88300254E1D /* KPKSalsa20Cipher.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1118431DCCD88300254E1D /* KPKSalsa20Cipher.h */; };
+		4C1118461DCCD88300254E1D /* KPKSalsa20Cipher.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1118441DCCD88300254E1D /* KPKSalsa20Cipher.m */; };
+		4C1118491DCCD90100254E1D /* KPKTwofishCipher.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1118471DCCD90100254E1D /* KPKTwofishCipher.h */; };
+		4C11184A1DCCD90100254E1D /* KPKTwofishCipher.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1118481DCCD90100254E1D /* KPKTwofishCipher.m */; };
+		4C11184E1DCCD93F00254E1D /* twofish.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C11184C1DCCD93F00254E1D /* twofish.c */; };
+		4C11184F1DCCD93F00254E1D /* twofish.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C11184D1DCCD93F00254E1D /* twofish.h */; };
 		4C15091D1C74AD10008A2C8E /* KPKMetaData_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */; };
 		4C152C5E1C7617D900380A3B /* KPKGroup_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */; };
 		4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */; };
@@ -269,6 +275,12 @@
 		4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKKdbTreeWriter.m; sourceTree = "<group>"; };
 		4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argon2KDF_AES_Cipher_test.kdbx; sourceTree = "<group>"; };
 		4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argon2KDF_ChaCha_Cipher_test.kdbx; sourceTree = "<group>"; };
+		4C1118431DCCD88300254E1D /* KPKSalsa20Cipher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKSalsa20Cipher.h; sourceTree = "<group>"; };
+		4C1118441DCCD88300254E1D /* KPKSalsa20Cipher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKSalsa20Cipher.m; sourceTree = "<group>"; };
+		4C1118471DCCD90100254E1D /* KPKTwofishCipher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKTwofishCipher.h; sourceTree = "<group>"; };
+		4C1118481DCCD90100254E1D /* KPKTwofishCipher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = KPKTwofishCipher.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		4C11184C1DCCD93F00254E1D /* twofish.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = twofish.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		4C11184D1DCCD93F00254E1D /* twofish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = twofish.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKMetaData_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKGroup_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AutotypeCustomKeystrokeSequence_1234.xml; path = Kdbx3/AutotypeCustomKeystrokeSequence_1234.xml; sourceTree = "<group>"; };
@@ -572,6 +584,15 @@
 			name = Kdb;
 			sourceTree = "<group>";
 		};
+		4C11184B1DCCD93F00254E1D /* TwoFish */ = {
+			isa = PBXGroup;
+			children = (
+				4C11184C1DCCD93F00254E1D /* twofish.c */,
+				4C11184D1DCCD93F00254E1D /* twofish.h */,
+			);
+			path = TwoFish;
+			sourceTree = "<group>";
+		};
 		4C2602101DB110930069B059 /* ChaCha20 */ = {
 			isa = PBXGroup;
 			children = (
@@ -643,6 +664,10 @@
 				4C5C829C1D79C13800A1DEA6 /* KPKAESCipher.m */,
 				4C5C829D1D79C13800A1DEA6 /* KPKChaCha20Cipher.h */,
 				4C5C829E1D79C13800A1DEA6 /* KPKChaCha20Cipher.m */,
+				4C1118431DCCD88300254E1D /* KPKSalsa20Cipher.h */,
+				4C1118441DCCD88300254E1D /* KPKSalsa20Cipher.m */,
+				4C1118471DCCD90100254E1D /* KPKTwofishCipher.h */,
+				4C1118481DCCD90100254E1D /* KPKTwofishCipher.m */,
 			);
 			path = Cipher;
 			sourceTree = "<group>";
@@ -652,6 +677,7 @@
 			children = (
 				4CA1E49A1D8832C400100002 /* Argon2 */,
 				4C2602101DB110930069B059 /* ChaCha20 */,
+				4C11184B1DCCD93F00254E1D /* TwoFish */,
 				4C4FF1A81BE119E60015827B /* KissXML */,
 				4C5CF31A1BE10B650019AA81 /* KeePassKit */,
 				4C5CF3261BE10B650019AA81 /* KeePassKitTests */,
@@ -1045,6 +1071,7 @@
 				4C5CF3D81BE10DF80019AA81 /* NSString+Empty.h in Headers */,
 				4C5CF4801BE10E200019AA81 /* KPKModificationRecording.h in Headers */,
 				4C0B9D8E1DBFB49600E66CD6 /* KPKArc4RandomStream.h in Headers */,
+				4C1118491DCCD90100254E1D /* KPKTwofishCipher.h in Headers */,
 				4C5CF4311BE10E070019AA81 /* KPKKdbxFormat.h in Headers */,
 				4C7C3FA41D81D620008D8961 /* KPKKey_Private.h in Headers */,
 				4C4FF1BC1BE119E60015827B /* DDXML.h in Headers */,
@@ -1089,10 +1116,12 @@
 				4C79310D1D0FF42E00A511E8 /* KPKBinary_Private.h in Headers */,
 				4C4FF1BA1BE119E60015827B /* NSString+DDXML.h in Headers */,
 				4C0B9D901DBFB49600E66CD6 /* KPKRandomStream.h in Headers */,
+				4C1118451DCCD88300254E1D /* KPKSalsa20Cipher.h in Headers */,
 				4C26021A1DB110930069B059 /* chacha20_simple.h in Headers */,
 				4C5CF4821BE10E200019AA81 /* KPKTreeReading.h in Headers */,
 				4CA1E48A1D8832BA00100002 /* blamka-round-opt.h in Headers */,
 				4C5CF3D01BE10DF80019AA81 /* NSDate+Packed.h in Headers */,
+				4C11184F1DCCD93F00254E1D /* twofish.h in Headers */,
 				4C5C82A81D79C13800A1DEA6 /* KPKCipher_Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1248,6 +1277,7 @@
 				4C5D91E51D89519C00029558 /* KPKNumber.m in Sources */,
 				4C4FF1BE1BE119E60015827B /* DDXMLDocument.m in Sources */,
 				4C4FF1B91BE119E60015827B /* DDXMLElementAdditions.m in Sources */,
+				4C11184E1DCCD93F00254E1D /* twofish.c in Sources */,
 				4C5CF45A1BE10E100019AA81 /* KPKDataStreamWriter.m in Sources */,
 				4C5CF4921BE10E250019AA81 /* KPKUTIs.m in Sources */,
 				4C5CF3C91BE10DF80019AA81 /* NSData+Gzip.m in Sources */,
@@ -1282,6 +1312,7 @@
 				4CA1E48E1D8832BA00100002 /* encoding.c in Sources */,
 				4C5CF41E1BE10E000019AA81 /* KPKTag.m in Sources */,
 				4C5CF3CB1BE10DF80019AA81 /* NSData+HashedData.m in Sources */,
+				4C1118461DCCD88300254E1D /* KPKSalsa20Cipher.m in Sources */,
 				4C7C3FA31D81D620008D8961 /* KPKKey.m in Sources */,
 				4C4FF1BB1BE119E60015827B /* NSString+DDXML.m in Sources */,
 				4CA1E4851D8832BA00100002 /* argon2.c in Sources */,
@@ -1298,6 +1329,7 @@
 				4C5CF3DB1BE10DF80019AA81 /* NSString+Hexdata.m in Sources */,
 				4C5CF40A1BE10E000019AA81 /* KPKBinary.m in Sources */,
 				4C5CF4941BE10E250019AA81 /* KPKXmlUtilities.m in Sources */,
+				4C11184A1DCCD90100254E1D /* KPKTwofishCipher.m in Sources */,
 				4C0B9DB31DBFB4FC00E66CD6 /* KPKKdbArchiver.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,7 +9,6 @@
 #import "KPKEntry.h"
 
 @interface KPKEntry ()
-
 @property (nonatomic, copy) KPKAutotype *autotype;
 /**
  *  Generic getter for the protected property of a attribute with the supplied key,

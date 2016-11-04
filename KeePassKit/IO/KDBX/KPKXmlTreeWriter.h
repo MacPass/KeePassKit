@@ -30,25 +30,27 @@ NS_ASSUME_NONNULL_BEGIN
 @class DDXMLDocument;
 @class KPKXmlTreeWriter;
 @class KPKBinary;
+@class KPKRandomStream;
 
 @protocol KPKXmlTreeWriterDelegate <NSObject>
 
 @required
-- (KPKRandomStreamType)randomStreamTypeForWriter:(KPKXmlTreeWriter *)writer ;
-- (NSData *)randomStreamKeyForWriter:(KPKXmlTreeWriter *)writer;
+- (NSDateFormatter *)dateFormatterForWriter:(KPKXmlTreeWriter *)writer;
+- (KPKRandomStream *)randomStreamForWriter:(KPKXmlTreeWriter *)writer;
+- (NSUInteger)outputVersionForWriter:(KPKXmlTreeWriter *)writer;
 - (NSData *)headerHashForWriter:(KPKXmlTreeWriter *)writer;
 /**
- Called by the writer to retrieve information who to write entry attachments (KPKBinary)
- If nil is returned by the delegate, the writer will not write any information about binaries into the file (e.g. KDBX4)
- If no binaries are present, return an empty array @[] instead of nil! (e.g. KDBX3.1)
- 
+ Called by the writer to retrieve a list of all available binaries.
+ The wirter will only send this message, if the output is not KDBX4.
+ For KDBX$ only references will get retrieved!
+
  @param writer the calling writer
  @return NSArray containgin the binaries.
  */
 - (NSArray *)binariesForWriter:(KPKXmlTreeWriter *)writer;
-
 /**
  Called by the writer to retrieve a unique refernce for a given binary.
+ This is called regardless of the format!
  
  @param writer Calling writer
  @param binary The binary to get a reference key for
