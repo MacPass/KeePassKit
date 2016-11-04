@@ -56,6 +56,26 @@
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
+  
+  KPKEntry *entry = [tree.root entryForUUID:[[NSUUID alloc] initWithUUIDString:@"CE07121C-E7CB-2940-AB4A-9AD530A58622"]];
+  XCTAssertNotNil(entry);
+  XCTAssertEqual(entry.binaries.count, 2);
+  
+  NSData *binaryData = entry.binaries[0].data;
+  XCTAssertEqualObjects(entry.binaries[0].name, @"Empty.xml");
+  XCTAssertTrue(binaryData.length == 10694);
+  /* byte 1392 0x50 */
+  XCTAssertEqual(((const uint8_t*)binaryData.bytes)[1392],0x50);
+  /* byte 3262 0x44 */
+  XCTAssertEqual(((const uint8_t*)binaryData.bytes)[3262],0x44);
+  
+  binaryData = entry.binaries[1].data;
+  XCTAssertEqualObjects(entry.binaries[1].name, @"New.rtf");
+  XCTAssertEqual(entry.binaries[1].data.length, 155);
+  /* byte 58 0x6c */
+  XCTAssertEqual(((const uint8_t*)binaryData.bytes)[58],0x6c);
+  /* byte 90 0x3b */
+  XCTAssertEqual(((const uint8_t*)binaryData.bytes)[90],0x3b);
 }
 
 - (void)testLoadingVersion3 {
