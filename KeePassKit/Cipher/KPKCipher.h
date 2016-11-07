@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, copy) NSUUID *uuid;
 
-@property (nonatomic, copy) NSString *name;
+@property (nonatomic, readonly, copy) NSString *name;
 
 @property (nonatomic, readonly, copy) NSData *key;
 @property (nonatomic, readonly) NSUInteger keyLength;
