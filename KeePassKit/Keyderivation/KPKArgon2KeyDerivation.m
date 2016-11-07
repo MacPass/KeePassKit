@@ -68,6 +68,10 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
   return argon2UUID;
 }
 
+- (NSString *)name {
+  return @"Argon2";
+}
+
 - (void)randomize {
   self.mutableParameters[KPKArgon2SaltParameter] = [NSData dataWithRandomBytes:32];
 }

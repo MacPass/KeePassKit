@@ -47,6 +47,7 @@ FOUNDATION_EXTERN NSString *const KPKKeyDerivationOptionUUID;
 
 @property (readonly, copy, nonatomic) NSUUID *uuid;
 @property (readonly, copy) NSDictionary *parameters;
+@property (readonly, copy, nonatomic) NSString *name;
 
 @end
 

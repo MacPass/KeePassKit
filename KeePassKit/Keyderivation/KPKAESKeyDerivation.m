@@ -76,6 +76,10 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
   return self;
 }
 
+- (NSString *)name {
+  return @"AES";
+}
+
 - (void)randomize {
   self.mutableParameters[KPKAESSeedOption] = [NSData dataWithRandomBytes:32];
 }

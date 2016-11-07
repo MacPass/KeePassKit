@@ -107,6 +107,11 @@ static NSMutableDictionary *_keyDerivations;
   NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
 }
 
+- (NSString *)name {
+  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
+  return @"UNDEFINED";
+}
+
 - (NSDictionary *)parameters {
   return [self.mutableParameters copy];
 }
