@@ -28,18 +28,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 KeePassKit uses code from the following projects
 
-[KissXML](https://github.com/robbiehanson/KissXML) Copyright 2012 Robbie Hanson. All rights reserved.
+[Argon2](https://github.com/P-H-C/phc-winner-argon2) Copyright (c) 2015 Daniel Dinu, Dmitry Khovratovich (main authors), Jean-Philippe Aumasson and Samuel Neves
 
-[MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) Copyright 2011 Jason Rush and John Flanagan. All rights reserved.
+[ChaCha20 Simple](http://chacha20.insanecoding.org/) Copyright (c) 2014 insane coder (http://insanecoding.blogspot.com/, http://chacha20.insanecoding.org/)
 
-[KeePass Database Library](https://github.com/mykeepass/KeePassLib) Copyright 2010 Qiang Yu. All rights reserved.
+Twofish Copyright (c) 2002 by Niels Ferguson.
 
-[KeepassX](https://gitorious.org/~sergeidanilov/keepassx/gdrive-keepassx) Copyright (C) 2012 Felix Geyer <debfx@fobos.de>
+[KissXML](https://github.com/robbiehanson/KissXML) Copyright (c) 2012 Robbie Hanson. All rights reserved.
+
+[MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) Copyright (c) 2011 Jason Rush and John Flanagan. All rights reserved.
+
+[KeePass Database Library](https://github.com/mykeepass/KeePassLib) Copyright (c) 2010 Qiang Yu. All rights reserved.
+
+[KeepassX](https://gitorious.org/~sergeidanilov/keepassx/gdrive-keepassx) Copyright (c) 2012 Felix Geyer <debfx@fobos.de>
 
 [NSData Gzip Category](http://www.cocoadev.com/index.pl?NSDataCategory) from the [CocoaDev Wiki](http://www.cocoadev.com)
 
 [NSData Base64 Category](http://stackoverflow.com/questions/11386876/how-to-encode-and-decode-files-as-base64-in-cocoa-objective-c) from Stackoverflow user [deins2342](http://stackoverflow.com/users/200321/denis2342)
 
-[NSData CommonCrypto Category](https://github.com/AlanQuatermain/aqtoolkit) Copyright 2008-2009 Jim Dovey, All rights reserved.
-
-[ShorcutRecorder](https://github.com/shortcutrecorder/shortcutrecorder) Copyright 2006, [contributors](http://wafflesoftware.net/shortcut/contributors/) to ShortcutRecorder. 
+[NSData CommonCrypto Category](https://github.com/AlanQuatermain/aqtoolkit) Copyright (c) 2008-2009 Jim Dovey, All rights reserved.
