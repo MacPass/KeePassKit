@@ -43,6 +43,14 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
   }
 }
 
++ (NSArray<KPKCipher *> *)availableCiphers {
+  NSMutableArray *array = [[NSMutableArray alloc] init];
+  for(NSUUID *uuid in _ciphers) {
+    [array addObject:[[_ciphers[uuid] alloc] init]];
+  }
+  return [array copy];
+}
+
 - (KPKCipher *)initWithUUID:(NSUUID *)uuid {
   self = nil;
   Class cipherClass = _ciphers[uuid];
@@ -61,6 +69,11 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
     _initializationVector = [iv copy];
   }
   return self;
+}
+
+- (NSString *)name {
+  NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
+  return @"ABSTRACT_CIPHER";
 }
 
 - (NSUUID *)uuid {

@@ -8,7 +8,6 @@
 
 #import <KeePassKit/KeePassKit.h>
 
-
 /**
  TwoFish cipher using CBC and PKS7 Padding. No other options are possible since this is the default mode used by plugins
  */

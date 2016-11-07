@@ -46,6 +46,10 @@
   return self;
 }
 
+- (NSString *)name {
+  return @"Twofish";
+}
+
 - (NSUInteger)IVLength {
   return 16;
 }

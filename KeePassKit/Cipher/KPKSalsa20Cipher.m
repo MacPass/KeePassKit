@@ -30,6 +30,10 @@
   return salsa20;
 }
 
+- (NSString *)name {
+  return @"Salsa20";
+}
+
 - (NSData *)encryptData:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error {
   return nil;
 }

@@ -45,6 +45,10 @@
   return self;
 }
 
+- (NSString *)name {
+  return @"ChaCha20";
+}
+
 - (NSUInteger)IVLength {
   return 12;
 }

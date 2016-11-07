@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, copy) NSUUID *uuid;
 
+@property (nonatomic, copy) NSString *name;
+
 @property (nonatomic, readonly, copy) NSData *key;
 @property (nonatomic, readonly) NSUInteger keyLength;
 
@@ -22,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSUUID *)uuid;
 + (KPKCipher * _Nullable)cipherWithUUID:(NSUUID *)uuid;
++ (NSArray<KPKCipher *> *)availableCiphers;
+
 
 - (KPKCipher *)initWithUUID:(NSUUID *)uuid;
 - (KPKCipher *)initWithKey:(NSData *)key initializationVector:(NSData *)iv;
@@ -31,7 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSData * _Nullable)decryptData:(NSData *)data error:(NSError * _Nullable __autoreleasing *)error;
 - (NSData * _Nullable)encryptData:(NSData *)data error:(NSError * _Nullable __autoreleasing *)error;
-
 
 @end
 
