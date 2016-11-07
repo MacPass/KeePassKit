@@ -255,6 +255,9 @@
   
   /* encrypt data */
   NSData *encryptedData = [cipher encryptData:contentData withKey:keyData initializationVector:self.encryptionIV error:error];
+  if(!encryptedData) {
+    return nil;
+  }
   [data appendData:encryptedData];
   return data;
 }

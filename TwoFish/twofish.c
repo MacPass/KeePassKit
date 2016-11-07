@@ -1266,6 +1266,7 @@ static unsigned int rs_poly_const[] = {0, 0x14d};
 static unsigned int rs_poly_div_const[] = {0, 0xa6 };
 
 void Twofish_setup(Twofish_context *context, Twofish_Byte key[32], Twofish_Byte iv[16], Twofish_options options) {
+  Twofish_initialise();
   context->options = options;
   Twofish_prepare_key(key, 32, &(context->key));
   memcpy(context->iv, iv, 16);
@@ -1694,11 +1695,70 @@ void Twofish_decrypt_block( Twofish_key * xkey, Byte c[16], Byte p[16]) {
  * with Twofish.
  */
 
-void Twofish_encrypt(Twofish_context *context, Twofish_Byte *input, Twofish_UInt32 input_length, Twofish_Byte *output, Twofish_UInt32 *output_length) {
-  Twofish_fatal("not implemented");
+#define TWOFISH_BLOCKSIZE 16
+
+Twofish_UInt64 Twofish_get_block_count(Twofish_context *context, Twofish_UInt64 input_lenght) {
+  if(context->options & Twofish_option_PaddingPKCS7) {
+    return 1 + (input_lenght / TWOFISH_BLOCKSIZE);
+  }
+  return (input_lenght / TWOFISH_BLOCKSIZE);
 }
 
-void Twofish_decrypt(Twofish_context *context, Twofish_Byte *input, Twofish_UInt32 input_length, Twofish_Byte *output, Twofish_UInt32 *output_length) {
-  Twofish_fatal("not implemented");
+Twofish_UInt64 Twofish_get_output_length(Twofish_context *context, Twofish_UInt64 input_lenght) {
+  return TWOFISH_BLOCKSIZE * Twofish_get_block_count(context, input_lenght);
+}
+
+#define TWOFISH_MIN(x,y) (x) < (y) ? (x) : (y)
+
+void Twofish_encrypt(Twofish_context *context, Twofish_Byte *input, Twofish_UInt64 input_length, Twofish_Byte *output, Twofish_UInt64 output_length) {
+  Twofish_UInt64 blockCount = Twofish_get_block_count(context, input_length);
+  if(output_length < Twofish_get_output_length(context, input_length)) {
+    return;
+  }
+
+  for(uint32_t blockIndex = 0; blockIndex < blockCount; blockIndex++) {
+    uint8_t inputBlock[TWOFISH_BLOCKSIZE];
+    uint8_t copy_length = TWOFISH_MIN(input_length - blockIndex * TWOFISH_BLOCKSIZE, TWOFISH_BLOCKSIZE);
+    uint8_t paddingCount = (TWOFISH_BLOCKSIZE - copy_length);
+    if(copy_length > 0) {
+      memcpy(inputBlock, (input+(blockIndex*TWOFISH_BLOCKSIZE)), TWOFISH_BLOCKSIZE);
+    }
+    for(int index=0; index < paddingCount; index++) {
+      inputBlock[TWOFISH_BLOCKSIZE - 1 - index] = paddingCount;
+    }
+    for(uint8_t index=0; index < TWOFISH_BLOCKSIZE; index++) {
+      inputBlock[index] ^= context->iv[index];
+    }
+    uint8_t outputBlock[TWOFISH_BLOCKSIZE];
+    Twofish_encrypt_block(&(context->key), inputBlock, outputBlock);
+    /* update iv with block */
+    memcpy(context->iv, outputBlock, TWOFISH_BLOCKSIZE);
+    memcpy((output + (blockIndex * TWOFISH_BLOCKSIZE)), outputBlock, TWOFISH_BLOCKSIZE);
+    /* whipe input plain text */
+    //memset(inputBlock, 0, sizeof(inputBlock));
+  }
+}
+
+void Twofish_decrypt(Twofish_context *context, Twofish_Byte *input, Twofish_UInt64 input_length, Twofish_Byte *output, Twofish_UInt64 *output_length) {
+  if(NULL == output) {
+    return;
+  }
+  if(*output_length < input_length) {
+    return;
+  }
+  Twofish_UInt64 blockCount = input_length / TWOFISH_BLOCKSIZE;
+  for(uint32_t blockIndex = 0; blockIndex < blockCount; blockIndex++) {
+    uint8_t inputBlock[TWOFISH_BLOCKSIZE];
+    memcpy(inputBlock, (input+(blockIndex*TWOFISH_BLOCKSIZE)), TWOFISH_BLOCKSIZE);
+    uint8_t outputBlock[TWOFISH_BLOCKSIZE];
+    Twofish_decrypt_block(&(context->key), inputBlock, outputBlock);
+    for(uint8_t index=0; index < TWOFISH_BLOCKSIZE; index++) {
+      outputBlock[index] ^= context->iv[index];
+    }
+    /* update iv with block */
+    memcpy(context->iv, inputBlock, TWOFISH_BLOCKSIZE);
+    memcpy((output + (blockIndex * TWOFISH_BLOCKSIZE)), outputBlock, TWOFISH_BLOCKSIZE);
+  }
+  *output_length = (input_length - (Twofish_Byte)output[input_length-1]);
 }
 

@@ -40,6 +40,7 @@ typedef uint8_t     Twofish_Byte;
  * Twofish_key structure which means it has to be included here.
  */
 typedef uint32_t    Twofish_UInt32;
+typedef uint64_t    Twofish_UInt64;
 
 
 /*
@@ -156,9 +157,25 @@ extern void Twofish_prepare_key( Twofish_Byte key[], int key_len, Twofish_key * 
  */
 extern void Twofish_encrypt_block(Twofish_key * xkey, Twofish_Byte p[16], Twofish_Byte c[16]);
 
-/* Call this to encrypt an arbitrary number of bytes */
-extern void Twofish_encrypt(Twofish_context *context, Twofish_Byte *input, Twofish_UInt32 input_length, Twofish_Byte *output, Twofish_UInt32 *output_length);
-
+/*
+ * Encrypt arbitratry dta
+ *
+ * This functions uses CBC and PKS#7 padding to encrypt the intput data
+ *
+ * Arguments:
+ * context        pointer to the context for the opration
+ * input          pointer to the plaintext input data array
+ * input_lenght   length of the plaintext array
+ * output         pointer to the output buffer. This needs to be preallocated by the caller!
+ * output_length  available space for the output buffer. Use Twofish_get_output_lenght to determine the size an allocate the buffer!
+ */
+extern void Twofish_encrypt(Twofish_context *context, Twofish_Byte *input, Twofish_UInt64 input_length, Twofish_Byte *output, Twofish_UInt64 output_length);
+/*
+ * Determine the output buffer size for a given input lenght
+ * 
+ * This function simply calculated the size of the output if a given input is used.
+ */
+extern Twofish_UInt64 Twofish_get_output_length(Twofish_context *context, Twofish_UInt64 input_lenght);
 /*
  * Decrypt a single block of data.
  *
@@ -178,8 +195,11 @@ extern void Twofish_encrypt(Twofish_context *context, Twofish_Byte *input, Twofi
  */
 extern void Twofish_decrypt_block(Twofish_key * xkey, Twofish_Byte c[16], Twofish_Byte p[16]);
 
-/* Call this to decrypt an arbitrary number of bytes */
-extern void Twofish_decrypt(Twofish_context *context, Twofish_Byte *input, Twofish_UInt32 input_length, Twofish_Byte *output, Twofish_UInt32 *output_length);
+
+/* output length denotes the space available in output an needs ot be at least as big as input_length
+ * after exiting, output_lenght contains the actual ammount of data written to output. Use this to copy the plaintext
+ */
+extern void Twofish_decrypt(Twofish_context *context, Twofish_Byte *input, Twofish_UInt64 input_length, Twofish_Byte *output, Twofish_UInt64 *output_length);
 
 extern void Twofish_setup(Twofish_context *context, Twofish_Byte key[32], Twofish_Byte iv[16], Twofish_options options);
 

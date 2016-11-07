@@ -65,6 +65,7 @@
 - (instancetype)initWithTree:(KPKTree *)tree delegate:(id<KPKXmlTreeWriterDelegate>)delegate {
   self = [super init];
   if(self) {
+    _delegate = delegate;
     _tree = tree;
   }
   return self;

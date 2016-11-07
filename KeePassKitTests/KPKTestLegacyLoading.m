@@ -17,6 +17,20 @@
 
 @implementation KPKTestLegacyLoading
 
+- (void)testAESDecryption {
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  NSData *data = [self _loadTestDataBase:@"Test_Password_1234" extension:@"kdb"];
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:NULL];
+  XCTAssertNotNil(tree, @"AES decryption yields a valid tree");
+}
+
+- (void)testTwofishDecryption {
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
+  NSData *data = [self _loadTestDataBase:@"TwofishCipher256bit_test" extension:@"kdb"];
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:NULL];
+  XCTAssertNotNil(tree, @"Twofish decryption yields a valid tree");
+}
+
 - (void)testValidFile {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   NSData *data = [self _loadTestDataBase:@"Test_Password_1234" extension:@"kdb"];

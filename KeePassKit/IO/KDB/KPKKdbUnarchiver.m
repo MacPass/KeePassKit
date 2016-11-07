@@ -19,6 +19,7 @@
 #import "KPKCompositeKey.h"
 
 #import "KPKAESCipher.h"
+#import "KPKTwofishCipher.h"
 #import "KPKAESKeyDerivation.h"
 
 #import "KPKNumber.h"
@@ -62,8 +63,11 @@
     if(_header.flags & KPKLegacyEncryptionAES) {
       self.cipherUUID = [KPKAESCipher uuid];
     }
+    if(_header.flags & KPKLegacyEncryptionTwoFish) {
+      self.cipherUUID = [KPKTwofishCipher uuid];
+    }
     
-    if (!(_header.flags & KPKLegacyEncryptionAES)) {
+    if(!self.cipherUUID) {
       KPKCreateError(error, KPKErrorUnsupportedCipher);
       self = nil;
       return self;
@@ -87,7 +91,7 @@
     return nil;
   }
   
-  KPKCipher *cipher = [[KPKAESCipher alloc] init];
+  KPKCipher *cipher = [[KPKCipher alloc] initWithUUID:self.cipherUUID];
   NSData *keyData = [self.key computeKeyDataForFormat:KPKDatabaseFormatKdb
                                            masterseed:self.masterSeed
                                                cipher:cipher

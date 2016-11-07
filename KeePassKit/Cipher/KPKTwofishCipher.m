@@ -19,12 +19,9 @@
 @end
 @implementation KPKTwofishCipher
 
-
-/*
 + (void)load {
   [KPKCipher _registerCipher:self];
 }
-*/
 
 + (NSUUID *)uuid {
   static uuid_t const uuid_bytes = {
@@ -60,45 +57,25 @@
 - (NSData *)encryptData:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error {
   if(![self _setupContext:error]) {
     return nil;
-  };
-  
-  NSMutableData *outputData = [[NSMutableData alloc] initWithCapacity:data.length];
-  NSUInteger blockSize = 16;
-  NSUInteger blockCount = ceil((CGFloat)data.length / (CGFloat)blockSize) + 1;
-  NSUInteger blockIndex = 0;
-  while(blockIndex < blockCount) {
-    uint8_t inputBlock[16];
-    uint8_t copyLength = MIN(data.length - blockIndex * blockSize, blockSize);
-    [data getBytes:inputBlock range:NSMakeRange(blockIndex * blockCount, copyLength)];
-    uint8_t paddingCount = (16-copyLength);
-    for(int index=0; index < paddingCount; index++) {
-      inputBlock[15-index] = paddingCount;
-    }
-    uint8_t outputBlock[16];
-    Twofish_encrypt_block(&_context.key, inputBlock, outputBlock);
-    
-    [outputData appendBytes:outputBlock length:16];
   }
-  return nil;
+  uint64_t encrpyted_length = Twofish_get_output_length(&_context, data.length);
+  uint8_t encrypted[data.length];
+  
+  Twofish_encrypt(&_context, (Twofish_Byte *)data.bytes, (Twofish_UInt64) data.length, encrypted, encrpyted_length);
+  
+  return [NSData dataWithBytes:encrypted length:encrpyted_length];
 }
 
 - (NSData *)decryptData:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error {
  if(![self _setupContext:error]) {
     return nil;
   }
-  NSMutableData *outputData = [[NSMutableData alloc] initWithCapacity:data.length];
-  NSAssert(data.length % 16 == 0, @"Unsupported input data size. No padding applied?");
-  KPKDataStreamReader *reader = [[KPKDataStreamReader alloc] initWithData:data];
-  while(reader.hasBytesAvailable) {
-    uint8_t inputBlock[16];
-    [data getBytes:inputBlock range:NSMakeRange(reader.offset, 16)];
-    uint8_t outputBlock[16];
-    Twofish_decrypt_block(&_context.key, inputBlock, outputBlock);
-    /* todo update iv */
-    [outputData appendBytes:outputBlock length:16];
-  }
+  NSAssert(0 == (data.length % 16), @"Invalid data size");
+  uint8_t decrypted[data.length];
+  uint64_t decrpyted_length = data.length;
+  Twofish_decrypt(&_context, (Twofish_Byte *)data.bytes, data.length, decrypted, &decrpyted_length);
   
-  return nil;
+  return [NSData dataWithBytes:decrypted length:decrpyted_length];
 }
 
 - (NSData *)encryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError *__autoreleasing  _Nullable *)error {
@@ -127,5 +104,4 @@
   Twofish_setup(&_context, (void *)self.key.bytes, (void *)self.initializationVector.bytes, Twofish_options_default);
   return YES;
 }
-
 @end

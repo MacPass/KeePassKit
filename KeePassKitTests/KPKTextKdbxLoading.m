@@ -34,6 +34,14 @@
   _key = nil;
 }
 
+- (void)testLoadingAESKDFTwofishCipher {
+  NSError *error;
+  NSData *data =  [self _loadTestDataBase:@"TwoFishCipher256bit_test" extension:@"kdbx"];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(tree, @"Loading should result in a tree object");
+}
+
 - (void)testLoadingArgon2KDFAESCipher {
   NSError *error;
   NSData *data =  [self _loadTestDataBase:@"Argon2KDF_AES_Cipher_test" extension:@"kdbx"];
