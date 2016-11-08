@@ -23,6 +23,7 @@
 #import "NSData+HashedData.h"
 
 #import "KPKDataStreamReader.h"
+#import "KPKDataStreamWriter.h"
 #import "KPKErrors.h"
 
 #import "NSData+CommonCrypto.h"
@@ -36,10 +37,7 @@
 @implementation NSData (HashedData)
 
 - (NSData *)unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error {
-  /*
-   The HMAC is computed over i ‖ n ‖ C (where little-endian encoding is used for the 64-bit sequence number i and the 32-bit block size n; i is implicit and does not need to be stored).
-   The key for the HMAC is different for each block; it is computed as Ki := SHA-512(i ‖ K), where K is a 512-bit key derived from the user's composite master key and the master seed stored in the KDBX header.
-   */
+  
   KPKDataStreamReader *reader = [[KPKDataStreamReader alloc] initWithData:self];
   NSMutableData *unhashedData = [[NSMutableData alloc] initWithCapacity:self.length];
   
@@ -151,52 +149,41 @@
 }
 
 - (NSData *)hashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error {
-  NSUInteger blockSize = 1024*1024;
+  uint32_t blockSize = 1024*1024;
   uint32_t blockCount = ceil((CGFloat)self.length / (CGFloat)blockSize);
-  uint64_t blockIndex = 0;
   
+  NSMutableData *outputData = [[NSMutableData alloc] initWithCapacity:(self.length + (blockSize + 4) * blockCount)];
   
+  KPKDataStreamWriter *writer = [[KPKDataStreamWriter alloc] initWithData:outputData];
   
+  uint8_t hmac[32];
+  NSUInteger offset = 0;
+  for(uint64_t blockIndex = 0; blockIndex  < blockCount; blockIndex++) {
+    NSData *hmacKey = [key hmacKeyForIndex:blockIndex];
+    uint32_t blockLength = (uint32_t)MIN(blockSize, self.length - offset);
+    
+    CCHmacContext context;
+    uint64_t LEblockIndex = CFSwapInt64HostToLittle(blockIndex);
+    uint64_t LEblockLength = CFSwapInt32HostToLittle(blockLength);
+    CCHmacInit(&context, kCCHmacAlgSHA256, hmacKey.bytes, (CC_LONG)hmacKey.length);
+    CCHmacUpdate(&context, &LEblockIndex, 8);
+    CCHmacUpdate(&context, &LEblockLength, 4);
+    if(blockLength > 0) {
+      CCHmacUpdate(&context, (self.bytes+offset), (CC_LONG)blockLength);
+    }
+    CCHmacFinal(&context, hmac);
+    
+    [writer writeBytes:hmac length:32];
+    [writer write4Bytes:blockLength];
+    [writer writeBytes:(self.bytes + offset) length:blockLength];
+    offset += blockLength;
+  }
+  /* final 0 size block */
+  memset(hmac, 0, 32);
+  [writer writeBytes:hmac length:32];
+  [writer write4Bytes:0];
   
-  
-  /*
-   byte[] pbBlockIndex = MemUtil.UInt64ToBytes(m_uBlockIndex);
-   
-			int cbBlockSize = m_iBufferPos;
-			byte[] pbBlockSize = MemUtil.Int32ToBytes(cbBlockSize);
-   
-			byte[] pbBlockHmac;
-			byte[] pbBlockKey = GetHmacKey64(m_pbKey, m_uBlockIndex);
-			using(HMACSHA256 h = new HMACSHA256(pbBlockKey))
-			{
-   h.TransformBlock(pbBlockIndex, 0, pbBlockIndex.Length,
-   pbBlockIndex, 0);
-   h.TransformBlock(pbBlockSize, 0, pbBlockSize.Length,
-   pbBlockSize, 0);
-   
-   if(cbBlockSize > 0)
-   h.TransformBlock(m_pbBuffer, 0, cbBlockSize, m_pbBuffer, 0);
-   
-   h.TransformFinalBlock(MemUtil.EmptyByteArray, 0, 0);
-   
-   pbBlockHmac = h.Hash;
-			}
-			MemUtil.ZeroByteArray(pbBlockKey);
-   
-			MemUtil.Write(m_sBase, pbBlockHmac);
-			// MemUtil.Write(m_sBase, pbBlockIndex); // Implicit
-			MemUtil.Write(m_sBase, pbBlockSize);
-			if(cbBlockSize > 0)
-   m_sBase.Write(m_pbBuffer, 0, cbBlockSize);
-   
-			++m_uBlockIndex;
-			m_iBufferPos = 0;
-   }
-   
-   */
-  
-  NSAssert(NO, @"Not Implemented!");
-  return nil;
+  return [outputData copy];
 }
 
 - (NSData *)hashedSha256Data {
@@ -225,22 +212,6 @@
   [outputData appendBytes:&nullHash length:32];
   [outputData appendBytes:&blockLength length:4];
   return outputData;
-}
-
-- (NSData *)_computeHmacKey:(NSData *)key index:(NSUInteger)index {
-  NSAssert(key.length == 64, @"Unsupported key size!");
-  if(key.length != 64) {
-    return nil;
-  }
-  uint8_t hash[64];
-  uint64_t index64 = CFSwapInt64HostToLittle(index);
-  CC_SHA512_CTX context;
-  CC_SHA512_Init(&context);
-  CC_SHA512_Update(&context, key.bytes, (CC_LONG)key.length);
-  CC_SHA512_Update(&context, &index64, 8);
-  CC_SHA512_Final(hash, &context);
-  
-  return [NSData dataWithBytes:hash length:64];
 }
 
 @end
