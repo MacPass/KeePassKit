@@ -112,7 +112,7 @@
   return self.randomStream;
 }
 
-- (NSUInteger)outputVersionForWriter:(KPKXmlTreeWriter *)writer {
+- (NSUInteger)fileVersionForWriter:(KPKXmlTreeWriter *)writer {
   if(self.outputVersion4) {
     return kKPKKdbxFileVersion4;
   }
@@ -214,6 +214,11 @@
   KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self.tree delegate:self];
   NSData *xmlData = [treeWriter.xmlDocument XMLDataWithOptions:DDXMLNodeCompactEmptyElement];
   
+  /* compress the xml data if necessary */
+  if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
+    xmlData = [xmlData gzipDeflate];
+  }
+  
   /* create key */
   NSData *hmacKey;
   NSData *keyData = [self.key computeKeyDataForFormat:KPKDatabaseFormatKdbx
@@ -226,24 +231,52 @@
     return nil;
   }
   
-  /* compress data */
-  NSMutableData *contentData = [[NSMutableData alloc] initWithData:self.streamStartBytes];
-  if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
-    xmlData = [xmlData gzipDeflate];
+  if(!self.outputVersion4) {
+    /* compress data */
+    NSMutableData *contentData = [[NSMutableData alloc] initWithData:self.streamStartBytes];
+    
+    /* append hashed data */
+    [contentData appendData:xmlData.hashedSha256Data];
+    
+    /* encrypt data */
+    NSData *encryptedData = [cipher encryptData:contentData withKey:keyData initializationVector:self.encryptionIV error:error];
+    if(!encryptedData) {
+      return nil;
+    }
+    [self.dataWriter writeData:encryptedData];
   }
-  
-  /* append hashed data */
-  [contentData appendData:xmlData.hashedSha256Data];
-  
-  /* encrypt data */
-  NSData *encryptedData = [cipher encryptData:contentData withKey:keyData initializationVector:self.encryptionIV error:error];
-  if(!encryptedData) {
-    return nil;
+  else {
+    NSData *headerHmac = [self.dataWriter.writtenData headerHmacWithKey:hmacKey];
+    
+    /* add header hash */
+    [self.dataWriter writeData:self.headerHash];
+    /* add header hmac */
+    [self.dataWriter writeData:headerHmac];
+    
+    /* inner header */
+    [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyRandomStreamId bytes:(void *)self.randomStreamID length:sizeof(self.randomStreamID)];
+    [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyRandomStreamKey data:self.randomStreamKey];
+    for(KPKBinary *binary in self.binaries) {
+      uint8_t buffer[binary.data.length + 1];
+      if(binary.protectInMemory) {
+        buffer[0] &= KPKBinaryProtectMemoryFlag;
+      }
+      [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyBinary bytes:buffer length:sizeof(buffer)];
+    }
+    [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyEndOfHeader data:nil];
+    
+    NSData *encryptedData = [cipher encryptData:xmlData withKey:keyData initializationVector:self.encryptionIV error:error];
+    if(!encryptedData) {
+      return nil;
+    }
+    NSData *hashedData = [encryptedData hashedHmacSha256DataWithKey:hmacKey error:error];
+    if(!hashedData) {
+      return nil;
+    }
+    [self.dataWriter writeData:hashedData];
   }
-  [data appendData:encryptedData];
   return data;
 }
-
 - (void)_writeHeaderField:(KPKHeaderKey)key bytes:(const void *)bytes length:(NSUInteger)length {
   [self.dataWriter writeByte:key];
   self.outputVersion4 ? [self.dataWriter write4Bytes:CFSwapInt16HostToLittle(length)] : [self.dataWriter write2Bytes:CFSwapInt16HostToLittle(length)];
