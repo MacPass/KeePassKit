@@ -73,7 +73,7 @@ NSString *KPKStringFromLong(NSInteger integer);
 /**
  *  Generates a string for the given date using the supplied date formatter
  *
- *  @param dateFormatter formatter to be used for the conversion
+ *  @param dateFormatter formatter to be used for the conversion,
  *  @param date          date that should be converted
  *
  *  @return string representation of the date.

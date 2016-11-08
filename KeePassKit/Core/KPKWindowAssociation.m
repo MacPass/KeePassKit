@@ -146,7 +146,9 @@
 }
 
 - (BOOL)matchesWindowTitle:(NSString *)windowTitle {
-  if(NSOrderedSame == [self.windowTitle caseInsensitiveCompare:windowTitle]) { return YES; }
+  if(NSOrderedSame == [self.windowTitle caseInsensitiveCompare:windowTitle]) {
+    return YES;
+  }
   /* Only update the cached expression, if we need to */
   if(!_regularExpressionIsValid) {
     NSString *pattern;

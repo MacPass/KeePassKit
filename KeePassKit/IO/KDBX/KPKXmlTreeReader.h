@@ -27,13 +27,14 @@
 @class KPKTree;
 @class KPKXmlTreeReader;
 @class KPKBinary;
+@class KPKRandomStream;
 
 @protocol KPKXmlTreeReaderDelegate <NSObject>
 
 @required
-- (KPKRandomStreamType)randomStreamTypeForReader:(KPKXmlTreeReader *)reader ;
-- (NSData *)randomStreamKeyForReader:(KPKXmlTreeReader *)reader;
-- (KPKBinary *)writer:(KPKXmlTreeReader *)writer binaryForReference:(NSUInteger)reference;
+- (KPKBinary *)reader:(KPKXmlTreeReader *)reader binaryForReference:(NSUInteger)reference;
+- (KPKRandomStream *)randomStreamForReader:(KPKXmlTreeReader *)reader;
+- (NSUInteger)fileVersionForReader:(KPKXmlTreeReader *)reader;
 @end
 
 @interface KPKXmlTreeReader : NSObject

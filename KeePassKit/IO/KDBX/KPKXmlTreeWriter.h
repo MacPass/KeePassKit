@@ -35,9 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol KPKXmlTreeWriterDelegate <NSObject>
 
 @required
-- (NSDateFormatter *)dateFormatterForWriter:(KPKXmlTreeWriter *)writer;
 - (KPKRandomStream *)randomStreamForWriter:(KPKXmlTreeWriter *)writer;
-- (NSUInteger)outputVersionForWriter:(KPKXmlTreeWriter *)writer;
+- (NSUInteger)fileVersionForWriter:(KPKXmlTreeWriter *)writer;
 - (NSData *)headerHashForWriter:(KPKXmlTreeWriter *)writer;
 /**
  Called by the writer to retrieve a list of all available binaries.

@@ -58,14 +58,12 @@
 @interface KPKXmlTreeReader ()
 
 @property (strong) DDXMLDocument *document;
-@property (strong) KPKRandomStream *randomStream;
+@property (nonatomic, strong) KPKRandomStream *randomStream;
 @property (strong) NSDateFormatter *dateFormatter;
 @property (strong) NSMutableDictionary *binaryMap;
 @property (strong) NSMutableDictionary *iconMap;
 
 @property (copy) NSData *headerHash;
-@property (readonly, copy) NSData *randomStreamKey;
-@property (readonly, assign) KPKRandomStreamType randomStreamID;
 
 @end
 
@@ -81,22 +79,22 @@
   if(self) {
     _delegate = delegate;
     _document = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
-    _dateFormatter = [[NSDateFormatter alloc] init];
-    _dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
-    _dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
   }
   return self;
 }
 
-- (KPKRandomStreamType)randomStreamID {
-  return [self.delegate randomStreamTypeForReader:self];
-}
-
-- (NSData *)randomStreamKey {
-  return [[self.delegate randomStreamKeyForReader:self] copy];
+- (KPKRandomStream *)randomStream {
+  return [self.delegate randomStreamForReader:self];
 }
 
 - (KPKTree *)tree:(NSError *__autoreleasing *)error {
+  
+  if(!self.randomStream || (kKPKKdbxFileVersion4 > [self.delegate fileVersionForReader:self])) {
+    self.dateFormatter = [[NSDateFormatter alloc] init];
+    self.dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
+    self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+  }
+  
   if(!self.document) {
     KPKCreateError(error, KPKErrorNoData);
     return nil;
@@ -105,10 +103,6 @@
   DDXMLElement *rootElement = [self.document rootElement];
   if(![[rootElement name] isEqualToString:kKPKXmlKeePassFile]) {
     KPKCreateError(error, KPKErrorKdbxKeePassFileElementMissing);
-    return nil;
-  }
-  
-  if(![self _setupRandomStream:error]) {
     return nil;
   }
   
@@ -371,7 +365,7 @@
     
     KPKBinary *binary = self.binaryMap[ @(index) ];
     if(!binary) {
-      binary = [self.delegate writer:self binaryForReference:index];
+      binary = [self.delegate reader:self binaryForReference:index];
     }
     NSAssert(binary, @"Unable to dereference binary!");
     if(!binary) {
@@ -459,32 +453,6 @@
     NSDate *date = KPKXmlDate(self.dateFormatter, deletedObject, kKPKXmlDeletionTime);
     KPKDeletedNode *deletedNode = [[KPKDeletedNode alloc] initWithUUID:uuid date:date];
     tree.mutableDeletedObjects[ deletedNode.uuid ] = deletedNode;
-  }
-}
-
-- (BOOL)_setupRandomStream:(NSError **)error {
-  switch(self.randomStreamID ) {
-    case KPKRandomStreamSalsa20:
-      NSAssert(self.randomStreamKey, @"Protetect stream key has to be set");
-      self.randomStream = [[KPKSalsa20RandomStream alloc] initWithKeyData:self.randomStreamKey];
-      return YES;
-      
-    case KPKRandomStreamArc4:
-      NSAssert(self.randomStreamKey, @"Protetect stream key has to be set");
-      self.randomStream = [[KPKArc4RandomStream alloc] initWithKeyData:self.randomStreamKey];
-      return YES;
-      
-    case KPKRandomStreamChaCha20:
-      NSAssert(self.randomStreamKey, @"Protetect stream key has to be set");
-      self.randomStream = [[KPKChaCha20RandomStream alloc] initWithKeyData:self.randomStreamKey];
-      return YES;
-      
-    case KPKRandomStreamNone:
-      return YES;
-      
-    default:
-      KPKCreateError(error, KPKErrorUnsupportedRandomStream);
-      return NO;
   }
 }
 @end

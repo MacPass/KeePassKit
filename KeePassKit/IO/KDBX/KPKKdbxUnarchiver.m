@@ -19,6 +19,10 @@
 #import "KPKKeyDerivation.h"
 #import "KPKAESKeyDerivation.h"
 
+#import "KPKArc4RandomStream.h"
+#import "KPKSalsa20RandomStream.h"
+#import "KPKChaCha20RandomStream.h"
+
 #import "KPKXmlTreeReader.h"
 
 #import "KPKTree.h"
@@ -42,15 +46,17 @@
 @interface KPKKdbxUnarchiver () <KPKXmlTreeReaderDelegate>
 @property (copy) NSData *masterSeed;
 @property (copy) NSData *streamStartBytes;
-@property (copy) NSData *protectedStreamKey;
 @property (copy) NSData *encryptionIV;
-@property (strong) NSMutableDictionary *customData;
+@property (copy) NSData *randomStreamKey;
 @property KPKRandomStreamType randomStreamID;
 @property KPKCompression compressionAlgorithm;
+
+@property (strong) NSMutableDictionary *customData;
 @property (strong) NSMutableArray *binaries;
 
 @property NSUInteger headerLength;
 @property (nonatomic,readonly,copy) NSData *headerData;
+@property (strong) KPKRandomStream *randomStream;
 @end
 
 @implementation KPKKdbxUnarchiver
@@ -74,19 +80,19 @@
 #pragma mark -
 #pragma mark KPKXmlTreeReaderDelegate
 
-- (KPKBinary *)writer:(KPKXmlTreeReader *)writer binaryForReference:(NSUInteger)reference {
+- (KPKBinary *)reader:(KPKXmlTreeReader *)reader binaryForReference:(NSUInteger)reference {
   if(self.binaries.count <= reference) {
     return nil;
   }
   return self.binaries[reference];
 }
 
-- (NSData *)randomStreamKeyForReader:(KPKXmlTreeReader *)reader {
-  return self.protectedStreamKey;
+- (KPKRandomStream *)randomStreamForReader:(KPKXmlTreeReader *)reader {
+  return self.randomStream;
 }
 
-- (KPKRandomStreamType)randomStreamTypeForReader:(KPKXmlTreeReader *)reader {
-  return self.randomStreamID;
+- (NSUInteger)fileVersionForReader:(KPKXmlTreeReader *)reader {
+  return self.version;
 }
 
 #pragma mark -
@@ -175,7 +181,27 @@
     }
     xmlData = [decryptedData subdataWithRange:NSMakeRange(xmlOffset, decryptedData.length - xmlOffset)];
   }
-  //KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:xmlData randomStreamType:self.randomStreamID randomStreamKey:self.protectedStreamKey];
+
+  
+  /* setup the random stream */
+  switch(self.randomStreamID) {
+    case KPKRandomStreamArc4:
+      self.randomStream = [[KPKArc4RandomStream alloc] initWithKeyData:self.randomStreamKey];
+      break;
+      
+    case KPKRandomStreamSalsa20:
+      self.randomStream = [[KPKSalsa20RandomStream alloc] initWithKeyData:self.randomStreamKey];
+      break;
+      
+    case KPKRandomStreamChaCha20:
+      self.randomStream = [[KPKChaCha20RandomStream alloc] initWithKeyData:self.randomStreamKey];
+      break;
+      
+    default:
+      KPKCreateError(error, KPKErrorUnsupportedRandomStream);
+      return nil;
+  }
+   
   KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:xmlData delegate:self];
   
   KPKTree *tree = [reader tree:error];
@@ -276,7 +302,7 @@
         if(isVersion4) {
           NSLog(@"Unexptected Public Header field ProtectedKey in KDBX4 public header!");
         }
-        self.protectedStreamKey = [dataReader readDataWithLength:fieldSize];
+        self.randomStreamKey = [dataReader readDataWithLength:fieldSize];
         break;
         
       case KPKHeaderKeyStartBytes:
@@ -397,7 +423,7 @@
         
       case KPKInnerHeaderKeyRandomStreamKey:
         if(length > 0) {
-          self.protectedStreamKey = [reader readDataWithLength:length];
+          self.randomStreamKey = [reader readDataWithLength:length];
         }
         break;
         

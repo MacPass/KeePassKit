@@ -112,19 +112,6 @@
   return self.randomStream;
 }
 
-- (NSDateFormatter *)dateFormatterForWriter:(KPKXmlTreeWriter *)writer {
-  if(self.outputVersion4) {
-    return nil;
-  }
-  if(!self.dateFormatter) {
-    self.dateFormatter = [[NSDateFormatter alloc] init];
-    self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
-    self.dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
-  }
-  return self.dateFormatter;
-}
-
-
 - (NSUInteger)outputVersionForWriter:(KPKXmlTreeWriter *)writer {
   if(self.outputVersion4) {
     return kKPKKdbxFileVersion4;
@@ -176,36 +163,31 @@
     [self.dataWriter write4Bytes:CFSwapInt32HostToLittle(kKPKKdbxFileVersion3)];
   }
   /* header fields */
-  [self _writerHeaderField:KPKHeaderKeyCipherId data:self.tree.metaData.cipherUUID.uuidData];
+  [self _writeHeaderField:KPKHeaderKeyCipherId data:self.tree.metaData.cipherUUID.uuidData];
   uint32_t compressionAlgorithm = CFSwapInt32HostToLittle(self.tree.metaData.compressionAlgorithm);
-  NSData *headerData = [NSData dataWithBytesNoCopy:&compressionAlgorithm length:sizeof(uint32_t) freeWhenDone:NO];
-  [self _writerHeaderField:KPKHeaderKeyCompression data:headerData];
-  [self _writerHeaderField:KPKHeaderKeyMasterSeed data:self.masterSeed];
-  [self _writerHeaderField:KPKHeaderKeyEncryptionIV data:self.encryptionIV];
+  [self _writeHeaderField:KPKHeaderKeyCompression bytes:&compressionAlgorithm length:sizeof(compressionAlgorithm)];
+  [self _writeHeaderField:KPKHeaderKeyMasterSeed data:self.masterSeed];
+  [self _writeHeaderField:KPKHeaderKeyEncryptionIV data:self.encryptionIV];
   
   if(!self.outputVersion4) {
-    [self _writerHeaderField:KPKHeaderKeyTransformSeed data:keyDerivation.parameters[KPKAESSeedOption]];
-    KPKNumber *roundsOption = keyDerivation.parameters[KPKAESRoundsOption];
-    uint64_t rounds = CFSwapInt64HostToLittle(roundsOption.unsignedInteger64Value);
-    headerData = [NSData dataWithBytesNoCopy:&rounds length:sizeof(uint64_t) freeWhenDone:NO];
-    [self _writerHeaderField:KPKHeaderKeyTransformRounds data:headerData];
-    [self _writerHeaderField:KPKHeaderKeyProtectedKey data:self.randomStreamKey];
-    [self _writerHeaderField:KPKHeaderKeyStartBytes data:self.streamStartBytes];
+    [self _writeHeaderField:KPKHeaderKeyTransformSeed data:keyDerivation.parameters[KPKAESSeedOption]];
+    uint64_t rounds = CFSwapInt64HostToLittle([keyDerivation.parameters[KPKAESRoundsOption] unsignedInteger64Value]);
+    [self _writeHeaderField:KPKHeaderKeyTransformRounds bytes:&rounds length:sizeof(rounds)];
+    [self _writeHeaderField:KPKHeaderKeyProtectedKey data:self.randomStreamKey];
+    [self _writeHeaderField:KPKHeaderKeyStartBytes data:self.streamStartBytes];
     uint32_t randomStreamId = CFSwapInt32HostToLittle(_randomStreamID);
-    headerData = [NSData dataWithBytesNoCopy:&randomStreamId length:sizeof(uint32_t) freeWhenDone:NO];
-    [self _writerHeaderField:KPKHeaderKeyRandomStreamId data:headerData];
+    [self _writeHeaderField:KPKHeaderKeyRandomStreamId bytes:&randomStreamId length:sizeof(randomStreamId)];
   }
   else {
-    [self _writerHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.parameters.variantDictionaryData];
+    [self _writeHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.parameters.variantDictionaryData];
   }
   if(self.tree.metaData.customPublicData.count > 0) {
     NSAssert(self.outputVersion4, @"Custom data reuqires KDBX version 4");
-    [self _writerHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.variantDictionaryData];
+    [self _writeHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.variantDictionaryData];
   }
   /* endOfHeader */
   uint8_t endBuffer[] = { NSCarriageReturnCharacter, NSNewlineCharacter, NSCarriageReturnCharacter, NSNewlineCharacter };
-  headerData = [NSData dataWithBytesNoCopy:endBuffer length:4 freeWhenDone:NO];
-  [self _writerHeaderField:KPKHeaderKeyEndOfHeader data:headerData];
+  [self _writeHeaderField:KPKHeaderKeyEndOfHeader bytes:endBuffer length:4];
   
   /* setup the random stream */
   switch(self.randomStreamID) {
@@ -262,16 +244,16 @@
   return data;
 }
 
-- (void)_writeHeader:(KPKKeyDerivation *)keyDerivation {
-
+- (void)_writeHeaderField:(KPKHeaderKey)key bytes:(const void *)bytes length:(NSUInteger)length {
+  [self.dataWriter writeByte:key];
+  self.outputVersion4 ? [self.dataWriter write4Bytes:CFSwapInt16HostToLittle(length)] : [self.dataWriter write2Bytes:CFSwapInt16HostToLittle(length)];
+  if (length > 0) {
+    [self.dataWriter writeBytes:bytes length:length];
+  }
 }
 
-- (void)_writerHeaderField:(KPKHeaderKey)key data:(NSData *)data {
-  [self.dataWriter writeByte:key];
-  self.outputVersion4 ? [self.dataWriter write4Bytes:CFSwapInt16HostToLittle(data.length)] : [self.dataWriter write2Bytes:CFSwapInt16HostToLittle(data.length)];
-  if (data.length > 0) {
-    [self.dataWriter writeData:data];
-  }
+- (void)_writeHeaderField:(KPKHeaderKey)key data:(NSData *)data {
+  [self _writeHeaderField:key bytes:data.bytes length:data.length];
 }
 
 @end

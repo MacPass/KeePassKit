@@ -55,7 +55,7 @@
 @property (strong, readwrite) KPKTree *tree;
 @property (readonly, copy) NSData *headerHash;
 @property (readonly, strong) KPKRandomStream *randomStream;
-@property (readonly, strong) NSDateFormatter *dateFormatter;
+@property (strong) NSDateFormatter *dateFormatter;
 @property (readonly, copy) NSArray *binaries;
 
 @end
@@ -90,10 +90,6 @@
   return [[self.delegate binariesForWriter:self] copy];
 }
 
-- (NSDateFormatter *)dateFormatter {
-  return [self.delegate dateFormatterForWriter:self];
-}
-
 #pragma mark -
 #pragma mark Serialisation
 
@@ -109,6 +105,12 @@
   
   if(self.headerHash) {
     KPKAddXmlElement(metaElement, kKPKXmlHeaderHash, [self.headerHash base64Encoding]);
+  }
+  
+  if(!self.randomStream || kKPKKdbxFileVersion4 > [self.delegate fileVersionForWriter:self]) {
+    self.dateFormatter = [[NSDateFormatter alloc] init];
+    self.dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
+    self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
   }
   
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseName, metaData.databaseName.XMLCompatibleString);

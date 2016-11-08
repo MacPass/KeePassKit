@@ -24,6 +24,24 @@
 #import <Foundation/Foundation.h>
 #import "DDXMLElementAdditions.h"
 
+static NSDate *referenceDate(void) {
+  static NSDate *refernceDate;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    components.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+    components.calendar = calendar;
+    components.year = 1;
+    components.month = 1;
+    components.day = 1;
+    components.hour = 0;
+    components.minute = 0;
+    refernceDate = [components date];
+  });
+  return refernceDate;
+}
+
 #pragma mark Writing Helper
 
 void KPKAddXmlElement(DDXMLElement *element, NSString *name, NSString *value) {
@@ -51,6 +69,10 @@ NSString * KPKStringFromLong(NSInteger integer) {
 }
 
 NSString *KPKStringFromDate(NSDateFormatter *dateFormatter, NSDate *date){
+  if(!dateFormatter) {
+    uint64_t interval = [date timeIntervalSinceDate:referenceDate()];
+    return [[NSData dataWithBytesNoCopy:&interval length:8 freeWhenDone:NO] base64EncodedStringWithOptions:0];
+  }
   return [dateFormatter stringFromDate:date];
 }
 
@@ -107,7 +129,18 @@ BOOL KPKXmlBoolAttribute(DDXMLElement *element, NSString *attribute) {
 }
 
 NSDate *KPKXmlDate(NSDateFormatter *dateFormatter, DDXMLElement *element, NSString *name) {
-  return [dateFormatter dateFromString:[[element elementForName:name] stringValue]];
+  NSString *value = [[element elementForName:name] stringValue];
+  if(!dateFormatter) {
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    if(data.length != 8) {
+      NSLog(@"Invalid date format!");
+      return nil;
+    }
+    uint64_t interval;
+    [data getBytes:&interval length:8];
+    return [referenceDate() dateByAddingTimeInterval:interval];
+  }
+  return [dateFormatter dateFromString:value];
 }
 
 KPKInheritBool parseInheritBool(DDXMLElement *element, NSString *name) {
@@ -124,3 +157,5 @@ KPKInheritBool parseInheritBool(DDXMLElement *element, NSString *name) {
   }
   return KPKInherit;
 }
+
+
