@@ -34,7 +34,7 @@
 		4C0BF1531DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */; };
 		4C1118451DCCD88300254E1D /* KPKSalsa20Cipher.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1118431DCCD88300254E1D /* KPKSalsa20Cipher.h */; };
 		4C1118461DCCD88300254E1D /* KPKSalsa20Cipher.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1118441DCCD88300254E1D /* KPKSalsa20Cipher.m */; };
-		4C1118491DCCD90100254E1D /* KPKTwofishCipher.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1118471DCCD90100254E1D /* KPKTwofishCipher.h */; };
+		4C1118491DCCD90100254E1D /* KPKTwofishCipher.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1118471DCCD90100254E1D /* KPKTwofishCipher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C11184A1DCCD90100254E1D /* KPKTwofishCipher.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1118481DCCD90100254E1D /* KPKTwofishCipher.m */; };
 		4C11184E1DCCD93F00254E1D /* twofish.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C11184C1DCCD93F00254E1D /* twofish.c */; };
 		4C11184F1DCCD93F00254E1D /* twofish.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C11184D1DCCD93F00254E1D /* twofish.h */; };
@@ -1031,6 +1031,7 @@
 				4C0B9DB41DBFB4FC00E66CD6 /* KPKKdbUnarchiver.h in Headers */,
 				4C5CF4161BE10E000019AA81 /* KPKIcon.h in Headers */,
 				4CA1E4991D8832BA00100002 /* thread.h in Headers */,
+				4C1118491DCCD90100254E1D /* KPKTwofishCipher.h in Headers */,
 				4CA1E4881D8832BA00100002 /* blake2.h in Headers */,
 				4C5CF4901BE10E250019AA81 /* KPKTypes.h in Headers */,
 				4C5CF4911BE10E250019AA81 /* KPKUTIs.h in Headers */,
@@ -1080,7 +1081,6 @@
 				4C5CF3D81BE10DF80019AA81 /* NSString+Empty.h in Headers */,
 				4C5CF4801BE10E200019AA81 /* KPKModificationRecording.h in Headers */,
 				4C0B9D8E1DBFB49600E66CD6 /* KPKArc4RandomStream.h in Headers */,
-				4C1118491DCCD90100254E1D /* KPKTwofishCipher.h in Headers */,
 				4C5CF4311BE10E070019AA81 /* KPKKdbxFormat.h in Headers */,
 				4C7C3FA41D81D620008D8961 /* KPKKey_Private.h in Headers */,
 				4C4FF1BC1BE119E60015827B /* DDXML.h in Headers */,
