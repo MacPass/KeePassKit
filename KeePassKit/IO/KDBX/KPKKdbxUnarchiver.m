@@ -27,6 +27,7 @@
 
 #import "KPKTree.h"
 #import "KPKMetaData.h"
+#import "KPKMetaData_Private.h"
 #import "KPKCompositeKey.h"
 #import "KPKBinary.h"
 
@@ -51,7 +52,7 @@
 @property KPKRandomStreamType randomStreamID;
 @property KPKCompression compressionAlgorithm;
 
-@property (strong) NSMutableDictionary *customData;
+@property (strong) NSMutableDictionary *customPublicData;
 @property (strong) NSMutableArray *binaries;
 
 @property NSUInteger headerLength;
@@ -208,6 +209,7 @@
     tree.metaData.keyDerivationParameters = self.mutableKeyDerivationParameters;
     tree.metaData.compressionAlgorithm = self.compressionAlgorithm;
     tree.metaData.cipherUUID = self.cipherUUID;
+    tree.metaData.mutableCustomPublicData = self.customPublicData;
     
     if(reader.headerHash && ![self.headerData.SHA256Hash isEqualToData:reader.headerHash]) {
       KPKCreateError(error, KPKErrorKdbxHeaderHashVerificationFailed);
@@ -356,8 +358,8 @@
         
       case KPKHeaderKeyPublicCustomData:
         NSAssert(self.version >= kKPKKdbxFileVersion4, @"File version doesn allow PublictCustomData header field");
-        self.customData = [[NSMutableDictionary alloc] initWithVariantDictionaryData:[dataReader readDataWithLength:fieldSize]];
-        if(!self.customData) {
+        self.customPublicData = [[NSMutableDictionary alloc] initWithVariantDictionaryData:[dataReader readDataWithLength:fieldSize]];
+        if(!self.customPublicData) {
           KPKCreateError(error, KPKErrorKdbxCorrutpedPublicCustomData);
           return NO;
         }

@@ -59,7 +59,7 @@
 }
 
 + (NSData *)_xmlKeyForData:(NSData *)data {
-  NSString *dataString = [data base64Encoding];
+  NSString *dataString = [data base64EncodedStringWithOptions:0];
   NSString *xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>1.00</Version></Meta><Key><Data>%@</Data></Key></KeyFile>", dataString];
   DDXMLDocument *keyDocument = [[DDXMLDocument alloc] initWithXMLString:xmlString options:0 error:NULL];
   return [keyDocument XMLDataWithOptions:DDXMLNodePrettyPrint];
@@ -149,7 +149,8 @@
     KPKCreateError(error, KPKErrorKdbxKeyDataParsingError);
     return nil;
   }
-  return [[NSData alloc] initWithBase64Encoding:dataString];
+
+  return [[NSData alloc] initWithBase64EncodedString:dataString options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
 + (NSData *)_keyDataFromHex:(NSData *)hexData {

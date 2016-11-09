@@ -124,7 +124,7 @@
 }
 
 - (NSData *)_dataForEncodedString:(NSString *)string compressed:(BOOL)compressed {
-  NSData *data = [[NSData alloc] initWithBase64Encoding:string];
+  NSData *data = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
   if(data && compressed) {
     data = [data gzipInflate];
   }
@@ -134,9 +134,9 @@
 - (NSString *)encodedStringUsingCompression:(BOOL)compress {
   if(compress) {
     NSData *data = [self.data gzipDeflate];
-    return [data base64Encoding];
+    return [data base64EncodedStringWithOptions:0];
   }
-  return [self.data base64Encoding];
+  return [self.data base64EncodedStringWithOptions:0];
 }
 
 @end

@@ -262,6 +262,7 @@
     }
     [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyEndOfHeader data:nil];
     
+    /* encrypt data */
     NSData *encryptedData = [cipher encryptData:xmlData withKey:keyData initializationVector:self.encryptionIV error:error];
     if(!encryptedData) {
       return nil;

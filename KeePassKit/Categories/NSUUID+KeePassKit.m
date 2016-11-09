@@ -36,7 +36,7 @@
 }
 
 - (instancetype)initWithEncodedUUIDString:(NSString *)string {
-  NSData *data = [[NSData alloc] initWithBase64Encoding:string];
+  NSData *data = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
   self = [self initWithData:data];
   return self;
 }
@@ -69,7 +69,7 @@
 }
 
 - (NSString *)encodedString {
-  return [[self uuidData] base64Encoding];
+  return [self.uuidData base64EncodedStringWithOptions:0];
 }
 
 - (NSData *)uuidData {

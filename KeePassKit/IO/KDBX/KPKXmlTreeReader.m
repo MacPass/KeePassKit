@@ -125,7 +125,7 @@
   }
   NSString *headerHash = KPKXmlString(metaElement, kKPKXmlHeaderHash);
   if(headerHash) {
-    self.headerHash = [[NSData alloc] initWithBase64Encoding:headerHash];
+    self.headerHash = [[NSData alloc] initWithBase64EncodedString:headerHash options:NSDataBase64DecodingIgnoreUnknownCharacters];
   }
   
   [self _parseMeta:metaElement metaData:tree.metaData];
@@ -157,7 +157,7 @@
   DDXMLNode *protectedAttribute = [element attributeForName:kKPKXmlProtected];
   if([[protectedAttribute stringValue] isEqualToString:kKPKXmlTrue]) {
     NSString *valueString = [element stringValue];
-    NSMutableData *decodedData = [[[NSData alloc] initWithBase64Encoding:valueString] mutableCopy];
+    NSMutableData *decodedData = [[NSMutableData alloc] initWithBase64EncodedString:valueString options:NSDataBase64DecodingIgnoreUnknownCharacters];
     /*
      XOR the random stream against the data
      */

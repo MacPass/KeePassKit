@@ -106,7 +106,7 @@
   KPKAddXmlElement(metaElement, kKPKXmlGenerator, metaData.generator);
   
   if(self.headerHash) {
-    KPKAddXmlElement(metaElement, kKPKXmlHeaderHash, [self.headerHash base64Encoding]);
+    KPKAddXmlElement(metaElement, kKPKXmlHeaderHash, [self.headerHash base64EncodedStringWithOptions:0]);
   }
   
   if(!self.randomStream || kKPKKdbxFileVersion4 > [self.delegate fileVersionForWriter:self]) {
@@ -123,6 +123,10 @@
   KPKAddXmlElement(metaElement, kKPKXmlDefaultUserNameChanged, KPKStringFromDate(self.dateFormatter, metaData.defaultUserNameChanged));
   KPKAddXmlElement(metaElement, kKPKXmlMaintenanceHistoryDays, KPKStringFromLong(metaData.maintenanceHistoryDays));
   KPKAddXmlElement(metaElement, kKPKXmlColor, [metaData.color hexString]);
+  /* Settings changed only in KDBX4 */
+  if(kKPKKdbxFileVersion4 <= [self.delegate fileVersionForWriter:self]) {
+    KPKAddXmlElement(metaElement, kKPKXmlSettingsChanged, KPKStringFromDate(self.dateFormatter, metaData.settingsChanged));
+  }
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChanged, KPKStringFromDate(self.dateFormatter, metaData.masterKeyChanged));
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeRecommendationInterval, KPKStringFromLong(metaData.masterKeyChangeRecommendationInterval));
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeForceInterval, KPKStringFromLong(metaData.masterKeyChangeEnforcementInterval));
@@ -152,15 +156,13 @@
   
   /* only add binaries if we actuall should, ask the delegate! */
   if(!self.randomStream || kKPKKdbxFileVersion4 > [self.delegate fileVersionForWriter:self]) {
-    
+    if(self.binaries) {
+      [metaElement addChild:[self _xmlBinaries]];
+    }
   }
-  if(self.binaries) {
-    [metaElement addChild:[self _xmlBinaries]];
-  }
-  DDXMLElement *customDataElement = [DDXMLElement elementWithName:@"CustomData"];
-  for (KPKBinary *binary in metaData.mutableCustomData) {
-    [customDataElement addChild:[self _xmlCustomData:binary]];
-  }
+  
+  DDXMLElement *customDataElement = [self _xmlCustomData:metaData.mutableCustomData addEmptyElement:YES];
+  NSAssert(customDataElement, @"Unepected nil value!");
   [metaElement addChild:customDataElement];
   /* Add meta Element to XML root */
   [[document rootElement] addChild:metaElement];
@@ -209,6 +211,11 @@
   KPKAddXmlElement(groupElement, kKPKXmlEnableSearching, stringFromInhertiBool(group.isSearchEnabled));
   KPKAddXmlElement(groupElement, kKPKXmlLastTopVisibleEntry, [group.lastTopVisibleEntry encodedString]);
   
+  DDXMLElement *customDataElement = [self _xmlCustomData:group.mutableCustomData addEmptyElement:NO];
+  if(customDataElement) {
+    [groupElement addChild:customDataElement];
+  }
+  
   for(KPKEntry *entry in group.entries) {
     [groupElement addChild:[self _xmlEntry:entry skipHistory:NO]];
   }
@@ -236,6 +243,11 @@
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:entry.timeInfo];
   [entryElement addChild:timesElement];
+  
+  DDXMLElement *customDataElement = [self _xmlCustomData:entry.mutableCustomData addEmptyElement:NO];
+  if(customDataElement) {
+    [entryElement addChild:customDataElement];
+  }
   
   for(KPKAttribute *attribute in entry.attributes) {
     [entryElement addChild:[self _xmlAttribute:attribute metaData:entry.tree.metaData]];
@@ -368,11 +380,18 @@
   return customIconsElements;
 }
 
-- (DDXMLElement *)_xmlCustomData:(KPKBinary *)customData {
-  DDXMLElement *itemElement = [DDXMLElement elementWithName:kKPKXmlCustomDataItem];
-  KPKAddXmlElement(itemElement, kKPKXmlKey, customData.name.XMLCompatibleString);
-  KPKAddXmlElement(itemElement, kKPKXmlValue, [customData encodedStringUsingCompression:NO]);
-  return itemElement;
+- (DDXMLElement *)_xmlCustomData:(NSArray *)customData addEmptyElement:(BOOL)addEmpty{
+  DDXMLElement *customDataElement;
+  if(addEmpty || customData.count > 0) {
+    customDataElement = [DDXMLElement elementWithName:kKPKXmlCustomData];
+    for (KPKBinary *binary in customData) {
+      DDXMLElement *itemElement = [DDXMLElement elementWithName:kKPKXmlCustomDataItem];
+      KPKAddXmlElement(itemElement, kKPKXmlKey, binary.name.XMLCompatibleString);
+      KPKAddXmlElement(itemElement, kKPKXmlValue, [binary encodedStringUsingCompression:NO]);
+      [customDataElement addChild:itemElement];
+    }
+  }
+  return customDataElement;
 }
 
 - (DDXMLElement *)_xmlDeletedObjects {
@@ -409,7 +428,7 @@
     [self.randomStream xor:data];
     
     // Base64 encode the string
-    [root setStringValue:[data base64Encoding]];
+    [root setStringValue:[data base64EncodedStringWithOptions:0]];
   }
   
   for(DDXMLNode *node in [root children]) {

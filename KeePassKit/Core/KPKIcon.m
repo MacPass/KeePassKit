@@ -122,7 +122,7 @@
 }
 
 - (NSString *)encodedString {
-  return [self.pngData base64Encoding];
+  return [self.pngData base64EncodedStringWithOptions:0];
 }
 
 - (NSData *)pngData {
@@ -138,7 +138,7 @@
 #pragma mark Private
 
 - (NSImage *)_decodeString:(NSString *)imageString {
-  NSData *data = [[NSData alloc] initWithBase64Encoding:imageString];
+  NSData *data = [[NSData alloc] initWithBase64EncodedString:imageString options:NSDataBase64DecodingIgnoreUnknownCharacters];
   return [[NSImage alloc] initWithData:data];
 }
 
