@@ -181,7 +181,6 @@
     }
     xmlData = [decryptedData subdataWithRange:NSMakeRange(xmlOffset, decryptedData.length - xmlOffset)];
   }
-
   
   /* setup the random stream */
   switch(self.randomStreamID) {
@@ -210,7 +209,6 @@
     tree.metaData.compressionAlgorithm = self.compressionAlgorithm;
     tree.metaData.cipherUUID = self.cipherUUID;
     
-    /* TODO check file format when header hash is mandatory */
     if(reader.headerHash && ![self.headerData.SHA256Hash isEqualToData:reader.headerHash]) {
       KPKCreateError(error, KPKErrorKdbxHeaderHashVerificationFailed);
       return nil;

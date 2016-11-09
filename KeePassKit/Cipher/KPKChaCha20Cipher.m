@@ -53,7 +53,6 @@
   return 12;
 }
 
-
 - (NSUInteger)keyLength {
   return 32;
 }
