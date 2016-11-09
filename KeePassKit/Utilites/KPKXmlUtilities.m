@@ -25,7 +25,7 @@
 #import "DDXMLElementAdditions.h"
 
 static NSDate *referenceDate(void) {
-  static NSDate *refernceDate;
+  static NSDate *referenceDate;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     NSCalendar *calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
@@ -37,9 +37,9 @@ static NSDate *referenceDate(void) {
     components.day = 1;
     components.hour = 0;
     components.minute = 0;
-    refernceDate = [components date];
+    referenceDate = [components date];
   });
-  return refernceDate;
+  return referenceDate;
 }
 
 #pragma mark Writing Helper
