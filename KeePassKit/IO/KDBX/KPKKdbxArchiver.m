@@ -179,7 +179,7 @@
     [self _writeHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.parameters.variantDictionaryData];
   }
   if(self.tree.metaData.customPublicData.count > 0) {
-    NSAssert(self.outputVersion4, @"Custom data reuqires KDBX version 4");
+    NSAssert(self.outputVersion4, @"Custom data requires KDBX version 4");
     [self _writeHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.variantDictionaryData];
   }
   /* endOfHeader */

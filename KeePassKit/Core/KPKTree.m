@@ -20,14 +20,16 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKNode_Private.h"
 #import "KPKTree.h"
 #import "KPKTree_Private.h"
+#import "KPKNode_Private.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
+#import "KPKMetaData_Private.h"
 #import "KPKTimeInfo.h"
+#import "KPKFormat.h"
 
 
 /*
@@ -229,14 +231,21 @@ NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKN
 }
 
 - (KPKDatabaseFormat)minimumFormat {
-  if(self.root.entries.count > 0) {
+  if(self.root.entries.count > 0 ||
+     self.metaData.mutableCustomPublicData.count > 0) {
     return KPKDatabaseFormatKdbx;
   }
   return self.root.minimumFormat;
 }
 
 - (NSUInteger)minimumVersion {
-  return 0;
+  switch (self.minimumFormat) {
+    case KPKDatabaseFormatKdbx:
+      return (self.metaData.mutableCustomPublicData.count > 0) ? kKPKKdbxFileVersion4 : kKPKKdbxFileVersion3;
+      
+    default:
+      return kKPKKdbFileVersion;
+  }
 }
 
 - (NSString *)defaultAutotypeSequence {
