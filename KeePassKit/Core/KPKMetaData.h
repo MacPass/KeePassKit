@@ -78,7 +78,7 @@
 
 @property(nonatomic, copy, readonly) NSArray<KPKBinary *> *customData;
 @property(nonatomic, copy, readonly) NSArray<KPKIcon *> *customIcons;
-@property(nonatomic, copy, readonly) NSDictionary *customPublicData;
+@property(nonatomic, copy, readonly) NSDictionary *customPublicData; // NSDictionary(Variant) with custom date stored in the public header
 /**
  *	Array of KPKBinary objects - extracted from unknown meta entries. Notes is mapped to name, data to data
  */
