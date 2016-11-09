@@ -11,7 +11,7 @@
 #import "KeePassKit.h"
 
 
-@interface KPKTextKdbxLoading : XCTestCase {
+@interface KPKTestKdbxLoading : XCTestCase {
 @private
   NSData *_data;
   KPKCompositeKey *_key;
@@ -20,7 +20,7 @@
 @end
 
 
-@implementation KPKTextKdbxLoading
+@implementation KPKTestKdbxLoading
 
 - (void)setUp {
   NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
@@ -58,7 +58,7 @@
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
 }
 
-- (void)testLoadingBinaries {
+- (void)testLoadingInnerHeaderBinaries {
   NSError *error;
   NSData *data =  [self _loadTestDataBase:@"BinaryAttachments_test" extension:@"kdbx"];
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
