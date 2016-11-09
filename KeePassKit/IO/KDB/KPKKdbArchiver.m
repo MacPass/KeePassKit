@@ -15,6 +15,7 @@
 #import "KPKAESKeyDerivation.h"
 #import "KPKCipher.h"
 #import "KPKAESCipher.h"
+#import "KPKTwofishCipher.h"
 #import "KPKLegacyHeaderUtility.h"
 
 #import "KPKTree.h"
@@ -82,7 +83,11 @@
   /* Save the content hash in the header */
   [treeData.SHA256Hash getBytes:_header.contentsHash length:sizeof(_header.contentsHash)];
   
-  KPKCipher *cipher = [[KPKAESCipher alloc] init];
+  KPKCipher *cipher = [[KPKCipher alloc] initWithUUID:self.tree.metaData.cipherUUID];
+  if(![cipher.uuid isEqual:[KPKAESCipher uuid]] || ![cipher.uuid isEqual:[KPKTwofishCipher uuid]]) {
+    /* if we have an unsupported cipher fall back to AES/Rijindale */
+    cipher = [[KPKAESCipher alloc] init];
+  }  
   /* Create the key to encrypt the data stream from the password */
   NSData *keyData = [self.key computeKeyDataForFormat:KPKDatabaseFormatKdb
                                            masterseed:self.masterSeed
