@@ -139,6 +139,10 @@ NSString *const kKPKXmlKeystrokeSequence = @"KeystrokeSequence";
 #pragma mark History
 NSString *const kKPKXmlHistory = @"History";
 
+#pragma mark CustomData
+NSString *const kKPKXmlCustomData = @"CustomData";
+NSString *const kKPKXmlCustomDataItem = @"Item";
+
 #pragma mark Generic
 NSString *const kKPKXmlVersion = @"Version";
 NSString *const kKPKXmlKey = @"Key";

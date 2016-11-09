@@ -41,9 +41,10 @@
 
 @dynamic notes;
 @dynamic title;
-@dynamic minimumType;
+@dynamic minimumFormat;
 @dynamic minimumVersion;
 @dynamic updateTiming;
+@dynamic customData;
 
 + (NSUInteger)defaultIcon {
   return KPKIconPassword;
@@ -63,6 +64,10 @@
 
 + (NSSet *)keyPathsForValuesAffectingParentGroup {
   return [NSSet setWithObject:NSStringFromSelector(@selector(parent))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingCustomData {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableCustomData))];
 }
 
 - (instancetype)init {
@@ -149,6 +154,10 @@
     return NO; // Trash is not trashed
   }
   return [self.tree.trash isAnchestorOf:self];
+}
+
+- (NSArray<KPKBinary *> *)customData {
+  return [self.mutableCustomData copy];
 }
 
 - (KPKGroup *)rootGroup {
@@ -304,6 +313,7 @@
     _uuid = uuid ? [uuid copy] : [[[NSUUID alloc] init] copy];
     self.timeInfo = [[KPKTimeInfo alloc] init];
     _iconId = [[self class] defaultIcon];
+    _mutableCustomData = [[NSMutableArray alloc] init];
   }
   return self;
 }
@@ -316,6 +326,7 @@
     _iconUUID = [[aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))] copy];
     /* decode time info at last */
     self.timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
+    _mutableCustomData = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableCustomData))];
   }
   return self;
 }
@@ -325,6 +336,7 @@
   [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
   [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
+  [aCoder encodeObject:self.mutableCustomData forKey:NSStringFromSelector(@selector(mutableCustomData))];
 }
 
 - (instancetype)_copyWithUUUD:(NSUUID *)uuid {

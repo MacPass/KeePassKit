@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol KPKXmlTreeWriterDelegate <NSObject>
 
 @required
+/**
+ Called by the writer to retrieve the random stream for the inner protection
+ */
 - (KPKRandomStream *)randomStreamForWriter:(KPKXmlTreeWriter *)writer;
 - (NSUInteger)fileVersionForWriter:(KPKXmlTreeWriter *)writer;
 - (NSData *)headerHashForWriter:(KPKXmlTreeWriter *)writer;
@@ -56,6 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return the unique reference for the binary.
  */
 - (NSUInteger)writer:(KPKXmlTreeWriter *)writer referenceForBinary:(KPKBinary *)binary;
+
 @end
 
 @interface KPKXmlTreeWriter : NSObject

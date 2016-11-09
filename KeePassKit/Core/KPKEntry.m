@@ -425,13 +425,25 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return YES;
 }
 
-- (KPKDatabaseFormat)minimumType {
+- (KPKDatabaseFormat)minimumFormat {
   if(self.binaries.count > 1 ||
      self.customAttributes.count > 0 ||
-     self.history.count > 0 ) {
+     self.mutableHistory.count > 0  ||
+     self.mutableCustomData.count > 0) {
     return KPKDatabaseFormatKdbx;
   }
   return KPKDatabaseFormatKdb;
+}
+
+- (NSUInteger)minimumVersion {
+  switch(self.minimumFormat) {
+    case KPKDatabaseFormatKdbx:
+      return (self.mutableCustomData.count > 0 ) ? kKPKKdbxFileVersion4 : kKPKKdbxFileVersion3;
+    
+    default:
+      return kKPKKdbFileVersion;
+  }
+  
 }
 
 - (void)setMutableAttributes:(NSMutableArray<KPKAttribute *> *)mutableAttributes {

@@ -310,21 +310,28 @@
   _isSearchEnabled = isSearchEnabled;
 }
 
-- (KPKDatabaseFormat)minimumType {
-  KPKDatabaseFormat type = KPKDatabaseFormatKdb;
+- (KPKDatabaseFormat)minimumFormat {
+  KPKDatabaseFormat minimum = KPKDatabaseFormatKdb;
+  if(self.customData.count > 0) {
+    minimum = KPKDatabaseFormatKdbx;
+  }
+  
   for(KPKGroup *group in self.groups) {
-    type = MAX(type, group.minimumType);
+    minimum = MAX(minimum, group.minimumFormat);
   }
   for(KPKEntry *entry in self.entries) {
-    type = MAX(type, entry.minimumType);
+    minimum = MAX(minimum, entry.minimumFormat);
   }
-  return type;
+  return minimum;
 }
 
 - (NSUInteger)minimumVersion {
-  switch (self.minimumType) {
+  switch (self.minimumFormat) {
     case KPKDatabaseFormatKdbx:
-      break;
+      if(self.mutableCustomData.count > 0 ) {
+        return kKPKKdbxFileVersion4;
+      }
+      return kKPKKdbxFileVersion3;
       
     default:
       break;

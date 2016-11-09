@@ -58,11 +58,11 @@
 - (instancetype)_initWithTree:(KPKTree *)tree key:(KPKCompositeKey *)key {
   self = [super _initWithTree:tree key:key];
   if(self) {
-    if(self.tree.minimumType == KPKDatabaseFormatKdbx) {
+    if(self.tree.minimumFormat == KPKDatabaseFormatKdb) {
       _outputVersion4 = NO;
     }
     else {
-      _outputVersion4 = self.tree.minimumVersion <= kKPKKdbxFileVersion4;
+      _outputVersion4 = self.tree.minimumVersion >= kKPKKdbxFileVersion4;
     }
     
     NSArray *allEntries = [self.tree.allEntries arrayByAddingObjectsFromArray:self.tree.allHistoryEntries];
@@ -102,9 +102,6 @@
 }
 
 - (NSArray *)binariesForWriter:(KPKXmlTreeWriter *)writer {
-  if(self.outputVersion4) {
-    return @[];
-  }
   return self.binaries;
 }
 

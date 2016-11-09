@@ -228,11 +228,11 @@ NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKN
   return historyEntries;
 }
 
-- (KPKDatabaseFormat)minimumType {
+- (KPKDatabaseFormat)minimumFormat {
   if(self.root.entries.count > 0) {
     return KPKDatabaseFormatKdbx;
   }
-  return self.root.minimumType;
+  return self.root.minimumFormat;
 }
 
 - (NSUInteger)minimumVersion {

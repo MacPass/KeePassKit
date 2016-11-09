@@ -164,6 +164,11 @@ FOUNDATION_EXTERN NSString *const kKPKXmlKeystrokeSequence;
 #pragma mark History
 FOUNDATION_EXTERN NSString *const kKPKXmlHistory;
 
+#pragma mark CustomData
+FOUNDATION_EXTERN NSString *const kKPKXmlCustomData;
+FOUNDATION_EXTERN NSString *const kKPKXmlCustomDataItem;
+
+
 #pragma mark Generic
 FOUNDATION_EXTERN NSString *const kKPKXmlVersion;
 FOUNDATION_EXTERN NSString *const kKPKXmlKey;

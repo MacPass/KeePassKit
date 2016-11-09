@@ -58,6 +58,8 @@
 @property (strong) NSDateFormatter *dateFormatter;
 @property (readonly, copy) NSArray *binaries;
 
+@property (nonatomic, readonly) BOOL encrypted;
+
 @end
 
 @implementation KPKXmlTreeWriter
@@ -149,6 +151,9 @@
   KPKAddXmlElement(metaElement, kKPKXmlLastTopVisibleGroup, [metaData.lastTopVisibleGroup encodedString]);
   
   /* only add binaries if we actuall should, ask the delegate! */
+  if(!self.randomStream || kKPKKdbxFileVersion4 > [self.delegate fileVersionForWriter:self]) {
+    
+  }
   if(self.binaries) {
     [metaElement addChild:[self _xmlBinaries]];
   }
@@ -364,7 +369,7 @@
 }
 
 - (DDXMLElement *)_xmlCustomData:(KPKBinary *)customData {
-  DDXMLElement *itemElement = [DDXMLElement elementWithName:@"Item"];
+  DDXMLElement *itemElement = [DDXMLElement elementWithName:kKPKXmlCustomDataItem];
   KPKAddXmlElement(itemElement, kKPKXmlKey, customData.name.XMLCompatibleString);
   KPKAddXmlElement(itemElement, kKPKXmlValue, [customData encodedStringUsingCompression:NO]);
   return itemElement;

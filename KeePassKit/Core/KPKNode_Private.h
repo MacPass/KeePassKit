@@ -16,8 +16,9 @@
 @property(nonatomic, readwrite, weak) KPKTree *tree;
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;
 @property(nonatomic, weak) KPKGroup *parent;
-@property(nonatomic, readonly) KPKDatabaseFormat minimumType;
+@property(nonatomic, readonly) KPKDatabaseFormat minimumFormat;
 @property(nonatomic, readonly) NSUInteger minimumVersion;
+@property(nonatomic, strong) NSMutableArray<KPKBinary *> *mutableCustomData;
 
 #pragma mark Initalizer
 /* Subclasses have to override these initalizers */

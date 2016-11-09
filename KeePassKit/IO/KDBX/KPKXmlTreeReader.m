@@ -39,6 +39,7 @@
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
 #import "KPKNode.h"
+#import "KPKNode_Private.h"
 #import "KPKRandomStream.h"
 #import "KPKSalsa20RandomStream.h"
 #import "KPKTimeInfo.h"
@@ -210,7 +211,7 @@
   
   [self _parseCustomIcons:metaElement meta:data];
   [self _parseBinaries:metaElement meta:data];
-  [self _parseCustomData:metaElement meta:data];
+  [self _parseCustomData:metaElement dataArray:data.mutableCustomData];
 }
 
 - (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement {
@@ -239,6 +240,8 @@
   group.isAutoTypeEnabled = parseInheritBool(groupElement, kKPKXmlEnableAutoType);
   group.isSearchEnabled = parseInheritBool(groupElement, kKPKXmlEnableSearching);
   group.lastTopVisibleEntry = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlLastTopVisibleEntry)];
+  
+  [self _parseCustomData:groupElement dataArray:group.mutableCustomData];
   
   for (DDXMLElement *element in [groupElement elementsForName:kKPKXmlEntry]) {
     KPKEntry *entry = [self _parseEntry:element ignoreHistory:NO];
@@ -296,6 +299,8 @@
   if(!ignoreHistory) {
     [self _parseHistory:entryElement entry:entry];
   }
+  
+  [self _parseCustomData:entryElement dataArray:entry.mutableCustomData];
   
   entry.updateTiming = YES;
   return entry;
@@ -376,9 +381,9 @@
   }
 }
 
-- (void)_parseCustomData:(DDXMLElement *)root meta:(KPKMetaData *)metaData {
+- (void)_parseCustomData:(DDXMLElement *)root dataArray:(NSMutableArray *)array{
   DDXMLElement *customDataElement = [root elementForName:@"CustomData"];
-  for(DDXMLElement *dataElement in [customDataElement elementsForName:@"Item"]) {
+  for(DDXMLElement *dataElement in [customDataElement elementsForName:kKPKXmlCustomDataItem]) {
     /*
      <CustomData>
      <Item>
@@ -388,7 +393,7 @@
      </CustomData>
      */
     KPKBinary *customData = [[KPKBinary alloc] initWithName:KPKXmlString(dataElement, kKPKXmlKey) string:KPKXmlString(dataElement, kKPKXmlValue) compressed:NO];
-    [metaData.mutableCustomData addObject:customData];
+    [array addObject:customData];
   }
 }
 
