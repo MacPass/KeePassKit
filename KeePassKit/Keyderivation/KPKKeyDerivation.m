@@ -41,7 +41,7 @@ static NSMutableDictionary *_keyDerivations;
 }
 
 + (NSArray<KPKKeyDerivation *> *)availableKeyDerivations {
-  NSMutableArray *keyDerivations;
+  NSMutableArray *keyDerivations = [[NSMutableArray alloc] init];
   for(NSUUID *uuid in _keyDerivations) {
     [keyDerivations addObject:[[_keyDerivations[uuid] alloc] init]];
   }
