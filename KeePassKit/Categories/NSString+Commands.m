@@ -481,7 +481,15 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   /* mis mappings */
   //mappings[@"{APPDIR}"] = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
   caseInsensitiveMappings[@"{GROUP}"] = entry.parent.title ? entry.parent.title : @"";
-  caseInsensitiveMappings[@"{GROUPPATH}"] = entry.parent ? [entry.parent breadcrumb] : @"";
+  caseInsensitiveMappings[@"{GROUP_PATH}"] = entry.parent ? entry.parent.breadcrumb : @"";
+  caseInsensitiveMappings[@"{GROUP_NOTES}"] = entry.parent ? entry.parent.notes : @"";
+  /*
+   Those need environment infomration we're not getting form KeePassKit - delegation?
+   
+   {GROUP_SEL}	Name of the group that is currently selected in the main window.
+   {GROUP_SEL_PATH}	Full path of the group that is currently selected in the main window.
+   {GROUP_SEL_NOTES}	Notes of the group that is currently selected in the main window.
+   */
   caseInsensitiveMappings[@"{ENV_DIRSEP}"] = @"/";
   NSURL *appDirURL = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask][0];
   caseInsensitiveMappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  appDirURL.path : @"";
