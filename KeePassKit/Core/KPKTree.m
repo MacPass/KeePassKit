@@ -55,7 +55,11 @@ NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKN
 @implementation KPKTree
 
 + (NSSet *)keyPathsForValuesAffectingGroups {
-  return [NSSet setWithObjects:@"root", nil];
+  return [NSSet setWithObject:NSStringFromSelector(@selector(root))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingChildren {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(root))];
 }
 
 - (instancetype)init {
@@ -203,6 +207,10 @@ NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKN
     return @[self.root];
   }
   return @[];
+}
+
+- (NSArray<KPKNode *> *)children {
+  return self.root.children;
 }
 
 - (NSDictionary<NSUUID *,KPKDeletedNode *> *)deletedObjects {

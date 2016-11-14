@@ -60,6 +60,11 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
  */
 @property(nonatomic, readonly) NSArray<KPKGroup *> *groups;
 /**
+ Acces to the root children via the children property
+ to offer a bindable interface for a tree
+ */
+@property(nonatomic, copy, readonly) NSArray<KPKNode *> *children;
+/**
  *	NSArray of KPKGroup objects. Contains all child groups in a tree.
  *  @note The root group is missing from this array
  */

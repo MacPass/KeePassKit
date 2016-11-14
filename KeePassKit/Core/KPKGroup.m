@@ -53,6 +53,10 @@
   return YES;
 }
 
++ (NSSet *)keyPathsForValuesAffectingChildren {
+  return [NSSet setWithArray:@[NSStringFromSelector(@selector(groups)), NSStringFromSelector(@selector(entries)) ]];
+}
+
 + (NSUInteger)defaultIcon {
   return KPKIconFolder;
 }
@@ -258,6 +262,12 @@
 
 - (NSArray<KPKEntry *> *)entries {
   return  [_entries copy];
+}
+
+- (NSArray<KPKNode *> *)children {
+  NSMutableArray *children = [[NSMutableArray alloc] init];
+  [self _collectChildren:children];
+  return [children copy];
 }
 
 - (void)setNotes:(NSString *)notes {
@@ -498,6 +508,18 @@
 }
 
 #pragma mark Hierarchy
+
+- (void)_collectChildren:(NSMutableArray *)children {
+  /* TODO optimize using non-retained data structure? */
+  if(!children) {
+    children = [[NSMutableArray alloc] init];
+  }
+  [children addObjectsFromArray:_entries];
+  for(KPKGroup *group in _groups) {
+    [children addObject:group];
+    [group _collectChildren:children];
+  }
+}
 
 - (NSString *)breadcrumb {
   return [self breadcrumbWithSeparator:@"."];
