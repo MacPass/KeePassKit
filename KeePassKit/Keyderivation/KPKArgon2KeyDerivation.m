@@ -76,6 +76,37 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
   self.mutableParameters[KPKArgon2SaltParameter] = [NSData dataWithRandomBytes:32];
 }
 
+- (BOOL)adjustParameters:(NSMutableDictionary *)parameters {
+  BOOL changed = NO;
+  KPKNumber *p = parameters[KPKArgon2ParallelismParameter];
+  if(p) {
+    uint32_t clamped = MIN(MAX(KPKArgon2MinParallelism, p.unsignedInteger32Value), KPKArgon2MaxParallelism);
+    if(clamped != p.unsignedInteger32Value) {
+      changed = YES;
+      parameters[KPKArgon2ParallelismParameter] = [KPKNumber numberWithUnsignedInteger32:clamped];
+    }
+  }
+
+  KPKNumber *i = parameters[KPKArgon2IterationsParameter];
+  if(i) {
+    uint64_t clamped = MIN(MAX(KPKArgon2MinIterations, p.unsignedInteger64Value), KPKArgon2MaxIterations);
+    if(clamped != i.unsignedInteger64Value) {
+      changed = YES;
+      parameters[KPKArgon2IterationsParameter] = [KPKNumber numberWithUnsignedInteger64:clamped];
+    }
+  }
+
+  KPKNumber *m = parameters[KPKArgon2MemoryParameter];
+  if(i) {
+    uint64_t clamped = MIN(MAX(KPKArgon2MinMemory, m.unsignedInteger64Value), KPKArgon2MaxMemory);
+    if(clamped != m.unsignedInteger64Value) {
+      changed = YES;
+      parameters[KPKArgon2MemoryParameter] = [KPKNumber numberWithUnsignedInteger64:clamped];
+    }
+  }
+  return changed;
+}
+
 - (NSData *)deriveData:(NSData *)data {
   NSAssert(self.mutableParameters[KPKArgon2IterationsParameter],@"Iterations option is missing!");
   NSAssert(self.mutableParameters[KPKArgon2SaltParameter],@"Salt option is missing!");

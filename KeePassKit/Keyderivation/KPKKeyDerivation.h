@@ -31,9 +31,9 @@ FOUNDATION_EXTERN NSString *const KPKKeyDerivationOptionUUID;
 + (NSUUID *)uuid;
 + (void)parametersForDelay:(NSUInteger)seconds completionHandler:(void(^)(NSDictionary *options))completionHandler;
 
+
 + (KPKKeyDerivation * _Nullable)keyDerivationWithParameters:(NSDictionary *)parameters;
 + (NSData * _Nullable)deriveData:(NSData *)data withParameters:(NSDictionary *)parameters;
-
 /**
  @return an NSArray containing default initalizied instances of all known key derivations
  */
@@ -44,6 +44,11 @@ FOUNDATION_EXTERN NSString *const KPKKeyDerivationOptionUUID;
 - (NSData * _Nullable)deriveData:(NSData *)data;
 
 - (void)randomize;
+/**
+ @param parameters an NSDictionary(Variant) with all the values that should be adjustes to the KDF limits.
+ @return YES if any value was adjustes. NO if no change did take place.
+ */
+- (BOOL)adjustParameters:(NSMutableDictionary *)parameters;
 
 @property (readonly, copy, nonatomic) NSUUID *uuid;
 @property (readonly, copy) NSDictionary *parameters;

@@ -84,6 +84,10 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
   self.mutableParameters[KPKAESSeedOption] = [NSData dataWithRandomBytes:32];
 }
 
+- (BOOL)adjustParameters:(NSMutableDictionary *)parameters {
+  return NO;
+}
+
 - (NSData *)deriveData:(NSData *)data {
   NSAssert(self.mutableParameters[KPKAESSeedOption], @"Seed option is missing!");
   NSData *seed = self.mutableParameters[KPKAESSeedOption];
