@@ -577,10 +577,34 @@
 
 - (void)insertObject:(KPKGroup *)group inGroupsAtIndex:(NSUInteger)index {
   [_groups insertObject:group atIndex:index];
+  [self _beginObservingGroup:group];
 }
 
 - (void)removeObjectFromGroupsAtIndex:(NSUInteger)index {
+  KPKGroup *group = _groups[index];
   [_groups removeObjectAtIndex:index];
+  [self _endObservingGroup:group];
+}
+
+
+- (void)_beginObservingGroup:(KPKGroup *)group {
+  [group addObserver:self forKeyPath:NSStringFromSelector(@selector(children)) options:0 context:NULL];
+}
+
+- (void)_endObservingGroup:(KPKGroup *)group {
+  [group removeObserver:self forKeyPath:NSStringFromSelector(@selector(children))];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+  if(!object) {
+    return;
+  }
+  if(![keyPath isEqualToString:NSStringFromSelector(@selector(children))]) {
+    return;
+  }
+  /* just trigger a update to the children property */
+  [self willChangeValueForKey:NSStringFromSelector(@selector(children))];
+  [self didChangeValueForKey:NSStringFromSelector(@selector(children))];
 }
 
 @end
