@@ -72,6 +72,18 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
   return @"Argon2";
 }
 
+- (uint64_t)iterations {
+  return [self.parameters[KPKArgon2IterationsParameter] unsignedInteger64Value];
+}
+
+- (uint32_t)threads {
+  return [self.parameters[KPKArgon2ParallelismParameter] unsignedInteger32Value];
+}
+
+- (uint64_t)memory {
+  return [self.parameters[KPKArgon2MemoryParameter] unsignedInteger64Value];
+}
+
 - (void)randomize {
   self.mutableParameters[KPKArgon2SaltParameter] = [NSData dataWithRandomBytes:32];
 }
@@ -123,16 +135,16 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
   if(!KPK_ARGON2_CHECK_INVERVALL(KPKArgon2MinSaltLength, KPKArgon2MaxSaltLength, saltData.length)) {
     return nil;
   }
-  uint32_t parallelism = [self.mutableParameters[KPKArgon2ParallelismParameter] unsignedInteger32Value];
+  uint32_t parallelism = self.threads;
   if(!KPK_ARGON2_CHECK_INVERVALL(KPKArgon2MinParallelism, KPKArgon2MaxParallelism, parallelism)) {
     return nil;
   }
   
-  uint64_t memory = [self.mutableParameters[KPKArgon2MemoryParameter] unsignedInteger64Value];
+  uint64_t memory = self.memory;
   if(!KPK_ARGON2_CHECK_INVERVALL(KPKArgon2MinMemory, KPKArgon2MaxMemory, memory)) {
     return nil;
   }
-  uint64_t iterations = [self.mutableParameters[KPKArgon2IterationsParameter] unsignedInteger64Value];
+  uint64_t iterations = self.iterations;
   if(!KPK_ARGON2_CHECK_INVERVALL(KPKArgon2MinIterations, KPKArgon2MaxIterations, iterations)) {
     return nil;
   }

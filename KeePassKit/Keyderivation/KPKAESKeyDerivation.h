@@ -16,4 +16,6 @@ FOUNDATION_EXPORT NSString *const KPKAESRoundsOption; // KPKNumber uint64_t
 
 @interface KPKAESKeyDerivation : KPKKeyDerivation
 
+@property (nonatomic, readonly, assign) uint64_t rounds;
+
 @end
