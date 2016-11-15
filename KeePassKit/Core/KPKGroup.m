@@ -112,6 +112,7 @@
     self.defaultAutoTypeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultAutoTypeSequence))];
     self.lastTopVisibleEntry = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(lastTopVisibleEntry))];
     
+    [self _updateGroupObserving];
     [self _updateParents];
     
     self.updateTiming = YES;
@@ -120,6 +121,9 @@
 }
 
 - (void)dealloc {
+  for(KPKGroup *group in _groups) {
+    [self _endObservingGroup:group];
+  }
   [self.undoManager removeAllActionsWithTarget:self];
 }
 
@@ -152,7 +156,9 @@
   copy->_entries = [[[NSMutableArray alloc] initWithArray:_entries copyItems:YES] mutableCopy];
   copy->_groups = [[[NSMutableArray alloc] initWithArray:_groups copyItems:YES] mutableCopy];
   
+  [copy _updateGroupObserving];
   [copy _updateParents];
+  
   /* defer parent update to disable undo/redo registration */
   copy.parent = self.parent;
   return copy;
@@ -228,6 +234,12 @@
   }
   for(KPKEntry *childEntry in _entries) {
     childEntry.parent = self;
+  }
+}
+
+- (void)_updateGroupObserving {
+  for(KPKGroup *group in _groups) {
+    [self _beginObservingGroup:group];
   }
 }
 
