@@ -19,8 +19,8 @@ FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataParameter; // NSData
 
 @interface KPKArgon2KeyDerivation : KPKKeyDerivation
 
-@property (nonatomic, readonly, assign) uint64_t iterations;
-@property (nonatomic, readonly, assign) uint64_t memory;
-@property (nonatomic, readonly, assign) uint32_t threads;
+@property (nonatomic, assign) uint64_t iterations;
+@property (nonatomic, assign) uint64_t memory;
+@property (nonatomic, assign) uint32_t threads;
 
 @end

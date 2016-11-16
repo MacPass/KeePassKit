@@ -73,15 +73,27 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
 }
 
 - (uint64_t)iterations {
-  return [self.parameters[KPKArgon2IterationsParameter] unsignedInteger64Value];
+  return [self.mutableParameters[KPKArgon2IterationsParameter] unsignedInteger64Value];
+}
+
+- (void)setIterations:(uint64_t)iterations {
+  self.mutableParameters[KPKArgon2IterationsParameter] = [KPKNumber numberWithUnsignedInteger64:iterations];
 }
 
 - (uint32_t)threads {
-  return [self.parameters[KPKArgon2ParallelismParameter] unsignedInteger32Value];
+  return [self.mutableParameters[KPKArgon2ParallelismParameter] unsignedInteger32Value];
+}
+
+- (void)setThreads:(uint32_t)threads {
+  self.mutableParameters[KPKArgon2ParallelismParameter] = [KPKNumber numberWithUnsignedInteger32:threads];
 }
 
 - (uint64_t)memory {
-  return [self.parameters[KPKArgon2MemoryParameter] unsignedInteger64Value];
+  return [self.mutableParameters[KPKArgon2MemoryParameter] unsignedInteger64Value];
+}
+
+- (void)setMemory:(uint64_t)memory {
+  self.mutableParameters[KPKArgon2MemoryParameter] = [KPKNumber numberWithUnsignedInteger64:memory];
 }
 
 - (void)randomize {
@@ -181,7 +193,7 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
     context.secretlen = (uint32_t)secretData.length;
   }
   
-  int returnCode = argon2d_ctx( &context );
+  int returnCode = argon2d_ctx(&context);
   if(ARGON2_OK != returnCode) {
     NSLog(@"%s", argon2_error_message(returnCode));
     return nil;

@@ -81,7 +81,11 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
 }
 
 - (uint64_t)rounds {
-  return [self.parameters[KPKAESRoundsOption] unsignedInteger64Value];
+  return [self.mutableParameters[KPKAESRoundsOption] unsignedInteger64Value];
+}
+
+- (void)setRounds:(uint64_t)rounds {
+  self.mutableParameters[KPKAESRoundsOption] = [KPKNumber numberWithUnsignedInteger64:rounds];
 }
 
 - (void)randomize {
