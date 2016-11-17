@@ -10,11 +10,13 @@
 
 #import "KeePassKit.h"
 
-
 @interface KPKTestKdbxLoading : XCTestCase {
 @private
   NSData *_data;
   KPKCompositeKey *_key;
+  KPKFileVersion _kdbx4;
+  KPKFileVersion _kdbx3;
+
 }
 
 @end
@@ -27,6 +29,13 @@
   NSURL *url = [myBundle URLForResource:@"Test_Password_1234" withExtension:@"kdbx"];
   _data = [NSData dataWithContentsOfURL:url];
   _key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  
+  _kdbx3.format = KPKDatabaseFormatKdbx;
+  _kdbx3.version = kKPKKdbxFileVersion3;
+
+  _kdbx4.format = KPKDatabaseFormatKdbx;
+  _kdbx4.version = kKPKKdbxFileVersion4;
+
 }
 
 - (void)tearDown {
@@ -40,6 +49,8 @@
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
+  
+  XCTAssertLessThanOrEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx3));
 }
 
 - (void)testLoadingArgon2KDFAESCipher {
@@ -48,6 +59,8 @@
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
+  
+  XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx4));
 }
 
 - (void)testLoadingArgon2KDFChaCha20Cipher {
@@ -56,6 +69,8 @@
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
+  
+  XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx4));
 }
 
 - (void)testLoadingInnerHeaderBinaries {
@@ -66,8 +81,7 @@
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
   
   
-  XCTAssertEqual(tree.minimumFormat, KPKDatabaseFormatKdbx);
-  XCTAssertEqual(tree.minimumVersion, kKPKKdbxFileVersion4);
+  XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx4));
 
   KPKEntry *entry = [tree.root entryForUUID:[[NSUUID alloc] initWithUUIDString:@"CE07121C-E7CB-2940-AB4A-9AD530A58622"]];
   XCTAssertNotNil(entry);
@@ -97,6 +111,9 @@
   
   XCTAssertEqual(tree.root.groups.count, 0, @"Tree contains just root group");
   XCTAssertEqual(tree.root.entries.count, 1, @"Tree has only one entry");
+  
+  XCTAssertLessThanOrEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx3));
+  
 }
 
 - (void)testAutotypeLoading {
@@ -108,6 +125,8 @@
   XCTAssertNotNil(tree, @"Tree shoud be loaded");
   KPKEntry *entry = tree.root.entries.firstObject;
   XCTAssertNotNil(entry, @"Entry should be there");
+  
+  XCTAssertLessThanOrEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx3));
 }
 
 - (NSData *)_loadTestDataBase:(NSString *)name extension:(NSString *)extension {

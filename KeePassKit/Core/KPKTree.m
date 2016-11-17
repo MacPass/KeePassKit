@@ -238,25 +238,14 @@ NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKN
   return historyEntries;
 }
 
-- (KPKDatabaseFormat)minimumFormat {
-  if(self.root.entries.count > 0 ||
-     self.metaData.mutableCustomPublicData.count > 0) {
-    return KPKDatabaseFormatKdbx;
+- (KPKFileVersion)minimumVersion {
+  KPKFileVersion minimum = { KPKDatabaseFormatKdb, kKPKKdbFileVersion };
+  BOOL aesKdf = [self.metaData.keyDerivationParameters[KPKKeyDerivationOptionUUID] isEqual:[KPKAESKeyDerivation uuid].uuidData];
+  if(self.root.entries.count > 0 || self.metaData.mutableCustomPublicData.count > 0 || !aesKdf) {
+    minimum.format = KPKDatabaseFormatKdbx;
+    minimum.version = aesKdf ? kKPKKdbxFileVersion3 : kKPKKdbxFileVersion4;
   }
-  return self.root.minimumFormat;
-}
-
-- (NSUInteger)minimumVersion {
-  switch (self.minimumFormat) {
-    case KPKDatabaseFormatKdbx:
-      if( self.metaData.mutableCustomPublicData.count > 0 ||
-         ![self.metaData.keyDerivationParameters[KPKKeyDerivationOptionUUID] isEqual:[KPKAESKeyDerivation uuid]] ) {
-        return kKPKKdbxFileVersion4;
-      }
-      /* fall through ! */
-    default:
-      return self.root.minimumVersion;
-  }
+  return KPKFileVersionMax(minimum, self.root.minimumVersion);
 }
 
 - (NSString *)defaultAutotypeSequence {

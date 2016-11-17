@@ -332,35 +332,20 @@
   _isSearchEnabled = isSearchEnabled;
 }
 
-- (KPKDatabaseFormat)minimumFormat {
-  KPKDatabaseFormat minimum = KPKDatabaseFormatKdb;
+- (KPKFileVersion)minimumVersion {
+  KPKFileVersion minimum = { KPKDatabaseFormatKdb, kKPKKdbFileVersion };
   if(self.customData.count > 0) {
-    minimum = KPKDatabaseFormatKdbx;
+    minimum.format = KPKDatabaseFormatKdbx;
+    minimum.version = kKPKKdbxFileVersion4;
   }
-  
-  for(KPKGroup *group in self.groups) {
-    minimum = MAX(minimum, group.minimumFormat);
+  for(KPKGroup *group in _groups) {
+    minimum = KPKFileVersionMax(minimum, group.minimumVersion);
   }
-  for(KPKEntry *entry in self.entries) {
-    minimum = MAX(minimum, entry.minimumFormat);
+  for(KPKEntry *entry in _entries) {
+    minimum = KPKFileVersionMax(minimum, entry.minimumVersion);
   }
   return minimum;
 }
-
-- (NSUInteger)minimumVersion {
-  switch (self.minimumFormat) {
-    case KPKDatabaseFormatKdbx:
-      if(self.mutableCustomData.count > 0 ) {
-        return kKPKKdbxFileVersion4;
-      }
-      return kKPKKdbxFileVersion3;
-      
-    default:
-      break;
-  }
-  return kKPKKdbFileVersion;
-}
-
 
 #pragma mark -
 #pragma mark Accessors

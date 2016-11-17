@@ -23,6 +23,10 @@
   NSError *error;
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  
+  KPKFileVersion kdbx3 = { KPKDatabaseFormatKdbx, kKPKKdbxFileVersion3 };
+  XCTAssertLessThanOrEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, kdbx3));
+  
   error = nil;
   NSData *saveData = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
   XCTAssertNotNil(saveData, @"Serialization should yield data");

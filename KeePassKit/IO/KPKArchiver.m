@@ -34,7 +34,7 @@
 }
 
 - (instancetype)initWithTree:(KPKTree *)tree key:(KPKCompositeKey *)key {
-  self = [self initWithTree:tree key:key format:tree.minimumFormat];
+  self = [self initWithTree:tree key:key format:tree.minimumVersion.format];
   return self;
 }
 

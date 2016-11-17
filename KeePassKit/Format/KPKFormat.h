@@ -52,9 +52,14 @@ typedef NS_ENUM( NSUInteger, KPKDatabaseFormat ) {
 typedef struct {
   KPKDatabaseFormat format; // KPDatabaseTypeUnknown if not determined (e.g. signatures don't match or file too small)
   NSUInteger version; // kKPKInvalidFileVersion if version cannot be read (e.g. file too small)
-} KPKFileInfo;
+} KPKFileVersion;
 
-BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo);
+
+FOUNDATION_EXPORT KPKFileVersion KPKFileVersionMax(KPKFileVersion a, KPKFileVersion b);
+FOUNDATION_EXPORT KPKFileVersion KPKFileVersionMin(KPKFileVersion a, KPKFileVersion b);
+FOUNDATION_EXTERN NSComparisonResult KPKFileVersionCompare(KPKFileVersion a, KPKFileVersion b);
+
+BOOL KPKIsValidFileInfo(KPKFileVersion fileInfo);
 
 /**
  *  Key
@@ -287,7 +292,7 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualExtendedKey;
  */
 + (instancetype)sharedFormat;
 
-- (KPKFileInfo)fileInfoForData:(NSData *)data;
+- (KPKFileVersion)fileVersionForData:(NSData *)data;
 /**
  @returns A set containing the strings that are default keys for enty attributes
  */

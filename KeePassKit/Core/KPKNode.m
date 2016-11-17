@@ -41,7 +41,6 @@
 
 @dynamic notes;
 @dynamic title;
-@dynamic minimumFormat;
 @dynamic minimumVersion;
 @dynamic updateTiming;
 @dynamic customData;

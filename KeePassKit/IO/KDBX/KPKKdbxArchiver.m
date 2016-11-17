@@ -58,11 +58,13 @@
 - (instancetype)_initWithTree:(KPKTree *)tree key:(KPKCompositeKey *)key {
   self = [super _initWithTree:tree key:key];
   if(self) {
-    if(self.tree.minimumFormat == KPKDatabaseFormatKdb) {
-      _outputVersion4 = NO;
+    KPKFileVersion version4 = { KPKDatabaseFormatKdbx, kKPKKdbxFileVersion4 };
+    NSComparisonResult result = KPKFileVersionCompare(self.tree.minimumVersion, version4);
+    if(result == NSOrderedSame || result == NSOrderedDescending) {
+      _outputVersion4 = YES;
     }
     else {
-      _outputVersion4 = self.tree.minimumVersion >= kKPKKdbxFileVersion4;
+      _outputVersion4 = NO;
     }
     
     NSArray *allEntries = [self.tree.allEntries arrayByAddingObjectsFromArray:self.tree.allHistoryEntries];

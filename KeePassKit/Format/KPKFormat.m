@@ -310,15 +310,46 @@ NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
  
  */
 
-BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
-  switch(fileInfo.format) {
-    case KPKDatabaseFormatKdbx:
-      
-    case KPKDatabaseFormatKdb:
-    default:
-      return NO;
+KPKFileVersion KPKFileVersionMax(KPKFileVersion a, KPKFileVersion b) {
+  NSComparisonResult cmp = KPKFileVersionCompare(a, b);
+  switch(cmp) {
+    case NSOrderedSame:
+    case NSOrderedAscending:
+      return b;
+    case NSOrderedDescending:
+      return a;
   }
 }
+
+KPKFileVersion KPKFileVersionMin(KPKFileVersion a, KPKFileVersion b) {
+  NSComparisonResult cmp = KPKFileVersionCompare(a, b);
+  switch(cmp) {
+    case NSOrderedSame:
+    case NSOrderedAscending:
+      return a;
+    case NSOrderedDescending:
+      return b;
+  }
+}
+
+NSComparisonResult KPKFileVersionCompare(KPKFileVersion a, KPKFileVersion b) {
+  /* Format superseeds version */
+  if(a.format < b.format) {
+    return NSOrderedAscending;
+  }
+  if(a.format > b.format ) {
+    return NSOrderedDescending;
+  }
+  /* format matches */
+  if(a.version < b.version ) {
+    return NSOrderedAscending;
+  }
+  if(a.version > b.version ) {
+    return NSOrderedDescending;
+  }
+  return NSOrderedSame;
+}
+
 
 @implementation KPKFormat
 
@@ -351,8 +382,8 @@ BOOL KPKIsValidFileInfo(KPKFileInfo fileInfo) {
   return [self.entryDefaultKeys indexOfObject:key];
 }
 
-- (KPKFileInfo)fileInfoForData:(NSData *)data {
-  KPKFileInfo info;
+- (KPKFileVersion)fileVersionForData:(NSData *)data {
+  KPKFileVersion info;
   info.format = [self _databaseFormatForData:data];
   info.version = [self _fileVersionForData:data format:info.format];
   return info;
