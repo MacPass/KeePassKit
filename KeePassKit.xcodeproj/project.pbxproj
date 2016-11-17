@@ -51,6 +51,7 @@
 		4C2ADBF11D7C649F002C3190 /* KPKUnarchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ADBEF1D7C649F002C3190 /* KPKUnarchiver.h */; };
 		4C2ADBF21D7C649F002C3190 /* KPKUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2ADBF01D7C649F002C3190 /* KPKUnarchiver.m */; };
 		4C2ADBF41D7C6665002C3190 /* KPKArchiver_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ADBF31D7C6665002C3190 /* KPKArchiver_Private.h */; };
+		4C44988F1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C44988E1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m */; };
 		4C4E23031D7DC10700E58983 /* NSDictionary+KPKVariant.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4E23011D7DC10700E58983 /* NSDictionary+KPKVariant.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C4E23041D7DC10700E58983 /* NSDictionary+KPKVariant.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E23021D7DC10700E58983 /* NSDictionary+KPKVariant.m */; };
 		4C4FF1B81BE119E60015827B /* DDXMLElementAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4FF1AA1BE119E60015827B /* DDXMLElementAdditions.h */; };
@@ -297,6 +298,7 @@
 		4C2ADBEF1D7C649F002C3190 /* KPKUnarchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKUnarchiver.h; sourceTree = "<group>"; };
 		4C2ADBF01D7C649F002C3190 /* KPKUnarchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKUnarchiver.m; sourceTree = "<group>"; };
 		4C2ADBF31D7C6665002C3190 /* KPKArchiver_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKArchiver_Private.h; sourceTree = "<group>"; };
+		4C44988E1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KPKTestMinimumVersionDetermination.m; path = KeePassKitTests/KPKTestMinimumVersionDetermination.m; sourceTree = SOURCE_ROOT; };
 		4C4E23011D7DC10700E58983 /* NSDictionary+KPKVariant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+KPKVariant.h"; sourceTree = "<group>"; };
 		4C4E23021D7DC10700E58983 /* NSDictionary+KPKVariant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "NSDictionary+KPKVariant.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C4FF1AA1BE119E60015827B /* DDXMLElementAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElementAdditions.h; sourceTree = "<group>"; };
@@ -730,6 +732,7 @@
 				4C8138221BE282DC001BF195 /* Images */,
 				4C8138241BE282DC001BF195 /* Keyfiles */,
 				4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */,
+				4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */,
 				4C93C4AC1DC2704600260DD4 /* KPKTestChaCha20.m */,
 				4CC57A271DCD454A003EE16C /* KPKTestTwofish.m */,
 				4C5CF4951BE10F090019AA81 /* KPKTestHashedData.m */,
@@ -737,7 +740,6 @@
 				4CF7E8A51DCA4B4700BB652F /* KPKTestKeyComputation.m */,
 				4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */,
 				4C5CF4961BE10F090019AA81 /* KPKIconLoading.m */,
-				4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */,
 				4C5CF4981BE10F090019AA81 /* KPKTestEntryLookup.m */,
 				4C5CF4991BE10F090019AA81 /* KPKTestHexColor.m */,
 				4C5CF49A1BE10F090019AA81 /* KPKTestKeyfileParsing.m */,
@@ -759,6 +761,7 @@
 				4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */,
 				4C8F42311C7B2D0D0057AFBF /* KPKTestDatabaseSize.m */,
 				4CFAE3701D88537C007B57DB /* KPKTestKPKNumber.m */,
+				4C44988E1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m */,
 				4C70F4541D92BF56003564E2 /* KPKTestVariantDictionary.m */,
 				4C5CF3291BE10B650019AA81 /* Info.plist */,
 			);
@@ -1375,6 +1378,7 @@
 				4C5CF4AD1BE10F090019AA81 /* KPKTestHexColor.m in Sources */,
 				4CFAE3711D88537C007B57DB /* KPKTestKPKNumber.m in Sources */,
 				4CF7E8A61DCA4B4700BB652F /* KPKTestKeyComputation.m in Sources */,
+				4C44988F1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m in Sources */,
 				4C5CF4BC1BE10F090019AA81 /* KPKTextXMLUtilities.m in Sources */,
 				4C5CF4B81BE10F090019AA81 /* KPKTestUUIDAdditions.m in Sources */,
 				4C5CF4A91BE10F090019AA81 /* KPKTestHashedData.m in Sources */,
