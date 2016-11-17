@@ -42,7 +42,7 @@
                            @"2" : [KPKNumber numberWithBool:NO],
                            @"3" : [KPKNumber numberWithInteger32:-32],
                            @"4" : [KPKNumber numberWithUnsignedInteger32:32],
-                           @"3" : [NSData dataWithBytes:bytes length:4] };
+                           @"5" : [NSData dataWithBytes:bytes length:4] };
 
   XCTAssertTrue(dict.isValidVariantDictionary);
   NSData *data = dict.variantDictionaryData;

@@ -253,7 +253,8 @@
     [self.dataWriter writeData:headerHmac];
     
     /* inner header */
-    [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyRandomStreamId bytes:(void *)self.randomStreamID length:sizeof(self.randomStreamID)];
+    uint32_t LErandomStreamId = CFSwapInt32HostToLittle(self.randomStreamID);
+    [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyRandomStreamId bytes:&LErandomStreamId length:sizeof(LErandomStreamId)];
     [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyRandomStreamKey data:self.randomStreamKey];
     for(KPKBinary *binary in self.binaries) {
       uint8_t buffer[binary.data.length + 1];

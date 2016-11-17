@@ -181,10 +181,13 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
     id value = self[key];
     /* Data */
     if([value isKindOfClass:[NSData class]]) {
+      NSData *data = value;
+      NSAssert(data.length <= UINT32_MAX, @"Maxium size for storable data is exceeded");
       [writer writeByte:KPKVariantTypeByteArray];
       [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)keyStringData.length)];
       [writer writeData:keyStringData];
-      [writer writeData:value];
+      [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)data.length)];
+      [writer writeData:data];
     }
     /* String */
     else if([value isKindOfClass:[NSString class]]) {
