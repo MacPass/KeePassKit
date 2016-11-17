@@ -17,14 +17,15 @@
 @implementation KPKTestHashedData
 
 - (void)testSHA256Hashing {
-  NSData *data = [NSData dataWithRandomBytes:10000];
+  NSData *data = [NSData dataWithRandomBytes:1024*1024*8 + 512]; // 8 MB Data, to use more than one block
   NSData *hashedData = data.hashedSha256Data;
   NSData *unhashedData = hashedData.unhashedSha256Data;
   XCTAssertTrue([unhashedData isEqualToData:data], @"Data needs to be the same after hashing and unhashing");
 }
 
 - (void)testHmacSha256Hasing {
-  NSData *data = [NSData dataWithRandomBytes:10000];
+  /* use more than 1 block of unaligned data */
+  NSData *data = [NSData dataWithRandomBytes:1024*1024*8 + 512];
   NSData *key = [NSData dataWithRandomBytes:64];
   NSError *error;
   NSData *hashedData = [data hashedHmacSha256DataWithKey:key error:&error];
