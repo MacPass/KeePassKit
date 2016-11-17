@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/MacPass/KeePassKit.svg?branch=master)](https://travis-ci.org/MacPass/KeePassKit)
 
 KeePass database loading, storing and manipulation framework.
-It's borrowing a lot of code from [MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) and [KeePass Database Library](https://github.com/mpowrie/KeePassLib).
+It's inspired by [MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) and [KeePass Database Library](https://github.com/mpowrie/KeePassLib) but hase diverged a lot over the development.
 
 ##License
 
@@ -43,7 +43,5 @@ Twofish Copyright (c) 2002 by Niels Ferguson.
 [KeepassX](https://gitorious.org/~sergeidanilov/keepassx/gdrive-keepassx) Copyright (c) 2012 Felix Geyer <debfx@fobos.de>
 
 [NSData Gzip Category](http://www.cocoadev.com/index.pl?NSDataCategory) from the [CocoaDev Wiki](http://www.cocoadev.com)
-
-[NSData Base64 Category](http://stackoverflow.com/questions/11386876/how-to-encode-and-decode-files-as-base64-in-cocoa-objective-c) from Stackoverflow user [deins2342](http://stackoverflow.com/users/200321/denis2342)
 
 [NSData CommonCrypto Category](https://github.com/AlanQuatermain/aqtoolkit) Copyright (c) 2008-2009 Jim Dovey, All rights reserved.
