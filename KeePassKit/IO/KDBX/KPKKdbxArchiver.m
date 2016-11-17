@@ -35,6 +35,44 @@
 
 #import "DDXMLDocument.h"
 
+@interface KPKDataStreamWriter (KPKHeaderWriting)
+
+- (void)_writeInnerHeaderField:(KPKInnerHeaderKey)key bytes:(const void *)bytes length:(NSUInteger)length;
+- (void)_writeInnerHeaderField:(KPKInnerHeaderKey)key data:(NSData *)data;
+- (void)_writeHeaderField:(KPKHeaderKey)key bytes:(const void *)bytes length:(NSUInteger)length useWideField:(BOOL)wideField;
+- (void)_writeHeaderField:(KPKHeaderKey)key data:(NSData *)data useWideField:(BOOL)wideField;
+
+@end
+
+@implementation KPKDataStreamWriter (KPKHeaderWriting)
+
+- (void)_writeHeaderField:(KPKHeaderKey)key bytes:(const void *)bytes length:(NSUInteger)length useWideField:(BOOL)wideField {
+  [self writeByte:key];
+  if(wideField) {
+    [self write4Bytes:CFSwapInt16HostToLittle(length)];
+  }
+  else {
+    [self write2Bytes:CFSwapInt16HostToLittle(length)];
+  }
+  if (length > 0) {
+    [self writeBytes:bytes length:length];
+  }
+}
+- (void)_writeHeaderField:(KPKHeaderKey)key data:(NSData *)data useWideField:(BOOL)wideField {
+  [self _writeHeaderField:key bytes:data.bytes length:data.length useWideField:wideField];
+}
+
+- (void)_writeInnerHeaderField:(KPKInnerHeaderKey)key bytes:(const void *)bytes length:(NSUInteger)length {
+  [self _writeHeaderField:(uint32_t)key bytes:bytes length:length useWideField:YES];
+}
+
+- (void)_writeInnerHeaderField:(KPKInnerHeaderKey)key data:(NSData *)data {
+  [self _writeInnerHeaderField:key bytes:data.bytes length:data.length];
+}
+
+@end
+
+
 @interface KPKKdbxArchiver () <KPKXmlTreeWriterDelegate>
 
 @property (strong) KPKDataStreamWriter *dataWriter;
@@ -120,7 +158,6 @@
 
 #pragma mark -
 
-
 - (NSData *)archiveTree:(NSError *__autoreleasing *)error {
   KPKCipher *cipher = [KPKCipher cipherWithUUID:self.tree.metaData.cipherUUID];
   if(!cipher) {
@@ -162,31 +199,32 @@
     [self.dataWriter write4Bytes:CFSwapInt32HostToLittle(kKPKKdbxFileVersion3)];
   }
   /* header fields */
-  [self _writeHeaderField:KPKHeaderKeyCipherId data:self.tree.metaData.cipherUUID.uuidData];
+  
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyCipherId data:self.tree.metaData.cipherUUID.uuidData useWideField:self.outputVersion4];
   uint32_t compressionAlgorithm = CFSwapInt32HostToLittle(self.tree.metaData.compressionAlgorithm);
-  [self _writeHeaderField:KPKHeaderKeyCompression bytes:&compressionAlgorithm length:sizeof(compressionAlgorithm)];
-  [self _writeHeaderField:KPKHeaderKeyMasterSeed data:self.masterSeed];
-  [self _writeHeaderField:KPKHeaderKeyEncryptionIV data:self.encryptionIV];
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyCompression bytes:&compressionAlgorithm length:sizeof(compressionAlgorithm) useWideField:self.outputVersion4];
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyMasterSeed data:self.masterSeed useWideField:self.outputVersion4];
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyEncryptionIV data:self.encryptionIV useWideField:self.outputVersion4];
   
   if(!self.outputVersion4) {
-    [self _writeHeaderField:KPKHeaderKeyTransformSeed data:keyDerivation.parameters[KPKAESSeedOption]];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyTransformSeed data:keyDerivation.parameters[KPKAESSeedOption] useWideField:self.outputVersion4];
     uint64_t rounds = CFSwapInt64HostToLittle([keyDerivation.parameters[KPKAESRoundsOption] unsignedInteger64Value]);
-    [self _writeHeaderField:KPKHeaderKeyTransformRounds bytes:&rounds length:sizeof(rounds)];
-    [self _writeHeaderField:KPKHeaderKeyProtectedKey data:self.randomStreamKey];
-    [self _writeHeaderField:KPKHeaderKeyStartBytes data:self.streamStartBytes];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyTransformRounds bytes:&rounds length:sizeof(rounds) useWideField:self.outputVersion4];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyProtectedKey data:self.randomStreamKey useWideField:self.outputVersion4];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyStartBytes data:self.streamStartBytes useWideField:self.outputVersion4];
     uint32_t randomStreamId = CFSwapInt32HostToLittle(_randomStreamID);
-    [self _writeHeaderField:KPKHeaderKeyRandomStreamId bytes:&randomStreamId length:sizeof(randomStreamId)];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyRandomStreamId bytes:&randomStreamId length:sizeof(randomStreamId) useWideField:self.outputVersion4];
   }
   else {
-    [self _writeHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.parameters.variantDictionaryData];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.parameters.variantDictionaryData useWideField:self.outputVersion4];
   }
   if(self.tree.metaData.customPublicData.count > 0) {
     NSAssert(self.outputVersion4, @"Custom data requires KDBX version 4");
-    [self _writeHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.variantDictionaryData];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.variantDictionaryData useWideField:self.outputVersion4];
   }
   /* endOfHeader */
   uint8_t endBuffer[] = { NSCarriageReturnCharacter, NSNewlineCharacter, NSCarriageReturnCharacter, NSNewlineCharacter };
-  [self _writeHeaderField:KPKHeaderKeyEndOfHeader bytes:endBuffer length:4];
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyEndOfHeader bytes:endBuffer length:4 useWideField:self.outputVersion4];
   
   /* setup the random stream */
   switch(self.randomStreamID) {
@@ -213,11 +251,7 @@
   KPKXmlTreeWriter *treeWriter = [[KPKXmlTreeWriter alloc] initWithTree:self.tree delegate:self];
   NSData *xmlData = [treeWriter.xmlDocument XMLDataWithOptions:DDXMLNodeCompactEmptyElement];
   
-  /* compress the xml data if necessary */
-  if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
-    xmlData = [xmlData gzipDeflate];
-  }
-  
+ 
   /* create key */
   NSData *hmacKey;
   NSData *keyData = [self.key computeKeyDataForFormat:KPKDatabaseFormatKdbx
@@ -231,9 +265,13 @@
   }
   
   if(!self.outputVersion4) {
-    /* compress data */
     NSMutableData *contentData = [[NSMutableData alloc] initWithData:self.streamStartBytes];
     
+
+    /* compress data */
+    if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
+      xmlData = [xmlData gzipDeflate];
+    }
     /* append hashed data */
     [contentData appendData:xmlData.hashedSha256Data];
     
@@ -252,21 +290,36 @@
     /* add header hmac */
     [self.dataWriter writeData:headerHmac];
     
+    
+    /* inner header and xml data are encrypted */
+    NSMutableData *innerData = [[NSMutableData alloc] init];
+    KPKDataStreamWriter *innerDataWriter = [[KPKDataStreamWriter alloc] initWithData:innerData];
+
     /* inner header */
     uint32_t LErandomStreamId = CFSwapInt32HostToLittle(self.randomStreamID);
-    [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyRandomStreamId bytes:&LErandomStreamId length:sizeof(LErandomStreamId)];
-    [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyRandomStreamKey data:self.randomStreamKey];
+    [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyRandomStreamId bytes:&LErandomStreamId length:sizeof(LErandomStreamId)];
+    [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyRandomStreamKey data:self.randomStreamKey];
     for(KPKBinary *binary in self.binaries) {
       uint8_t buffer[binary.data.length + 1];
       if(binary.protectInMemory) {
         buffer[0] &= KPKBinaryProtectMemoryFlag;
       }
-      [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyBinary bytes:buffer length:sizeof(buffer)];
+      [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyBinary bytes:buffer length:sizeof(buffer)];
     }
-    [self _writeHeaderField:(uint32_t)KPKInnerHeaderKeyEndOfHeader data:nil];
+    [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyEndOfHeader data:nil];
     
+    [innerData appendData:xmlData];
+
+    NSData *encryptedData;
     /* encrypt data */
-    NSData *encryptedData = [cipher encryptData:xmlData withKey:keyData initializationVector:self.encryptionIV error:error];
+    if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
+      /* compress data if enabled */
+      encryptedData = [cipher encryptData:[innerData gzipDeflate] withKey:keyData initializationVector:self.encryptionIV error:error];
+    }
+    else {
+      encryptedData = [cipher encryptData:innerData withKey:keyData initializationVector:self.encryptionIV error:error];;
+    }
+
     if(!encryptedData) {
       return nil;
     }
@@ -277,17 +330,6 @@
     [self.dataWriter writeData:hashedData];
   }
   return data;
-}
-- (void)_writeHeaderField:(KPKHeaderKey)key bytes:(const void *)bytes length:(NSUInteger)length {
-  [self.dataWriter writeByte:key];
-  self.outputVersion4 ? [self.dataWriter write4Bytes:CFSwapInt16HostToLittle(length)] : [self.dataWriter write2Bytes:CFSwapInt16HostToLittle(length)];
-  if (length > 0) {
-    [self.dataWriter writeBytes:bytes length:length];
-  }
-}
-
-- (void)_writeHeaderField:(KPKHeaderKey)key data:(NSData *)data {
-  [self _writeHeaderField:key bytes:data.bytes length:data.length];
 }
 
 @end
