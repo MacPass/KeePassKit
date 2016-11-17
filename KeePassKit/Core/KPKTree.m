@@ -33,12 +33,12 @@
 
 
 /*
-NSString *const KPKDidRemoveNodeNotification  = @"com.hicknhack.KeePassKit.KPKDidRemoveNodeNotification";
-NSString *const KPKWillAddNodeNotification    = @"com.hicknhack.KeePassKit.KPKWillAddNodeNotification";
-NSString *const KPKDidAddNodeNotification     = @"com.hicknhack.KeePassKit.KPKDidAddNodeNotification";
-
-NSString *const kKPKNodeUUIDKey               = @"com.hicknhack.KeePassKit.kKPKNodeUUIDKey";
-*/
+ NSString *const KPKDidRemoveNodeNotification  = @"com.hicknhack.KeePassKit.KPKDidRemoveNodeNotification";
+ NSString *const KPKWillAddNodeNotification    = @"com.hicknhack.KeePassKit.KPKWillAddNodeNotification";
+ NSString *const KPKDidAddNodeNotification     = @"com.hicknhack.KeePassKit.KPKDidAddNodeNotification";
+ 
+ NSString *const kKPKNodeUUIDKey               = @"com.hicknhack.KeePassKit.kKPKNodeUUIDKey";
+ */
 NSString *const KPKWillRemoveNodeNotification = @"com.hicknhack.KeePassKit.KPKWillRemoveNodeNotification";
 NSString *const KPKWillModifyNodeNotification = @"com.hicknhack.KeePassKit.KPKWillModifyNodeNotification";
 NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKNodeKey";
@@ -249,10 +249,13 @@ NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKN
 - (NSUInteger)minimumVersion {
   switch (self.minimumFormat) {
     case KPKDatabaseFormatKdbx:
-      return (self.metaData.mutableCustomPublicData.count > 0) ? kKPKKdbxFileVersion4 : kKPKKdbxFileVersion3;
-      
+      if( self.metaData.mutableCustomPublicData.count > 0 ||
+         ![self.metaData.keyDerivationParameters[KPKKeyDerivationOptionUUID] isEqual:[KPKAESKeyDerivation uuid]] ) {
+        return kKPKKdbxFileVersion4;
+      }
+      /* fall through ! */
     default:
-      return kKPKKdbFileVersion;
+      return self.root.minimumVersion;
   }
 }
 

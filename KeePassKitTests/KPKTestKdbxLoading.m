@@ -65,6 +65,10 @@
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
   
+  
+  XCTAssertEqual(tree.minimumFormat, KPKDatabaseFormatKdbx);
+  XCTAssertEqual(tree.minimumVersion, kKPKKdbxFileVersion4);
+
   KPKEntry *entry = [tree.root entryForUUID:[[NSUUID alloc] initWithUUIDString:@"CE07121C-E7CB-2940-AB4A-9AD530A58622"]];
   XCTAssertNotNil(entry);
   XCTAssertEqual(entry.binaries.count, 2);
