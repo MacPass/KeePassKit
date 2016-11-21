@@ -190,11 +190,7 @@
 
 - (DDXMLElement *)_xmlGroup:(KPKGroup *)group {
   DDXMLElement *groupElement = [DDXMLNode elementWithName:kKPKXmlGroup];
-  
-  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-  dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
-  dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
-  
+    
   // Add the standard properties
   KPKAddXmlElement(groupElement, kKPKXmlUUID, [group.uuid encodedString]);
   KPKAddXmlElement(groupElement, kKPKXmlName, group.title.XMLCompatibleString);
