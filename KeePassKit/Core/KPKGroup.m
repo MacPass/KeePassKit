@@ -227,6 +227,7 @@
   return isEqual;
 }
 
+#pragma mark Strucural Helper
 - (void)_updateParents {
   for(KPKGroup *childGroup in _groups) {
     childGroup.parent = self;
@@ -240,6 +241,16 @@
 - (void)_updateGroupObserving {
   for(KPKGroup *group in _groups) {
     [self _beginObservingGroup:group];
+  }
+}
+
+- (void)_regenerateUUIDs {
+  [super _regenerateUUIDs];
+  for(KPKEntry *entry in _entries) {
+     [entry _regenerateUUIDs];
+  }
+  for(KPKGroup *group  in _groups) {
+    [group _regenerateUUIDs];
   }
 }
 

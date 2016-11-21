@@ -24,10 +24,11 @@
 - (instancetype)_init;
 - (instancetype)_initWithUUID:(NSUUID *)uuid;
 
-
 #pragma mark NSSecureCoding
 - (instancetype)_initWithCoder:(NSCoder *)aDecoder;
 - (void)_encodeWithCoder:(NSCoder *)aCoder;
+
+- (void)_regenerateUUIDs;
 
 #pragma mark Copy Helper
 /**

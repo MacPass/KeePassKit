@@ -363,4 +363,8 @@
   _tree = tree;
 }
 
+- (void)_regenerateUUIDs {
+  _uuid = [[NSUUID alloc] init];
+}
+
 @end
