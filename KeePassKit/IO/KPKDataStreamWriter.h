@@ -34,10 +34,10 @@
 - (void)writeStringAsNullTerminatedCString:(NSString *)string encoding:(NSStringEncoding)encoding;
 - (void)writeStringData:(NSString *)string encoding:(NSStringEncoding)encoding;
 - (void)writeBytes:(const void *)buffer length:(NSUInteger)lenght;
-- (void)writeByte:(uint8)byte;
-- (void)write2Bytes:(uint16)bytes;
-- (void)write4Bytes:(uint32)bytes;
-- (void)write8Bytes:(uint64)bytes;
+- (void)writeByte:(uint8_t)byte;
+- (void)write2Bytes:(uint16_t)bytes;
+- (void)write4Bytes:(uint32_t)bytes;
+- (void)write8Bytes:(uint64_t)bytes;
 - (void)writeInteger:(NSUInteger)integer;
 
 @property (nonatomic, readonly, copy) NSData *data;
