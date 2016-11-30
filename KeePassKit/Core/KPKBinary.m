@@ -23,7 +23,7 @@
 
 #import "KPKBinary.h"
 #import "KPKBinary_Private.h"
-#import "NSData+Gzip.h"
+#import "NSData+KPKGzip.h"
 
 @implementation KPKBinary
 
@@ -108,7 +108,7 @@
   return [self.name isEqualToString:binary.name] && [self.data isEqualToData:binary.data] && (self.protectInMemory == binary.protectInMemory);
 }
 
--(NSUInteger)hash {
+- (NSUInteger)hash {
   NSUInteger result = 1;
   NSUInteger prime = 37;
   
@@ -126,15 +126,14 @@
 - (NSData *)_dataForEncodedString:(NSString *)string compressed:(BOOL)compressed {
   NSData *data = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
   if(data && compressed) {
-    data = [data gzipInflate];
+    return data.kpk_gzipDeflated;
   }
   return data;
 }
 
 - (NSString *)encodedStringUsingCompression:(BOOL)compress {
   if(compress) {
-    NSData *data = [self.data gzipDeflate];
-    return [data base64EncodedStringWithOptions:0];
+    return [self.data.kpk_gzipDeflated base64EncodedStringWithOptions:0];
   }
   return [self.data base64EncodedStringWithOptions:0];
 }

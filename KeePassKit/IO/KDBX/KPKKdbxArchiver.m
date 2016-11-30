@@ -28,7 +28,7 @@
 #import "KPKErrors.h"
 
 #import "NSData+Random.h"
-#import "NSData+Gzip.h"
+#import "NSData+KPKGzip.h"
 #import "NSData+HashedData.h"
 #import "NSData+CommonCrypto.h"
 #import "NSData+KPKKeyComputation.h"
@@ -270,7 +270,7 @@
 
     /* compress data */
     if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
-      xmlData = [xmlData gzipDeflate];
+      xmlData = xmlData.kpk_gzipDeflated;
     }
     /* append hashed data */
     [contentData appendData:xmlData.hashedSha256Data];
@@ -314,7 +314,7 @@
     /* encrypt data */
     if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
       /* compress data if enabled */
-      encryptedData = [cipher encryptData:[innerData gzipDeflate] withKey:keyData initializationVector:self.encryptionIV error:error];
+      encryptedData = [cipher encryptData:innerData.kpk_gzipDeflated withKey:keyData initializationVector:self.encryptionIV error:error];
     }
     else {
       encryptedData = [cipher encryptData:innerData withKey:keyData initializationVector:self.encryptionIV error:error];;

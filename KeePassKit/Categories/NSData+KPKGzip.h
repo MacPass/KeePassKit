@@ -25,17 +25,17 @@
 
 #import <Foundation/NSData.h>
 
-@interface NSData (Gzip)
+@interface NSData (KPKGzip)
 
 #pragma mark -
 #pragma mark Gzip Compression routines
 /*
  Returns a data object containing a Gzip decompressed copy of the receivers contents.
  */
-@property (nonatomic, readonly, copy) NSData *gzipInflate;
+@property (nonatomic, readonly, copy) NSData *kpk_gzipInflated;
 /*
  Returns a data object containing a Gzip compressed copy of the receivers contents.
  */
-@property (nonatomic, readonly, copy) NSData *gzipDeflate;
+@property (nonatomic, readonly, copy) NSData *kpk_gzipDeflated;
 
 @end

@@ -34,7 +34,7 @@
 #import "NSUUID+KeePassKit.h"
 
 #import "NSData+CommonCrypto.h"
-#import "NSData+Gzip.h"
+#import "NSData+KPKGzip.h"
 #import "NSData+HashedData.h"
 #import "NSData+KPKKeyComputation.h"
 
@@ -143,7 +143,7 @@
     
     xmlData = [[decryptedData subdataWithRange:NSMakeRange(32, decryptedData.length - 32)] unhashedSha256Data];
     if(self.compressionAlgorithm == KPKCompressionGzip) {
-      xmlData = [xmlData gzipInflate];
+      xmlData = xmlData.kpk_gzipInflated;
     }
     
     if(!xmlData) {
@@ -174,7 +174,7 @@
     }
     NSData *decryptedData = [cipher decryptData:unhashedData withKey:keyData initializationVector:self.encryptionIV error:error];
     if(self.compressionAlgorithm == KPKCompressionGzip) {
-      decryptedData = [decryptedData gzipInflate];
+      decryptedData = decryptedData.kpk_gzipInflated;
     }
     NSUInteger xmlOffset = [self _parseInnerHeader:decryptedData error:error];
     if(xmlOffset == 0) {
