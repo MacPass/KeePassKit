@@ -21,7 +21,7 @@
 //
 
 
-#import "NSData+Keyfile.h"
+#import "NSData+KPKKeyfile.h"
 #import <CommonCrypto/CommonCrypto.h>
 
 #import "KPKErrors.h"
@@ -31,41 +31,41 @@
 #import "NSString+Hexdata.h"
 #import "NSData+Random.h"
 
-@implementation NSData (Keyfile)
+@implementation NSData (KPKKeyfile)
 
-+ (NSData *)dataWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseFormat)version error:(NSError *__autoreleasing *)error {
++ (NSData *)kpk_dataWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseFormat)version error:(NSError *__autoreleasing *)error {
   switch (version) {
     case KPKDatabaseFormatKdb:
-      return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
+      return [self _kpk_dataVersion1WithWithContentsOfKeyFile:url error:error];
     case KPKDatabaseFormatKdbx:
-      return [self _dataVersion2WithWithContentsOfKeyFile:url error:error];
+      return [self _kpk_dataVersion2WithWithContentsOfKeyFile:url error:error];
     default:
       return nil;
   }
 }
 
-+ (NSData *)generateKeyfiledataForVersion:(KPKDatabaseFormat)version {
++ (NSData *)kpk_generateKeyfiledataForVersion:(KPKDatabaseFormat)version {
   NSData *data = [NSData dataWithRandomBytes:32];
   switch(version) {
     case KPKDatabaseFormatKdb:
       return [[NSString hexstringFromData:data] dataUsingEncoding:NSUTF8StringEncoding];
       
     case KPKDatabaseFormatKdbx:
-      return [self _xmlKeyForData:data];
+      return [self _kpk_xmlKeyForData:data];
     
     default:
       return nil;
   }
 }
 
-+ (NSData *)_xmlKeyForData:(NSData *)data {
++ (NSData *)_kpk_xmlKeyForData:(NSData *)data {
   NSString *dataString = [data base64EncodedStringWithOptions:0];
   NSString *xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>1.00</Version></Meta><Key><Data>%@</Data></Key></KeyFile>", dataString];
   DDXMLDocument *keyDocument = [[DDXMLDocument alloc] initWithXMLString:xmlString options:0 error:NULL];
   return [keyDocument XMLDataWithOptions:DDXMLNodePrettyPrint];
 }
 
-+ (NSData *)_dataVersion1WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
++ (NSData *)_kpk_dataVersion1WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
   // Open the keyfile
   NSData *fileData = [NSData dataWithContentsOfURL:url options:0 error:error];
   if(!fileData) {
@@ -77,25 +77,25 @@
   }
   NSData *decordedData = nil;
   if (fileData.length == 64) {
-    decordedData = [self _keyDataFromHex:fileData];
+    decordedData = [self _kpk_keyDataFromHex:fileData];
   }
   /* Hexdata loading failed, so just hash the key */
   if(!decordedData) {
-    decordedData = [self _keyDataFromHash:fileData];
+    decordedData = [self _kpk_keyDataFromHash:fileData];
   }
   return decordedData;
 }
 
-+ (NSData *)_dataVersion2WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
++ (NSData *)_kpk_dataVersion2WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
   // Try and load a 2.x XML keyfile first
-  NSData *data = [self _dataWithContentOfXMLKeyFile:url error:error];
+  NSData *data = [self _kpk_dataWithContentOfXMLKeyFile:url error:error];
   if(!data) {
-    return [self _dataVersion1WithWithContentsOfKeyFile:url error:error];
+    return [self _kpk_dataVersion1WithWithContentsOfKeyFile:url error:error];
   }
   return data;
 }
 
-+ (NSData *)_dataWithContentOfXMLKeyFile:(NSURL *)fileURL error:(NSError *__autoreleasing *)error {
++ (NSData *)_kpk_dataWithContentOfXMLKeyFile:(NSURL *)fileURL error:(NSError *__autoreleasing *)error {
   /*
    Format of the Keyfile
    <KeyFile>
@@ -153,7 +153,7 @@
   return [[NSData alloc] initWithBase64EncodedString:dataString options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
-+ (NSData *)_keyDataFromHex:(NSData *)hexData {
++ (NSData *)_kpk_keyDataFromHex:(NSData *)hexData {
   NSString *hexString = [[NSString alloc] initWithData:hexData encoding:NSUTF8StringEncoding];
   if(!hexString) {
    return nil;
@@ -164,7 +164,7 @@
   return [hexString dataFromHexString];
 }
 
-+ (NSData *)_keyDataFromHash:(NSData *)fileData {
++ (NSData *)_kpk_keyDataFromHash:(NSData *)fileData {
   uint8_t buffer[32];
   NSData *chunk;
   

@@ -31,7 +31,7 @@
 
 #import "KPKErrors.h"
 
-#import "NSData+Keyfile.h"
+#import "NSData+KPKKeyfile.h"
 #import "NSData+KPKKeyComputation.h"
 #import "NSData+CommonCrypto.h"
 
@@ -130,7 +130,7 @@
   else if(!password && keyURL) {
     /* Get the bytes from the keyfile */
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKDatabaseFormatKdb error:&error];
+    NSData *keyFileData = [NSData kpk_dataWithContentsOfKeyFile:keyURL version:KPKDatabaseFormatKdb error:&error];
     if(!keyFileData) {
       NSLog(@"Error while trying to load keyfile:%@", error.localizedDescription);
       return nil;
@@ -145,7 +145,7 @@
     
     /* Get the bytes from the keyfile */
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKDatabaseFormatKdb error:&error];
+    NSData *keyFileData = [NSData kpk_dataWithContentsOfKeyFile:keyURL version:KPKDatabaseFormatKdb error:&error];
     if( keyFileData == nil) {
       return nil;
     }
@@ -186,7 +186,7 @@
   if (keyURL) {
     // Get the bytes from the keyfile
     NSError *error = nil;
-    NSData *keyFileData = [NSData dataWithContentsOfKeyFile:keyURL version:KPKDatabaseFormatKdbx error:&error];
+    NSData *keyFileData = [NSData kpk_dataWithContentsOfKeyFile:keyURL version:KPKDatabaseFormatKdbx error:&error];
     if(!keyURL) {
       return nil;
     }

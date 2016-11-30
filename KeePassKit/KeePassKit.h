@@ -55,7 +55,7 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 
 #import "NSColor+KeePassKit.h"
 #import "NSData+KPKHashedData.h"
-#import "NSData+Keyfile.h"
+#import "NSData+KPKKeyfile.h"
 #import "NSData+Random.h"
 #import "NSDictionary+KPKVariant.h"
 #import "NSString+Commands.h"
