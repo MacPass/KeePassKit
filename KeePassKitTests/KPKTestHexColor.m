@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "KeePassKit.h"
-#import "NSString+Hexdata.h"
+#import "NSString+KPKHexdata.h"
 
 @interface KPKTestHexColor : XCTestCase
 
@@ -22,10 +22,10 @@
   BOOL results[] = { YES, NO, NO, NO };
   for(NSUInteger index = 0; index < hexStrings.count; index++) {
     if(results[index]) {
-      XCTAssertTrue(hexStrings[index].isValidHexString, @"Is valid hex string!");
+      XCTAssertTrue(hexStrings[index].kpk_isValidHexString, @"Is valid hex string!");
     }
     else {
-      XCTAssertFalse(hexStrings[index].isValidHexString, @"Is invalid hex string!");
+      XCTAssertFalse(hexStrings[index].kpk_isValidHexString, @"Is invalid hex string!");
     }
   }
 }

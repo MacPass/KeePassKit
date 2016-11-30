@@ -1,8 +1,8 @@
 //
-//  NSString+Empty.h
+//  NSString+Hexdata.h
 //  MacPass
 //
-//  Created by Michael Starke on 24.06.13.
+//  Created by Michael Starke on 14.07.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -22,9 +22,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSString (Empty)
+@interface NSString (KPKHexdata)
 
-+ (BOOL)isEmptyString:(NSString *)string;
-@property (nonatomic, getter=isEmpty, readonly) BOOL empty;
++ (NSString *)kpk_hexstringFromData:(NSData *)data;
+@property (nonatomic, readonly, copy) NSData *kpk_dataFromHexString;
+@property (nonatomic, readonly) BOOL kpk_isValidHexString;
 
 @end

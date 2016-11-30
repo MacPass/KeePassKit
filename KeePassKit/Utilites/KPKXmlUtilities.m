@@ -54,12 +54,6 @@ void KPKAddXmlElementIfNotNil(DDXMLElement *element, NSString *name, NSString *v
   }
 }
 
-void KPKAddXmlElementIfNotEmtpy(DDXMLElement *element, NSString *name, NSString *value) {
-  if(value.length > 0) {
-    KPKAddXmlElement(element, name, value);
-  }
-}
-
 void KPKAddXmlAttribute(DDXMLElement *element, NSString *name, NSString *value) {
   [element addAttributeWithName:name stringValue:value];
 }

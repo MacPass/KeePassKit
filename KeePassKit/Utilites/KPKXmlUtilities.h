@@ -46,15 +46,6 @@ void KPKAddXmlElement(DDXMLElement *element, NSString *name, NSString *value);
  */
 void KPKAddXmlElementIfNotNil(DDXMLElement *element, NSString *name, NSString *value);
 /**
- *  Adds an XML Element with the givne name and value only to the parent element.
- *  The value has a lenght greater than zero
- *
- *  @param element parent the new element should be added to
- *  @param name    name of the new element
- *  @param value   string value for the new elment. If empty (or nil) the element will not be added
- */
-void KPKAddXmlElementIfNotEmtpy(DDXMLElement *element, NSString *name, NSString *value);
-/**
  *  Adds an XML Attribute with the given name and value to the element.
  *
  *  @param element element that should get the attribute

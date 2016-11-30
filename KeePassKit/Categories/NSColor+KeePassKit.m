@@ -21,7 +21,7 @@
 //
 
 #import "NSColor+KeePassKit.h"
-#import "NSString+Hexdata.h"
+#import "NSString+KPKHexdata.h"
 
 @implementation NSColor (KeePassKit)
 
@@ -29,7 +29,7 @@
   if([hex hasPrefix:@"#"]) {
     hex = [hex substringFromIndex:1];
   }
-  NSData *hexData = hex.dataFromHexString;
+  NSData *hexData = hex.kpk_dataFromHexString;
   return [self kpk_colorWithData:hexData];
 }
 

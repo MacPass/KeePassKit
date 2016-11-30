@@ -1,5 +1,5 @@
 //
-//  NSString+Empty.m
+//  NSString+Empty.h
 //  MacPass
 //
 //  Created by Michael Starke on 24.06.13.
@@ -20,22 +20,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSString+Empty.h"
+#import <Foundation/Foundation.h>
 
-@implementation NSString (Empty)
+@interface NSString (Empty)
 
-+ (BOOL)isEmptyString:(NSString *)string {
-  if(string) {
-    return [string isEmpty];
-  }
-  return YES;
-}
-
-- (BOOL)isEmpty {
-  if(!self) {
-    return YES;
-  }
-  return (self.length == 0);
-}
+/**
+ Determines if a string is not empty. Since this method is a category, we have to be compatible with a nil target.
+ Nil getting a message will always result in NO thus the interface hast to test for Not emptry instead of the more obvious isEmptry
+ */
+@property (nonatomic, readonly) BOOL kpk_isNotEmpty;
 
 @end

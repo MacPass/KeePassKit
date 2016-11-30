@@ -22,9 +22,9 @@
 //  Based on http://stackoverflow.com/questions/2501033/nsstring-hex-to-bytes
 //  by http://stackoverflow.com/users/136819/zyphrax
 //
-#import "NSString+Hexdata.h"
+#import "NSString+KPKHexdata.h"
 
-@implementation NSString (Hexdata)
+@implementation NSString (KPKHexdata)
 
 NSCharacterSet *KPKHexCharacterSet() {
   static dispatch_once_t onceToken;
@@ -35,7 +35,7 @@ NSCharacterSet *KPKHexCharacterSet() {
   return set;
 }
 
-+ (NSString *)hexstringFromData:(NSData *)data {
++ (NSString *)kpk_hexstringFromData:(NSData *)data {
   NSMutableString *hexString = [[NSMutableString alloc] initWithCapacity:data.length * 2];
   uint8_t byte;
   for(NSInteger byteIndex = 0; byteIndex < data.length; byteIndex++) {
@@ -45,15 +45,15 @@ NSCharacterSet *KPKHexCharacterSet() {
   return hexString;
 }
 
-- (NSData *)dataFromHexString {
-  if(!self.isValidHexString) {
+- (NSData *)kpk_dataFromHexString {
+  if(!self.kpk_isValidHexString) {
     return nil;
   }
   NSString *string = [self copy];
   if([string hasPrefix:@"0x"]) {
     string = [self substringFromIndex:2];
   }
-  if(![string isValidHexString]) {
+  if(!string.kpk_isValidHexString) {
     return nil;
   }
   const char *chars = string.UTF8String;
@@ -75,7 +75,7 @@ NSCharacterSet *KPKHexCharacterSet() {
   return data;
 }
 
-- (BOOL)isValidHexString {
+- (BOOL)kpk_isValidHexString {
   NSRange range = [self rangeOfCharacterFromSet:KPKHexCharacterSet()];
   return (NSNotFound == range.location) && (0 == range.length);
 }

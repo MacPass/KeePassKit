@@ -34,7 +34,7 @@
 
 #import "KPKDataStreamWriter.h"
 
-#import "NSString+Empty.h"
+#import "NSString+KPKEmpty.h"
 #import "NSData+KPKRandom.h"
 #import "NSDate+KPKPacked.h"
 #import "NSColor+KeePassKit.h"
@@ -129,7 +129,7 @@
   tmp32 = CFSwapInt32HostToLittle(groupId);
   [self _writeField:KPKFieldTypeGroupId bytes:&tmp32 length:4];
   
-  if (![NSString isEmptyString:group.title]){
+  if (group.title.kpk_isNotEmpty){
     const char *title = [group.title cStringUsingEncoding:NSUTF8StringEncoding];
     [self _writeField:KPKFieldTypeGroupName bytes:(void *)title length:strlen(title)+1];
   }
@@ -209,7 +209,7 @@
 - (NSArray <KPKEntry *>*)_collectMetaEntries {
   /* Store metadata in entries */
   NSMutableArray<KPKEntry *> *metaEntries = [[NSMutableArray alloc] init];
-  if(![NSString isEmptyString:self.tree.metaData.defaultUserName]) {
+  if(self.tree.metaData.defaultUserName.kpk_isNotEmpty) {
     NSData *defaultUsernameData = [self.tree.metaData.defaultUserName dataUsingEncoding:NSUTF8StringEncoding];
     KPKEntry *defaultUsernameEntry = [KPKEntry metaEntryWithData:defaultUsernameData name:KPKMetaEntryDefaultUsername];
     [metaEntries addObject:defaultUsernameEntry];
@@ -400,7 +400,7 @@
 
 - (void)_writeString:(NSString *)string forField:(KPKLegacyFieldType)type {
   const char *bufferString = "";
-  if (![NSString isEmptyString:string]) {
+  if(string.kpk_isNotEmpty) {
     bufferString = [string cStringUsingEncoding:NSUTF8StringEncoding];
   }
   [self _writeField:type bytes:bufferString length:strlen(bufferString) + 1];

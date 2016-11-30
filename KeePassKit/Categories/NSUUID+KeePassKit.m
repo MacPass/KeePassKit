@@ -22,7 +22,7 @@
 
 #import "NSUUID+KeePassKit.h"
 #import "KPKUTIs.h"
-#import "NSString+Hexdata.h"
+#import "NSString+KPKHexdata.h"
 
 
 @implementation NSUUID (KeePassKit)
@@ -49,7 +49,7 @@
 }
 
 - (instancetype)initWithUndelemittedUUIDString:(NSString *)string {
-  if(![string isValidHexString]) {
+  if(!string.kpk_isValidHexString) {
     return nil; // invalid characters
   }
   if(string.length != 32) {

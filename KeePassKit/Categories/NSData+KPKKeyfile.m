@@ -28,7 +28,7 @@
 #import "KPKFormat.h"
 
 #import "DDXMLElementAdditions.h"
-#import "NSString+Hexdata.h"
+#import "NSString+KPKHexdata.h"
 #import "NSData+KPKRandom.h"
 
 @implementation NSData (KPKKeyfile)
@@ -48,7 +48,7 @@
   NSData *data = [NSData kpk_dataWithRandomBytes:32];
   switch(version) {
     case KPKDatabaseFormatKdb:
-      return [[NSString hexstringFromData:data] dataUsingEncoding:NSUTF8StringEncoding];
+      return [[NSString kpk_hexstringFromData:data] dataUsingEncoding:NSUTF8StringEncoding];
       
     case KPKDatabaseFormatKdbx:
       return [self _kpk_xmlKeyForData:data];
@@ -161,7 +161,7 @@
   if(hexString.length != 64) {
     return nil; // No valid lenght found
   }
-  return [hexString dataFromHexString];
+  return [hexString kpk_dataFromHexString];
 }
 
 + (NSData *)_kpk_keyDataFromHash:(NSData *)fileData {

@@ -1,8 +1,8 @@
 //
-//  NSString+Hexdata.h
+//  NSString+Empty.m
 //  MacPass
 //
-//  Created by Michael Starke on 14.07.13.
+//  Created by Michael Starke on 24.06.13.
 //  Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,16 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import <Foundation/Foundation.h>
+#import "NSString+KPKEmpty.h"
 
-@interface NSString (Hexdata)
+@implementation NSString (Empty)
 
-+ (NSString *)hexstringFromData:(NSData *)data;
-@property (nonatomic, readonly, copy) NSData *dataFromHexString;
-@property (nonatomic, getter=isValidHexString, readonly) BOOL validHexString;
+- (BOOL)kpk_isNotEmpty {
+  /*
+   nil objects should not get this message.
+   if for some reason they do, length is 0 so the return NO correctly
+  */
+  return (self.length != 0);
+}
 
 @end
