@@ -11,7 +11,7 @@
 
 #import "KPKNumber.h"
 
-#import "NSData+Random.h"
+#import "NSData+KPKRandom.h"
 
 #import "argon2.h"
 
@@ -97,7 +97,7 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
 }
 
 - (void)randomize {
-  self.mutableParameters[KPKArgon2SaltParameter] = [NSData dataWithRandomBytes:32];
+  self.mutableParameters[KPKArgon2SaltParameter] = [NSData kpk_dataWithRandomBytes:32];
 }
 
 - (BOOL)adjustParameters:(NSMutableDictionary *)parameters {

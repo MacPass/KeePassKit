@@ -11,7 +11,7 @@
 #import "KPKNumber.h"
 
 #import "NSData+CommonCrypto.h"
-#import "NSData+Random.h"
+#import "NSData+KPKRandom.h"
 #import "NSUUID+KeePassKit.h"
 
 #import <CommonCrypto/CommonCrypto.h>
@@ -89,7 +89,7 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
 }
 
 - (void)randomize {
-  self.mutableParameters[KPKAESSeedOption] = [NSData dataWithRandomBytes:32];
+  self.mutableParameters[KPKAESSeedOption] = [NSData kpk_dataWithRandomBytes:32];
 }
 
 - (BOOL)adjustParameters:(NSMutableDictionary *)parameters {

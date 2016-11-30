@@ -27,7 +27,7 @@
 #import "KPKKdbxFormat.h"
 #import "KPKErrors.h"
 
-#import "NSData+Random.h"
+#import "NSData+KPKRandom.h"
 #import "NSData+KPKGzip.h"
 #import "NSData+KPKHashedData.h"
 #import "NSData+CommonCrypto.h"
@@ -172,15 +172,15 @@
   }
   [keyDerivation randomize];
   
-  self.masterSeed = [NSData dataWithRandomBytes:32];
-  self.encryptionIV = [NSData dataWithRandomBytes:cipher.IVLength];
-  self.randomStreamKey = [NSData dataWithRandomBytes:32];
+  self.masterSeed = [NSData kpk_dataWithRandomBytes:32];
+  self.encryptionIV = [NSData kpk_dataWithRandomBytes:cipher.IVLength];
+  self.randomStreamKey = [NSData kpk_dataWithRandomBytes:32];
   
   if(self.outputVersion4) {
     self.randomStreamID = KPKRandomStreamChaCha20;
   }
   else {
-    self.streamStartBytes = [NSData dataWithRandomBytes:32];
+    self.streamStartBytes = [NSData kpk_dataWithRandomBytes:32];
     self.randomStreamID = KPKRandomStreamSalsa20;
   }
   

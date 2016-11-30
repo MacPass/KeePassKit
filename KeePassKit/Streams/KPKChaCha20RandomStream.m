@@ -7,7 +7,7 @@
 //
 
 #import "KPKChaCha20RandomStream.h"
-#import "NSData+Random.h"
+#import "NSData+KPKRandom.h"
 #import "KPKCipher.h"
 #import "KPKChaCha20Cipher.h"
 
@@ -20,7 +20,7 @@
 @implementation KPKChaCha20RandomStream
 
 - (instancetype)init {
-  return [self initWithKeyData:[NSData dataWithRandomBytes:64]];
+  return [self initWithKeyData:[NSData kpk_dataWithRandomBytes:64]];
 }
 
 - (instancetype)initWithKeyData:(NSData*)key {

@@ -29,7 +29,7 @@
 
 #import "DDXMLElementAdditions.h"
 #import "NSString+Hexdata.h"
-#import "NSData+Random.h"
+#import "NSData+KPKRandom.h"
 
 @implementation NSData (KPKKeyfile)
 
@@ -45,7 +45,7 @@
 }
 
 + (NSData *)kpk_generateKeyfiledataForVersion:(KPKDatabaseFormat)version {
-  NSData *data = [NSData dataWithRandomBytes:32];
+  NSData *data = [NSData kpk_dataWithRandomBytes:32];
   switch(version) {
     case KPKDatabaseFormatKdb:
       return [[NSString hexstringFromData:data] dataUsingEncoding:NSUTF8StringEncoding];

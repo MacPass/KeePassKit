@@ -31,7 +31,7 @@
 - (void)testBinaryCoding {
   KPKBinary *binary = [[KPKBinary alloc] init];
   binary.name = @"Binary";
-  binary.data = [NSData dataWithRandomBytes:1*1024*1024];
+  binary.data = [NSData kpk_dataWithRandomBytes:1*1024*1024];
   
   NSData *data = [self encode:binary];
   KPKBinary *decodedBinary = [self decode:data ofClass:[KPKBinary class]];

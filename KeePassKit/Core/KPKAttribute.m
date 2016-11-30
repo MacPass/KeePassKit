@@ -29,7 +29,7 @@
 
 #import "NSString+Commands.h"
 #import "NSString+XMLUtilities.h"
-#import "NSData+Random.h"
+#import "NSData+KPKRandom.h"
 #import "NSMutableData+KeePassKit.h"
 /*
  References are formatted as follows:
@@ -185,7 +185,7 @@
   NSMutableData *stringData = [[string dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
   _length = stringData.length;
   if(_xorPad.length < _length) {
-    _xorPad = [NSData dataWithRandomBytes:_length];
+    _xorPad = [NSData kpk_dataWithRandomBytes:_length];
   }
   [stringData xorWithKey:_xorPad];
   if(!_protectedData) {

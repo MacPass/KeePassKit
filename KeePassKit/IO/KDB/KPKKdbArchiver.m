@@ -25,7 +25,7 @@
 
 #import "KPKErrors.h"
 
-#import "NSData+Random.h"
+#import "NSData+KPKRandom.h"
 #import "NSData+CommonCrypto.h"
 #import "NSData+KPKKeyComputation.h"
 
@@ -50,8 +50,8 @@
   _header.version = CFSwapInt32HostToLittle(kKPKKdbFileVersion);
   
   /* randomize Master seed and encryption iv */
-  [[NSData dataWithRandomBytes:sizeof(_header.masterSeed)] getBytes:_header.masterSeed length:sizeof(_header.masterSeed)];
-  [[NSData dataWithRandomBytes:sizeof(_header.encryptionIV)] getBytes:_header.encryptionIV length:sizeof(_header.encryptionIV)];
+  [[NSData kpk_dataWithRandomBytes:sizeof(_header.masterSeed)] getBytes:_header.masterSeed length:sizeof(_header.masterSeed)];
+  [[NSData kpk_dataWithRandomBytes:sizeof(_header.encryptionIV)] getBytes:_header.encryptionIV length:sizeof(_header.encryptionIV)];
   
   /* initalize the tree writer to get the count of meta entries */
   KPKKdbTreeWriter *treeWriter = [[KPKKdbTreeWriter alloc] initWithTree:self.tree];

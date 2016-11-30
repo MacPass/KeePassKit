@@ -20,12 +20,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSData+Random.h"
+#import "NSData+KPKRandom.h"
 #import <Security/SecRandom.h>
 
-@implementation NSData (Random)
+@implementation NSData (KPKRandom)
 
-+ (NSData *)dataWithRandomBytes:(NSUInteger)length {
++ (NSData *)kpk_dataWithRandomBytes:(NSUInteger)length {
   uint8_t *bytes = malloc(sizeof(uint8_t) * length);
   int ret = SecRandomCopyBytes(kSecRandomDefault, length, bytes);
   if(ret != 0) {

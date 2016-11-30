@@ -7,8 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "KeePassKit/KeePassKit.h"
 #import "NSData+KPKKeyComputation.h"
-#import "NSData+Random.h"
 #import "NSData+CommonCrypto.h"
 
 @interface KPKTestDeriveKeyData : XCTestCase
@@ -18,7 +18,7 @@
 @implementation KPKTestDeriveKeyData
 
 - (void)testKeyResizing {
-  NSData *data = [NSData dataWithRandomBytes:128];
+  NSData *data = [NSData kpk_dataWithRandomBytes:128];
   NSData *result = [data resizeKeyDataTo:32];
   XCTAssertEqualObjects(result, data.SHA256Hash);
   result = [data resizeKeyDataTo:64];

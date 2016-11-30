@@ -22,8 +22,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSData (Random)
+@interface NSData (KPKRandom)
 
-+ (NSData *)dataWithRandomBytes:(NSUInteger)length;
++ (NSData *)kpk_dataWithRandomBytes:(NSUInteger)length;
 
 @end

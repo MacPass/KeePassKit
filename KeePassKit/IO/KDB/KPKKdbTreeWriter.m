@@ -35,7 +35,7 @@
 #import "KPKDataStreamWriter.h"
 
 #import "NSString+Empty.h"
-#import "NSData+Random.h"
+#import "NSData+KPKRandom.h"
 #import "NSDate+Packed.h"
 #import "NSColor+KeePassKit.h"
 
@@ -392,7 +392,7 @@
   [self _writeField:KPKHeaderHashFieldTypeHeaderHash data:hash];
   
   /* Generate some random data to prevent guessing attacks that use the content hash */
-  [self _writeField:KPKHeaderHashFieldTypeRandomData data:[NSData dataWithRandomBytes:32]];
+  [self _writeField:KPKHeaderHashFieldTypeRandomData data:[NSData kpk_dataWithRandomBytes:32]];
   [self _writeField:KPKFieldTypeCommonStop bytes:NULL length:0];
 }
 
