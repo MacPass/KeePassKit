@@ -29,7 +29,7 @@
 
 #import "NSData+Random.h"
 #import "NSData+KPKGzip.h"
-#import "NSData+HashedData.h"
+#import "NSData+KPKHashedData.h"
 #import "NSData+CommonCrypto.h"
 #import "NSData+KPKKeyComputation.h"
 
@@ -273,7 +273,7 @@
       xmlData = xmlData.kpk_gzipDeflated;
     }
     /* append hashed data */
-    [contentData appendData:xmlData.hashedSha256Data];
+    [contentData appendData:xmlData.kpk_hashedSha256Data];
     
     /* encrypt data */
     NSData *encryptedData = [cipher encryptData:contentData withKey:keyData initializationVector:self.encryptionIV error:error];
@@ -323,7 +323,7 @@
     if(!encryptedData) {
       return nil;
     }
-    NSData *hashedData = [encryptedData hashedHmacSha256DataWithKey:hmacKey error:error];
+    NSData *hashedData = [encryptedData kpk_hashedHmacSha256DataWithKey:hmacKey error:error];
     if(!hashedData) {
       return nil;
     }

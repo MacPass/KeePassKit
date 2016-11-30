@@ -20,7 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSData+HashedData.h"
+#import "NSData+KPKHashedData.h"
 
 #import "KPKDataStreamReader.h"
 #import "KPKDataStreamWriter.h"
@@ -34,9 +34,9 @@
 
 #define KPKValidateLength(length, location, offset) if(length < location + offset ) { return nil; }
 
-@implementation NSData (HashedData)
+@implementation NSData (KPKHashedData)
 
-- (NSData *)unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error {
+- (NSData *)kpk_unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error {
   
   KPKDataStreamReader *reader = [[KPKDataStreamReader alloc] initWithData:self];
   NSMutableData *unhashedData = [[NSMutableData alloc] initWithCapacity:self.length];
@@ -94,7 +94,7 @@
   return nil;
 }
 
-- (NSData *)unhashedSha256Data {
+- (NSData *)kpk_unhashedSha256Data {
   NSUInteger blockIndex = 0;
   NSUInteger location = 0;
   uint32_t indexBuffer = 0;
@@ -148,7 +148,7 @@
   }
 }
 
-- (NSData *)hashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error {
+- (NSData *)kpk_hashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error {
   uint32_t blockSize = 1024*1024;
   uint32_t blockCount = ceil((CGFloat)self.length / (CGFloat)blockSize);
   
@@ -186,7 +186,7 @@
   return [outputData copy];
 }
 
-- (NSData *)hashedSha256Data {
+- (NSData *)kpk_hashedSha256Data {
   NSUInteger blockSize = 1024*1024;
   uint32_t blockCount = ceil((CGFloat)self.length / (CGFloat)blockSize);
   uint32_t location = 0;

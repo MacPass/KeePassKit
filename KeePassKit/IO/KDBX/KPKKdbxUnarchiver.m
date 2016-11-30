@@ -35,7 +35,7 @@
 
 #import "NSData+CommonCrypto.h"
 #import "NSData+KPKGzip.h"
-#import "NSData+HashedData.h"
+#import "NSData+KPKHashedData.h"
 #import "NSData+KPKKeyComputation.h"
 
 #import "NSDictionary+KPKVariant.h"
@@ -141,7 +141,7 @@
       return nil;
     }
     
-    xmlData = [[decryptedData subdataWithRange:NSMakeRange(32, decryptedData.length - 32)] unhashedSha256Data];
+    xmlData = [decryptedData subdataWithRange:NSMakeRange(32, decryptedData.length - 32)].kpk_unhashedSha256Data;
     if(self.compressionAlgorithm == KPKCompressionGzip) {
       xmlData = xmlData.kpk_gzipInflated;
     }
@@ -168,7 +168,7 @@
     }
     
     NSData *hashedData = [self.data subdataWithRange:NSMakeRange(self.headerLength + 64, self.data.length - self.headerLength - 64)];
-    NSData *unhashedData = [hashedData unhashedHmacSha256DataWithKey:hmacKey error:error];
+    NSData *unhashedData = [hashedData kpk_unhashedHmacSha256DataWithKey:hmacKey error:error];
     if(!unhashedData) {
       return nil;
     }

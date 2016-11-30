@@ -18,8 +18,8 @@
 
 - (void)testSHA256Hashing {
   NSData *data = [NSData dataWithRandomBytes:1024*1024*8 + 512]; // 8 MB Data, to use more than one block
-  NSData *hashedData = data.hashedSha256Data;
-  NSData *unhashedData = hashedData.unhashedSha256Data;
+  NSData *hashedData = data.kpk_hashedSha256Data;
+  NSData *unhashedData = hashedData.kpk_unhashedSha256Data;
   XCTAssertTrue([unhashedData isEqualToData:data], @"Data needs to be the same after hashing and unhashing");
 }
 
@@ -28,8 +28,8 @@
   NSData *data = [NSData dataWithRandomBytes:1024*1024*8 + 512];
   NSData *key = [NSData dataWithRandomBytes:64];
   NSError *error;
-  NSData *hashedData = [data hashedHmacSha256DataWithKey:key error:&error];
-  NSData *unhashedData = [hashedData unhashedHmacSha256DataWithKey:key error:&error];
+  NSData *hashedData = [data kpk_hashedHmacSha256DataWithKey:key error:&error];
+  NSData *unhashedData = [hashedData kpk_unhashedHmacSha256DataWithKey:key error:&error];
   XCTAssertEqualObjects(data, unhashedData, @"Hashed and unhashed data are the same");
 }
 @end

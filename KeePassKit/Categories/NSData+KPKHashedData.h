@@ -50,13 +50,13 @@
   uint32_t cipherText[blockSize];
  }
 */
-@interface NSData (HashedData)
+@interface NSData (KPKHashedData)
 
 /* block sizes are defaulted per stream */
-@property (nonatomic, readonly) NSData *hashedSha256Data;
-@property (nonatomic, readonly) NSData *unhashedSha256Data;
+@property (nonatomic, readonly) NSData *kpk_hashedSha256Data;
+@property (nonatomic, readonly) NSData *kpk_unhashedSha256Data;
 
-- (NSData *)hashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error;
-- (NSData *)unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error;
+- (NSData *)kpk_hashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error;
+- (NSData *)kpk_unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error;
 
 @end
