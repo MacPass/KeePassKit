@@ -20,9 +20,15 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-@import Cocoa;
+@import Foundation;
+#include "KPKPlatformIncludes.h"
 
-@interface NSUUID (KPKAdditions) <NSPasteboardReading, NSPasteboardWriting>
+#if TARGET_OS_MAC
+@interface NSUUID (KPKAdditions) <KPKPasteboardWriting, KPKPasteboardReading>
+#endif
+#if (TARGET_OS_IPHONE || TARGET_OS_TV)
+@interface NSUUID (KPKAdditions)
+#endif
 
 + (NSUUID *)kpk_nullUUID;
 + (NSUUID *)kpk_uuidWithEncodedString:(NSString *)string;

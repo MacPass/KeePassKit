@@ -236,18 +236,17 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return copy;
 }
 
-#pragma mark NSPasteBoardWriting/Readin
-
-+ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
+#pragma mark NSPasteBoardWriting/Reading
++ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSUIPasteboard *)pasteboard {
   NSAssert([type isEqualToString:KPKEntryUTI], @"Only KPKEntryUTI type is supported");
   return NSPasteboardReadingAsKeyedArchive;
 }
 
-+ (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
++ (NSArray *)readableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
   return @[KPKEntryUTI];
 }
 
-- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
+- (NSArray *)writableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
   return @[KPKEntryUTI];
 }
 

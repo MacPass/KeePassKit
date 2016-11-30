@@ -11,7 +11,7 @@
 #import "KeePassKit.h"
 
 @interface KPKIconLoading : XCTestCase {
-  NSImage *_image;
+  NSUIImage *_image;
   NSData *_imageData;
 }
 @end

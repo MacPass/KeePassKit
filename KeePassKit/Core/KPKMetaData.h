@@ -20,7 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
+#import "KPKPlatformIncludes.h"
 #import "KPKModificationRecording.h"
 
 @class KPKBinary;
@@ -48,7 +49,7 @@
 @property(nonatomic) NSInteger maintenanceHistoryDays;
 #
 /* Hexstring - #AA77FF */
-@property(nonatomic, copy) NSColor *color;
+@property(nonatomic, copy) NSUIColor *color;
 
 @property(nonatomic, copy) NSDate *masterKeyChanged;
 @property(nonatomic, readonly) BOOL recommendMasterKeyChange;

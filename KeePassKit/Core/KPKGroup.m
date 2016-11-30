@@ -255,14 +255,14 @@
 }
 
 #pragma mark NSPasteboardWriting/Reading
-- (NSArray<NSString *> *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
+- (NSArray<NSString *> *)writableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
   return @[KPKGroupUTI];
 }
-+ (NSArray<NSString *> *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
++ (NSArray<NSString *> *)readableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
   return @[KPKGroupUTI];
 }
 
-+ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
++ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSUIPasteboard *)pasteboard {
   NSAssert([type isEqualToString:KPKGroupUTI], @"Type needs to be KPKGroupUTI");
   return NSPasteboardReadingAsKeyedArchive;
 }

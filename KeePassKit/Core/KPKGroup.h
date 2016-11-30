@@ -20,7 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-@import Cocoa;
+@import Foundation;
+#import "KPKPlatformIncludes.h"
 #import "KPKTypes.h"
 #import "KPKNode.h"
 
@@ -28,7 +29,7 @@
 
 FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 
-@interface KPKGroup : KPKNode <NSSecureCoding, NSCopying, NSPasteboardReading, NSPasteboardWriting>
+@interface KPKGroup : KPKNode <NSSecureCoding, NSCopying, KPKPasteboardReading, KPKPasteboardWriting>
 
 @property(nonatomic, copy, readonly) NSArray<KPKGroup *> *groups;
 @property(nonatomic, copy, readonly) NSArray<KPKEntry *> *entries;

@@ -6,7 +6,7 @@
 //  Copyright © 2015 HicknHack Software GmbH. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+@import Foundation
 
 #import "KPKXmlTreeReader.h"
 

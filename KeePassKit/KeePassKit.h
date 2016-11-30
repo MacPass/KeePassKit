@@ -6,7 +6,7 @@
 //  Copyright © 2015 HicknHack Software GmbH. All rights reserved.
 //
 
-@import Cocoa;
+@import Foundation;
 
 //! Project version number for KeePassKit.
 FOUNDATION_EXPORT double KeePassKitVersionNumber;

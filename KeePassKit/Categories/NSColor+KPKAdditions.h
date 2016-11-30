@@ -20,16 +20,17 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import <AppKit/AppKit.h>
+#import "KPKPlatformIncludes.h"
+@import Foundation;
 
-@interface NSColor (KPKAdditions)
+@interface NSUIColor (KPKAdditions)
 /**
  *	Create an NSColor object form a hexadeciaml (eg #FF0000)
  *  Representation of a String
  *	@param	hex	The String to parse
  *	@return	NSColor created form the hex string
  */
-+ (NSColor *)kpk_colorWithHexString:(NSString *)hex;
++ (NSUIColor *)kpk_colorWithHexString:(NSString *)hex;
 /**
  *  Creates an NSCOlor object form the Data provieded
  *  data shoule be of the following format:
@@ -38,13 +39,13 @@
  *  @param	data	Date to parse as color
  *  @return	NSColor object with the suplied values set
  */
-+ (NSColor *)kpk_colorWithData:(NSData *)data;
++ (NSUIColor *)kpk_colorWithData:(NSData *)data;
 /**
  *  Generates a Hexstring representing the color
  *  @param	color	Color to convert to hexadecimal format
  *  @return	string with color encoded in hexadecimal format
  */
-+ (NSString *)kpk_hexStringFromColor:(NSColor *)color;
++ (NSString *)kpk_hexStringFromColor:(NSUIColor *)color;
 /**
  *  Return a hexadecimal string representation of the color
  *  @return	hexadecimal string of the recieving NSColor object

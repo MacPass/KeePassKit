@@ -45,9 +45,9 @@
 - (instancetype)initWithImageAtURL:(NSURL *)imageLocation {
   self = [self init];
   if(self) {
-    _image = [[NSImage alloc] initWithContentsOfURL:imageLocation];
+    _image = [[NSUIImage alloc] initWithContentsOfURL:imageLocation];
     /* convert the Image to be in our PNG representation */
-    _image = [[NSImage alloc] initWithData:self.pngData];
+    _image = [[NSUIImage alloc] initWithData:self.pngData];
   }
   return self;
 }
@@ -64,7 +64,7 @@
 - (instancetype)initWithData:(NSData *)data {
   self = [self init];
   if(self) {
-    self.image =[[NSImage alloc] initWithData:data];
+    self.image =[[NSUIImage alloc] initWithData:data];
   }
   return self;
 }
@@ -75,7 +75,7 @@
   self = [[KPKIcon alloc] init];
   if(self) {
     NSData *imageData = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(image))];
-    _image = [[NSImage alloc] initWithData:imageData];
+    _image = [[NSUIImage alloc] initWithData:imageData];
     _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))];
   }
   return self;
@@ -126,20 +126,22 @@
 }
 
 - (NSData *)pngData {
+#if TARGET_OS_MAC
   NSImageRep *imageRep = (self.image).representations.lastObject;
   if([imageRep isKindOfClass:[NSBitmapImageRep class]]) {
     NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
     //[bitmapRep setProperty:NSImageGamma withValue:@1.0];
     return [bitmapRep representationUsingType:NSPNGFileType properties:@{}];
   }
+#endif
   return nil;
 }
 
 #pragma mark Private
 
-- (NSImage *)_decodeString:(NSString *)imageString {
+- (NSUIImage *)_decodeString:(NSString *)imageString {
   NSData *data = [[NSData alloc] initWithBase64EncodedString:imageString options:NSDataBase64DecodingIgnoreUnknownCharacters];
-  return [[NSImage alloc] initWithData:data];
+  return [[NSUIImage alloc] initWithData:data];
 }
 
 @end

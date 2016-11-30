@@ -20,12 +20,13 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-@import Cocoa;
+@import Foundation;
+#import "KPKPlatformIncludes.h"
 
 @interface KPKIcon : NSObject <NSCopying, NSSecureCoding>
 
 @property (nonatomic, strong) NSUUID *uuid;
-@property (nonatomic, strong) NSImage *image;
+@property (nonatomic, strong) NSUIImage *image;
 @property (nonatomic, readonly) NSData *pngData;
 @property (nonatomic, readonly) NSString *encodedString;
 
