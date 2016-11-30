@@ -71,7 +71,7 @@
       }
       
       NSData *content = [reader readDataWithLength:blockLength];
-      NSData *hmacKey = [key hmacKeyForIndex:blockIndex];
+      NSData *hmacKey = [key kpk_hmacKeyForIndex:blockIndex];
       
       CCHmacContext context;
       uint64_t LEblockIndex = CFSwapInt64HostToLittle(blockIndex);
@@ -159,7 +159,7 @@
   uint8_t hmac[32];
   NSUInteger offset = 0;
   for(uint64_t blockIndex = 0; blockIndex  < blockCount; blockIndex++) {
-    NSData *hmacKey = [key hmacKeyForIndex:blockIndex];
+    NSData *hmacKey = [key kpk_hmacKeyForIndex:blockIndex];
     uint32_t blockLength = (uint32_t)MIN(blockSize, self.length - offset);
     
     CCHmacContext context;

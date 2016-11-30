@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "NSString+XMLUtilities.h"
+#import "NSString+KPKXmlUtilities.h"
 
-@implementation NSString (XMLUtilities)
+@implementation NSString (KPKXmlUtilities)
 
 /*
  Removes all characters that are not valid XML characters,
@@ -16,7 +16,7 @@
  
  Based heavily on SafeXmlString(string strText) from StrUtil.cs of KeePass
  */
-- (NSString *)XMLCompatibleString {
+- (NSString *)kpk_xmlCompatibleString {
   const NSUInteger length = self.length;
   if(length == 0) {
     return nil;

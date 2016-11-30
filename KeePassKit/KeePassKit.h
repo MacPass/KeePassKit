@@ -60,6 +60,6 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import "NSDictionary+KPKVariant.h"
 #import "NSString+KPKCommands.h"
 #import "NSString+KPKEmpty.h"
-#import "NSString+XMLUtilities.h"
+#import "NSString+KPKXmlUtilities.h"
 #import "NSUUID+KPKAdditions.h"
 

@@ -19,16 +19,16 @@
 
 - (void)testKeyResizing {
   NSData *data = [NSData kpk_dataWithRandomBytes:128];
-  NSData *result = [data resizeKeyDataTo:32];
+  NSData *result = [data kpk_resizeKeyDataTo:32];
   XCTAssertEqualObjects(result, data.SHA256Hash);
-  result = [data resizeKeyDataTo:64];
+  result = [data kpk_resizeKeyDataTo:64];
   XCTAssertEqualObjects(result, data.SHA512Hash);
   NSRange range = NSMakeRange(32, 64);
-  result = [data resizeKeyDataRange:range toLength:32];
+  result = [data kpk_resizeKeyDataRange:range toLength:32];
   XCTAssertEqualObjects(result, [data subdataWithRange:range].SHA256Hash);
-  result = [data resizeKeyDataTo:50];
+  result = [data kpk_resizeKeyDataTo:50];
   XCTAssertEqualObjects(result, [data.SHA512Hash subdataWithRange:NSMakeRange(0, 50)]);
-  result = [data resizeKeyDataTo:110];
+  result = [data kpk_resizeKeyDataTo:110];
 }
 
 

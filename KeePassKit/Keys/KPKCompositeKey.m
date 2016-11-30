@@ -114,7 +114,7 @@
     *hmacKey = [NSData dataWithBytes:hmacBuffer length:64];
   }
   /* do not use last 0-byte for key computation */
-  return [workingData resizeKeyDataRange:NSMakeRange(0, workingData.length - 1) toLength:cipher.keyLength];
+  return [workingData kpk_resizeKeyDataRange:NSMakeRange(0, workingData.length - 1) toLength:cipher.keyLength];
 }
 
 - (NSData *)_createKdbDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {

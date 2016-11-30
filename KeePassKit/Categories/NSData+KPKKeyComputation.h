@@ -10,10 +10,10 @@
 
 @interface NSData (KPKKeyComputation)
 
-- (NSData *)resizeKeyDataRange:(NSRange)range toLength:(NSUInteger)length;
-- (NSData *)resizeKeyDataTo:(NSUInteger)length;
+- (NSData *)kpk_resizeKeyDataRange:(NSRange)range toLength:(NSUInteger)length;
+- (NSData *)kpk_resizeKeyDataTo:(NSUInteger)length;
 
-- (NSData *)hmacKeyForIndex:(uint64_t)index;
-- (NSData *)headerHmacWithKey:(NSData *)key;
+- (NSData *)kpk_hmacKeyForIndex:(uint64_t)index;
+- (NSData *)kpk_headerHmacWithKey:(NSData *)key;
 
 @end

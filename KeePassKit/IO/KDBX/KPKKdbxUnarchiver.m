@@ -161,7 +161,7 @@
       return nil;
     }
     NSData *expectedHeaderHmac = [self.data subdataWithRange:NSMakeRange(self.headerLength + 32, 32)];
-    NSData *headerMac = [self.headerData headerHmacWithKey:hmacKey];
+    NSData *headerMac = [self.headerData kpk_headerHmacWithKey:hmacKey];
     if(![headerMac isEqualToData:expectedHeaderHmac]) {
       KPKCreateError(error, KPKErrorKdbxHeaderHashVerificationFailed);
       return nil;

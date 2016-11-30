@@ -11,11 +11,11 @@
 
 @implementation NSData (KPKKeyComputation)
 
-- (NSData *)resizeKeyDataTo:(NSUInteger)length {
-  return [self resizeKeyDataRange:NSMakeRange(0, self.length) toLength:length];
+- (NSData *)kpk_resizeKeyDataTo:(NSUInteger)length {
+  return [self kpk_resizeKeyDataRange:NSMakeRange(0, self.length) toLength:length];
 }
 
-- (NSData *)resizeKeyDataRange:(NSRange)range toLength:(NSUInteger)length {
+- (NSData *)kpk_resizeKeyDataRange:(NSRange)range toLength:(NSUInteger)length {
   
   NSAssert((range.location + range.length) <= self.length, @"");
   
@@ -51,7 +51,7 @@
   return [NSData dataWithBytes:output length:length];
 }
 
-- (NSData *)hmacKeyForIndex:(uint64_t)index {
+- (NSData *)kpk_hmacKeyForIndex:(uint64_t)index {
   //NSAssert(self.length == 64, @"Invalid data size. HeaderMac required 64 byte of data!");
   
   /* ensure endianess */
@@ -66,8 +66,8 @@
   return nil;
 }
 
-- (NSData *)headerHmacWithKey:(NSData *)key {
-  key = [key hmacKeyForIndex:UINT64_MAX];
+- (NSData *)kpk_headerHmacWithKey:(NSData *)key {
+  key = [key kpk_hmacKeyForIndex:UINT64_MAX];
   uint8_t buffer[32];
   CCHmac(kCCHmacAlgSHA256, key.bytes, key.length, self.bytes, self.length, buffer);
   return [NSData dataWithBytes:buffer length:32];

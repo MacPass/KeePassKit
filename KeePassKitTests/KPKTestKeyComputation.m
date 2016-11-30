@@ -30,7 +30,7 @@
   NSData *key = [NSData dataWithBytesNoCopy:keyBytes length:sizeof(keyBytes) freeWhenDone:NO];
   NSData *data = [NSData dataWithBytesNoCopy:dataBytes length:sizeof(dataBytes) freeWhenDone:NO];
   
-  NSData *hmac = [data headerHmacWithKey:key];
+  NSData *hmac = [data kpk_headerHmacWithKey:key];
   
 }
 

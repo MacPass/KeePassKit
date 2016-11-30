@@ -283,7 +283,7 @@
     [self.dataWriter writeData:encryptedData];
   }
   else {
-    NSData *headerHmac = [self.dataWriter.writtenData headerHmacWithKey:hmacKey];
+    NSData *headerHmac = [self.dataWriter.writtenData kpk_headerHmacWithKey:hmacKey];
     
     /* add header hash */
     [self.dataWriter writeData:self.headerHash];

@@ -44,7 +44,7 @@
 #import "KPKWindowAssociation.h"
 
 #import "NSColor+KPKAdditions.h"
-#import "NSString+XMLUtilities.h"
+#import "NSString+KPKXmlUtilities.h"
 
 #import "KPKRandomStream.h"
 
@@ -115,11 +115,11 @@
     self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
   }
   
-  KPKAddXmlElement(metaElement, kKPKXmlDatabaseName, metaData.databaseName.XMLCompatibleString);
+  KPKAddXmlElement(metaElement, kKPKXmlDatabaseName, metaData.databaseName.kpk_xmlCompatibleString);
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseNameChanged, KPKStringFromDate(self.dateFormatter, metaData.databaseNameChanged));
-  KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescription, metaData.databaseDescription.XMLCompatibleString);
+  KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescription, metaData.databaseDescription.kpk_xmlCompatibleString);
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescriptionChanged, KPKStringFromDate(self.dateFormatter, metaData.databaseDescriptionChanged));
-  KPKAddXmlElement(metaElement, kKPKXmlDefaultUserName, metaData.defaultUserName.XMLCompatibleString);
+  KPKAddXmlElement(metaElement, kKPKXmlDefaultUserName, metaData.defaultUserName.kpk_xmlCompatibleString);
   KPKAddXmlElement(metaElement, kKPKXmlDefaultUserNameChanged, KPKStringFromDate(self.dateFormatter, metaData.defaultUserNameChanged));
   KPKAddXmlElement(metaElement, kKPKXmlMaintenanceHistoryDays, KPKStringFromLong(metaData.maintenanceHistoryDays));
   KPKAddXmlElement(metaElement, kKPKXmlColor, metaData.color.kpk_hexString);
@@ -193,15 +193,15 @@
     
   // Add the standard properties
   KPKAddXmlElement(groupElement, kKPKXmlUUID, group.uuid.kpk_encodedString);
-  KPKAddXmlElement(groupElement, kKPKXmlName, group.title.XMLCompatibleString);
-  KPKAddXmlElement(groupElement, kKPKXmlNotes, group.notes.XMLCompatibleString);
+  KPKAddXmlElement(groupElement, kKPKXmlName, group.title.kpk_xmlCompatibleString);
+  KPKAddXmlElement(groupElement, kKPKXmlNotes, group.notes.kpk_xmlCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlIconId, KPKStringFromLong(group.iconId));
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:group.timeInfo];
   [groupElement addChild:timesElement];
   
   KPKAddXmlElement(groupElement, kKPKXmlIsExpanded, KPKStringFromBool(group.isExpanded));
-  NSString *keystrokes = (group.hasDefaultAutotypeSequence ? nil : group.defaultAutoTypeSequence.XMLCompatibleString);
+  NSString *keystrokes = (group.hasDefaultAutotypeSequence ? nil : group.defaultAutoTypeSequence.kpk_xmlCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlDefaultAutoTypeSequence, keystrokes);
   KPKAddXmlElement(groupElement, kKPKXmlEnableAutoType, stringFromInhertiBool(group.isAutoTypeEnabled));
   KPKAddXmlElement(groupElement, kKPKXmlEnableSearching, stringFromInhertiBool(group.isSearchEnabled));
@@ -234,8 +234,8 @@
   }
   KPKAddXmlElement(entryElement, @"ForegroundColor", entry.foregroundColor.kpk_hexString);
   KPKAddXmlElement(entryElement, @"BackgroundColor", entry.backgroundColor.kpk_hexString);
-  KPKAddXmlElement(entryElement, @"OverrideURL", entry.overrideURL.XMLCompatibleString);
-  KPKAddXmlElement(entryElement, @"Tags", [entry.tags componentsJoinedByString:@";"].XMLCompatibleString);
+  KPKAddXmlElement(entryElement, @"OverrideURL", entry.overrideURL.kpk_xmlCompatibleString);
+  KPKAddXmlElement(entryElement, @"Tags", [entry.tags componentsJoinedByString:@";"].kpk_xmlCompatibleString);
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:entry.timeInfo];
   [entryElement addChild:timesElement];
@@ -286,14 +286,14 @@
   KPKAddXmlElement(autotypeElement, kKPKXmlEnabled, KPKStringFromBool(autotype.enabled));
   NSString *obfuscate = autotype.obfuscateDataTransfer ? @"1" : @"0";
   KPKAddXmlElement(autotypeElement, kKPKXmlDataTransferObfuscation, obfuscate);
-  NSString *keystrokes = autotype.hasDefaultKeystrokeSequence ? nil : autotype.defaultKeystrokeSequence.XMLCompatibleString;
+  NSString *keystrokes = autotype.hasDefaultKeystrokeSequence ? nil : autotype.defaultKeystrokeSequence.kpk_xmlCompatibleString;
   KPKAddXmlElementIfNotNil(autotypeElement, kKPKXmlDefaultSequence, keystrokes);
   
   if((autotype.associations).count > 0) {
     for(KPKWindowAssociation *association in autotype.associations) {
       DDXMLElement *associationsElement = [DDXMLElement elementWithName:kKPKXmlAssociation];
-      KPKAddXmlElement(associationsElement, kKPKXmlWindow, association.windowTitle.XMLCompatibleString);
-      NSString *keyStrokes = (association.hasDefaultKeystrokeSequence ? @"" : association.keystrokeSequence.XMLCompatibleString);
+      KPKAddXmlElement(associationsElement, kKPKXmlWindow, association.windowTitle.kpk_xmlCompatibleString);
+      NSString *keyStrokes = (association.hasDefaultKeystrokeSequence ? @"" : association.keystrokeSequence.kpk_xmlCompatibleString);
       KPKAddXmlElement(associationsElement, kKPKXmlKeystrokeSequence, keyStrokes);
       [autotypeElement addChild:associationsElement];
     }
@@ -329,7 +329,7 @@
    to prevent XML malformation
    */
   BOOL usesRandomStream = (self.randomStream != nil);
-  NSString *attributeValue = (usesRandomStream && isProtected) ? attribute.value : attribute.value.XMLCompatibleString;
+  NSString *attributeValue = (usesRandomStream && isProtected) ? attribute.value : attribute.value.kpk_xmlCompatibleString;
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue stringValue:attributeValue];
   if(isProtected) {
     NSString *attributeName = usesRandomStream ? kKPKXmlProtected : kKPKXmlProtectInMemory;
@@ -356,7 +356,7 @@
 
 - (DDXMLElement *)_xmlBinary:(KPKBinary *)binary {
   DDXMLElement *binaryElement = [DDXMLElement elementWithName:kKPKXmlBinary];
-  KPKAddXmlElement(binaryElement, kKPKXmlKey, binary.name.XMLCompatibleString);
+  KPKAddXmlElement(binaryElement, kKPKXmlKey, binary.name.kpk_xmlCompatibleString);
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue];
   [binaryElement addChild:valueElement];
   NSUInteger reference = [self.delegate writer:self referenceForBinary:binary];
@@ -382,7 +382,7 @@
     customDataElement = [DDXMLElement elementWithName:kKPKXmlCustomData];
     for (KPKBinary *binary in customData) {
       DDXMLElement *itemElement = [DDXMLElement elementWithName:kKPKXmlCustomDataItem];
-      KPKAddXmlElement(itemElement, kKPKXmlKey, binary.name.XMLCompatibleString);
+      KPKAddXmlElement(itemElement, kKPKXmlKey, binary.name.kpk_xmlCompatibleString);
       KPKAddXmlElement(itemElement, kKPKXmlValue, [binary encodedStringUsingCompression:NO]);
       [customDataElement addChild:itemElement];
     }

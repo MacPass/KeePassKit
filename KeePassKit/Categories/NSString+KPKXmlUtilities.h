@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSString (XMLUtilities)
+@interface NSString (KPKXmlUtilities)
 
-@property (readonly) NSString *XMLCompatibleString;
+@property (readonly) NSString *kpk_xmlCompatibleString;
 
 @end

@@ -28,7 +28,7 @@
 #import "KPKErrors.h"
 
 #import "NSString+KPKCommands.h"
-#import "NSString+XMLUtilities.h"
+#import "NSString+KPKXmlUtilities.h"
 #import "NSData+KPKRandom.h"
 #import "NSData+KPKXor.h"
 /*
@@ -122,7 +122,7 @@
     return NO; // No string, so we cannot process it further
   }
   /* We need to make the key valid, as they are never protected */
-  *ioValue = ((NSString *)*ioValue).XMLCompatibleString;
+  *ioValue = ((NSString *)*ioValue).kpk_xmlCompatibleString;
   if([self.entry hasAttributeWithKey:*ioValue]) {
     NSString *copy = [*ioValue copy];
     *ioValue = [self.entry proposedKeyForAttributeKey:copy];
