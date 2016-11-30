@@ -20,7 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <AppKit/AppKit.h>
 
 @interface NSColor (KeePassKit)
 /**
@@ -29,7 +29,7 @@
  *	@param	hex	The String to parse
  *	@return	NSColor created form the hex string
  */
-+ (NSColor *)colorWithHexString:(NSString *)hex;
++ (NSColor *)kpk_colorWithHexString:(NSString *)hex;
 /**
  *  Creates an NSCOlor object form the Data provieded
  *  data shoule be of the following format:
@@ -38,22 +38,22 @@
  *  @param	data	Date to parse as color
  *  @return	NSColor object with the suplied values set
  */
-+ (NSColor *)colorWithData:(NSData *)data;
++ (NSColor *)kpk_colorWithData:(NSData *)data;
 /**
  *  Generates a Hexstring representing the color
  *  @param	color	Color to convert to hexadecimal format
  *  @return	string with color encoded in hexadecimal format
  */
-+ (NSString *)hexStringFromColor:(NSColor *)color;
++ (NSString *)kpk_hexStringFromColor:(NSColor *)color;
 /**
  *  Return a hexadecimal string representation of the color
  *  @return	hexadecimal string of the recieving NSColor object
  */
-@property (nonatomic, readonly, copy) NSString *hexString;
+@property (nonatomic, readonly, copy) NSString *kpk_hexString;
 /**
  *  Returns the color represented as 4 byte data. This format is used in KDB files
  *  @return	NSData for the receiving color
  */
-@property (nonatomic, readonly, copy) NSData *colorData;
+@property (nonatomic, readonly, copy) NSData *kpk_colorData;
 
 @end

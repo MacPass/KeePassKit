@@ -122,7 +122,7 @@
   KPKAddXmlElement(metaElement, kKPKXmlDefaultUserName, metaData.defaultUserName.XMLCompatibleString);
   KPKAddXmlElement(metaElement, kKPKXmlDefaultUserNameChanged, KPKStringFromDate(self.dateFormatter, metaData.defaultUserNameChanged));
   KPKAddXmlElement(metaElement, kKPKXmlMaintenanceHistoryDays, KPKStringFromLong(metaData.maintenanceHistoryDays));
-  KPKAddXmlElement(metaElement, kKPKXmlColor, [metaData.color hexString]);
+  KPKAddXmlElement(metaElement, kKPKXmlColor, metaData.color.kpk_hexString);
   /* Settings changed only in KDBX4 */
   if(kKPKKdbxFileVersion4 <= [self.delegate fileVersionForWriter:self]) {
     KPKAddXmlElement(metaElement, kKPKXmlSettingsChanged, KPKStringFromDate(self.dateFormatter, metaData.settingsChanged));
@@ -232,8 +232,8 @@
   if(entry.iconUUID) {
     KPKAddXmlElement(entryElement, kKPKXmlCustomIconUUID, [entry.iconUUID encodedString]);
   }
-  KPKAddXmlElement(entryElement, @"ForegroundColor", [entry.foregroundColor hexString]);
-  KPKAddXmlElement(entryElement, @"BackgroundColor", [entry.backgroundColor hexString]);
+  KPKAddXmlElement(entryElement, @"ForegroundColor", entry.foregroundColor.kpk_hexString);
+  KPKAddXmlElement(entryElement, @"BackgroundColor", entry.backgroundColor.kpk_hexString);
   KPKAddXmlElement(entryElement, @"OverrideURL", entry.overrideURL.XMLCompatibleString);
   KPKAddXmlElement(entryElement, @"Tags", [entry.tags componentsJoinedByString:@";"].XMLCompatibleString);
   

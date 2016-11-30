@@ -35,9 +35,9 @@
   NSString *greeHex = @"00FF0000";
   NSString *blueHex = @"0000ff00";
   
-  NSColor *red = [NSColor colorWithHexString:redHex];
-  NSColor *green = [NSColor colorWithHexString:greeHex];
-  NSColor *blue = [NSColor colorWithHexString:blueHex];
+  NSColor *red = [NSColor kpk_colorWithHexString:redHex];
+  NSColor *green = [NSColor kpk_colorWithHexString:greeHex];
+  NSColor *blue = [NSColor kpk_colorWithHexString:blueHex];
   
   XCTAssertEqual(red.redComponent, 1.0, @"Red color should have 100%% red");
   XCTAssertEqual(red.blueComponent, 0.0, @"Red color should have 0%% blue");
@@ -55,7 +55,7 @@
 - (void)testColorRefReading {
   uint32_t colorBytes = 0x000000FF;
   NSData *colorData = [NSData dataWithBytesNoCopy:&colorBytes length:3 freeWhenDone:NO];
-  NSColor *color = [NSColor colorWithData:colorData];
+  NSColor *color = [NSColor kpk_colorWithData:colorData];
   XCTAssertEqual([color redComponent], 1.0, @"Red 100%%");
   XCTAssertEqual([color greenComponent], 0.0, @"Green 0%%");
   XCTAssertEqual([color blueComponent], 0.0, @"Blue 100%%");
@@ -64,8 +64,8 @@
 - (void)testColorRefWriting {
   uint32_t colorBytes = 0x000000FF;
   NSData *colorData = [NSData dataWithBytesNoCopy:&colorBytes length:4 freeWhenDone:NO];
-  NSColor *color = [NSColor colorWithData:colorData];
-  XCTAssertEqualObjects(colorData, color.colorData, @"Conversion should result in same data");
+  NSColor *color = [NSColor kpk_colorWithData:colorData];
+  XCTAssertEqualObjects(colorData, color.kpk_colorData, @"Conversion should result in same data");
 }
 
 @end

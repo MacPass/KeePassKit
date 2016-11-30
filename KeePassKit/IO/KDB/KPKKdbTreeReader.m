@@ -621,7 +621,7 @@
     color = CFSwapInt32LittleToHost(color);
     /* Read only the first 3 bytes, leave the last one out */
     NSData *colorData = [NSData dataWithBytesNoCopy:&color length:3 freeWhenDone:NO];
-    metaData.color = [NSColor colorWithData:colorData];
+    metaData.color = [NSColor kpk_colorWithData:colorData];
   }
 }
 

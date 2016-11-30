@@ -25,15 +25,15 @@
 
 @implementation NSColor (KeePassKit)
 
-+ (NSColor *)colorWithHexString:(NSString *)hex {
++ (NSColor *)kpk_colorWithHexString:(NSString *)hex {
   if([hex hasPrefix:@"#"]) {
     hex = [hex substringFromIndex:1];
   }
   NSData *hexData = hex.dataFromHexString;
-  return [self colorWithData:hexData];
+  return [self kpk_colorWithData:hexData];
 }
 
-+ (NSColor *)colorWithData:(NSData *)data {
++ (NSColor *)kpk_colorWithData:(NSData *)data {
   if(data.length != 3 && data.length != 4) {
     return nil; // Unsupported data format
   }
@@ -49,11 +49,11 @@
   return [NSColor colorWithCalibratedRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];
 }
 
-+ (NSString *)hexStringFromColor:(NSColor *)color {
-  return [color hexString];
++ (NSString *)kpk_hexStringFromColor:(NSColor *)color {
+  return [color kpk_hexString];
 }
 
-- (NSString *)hexString {
+- (NSString *)kpk_hexString {
   NSColor *rgbColor = [self colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]];
   if(!rgbColor) {
     return nil;
@@ -64,7 +64,7 @@
           (int)(rgbColor.blueComponent * 255)];
 }
 
-- (NSData *)colorData {
+- (NSData *)kpk_colorData {
   NSColor *rgbColor = [self colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]];
   if(!rgbColor) {
     return nil;
