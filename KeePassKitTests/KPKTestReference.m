@@ -47,13 +47,13 @@
   self.entry2.title = [[NSString alloc] initWithFormat:@"Nothing{ref:t@i:%@}Changed", self.entry1.uuid.UUIDString];;
   self.entry2.url = @"-Entry2URL-";
   
-  NSString *result = [self.entry2.title resolveReferencesWithTree:self.tree];
+  NSString *result = [self.entry2.title kpk_resolveReferencesWithTree:self.tree];
   XCTAssertTrue([result isEqualToString:@"Nothing-Entry1Title-Changed"], @"Reference with delemited UUID string matches!");
   
   NSString *undelemitedUUIDString = [self.entry1.uuid.UUIDString stringByReplacingOccurrencesOfString:@"-" withString:@""];
   self.entry2.title = [[NSString alloc] initWithFormat:@"Nothing{ref:t@i:%@}Changed", undelemitedUUIDString];;
   
-  result = [self.entry2.title resolveReferencesWithTree:self.tree];
+  result = [self.entry2.title kpk_resolveReferencesWithTree:self.tree];
   XCTAssertTrue([result isEqualToString:@"Nothing-Entry1Title-Changed"], @"Reference with undelemtied UUID string matches!");
 }
 
@@ -61,7 +61,7 @@
   self.entry1.title = [[NSString alloc] initWithFormat:@"Title1{REF:A@i:%@}", self.entry2.uuid.UUIDString];
   self.entry2.title = [[NSString alloc] initWithFormat:@"Nothing{REF:t@I:%@}Changed", self.entry1.uuid.UUIDString];
   
-  NSString *result = [self.entry2.title resolveReferencesWithTree:self.tree];
+  NSString *result = [self.entry2.title kpk_resolveReferencesWithTree:self.tree];
   XCTAssertTrue([result isEqualToString:@"NothingTitle1-Entry2URL-Changed"], @"Replaced Strings should match");
 }
 
@@ -69,15 +69,15 @@
   self.entry1.title = @"Title1";
   self.entry2.title = [[NSString alloc] initWithFormat:@"{REF:T@I:%@-}", self.entry1.uuid.UUIDString];
   
-  XCTAssertNoThrow([self.entry2.title resolveReferencesWithTree:self.tree], @"Malformed UUID string does not throw exception!");
-  XCTAssertTrue([[self.entry2.title resolveReferencesWithTree:self.tree] isEqualToString:self.entry2.title], @"Malformed UUID does not yield a match!");
+  XCTAssertNoThrow([self.entry2.title kpk_resolveReferencesWithTree:self.tree], @"Malformed UUID string does not throw exception!");
+  XCTAssertTrue([[self.entry2.title kpk_resolveReferencesWithTree:self.tree] isEqualToString:self.entry2.title], @"Malformed UUID does not yield a match!");
 }
 
 - (void)testReferncePasswordByTitle {
   self.entry1.title = [[NSString alloc] initWithFormat:@"Title1{REF:A@i:%@}", self.entry2.uuid.UUIDString];
   self.entry2.title = [[NSString alloc] initWithFormat:@"Nothing{REF:t@I:%@}Changed", self.entry1.uuid.UUIDString];
   
-  NSString *result = [self.entry2.title resolveReferencesWithTree:self.tree];
+  NSString *result = [self.entry2.title kpk_resolveReferencesWithTree:self.tree];
   XCTAssertTrue([result isEqualToString:@"NothingTitle1-Entry2URL-Changed"], @"Replaced Strings should match");
 }
 

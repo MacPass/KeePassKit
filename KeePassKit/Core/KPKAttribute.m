@@ -27,7 +27,7 @@
 #import "KPKGroup.h"
 #import "KPKErrors.h"
 
-#import "NSString+Commands.h"
+#import "NSString+KPKCommands.h"
 #import "NSString+XMLUtilities.h"
 #import "NSData+KPKRandom.h"
 #import "NSData+KPKXor.h"
@@ -139,7 +139,7 @@
 }
 
 - (NSString *)evaluatedValue {
-  return [self.value finalValueForEntry:self.entry];
+  return [self.value kpk_finalValueForEntry:self.entry];
 }
 
 - (void)setValue:(NSString *)value {

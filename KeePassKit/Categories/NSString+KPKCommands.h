@@ -25,7 +25,7 @@
 @class KPKEntry;
 @class KPKTree;
 
-@interface NSString (Autotype)
+@interface NSString (KPKAutotype)
 
 /**
  *  Normalizes the Autotype sequence by using only the long-format for all Entries.
@@ -33,34 +33,34 @@
  *
  *  @return NSString with all sequences normalized to internal state
  */
-@property (nonatomic, readonly, copy) NSString *normalizedAutotypeSequence;
+@property (nonatomic, readonly, copy) NSString *kpk_normalizedAutotypeSequence;
 /**
  *  Determines if the command is valid. Currently is only bracket-missmatch aware.
  *
  *  @return YES, if the command is valid, NO otherweise.
  */
-@property (nonatomic, readonly) BOOL validCommand;
+@property (nonatomic, readonly) BOOL kpk_validCommand;
 
 @end
 
-@interface NSString (Reference)
+@interface NSString (KPKReference)
 
-- (NSString *)resolveReferencesWithTree:(KPKTree *)tree;
+- (NSString *)kpk_resolveReferencesWithTree:(KPKTree *)tree;
 
 @end
 
-@interface NSString (Placeholder)
+@interface NSString (KPKPlaceholder)
 /**
  *	Evaluates all placeholders inside the string an replaces them with values found in the entry
  *	@param	entry	The enty to use a source
  *	@return	NSString with all found placeholder filled
  */
-- (NSString *)evaluatePlaceholderWithEntry:(KPKEntry *)entry;
+- (NSString *)kpk_evaluatePlaceholderWithEntry:(KPKEntry *)entry;
 
 @end
 
-@interface NSString (Evaluation)
+@interface NSString (KPKEvaluation)
 
-- (NSString *)finalValueForEntry:(KPKEntry *)entry;
+- (NSString *)kpk_finalValueForEntry:(KPKEntry *)entry;
 
 @end

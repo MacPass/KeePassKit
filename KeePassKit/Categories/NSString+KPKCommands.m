@@ -20,7 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSString+Commands.h"
+#import "NSString+KPKCommands.h"
 #import "KPKNode_Private.h"
 #import "KPKEntry.h"
 #import "KPKAttribute.h"
@@ -174,7 +174,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketLeft withString:kKPKAutotypeCurlyBracketLeft options:0 range:NSMakeRange(0, mutableCommand.length)];
   [mutableCommand replaceOccurrencesOfString:kKPKAutotypeShortCurlyBracketRight withString:kKPKAutotypeCurlyBracketRight options:0 range:NSMakeRange(0, mutableCommand.length)];
   
-  if(![mutableCommand validCommand]) {
+  if(!mutableCommand.kpk_validCommand) {
     return nil;
   }
   /*
@@ -256,14 +256,14 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 @end
 
 
-@implementation NSString (Autotype)
+@implementation NSString (KPKAutotype)
 
-- (NSString *)normalizedAutotypeSequence {
+- (NSString *)kpk_normalizedAutotypeSequence {
   /* findCommand returns a copy */
   return [[KPKCommandCache sharedCache] findCommand:self];
 }
 
-- (BOOL)validCommand {
+- (BOOL)kpk_validCommand {
   if(self.length == 0) {
     return NO;
   }
@@ -298,7 +298,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 
 @end
 
-@implementation NSString (Reference)
+@implementation NSString (KPKReference)
 
 /*
  References are formatted as follows:
@@ -313,15 +313,15 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
  {REF:P@I:46C9B1FFBD4ABC4BBB260C6190BAD20C}
  {REF:<WantedField>@<SearchIn>:<Text>}
  */
-- (NSString *)resolveReferencesWithTree:(KPKTree *)tree {
+- (NSString *)kpk_resolveReferencesWithTree:(KPKTree *)tree {
   NSString *resolved;
   @autoreleasepool {
-    resolved = [self _resolveReferencesWithTree:tree recursionLevel:0];
+    resolved = [self _kpk_resolveReferencesWithTree:tree recursionLevel:0];
   }
   return resolved;
 }
 
-- (NSString *)_resolveReferencesWithTree:(KPKTree *)tree recursionLevel:(NSUInteger)level {
+- (NSString *)_kpk_resolveReferencesWithTree:(KPKTree *)tree recursionLevel:(NSUInteger)level {
   /* No tree, no real references */
   if(!tree) {
     return self;
@@ -339,7 +339,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     NSString *valueField = [self substringWithRange:[result rangeAtIndex:1]];
     NSString *searchField = [self substringWithRange:[result rangeAtIndex:2]];
     NSString *criteria = [self substringWithRange:[result rangeAtIndex:3]];
-    NSString *substitute = [self _retrieveValueOfKey:valueField
+    NSString *substitute = [self _kpk_retrieveValueOfKey:valueField
                                              withKey:searchField
                                             matching:criteria
                                             withTree:tree];
@@ -348,10 +348,10 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
       didReplace = YES;
     }
   }];
-  return (didReplace ? [mutableSelf _resolveReferencesWithTree:tree recursionLevel:level+1] : [self copy]);
+  return (didReplace ? [mutableSelf _kpk_resolveReferencesWithTree:tree recursionLevel:level+1] : [self copy]);
 }
 
-- (NSString *)_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match withTree:(KPKTree *)tree {
+- (NSString *)_kpk_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match withTree:(KPKTree *)tree {
   /* Custom and UUID will get special treatment, so we do not collect them inside the array */
   _attributeKeyForReferenceKey = @{
                             kKPKReferenceTitleKey : kKPKTitleKey,
@@ -421,17 +421,17 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 
 @end
 
-@implementation NSString (Placeholder)
+@implementation NSString (KPKPlaceholder)
 
-- (NSString *)evaluatePlaceholderWithEntry:(KPKEntry *)entry {
+- (NSString *)kpk_evaluatePlaceholderWithEntry:(KPKEntry *)entry {
   NSString *evaluated;
   @autoreleasepool {
-    evaluated = [self _evaluatePlaceholderWithEntry:entry recursionLevel:0];
+    evaluated = [self _kpk_evaluatePlaceholderWithEntry:entry recursionLevel:0];
   }
   return evaluated;
 }
 
-- (NSString *)_evaluatePlaceholderWithEntry:(KPKEntry *)entry recursionLevel:(NSUInteger)recursion {
+- (NSString *)_kpk_evaluatePlaceholderWithEntry:(KPKEntry *)entry recursionLevel:(NSUInteger)recursion {
   if(recursion > _KPKMaxiumRecursionLevel) {
     return [self copy];
   }
@@ -542,16 +542,16 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   if([supstitudedString isEqualToString:self]) {
     return [self copy];
   }
-  return [supstitudedString _evaluatePlaceholderWithEntry:entry recursionLevel:recursion + 1];
+  return [supstitudedString _kpk_evaluatePlaceholderWithEntry:entry recursionLevel:recursion + 1];
 }
 
 
 @end
 
-@implementation NSString (Evaluation)
+@implementation NSString (KPKEvaluation)
 
-- (NSString *)finalValueForEntry:(KPKEntry *)entry {
-  return[[self resolveReferencesWithTree:entry.tree] evaluatePlaceholderWithEntry:entry];
+- (NSString *)kpk_finalValueForEntry:(KPKEntry *)entry {
+  return[[self kpk_resolveReferencesWithTree:entry.tree] kpk_evaluatePlaceholderWithEntry:entry];
 }
 
 @end
