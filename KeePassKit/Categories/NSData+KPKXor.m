@@ -20,19 +20,21 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSMutableData+KeePassKit.h"
+#import "NSData+KPKXor.h"
 
-@implementation NSMutableData (KeePassKit)
+@implementation NSData (KPKXor)
 
-- (void)xorWithKey:(NSData *)key {
+- (NSData *)kpk_dataXoredWithKey:(NSData *)key {
   if(key.length < self.length) {
     NSAssert(NO, @"Key has to be at least as long as data");
   }
-  uint8_t *dataPointer = self.mutableBytes;
+  uint8_t buffer[self.length];
+  [self getBytes:buffer length:self.length];
   const uint8_t *keyPointer = key.bytes;
   for(NSUInteger byteIndex = 0; byteIndex < self.length; byteIndex++) {
-    dataPointer[byteIndex] = dataPointer[byteIndex] ^ keyPointer[byteIndex];
+    buffer[byteIndex] ^= keyPointer[byteIndex];
   }
+  return [NSData dataWithBytes:buffer length:self.length];
 }
 
 @end

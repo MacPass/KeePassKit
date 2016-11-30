@@ -36,7 +36,7 @@
 
 #import "NSString+Empty.h"
 #import "NSData+KPKRandom.h"
-#import "NSDate+Packed.h"
+#import "NSDate+KPKPacked.h"
 #import "NSColor+KeePassKit.h"
 
 #import "NSUUID+KeePassKit.h"
@@ -410,13 +410,13 @@
   BOOL isEntry = [node isKindOfClass:[KPKEntry class]];
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryCreationTime : KPKFieldTypeGroupCreationTime )
-               data:[NSDate packedBytesFromDate:node.timeInfo.creationDate]];
+               data:[NSDate kpk_packedBytesFromDate:node.timeInfo.creationDate]];
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryModificationTime : KPKFieldTypeGroupModificationTime )
-               data:[NSDate packedBytesFromDate:node.timeInfo.modificationDate]];
+               data:[NSDate kpk_packedBytesFromDate:node.timeInfo.modificationDate]];
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryAccessTime : KPKFieldTypeGroupAccessTime )
-               data:[NSDate packedBytesFromDate:node.timeInfo.accessDate]];
+               data:[NSDate kpk_packedBytesFromDate:node.timeInfo.accessDate]];
   
   /*
    Keepass stores only the date. If the date is set, expire is true.
@@ -424,7 +424,7 @@
    */
   NSDate *expiryDate = node.timeInfo.expires ? node.timeInfo.expirationDate : nil;
   [self _writeField:(isEntry ? KPKFieldTypeEntryExpiryDate : KPKFieldTypeGroupExpiryDate )
-               data:[NSDate packedBytesFromDate:expiryDate]];
+               data:[NSDate kpk_packedBytesFromDate:expiryDate]];
 }
 
 

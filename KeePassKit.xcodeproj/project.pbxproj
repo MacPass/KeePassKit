@@ -88,10 +88,10 @@
 		4C5CF3CD1BE10DF80019AA81 /* NSData+KPKKeyfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3B01BE10DF80019AA81 /* NSData+KPKKeyfile.m */; };
 		4C5CF3CE1BE10DF80019AA81 /* NSData+KPKRandom.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3B11BE10DF80019AA81 /* NSData+KPKRandom.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C5CF3CF1BE10DF80019AA81 /* NSData+KPKRandom.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3B21BE10DF80019AA81 /* NSData+KPKRandom.m */; };
-		4C5CF3D01BE10DF80019AA81 /* NSDate+Packed.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3B31BE10DF80019AA81 /* NSDate+Packed.h */; };
-		4C5CF3D11BE10DF80019AA81 /* NSDate+Packed.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3B41BE10DF80019AA81 /* NSDate+Packed.m */; };
-		4C5CF3D41BE10DF80019AA81 /* NSMutableData+KeePassKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3B71BE10DF80019AA81 /* NSMutableData+KeePassKit.h */; };
-		4C5CF3D51BE10DF80019AA81 /* NSMutableData+KeePassKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3B81BE10DF80019AA81 /* NSMutableData+KeePassKit.m */; };
+		4C5CF3D01BE10DF80019AA81 /* NSDate+KPKPacked.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3B31BE10DF80019AA81 /* NSDate+KPKPacked.h */; };
+		4C5CF3D11BE10DF80019AA81 /* NSDate+KPKPacked.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3B41BE10DF80019AA81 /* NSDate+KPKPacked.m */; };
+		4C5CF3D41BE10DF80019AA81 /* NSData+KPKXor.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3B71BE10DF80019AA81 /* NSData+KPKXor.h */; };
+		4C5CF3D51BE10DF80019AA81 /* NSData+KPKXor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3B81BE10DF80019AA81 /* NSData+KPKXor.m */; };
 		4C5CF3D61BE10DF80019AA81 /* NSString+Commands.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3B91BE10DF80019AA81 /* NSString+Commands.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C5CF3D71BE10DF80019AA81 /* NSString+Commands.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3BA1BE10DF80019AA81 /* NSString+Commands.m */; };
 		4C5CF3D81BE10DF80019AA81 /* NSString+Empty.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3BB1BE10DF80019AA81 /* NSString+Empty.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -340,10 +340,10 @@
 		4C5CF3B01BE10DF80019AA81 /* NSData+KPKKeyfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+KPKKeyfile.m"; sourceTree = "<group>"; };
 		4C5CF3B11BE10DF80019AA81 /* NSData+KPKRandom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+KPKRandom.h"; sourceTree = "<group>"; };
 		4C5CF3B21BE10DF80019AA81 /* NSData+KPKRandom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+KPKRandom.m"; sourceTree = "<group>"; };
-		4C5CF3B31BE10DF80019AA81 /* NSDate+Packed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Packed.h"; sourceTree = "<group>"; };
-		4C5CF3B41BE10DF80019AA81 /* NSDate+Packed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Packed.m"; sourceTree = "<group>"; };
-		4C5CF3B71BE10DF80019AA81 /* NSMutableData+KeePassKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableData+KeePassKit.h"; sourceTree = "<group>"; };
-		4C5CF3B81BE10DF80019AA81 /* NSMutableData+KeePassKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableData+KeePassKit.m"; sourceTree = "<group>"; };
+		4C5CF3B31BE10DF80019AA81 /* NSDate+KPKPacked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+KPKPacked.h"; sourceTree = "<group>"; };
+		4C5CF3B41BE10DF80019AA81 /* NSDate+KPKPacked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+KPKPacked.m"; sourceTree = "<group>"; };
+		4C5CF3B71BE10DF80019AA81 /* NSData+KPKXor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+KPKXor.h"; sourceTree = "<group>"; };
+		4C5CF3B81BE10DF80019AA81 /* NSData+KPKXor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+KPKXor.m"; sourceTree = "<group>"; };
 		4C5CF3B91BE10DF80019AA81 /* NSString+Commands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Commands.h"; sourceTree = "<group>"; };
 		4C5CF3BA1BE10DF80019AA81 /* NSString+Commands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Commands.m"; sourceTree = "<group>"; };
 		4C5CF3BB1BE10DF80019AA81 /* NSString+Empty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Empty.h"; sourceTree = "<group>"; };
@@ -787,10 +787,10 @@
 				4C5CF3B01BE10DF80019AA81 /* NSData+KPKKeyfile.m */,
 				4C5CF3B11BE10DF80019AA81 /* NSData+KPKRandom.h */,
 				4C5CF3B21BE10DF80019AA81 /* NSData+KPKRandom.m */,
-				4C5CF3B31BE10DF80019AA81 /* NSDate+Packed.h */,
-				4C5CF3B41BE10DF80019AA81 /* NSDate+Packed.m */,
-				4C5CF3B71BE10DF80019AA81 /* NSMutableData+KeePassKit.h */,
-				4C5CF3B81BE10DF80019AA81 /* NSMutableData+KeePassKit.m */,
+				4C5CF3B31BE10DF80019AA81 /* NSDate+KPKPacked.h */,
+				4C5CF3B41BE10DF80019AA81 /* NSDate+KPKPacked.m */,
+				4C5CF3B71BE10DF80019AA81 /* NSData+KPKXor.h */,
+				4C5CF3B81BE10DF80019AA81 /* NSData+KPKXor.m */,
 				4C5CF3B91BE10DF80019AA81 /* NSString+Commands.h */,
 				4C5CF3BA1BE10DF80019AA81 /* NSString+Commands.m */,
 				4C5CF3BB1BE10DF80019AA81 /* NSString+Empty.h */,
@@ -1128,7 +1128,7 @@
 				4CA1E48B1D8832BA00100002 /* blamka-round-ref.h in Headers */,
 				4C5CF41D1BE10E000019AA81 /* KPKTag.h in Headers */,
 				4C5CF40F1BE10E000019AA81 /* KPKEntry_Private.h in Headers */,
-				4C5CF3D41BE10DF80019AA81 /* NSMutableData+KeePassKit.h in Headers */,
+				4C5CF3D41BE10DF80019AA81 /* NSData+KPKXor.h in Headers */,
 				4C5CF41A1BE10E000019AA81 /* KPKNode_Private.h in Headers */,
 				4C5CF4931BE10E250019AA81 /* KPKXmlUtilities.h in Headers */,
 				4C5CF4241BE10E000019AA81 /* KPKWindowAssociation_Private.h in Headers */,
@@ -1139,7 +1139,7 @@
 				4C26021A1DB110930069B059 /* chacha20_simple.h in Headers */,
 				4C5CF4821BE10E200019AA81 /* KPKTreeReading.h in Headers */,
 				4CA1E48A1D8832BA00100002 /* blamka-round-opt.h in Headers */,
-				4C5CF3D01BE10DF80019AA81 /* NSDate+Packed.h in Headers */,
+				4C5CF3D01BE10DF80019AA81 /* NSDate+KPKPacked.h in Headers */,
 				4C11184F1DCCD93F00254E1D /* twofish.h in Headers */,
 				4C5C82A81D79C13800A1DEA6 /* KPKCipher_Private.h in Headers */,
 			);
@@ -1314,7 +1314,7 @@
 				4C0B9DA91DBFB4FC00E66CD6 /* KPKKdbxArchiver.m in Sources */,
 				4C5CF3DF1BE10DF80019AA81 /* NSUUID+KeePassKit.m in Sources */,
 				4C4FF1C21BE119E60015827B /* DDXMLNode.m in Sources */,
-				4C5CF3D51BE10DF80019AA81 /* NSMutableData+KeePassKit.m in Sources */,
+				4C5CF3D51BE10DF80019AA81 /* NSData+KPKXor.m in Sources */,
 				4C4E23041D7DC10700E58983 /* NSDictionary+KPKVariant.m in Sources */,
 				4CA1E3451D87F5ED00100002 /* KPKArgon2KeyDerivation.m in Sources */,
 				4C7C3F9A1D81D620008D8961 /* KPKAESKeyDerivation.m in Sources */,
@@ -1322,7 +1322,7 @@
 				4C0B9DB51DBFB4FC00E66CD6 /* KPKKdbUnarchiver.m in Sources */,
 				4CA6DB8F1DC3574200650417 /* KPKChaCha20RandomStream.m in Sources */,
 				4C5CF4581BE10E100019AA81 /* KPKDataStreamReader.m in Sources */,
-				4C5CF3D11BE10DF80019AA81 /* NSDate+Packed.m in Sources */,
+				4C5CF3D11BE10DF80019AA81 /* NSDate+KPKPacked.m in Sources */,
 				4C5CF42E1BE10E070019AA81 /* KPKFormat.m in Sources */,
 				4C5CF3C51BE10DF80019AA81 /* NSColor+KeePassKit.m in Sources */,
 				4C0B9D931DBFB49600E66CD6 /* KPKSalsa20RandomStream.m in Sources */,

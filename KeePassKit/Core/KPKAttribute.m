@@ -30,7 +30,7 @@
 #import "NSString+Commands.h"
 #import "NSString+XMLUtilities.h"
 #import "NSData+KPKRandom.h"
-#import "NSMutableData+KeePassKit.h"
+#import "NSData+KPKXor.h"
 /*
  References are formatted as follows:
  T	Title
@@ -45,11 +45,12 @@
  {REF:<WantedField>@<SearchIn>:<Text>}
 */
 
-@interface KPKAttribute () {
-  NSUInteger _length;
-  NSData *_xorPad;
-  NSMutableData *_protectedData;
-}
+@interface KPKAttribute ()
+
+@property (assign) NSUInteger length;
+@property (copy) NSData *xorPad;
+@property (copy) NSData *protectedData;
+
 @end
 
 @implementation KPKAttribute
@@ -81,21 +82,21 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
-    _key = [aDecoder decodeObjectOfClass:[NSString class] forKey:@"key"];
-    _xorPad = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"xorPad"];
-    _protectedData = [aDecoder decodeObjectOfClass:[NSData class] forKey:@"protectedData"];
-    _isProtected = [aDecoder decodeBoolForKey:@"isProtected"];
-    _length = [aDecoder decodeIntegerForKey:@"lenght"];
+    self.key = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(key))];
+    self.xorPad = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(xorPad))];
+    self.protectedData = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(protectedData))];
+    self.isProtected = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isProtected))];
+    self.length = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(length))];
   }
   return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  [aCoder encodeBool:self.isProtected forKey:@"isProtected"];
-  [aCoder encodeObject:self.key forKey:@"key"];
-  [aCoder encodeObject:_xorPad forKey:@"xorPad"];
-  [aCoder encodeObject:_protectedData forKey:@"protectedData"];
-  [aCoder encodeInteger:_length forKey:@"lenght"];
+  [aCoder encodeBool:self.isProtected forKey:NSStringFromSelector(@selector(isProtected))];
+  [aCoder encodeObject:self.key forKey:NSStringFromSelector(@selector(key))];
+  [aCoder encodeObject:self.xorPad forKey:NSStringFromSelector(@selector(xorPad))];
+  [aCoder encodeObject:self.protectedData forKey:NSStringFromSelector(@selector(protectedData))];
+  [aCoder encodeInteger:self.length forKey:NSStringFromSelector(@selector(length))];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
@@ -182,26 +183,19 @@
 }
 
 - (void)_encodeValue:(NSString *)string {
-  NSMutableData *stringData = [[string dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
+  NSData *stringData = [string dataUsingEncoding:NSUTF8StringEncoding];
   _length = stringData.length;
   if(_xorPad.length < _length) {
     _xorPad = [NSData kpk_dataWithRandomBytes:_length];
   }
-  [stringData xorWithKey:_xorPad];
-  if(!_protectedData) {
-    _protectedData = stringData;
-  }
-  else {
-    [_protectedData setData:stringData];
-  }
+  _protectedData = [stringData kpk_dataXoredWithKey:_xorPad];
 }
 
 - (NSString *)_decodedValue {
   if(_length == 0) {
     return @"";
   }
-  NSMutableData *stringData = [_protectedData mutableCopy];
-  [stringData xorWithKey:_xorPad];
+  NSData *stringData = [_protectedData kpk_dataXoredWithKey:_xorPad];
   return [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
 }
 

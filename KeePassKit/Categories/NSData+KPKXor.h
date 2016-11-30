@@ -22,8 +22,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSMutableData (KeePassKit)
+@interface NSData (KPKXor)
 
-- (void)xorWithKey:(NSData *)key;
+- (NSData *)kpk_dataXoredWithKey:(NSData *)key;
 
 @end

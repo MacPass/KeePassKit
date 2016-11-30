@@ -20,11 +20,11 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSDate+Packed.h"
+#import "NSDate+KPKPacked.h"
 
-@implementation NSDate (Packed)
+@implementation NSDate (KPKPacked)
 
-+ (NSDate *)dateFromPackedBytes:(uint8_t *)buffer {
++ (NSDate *)kpk_dateFromPackedBytes:(uint8_t *)buffer {
   uint32_t dw1, dw2, dw3, dw4, dw5;
   dw1 = (uint32_t)buffer[0]; dw2 = (uint32_t)buffer[1]; dw3 = (uint32_t)buffer[2];
   dw4 = (uint32_t)buffer[3]; dw5 = (uint32_t)buffer[4];
@@ -53,12 +53,12 @@
   return date;
 }
 
-+ (void)getPackedBytes:(uint8_t *)buffer fromDate:(NSDate *)date {
-  NSData *data = [self packedBytesFromDate:date];
++ (void)kpk_getPackedBytes:(uint8_t *)buffer fromDate:(NSDate *)date {
+  NSData *data = [self kpk_packedBytesFromDate:date];
   [data getBytes:buffer length:data.length];
 }
 
-+ (NSData *)packedBytesFromDate:(NSDate *)date {
++ (NSData *)kpk_packedBytesFromDate:(NSDate *)date {
   
   uint32_t year;
   uint32_t month;
