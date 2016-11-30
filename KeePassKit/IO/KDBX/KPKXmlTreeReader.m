@@ -53,8 +53,8 @@
 #import "DDXMLElementAdditions.h"
 
 #import "NSData+CommonCrypto.h"
-#import "NSUUID+KeePassKit.h"
-#import "NSColor+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
+#import "NSColor+KPKAdditions.h"
 
 @interface KPKXmlTreeReader ()
 
@@ -200,14 +200,14 @@
   data.protectNotes = KPKXmlBool(memoryProtectionElement, kKPKXmlProtectNotes);
   
   data.useTrash = KPKXmlBool(metaElement, kKPKXmlRecycleBinEnabled);
-  data.trashUuid = [NSUUID uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlRecycleBinUUID)];
+  data.trashUuid = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlRecycleBinUUID)];
   data.trashChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlRecycleBinChanged);
-  data.entryTemplatesGroup = [NSUUID uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlEntryTemplatesGroup)];
+  data.entryTemplatesGroup = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlEntryTemplatesGroup)];
   data.entryTemplatesGroupChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlEntryTemplatesGroupChanged);
   data.historyMaxItems = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxItems);
   data.historyMaxSize = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxSize);
-  data.lastSelectedGroup = [NSUUID uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlLastSelectedGroup)];
-  data.lastTopVisibleGroup = [NSUUID uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlLastTopVisibleGroup)];
+  data.lastSelectedGroup = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlLastSelectedGroup)];
+  data.lastTopVisibleGroup = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlLastTopVisibleGroup)];
   
   [self _parseCustomIcons:metaElement meta:data];
   [self _parseBinaries:metaElement meta:data];
@@ -215,7 +215,7 @@
 }
 
 - (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement {
-  NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlUUID)];
+  NSUUID *uuid = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlUUID)];
   KPKGroup *group = [[KPKGroup alloc] initWithUUID:uuid];
   
   group.updateTiming = NO;
@@ -227,7 +227,7 @@
   
   DDXMLElement *customIconUuidElement = [groupElement elementForName:kKPKXmlCustomIconUUID];
   if (customIconUuidElement != nil) {
-    group.iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
+    group.iconUUID = [NSUUID kpk_uuidWithEncodedString:[customIconUuidElement stringValue]];
   }
   
   DDXMLElement *timesElement = [groupElement elementForName:kKPKXmlTimes];
@@ -239,7 +239,7 @@
   
   group.isAutoTypeEnabled = parseInheritBool(groupElement, kKPKXmlEnableAutoType);
   group.isSearchEnabled = parseInheritBool(groupElement, kKPKXmlEnableSearching);
-  group.lastTopVisibleEntry = [NSUUID uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlLastTopVisibleEntry)];
+  group.lastTopVisibleEntry = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlLastTopVisibleEntry)];
   
   [self _parseCustomData:groupElement dataArray:group.mutableCustomData];
   
@@ -258,7 +258,7 @@
 }
 
 - (KPKEntry *)_parseEntry:(DDXMLElement *)entryElement ignoreHistory:(BOOL)ignoreHistory {
-  NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKXmlString(entryElement, kKPKXmlUUID)];
+  NSUUID *uuid = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(entryElement, kKPKXmlUUID)];
   KPKEntry *entry = [[KPKEntry alloc] initWithUUID:uuid];
   
   entry.updateTiming = NO;
@@ -267,7 +267,7 @@
   
   DDXMLElement *customIconUuidElement = [entryElement elementForName:kKPKXmlCustomIconUUID];
   if (customIconUuidElement != nil) {
-    entry.iconUUID = [NSUUID uuidWithEncodedString:[customIconUuidElement stringValue]];
+    entry.iconUUID = [NSUUID kpk_uuidWithEncodedString:[customIconUuidElement stringValue]];
   }
   
   entry.foregroundColor =  [NSColor kpk_colorWithHexString:KPKXmlString(entryElement, @"ForegroundColor")];
@@ -328,7 +328,7 @@
   self.iconMap = [[NSMutableDictionary alloc] init];
   DDXMLElement *customIconsElement = [root elementForName:kKPKXmlCustomIcons];
   for (DDXMLElement *iconElement in [customIconsElement elementsForName:kKPKXmlIcon]) {
-    NSUUID *uuid = [NSUUID uuidWithEncodedString:KPKXmlString(iconElement, kKPKXmlUUID)];
+    NSUUID *uuid = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(iconElement, kKPKXmlUUID)];
     KPKIcon *icon = [[KPKIcon alloc] initWithUUID:uuid encodedString:KPKXmlString(iconElement, kKPKXmlData)];
     [metaData addCustomIcon:icon];
     self.iconMap[ icon.uuid ] = icon;

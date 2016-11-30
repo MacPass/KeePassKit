@@ -8,7 +8,7 @@
 
 #import "KPKKeyDerivation.h"
 #import "KPKKeyDerivation_Private.h"
-#import "NSUUID+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
 
 NSString *const KPKKeyDerivationOptionUUID = @"$UUID";
 
@@ -17,11 +17,11 @@ NSString *const KPKKeyDerivationOptionUUID = @"$UUID";
 static NSMutableDictionary *_keyDerivations;
 
 + (NSDictionary *)defaultParameters {
-  return @{ KPKKeyDerivationOptionUUID: [self.class uuid].uuidData };
+  return @{ KPKKeyDerivationOptionUUID: [self.class uuid].kpk_uuidData };
 }
 
 + (NSUUID *)uuid {
-  return [NSUUID nullUUID];
+  return [NSUUID kpk_nullUUID];
 }
 
 + (void)_registerKeyDerivation:(Class)derivationClass {

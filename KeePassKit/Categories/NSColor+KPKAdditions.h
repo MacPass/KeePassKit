@@ -22,7 +22,7 @@
 
 #import <AppKit/AppKit.h>
 
-@interface NSColor (KeePassKit)
+@interface NSColor (KPKAdditions)
 /**
  *	Create an NSColor object form a hexadeciaml (eg #FF0000)
  *  Representation of a String

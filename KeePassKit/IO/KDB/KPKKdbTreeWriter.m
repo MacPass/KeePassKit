@@ -37,9 +37,9 @@
 #import "NSString+KPKEmpty.h"
 #import "NSData+KPKRandom.h"
 #import "NSDate+KPKPacked.h"
-#import "NSColor+KeePassKit.h"
+#import "NSColor+KPKAdditions.h"
 
-#import "NSUUID+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
 
 @interface KPKKdbTreeWriter ()
 @property (strong) KPKDataStreamWriter *dataWriter;
@@ -163,7 +163,7 @@
 }
 
 - (BOOL)_writeEntry:(KPKEntry *)entry {
-  [self _writeField:KPKFieldTypeEntryUUID data:entry.uuid.uuidData];
+  [self _writeField:KPKFieldTypeEntryUUID data:entry.uuid.kpk_uuidData];
   
   /* Shift all entries in the root group inside the first group */
   uint32_t groupId = [self _groupIdForGroup:entry.parent];
@@ -298,7 +298,7 @@
   for(KPKEntry *entry in _iconEntries) {
     KPKIcon *entryIcon = [self.tree.metaData findIcon:entry.iconUUID];
     if(entryIcon) {
-      [dataWriter writeData:[entry.uuid uuidData]];
+      [dataWriter writeData:entry.uuid.kpk_uuidData];
       NSInteger index = [icons indexOfObject:entryIcon];
       NSAssert(index != NSNotFound, @"Icon cannot be missing");
       [dataWriter write4Bytes:(uint32_t)index];

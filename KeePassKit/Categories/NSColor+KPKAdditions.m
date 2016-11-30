@@ -20,10 +20,10 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSColor+KeePassKit.h"
+#import "NSColor+KPKAdditions.h"
 #import "NSString+KPKHexdata.h"
 
-@implementation NSColor (KeePassKit)
+@implementation NSColor (KPKAdditions)
 
 + (NSColor *)kpk_colorWithHexString:(NSString *)hex {
   if([hex hasPrefix:@"#"]) {

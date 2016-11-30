@@ -28,7 +28,7 @@
 #import "KPKAESCipher.h"
 #import "KPKAESKeyDerivation.h"
 
-#import "NSUUID+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
 
 @interface KPKMetaData () {
   NSMutableDictionary *_customIconCache;
@@ -81,11 +81,11 @@
     _defaultUserName = [@"" copy];
     _defaultUserNameChanged = [[NSDate date] copy];
     _entryTemplatesGroupChanged = [[NSDate date] copy];
-    _entryTemplatesGroup = [[NSUUID nullUUID] copy];
+    _entryTemplatesGroup = [[NSUUID kpk_nullUUID] copy];
     _trashChanged = [[NSDate date] copy];
-    _trashUuid = [[NSUUID nullUUID] copy];
-    _lastSelectedGroup = [[NSUUID nullUUID] copy];
-    _lastTopVisibleGroup = [[NSUUID nullUUID] copy];
+    _trashUuid = [[NSUUID kpk_nullUUID] copy];
+    _lastSelectedGroup = [[NSUUID kpk_nullUUID] copy];
+    _lastTopVisibleGroup = [[NSUUID kpk_nullUUID] copy];
     _historyMaxItems = 10;
     _historyMaxSize = 6 * 1024 * 1024; // 6 MB
     _maintenanceHistoryDays = 365;

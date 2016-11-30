@@ -240,7 +240,7 @@ NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKN
 
 - (KPKFileVersion)minimumVersion {
   KPKFileVersion minimum = { KPKDatabaseFormatKdb, kKPKKdbFileVersion };
-  BOOL aesKdf = [self.metaData.keyDerivationParameters[KPKKeyDerivationOptionUUID] isEqual:[KPKAESKeyDerivation uuid].uuidData];
+  BOOL aesKdf = [self.metaData.keyDerivationParameters[KPKKeyDerivationOptionUUID] isEqual:[KPKAESKeyDerivation uuid].kpk_uuidData];
   BOOL entriesInRoot = self.root.entries.count > 0;
   BOOL publicData = self.metaData.mutableCustomPublicData.count > 0;
   if( !aesKdf || entriesInRoot || publicData ) {

@@ -31,7 +31,7 @@
 #import "KPKCompositeKey.h"
 #import "KPKBinary.h"
 
-#import "NSUUID+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
 
 #import "NSData+CommonCrypto.h"
 #import "NSData+KPKGzip.h"

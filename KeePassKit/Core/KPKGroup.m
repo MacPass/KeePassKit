@@ -33,7 +33,7 @@
 #import "KPKTree_Private.h"
 #import "KPKTimeInfo.h"
 
-#import "NSUUID+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
 
 @interface KPKGroup () {
 @private
@@ -83,7 +83,7 @@
     _entries = [@[] mutableCopy];
     _isAutoTypeEnabled = KPKInherit;
     _isSearchEnabled = KPKInherit;
-    _lastTopVisibleEntry = [NSUUID nullUUID];
+    _lastTopVisibleEntry = [NSUUID kpk_nullUUID];
     //self.updateTiming = YES;
   }
   return self;

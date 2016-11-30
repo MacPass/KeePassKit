@@ -20,18 +20,19 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSUUID+KeePassKit.h"
-#import "KPKUTIs.h"
+#import "NSUUID+KPKAdditions.h"
 #import "NSString+KPKHexdata.h"
 
+#import "KPKUTIs.h"
 
-@implementation NSUUID (KeePassKit)
 
-+ (NSUUID *)nullUUID {
+@implementation NSUUID (KPKAdditions)
+
++ (NSUUID *)kpk_nullUUID {
   return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-0000-0000-000000000000"];
 }
 
-+ (NSUUID *)uuidWithEncodedString:(NSString *)string {
++ (NSUUID *)kpk_uuidWithEncodedString:(NSString *)string {
   return [[NSUUID alloc] initWithEncodedUUIDString:string];
 }
 
@@ -68,20 +69,15 @@
   return self;
 }
 
-- (NSString *)encodedString {
-  return [self.uuidData base64EncodedStringWithOptions:0];
+- (NSString *)kpk_encodedString {
+  return [self.kpk_uuidData base64EncodedStringWithOptions:0];
 }
 
-- (NSData *)uuidData {
+- (NSData *)kpk_uuidData {
   uuid_t bytes;
   [self getUUIDBytes:bytes];
   return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
-
-@end
-
-@implementation NSUUID (Pasteboarding)
-
 
 #pragma mark -
 #pragma mark NSPasteboardReading

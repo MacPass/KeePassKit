@@ -26,7 +26,7 @@
 
 #import "DDXMLDocument.h"
 #import "DDXMLElementAdditions.h"
-#import "NSUUID+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
 
 #import "KPKKdbxFormat.h"
 #import "KPKNode_Private.h"
@@ -43,7 +43,7 @@
 #import "KPKAutotype.h"
 #import "KPKWindowAssociation.h"
 
-#import "NSColor+KeePassKit.h"
+#import "NSColor+KPKAdditions.h"
 #import "NSString+XMLUtilities.h"
 
 #import "KPKRandomStream.h"
@@ -145,14 +145,14 @@
   }
   
   KPKAddXmlElement(metaElement, kKPKXmlRecycleBinEnabled, KPKStringFromBool(metaData.useTrash));
-  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinUUID, [metaData.trashUuid encodedString]);
+  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinUUID, metaData.trashUuid.kpk_encodedString);
   KPKAddXmlElement(metaElement, kKPKXmlRecycleBinChanged, KPKStringFromDate(self.dateFormatter, metaData.trashChanged));
-  KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroup, [metaData.entryTemplatesGroup encodedString]);
+  KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroup, metaData.entryTemplatesGroup.kpk_encodedString);
   KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroupChanged, KPKStringFromDate(self.dateFormatter, metaData.entryTemplatesGroupChanged));
   KPKAddXmlElement(metaElement, kKPKXmlHistoryMaxItems, KPKStringFromLong(metaData.historyMaxItems));
   KPKAddXmlElement(metaElement, kKPKXmlHistoryMaxSize, KPKStringFromLong(metaData.historyMaxSize));
-  KPKAddXmlElement(metaElement, kKPKXmlLastSelectedGroup, [metaData.lastSelectedGroup encodedString]);
-  KPKAddXmlElement(metaElement, kKPKXmlLastTopVisibleGroup, [metaData.lastTopVisibleGroup encodedString]);
+  KPKAddXmlElement(metaElement, kKPKXmlLastSelectedGroup, metaData.lastSelectedGroup.kpk_encodedString);
+  KPKAddXmlElement(metaElement, kKPKXmlLastTopVisibleGroup, metaData.lastTopVisibleGroup.kpk_encodedString);
   
   /* only add binaries if we actuall should, ask the delegate! */
   if(!self.randomStream || kKPKKdbxFileVersion4 > [self.delegate fileVersionForWriter:self]) {
@@ -192,7 +192,7 @@
   DDXMLElement *groupElement = [DDXMLNode elementWithName:kKPKXmlGroup];
     
   // Add the standard properties
-  KPKAddXmlElement(groupElement, kKPKXmlUUID, [group.uuid encodedString]);
+  KPKAddXmlElement(groupElement, kKPKXmlUUID, group.uuid.kpk_encodedString);
   KPKAddXmlElement(groupElement, kKPKXmlName, group.title.XMLCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlNotes, group.notes.XMLCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlIconId, KPKStringFromLong(group.iconId));
@@ -205,7 +205,7 @@
   KPKAddXmlElement(groupElement, kKPKXmlDefaultAutoTypeSequence, keystrokes);
   KPKAddXmlElement(groupElement, kKPKXmlEnableAutoType, stringFromInhertiBool(group.isAutoTypeEnabled));
   KPKAddXmlElement(groupElement, kKPKXmlEnableSearching, stringFromInhertiBool(group.isSearchEnabled));
-  KPKAddXmlElement(groupElement, kKPKXmlLastTopVisibleEntry, [group.lastTopVisibleEntry encodedString]);
+  KPKAddXmlElement(groupElement, kKPKXmlLastTopVisibleEntry, group.lastTopVisibleEntry.kpk_encodedString);
   
   DDXMLElement *customDataElement = [self _xmlCustomData:group.mutableCustomData addEmptyElement:NO];
   if(customDataElement) {
@@ -227,10 +227,10 @@
   DDXMLElement *entryElement = [DDXMLNode elementWithName:kKPKXmlEntry];
   
   // Add the standard properties
-  KPKAddXmlElement(entryElement, kKPKXmlUUID, [entry.uuid encodedString]);
+  KPKAddXmlElement(entryElement, kKPKXmlUUID, entry.uuid.kpk_encodedString);
   KPKAddXmlElement(entryElement, kKPKXmlIconId, KPKStringFromLong(entry.iconId));
   if(entry.iconUUID) {
-    KPKAddXmlElement(entryElement, kKPKXmlCustomIconUUID, [entry.iconUUID encodedString]);
+    KPKAddXmlElement(entryElement, kKPKXmlCustomIconUUID, entry.iconUUID.kpk_encodedString);
   }
   KPKAddXmlElement(entryElement, @"ForegroundColor", entry.foregroundColor.kpk_hexString);
   KPKAddXmlElement(entryElement, @"BackgroundColor", entry.backgroundColor.kpk_hexString);
@@ -369,7 +369,7 @@
   DDXMLElement *customIconsElements = [DDXMLElement elementWithName:kKPKXmlCustomIcons];
   for (KPKIcon *icon in self.tree.metaData.mutableCustomIcons) {
     DDXMLElement *iconElement = [DDXMLNode elementWithName:kKPKXmlIcon];
-    KPKAddXmlElement(iconElement, kKPKXmlUUID, [icon.uuid encodedString]);
+    KPKAddXmlElement(iconElement, kKPKXmlUUID, icon.uuid.kpk_encodedString);
     KPKAddXmlElement(iconElement, kKPKXmlData, icon.encodedString);
     [customIconsElements addChild:iconElement];
   }
@@ -395,7 +395,7 @@
   for(NSUUID *uuid in self.tree.mutableDeletedObjects) {
     KPKDeletedNode *node = self.tree.mutableDeletedObjects[ uuid ];
     DDXMLElement *deletedElement = [DDXMLNode elementWithName:kKPKXmlDeletedObject];
-    KPKAddXmlElement(deletedElement, kKPKXmlUUID,[node.uuid encodedString]);
+    KPKAddXmlElement(deletedElement, kKPKXmlUUID, node.uuid.kpk_encodedString);
     KPKAddXmlElement(deletedElement, kKPKXmlDeletionTime, KPKStringFromDate(self.dateFormatter, node.deletionDate));
     [deletedObjectsElement addChild:deletedElement];
   }

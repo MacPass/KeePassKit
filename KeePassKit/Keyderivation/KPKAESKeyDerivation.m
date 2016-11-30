@@ -12,7 +12,7 @@
 
 #import "NSData+CommonCrypto.h"
 #import "NSData+KPKRandom.h"
-#import "NSUUID+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 
@@ -70,7 +70,7 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
 }
 
 - (KPKKeyDerivation *)_initWithParameters:(NSDictionary *)parameters {
-  NSAssert([parameters[KPKKeyDerivationOptionUUID] isEqualToData:self.uuid.uuidData], @"AES KeyDerivation UUID mismatch!");
+  NSAssert([parameters[KPKKeyDerivationOptionUUID] isEqualToData:self.uuid.kpk_uuidData], @"AES KeyDerivation UUID mismatch!");
   NSAssert(parameters[KPKAESRoundsOption], @"Rounds option is missing!");
   self = [super _initWithParameters:parameters];
   return self;

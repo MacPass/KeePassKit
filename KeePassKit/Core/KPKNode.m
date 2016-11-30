@@ -33,7 +33,7 @@
 #import "KPKTree_Private.h"
 #import "KPKMetaData.h"
 
-#import "NSUUID+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
 
 @implementation KPKNode {
   KPKTree *_tree;

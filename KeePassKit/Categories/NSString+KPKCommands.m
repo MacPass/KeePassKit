@@ -26,7 +26,7 @@
 #import "KPKAttribute.h"
 #import "KPKTree.h"
 #import "KPKGroup.h"
-#import "NSUUID+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
 #import "KPKFormat.h"
 
 static NSUInteger const _KPKMaxiumRecursionLevel = 10;

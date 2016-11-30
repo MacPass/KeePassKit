@@ -13,14 +13,14 @@
 #import "KPKAESCipher.h"
 #import "KPKChaCha20Cipher.h"
 
-#import "NSUUID+KeePassKit.h"
+#import "NSUUID+KPKAdditions.h"
 
 @implementation KPKCipher
 
 static NSMutableDictionary<NSUUID *, Class> *_ciphers;
 
 + (NSUUID *)uuid {
-  return [NSUUID nullUUID];
+  return [NSUUID kpk_nullUUID];
 }
 
 + (KPKCipher *)cipherWithUUID:(NSUUID *)uuid {

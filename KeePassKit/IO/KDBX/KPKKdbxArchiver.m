@@ -200,7 +200,7 @@
   }
   /* header fields */
   
-  [self.dataWriter _writeHeaderField:KPKHeaderKeyCipherId data:self.tree.metaData.cipherUUID.uuidData useWideField:self.outputVersion4];
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyCipherId data:self.tree.metaData.cipherUUID.kpk_uuidData useWideField:self.outputVersion4];
   uint32_t compressionAlgorithm = CFSwapInt32HostToLittle(self.tree.metaData.compressionAlgorithm);
   [self.dataWriter _writeHeaderField:KPKHeaderKeyCompression bytes:&compressionAlgorithm length:sizeof(compressionAlgorithm) useWideField:self.outputVersion4];
   [self.dataWriter _writeHeaderField:KPKHeaderKeyMasterSeed data:self.masterSeed useWideField:self.outputVersion4];

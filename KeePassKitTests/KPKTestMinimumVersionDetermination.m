@@ -40,13 +40,13 @@
 }
 
 - (void)testMinimumVersionForKeyDerivations {
-  kdfParams[KPKKeyDerivationOptionUUID] = [KPKAESKeyDerivation uuid].uuidData;
+  kdfParams[KPKKeyDerivationOptionUUID] = [KPKAESKeyDerivation uuid].kpk_uuidData;
   
   tree.metaData.keyDerivationParameters = [kdfParams copy];
   /* empty tree does not require KDBX */
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdb, tree.minimumVersion));
   
-  kdfParams[KPKKeyDerivationOptionUUID] = [KPKArgon2KeyDerivation uuid].uuidData;
+  kdfParams[KPKKeyDerivationOptionUUID] = [KPKArgon2KeyDerivation uuid].kpk_uuidData;
   tree.metaData.keyDerivationParameters = [kdfParams copy];
   
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdbx4, tree.minimumVersion));

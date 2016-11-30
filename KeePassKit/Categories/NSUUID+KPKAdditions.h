@@ -22,20 +22,16 @@
 
 @import Cocoa;
 
-@interface NSUUID (KeePassKit)
+@interface NSUUID (KPKAdditions) <NSPasteboardReading, NSPasteboardWriting>
 
-+ (NSUUID *)nullUUID;
-+ (NSUUID *)uuidWithEncodedString:(NSString *)string;
++ (NSUUID *)kpk_nullUUID;
++ (NSUUID *)kpk_uuidWithEncodedString:(NSString *)string;
 
-@property (nonatomic, readonly, copy) NSData *uuidData;
-@property (nonatomic, readonly, copy) NSString *encodedString;
+@property (nonatomic, readonly, copy) NSData *kpk_uuidData;
+@property (nonatomic, readonly, copy) NSString *kpk_encodedString;
 - (instancetype)initWithEncodedUUIDString:(NSString *)string;
 - (instancetype)initWithData:(NSData *)data;
 /* Initsalizes with a UUID string missing any - */
 - (instancetype)initWithUndelemittedUUIDString:(NSString *)string;
-
-@end
-
-@interface NSUUID (Pasteboarding) <NSPasteboardReading, NSPasteboardWriting>
 
 @end
