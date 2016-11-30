@@ -26,15 +26,15 @@
 }
 
 - (void)testInvalidContent {
-  XCTAssertTrue( @{ @"String" : @"String" }.isValidVariantDictionary );
-  XCTAssertTrue( @{ @"String" : [[NSMutableString alloc] init] }.isValidVariantDictionary );
-  XCTAssertTrue( @{ @"Number" : [KPKNumber numberWithBool:NO] }.isValidVariantDictionary );
-  XCTAssertTrue( @{ @"Data" : [NSData data] }.isValidVariantDictionary );
-  XCTAssertTrue( @{ @"Data" : [NSMutableData data] }.isValidVariantDictionary );
+  XCTAssertTrue( @{ @"String" : @"String" }.kpk_isValidVariantDictionary );
+  XCTAssertTrue( @{ @"String" : [[NSMutableString alloc] init] }.kpk_isValidVariantDictionary );
+  XCTAssertTrue( @{ @"Number" : [KPKNumber numberWithBool:NO] }.kpk_isValidVariantDictionary );
+  XCTAssertTrue( @{ @"Data" : [NSData data] }.kpk_isValidVariantDictionary );
+  XCTAssertTrue( @{ @"Data" : [NSMutableData data] }.kpk_isValidVariantDictionary );
   
-  XCTAssertFalse( @{ @(1) : @"" }.isValidVariantDictionary, @"Number as key is not allowed" );
-  XCTAssertFalse( @{ [NSData data] : @"" }.isValidVariantDictionary, @"Data as key is not allowed" );
-  XCTAssertFalse( @{ [KPKNumber numberWithBool:YES] : @"" }.isValidVariantDictionary, @"Data as key is not allowed" );
+  XCTAssertFalse( @{ @(1) : @"" }.kpk_isValidVariantDictionary, @"Number as key is not allowed" );
+  XCTAssertFalse( @{ [NSData data] : @"" }.kpk_isValidVariantDictionary, @"Data as key is not allowed" );
+  XCTAssertFalse( @{ [KPKNumber numberWithBool:YES] : @"" }.kpk_isValidVariantDictionary, @"Data as key is not allowed" );
   
   
   uint8_t bytes[] = {0,1,2,3};
@@ -44,8 +44,8 @@
                            @"4" : [KPKNumber numberWithUnsignedInteger32:32],
                            @"5" : [NSData dataWithBytes:bytes length:4] };
 
-  XCTAssertTrue(dict.isValidVariantDictionary);
-  NSData *data = dict.variantDictionaryData;
+  XCTAssertTrue(dict.kpk_isValidVariantDictionary);
+  NSData *data = dict.kpk_variantDictionaryData;
   XCTAssertNotNil(data);
   NSDictionary *dictFromData = [[NSDictionary alloc] initWithVariantDictionaryData:data];
   XCTAssertEqual(dict.count, dictFromData.count);

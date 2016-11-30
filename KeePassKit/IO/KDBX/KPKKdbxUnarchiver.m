@@ -350,7 +350,7 @@
       case KPKHeaderKeyKdfParameters:
         NSAssert(self.version >= kKPKKdbxFileVersion4, @"File version doesn allow KDFParameter header field");
         self.mutableKeyDerivationParameters = [[NSMutableDictionary alloc] initWithVariantDictionaryData:[dataReader readDataWithLength:fieldSize]];
-        if(!self.mutableKeyDerivationParameters || !self.mutableKeyDerivationParameters.isValidVariantDictionary) {
+        if(!self.mutableKeyDerivationParameters || !self.mutableKeyDerivationParameters.kpk_isValidVariantDictionary) {
           KPKCreateError(error,KPKErrorKdbxInvalidKeyDerivationData);
           return NO;
         }

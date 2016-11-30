@@ -216,11 +216,11 @@
     [self.dataWriter _writeHeaderField:KPKHeaderKeyRandomStreamId bytes:&randomStreamId length:sizeof(randomStreamId) useWideField:self.outputVersion4];
   }
   else {
-    [self.dataWriter _writeHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.parameters.variantDictionaryData useWideField:self.outputVersion4];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.parameters.kpk_variantDictionaryData useWideField:self.outputVersion4];
   }
   if(self.tree.metaData.customPublicData.count > 0) {
     NSAssert(self.outputVersion4, @"Custom data requires KDBX version 4");
-    [self.dataWriter _writeHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.variantDictionaryData useWideField:self.outputVersion4];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.kpk_variantDictionaryData useWideField:self.outputVersion4];
   }
   /* endOfHeader */
   uint8_t endBuffer[] = { NSCarriageReturnCharacter, NSNewlineCharacter, NSCarriageReturnCharacter, NSNewlineCharacter };

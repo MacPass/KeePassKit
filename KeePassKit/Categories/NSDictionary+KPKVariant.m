@@ -47,7 +47,7 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
 @implementation NSDictionary (KPKVariant)
 
 
-+ (instancetype)dictionaryWithVariantDictionaryData:(NSData *)data {
++ (instancetype)kpk_dictionaryWithVariantDictionaryData:(NSData *)data {
   if([self isSubclassOfClass:[NSMutableDictionary class]]) {
     return [[NSMutableDictionary alloc] initWithVariantDictionaryData:data];
   }
@@ -163,9 +163,9 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
   return self;
 }
 
-- (NSData *)variantDictionaryData {
+- (NSData *)kpk_variantDictionaryData {
   
-  if(!self.isValidVariantDictionary) {
+  if(!self.kpk_isValidVariantDictionary) {
     return nil;
   }
   
@@ -267,7 +267,7 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
  
  */
 
-- (BOOL)isValidVariantDictionary {
+- (BOOL)kpk_isValidVariantDictionary {
   for(id key in self) {
     if(![key isKindOfClass:[NSString class]]) {
       return NO; // only string as keys allowed!
