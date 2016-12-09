@@ -26,7 +26,7 @@
 
 /**
  Determines if a string is not empty. Since this method is a category, we have to be compatible with a nil target.
- Nil getting a message will always result in NO thus the interface hast to test for Not emptry instead of the more obvious isEmptry
+ Nil getting a message will always result in NO thus the interface hast to test for Not empty instead of the more obvious isEmptry
  */
 @property (nonatomic, readonly) BOOL kpk_isNotEmpty;
 
