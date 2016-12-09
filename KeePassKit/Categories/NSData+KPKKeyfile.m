@@ -44,9 +44,9 @@
   }
 }
 
-+ (NSData *)kpk_generateKeyfiledataForVersion:(KPKDatabaseFormat)version {
++ (NSData *)kpk_generateKeyfiledataForFormat:(KPKDatabaseFormat)format {
   NSData *data = [NSData kpk_dataWithRandomBytes:32];
-  switch(version) {
+  switch(format) {
     case KPKDatabaseFormatKdb:
       return [[NSString kpk_hexstringFromData:data] dataUsingEncoding:NSUTF8StringEncoding];
       

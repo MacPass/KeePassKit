@@ -38,13 +38,13 @@
 }
 
 - (void)testXmlKeyfilGeneration {
-  NSData *data = [NSData kpk_generateKeyfiledataForVersion:KPKDatabaseFormatKdbx];
+  NSData *data = [NSData kpk_generateKeyfiledataForFormat:KPKDatabaseFormatKdbx];
   // Test if structure is sound;
   XCTAssertNotNil(data, @"Keydata should have been generated");
 }
 
 - (void)testLegacyKeyfileGeneration {
-  NSData *data = [NSData kpk_generateKeyfiledataForVersion:KPKDatabaseFormatKdb];
+  NSData *data = [NSData kpk_generateKeyfiledataForFormat:KPKDatabaseFormatKdb];
   // test if structure is sound;
   XCTAssertNotNil(data, @"Keydata should have been generated");
 }
