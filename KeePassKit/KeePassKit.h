@@ -14,8 +14,7 @@ FOUNDATION_EXPORT double KeePassKitVersionNumber;
 //! Project version string for KeePassKit.
 FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <KeePassKit/PublicHeader.h>
-
+#import "KPKPlatformIncludes.h"
 #import "KPKTypes.h"
 #import "KPKUTIs.h"
 #import "KPKIconTypes.h"
