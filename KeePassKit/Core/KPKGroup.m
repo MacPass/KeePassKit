@@ -425,11 +425,13 @@
   if(!uuid) {
     return nil;
   }
-  /* TODO hash lookup, since UUIDs do not change! */
-  for(KPKEntry *entry in self.childEntries) {
+  for(KPKEntry *entry in _entries) {
     if([entry.uuid isEqual:uuid]) {
       return entry;
     }
+  }
+  for(KPKGroup *group in _groups) {
+    return [group entryForUUID:uuid];
   }
   return nil;
 }
@@ -438,11 +440,11 @@
   if(!uuid) {
     return nil;
   }
-  /* TODO hash lookup, since UUIDs do not change! */
-  for(KPKGroup *group in self.childGroups) {
-    if([group.uuid isEqual:uuid]) {
-      return group;
-    }
+  if([self.uuid isEqual:uuid]) {
+    return self;
+  }
+  for(KPKGroup *group in _groups) {
+    return [group groupForUUID:uuid];
   }
   return nil;
 }
