@@ -36,6 +36,7 @@
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
+#import "KPKNode_Private.h"
 #import "KPKTimeInfo.h"
 #import "KPKTree.h"
 

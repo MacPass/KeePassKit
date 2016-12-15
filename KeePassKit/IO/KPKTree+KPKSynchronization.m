@@ -12,6 +12,7 @@
 #import "KPKNode_Private.h"
 
 #import "KPKGroup.h"
+#import "KPKGroup_Private.h"
 
 @implementation KPKTree (KPKSynchronization)
 
@@ -21,6 +22,19 @@
     [self.root _regenerateUUIDs];
   }
   return NO;
+  
+  for(KPKGroup *group in tree.allGroups) {
+    KPKGroup *localGroup = [self.root groupForUUID:group.uuid];
+    if([localGroup _isEqualToGroup:group ignoreHierachy:YES]) {
+      continue;
+    }
+  }
+  
+  for(KPKEntry *entry in tree.allEntries) {
+  
+  }
+  
+  
 }
 
 @end

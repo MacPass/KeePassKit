@@ -30,7 +30,10 @@
 #import "KPKMetaData_Private.h"
 #import "KPKTimeInfo.h"
 #import "KPKFormat.h"
+#import "KPKKeyDerivation.h"
+#import "KPKAESKeyDerivation.h"
 
+#import "NSUUID+KPKAdditions.h"
 
 /*
  NSString *const KPKDidRemoveNodeNotification  = @"com.hicknhack.KeePassKit.KPKDidRemoveNodeNotification";

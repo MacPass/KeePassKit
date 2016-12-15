@@ -39,6 +39,11 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
   kKPKCopyOptionReferencePassword  = 1<<2, // KPKEntry only - copy references the password of the source
 };
 
+typedef NS_OPTIONS(NSUInteger, KPKUpdateOptions) {
+  KPKUpdateOptionOnlyIfNewer  = 1<<0,
+  KPKUpdateOptionForce        = 1<<1,
+};
+
 /**
  *  Abstract base class for all Nodes (Entries and Groups)
  *  Do not instanciate an instance of KPKnode
@@ -127,6 +132,9 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
 - (void)addToGroup:(KPKGroup *)group;
 - (void)addToGroup:(KPKGroup *)group atIndex:(NSUInteger)index;
+
+
+- (void)updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options;
 
 
 @property(nonatomic, readonly) KPKGroup *asGroup;

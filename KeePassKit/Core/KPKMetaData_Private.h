@@ -6,9 +6,13 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import <KeePassKit/KeePassKit.h>
+#import "KPKMetaData.h"
+#import "KPKExtendedModificationRecording.h"
 
-@interface KPKMetaData ()
+@class KPKBinary;
+@class KPKIcon;
+
+@interface KPKMetaData () <KPKExtendedModificationRecording>
 
 @property(nonatomic, strong) NSMutableArray<KPKBinary *> *mutableCustomData;
 @property(nonatomic, strong) NSMutableArray<KPKIcon *> *mutableCustomIcons;

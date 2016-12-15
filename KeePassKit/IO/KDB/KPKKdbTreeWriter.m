@@ -26,6 +26,7 @@
 #import "KPKBinary.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
+#import "KPKIcon.h"
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
 #import "KPKNode_Private.h"

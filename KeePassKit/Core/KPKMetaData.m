@@ -21,6 +21,7 @@
 //
 
 #import "KPKMetaData.h"
+#import "KPKExtendedModificationRecording.h"
 #import "KPKMetaData_Private.h"
 #import "KPKKdbxFormat.h"
 #import "KPKIcon.h"

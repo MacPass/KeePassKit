@@ -190,6 +190,10 @@
 }
 
 - (BOOL)isEqualToGroup:(KPKGroup *)aGroup {
+  return [self _isEqualToGroup:aGroup ignoreHierachy:NO];
+}
+
+- (BOOL)_isEqualToGroup:(KPKGroup *)aGroup ignoreHierachy:(BOOL)ignoreHierachy {
   NSAssert([aGroup isKindOfClass:[KPKGroup class]], @"No valid object supplied!");
   if(![aGroup isKindOfClass:[KPKGroup class]]) {
     return NO;
@@ -199,24 +203,29 @@
     return NO;
   }
   
+  if((_isAutoTypeEnabled != aGroup->_isAutoTypeEnabled) || (_isSearchEnabled != aGroup->_isSearchEnabled)) {
+    return NO;
+  };
+  
+  /* stop here if only group properties are considered */
+  if(ignoreHierachy) {
+    return YES;
+  }
+  
   BOOL entryCountDiffers = _entries.count != aGroup->_entries.count;
   BOOL groupCountDiffers = _groups.count != aGroup->_groups.count;
   if( entryCountDiffers || groupCountDiffers ) {
     return NO;
   }
-  __block BOOL isEqual = (_isAutoTypeEnabled == aGroup->_isAutoTypeEnabled)
-  && (_isSearchEnabled == aGroup->_isSearchEnabled);
-  
-  if(!isEqual) {
-    return NO;
-  }
-  
+
   for(KPKEntry *entry in _entries) {
     /* Indexes might be different, the contents of the array is important */
     if(NSNotFound == [aGroup->_entries indexOfObject:entry]) {
       return NO;
     }
+    /* TODO compare entries? */
   }
+  __block BOOL isEqual = YES;
   /* Indexes in groups matter, so we need to compare them */
   [_groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     KPKGroup *otherGroup = obj;

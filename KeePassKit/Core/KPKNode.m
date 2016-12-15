@@ -299,6 +299,22 @@
   return nil;
 }
 
+- (void)updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
+  if(options & KPKUpdateOptionOnlyIfNewer) {
+    NSComparisonResult result = [self.timeInfo.modificationDate compare:node.timeInfo.modificationDate];
+    if(result != NSOrderedAscending) {
+      return; // we are new so no update
+    }
+  }
+  /* we are either older or have to overwrite */
+  self.iconId = node.iconId;
+  self.iconUUID = node.iconUUID;
+  self.title = node.title;
+  self.notes = node.notes;
+  NSAssert(YES == self.updateTiming, @"Node updating has ot have update timing activated");
+  [self touchModified];
+}
+
 #pragma mark -
 #pragma mark Private Extensions
 - (instancetype)_init {

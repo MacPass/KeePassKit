@@ -10,8 +10,9 @@
 #define MacPass_KPKNode_Private_h
 
 #import "KPKNode.h"
+#import "KPKExtendedModificationRecording.h"
 
-@interface KPKNode ()
+@interface KPKNode () <KPKExtendedModificationRecording>
 
 @property(nonatomic, readwrite, weak) KPKTree *tree;
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;

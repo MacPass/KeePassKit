@@ -6,11 +6,12 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import <KeePassKit/KeePassKit.h>
+#import "KPKTimeInfo.h"
+#import "KPKExtendedModificationRecording.h"
 
 @class KPKNode;
 
-@interface KPKTimeInfo ()
+@interface KPKTimeInfo () <KPKExtendedModificationRecording>
 
 @property (weak) KPKNode *node;
 

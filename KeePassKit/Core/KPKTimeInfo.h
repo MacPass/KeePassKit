@@ -39,8 +39,5 @@
 @property NSUInteger usageCount;
 
 - (void)reset;
-- (void)touchModified;
-- (void)touchAccessed;
-- (void)touchMoved;
 
 @end

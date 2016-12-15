@@ -14,4 +14,6 @@
 - (void)_addChild:(KPKNode *)node atIndex:(NSUInteger)index;
 - (NSUInteger)_indexForNode:(KPKNode *)node;
 
+- (BOOL)_isEqualToGroup:(KPKGroup *)aGroup ignoreHierachy:(BOOL)ignoreHierachy;
+
 @end
