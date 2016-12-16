@@ -354,7 +354,7 @@
   [aCoder encodeObject:self.mutableCustomData forKey:NSStringFromSelector(@selector(mutableCustomData))];
 }
 
-- (instancetype)_copyWithUUUD:(NSUUID *)uuid {
+- (instancetype)_copyWithUUID:(NSUUID *)uuid {
   KPKNode *copy = [[[self class] alloc] _initWithUUID:uuid];
   copy.iconId = self.iconId;
   copy.iconUUID = self.iconUUID;

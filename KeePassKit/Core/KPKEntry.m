@@ -161,11 +161,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark NSCopying
 - (id)copyWithZone:(NSZone *)zone {
-  return [self _copyWithUUUD:self.uuid];
+  return [self _copyWithUUID:self.uuid];
 }
 
-- (instancetype)_copyWithUUUD:(nullable NSUUID *)uuid {
-  KPKEntry *copy = [super _copyWithUUUD:uuid];
+- (instancetype)_copyWithUUID:(nullable NSUUID *)uuid {
+  KPKEntry *copy = [super _copyWithUUID:uuid];
   /* Default attributes */
   copy.overrideURL = self.overrideURL;
   
@@ -226,7 +226,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
   /* Copy sets a new UUID */
-  KPKEntry *copy = [self _copyWithUUUD:nil];
+  KPKEntry *copy = [self _copyWithUUID:nil];
   if(!titleOrNil) {
     NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKLocalizable", "");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
@@ -610,7 +610,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(!self.tree.metaData.isHistoryEnabled) {
     return; // Pushing history but it's disabled
   }
-  [self _addHistoryEntry:[self _copyWithUUUD:self.uuid]];
+  [self _addHistoryEntry:[self _copyWithUUID:self.uuid]];
   [self _maintainHistory];
 }
 

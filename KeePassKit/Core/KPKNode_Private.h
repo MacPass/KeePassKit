@@ -40,7 +40,7 @@
  *
  *  @return Copy of the receiving node.
  */
-- (instancetype)_copyWithUUUD:(NSUUID *)uuid;
+- (instancetype)_copyWithUUID:(NSUUID *)uuid;
 
 @end
 

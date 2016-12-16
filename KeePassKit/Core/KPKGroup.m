@@ -147,7 +147,7 @@
 }
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
-  KPKGroup *copy = [super _copyWithUUUD:uuid];
+  KPKGroup *copy = [super _copyWithUUID:uuid];
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
