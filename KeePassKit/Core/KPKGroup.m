@@ -217,7 +217,7 @@
   if( entryCountDiffers || groupCountDiffers ) {
     return NO;
   }
-
+  
   for(KPKEntry *entry in _entries) {
     /* Indexes might be different, the contents of the array is important */
     if(NSNotFound == [aGroup->_entries indexOfObject:entry]) {
@@ -234,6 +234,29 @@
     *stop = !isEqual;
   }];
   return isEqual;
+}
+
+- (void)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
+  [super _updateFromNode:node options:options];
+  
+  NSComparisonResult result = [self.timeInfo.modificationDate compare:node.timeInfo.modificationDate];
+  if(NSOrderedDescending == result || (options & KPKUpdateOptionIgnoreModificationTime)) {
+    KPKGroup *group = node.asGroup;
+    if(!group) {
+      return;
+    }
+    
+    self.isAutoTypeEnabled = group.isAutoTypeEnabled;
+    self.defaultAutoTypeSequence = group.defaultAutoTypeSequence;
+    self.isSearchEnabled = group.isSearchEnabled;
+    self.lastTopVisibleEntry = group.lastTopVisibleEntry;
+    
+    NSDate *movedTime = self.timeInfo.locationChanged;
+    self.timeInfo = group.timeInfo;
+    if(!(options & KPKUpdateOptionUpateMovedTime)) {
+      self.timeInfo.locationChanged = movedTime;
+    }
+  }
 }
 
 #pragma mark Strucural Helper
@@ -256,7 +279,7 @@
 - (void)_regenerateUUIDs {
   [super _regenerateUUIDs];
   for(KPKEntry *entry in _entries) {
-     [entry _regenerateUUIDs];
+    [entry _regenerateUUIDs];
   }
   for(KPKGroup *group  in _groups) {
     [group _regenerateUUIDs];
@@ -395,7 +418,7 @@
 - (void)_addChild:(KPKNode *)node atIndex:(NSUInteger)index {
   KPKEntry *entry = node.asEntry;
   KPKGroup *group = node.asGroup;
-   
+  
   if(group) {
     index = MAX(0, MIN(_groups.count, index));
     [self insertObject:group inGroupsAtIndex:index];

@@ -595,6 +595,27 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
 }
 
+#pragma mark Mergin
+- (void)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
+  [super _updateFromNode:node options:options];
+  
+  NSComparisonResult result = [self.timeInfo.modificationDate compare:node.timeInfo.modificationDate];
+  if(NSOrderedDescending == result || (options & KPKUpdateOptionIgnoreModificationTime)) {
+    KPKGroup *group = node.asGroup;
+    if(!group) {
+      return;
+    }
+    
+    
+    
+    NSDate *movedTime = self.timeInfo.locationChanged;
+    self.timeInfo = group.timeInfo;
+    if(!(options & KPKUpdateOptionUpateMovedTime)) {
+      self.timeInfo.locationChanged = movedTime;
+    }
+  }
+}
+
 #pragma mark History
 - (void)_addHistoryEntry:(KPKEntry *)entry {
   [self insertObject:entry inMutableHistoryAtIndex:self.mutableHistory.count];

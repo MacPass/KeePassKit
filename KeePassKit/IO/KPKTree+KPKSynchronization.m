@@ -21,6 +21,7 @@
   if(options == KPKSynchronizationCreateNewUuidsOption) {
     [self.root _regenerateUUIDs];
   }
+  
   return NO;
   
   for(KPKGroup *group in tree.allGroups) {
@@ -28,10 +29,15 @@
     if([localGroup _isEqualToGroup:group ignoreHierachy:YES]) {
       continue;
     }
+    KPKUpdateOptions updateOptions = options == KPKSynchronizationOverwriteExistingOption ? KPKUpdateOptionIgnoreModificationTime : 0;
+    if(options == KPKSynchronizationOverwriteExistingOption ||
+       options == KPKSynchronizationOverwriteIfNewerOption ) {
+      [localGroup _updateFromNode:group options:updateOptions];
+    }
   }
   
   for(KPKEntry *entry in tree.allEntries) {
-  
+    
   }
   
   

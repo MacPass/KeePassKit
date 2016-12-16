@@ -12,6 +12,11 @@
 #import "KPKNode.h"
 #import "KPKExtendedModificationRecording.h"
 
+typedef NS_OPTIONS(NSUInteger, KPKUpdateOptions) {
+  KPKUpdateOptionIgnoreModificationTime = 1<<1, // Only use properties from node if node has newer updates
+  KPKUpdateOptionUpateMovedTime         = 1<<2 // LocationChanged will only be overwritten if this flag is set
+};
+
 @interface KPKNode () <KPKExtendedModificationRecording>
 
 @property(nonatomic, readwrite, weak) KPKTree *tree;
@@ -41,6 +46,9 @@
  *  @return Copy of the receiving node.
  */
 - (instancetype)_copyWithUUID:(NSUUID *)uuid;
+
+#pragma mark Mergin
+- (void)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options;
 
 @end
 
