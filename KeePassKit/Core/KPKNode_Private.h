@@ -21,7 +21,7 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {
   KPKNodeEqualityIgnoreAccessDateOption       = 1<<0, // Do not compare access dates
   KPKNodeEqualityIgnoreModificationDateOption = 1<<1, // Don't compare modification dates
   KPKNodeEqualityIgnoreHistoryOption          = 1<<2, // Do not compare entry histories
-  KPKNodeEqualityIgnoreEntriesOptions         = 1<<3, // KPKGroup only do not compare sub-entries
+  KPKNodeEqualityIgnoreEntriesOption          = 1<<3, // KPKGroup only do not compare sub-entries
   KPKNodeEqualityIgnoreGroupsOption           = 1<<4 // KPKGroup only, do not compare sub-groups (and entries in those sub-groups!)
 };
 

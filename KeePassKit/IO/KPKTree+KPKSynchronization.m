@@ -24,6 +24,8 @@
     
   for(KPKGroup *group in tree.allGroups) {
     KPKGroup *localGroup = [self.root groupForUUID:group.uuid];
+    KPKNodeEqualityOptions options = KPKNodeEqualityIgnoreGroupsOption | KPKNodeEqualityIgnoreEntriesOption
+    if(
     if([localGroup _isEqualToGroup:group options:KPKNodeEqualityIgnoreHistoryOption]) {
       continue;
     }
