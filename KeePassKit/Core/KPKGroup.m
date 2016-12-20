@@ -190,10 +190,11 @@
 }
 
 - (BOOL)isEqualToGroup:(KPKGroup *)aGroup {
-  return [self _isEqualToGroup:aGroup ignoreHierachy:NO];
+  /* normal compare does not ignroe anything */
+  return [self _isEqualToGroup:aGroup options:0];
 }
 
-- (BOOL)_isEqualToGroup:(KPKGroup *)aGroup ignoreHierachy:(BOOL)ignoreHierachy {
+- (BOOL)_isEqualToGroup:(KPKGroup *)aGroup options:(KPKNodeEqualityOptions)options {
   NSAssert([aGroup isKindOfClass:[KPKGroup class]], @"No valid object supplied!");
   if(![aGroup isKindOfClass:[KPKGroup class]]) {
     return NO;
@@ -207,33 +208,37 @@
     return NO;
   };
   
-  /* stop here if only group properties are considered */
-  if(ignoreHierachy) {
-    return YES;
-  }
-  
-  BOOL entryCountDiffers = _entries.count != aGroup->_entries.count;
-  BOOL groupCountDiffers = _groups.count != aGroup->_groups.count;
-  if( entryCountDiffers || groupCountDiffers ) {
-    return NO;
-  }
-  
-  for(KPKEntry *entry in _entries) {
-    /* Indexes might be different, the contents of the array is important */
-    if(NSNotFound == [aGroup->_entries indexOfObject:entry]) {
+  __block BOOL isEqual = YES;
+  if(!(KPKNodeEqualityIgnoreGroupsOption & options)) {
+    if( _groups.count != aGroup->_groups.count) {
       return NO;
     }
-    /* TODO compare entries? */
+    /* Indexes in groups matter, so we need to compare them */
+    [_groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+      KPKGroup *otherGroup = obj;
+      KPKGroup *myGroup = _groups[idx];
+      isEqual &= [myGroup _isEqualToGroup:otherGroup options:options];
+      *stop = !isEqual;
+    }];
+    
+    if(!isEqual) {
+      return NO;
+    }
   }
-  __block BOOL isEqual = YES;
-  /* Indexes in groups matter, so we need to compare them */
-  [_groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    KPKGroup *otherGroup = obj;
-    KPKGroup *myGroup = _groups[idx];
-    isEqual &= [myGroup isEqualToGroup:otherGroup];
-    *stop = !isEqual;
-  }];
-  return isEqual;
+  
+  if(!(KPKNodeEqualityIgnoreEntriesOptions & options)) {
+    if( _entries.count != aGroup->_entries.count ) {
+      return NO;
+    }
+    for(KPKEntry *entry in _entries) {
+      /* Indexes might be different, the contents of the array is important */
+      if(NSNotFound == [aGroup->_entries indexOfObject:entry]) {
+        return NO;
+      }
+      /* TODO compare entries? */
+    }
+  }
+  return YES;
 }
 
 - (void)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {

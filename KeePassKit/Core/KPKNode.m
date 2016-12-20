@@ -23,6 +23,7 @@
 
 #import "KPKNode.h"
 #import "KPKNode_Private.h"
+#import "KPKDeletedNode.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKGroup_Private.h"
@@ -95,6 +96,10 @@
 }
 
 - (BOOL)isEqualToNode:(KPKNode *)aNode {
+  return [self _isEqualToNode:aNode options:0];
+}
+
+- (BOOL)_isEqualToNode:(KPKNode *)aNode options:(KPKNodeEqualityOptions)options {
   /* pointing to the same instance */
   if(nil != self && self == aNode) {
     return YES;

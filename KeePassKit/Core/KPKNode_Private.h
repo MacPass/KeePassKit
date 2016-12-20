@@ -17,6 +17,14 @@ typedef NS_OPTIONS(NSUInteger, KPKUpdateOptions) {
   KPKUpdateOptionUpateMovedTime         = 1<<2 // LocationChanged will only be overwritten if this flag is set
 };
 
+typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {
+  KPKNodeEqualityIgnoreAccessDateOption       = 1<<0, // Do not compare access dates
+  KPKNodeEqualityIgnoreModificationDateOption = 1<<1, // Don't compare modification dates
+  KPKNodeEqualityIgnoreHistoryOption          = 1<<2, // Do not compare entry histories
+  KPKNodeEqualityIgnoreEntriesOptions         = 1<<3, // KPKGroup only do not compare sub-entries
+  KPKNodeEqualityIgnoreGroupsOption           = 1<<4 // KPKGroup only, do not compare sub-groups (and entries in those sub-groups!)
+};
+
 @interface KPKNode () <KPKExtendedModificationRecording>
 
 @property(nonatomic, readwrite, weak) KPKTree *tree;
@@ -47,8 +55,11 @@ typedef NS_OPTIONS(NSUInteger, KPKUpdateOptions) {
  */
 - (instancetype)_copyWithUUID:(NSUUID *)uuid;
 
-#pragma mark Mergin
+#pragma mark Merging
 - (void)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options;
+
+#pragma mark Extended Equality
+- (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options;
 
 @end
 

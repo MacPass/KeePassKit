@@ -6,7 +6,8 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import <KeePassKit/KeePassKit.h>
+#import "KPKGroup.h"
+#import "KPKNode_Private.h"
 
 @interface KPKGroup ()
 
@@ -14,6 +15,6 @@
 - (void)_addChild:(KPKNode *)node atIndex:(NSUInteger)index;
 - (NSUInteger)_indexForNode:(KPKNode *)node;
 
-- (BOOL)_isEqualToGroup:(KPKGroup *)aGroup ignoreHierachy:(BOOL)ignoreHierachy;
+- (BOOL)_isEqualToGroup:(KPKGroup *)group options:(KPKNodeEqualityOptions)options;
 
 @end

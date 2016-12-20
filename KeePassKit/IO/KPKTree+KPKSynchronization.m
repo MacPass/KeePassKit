@@ -21,12 +21,10 @@
   if(options == KPKSynchronizationCreateNewUuidsOption) {
     [self.root _regenerateUUIDs];
   }
-  
-  return NO;
-  
+    
   for(KPKGroup *group in tree.allGroups) {
     KPKGroup *localGroup = [self.root groupForUUID:group.uuid];
-    if([localGroup _isEqualToGroup:group ignoreHierachy:YES]) {
+    if([localGroup _isEqualToGroup:group options:KPKNodeEqualityIgnoreHistoryOption]) {
       continue;
     }
     KPKUpdateOptions updateOptions = options == KPKSynchronizationOverwriteExistingOption ? KPKUpdateOptionIgnoreModificationTime : 0;
@@ -39,8 +37,7 @@
   for(KPKEntry *entry in tree.allEntries) {
     
   }
-  
-  
+  return NO;
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "KPKEntry.h"
+#import "KPKNode_Private.h"
 
 @interface KPKEntry ()
 @property (nonatomic, copy) KPKAutotype *autotype;
@@ -38,5 +39,7 @@
  *	@param	entry	Entry element to be added as history
  */
 - (void)_addHistoryEntry:(KPKEntry *)entry;
+
+- (BOOL)_isEqualToEntry:(KPKEntry *)entry options:(KPKNodeEqualityOptions)options;
 
 @end
