@@ -117,6 +117,26 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAttributes))];
 }
 
++ (NSSet *)keyPathsForValuesAffectingPassword {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAttributes))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingUsername {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAttributes))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingUrl {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAttributes))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingTitle {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAttributes))];
+}
+
++ (NSSet *)keyPathsForValuesAffectingNotes {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAttributes))];
+}
+
 - (instancetype)init {
   self = [self _init];
   return self;
@@ -656,9 +676,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   self.timeInfo.expires = entry.timeInfo.expires;
   self.timeInfo.expirationDate = entry.timeInfo.expirationDate;
 
-  if(self.mutableAttributes.count != entry.mutableAttributes.count) {
-    
-  }
+  self.mutableAttributes = entry.mutableAttributes;
   // TODO copy binaries
   // TODO copy custom attributes
 }
