@@ -55,7 +55,6 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
   NSMutableArray *_binaries;
 }
 
-@property (nonatomic, strong) NSMutableArray<KPKAttribute *> *mutableAttributes;
 @property (nonatomic, strong) NSMutableArray<KPKEntry *> *mutableHistory;
 @property (nonatomic, strong) NSArray<KPKBinary *> *binaries;
 @property (nonatomic) BOOL isHistory;
