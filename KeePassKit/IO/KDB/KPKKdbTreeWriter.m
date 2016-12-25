@@ -285,8 +285,8 @@
   NSMutableData *iconData = [[NSMutableData alloc] initWithCapacity:1024*1024];
   KPKDataStreamWriter *dataWriter = [[KPKDataStreamWriter alloc] initWithData:iconData];
   [dataWriter write4Bytes:(uint32_t)icons.count];
-  [dataWriter write4Bytes:(uint32)_iconEntries.count];
-  [dataWriter write4Bytes:(uint32)_iconGroups.count];
+  [dataWriter write4Bytes:(uint32_t)_iconEntries.count];
+  [dataWriter write4Bytes:(uint32_t)_iconGroups.count];
   
   
   for(KPKIcon *icon in icons) {
