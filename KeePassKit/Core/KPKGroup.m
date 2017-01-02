@@ -148,6 +148,7 @@
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
   KPKGroup *copy = [super _copyWithUUID:uuid];
+  copy.updateTiming = NO;
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
@@ -161,6 +162,7 @@
   
   /* defer parent update to disable undo/redo registration */
   copy.parent = self.parent;
+  copy.updateTiming = YES;
   return copy;
 }
 
