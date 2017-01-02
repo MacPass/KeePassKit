@@ -28,7 +28,11 @@
 @class KPKEntry;
 
 FOUNDATION_EXPORT NSString *const KPKGroupUTI;
-
+/**
+ *  A group is like a folder in the database.
+ *  It can hold subgroups as well as entries.
+ *  The tree structure provides a way to inherit certain attributes like search or autotype.
+ */
 @interface KPKGroup : KPKNode <NSSecureCoding, NSCopying, KPKPasteboardReading, KPKPasteboardWriting>
 
 @property(nonatomic, copy, readonly) NSArray<KPKGroup *> *groups;
