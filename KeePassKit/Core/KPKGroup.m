@@ -27,6 +27,7 @@
 #import "KPKAutotype.h"
 #import "KPKDeletedNode.h"
 #import "KPKEntry.h"
+#import "KPKEntry_Private.h"
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
 #import "KPKTree.h"
@@ -233,11 +234,16 @@
       return NO;
     }
     for(KPKEntry *entry in _entries) {
-      /* Indexes might be different, the contents of the array is important */
-      if(NSNotFound == [aGroup->_entries indexOfObject:entry]) {
-        return NO;
+      BOOL foundEntry = NO;
+      for(KPKEntry *otherEntry in aGroup->_entries) {
+        foundEntry = [entry _isEqualToEntry:otherEntry options:options];
+        if(foundEntry) {
+          break;
+        }
       }
-      /* TODO compare entries? */
+      if(!foundEntry) {
+        return NO; // no matching entry found
+      }
     }
   }
   return YES;
