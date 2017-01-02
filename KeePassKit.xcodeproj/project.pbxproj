@@ -779,8 +779,8 @@
 				4CFAE3701D88537C007B57DB /* KPKTestKPKNumber.m */,
 				4C44988E1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m */,
 				4C70F4541D92BF56003564E2 /* KPKTestVariantDictionary.m */,
-				4C5CF3291BE10B650019AA81 /* Info.plist */,
 				4CE471ED1E08327D00AA3D81 /* KPKTestKVO.m */,
+				4C5CF3291BE10B650019AA81 /* Info.plist */,
 			);
 			path = KeePassKitTests;
 			sourceTree = "<group>";
