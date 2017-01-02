@@ -202,7 +202,7 @@
     return NO;
   }
   
-  if(![self isEqualToNode:aGroup]) {
+  if(![self _isEqualToNode:aGroup options:options]) {
     return NO;
   }
   
@@ -228,7 +228,7 @@
     }
   }
   
-  if(!(KPKNodeEqualityIgnoreEntriesOptions & options)) {
+  if(!(KPKNodeEqualityIgnoreEntriesOption & options)) {
     if( _entries.count != aGroup->_entries.count ) {
       return NO;
     }

@@ -24,9 +24,8 @@
     
   for(KPKGroup *group in tree.allGroups) {
     KPKGroup *localGroup = [self.root groupForUUID:group.uuid];
-    KPKNodeEqualityOptions options = KPKNodeEqualityIgnoreGroupsOption | KPKNodeEqualityIgnoreEntriesOption
-    if(
-    if([localGroup _isEqualToGroup:group options:KPKNodeEqualityIgnoreHistoryOption]) {
+    KPKNodeEqualityOptions options = KPKNodeEqualityIgnoreGroupsOption | KPKNodeEqualityIgnoreEntriesOption | KPKNodeEqualityIgnoreHistoryOption;
+    if([localGroup _isEqualToGroup:group options:options]) {
       continue;
     }
     KPKUpdateOptions updateOptions = options == KPKSynchronizationOverwriteExistingOption ? KPKUpdateOptionIgnoreModificationTime : 0;

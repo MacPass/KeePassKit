@@ -99,13 +99,26 @@
   return [self _isEqualToNode:aNode options:0];
 }
 
-- (BOOL)_isEqualToNode:(KPKNode *)aNode options:(KPKNodeEqualityOptions)options {
+- (BOOL)_isEqualToNode:(KPKNode *)aNode options:(KPKNodeEqualityOptions)options {
   /* pointing to the same instance */
   if(nil != self && self == aNode) {
     return YES;
   }
   /* We do not compare UUIDs as those are supposed to be different for nodes unless they are encoded/decoded */
   NSAssert([aNode isKindOfClass:[KPKNode class]], @"Unsupported type for quality test");
+  
+  if(!(options & KPKNodeEqualityIgnoreAccessDateOption)) {
+    NSComparisonResult result = [self.timeInfo.accessDate compare:aNode.timeInfo.accessDate];
+    if(result != NSOrderedSame) {
+      return NO;
+    }
+  }
+  if(!(options & KPKNodeEqualityIgnoreModificationDateOption)) {
+    NSComparisonResult result = [self.timeInfo.modificationDate compare:aNode.timeInfo.modificationDate];
+    if(result != NSOrderedSame) {
+      return NO;
+    }
+  }
   
   BOOL isEqual = (_iconId == aNode->_iconId)
   && (_iconUUID == aNode.iconUUID || [_iconUUID isEqual:aNode->_iconUUID])

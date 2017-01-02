@@ -312,6 +312,20 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
       return NO;
     }
   }
+  
+  if(!(options & KPKNodeEqualityIgnoreHistoryOption)) {
+    if(self.mutableHistory.count != entry.mutableHistory.count) {
+      return NO;
+    }
+    BOOL __block historyEqual = YES;
+    [self.mutableHistory enumerateObjectsUsingBlock:^(KPKEntry * _Nonnull historyEntry, NSUInteger idx, BOOL * _Nonnull stop) {
+      *stop = [historyEntry isEqualToEntry:entry.mutableHistory[idx]];
+      if(*stop) {
+        historyEqual = NO;
+      }
+    }];
+  }
+  
   return [self.autotype isEqualToAutotype:entry.autotype];
 }
 
