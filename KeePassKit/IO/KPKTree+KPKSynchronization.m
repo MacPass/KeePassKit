@@ -21,16 +21,27 @@
   if(options == KPKSynchronizationCreateNewUuidsOption) {
     [self.root _regenerateUUIDs];
   }
-    
   for(KPKGroup *group in tree.allGroups) {
+    KPKDeletedNode *deletedNode = self.deletedObjects[group.uuid];
+    if(nil != deletedNode) {
+      NSComparisonResult result = [deletedNode.deletionDate compare:group.timeInfo.modificationDate];
+      if(result == NSOrderedDescending) {
+        // object was deleted in destination but modified in source afterwards "tree conflict"
+      }
+      continue; // Group is known but deleted
+    }
+    
+    
     KPKGroup *localGroup = [self.root groupForUUID:group.uuid];
-    KPKNodeEqualityOptions options = KPKNodeEqualityIgnoreGroupsOption | KPKNodeEqualityIgnoreEntriesOption | KPKNodeEqualityIgnoreHistoryOption;
+    /* ignore entreis and subgroups to just compare the group attributes */
+    KPKNodeEqualityOptions options = KPKNodeEqualityIgnoreGroupsOption | KPKNodeEqualityIgnoreEntriesOption;
     if([localGroup _isEqualToGroup:group options:options]) {
       continue;
     }
-    KPKUpdateOptions updateOptions = options == KPKSynchronizationOverwriteExistingOption ? KPKUpdateOptionIgnoreModificationTime : 0;
+    KPKUpdateOptions updateOptions = (options == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime : 0;
     if(options == KPKSynchronizationOverwriteExistingOption ||
-       options == KPKSynchronizationOverwriteIfNewerOption ) {
+       options == KPKSynchronizationOverwriteIfNewerOption ||
+       options == KPKSynchronizationSynchronizeOption) {
       [localGroup _updateFromNode:group options:updateOptions];
     }
   }
