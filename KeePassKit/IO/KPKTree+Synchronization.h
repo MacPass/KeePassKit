@@ -15,7 +15,7 @@ typedef NS_ENUM(NSUInteger, KPKSynchronizationOptions) {
     KPKSynchronizationCreateNewUuidsOption = 4,
     KPKSynchronizationSynchronizeOption = 5
 };
-@interface KPKTree (KPKSynchronization)
+@interface KPKTree (Synchronization)
 
 - (BOOL)syncronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
 

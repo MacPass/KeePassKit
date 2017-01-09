@@ -34,6 +34,7 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 
 #import "KPKTree.h"
 #import "KPKTree+Serializing.h"
+#import "KPKTree+Synchronization.h"
 #import "KPKNode.h"
 #import "KPKEntry.h"
 #import "KPKGroup.h"

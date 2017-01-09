@@ -6,7 +6,7 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKTree+KPKSynchronization.h"
+#import "KPKTree+Synchronization.h"
 
 #import "KPKNode.h"
 #import "KPKNode_Private.h"
@@ -14,13 +14,14 @@
 #import "KPKGroup.h"
 #import "KPKGroup_Private.h"
 
-@implementation KPKTree (KPKSynchronization)
+@implementation KPKTree (Synchronization)
 
 
 - (BOOL)syncronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
   if(options == KPKSynchronizationCreateNewUuidsOption) {
     [self.root _regenerateUUIDs];
   }
+  self.metaData.
   for(KPKGroup *group in tree.allGroups) {
     KPKDeletedNode *deletedNode = self.deletedObjects[group.uuid];
     if(nil != deletedNode) {
@@ -47,12 +48,15 @@
       localGroup.updateTiming = updateTiming;
     }
     else {
-      /* ignore entries and subgroups to just compare the group attributes */
-      KPKNodeEqualityOptions options = KPKNodeEqualityIgnoreGroupsOption | KPKNodeEqualityIgnoreEntriesOption;
-      if([localGroup _isEqualToGroup:group options:options]) {
+      /*
+       ignore entries and subgroups to just compare the group attributes,
+       KPKNodeEqualityIgnoreHistory not needed since we do not compare entries at all
+       */
+      KPKNodeEqualityOptions equalityOptions = KPKNodeEqualityIgnoreGroupsOption | KPKNodeEqualityIgnoreEntriesOption;
+      if([localGroup _isEqualToGroup:group options:equalityOptions]) {
         continue; // Groups has not changed at all, no updates needed
       }
-      KPKUpdateOptions updateOptions = (options == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime : 0;
+      KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime : 0;
       if(options == KPKSynchronizationOverwriteExistingOption ||
          options == KPKSynchronizationOverwriteIfNewerOption ||
          options == KPKSynchronizationSynchronizeOption) {

@@ -47,7 +47,7 @@
 @property(nonatomic, copy) NSString *defaultUserName;
 @property(nonatomic, copy) NSDate *defaultUserNameChanged;
 @property(nonatomic) NSInteger maintenanceHistoryDays;
-#
+
 /* Hexstring - #AA77FF */
 @property(nonatomic, copy) NSUIColor *color;
 
