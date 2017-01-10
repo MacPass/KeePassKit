@@ -7,33 +7,66 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "KeePassKit.h"
 
 @interface KPKTestSynchronization : XCTestCase
-
+@property (strong) KPKTree *treeA;
+@property (strong) KPKTree *treeB;
 @end
 
 @implementation KPKTestSynchronization
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+  self.treeA = [[KPKTree alloc] init];
+  self.treeA.root = [[KPKGroup alloc] init];
+  [[[KPKGroup alloc] init] addToGroup:self.treeA.root];
+  [[[KPKEntry alloc] init] addToGroup:self.treeA.root];
+  
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  NSData *data = [self.treeA encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
+  self.treeB = [[KPKTree alloc] initWithData:data key:key error:nil];
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
+
+- (void)testAddedGroup {
+  KPKGroup *newGroup = [[KPKGroup alloc] init];
+  [newGroup addToGroup:self.treeB.root];
+  
+  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  KPKGroup *synchronizedGroup = [self.treeA.root groupForUUID:newGroup.uuid];
+  XCTAssertNotNil(synchronizedGroup);
+  XCTAssertEqualObjects(newGroup, synchronizedGroup);
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testChangedExternalGroup {
+  KPKGroup *group = self.treeB.root.groups.firstObject;
+  NSUUID *uuid = group.uuid;
+  group.title = @"TheTitleHasChanged";
+
+  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  KPKGroup *changedGroup = [self.treeA.root groupForUUID:uuid];
+  XCTAssertNotNil(changedGroup);
+  XCTAssertEqualObjects(changedGroup.title, @"TheTitleHasChanged");
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testChangedLocalGroup {
+  KPKGroup *groupB = self.treeB.root.groups.firstObject;
+  NSUUID *uuid = groupB.uuid;
+  groupB.title = @"TheTitleHasChanged";
+  
+  KPKGroup *groupA = [self.treeA.root groupForUUID:uuid];
+  groupA.title = @"ThisChangeWasLaterSoItStays";
+  
+  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  KPKGroup *changedGroup = [self.treeA.root groupForUUID:uuid];
+  XCTAssertNotNil(changedGroup);
+  XCTAssertEqualObjects(changedGroup.title, @"ThisChangeWasLaterSoItStays");
 }
+
+
 
 @end
