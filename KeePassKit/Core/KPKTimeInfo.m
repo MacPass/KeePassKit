@@ -106,7 +106,7 @@
 }
 
 - (NSString *)description {
-  return [NSString stringWithFormat:@"creationDate=%@, modificationDate=%@, accessDate=%@, expirationDate=%@, moved=%@, used=%ld",
+  return [NSString stringWithFormat:@"creationDate=%@\rmodificationDate=%@\raccessDate=%@\rexpirationDate=%@\rmoved=%@\rused=%ld",
           self.creationDate,
           self.modificationDate,
           self.accessDate,
