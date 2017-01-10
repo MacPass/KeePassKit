@@ -21,7 +21,7 @@
   if(options == KPKSynchronizationCreateNewUuidsOption) {
     [self.root _regenerateUUIDs];
   }
-  self.metaData.
+  
   for(KPKGroup *group in tree.allGroups) {
     KPKDeletedNode *deletedNode = self.deletedObjects[group.uuid];
     if(nil != deletedNode) {
