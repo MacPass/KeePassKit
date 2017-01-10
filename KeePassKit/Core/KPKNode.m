@@ -127,6 +127,14 @@
   return isEqual;
 }
 
+- (NSString*)description {
+  return [NSString stringWithFormat:@"%@\rimage=%ld\rname=%@\r%@]",
+          self.class,
+          self.iconId,
+          self.title,
+          self.timeInfo];
+}
+
 #pragma mark Properties
 - (BOOL)isEditable {
   if(self.tree) {

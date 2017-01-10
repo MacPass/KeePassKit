@@ -90,14 +90,6 @@
   return self;
 }
 
-- (NSString*)description {
-  return [NSString stringWithFormat:@"%@ [image=%ld, name=%@, %@]",
-          [self class],
-          self.iconId,
-          self.title,
-          self.timeInfo];
-}
-
 #pragma mark NSCoding
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [super _initWithCoder:aDecoder];
