@@ -489,7 +489,10 @@
     return self;
   }
   for(KPKGroup *group in _groups) {
-    return [group groupForUUID:uuid];
+    KPKGroup *match = [group groupForUUID:uuid];
+    if(match) {
+      return match;
+    }
   }
   return nil;
 }
