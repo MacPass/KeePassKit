@@ -243,6 +243,7 @@
 		4CA6DB8F1DC3574200650417 /* KPKChaCha20RandomStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA6DB8D1DC3574200650417 /* KPKChaCha20RandomStream.m */; };
 		4CC34FE71D21290D00D79EC1 /* KPKTestUndoAutotype.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */; };
 		4CC57A281DCD454A003EE16C /* KPKTestTwofish.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC57A271DCD454A003EE16C /* KPKTestTwofish.m */; };
+		4CCB50AC1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCB50AB1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m */; };
 		4CCC95061E24F2BD00593E65 /* KPKTestNodeForUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */; };
 		4CCE00C71D78598800B8D50A /* KPKTimeInfo_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCE00C51D78598800B8D50A /* KPKTimeInfo_Private.h */; };
 		4CD607AE1DFAAECE00C815E5 /* KPKPlatformIncludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -505,6 +506,7 @@
 		4CA6DB8D1DC3574200650417 /* KPKChaCha20RandomStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKChaCha20RandomStream.m; sourceTree = "<group>"; };
 		4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestUndoAutotype.m; sourceTree = "<group>"; };
 		4CC57A271DCD454A003EE16C /* KPKTestTwofish.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestTwofish.m; sourceTree = "<group>"; };
+		4CCB50AB1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestWindowAssociationTitleMatching.m; sourceTree = "<group>"; };
 		4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestNodeForUUID.m; sourceTree = "<group>"; };
 		4CCE00C51D78598800B8D50A /* KPKTimeInfo_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKTimeInfo_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4CE471ED1E08327D00AA3D81 /* KPKTestKVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestKVO.m; sourceTree = "<group>"; };
@@ -752,6 +754,7 @@
 				4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */,
 				4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */,
 				4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */,
+				4CCB50AB1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m */,
 				4C93C4AC1DC2704600260DD4 /* KPKTestChaCha20.m */,
 				4CC57A271DCD454A003EE16C /* KPKTestTwofish.m */,
 				4C5CF4951BE10F090019AA81 /* KPKTestHashedData.m */,
@@ -866,8 +869,8 @@
 				4C5CF3FE1BE10E000019AA81 /* KPKTree_Private.h */,
 				4C5CF3FF1BE10E000019AA81 /* KPKTree.h */,
 				4C5CF4001BE10E000019AA81 /* KPKTree.m */,
-				4C5CF4011BE10E000019AA81 /* KPKWindowAssociation_Private.h */,
 				4C5CF4021BE10E000019AA81 /* KPKWindowAssociation.h */,
+				4C5CF4011BE10E000019AA81 /* KPKWindowAssociation_Private.h */,
 				4C5CF4031BE10E000019AA81 /* KPKWindowAssociation.m */,
 			);
 			path = Core;
@@ -895,14 +898,14 @@
 				4C5CF4391BE10E100019AA81 /* KPKDataStreamWriter.m */,
 				4C5CF4481BE10E100019AA81 /* KPKTree+Serializing.h */,
 				4C5CF4491BE10E100019AA81 /* KPKTree+Serializing.m */,
+				4C6C6EF81DDE231A0079C26D /* KPKTree+Synchronization.h */,
+				4C6C6EF91DDE231A0079C26D /* KPKTree+Synchronization.m */,
 				4C2ADBEB1D7C6495002C3190 /* KPKArchiver.h */,
 				4C2ADBF31D7C6665002C3190 /* KPKArchiver_Private.h */,
 				4C2ADBEC1D7C6495002C3190 /* KPKArchiver.m */,
 				4C2ADBEF1D7C649F002C3190 /* KPKUnarchiver.h */,
 				4C0B9D7C1DBFADE200E66CD6 /* KPKUnarchiver_Private.h */,
 				4C2ADBF01D7C649F002C3190 /* KPKUnarchiver.m */,
-				4C6C6EF81DDE231A0079C26D /* KPKTree+Synchronization.h */,
-				4C6C6EF91DDE231A0079C26D /* KPKTree+Synchronization.m */,
 			);
 			path = IO;
 			sourceTree = "<group>";
@@ -1413,6 +1416,7 @@
 				4C5CF4AD1BE10F090019AA81 /* KPKTestHexColor.m in Sources */,
 				4CFAE3711D88537C007B57DB /* KPKTestKPKNumber.m in Sources */,
 				4CF7E8A61DCA4B4700BB652F /* KPKTestKeyComputation.m in Sources */,
+				4CCB50AC1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m in Sources */,
 				4C44988F1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m in Sources */,
 				4C5CF4BC1BE10F090019AA81 /* KPKTextXMLUtilities.m in Sources */,
 				4C5CF4B81BE10F090019AA81 /* KPKTestUUIDAdditions.m in Sources */,
