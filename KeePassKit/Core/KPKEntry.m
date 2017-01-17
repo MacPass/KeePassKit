@@ -633,24 +633,36 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 #pragma mark Mergin
-- (void)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
-  [super _updateFromNode:node options:options];
+- (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
+  BOOL didChange = [super _updateFromNode:node options:options];
   
   NSComparisonResult result = [self.timeInfo.modificationDate compare:node.timeInfo.modificationDate];
   if(NSOrderedDescending == result || (options & KPKUpdateOptionIgnoreModificationTime)) {
-    KPKGroup *group = node.asGroup;
-    if(!group) {
-      return;
+    KPKEntry *sourceEntry = node.asEntry;
+    if(!sourceEntry) {
+      return didChange;
     }
+
+    /* collections */
+    self.mutableAttributes = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableAttributes copyItems:YES];
+    self.mutableHistory = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableHistory copyItems:YES];
+    self->_binaries = [[NSMutableArray alloc] initWithArray:sourceEntry->_binaries copyItems:YES];
     
+    self.overrideURL = sourceEntry.overrideURL;
+    self.tags = sourceEntry.tags;
+    self.autotype = sourceEntry.autotype;
     
+    self.foregroundColor = sourceEntry.foregroundColor;
+    self.backgroundColor = sourceEntry.backgroundColor;
     
     NSDate *movedTime = self.timeInfo.locationChanged;
-    self.timeInfo = group.timeInfo;
+    self.timeInfo = sourceEntry.timeInfo;
     if(!(options & KPKUpdateOptionUpateMovedTime)) {
       self.timeInfo.locationChanged = movedTime;
     }
+    return YES;
   }
+  return didChange;
 }
 
 #pragma mark History

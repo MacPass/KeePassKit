@@ -56,7 +56,16 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {
 - (instancetype)_copyWithUUID:(NSUUID *)uuid;
 
 #pragma mark Merging
-- (void)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options;
+
+/**
+ Updates the reveiving node with properties form the node.
+ The way the update works depends heavily on the provided optoins
+
+ @param node node to update from
+ @param options options to use for updation
+ @return YES if the node did change, otherwise NO
+ */
+- (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options;
 
 #pragma mark Extended Equality
 - (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options;

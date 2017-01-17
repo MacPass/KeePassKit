@@ -241,14 +241,14 @@
   return YES;
 }
 
-- (void)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
-  [super _updateFromNode:node options:options];
+- (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
+  BOOL didChange = [super _updateFromNode:node options:options];
   
   NSComparisonResult result = [self.timeInfo.modificationDate compare:node.timeInfo.modificationDate];
   if(NSOrderedDescending == result || (options & KPKUpdateOptionIgnoreModificationTime)) {
     KPKGroup *group = node.asGroup;
     if(!group) {
-      return;
+      return didChange;
     }
     
     self.isAutoTypeEnabled = group.isAutoTypeEnabled;
@@ -261,7 +261,9 @@
     if(!(options & KPKUpdateOptionUpateMovedTime)) {
       self.timeInfo.locationChanged = movedTime;
     }
+    return YES;
   }
+  return didChange;
 }
 
 #pragma mark Strucural Helper

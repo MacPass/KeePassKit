@@ -325,14 +325,16 @@
   return nil;
 }
 
-- (void)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
+- (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
   NSComparisonResult result = [self.timeInfo.modificationDate compare:node.timeInfo.modificationDate];
   if(result == NSOrderedAscending || (options & KPKUpdateOptionIgnoreModificationTime)) {
     self.iconId = node.iconId;
     self.iconUUID = node.iconUUID;
     self.title = node.title;
     self.notes = node.notes;
+    return YES;
   }
+  return NO;
 }
 
 #pragma mark -
