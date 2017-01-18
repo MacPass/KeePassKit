@@ -26,10 +26,11 @@
 #import "KPKAutotype.h"
 #import "KPKErrors.h"
 
-@interface KPKWindowAssociation ()
+@interface KPKWindowAssociation () {
+  BOOL _regularExpressionValid;
+}
 
 @property (nonatomic, strong) NSRegularExpression *windowTitleRegularExpression;
-@property (nonatomic, copy) NSString *keyStrokeSequence;
 
 @end
 
@@ -55,7 +56,7 @@
   if(self) {
     _windowTitle = [windowTitle copy];
     _keystrokeSequence = [strokes copy];
-    [self _updateRegularExpression];
+    _regularExpressionValid = NO;
   }
   return self;
 }
@@ -63,9 +64,9 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
-    _windowTitle = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(windowTitle))];
-    _keystrokeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(keystrokeSequence))];
-    [self _updateRegularExpression];
+    _windowTitle = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(windowTitle))] copy];
+    _keystrokeSequence = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(keystrokeSequence))] copy];
+    _regularExpressionValid = NO;
   }
   return self;
 }
@@ -129,7 +130,7 @@
     [self.autotype.entry.undoManager registerUndoWithTarget:self selector:@selector(setWindowTitle:) object:self.windowTitle];
     [self.autotype.entry touchModified];
     _windowTitle = [windowTitle copy];
-    [self _updateRegularExpression];
+    _regularExpressionValid = NO;
   }
 }
 
@@ -149,11 +150,15 @@
   if(NSOrderedSame == [self.windowTitle caseInsensitiveCompare:windowTitle]) {
     return YES;
   }
+  [self _updateRegularExpression];
   NSUInteger matches = [self.windowTitleRegularExpression numberOfMatchesInString:windowTitle options:0 range:NSMakeRange(0, windowTitle.length)];
   return (matches > 0);
 }
 
 - (void)_updateRegularExpression {
+  if(_regularExpressionValid) {
+    return;
+  }
   NSString *pattern;
   if([self.windowTitle hasPrefix:@"//"] && [self.windowTitle hasSuffix:@"//"]) {
     pattern = [self.windowTitle substringWithRange:NSMakeRange(2, self.windowTitle.length - 4)];
@@ -166,7 +171,10 @@
   }
   NSError *error;
   self.windowTitleRegularExpression = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:&error];
-  if(!self.windowTitleRegularExpression) {
+  if(self.windowTitleRegularExpression) {
+    _regularExpressionValid = YES;
+  }
+  else {
     NSLog(@"Error while trying to evaluate regular expression %@: %@", pattern, error.localizedDescription);
   }
 }

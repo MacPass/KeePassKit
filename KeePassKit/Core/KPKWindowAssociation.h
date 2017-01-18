@@ -36,7 +36,7 @@
 /**
  *  The autotype sequence to use for this window association
  */
-@property (nonatomic, readonly, copy) NSString *keystrokeSequence;
+@property (nonatomic, copy) NSString *keystrokeSequence;
 @property (weak, readonly) KPKAutotype *autotype;
 @property (nonatomic, readonly) BOOL hasDefaultKeystrokeSequence;
 
