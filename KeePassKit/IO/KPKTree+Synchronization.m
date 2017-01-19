@@ -22,12 +22,25 @@
 
 
 - (BOOL)syncronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
-  BOOL didChange = NO;
+  
   if(options == KPKSynchronizationCreateNewUuidsOption) {
     /* create new uuid in the sourc tree */
     [tree.root _regenerateUUIDs];
   }
   
+  BOOL didChange = [self _mergeGroupsFromTree:tree options:options];
+  didChange |= [self _mergeEntriesFromTree:tree options:options];
+  didChange |= [self _mergeDeletedObjects:tree.mutableDeletedObjects];
+
+  
+  /* clear undo stack just to be save */
+  //[self.undoManager removeAllActions]
+  
+  return YES;
+}
+
+- (BOOL)_mergeGroupsFromTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
+  BOOL didChange = NO;
   for(KPKGroup *externGroup in tree.allGroups) {
     KPKDeletedNode *deletedNode = self.deletedObjects[externGroup.uuid];
     if(nil != deletedNode) {
@@ -50,7 +63,7 @@
       }
       BOOL updateTiming = localGroup.updateTiming;
       localGroup.updateTiming = NO;
-      [localGroup addToGroup:localParent];
+      [localGroup addToGroup:localParent atIndex:externGroup.index];
       localGroup.updateTiming = updateTiming;
       didChange = YES;
     }
@@ -68,13 +81,14 @@
       if(options == KPKSynchronizationOverwriteExistingOption ||
          options == KPKSynchronizationOverwriteIfNewerOption ||
          options == KPKSynchronizationSynchronizeOption) {
-        [localGroup _updateFromNode:externGroup options:updateOptions];
+        didChange |= [localGroup _updateFromNode:externGroup options:updateOptions];
       }
     }
   }
-  
-  /* merge entries */
-  
+  return didChange;
+}
+- (BOOL)_mergeEntriesFromTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
+  BOOL didChange = NO;
   for(KPKEntry *externEntry in tree.allEntries) {
     KPKDeletedNode *deletedNode = self.deletedObjects[externEntry.uuid];
     if(nil != deletedNode) {
@@ -96,8 +110,9 @@
       }
       BOOL updateTiming = localEntry.updateTiming;
       localEntry.updateTiming = NO;
-      [localEntry addToGroup:localParent];
+      [localEntry addToGroup:localParent atIndex:externEntry.index];
       localEntry.updateTiming = updateTiming;
+      didChange = YES;
     }
     else {
       NSAssert(options != KPKSynchronizationCreateNewUuidsOption, @"UUID collision while merging trees!");
@@ -113,37 +128,41 @@
       if(options == KPKSynchronizationOverwriteExistingOption ||
          options == KPKSynchronizationOverwriteIfNewerOption ||
          options == KPKSynchronizationSynchronizeOption) {
-        [localEntry _updateFromNode:externEntry options:updateOptions];
+        didChange |= [localEntry _updateFromNode:externEntry options:updateOptions];
       }
     }
   }
-  
-  /* merge deleted objects */
-  
-  for(NSUUID *uuid in tree.mutableDeletedObjects) {
-    KPKDeletedNode *otherDeletedNode = tree.mutableDeletedObjects[uuid];
+  return didChange;
+}
+
+- (void)_mergeHistory:(KPKEntry *)entry ofEntry:(KPKEntry *)otherEntry {
+
+}
+
+- (BOOL)_mergeDeletedObjects:(NSDictionary<NSUUID *,KPKDeletedNode *> *)deletedObjects {
+  for(NSUUID *uuid in deletedObjects) {
+    KPKDeletedNode *otherDeletedNode = deletedObjects[uuid];
     KPKDeletedNode *localDeletedNode = self.mutableDeletedObjects[uuid];
     if(!localDeletedNode) {
       self.mutableDeletedObjects[uuid] = otherDeletedNode;
       continue; // done;
     }
-
+    
     /* if the other node was deleted later, we use this other node instaed and remove ours */
     NSComparisonResult result = [localDeletedNode.deletionDate compare:otherDeletedNode.deletionDate];
     if(result == NSOrderedAscending) {
       self.mutableDeletedObjects[uuid] = otherDeletedNode;
     }
-    
   }
-  
-  /* clear undo stack just to be save */
-  //[self.undoManager removeAllActions]
-  
-  return YES;
-}
-
-- (void)_mergeHistory:(KPKEntry *)entry ofEntry:(KPKEntry *)otherEntry {
-
+  /* reapply deletion */
+  //FIXME: this causes data loss if a deleted group now has children!!!
+  for(NSUUID *uuid in self.mutableDeletedObjects) {
+    KPKGroup *group = [self.root groupForUUID:uuid];
+    [group.parent _removeChild:group];
+    KPKEntry *entry = [self.root entryForUUID:uuid];
+    [entry.parent _removeChild:entry];
+  }
+  return NO;
 }
 
 @end
