@@ -402,7 +402,7 @@
 }
 
 - (void)_regenerateUUIDs {
-  _uuid = [[NSUUID alloc] init];
+  _uuid = [[[NSUUID alloc] init] copy];
 }
 
 @end
