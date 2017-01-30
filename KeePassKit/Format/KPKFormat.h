@@ -281,6 +281,7 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeDelay;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualKey;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualNonExtendedKey;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualExtendedKey;
+FOUNDATION_EXPORT NSString *const kKPKAutotypeActivateApplication;
 
 /**
  Format class.

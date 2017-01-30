@@ -274,7 +274,7 @@ NSString *const kKPKAutotypeKeypaddAdd = @"{ADD}";
 NSString *const kKPKAutotypeKeypaddSubtract = @"{SUBTRACT}";
 NSString *const kKPKAutotypeKeypaddMultiply = @"{MULTIPLY}";
 NSString *const kKPKAutotypeKeypaddDivide = @"{DIVIDE}";
-NSString *const kKPKAutotypeKeypaddNumberMask = @"\\{NUMPAD[0-9]\\}"; // 0-9
+NSString *const kKPKAutotypeKeypaddNumberMaskRegularExpression = @"\\{NUMPAD[0-9]\\}"; // 0-9
 
 /* Symbols */
 NSString *const kKPKAutotypePlus = @"{PLUS}";
@@ -296,6 +296,7 @@ NSString *const kKPKAutotypeDelay = @"DELAY";
 NSString *const kKPKAutotypeVirtualKey = @"VKEY";
 NSString *const kKPKAutotypeVirtualNonExtendedKey = @"VKEY-NX";
 NSString *const kKPKAutotypeVirtualExtendedKey = @"VKEY-EX";
+NSString *const kKPKAutotypeActivateApplication = @"APPACTIVATE";
 
 /*
  Windows Key	{WIN} (equ. to {LWIN})
