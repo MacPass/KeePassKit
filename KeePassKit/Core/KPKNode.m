@@ -181,7 +181,7 @@
   return [self.tree.trash isAnchestorOf:self];
 }
 
-- (NSArray<KPKBinary *> *)customData {
+- (NSDictionary<NSString *,NSString *> *)customData {
   return [self.mutableCustomData copy];
 }
 
