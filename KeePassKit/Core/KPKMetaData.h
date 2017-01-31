@@ -77,9 +77,9 @@
 @property(copy) NSUUID *lastSelectedGroup;
 @property(copy) NSUUID *lastTopVisibleGroup;
 
-@property(nonatomic, copy, readonly) NSArray<KPKBinary *> *customData;
+@property(nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *customData;
 @property(nonatomic, copy, readonly) NSArray<KPKIcon *> *customIcons;
-@property(nonatomic, copy, readonly) NSDictionary *customPublicData; // NSDictionary(Variant) with custom date stored in the public header
+@property(nonatomic, copy, readonly) NSDictionary<NSString *, id> *customPublicData; // NSDictionary(Variant) with custom date stored in the public header
 /**
  *	Array of KPKBinary objects - extracted from unknown meta entries. Notes is mapped to name, data to data
  */

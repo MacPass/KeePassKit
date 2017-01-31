@@ -162,7 +162,7 @@
   }
   
   DDXMLElement *customDataElement = [self _xmlCustomData:metaData.mutableCustomData addEmptyElement:YES];
-  NSAssert(customDataElement, @"Unepected nil value!");
+  NSAssert(customDataElement, @"Unexspected nil value!");
   [metaElement addChild:customDataElement];
   /* Add meta Element to XML root */
   [[document rootElement] addChild:metaElement];
@@ -376,14 +376,14 @@
   return customIconsElements;
 }
 
-- (DDXMLElement *)_xmlCustomData:(NSArray *)customData addEmptyElement:(BOOL)addEmpty{
+- (DDXMLElement *)_xmlCustomData:(NSDictionary<NSString *, NSString*> *)customData addEmptyElement:(BOOL)addEmpty{
   DDXMLElement *customDataElement;
   if(addEmpty || customData.count > 0) {
     customDataElement = [DDXMLElement elementWithName:kKPKXmlCustomData];
-    for (KPKBinary *binary in customData) {
+    for(NSString *key in customData) {
       DDXMLElement *itemElement = [DDXMLElement elementWithName:kKPKXmlCustomDataItem];
-      KPKAddXmlElement(itemElement, kKPKXmlKey, binary.name.kpk_xmlCompatibleString);
-      KPKAddXmlElement(itemElement, kKPKXmlValue, [binary encodedStringUsingCompression:NO]);
+      KPKAddXmlElement(itemElement, kKPKXmlKey, key.kpk_xmlCompatibleString);
+      KPKAddXmlElement(itemElement, kKPKXmlValue, customData[key].kpk_xmlCompatibleString);
       [customDataElement addChild:itemElement];
     }
   }

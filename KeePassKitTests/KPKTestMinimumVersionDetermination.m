@@ -87,10 +87,9 @@
 
 - (void)testMinimumVersionForCustomGroupData {
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdb, tree.minimumVersion));
-  KPKBinary *binary = [[KPKBinary alloc] initWithName:@"Data" data:[NSData kpk_dataWithRandomBytes:10]];
-  [tree.root.mutableCustomData addObject:binary];
+  tree.root.mutableCustomData[@"Key"] = @"Value";
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdbx4, tree.minimumVersion));
-  [tree.root.mutableCustomData removeObject:binary];
+  tree.root.mutableCustomData[@"Key"] = nil;
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdb, tree.minimumVersion));
 }
 
@@ -104,12 +103,11 @@
   KPKEntry *entry = [[KPKEntry alloc] init];
   [entry addToGroup:group];
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdb, tree.minimumVersion));
-  
-  KPKBinary *binary = [[KPKBinary alloc] initWithName:@"Data" data:[NSData kpk_dataWithRandomBytes:10]];
-  [entry.mutableCustomData addObject:binary];
+
+  entry.mutableCustomData[@"Key"] = @"Value";
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdbx4, tree.minimumVersion));
   
-  [entry.mutableCustomData removeObject:binary];
+  entry.mutableCustomData[@"Key"] = nil;
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdb, tree.minimumVersion));
 }
 

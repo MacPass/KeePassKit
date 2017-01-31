@@ -211,7 +211,7 @@
   
   [self _parseCustomIcons:metaElement meta:data];
   [self _parseBinaries:metaElement meta:data];
-  [self _parseCustomData:metaElement dataArray:data.mutableCustomData];
+  [self _parseCustomData:metaElement intoDictionary:data.mutableCustomData];
 }
 
 - (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement {
@@ -241,7 +241,7 @@
   group.isSearchEnabled = parseInheritBool(groupElement, kKPKXmlEnableSearching);
   group.lastTopVisibleEntry = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlLastTopVisibleEntry)];
   
-  [self _parseCustomData:groupElement dataArray:group.mutableCustomData];
+  [self _parseCustomData:groupElement intoDictionary:group.mutableCustomData];
   
   for (DDXMLElement *element in [groupElement elementsForName:kKPKXmlEntry]) {
     KPKEntry *entry = [self _parseEntry:element ignoreHistory:NO];
@@ -300,7 +300,7 @@
     [self _parseHistory:entryElement entry:entry];
   }
   
-  [self _parseCustomData:entryElement dataArray:entry.mutableCustomData];
+  [self _parseCustomData:entryElement intoDictionary:entry.mutableCustomData];
   
   entry.updateTiming = YES;
   return entry;
@@ -381,19 +381,22 @@
   }
 }
 
-- (void)_parseCustomData:(DDXMLElement *)root dataArray:(NSMutableArray *)array{
+- (void)_parseCustomData:(DDXMLElement *)root intoDictionary:(NSMutableDictionary<NSString *, NSString *> *)dict{
   DDXMLElement *customDataElement = [root elementForName:@"CustomData"];
   for(DDXMLElement *dataElement in [customDataElement elementsForName:kKPKXmlCustomDataItem]) {
     /*
      <CustomData>
      <Item>
-     <Key></Key>
-     <Value>-Base64EncodedValue-</Value>
+     <Key></Key> - plain string
+     <Value></Value> - plain string
      </Item>
      </CustomData>
      */
-    KPKBinary *customData = [[KPKBinary alloc] initWithName:KPKXmlString(dataElement, kKPKXmlKey) string:KPKXmlString(dataElement, kKPKXmlValue) compressed:NO];
-    [array addObject:customData];
+    NSString *key = KPKXmlString(dataElement, kKPKXmlKey);
+    NSString *value = KPKXmlString(dataElement, kKPKXmlValue);
+    if((key.length > 0) && value) {
+      dict[key] = value;
+    }
   }
 }
 

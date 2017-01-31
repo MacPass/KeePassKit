@@ -14,9 +14,9 @@
 
 @interface KPKMetaData () <KPKExtendedModificationRecording>
 
-@property(nonatomic, strong) NSMutableArray<KPKBinary *> *mutableCustomData;
 @property(nonatomic, strong) NSMutableArray<KPKIcon *> *mutableCustomIcons;
 @property(nonatomic, strong) NSMutableArray<KPKBinary *> *mutableUnknownMetaEntryData;
-@property(nonatomic, strong) NSMutableDictionary *mutableCustomPublicData;
+@property(nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableCustomData;
+@property(nonatomic, strong) NSMutableDictionary<NSString *, id> *mutableCustomPublicData;
 
 @end

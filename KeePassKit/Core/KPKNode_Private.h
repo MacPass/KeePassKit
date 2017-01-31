@@ -31,7 +31,7 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;
 @property(nonatomic, weak) KPKGroup *parent;
 @property(nonatomic, readonly) KPKFileVersion minimumVersion;
-@property(nonatomic, strong) NSMutableArray<KPKBinary *> *mutableCustomData;
+@property(nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableCustomData;
 
 #pragma mark Initalizer
 /* Subclasses have to override these initalizers */

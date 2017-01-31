@@ -350,7 +350,7 @@
     _uuid = uuid ? [uuid copy] : [[[NSUUID alloc] init] copy];
     self.timeInfo = [[KPKTimeInfo alloc] init];
     _iconId = [[self class] defaultIcon];
-    _mutableCustomData = [[NSMutableArray alloc] init];
+    _mutableCustomData = [[NSMutableDictionary alloc] init];
   }
   return self;
 }

@@ -53,7 +53,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly, copy) NSUUID *uuid;
 @property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *notes;
-@property(nonatomic, copy) NSArray<KPKBinary *> *customData;
+@property(nonatomic, copy) NSDictionary<NSString *, NSString *> *customData;
 
 @property(nonatomic, copy, readonly) KPKTimeInfo *timeInfo;
 

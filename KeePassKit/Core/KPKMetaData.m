@@ -60,7 +60,7 @@
 - (instancetype)init {
   self = [super init];
   if(self){
-    _mutableCustomData = [[NSMutableArray alloc] init];
+    _mutableCustomData = [[NSMutableDictionary alloc] init];
     _mutableCustomPublicData = [[NSMutableDictionary alloc] init];
     _mutableCustomIcons = [[NSMutableArray alloc] init];
     _mutableUnknownMetaEntryData = [[NSMutableArray alloc] init];
@@ -224,7 +224,7 @@
   self.historyMaxSize == other.historyMaxSize &&
   [self.lastSelectedGroup isEqualTo:other.lastSelectedGroup] &&
   [self.lastTopVisibleGroup isEqualTo:other.lastTopVisibleGroup] &&
-  [self.mutableCustomData isEqualToArray:other.mutableCustomData] &&
+  [self.mutableCustomData isEqualToDictionary:other.mutableCustomData] &&
   [self.mutableCustomPublicData isEqualToDictionary:other.mutableCustomPublicData] &&
   [self.mutableCustomIcons isEqualToArray:other.mutableCustomIcons] &&
   [self.mutableUnknownMetaEntryData isEqualToArray:other.mutableUnknownMetaEntryData] &&
