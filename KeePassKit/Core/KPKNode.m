@@ -337,6 +337,18 @@
   return NO;
 }
 
+- (void)removeCustomDataValueForKey:(NSString *)key {
+  self.mutableCustomData[key] = nil;
+}
+
+- (void)addCustomDataValue:(NSString *)value forKey:(NSString *)key {
+  self.mutableCustomData[key] = value;
+}
+
+#pragma mark -
+#pragma mark KVO
+
+
 #pragma mark -
 #pragma mark Private Extensions
 - (instancetype)_init {
