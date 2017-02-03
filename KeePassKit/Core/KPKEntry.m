@@ -627,6 +627,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
    */
   NSUInteger index = [_binaries indexOfObject:binary];
   if(index != NSNotFound) {
+    [[self.undoManager prepareWithInvocationTarget:self] addBinary:binary];
     [self touchModified];
     [self removeObjectFromBinariesAtIndex:index];
   }
