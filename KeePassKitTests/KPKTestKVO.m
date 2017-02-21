@@ -33,13 +33,34 @@
   [self _bindAndTestEntry:entry selector:@selector(url)];
 }
 
-- (void)testGroupKVO {
+- (void)testGroupAttributesKVO {
   KPKGroup *group = [[KPKGroup alloc] init];
   group.title = @"Title";
   group.notes = @"Notes";
   
   [self _bindAndTestGroup:group selector:@selector(title)];
   [self _bindAndTestGroup:group selector:@selector(notes)];
+}
+
+- (void)testGroupChildrenKVO {
+  KPKGroup *group = [[KPKGroup alloc] init];
+
+  [[[KPKEntry alloc] init] addToGroup:group];
+
+  NSUInteger groups = 5;
+  while(groups--) {
+    KPKGroup *subGroup = [[KPKGroup alloc] init];
+    [subGroup addToGroup:group];
+    [[[KPKEntry alloc] init] addToGroup:subGroup];
+    NSUInteger subGroups = 5;
+    while(subGroups--) {
+      [[[KPKGroup alloc] init] addToGroup:subGroup];
+    }
+  }
+}
+
+- (void)testGroupChildEntreisKVO {
+
 }
 
 - (void)_bindAndTestGroup:(KPKGroup *)group selector:(SEL)selector {

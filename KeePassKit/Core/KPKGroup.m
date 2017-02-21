@@ -45,6 +45,8 @@
 
 @implementation KPKGroup
 
+static NSSet *_observedKeyPathsSet;
+
 @dynamic updateTiming;
 @synthesize defaultAutoTypeSequence = _defaultAutoTypeSequence;
 @synthesize title = _title;
@@ -56,6 +58,10 @@
 
 + (NSSet *)keyPathsForValuesAffectingChildren {
   return [NSSet setWithArray:@[NSStringFromSelector(@selector(groups)), NSStringFromSelector(@selector(entries)) ]];
+}
+
++ (NSSet *)keyPathsForValuesAffectingChildEntries {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(entries))];
 }
 
 + (NSUInteger)defaultIcon {
@@ -86,6 +92,9 @@
     _isSearchEnabled = KPKInherit;
     _lastTopVisibleEntry = [NSUUID kpk_nullUUID];
     //self.updateTiming = YES;
+    if(!_observedKeyPathsSet) {
+      _observedKeyPathsSet = [NSSet setWithArray:@[NSStringFromSelector(@selector(children)), NSStringFromSelector(@selector(childEntries))]];
+    }
   }
   return self;
 }
@@ -654,12 +663,11 @@
   if(!object) {
     return;
   }
-  if(![keyPath isEqualToString:NSStringFromSelector(@selector(children))]) {
-    return;
+  if([_observedKeyPathsSet containsObject:keyPath]) {
+    /* just trigger a update to the children property */
+    [self willChangeValueForKey:keyPath];
+    [self didChangeValueForKey:keyPath];
   }
-  /* just trigger a update to the children property */
-  [self willChangeValueForKey:NSStringFromSelector(@selector(children))];
-  [self didChangeValueForKey:NSStringFromSelector(@selector(children))];
 }
 
 @end
