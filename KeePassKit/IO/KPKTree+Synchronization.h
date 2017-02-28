@@ -17,6 +17,6 @@ typedef NS_ENUM(NSUInteger, KPKSynchronizationOptions) {
 };
 @interface KPKTree (Synchronization)
 
-- (BOOL)syncronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
+- (void)syncronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
 
 @end
