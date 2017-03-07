@@ -74,7 +74,7 @@ NSString *KPKStringFromBool(BOOL value) {
   return (value ? @"True" : @"False" );
 }
 
-NSString *stringFromInhertiBool(KPKInheritBool value) {
+NSString *stringFromInheritBool(KPKInheritBool value) {
   switch(value) {
     case KPKInherit:
       return @"null";
@@ -138,15 +138,16 @@ NSDate *KPKXmlDate(NSDateFormatter *dateFormatter, DDXMLElement *element, NSStri
 }
 
 KPKInheritBool parseInheritBool(DDXMLElement *element, NSString *name) {
-  NSString *stringValue = [[element elementForName:name] stringValue];
+  DDXMLNode *boolElement = [element elementForName:name];
+  NSString *stringValue = [boolElement stringValue];
   if (NSOrderedSame == [stringValue caseInsensitiveCompare:@"null"]) {
     return KPKInherit;
   }
   
-  if(KPKXmlTrue(element)) {
+  if(KPKXmlTrue(boolElement)) {
     return KPKInheritYES;
   }
-  if(KPKXmlFalse(element)) {
+  if(KPKXmlFalse(boolElement)) {
     return KPKInheritNO;
   }
   return KPKInherit;
