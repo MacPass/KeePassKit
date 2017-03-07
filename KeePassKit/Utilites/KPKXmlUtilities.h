@@ -85,7 +85,7 @@ NSString *KPKStringFromBool(BOOL value);
  *
  *  @return @"null" if KPKInherit, @"True" if KPKInhertiYes and @"False" if KPKInheritNO
  */
-NSString *stringFromInhertiBool(KPKInheritBool value);
+NSString *stringFromInheritBool(KPKInheritBool value);
 
 #pragma mark Reading Helper
 BOOL KPKXmlTrue(DDXMLNode *attribute);

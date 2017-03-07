@@ -203,8 +203,8 @@
   KPKAddXmlElement(groupElement, kKPKXmlIsExpanded, KPKStringFromBool(group.isExpanded));
   NSString *keystrokes = (group.hasDefaultAutotypeSequence ? nil : group.defaultAutoTypeSequence.kpk_xmlCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlDefaultAutoTypeSequence, keystrokes);
-  KPKAddXmlElement(groupElement, kKPKXmlEnableAutoType, stringFromInhertiBool(group.isAutoTypeEnabled));
-  KPKAddXmlElement(groupElement, kKPKXmlEnableSearching, stringFromInhertiBool(group.isSearchEnabled));
+  KPKAddXmlElement(groupElement, kKPKXmlEnableAutoType, stringFromInheritBool(group.isAutoTypeEnabled));
+  KPKAddXmlElement(groupElement, kKPKXmlEnableSearching, stringFromInheritBool(group.isSearchEnabled));
   KPKAddXmlElement(groupElement, kKPKXmlLastTopVisibleEntry, group.lastTopVisibleEntry.kpk_encodedString);
   
   DDXMLElement *customDataElement = [self _xmlCustomData:group.mutableCustomData addEmptyElement:NO];
