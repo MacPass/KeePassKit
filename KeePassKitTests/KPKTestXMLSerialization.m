@@ -11,12 +11,12 @@
 #import "KeePassKit.h"
 
 
-@interface KPKTestXmlWriting : XCTestCase
+@interface KPKTestXMLSerialization : XCTestCase
 
 @end
 
 
-@implementation KPKTestXmlWriting
+@implementation KPKTestXMLSerialization
 
 - (void)testXmlWriting {
   NSData *data = [self _loadBundleData:@"CustomIcon_Password_1234" extension:@"kdbx"];
@@ -71,7 +71,7 @@
   XCTAssertEqualObjects(entry, decryptedEntry, @"Decrypted entry is the same as the encrypted one");
 }
 
-- (void)testWindowAssociationWriting {
+- (void)testWindowAssociationSerialization {
   KPKTree *tree = [[KPKTree alloc] init];
   tree.root = [[KPKGroup alloc] init];
   KPKEntry *entry = [[KPKEntry alloc] init];
@@ -95,6 +95,95 @@
   KPKEntry *decryptedEntry = [tree.root entryForUUID:uuid];
   XCTAssertNotNil(entry, @"Encrypted entry is decryted!");
   XCTAssertEqualObjects(entry, decryptedEntry, @"Decrypted entry is the same as the encrypted one");
+}
+
+- (void)testGroupSearchSettingsSerialization {
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.root = [[KPKGroup alloc] init];
+
+  KPKGroup *inheritGroup = [[KPKGroup alloc] init];
+  KPKGroup *disabledGroup = [[KPKGroup alloc] init];
+  KPKGroup *enabledGroup = [[KPKGroup alloc] init];
+  
+  inheritGroup.isSearchEnabled = KPKInherit;
+  enabledGroup.isSearchEnabled = KPKInheritYES;
+  disabledGroup.isSearchEnabled = KPKInheritNO;
+  
+  XCTAssertEqual(inheritGroup.isSearchEnabled, KPKInherit);
+  XCTAssertEqual(enabledGroup.isSearchEnabled, KPKInheritYES);
+  XCTAssertEqual(disabledGroup.isSearchEnabled, KPKInheritNO);
+
+  [inheritGroup addToGroup:tree.root];
+  [enabledGroup addToGroup:tree.root];
+  [disabledGroup addToGroup:tree.root];
+  
+  NSUUID *inheritUUID = inheritGroup.uuid;
+  NSUUID *enabledUUID = enabledGroup.uuid;
+  NSUUID *disabledUUID = disabledGroup.uuid;
+
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  NSError *error;
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
+  XCTAssertNotNil(data, @"Tree encryption yields data!");
+  
+  KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(decryptedTree, @"Initalized tree from data is present!");
+  KPKGroup *loadedInheritGroup = [tree.root groupForUUID:inheritUUID];
+  XCTAssertNotNil(loadedInheritGroup, @"Encrypted entry is decryted!");
+  XCTAssertEqual(loadedInheritGroup.isSearchEnabled, inheritGroup.isSearchEnabled);
+
+  KPKGroup *loadedEnabledGroup = [tree.root groupForUUID:enabledUUID];
+  XCTAssertNotNil(loadedEnabledGroup, @"Encrypted entry is decryted!");
+  XCTAssertEqual(loadedEnabledGroup.isSearchEnabled, enabledGroup.isSearchEnabled);
+  
+  KPKGroup *loadedDisabledGroup = [tree.root groupForUUID:disabledUUID];
+  XCTAssertNotNil(loadedDisabledGroup, @"Encrypted entry is decryted!");
+  XCTAssertEqual(loadedDisabledGroup.isSearchEnabled, disabledGroup.isSearchEnabled);
+}
+
+- (void)testGroupAutotypeSettingsSerialization {
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.root = [[KPKGroup alloc] init];
+  
+  KPKGroup *inheritGroup = [[KPKGroup alloc] init];
+  KPKGroup *enabledGroup = [[KPKGroup alloc] init];
+  KPKGroup *disabledGroup = [[KPKGroup alloc] init];
+  
+  inheritGroup.isAutoTypeEnabled = KPKInherit;
+  enabledGroup.isAutoTypeEnabled = KPKInheritYES;
+  disabledGroup.isAutoTypeEnabled = KPKInheritNO;
+
+  XCTAssertEqual(inheritGroup.isAutoTypeEnabled, KPKInherit);
+  XCTAssertEqual(enabledGroup.isAutoTypeEnabled, KPKInheritYES);
+  XCTAssertEqual(disabledGroup.isAutoTypeEnabled, KPKInheritNO);
+
+  
+  [inheritGroup addToGroup:tree.root];
+  [enabledGroup addToGroup:tree.root];
+  [disabledGroup addToGroup:tree.root];
+  
+  NSUUID *inheritUUID = inheritGroup.uuid;
+  NSUUID *disabledUUID = disabledGroup.uuid;
+  NSUUID *enabledUUID = enabledGroup.uuid;
+  
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  NSError *error;
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
+  XCTAssertNotNil(data, @"Tree encryption yields data!");
+  
+  KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(decryptedTree, @"Initalized tree from data is present!");
+  KPKGroup *loadedInheritGroup = [tree.root groupForUUID:inheritUUID];
+  XCTAssertNotNil(loadedInheritGroup, @"Encrypted entry is decryted!");
+  XCTAssertEqual(loadedInheritGroup.isAutoTypeEnabled, inheritGroup.isAutoTypeEnabled);
+  
+  KPKGroup *loadedEnabledGroup = [tree.root groupForUUID:enabledUUID];
+  XCTAssertNotNil(loadedEnabledGroup, @"Encrypted entry is decryted!");
+  XCTAssertEqual(loadedEnabledGroup.isAutoTypeEnabled, enabledGroup.isAutoTypeEnabled);
+  
+  KPKGroup *loadedDisabledGroup = [tree.root groupForUUID:disabledUUID];
+  XCTAssertNotNil(loadedDisabledGroup, @"Encrypted entry is decryted!");
+  XCTAssertEqual(loadedDisabledGroup.isAutoTypeEnabled, disabledGroup.isAutoTypeEnabled);
 }
 
 - (NSData *)_loadBundleData:(NSString *)name extension:(NSString *)extension {
