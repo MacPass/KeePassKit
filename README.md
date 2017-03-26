@@ -1,11 +1,11 @@
-#KeePassKit
+# KeePassKit
 
 [![Build Status](https://travis-ci.org/MacPass/KeePassKit.svg?branch=master)](https://travis-ci.org/MacPass/KeePassKit)
 
 KeePass database loading, storing and manipulation framework.
 It's inspired by [MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) and [KeePass Database Library](https://github.com/mpowrie/KeePassLib) but hase diverged a lot over the development.
 
-##License
+## License
 
 KeePassKit - Cocoa KeePass Library
 Copyright (c) 2012-2016  Michael Starke, HicknHack Software GmbH
@@ -24,7 +24,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-##References
+## References
 
 KeePassKit uses code from the following projects
 
