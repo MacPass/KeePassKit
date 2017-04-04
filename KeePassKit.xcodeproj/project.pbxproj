@@ -235,7 +235,6 @@
 		4CA1E48E1D8832BA00100002 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E4781D8832BA00100002 /* encoding.c */; };
 		4CA1E48F1D8832BA00100002 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4791D8832BA00100002 /* encoding.h */; };
 		4CA1E4921D8832BA00100002 /* opt.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E47C1D8832BA00100002 /* opt.c */; };
-		4CA1E4931D8832BA00100002 /* opt.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E47D1D8832BA00100002 /* opt.h */; };
 		4CA1E4981D8832BA00100002 /* thread.c in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E4821D8832BA00100002 /* thread.c */; };
 		4CA1E4991D8832BA00100002 /* thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4831D8832BA00100002 /* thread.h */; };
 		4CA1E49C1D8838BC00100002 /* KPKTestArgon2.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */; };
@@ -498,7 +497,6 @@
 		4CA1E47A1D8832BA00100002 /* genkat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = genkat.c; sourceTree = "<group>"; };
 		4CA1E47B1D8832BA00100002 /* genkat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = genkat.h; sourceTree = "<group>"; };
 		4CA1E47C1D8832BA00100002 /* opt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = opt.c; sourceTree = "<group>"; };
-		4CA1E47D1D8832BA00100002 /* opt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opt.h; sourceTree = "<group>"; };
 		4CA1E4821D8832BA00100002 /* thread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = thread.c; sourceTree = "<group>"; };
 		4CA1E4831D8832BA00100002 /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread.h; sourceTree = "<group>"; };
 		4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestArgon2.m; sourceTree = "<group>"; };
@@ -1020,7 +1018,6 @@
 				4CA1E47A1D8832BA00100002 /* genkat.c */,
 				4CA1E47B1D8832BA00100002 /* genkat.h */,
 				4CA1E47C1D8832BA00100002 /* opt.c */,
-				4CA1E47D1D8832BA00100002 /* opt.h */,
 				4CA1E4821D8832BA00100002 /* thread.c */,
 				4CA1E4831D8832BA00100002 /* thread.h */,
 			);
@@ -1096,7 +1093,6 @@
 				4C2ADBED1D7C6495002C3190 /* KPKArchiver.h in Headers */,
 				4C0B9DAA1DBFB4FC00E66CD6 /* KPKKdbxUnarchiver.h in Headers */,
 				4C5CF4121BE10E000019AA81 /* KPKErrors.h in Headers */,
-				4CA1E4931D8832BA00100002 /* opt.h in Headers */,
 				4C835B521D22AA3B0037E4B8 /* KPKTreeDelegate.h in Headers */,
 				4C5D91E41D89519C00029558 /* KPKNumber.h in Headers */,
 				4C5CF3CA1BE10DF80019AA81 /* NSData+KPKHashedData.h in Headers */,
