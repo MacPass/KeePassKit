@@ -25,8 +25,6 @@
 #import <Security/Security.h>
 #import <Security/SecRandom.h>
 
-static uint32_t SIGMA[4] = {0x61707865, 0x3320646E, 0x79622D32, 0x6B206574};
-
 @interface KPKSalsa20RandomStream () {
   uint32_t _state[16];
   uint32_t _index;
@@ -40,11 +38,8 @@ static uint32_t SIGMA[4] = {0x61707865, 0x3320646E, 0x79622D32, 0x6B206574};
   uint8_t buffer[256];
   
   int ret = SecRandomCopyBytes(kSecRandomDefault, sizeof(buffer), buffer);
-  if(ret != 0) {
-    self = nil;
-    return self;
-  }
-  
+  NSAssert(ret == 0, @"Unable to copy secure bytes!");
+
   return [self initWithKeyData:[NSData dataWithBytes:buffer length:sizeof(buffer)]];
 }
 
@@ -73,6 +68,8 @@ static uint32_t SIGMA[4] = {0x61707865, 0x3320646E, 0x79622D32, 0x6B206574};
 }
 
 - (void)_setKey:(uint8_t*)key {
+  static uint32_t SIGMA[4] = {0x61707865, 0x3320646E, 0x79622D32, 0x6B206574};
+
   _state[1] = [self uint8To32Little:key offset:0];
   _state[2] = [self uint8To32Little:key offset:4];
   _state[3] = [self uint8To32Little:key offset:8];

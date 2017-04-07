@@ -24,11 +24,6 @@
 #import <Security/Security.h>
 #import <Security/SecRandom.h>
 
-
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
-
 #define ARC_BUFFER_SIZE 0x3FF
 
 @interface KPKArc4RandomStream () {
@@ -47,11 +42,8 @@
   uint8_t buffer[256];
   
   int ret = SecRandomCopyBytes(kSecRandomDefault, sizeof(buffer), buffer);
-  /* Unable to copy secure bytes. Fail! */
-  if(ret != 0) {
-    self = nil;
-    return self;
-  }
+  NSAssert(ret == 0, @"Unable to copy secure bytes!");
+
   return [self initWithKeyData:[NSData dataWithBytes:buffer length:sizeof(buffer)]];
 }
 

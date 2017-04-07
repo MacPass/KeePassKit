@@ -49,7 +49,7 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
   dispatch_queue_t normalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
   dispatch_async(normalQueue, ^{
     /* dispatch the benchmark to the background */
-    size_t seed = 0xAF09F49F;
+    static size_t seed = 0xAF09F49F;
     CCCryptorRef cryptorRef;
     CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES128, kCCOptionECBMode, &seed, sizeof(seed), nil, &cryptorRef);
     size_t tmp;

@@ -36,7 +36,7 @@
 
 @implementation NSData (KPKHashedData)
 
-- (NSData *)kpk_unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error {
+- (NSData *)kpk_unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError *__autoreleasing *)error {
   
   KPKDataStreamReader *reader = [[KPKDataStreamReader alloc] initWithData:self];
   NSMutableData *unhashedData = [[NSMutableData alloc] initWithCapacity:self.length];
@@ -148,7 +148,7 @@
   }
 }
 
-- (NSData *)kpk_hashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error {
+- (NSData *)kpk_hashedHmacSha256DataWithKey:(NSData *)key error:(NSError *__autoreleasing *)error {
   uint32_t blockSize = 1024*1024;
   uint32_t blockCount = ceil((CGFloat)self.length / (CGFloat)blockSize);
   

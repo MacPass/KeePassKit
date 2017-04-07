@@ -51,6 +51,6 @@
 - (NSString *)encodedStringUsingCompression:(BOOL)compress;
 
 - (BOOL)isEqualtoBinary:(KPKBinary *)binary;
-- (BOOL)saveToLocation:(NSURL *)location error:(NSError **)error;
+- (BOOL)saveToLocation:(NSURL *)location error:(NSError *__autoreleasing *)error;
 
 @end

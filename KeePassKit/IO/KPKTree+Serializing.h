@@ -31,7 +31,7 @@
  *  @param  error Error if initalization doesnt work
  *	@return	Newly created tree
  */
-- (instancetype)initWithContentsOfUrl:(NSURL *)url key:(KPKCompositeKey *)key error:(NSError **)error;
+- (instancetype)initWithContentsOfUrl:(NSURL *)url key:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error;
 /**
  *	Initalizes a tree with the given data. The data is the raw encrypted file data
  *	@param	data	Data to load the tree from. Supply raw undecrypted file data
@@ -39,14 +39,14 @@
  *  @param  error Error if initalization doesnt work
  *	@return	Tree with contents of data
  */
-- (instancetype)initWithData:(NSData *)data key:(KPKCompositeKey *)key error:(NSError **)error;
+- (instancetype)initWithData:(NSData *)data key:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error;
 /**
  *	Creates the tree with the contents of the xml file
  *	@param	url	URL to the xml file to load
  *  @param  error the error object returned on failure
  *	@return	Tree created from the xml data
  */
-- (instancetype)initWithXmlContentsOfURL:(NSURL *)url error:(NSError **)error;
+- (instancetype)initWithXmlContentsOfURL:(NSURL *)url error:(NSError *__autoreleasing *)error;
 /**
  *	Encrypts the tree with the given password and the version. This operation is possibly lossy
  *	@param	key	The key to encrypt the tree
@@ -54,7 +54,7 @@
  *	@param	error	error that might occur
  *	@return	data with the encrypted tree
  */
-- (NSData *)encryptWithKey:(KPKCompositeKey *)key format:(KPKDatabaseFormat)format error:(NSError **)error;
+- (NSData *)encryptWithKey:(KPKCompositeKey *)key format:(KPKDatabaseFormat)format error:(NSError *__autoreleasing *)error;
 /**
  *	Serializes the tree into the KeePass xml file
  *	@return	XML file string. Pretty printed

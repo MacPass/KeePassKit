@@ -88,7 +88,7 @@
   return NO;
 }
 
-- (NSData *)computeKeyDataForFormat:(KPKDatabaseFormat)format masterseed:(NSData *)seed cipher:(KPKCipher *)cipher keyDerivation:(KPKKeyDerivation *)keyDerivation hmacKey:(NSData *__autoreleasing *)hmacKey error:(NSError *__autoreleasing *)error {
+- (NSData *)computeKeyDataForFormat:(KPKDatabaseFormat)format masterseed:(NSData *)seed cipher:(KPKCipher *)cipher keyDerivation:(KPKKeyDerivation *)keyDerivation hmacKey:(NSData **)hmacKey error:(NSError *__autoreleasing *)error {
   NSAssert(seed.length == 32 || seed.length == 16, @"Unexpected seed length");
   /* KDBX uses 32 byte seeds, KDB only 16 */
   if(format != KPKDatabaseFormatKdbx && format != KPKDatabaseFormatKdb) {
