@@ -19,6 +19,6 @@
 @property (strong) NSMutableDictionary *mutableKeyDerivationParameters;
 @property (assign) NSUInteger version;
 
-- (instancetype)_initWithData:(NSData *)data version:(NSUInteger)version key:(KPKCompositeKey *)key error:(NSError **)error;
+- (instancetype)_initWithData:(NSData *)data version:(NSUInteger)version key:(KPKCompositeKey *)key error:(NSError *__autoreleasing *)error;
 
 @end

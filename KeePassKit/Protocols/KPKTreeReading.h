@@ -44,6 +44,6 @@
  *	@param	error	Error object.
  *	@return	initalizes tree object
  */
-- (KPKTree *)tree:(NSError *__autoreleasing*)error;
+- (KPKTree *)tree:(NSError *__autoreleasing *)error;
 
 @end

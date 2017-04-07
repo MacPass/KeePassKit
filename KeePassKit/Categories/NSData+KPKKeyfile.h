@@ -26,7 +26,7 @@
 
 @interface NSData (KPKKeyfile)
 
-+ (NSData *)kpk_dataWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseFormat)version error:(NSError **)error;
++ (NSData *)kpk_dataWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseFormat)version error:(NSError *__autoreleasing *)error;
 + (NSData *)kpk_generateKeyfiledataForFormat:(KPKDatabaseFormat)format;
 
 @end

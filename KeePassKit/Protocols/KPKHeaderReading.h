@@ -47,7 +47,7 @@
 @property (nonatomic, readonly) NSUInteger numberOfEntries;
 @property (nonatomic, readonly) NSUInteger numberOfGroups;
 
-- (instancetype)initWithData:(NSData *)data error:(NSError **)error;
+- (instancetype)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error;
 /**
  @returns the data with the header data removed.
  */

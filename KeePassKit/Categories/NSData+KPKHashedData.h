@@ -56,7 +56,7 @@
 @property (nonatomic, readonly) NSData *kpk_hashedSha256Data;
 @property (nonatomic, readonly) NSData *kpk_unhashedSha256Data;
 
-- (NSData *)kpk_hashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error;
-- (NSData *)kpk_unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError **)error;
+- (NSData *)kpk_hashedHmacSha256DataWithKey:(NSData *)key error:(NSError *__autoreleasing *)error;
+- (NSData *)kpk_unhashedHmacSha256DataWithKey:(NSData *)key error:(NSError *__autoreleasing *)error;
 
 @end

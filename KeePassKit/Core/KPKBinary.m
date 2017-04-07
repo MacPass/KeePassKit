@@ -119,7 +119,7 @@
   return result;
 }
 
-- (BOOL)saveToLocation:(NSURL *)location error:(NSError **)error {
+- (BOOL)saveToLocation:(NSURL *)location error:(NSError *__autoreleasing *)error {
   return [self.data writeToURL:location options:0 error:error];
 }
 
