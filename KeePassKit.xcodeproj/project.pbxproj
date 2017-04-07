@@ -247,6 +247,9 @@
 		4CCE00C71D78598800B8D50A /* KPKTimeInfo_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCE00C51D78598800B8D50A /* KPKTimeInfo_Private.h */; };
 		4CD607AE1DFAAECE00C815E5 /* KPKPlatformIncludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CE471EE1E08327D00AA3D81 /* KPKTestKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE471ED1E08327D00AA3D81 /* KPKTestKVO.m */; };
+		4CE95AE61E97BC330019BBDC /* KPKData.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CE95AE41E97BC330019BBDC /* KPKData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CE95AE71E97BC330019BBDC /* KPKData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE95AE51E97BC330019BBDC /* KPKData.m */; };
+		4CE95AE91E97C08C0019BBDC /* KPKTestData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE95AE81E97C08C0019BBDC /* KPKTestData.m */; };
 		4CF7E8A61DCA4B4700BB652F /* KPKTestKeyComputation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF7E8A51DCA4B4700BB652F /* KPKTestKeyComputation.m */; };
 		4CF8DF4D1DC9452900F46A10 /* KPKTestDeriveKeyData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8DF4C1DC9452900F46A10 /* KPKTestDeriveKeyData.m */; };
 		4CFAE3711D88537C007B57DB /* KPKTestKPKNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CFAE3701D88537C007B57DB /* KPKTestKPKNumber.m */; };
@@ -508,6 +511,9 @@
 		4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestNodeForUUID.m; sourceTree = "<group>"; };
 		4CCE00C51D78598800B8D50A /* KPKTimeInfo_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKTimeInfo_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4CE471ED1E08327D00AA3D81 /* KPKTestKVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestKVO.m; sourceTree = "<group>"; };
+		4CE95AE41E97BC330019BBDC /* KPKData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKData.h; sourceTree = "<group>"; };
+		4CE95AE51E97BC330019BBDC /* KPKData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKData.m; sourceTree = "<group>"; };
+		4CE95AE81E97C08C0019BBDC /* KPKTestData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestData.m; sourceTree = "<group>"; };
 		4CF7E8A51DCA4B4700BB652F /* KPKTestKeyComputation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestKeyComputation.m; sourceTree = "<group>"; };
 		4CF8DF4C1DC9452900F46A10 /* KPKTestDeriveKeyData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestDeriveKeyData.m; sourceTree = "<group>"; };
 		4CFAE3701D88537C007B57DB /* KPKTestKPKNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestKPKNumber.m; sourceTree = "<group>"; };
@@ -749,6 +755,7 @@
 				4C81381A1BE282DC001BF195 /* Databases */,
 				4C8138221BE282DC001BF195 /* Images */,
 				4C8138241BE282DC001BF195 /* Keyfiles */,
+				4CE95AE81E97C08C0019BBDC /* KPKTestData.m */,
 				4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */,
 				4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */,
 				4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */,
@@ -937,6 +944,8 @@
 				4C5D91E21D89519C00029558 /* KPKNumber.h */,
 				4C5D91E31D89519C00029558 /* KPKNumber.m */,
 				4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */,
+				4CE95AE41E97BC330019BBDC /* KPKData.h */,
+				4CE95AE51E97BC330019BBDC /* KPKData.m */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -1072,6 +1081,7 @@
 				4C152C5E1C7617D900380A3B /* KPKGroup_Private.h in Headers */,
 				4C0B9DA81DBFB4FC00E66CD6 /* KPKKdbxArchiver.h in Headers */,
 				4CA6DB8E1DC3574200650417 /* KPKChaCha20RandomStream.h in Headers */,
+				4CE95AE61E97BC330019BBDC /* KPKData.h in Headers */,
 				4C5CF4691BE10E100019AA81 /* KPKTree+Serializing.h in Headers */,
 				4C0B9D921DBFB49600E66CD6 /* KPKSalsa20RandomStream.h in Headers */,
 				4C5CF41B1BE10E000019AA81 /* KPKNode.h in Headers */,
@@ -1219,6 +1229,7 @@
 				TargetAttributes = {
 					4C5CF3171BE10B650019AA81 = {
 						CreatedOnToolsVersion = 7.1;
+						LastSwiftMigration = 0830;
 					};
 					4C5CF3211BE10B650019AA81 = {
 						CreatedOnToolsVersion = 7.1;
@@ -1364,6 +1375,7 @@
 				4C5CF3D91BE10DF80019AA81 /* NSString+KPKEmpty.m in Sources */,
 				4C5CF4201BE10E000019AA81 /* KPKTimeInfo.m in Sources */,
 				4C5C82A31D79C13800A1DEA6 /* KPKAESCipher.m in Sources */,
+				4CE95AE71E97BC330019BBDC /* KPKData.m in Sources */,
 				4CA1E4921D8832BA00100002 /* opt.c in Sources */,
 				4C5CF4151BE10E000019AA81 /* KPKGroup.m in Sources */,
 				4C0B9D8F1DBFB49600E66CD6 /* KPKArc4RandomStream.m in Sources */,
@@ -1396,6 +1408,7 @@
 				4C8F42321C7B2D0D0057AFBF /* KPKTestDatabaseSize.m in Sources */,
 				4CF8DF4D1DC9452900F46A10 /* KPKTestDeriveKeyData.m in Sources */,
 				4C8FE3B91E004DF5008C75BF /* KPKTestEntryOrGroupByUUID.m in Sources */,
+				4CE95AE91E97C08C0019BBDC /* KPKTestData.m in Sources */,
 				4C5CF4BB1BE10F090019AA81 /* KPKTestXMLSerialization.m in Sources */,
 				4C5CF4AF1BE10F090019AA81 /* KPKTestLegacyLoading.m in Sources */,
 				4CCC95061E24F2BD00593E65 /* KPKTestNodeForUUID.m in Sources */,
@@ -1530,6 +1543,7 @@
 		4C5CF32D1BE10B650019AA81 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.1;
@@ -1544,6 +1558,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hicknhacksoftware.KeePassKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "";
 				WARNING_CFLAGS = "-Wpartial-availability";
 			};
@@ -1552,6 +1568,7 @@
 		4C5CF32E1BE10B650019AA81 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.1;
@@ -1566,6 +1583,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hicknhacksoftware.KeePassKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "";
 				WARNING_CFLAGS = "-Wpartial-availability";
 			};

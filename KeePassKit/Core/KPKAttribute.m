@@ -27,6 +27,8 @@
 #import "KPKGroup.h"
 #import "KPKErrors.h"
 
+#import "KPKData.h"
+
 #import "NSString+KPKCommands.h"
 #import "NSString+KPKXmlUtilities.h"
 #import "NSData+KPKRandom.h"
@@ -47,9 +49,7 @@
 
 @interface KPKAttribute ()
 
-@property (assign) NSUInteger length;
-@property (copy) NSData *xorPad;
-@property (copy) NSData *protectedData;
+@property (strong) KPKData *data;
 
 @end
 
@@ -82,11 +82,9 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
   if(self) {
-    self.key = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(key))];
-    self.xorPad = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(xorPad))];
-    self.protectedData = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(protectedData))];
+    self.key = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(key))];
     self.isProtected = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isProtected))];
-    self.length = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(length))];
+    self.data = [aDecoder decodeObjectOfClass:KPKData.class forKey:NSStringFromSelector(@selector(data))];
   }
   return self;
 }
@@ -94,9 +92,7 @@
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [aCoder encodeBool:self.isProtected forKey:NSStringFromSelector(@selector(isProtected))];
   [aCoder encodeObject:self.key forKey:NSStringFromSelector(@selector(key))];
-  [aCoder encodeObject:self.xorPad forKey:NSStringFromSelector(@selector(xorPad))];
-  [aCoder encodeObject:self.protectedData forKey:NSStringFromSelector(@selector(protectedData))];
-  [aCoder encodeInteger:self.length forKey:NSStringFromSelector(@selector(length))];
+  [aCoder encodeObject:self.data forKey:NSStringFromSelector(@selector(data))];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
@@ -183,20 +179,17 @@
 }
 
 - (void)_encodeValue:(NSString *)string {
-  NSData *stringData = [string dataUsingEncoding:NSUTF8StringEncoding];
-  _length = stringData.length;
-  if(_xorPad.length < _length) {
-    _xorPad = [NSData kpk_dataWithRandomBytes:_length];
+  if(!self.data) {
+    self.data = [[KPKData alloc] init];
   }
-  _protectedData = [stringData kpk_dataXoredWithKey:_xorPad];
+  self.data.data = [string dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 - (NSString *)_decodedValue {
-  if(_length == 0) {
+  if(self.data.data.length == 0) {
     return @"";
   }
-  NSData *stringData = [_protectedData kpk_dataXoredWithKey:_xorPad];
-  return [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+  return [[NSString alloc] initWithData:self.data.data encoding:NSUTF8StringEncoding];
 }
 
 @end

@@ -27,6 +27,10 @@
 - (NSData *)kpk_dataXoredWithKey:(NSData *)key {
   if(key.length < self.length) {
     NSAssert(NO, @"Key has to be at least as long as data");
+    return nil;
+  }
+  if(self.length == 0) {
+    return nil;
   }
   uint8_t buffer[self.length];
   [self getBytes:buffer length:self.length];
