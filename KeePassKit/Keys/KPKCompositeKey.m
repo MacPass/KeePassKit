@@ -24,6 +24,7 @@
 #import "KPKCompositeKey.h"
 #import "KPKFormat.h"
 #import "KPKNumber.h"
+#import "KPKData.h"
 
 #import "KPKKeyDerivation.h"
 #import "KPKAESKeyDerivation.h"
@@ -37,10 +38,10 @@
 
 #import <CommonCrypto/CommonCrypto.h>
 
-@interface KPKCompositeKey () {
-  NSData *_kdbKeyData;
-  NSData *_kdbxKeyData;
-}
+@interface KPKCompositeKey ()
+
+@property (copy) KPKData *kdbKeyData;
+@property (copy) KPKData *kdbxKeyData;
 
 @property (nonatomic) BOOL hasKeyFile;
 @property (nonatomic) BOOL hasPassword;
@@ -65,8 +66,8 @@
 - (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key {
   _hasPassword = (password.length > 0);
   _hasKeyFile = (key != nil);
-  _kdbKeyData = [self _createKdbDataWithPassword:password keyFile:key];
-  _kdbxKeyData = [self _createKdbxDataWithPassword:password keyFile:key];
+  self.kdbKeyData = [[KPKData alloc] initWithData:[self _createKdbDataWithPassword:password keyFile:key]];
+  self.kdbxKeyData = [[KPKData alloc] initWithData:[self _createKdbxDataWithPassword:password keyFile:key]];
 }
 
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseFormat)version {
@@ -82,8 +83,8 @@
       return NO;
   }
   if(data) {
-    NSData *compare = (version == KPKDatabaseFormatKdb) ? _kdbKeyData : _kdbxKeyData;
-    return [data isEqualToData:compare];
+    KPKData *compare = (version == KPKDatabaseFormatKdb) ? self.kdbKeyData : self.kdbxKeyData;
+    return [data isEqualToData:compare.data];
   }
   return NO;
 }
@@ -95,7 +96,7 @@
     KPKCreateError(error, KPKErrorUnknownFileFormat);
     return nil;
   }
-  NSData *derivedData = (format == KPKDatabaseFormatKdb) ? [keyDerivation deriveData:_kdbKeyData] : [keyDerivation deriveData:_kdbxKeyData];
+  NSData *derivedData = (format == KPKDatabaseFormatKdb) ? [keyDerivation deriveData:self.kdbKeyData.data] : [keyDerivation deriveData:self.kdbxKeyData.data];
   if(!derivedData) {
     KPKCreateError(error, KPKErrorKeyDerivationFailed);
     return nil;
