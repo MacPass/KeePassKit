@@ -132,11 +132,11 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
 }
 
 - (NSData *)deriveData:(NSData *)data {
-  NSAssert(self.mutableParameters[KPKArgon2IterationsParameter],@"Iterations option is missing!");
-  NSAssert(self.mutableParameters[KPKArgon2SaltParameter],@"Salt option is missing!");
-  NSAssert(self.mutableParameters[KPKArgon2MemoryParameter],@"Memory option is missing!");
-  NSAssert(self.mutableParameters[KPKArgon2ParallelismParameter],@"Parallelism option is missing!");
-  NSAssert(self.mutableParameters[KPKArgon2VersionParameter],@"Version option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2IterationsParameter], @"Iterations option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2SaltParameter], @"Salt option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2MemoryParameter], @"Memory option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2ParallelismParameter], @"Parallelism option is missing!");
+  NSAssert(self.mutableParameters[KPKArgon2VersionParameter], @"Version option is missing!");
   
   uint32_t version = [self.mutableParameters[KPKArgon2VersionParameter] unsignedInteger32Value];
   if(!KPK_ARGON2_CHECK_INVERVALL(ARGON2_VERSION_10, ARGON2_VERSION_13, version)) {

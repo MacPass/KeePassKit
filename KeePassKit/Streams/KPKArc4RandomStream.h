@@ -25,6 +25,4 @@
 
 @interface KPKArc4RandomStream : KPKRandomStream 
 
-- (instancetype)init;
-
 @end
