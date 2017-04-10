@@ -33,7 +33,11 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  *  It can hold subgroups as well as entries.
  *  The tree structure provides a way to inherit certain attributes like search or autotype.
  */
+#if KPK_MAC
 @interface KPKGroup : KPKNode <NSSecureCoding, NSCopying, KPKPasteboardReading, KPKPasteboardWriting>
+#else
+@interface KPKGroup : KPKNode <NSSecureCoding, NSCopying>
+#endif
 
 @property(nonatomic, copy, readonly) NSArray<KPKGroup *> *groups;
 @property(nonatomic, copy, readonly) NSArray<KPKEntry *> *entries;

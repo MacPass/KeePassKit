@@ -186,7 +186,7 @@
   /*
    Color is coded in Hex #001122
    */
-  data.color = [NSColor kpk_colorWithHexString:KPKXmlString(metaElement, kKPKXmlColor)];
+  data.color = [NSUIColor kpk_colorWithHexString:KPKXmlString(metaElement, kKPKXmlColor)];
   data.masterKeyChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlMasterKeyChanged);
   data.masterKeyChangeRecommendationInterval = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeRecommendationInterval);
   data.masterKeyChangeEnforcementInterval = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeForceInterval);
@@ -270,8 +270,8 @@
     entry.iconUUID = [NSUUID kpk_uuidWithEncodedString:[customIconUuidElement stringValue]];
   }
   
-  entry.foregroundColor =  [NSColor kpk_colorWithHexString:KPKXmlString(entryElement, @"ForegroundColor")];
-  entry.backgroundColor = [NSColor kpk_colorWithHexString:KPKXmlString(entryElement, @"BackgroundColor")];
+  entry.foregroundColor =  [NSUIColor kpk_colorWithHexString:KPKXmlString(entryElement, @"ForegroundColor")];
+  entry.backgroundColor = [NSUIColor kpk_colorWithHexString:KPKXmlString(entryElement, @"BackgroundColor")];
   entry.overrideURL = KPKXmlString(entryElement, @"OverrideURL");
   entry.tags = [KPKXmlString(entryElement, @"Tags") componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@".,;"]];
   

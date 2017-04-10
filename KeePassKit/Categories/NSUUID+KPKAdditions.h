@@ -23,10 +23,9 @@
 @import Foundation;
 #include "KPKPlatformIncludes.h"
 
-#if TARGET_OS_MAC
-@interface NSUUID (KPKAdditions) <KPKPasteboardWriting, KPKPasteboardReading>
-#endif
-#if (TARGET_OS_IPHONE || TARGET_OS_TV)
+#if KPK_MAC
+@interface NSUUID (KPKAdditions) <NSPasteboardWriting, NSPasteboardReading>
+#else
 @interface NSUUID (KPKAdditions)
 #endif
 
@@ -39,5 +38,9 @@
 - (instancetype)initWithData:(NSData *)data;
 /* Initsalizes with a UUID string missing any - */
 - (instancetype)initWithUndelemittedUUIDString:(NSString *)string;
+
+#if KPK_UIKIT || KPK_WATCH
+- (BOOL)isEqualTo:(id)object;
+#endif
 
 @end

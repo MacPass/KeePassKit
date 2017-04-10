@@ -23,9 +23,9 @@
 #import "NSColor+KPKAdditions.h"
 #import "NSString+KPKHexdata.h"
 
-@implementation NSColor (KPKAdditions)
+@implementation NSUIColor (KPKAdditions)
 
-+ (NSColor *)kpk_colorWithHexString:(NSString *)hex {
++ (NSUIColor *)kpk_colorWithHexString:(NSString *)hex {
   if([hex hasPrefix:@"#"]) {
     hex = [hex substringFromIndex:1];
   }
@@ -33,7 +33,7 @@
   return [self kpk_colorWithData:hexData];
 }
 
-+ (NSColor *)kpk_colorWithData:(NSData *)data {
++ (NSUIColor *)kpk_colorWithData:(NSData *)data {
   if(data.length != 3 && data.length != 4) {
     return nil; // Unsupported data format
   }
@@ -45,16 +45,21 @@
   if(red > 255 || green > 255 || blue > 255) {
     return nil;
   }
-  
-  return [NSColor colorWithCalibratedRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];
+
+#if KPK_MAC
+  return [NSUIColor colorWithCalibratedRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];
+#else
+  return [NSUIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];
+#endif
 }
 
-+ (NSString *)kpk_hexStringFromColor:(NSColor *)color {
++ (NSString *)kpk_hexStringFromColor:(NSUIColor *)color {
   return [color kpk_hexString];
 }
 
 - (NSString *)kpk_hexString {
-  NSColor *rgbColor = [self colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]];
+#if KPK_MAC
+  NSUIColor *rgbColor = [self colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]];
   if(!rgbColor) {
     return nil;
   }
@@ -62,10 +67,19 @@
           (int)(rgbColor.redComponent * 255),
           (int)(rgbColor.greenComponent * 255),
           (int)(rgbColor.blueComponent * 255)];
+#else
+  CGFloat red, green, blue;
+  [self getRed:&red green:&green blue:&blue alpha:NULL];
+  return [NSString stringWithFormat:@"#%02X%02X%02X",
+          (int)(red * 255),
+          (int)(green * 255),
+          (int)(blue * 255)];
+#endif
 }
 
 - (NSData *)kpk_colorData {
-  NSColor *rgbColor = [self colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]];
+#if KPK_MAC
+  NSUIColor *rgbColor = [self colorUsingColorSpace:[NSColorSpace genericRGBColorSpace]];
   if(!rgbColor) {
     return nil;
   }
@@ -73,6 +87,14 @@
   color[0] = (uint8_t)rgbColor.redComponent*255;
   color[1] = (uint8_t)rgbColor.greenComponent*255;
   color[2] = (uint8_t)rgbColor.blueComponent*255;
+#else
+  CGFloat red, green, blue;
+  [self getRed:&red green:&green blue:&blue alpha:NULL];
+  uint8_t color[4] = { 0 };
+  color[0] = (uint8_t)red*255;
+  color[1] = (uint8_t)green*255;
+  color[2] = (uint8_t)blue*255;
+#endif
   return [NSData dataWithBytes:&color length:4];
 }
 

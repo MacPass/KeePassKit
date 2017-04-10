@@ -79,8 +79,11 @@
   return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
 
+#if KPK_MAC
+
 #pragma mark -
 #pragma mark NSPasteboardReading
+
 + (NSArray *)readableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
   return @[ KPKUUIDUTI ];
 }
@@ -89,6 +92,7 @@
   NSAssert([type isEqualToString:KPKUUIDUTI], @"Only MPUUID type is supported");
   return NSPasteboardReadingAsKeyedArchive;
 }
+
 #pragma mark -
 #pragma mark NSPasteboardWriting
 - (id)pasteboardPropertyListForType:(NSString *)type {
@@ -99,4 +103,13 @@
 - (NSArray *)writableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
   return @[ KPKUUIDUTI ];
 }
+
+#endif
+
+#if KPK_UIKIT
+- (BOOL)isEqualTo:(id)object {
+  return [self isEqual:object];
+}
+#endif
+
 @end

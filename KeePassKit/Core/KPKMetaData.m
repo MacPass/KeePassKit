@@ -128,7 +128,7 @@
   return self.masterKeyChangeRecommendationInterval > -1;
 }
 
-- (void)setColor:(NSColor *)color {
+- (void)setColor:(NSUIColor *)color {
   if(![_color isEqual:color]) {
     /*
      The color for databases does not support a alpha component
