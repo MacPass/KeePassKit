@@ -303,6 +303,8 @@ static NSSet *_observedKeyPathsSet;
   }
 }
 
+#if KPK_MAC
+
 #pragma mark NSPasteboardWriting/Reading
 - (NSArray<NSString *> *)writableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
   return @[KPKGroupUTI];
@@ -322,6 +324,8 @@ static NSSet *_observedKeyPathsSet;
   }
   return nil;
 }
+
+#endif
 
 #pragma mark -
 #pragma mark Properties

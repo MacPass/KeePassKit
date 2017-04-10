@@ -255,9 +255,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return copy;
 }
 
-#pragma mark NSPasteBoardWriting/Reading
-
 #if KPK_MAC
+
+#pragma mark NSPasteBoardWriting/Reading
 
 + (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSUIPasteboard *)pasteboard {
   NSAssert([type isEqualToString:KPKEntryUTI], @"Only KPKEntryUTI type is supported");
