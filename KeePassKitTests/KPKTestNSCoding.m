@@ -77,6 +77,8 @@
   XCTAssertEqualObjects(entry, copyEntry, @"Decoede entry is the equal to encoded one!");
 }
 
+#if KPK_MAC
+
 - (void)testIconCoding {
   NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
   NSURL *imageURL = [myBundle URLForImageResource:@"image.png"];
@@ -98,6 +100,8 @@
   NSData *decodedData = (decodedIcon.image).TIFFRepresentation;
   XCTAssertTrue([originalData isEqualToData:decodedData]);
 }
+
+#endif
 
 - (void)testGroupCoding {
   KPKGroup *group = [[KPKGroup alloc] init];

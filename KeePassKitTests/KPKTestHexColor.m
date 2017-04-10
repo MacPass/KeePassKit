@@ -30,6 +30,8 @@
   }
 }
 
+#if KPK_MAC
+
 - (void)testHexToColor {
   NSString *redHex = @"ff000000";
   NSString *greeHex = @"00FF0000";
@@ -68,4 +70,7 @@
   XCTAssertEqualObjects(colorData, color.kpk_colorData, @"Conversion should result in same data");
 }
 
+#endif
+
 @end
+

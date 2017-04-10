@@ -10,6 +10,8 @@
 
 #import "KeePassKit.h"
 
+#if KPK_MAC
+
 @interface KPKIconLoading : XCTestCase {
   NSUIImage *_image;
   NSData *_imageData;
@@ -69,3 +71,5 @@
 }
 
 @end
+
+#endif

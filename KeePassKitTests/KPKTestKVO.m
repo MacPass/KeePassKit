@@ -10,6 +10,8 @@
 #import "KeePassKit.h"
 #import "KeePassKit_Private.h"
 
+#if KPK_MAC
+
 @interface KPKTestKVO : XCTestCase
 @property (copy) NSString *string;
 @property (copy) NSDate *date;
@@ -85,3 +87,5 @@
 }
 
 @end
+
+#endif

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0800"
+   LastUpgradeVersion = "0830"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4C5CF3171BE10B650019AA81"
+               BlueprintIdentifier = "2D5126751E9BD34900D7EAF6"
                BuildableName = "KeePassKit.framework"
-               BlueprintName = "KeePassKit"
+               BlueprintName = "KeePassKit watchOS"
                ReferencedContainer = "container:KeePassKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,26 +28,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4C5CF3211BE10B650019AA81"
-               BuildableName = "KeePassKitTests.xctest"
-               BlueprintName = "KeePassKitTests"
-               ReferencedContainer = "container:KeePassKit.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4C5CF3171BE10B650019AA81"
-            BuildableName = "KeePassKit.framework"
-            BlueprintName = "KeePassKit"
-            ReferencedContainer = "container:KeePassKit.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -64,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4C5CF3171BE10B650019AA81"
+            BlueprintIdentifier = "2D5126751E9BD34900D7EAF6"
             BuildableName = "KeePassKit.framework"
-            BlueprintName = "KeePassKit"
+            BlueprintName = "KeePassKit watchOS"
             ReferencedContainer = "container:KeePassKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -82,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4C5CF3171BE10B650019AA81"
+            BlueprintIdentifier = "2D5126751E9BD34900D7EAF6"
             BuildableName = "KeePassKit.framework"
-            BlueprintName = "KeePassKit"
+            BlueprintName = "KeePassKit watchOS"
             ReferencedContainer = "container:KeePassKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
