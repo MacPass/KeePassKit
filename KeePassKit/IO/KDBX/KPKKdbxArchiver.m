@@ -233,7 +233,11 @@
     [self.dataWriter _writeHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.kpk_variantDictionaryData useWideField:self.outputVersion4];
   }
   /* endOfHeader */
+#if KPK_MAC
   uint8_t endBuffer[] = { NSCarriageReturnCharacter, NSNewlineCharacter, NSCarriageReturnCharacter, NSNewlineCharacter };
+#else
+  uint8_t endBuffer[] = { '\r', '\n', '\r', '\n' };
+#endif
   [self.dataWriter _writeHeaderField:KPKHeaderKeyEndOfHeader bytes:endBuffer length:4 useWideField:self.outputVersion4];
   
   /* setup the random stream */

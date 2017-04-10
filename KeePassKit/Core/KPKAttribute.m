@@ -141,7 +141,7 @@
 - (void)setValue:(NSString *)value {
   if(self.value != value) {
     if(!self.isDefault) {
-      [[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
+      [(KPKAttribute *)[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
     }
     [self.entry touchModified];
     [self _encodeValue:value];

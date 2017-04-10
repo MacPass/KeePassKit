@@ -218,8 +218,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     self.mutableHistory = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableHistory))];
     _binaries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(binaries))];
     _tags = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(tags))] copy];
-    _foregroundColor = [[aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
-    _backgroundColor = [[aDecoder decodeObjectOfClass:[NSColor class] forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
+    _foregroundColor = [[aDecoder decodeObjectOfClass:[NSUIColor class] forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
+    _backgroundColor = [[aDecoder decodeObjectOfClass:[NSUIColor class] forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
     _overrideURL = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(overrideURL))] copy];
     self.autotype = [aDecoder decodeObjectOfClass:[KPKAutotype class] forKey:NSStringFromSelector(@selector(autotype))];
     _isHistory = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isHistory))];
@@ -255,7 +255,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return copy;
 }
 
+#if KPK_MAC
+
 #pragma mark NSPasteBoardWriting/Reading
+
 + (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSUIPasteboard *)pasteboard {
   NSAssert([type isEqualToString:KPKEntryUTI], @"Only KPKEntryUTI type is supported");
   return NSPasteboardReadingAsKeyedArchive;
@@ -275,6 +278,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
   return nil;
 }
+
+#endif
 
 #pragma mark Equality
 

@@ -54,7 +54,12 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *  They contain a list of default key value pairs (password, username, url, etc.)
  *  Additianlly any number of custom attributes can be stored inside an entry as well as binaries and custom autotype information
  */
-@interface KPKEntry : KPKNode <NSCopying, NSSecureCoding, KPKPasteboardReading, KPKPasteboardWriting>
+
+#if KPK_MAC
+@interface KPKEntry : KPKNode <NSCopying, NSSecureCoding, NSPasteboardReading, NSPasteboardWriting>
+#else
+@interface KPKEntry : KPKNode <NSCopying, NSSecureCoding>
+#endif
 
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *username;

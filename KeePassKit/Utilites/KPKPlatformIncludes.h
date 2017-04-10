@@ -9,23 +9,63 @@
 #ifndef KPKPlatformIncludes_h
 #define KPKPlatformIncludes_h
 
-#import <Foundation/Foundation.h>
+#import <TargetConditionals.h>
 
-#if TARGET_OS_MAC
+#if !TARGET_OS_IPHONE && !TARGET_OS_IOS && !TARGET_OS_TV && !TARGET_OS_WATCH
+#define KPK_MAC 1
+#else
+#define KPK_MAC 0
+#endif
+
+#if TARGET_OS_IOS || TARGET_OS_TV
+#define KPK_UIKIT 1
+#else
+#define KPK_UIKIT 0
+#endif
+
+#if TARGET_OS_IOS
+#define KPK_IOS 1
+#else
+#define KPK_IOS 0
+#endif
+
+#if TARGET_OS_TV
+#define KPK_TV 1
+#else
+#define KPK_TV 0
+#endif
+
+#if TARGET_OS_WATCH
+#define KPK_WATCH 1
+#else
+#define KPK_WATCH 0
+#endif
+
+
+#if KPK_MAC
 #define NSUIColor NSColor
 #define NSUIImage NSImage
 #define NSUIPasteboard NSPasteboard
 #define KPKPasteboardReading NSPasteboardReading
 #define KPKPasteboardWriting NSPasteboardWriting
 #import <AppKit/AppKit.h>
-#endif
-#if (TARGET_OS_IPHONE || TARGET_OS_TV)
+
+#else
+
 #define NSUIColor UIColor
 #define NSUIImage UIImage
 #define NSUIPasteboard UIPasteboard
 #define KPKPasteboardReading
 #define KPKPasteboardWriting
+
+#if KPK_UIKIT
 #import <UIKit/UIKit.h>
+#endif
+
+#if KPK_WATCH
+#import <WatchKit/WatchKit.h>
+#endif
+
 #endif
 
 #endif /* KPKPlatformIncludes_h */

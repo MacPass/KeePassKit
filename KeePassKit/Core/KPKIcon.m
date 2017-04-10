@@ -45,8 +45,7 @@
 - (instancetype)initWithImageAtURL:(NSURL *)imageLocation {
   self = [self init];
   if(self) {
-    _image = [[NSUIImage alloc] initWithContentsOfURL:imageLocation];
-    /* convert the Image to be in our PNG representation */
+    _image = [[NSUIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageLocation]];    /* convert the Image to be in our PNG representation */
     _image = [[NSUIImage alloc] initWithData:self.pngData];
   }
   return self;
@@ -92,7 +91,11 @@
 
 - (instancetype)copyWithZone:(NSZone *)zone {
   KPKIcon *copy = [[KPKIcon alloc] init];
+#if KPK_MAC
   copy.image = [self.image copyWithZone:zone];
+#else
+  copy.image = [self.image copy];
+#endif
   copy.uuid = [self.uuid copyWithZone:zone];
   return copy;
 }
@@ -126,7 +129,7 @@
 }
 
 - (NSData *)pngData {
-#if TARGET_OS_MAC
+#if KPK_MAC
   NSImageRep *imageRep = (self.image).representations.lastObject;
   if([imageRep isKindOfClass:[NSBitmapImageRep class]]) {
     NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
