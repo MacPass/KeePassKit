@@ -8,12 +8,12 @@ matrix:
     - xcode_sdk: macosx
       xcode_scheme: "KeePassKit macOS"
       env: PLATFORM=macOS
-    - xcode_sdk: iphoneos
+    - xcode_sdk: iphonesimulator
       xcode_scheme: "KeePassKit iOS"
       env: PLATFORM=iOS
-    - xcode_sdk: appletvos
+    - xcode_sdk: appletvsimulator
       xcode_scheme: "KeePassKit tvOS"
       env: PLATFORM=tvOS
-    - xcode_sdk: watchos
+    - xcode_sdk: watchsimulator
       xcode_scheme: "KeePassKit watchOS"
       env: PLATFORM=watchOS
