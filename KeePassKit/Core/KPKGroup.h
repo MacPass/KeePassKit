@@ -34,7 +34,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  *  The tree structure provides a way to inherit certain attributes like search or autotype.
  */
 #if KPK_MAC
-@interface KPKGroup : KPKNode <NSSecureCoding, NSCopying, KPKPasteboardReading, KPKPasteboardWriting>
+@interface KPKGroup : KPKNode <NSSecureCoding, NSCopying, NSPasteboardReading, NSPasteboardWriting>
 #else
 @interface KPKGroup : KPKNode <NSSecureCoding, NSCopying>
 #endif

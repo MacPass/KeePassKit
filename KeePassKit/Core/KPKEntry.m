@@ -285,16 +285,16 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark NSPasteBoardWriting/Reading
 
-+ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSUIPasteboard *)pasteboard {
++ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
   NSAssert([type isEqualToString:KPKEntryUTI], @"Only KPKEntryUTI type is supported");
   return NSPasteboardReadingAsKeyedArchive;
 }
 
-+ (NSArray *)readableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
++ (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
   return @[KPKEntryUTI];
 }
 
-- (NSArray *)writableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
+- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
   return @[KPKEntryUTI];
 }
 

@@ -313,14 +313,14 @@ static NSSet *_observedKeyPathsSet;
 #if KPK_MAC
 
 #pragma mark NSPasteboardWriting/Reading
-- (NSArray<NSString *> *)writableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
+- (NSArray<NSString *> *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
   return @[KPKGroupUTI];
 }
-+ (NSArray<NSString *> *)readableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
++ (NSArray<NSString *> *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
   return @[KPKGroupUTI];
 }
 
-+ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSUIPasteboard *)pasteboard {
++ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
   NSAssert([type isEqualToString:KPKGroupUTI], @"Type needs to be KPKGroupUTI");
   return NSPasteboardReadingAsKeyedArchive;
 }

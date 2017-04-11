@@ -84,11 +84,11 @@
 #pragma mark -
 #pragma mark NSPasteboardReading
 
-+ (NSArray *)readableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
++ (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
   return @[ KPKUUIDUTI ];
 }
 
-+ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSUIPasteboard *)pasteboard {
++ (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
   NSAssert([type isEqualToString:KPKUUIDUTI], @"Only MPUUID type is supported");
   return NSPasteboardReadingAsKeyedArchive;
 }
@@ -100,7 +100,7 @@
   return [NSKeyedArchiver archivedDataWithRootObject:self];
 }
 
-- (NSArray *)writableTypesForPasteboard:(NSUIPasteboard *)pasteboard {
+- (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
   return @[ KPKUUIDUTI ];
 }
 

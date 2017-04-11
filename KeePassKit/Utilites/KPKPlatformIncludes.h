@@ -45,18 +45,12 @@
 #if KPK_MAC
 #define NSUIColor NSColor
 #define NSUIImage NSImage
-#define NSUIPasteboard NSPasteboard
-#define KPKPasteboardReading NSPasteboardReading
-#define KPKPasteboardWriting NSPasteboardWriting
 #import <AppKit/AppKit.h>
 
 #else
 
 #define NSUIColor UIColor
 #define NSUIImage UIImage
-#define NSUIPasteboard UIPasteboard
-#define KPKPasteboardReading
-#define KPKPasteboardWriting
 
 #if KPK_UIKIT
 #import <UIKit/UIKit.h>
