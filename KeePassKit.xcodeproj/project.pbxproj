@@ -236,7 +236,6 @@
 		2D51254F1E9BD06700D7EAF6 /* KPKTestArgon2.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */; };
 		2D5125501E9BD06700D7EAF6 /* KPKTestAutotype.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */; };
 		2D5125511E9BD06700D7EAF6 /* KPKTestSynchronization.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C71F1941E1EACA80060857C /* KPKTestSynchronization.m */; };
-		2D5125531E9BD06700D7EAF6 /* KeePassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C5CF3181BE10B650019AA81 /* KeePassKit.framework */; };
 		2D5125551E9BD06700D7EAF6 /* CustomIcon_Password_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */; };
 		2D5125561E9BD06700D7EAF6 /* Keepass2Key.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138251BE282DC001BF195 /* Keepass2Key.xml */; };
 		2D5125571E9BD06700D7EAF6 /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */; };
@@ -481,7 +480,6 @@
 		2D51265B1E9BD29500D7EAF6 /* KPKTestArgon2.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */; };
 		2D51265C1E9BD29500D7EAF6 /* KPKTestAutotype.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */; };
 		2D51265D1E9BD29500D7EAF6 /* KPKTestSynchronization.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C71F1941E1EACA80060857C /* KPKTestSynchronization.m */; };
-		2D51265F1E9BD29500D7EAF6 /* KeePassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C5CF3181BE10B650019AA81 /* KeePassKit.framework */; };
 		2D5126611E9BD29500D7EAF6 /* CustomIcon_Password_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */; };
 		2D5126621E9BD29500D7EAF6 /* Keepass2Key.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138251BE282DC001BF195 /* Keepass2Key.xml */; };
 		2D5126631E9BD29500D7EAF6 /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */; };
@@ -690,6 +688,8 @@
 		2D5127411E9C646400D7EAF6 /* ref.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D51273F1E9C642D00D7EAF6 /* ref.c */; };
 		2D5127421E9C646400D7EAF6 /* ref.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D51273F1E9C642D00D7EAF6 /* ref.c */; };
 		2D5127431E9C646500D7EAF6 /* ref.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D51273F1E9C642D00D7EAF6 /* ref.c */; };
+		2D8DC3901E9D0EF3004DE7BD /* KeePassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D5125251E9BCFA700D7EAF6 /* KeePassKit.framework */; };
+		2D8DC3911E9D0EFC004DE7BD /* KeePassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D5126311E9BD24500D7EAF6 /* KeePassKit.framework */; };
 		4C0B9D7D1DBFADE200E66CD6 /* KPKUnarchiver_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C0B9D7C1DBFADE200E66CD6 /* KPKUnarchiver_Private.h */; };
 		4C0B9D8E1DBFB49600E66CD6 /* KPKArc4RandomStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C0B9D881DBFB49600E66CD6 /* KPKArc4RandomStream.h */; };
 		4C0B9D8F1DBFB49600E66CD6 /* KPKArc4RandomStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0B9D891DBFB49600E66CD6 /* KPKArc4RandomStream.m */; };
@@ -1252,7 +1252,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D5125531E9BD06700D7EAF6 /* KeePassKit.framework in Frameworks */,
+				2D8DC3901E9D0EF3004DE7BD /* KeePassKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1268,7 +1268,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D51265F1E9BD29500D7EAF6 /* KeePassKit.framework in Frameworks */,
+				2D8DC3911E9D0EFC004DE7BD /* KeePassKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
