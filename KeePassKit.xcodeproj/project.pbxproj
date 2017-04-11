@@ -948,19 +948,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2D5125291E9BD06700D7EAF6 /* PBXContainerItemProxy */ = {
+		2D8DC38C1E9D0E6D004DE7BD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4C5CF30F1BE10B650019AA81 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4C5CF3171BE10B650019AA81;
-			remoteInfo = KeePassKit;
+			remoteGlobalIDString = 2D51245D1E9BCFA700D7EAF6;
+			remoteInfo = "KeePassKit iOS";
 		};
-		2D5126351E9BD29500D7EAF6 /* PBXContainerItemProxy */ = {
+		2D8DC38E1E9D0E75004DE7BD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4C5CF30F1BE10B650019AA81 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4C5CF3171BE10B650019AA81;
-			remoteInfo = KeePassKit;
+			remoteGlobalIDString = 2D5125691E9BD24500D7EAF6;
+			remoteInfo = "KeePassKit tvOS";
 		};
 		4C5CF3241BE10B650019AA81 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2341,7 +2341,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				2D5125281E9BD06700D7EAF6 /* PBXTargetDependency */,
+				2D8DC38D1E9D0E6D004DE7BD /* PBXTargetDependency */,
 			);
 			name = "KeePassKitTests iOS";
 			productName = KeePassKitTests;
@@ -2378,7 +2378,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				2D5126341E9BD29500D7EAF6 /* PBXTargetDependency */,
+				2D8DC38F1E9D0E75004DE7BD /* PBXTargetDependency */,
 			);
 			name = "KeePassKitTests tvOS";
 			productName = KeePassKitTests;
@@ -3134,15 +3134,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2D5125281E9BD06700D7EAF6 /* PBXTargetDependency */ = {
+		2D8DC38D1E9D0E6D004DE7BD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4C5CF3171BE10B650019AA81 /* KeePassKit macOS */;
-			targetProxy = 2D5125291E9BD06700D7EAF6 /* PBXContainerItemProxy */;
+			target = 2D51245D1E9BCFA700D7EAF6 /* KeePassKit iOS */;
+			targetProxy = 2D8DC38C1E9D0E6D004DE7BD /* PBXContainerItemProxy */;
 		};
-		2D5126341E9BD29500D7EAF6 /* PBXTargetDependency */ = {
+		2D8DC38F1E9D0E75004DE7BD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4C5CF3171BE10B650019AA81 /* KeePassKit macOS */;
-			targetProxy = 2D5126351E9BD29500D7EAF6 /* PBXContainerItemProxy */;
+			target = 2D5125691E9BD24500D7EAF6 /* KeePassKit tvOS */;
+			targetProxy = 2D8DC38E1E9D0E75004DE7BD /* PBXContainerItemProxy */;
 		};
 		4C5CF3251BE10B650019AA81 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
