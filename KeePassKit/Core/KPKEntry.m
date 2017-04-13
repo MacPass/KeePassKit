@@ -250,7 +250,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKLocalizable", "");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
+  BOOL enabled = copy.undoManager.isUndoRegistrationEnabled;
+  /* disable undo of title set otherwise undo/redo will clear this too! */
+  [copy.undoManager disableUndoRegistration];
   copy.title = titleOrNil;
+  if(enabled) {
+    [copy.undoManager enableUndoRegistration];
+  }
   [copy.timeInfo reset];
   return copy;
 }
