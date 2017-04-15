@@ -106,10 +106,4 @@
 
 #endif
 
-#if KPK_UIKIT
-- (BOOL)isEqualTo:(id)object {
-  return [self isEqual:object];
-}
-#endif
-
 @end

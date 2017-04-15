@@ -39,8 +39,4 @@
 /* Initsalizes with a UUID string missing any - */
 - (instancetype)initWithUndelemittedUUIDString:(NSString *)string;
 
-#if KPK_UIKIT || KPK_WATCH
-- (BOOL)isEqualTo:(id)object;
-#endif
-
 @end

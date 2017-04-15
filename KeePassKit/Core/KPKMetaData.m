@@ -224,13 +224,13 @@ if( self.updateTiming ) { \
   self.useTrash == other.useTrash &&
   [self.trashUuid isEqual:other.trashUuid] &&
   [self.trashChanged isEqualToDate:other.trashChanged] &&
-  [self.entryTemplatesGroupUuid isEqualTo:other.entryTemplatesGroupUuid] &&
+  [self.entryTemplatesGroupUuid isEqual:other.entryTemplatesGroupUuid] &&
   [self.entryTemplatesGroupChanged isEqualToDate:other.entryTemplatesGroupChanged] &&
   self.isHistoryEnabled == other.isHistoryEnabled &&
   self.historyMaxItems == other.historyMaxItems &&
   self.historyMaxSize == other.historyMaxSize &&
-  [self.lastSelectedGroup isEqualTo:other.lastSelectedGroup] &&
-  [self.lastTopVisibleGroup isEqualTo:other.lastTopVisibleGroup] &&
+  [self.lastSelectedGroup isEqual:other.lastSelectedGroup] &&
+  [self.lastTopVisibleGroup isEqual:other.lastTopVisibleGroup] &&
   [self.mutableCustomData isEqualToDictionary:other.mutableCustomData] &&
   [self.mutableCustomPublicData isEqualToDictionary:other.mutableCustomPublicData] &&
   [self.mutableCustomIcons isEqualToArray:other.mutableCustomIcons] &&
