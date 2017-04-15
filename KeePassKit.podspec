@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/MacPass/KeePassKit"
   s.license      = "GPLv3"
   s.author       = { "Michael Starke" => "michael.starke@hicknhack-software.com" }
-  s.source        = { :git => "https://github.com/MacPass/KeePassKit.git", :tag => s.version.to_s, :submodules => true}
+  s.source        = { :git => "https://github.com/MacPass/KeePassKit.git", :tag => s.version.to_s, :submodules => true }
   s.requires_arc  = true
 
   s.ios.deployment_target = "8.0"
@@ -28,16 +28,16 @@ Pod::Spec.new do |s|
     ss.source_files = 'KissXML/KissXML/**/*.{h,m}'
     ss.private_header_files = 'KissXML/KissXML/Private/**/*.h'
     ss.library      = 'xml2'
-    ss.xcconfig     = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2'}
+    ss.xcconfig     = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
   end
 
   s.subspec 'Argon2' do |ss|
     ss.source_files = "Argon2/src/*.c", "Argon2/include/*.h", "Argon2/src/blake2/*.{h,c}"
-    ss.exclude_files = "Argon2/src/test.c", "Argon2/src/run.c", "Argon2/src/bench.c", "Argon2/src/blake2/blamka-round-ref.h"
-    ss.osx.exclude_files = "Argon2/src/ref.c"
-    ss.ios.exclude_files = "Argon2/src/opt.c"
-    ss.watchos.exclude_files = "Argon2/src/opt.c"
-    ss.tvos.exclude_files = "Argon2/src/opt.c"
+    ss.exclude_files = "Argon2/src/test.c", "Argon2/src/run.c", "Argon2/src/bench.c"
+    ss.osx.exclude_files = "Argon2/src/ref.c", "Argon2/src/blake2/blamka-round-ref.h"
+    ss.ios.exclude_files = "Argon2/src/opt.c", "Argon2/src/blake2/blamka-round-opt.h"
+    ss.watchos.exclude_files = "Argon2/src/opt.c", "Argon2/src/blake2/blamka-round-ref.h"
+    ss.tvos.exclude_files = "Argon2/src/opt.c", "Argon2/src/blake2/blamka-round-ref.h"
   end
 
   s.subspec 'ChaCha20' do |ss|
