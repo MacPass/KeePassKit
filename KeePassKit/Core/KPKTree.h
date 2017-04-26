@@ -105,4 +105,19 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
 
 @end
 
+typedef NS_ENUM(NSUInteger, KPKSynchronizationOptions) {
+  KPKSynchronizationOverwriteExistingOption = 1,
+  KPKSynchronizationKeepExistingOption = 2,
+  KPKSynchronizationOverwriteIfNewerOption = 3,
+  KPKSynchronizationCreateNewUuidsOption = 4,
+  KPKSynchronizationSynchronizeOption = 5
+};
+
+@interface KPKTree (Synchronization)
+
+- (void)syncronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
+
+@end
+
+
 NS_ASSUME_NONNULL_END

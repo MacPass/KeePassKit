@@ -6,7 +6,7 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKTree+Synchronization.h"
+#import "KPKTree.h"
 #import "KPKTree_Private.h"
 
 #import "KPKNode.h"
@@ -18,8 +18,11 @@
 #import "KPKEntry.h"
 #import "KPKEntry_Private.h"
 
-@implementation KPKTree (Synchronization)
+#import "KPKDeletedNode.h"
 
+#import "KPKTimeInfo.h"
+
+@implementation KPKTree (Synchronization)
 
 - (void)syncronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
   
