@@ -43,6 +43,7 @@
 }
 
 - (void)_mergeGroupsFromTree:(KPKTree *)otherTree options:(KPKSynchronizationOptions)options {
+  /* Updated Properties */
   for(KPKGroup *externGroup in otherTree.allGroups) {
     KPKDeletedNode *deletedNode = self.deletedObjects[externGroup.uuid];
     if(nil != deletedNode) {
@@ -83,6 +84,31 @@
          options == KPKSynchronizationOverwriteIfNewerOption ||
          options == KPKSynchronizationSynchronizeOption) {
         [localGroup _updateFromNode:externGroup options:updateOptions];
+      }
+    }
+  }
+  /* Update Location */
+  for(KPKGroup *externGroup in otherTree.allGroups) {
+    KPKGroup *localGroup = [self.root groupForUUID:externGroup.uuid];
+    if(!localGroup) {
+      /* no local group for extern group found */
+      continue;
+    }
+    KPKGroup *externParent = externGroup.parent;
+    KPKGroup *localParent = localGroup.parent;
+    
+    if(nil == externParent || nil == localParent) {
+      continue;
+    }
+    
+    if([localParent.uuid isEqual:externParent.uuid]) {
+      /* parents are the same */
+      continue;
+    }
+    if(NSOrderedAscending == [localGroup.timeInfo.locationChanged compare:externGroup.timeInfo.locationChanged]) {
+      KPKGroup *newLocalParent = [self.root groupForUUID:externParent.uuid];
+      if(newLocalParent) {
+        [localGroup moveToGroup:newLocalParent];
       }
     }
   }
@@ -127,6 +153,31 @@
          options == KPKSynchronizationOverwriteIfNewerOption ||
          options == KPKSynchronizationSynchronizeOption) {
         [localEntry _updateFromNode:externEntry options:updateOptions];
+      }
+    }
+  }
+  /* Update Location */
+  for(KPKEntry *externEntry in tree.allEntries) {
+    KPKEntry *localEntry = [self.root entryForUUID:externEntry.uuid];
+    if(!localEntry) {
+      /* no local group for extern group found */
+      continue;
+    }
+    KPKGroup *externParent = externEntry.parent;
+    KPKGroup *localParent = localEntry.parent;
+    
+    if(nil == externParent || nil == localParent) {
+      continue;
+    }
+    
+    if([localParent.uuid isEqual:externParent.uuid]) {
+      /* parents are the same */
+      continue;
+    }
+    if(NSOrderedAscending == [localEntry.timeInfo.locationChanged compare:externEntry.timeInfo.locationChanged]) {
+      KPKGroup *newLocalParent = [self.root groupForUUID:externParent.uuid];
+      if(newLocalParent) {
+        [localEntry moveToGroup:newLocalParent];
       }
     }
   }
