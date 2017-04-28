@@ -81,7 +81,7 @@
         
         /* Empty keystrokes or titles aren't allowed */
         if(!hasWindowTitleOrCommand) {
-          NSLog(@"Encountered emptry %@. Aborting!", isAssociation ? @"window title" : @"keystroke sequence");
+          NSLog(@"Encountered empty %@. Aborting!", isAssociation ? @"window title" : @"keystroke sequence");
           *stop = YES;
         }
         /* Test for correct numbering */
@@ -108,7 +108,7 @@
         }
         else {
           if(autotype.hasDefaultKeystrokeSequence) {
-            NSLog(@"Encounterd window association %@ but no Autotype sequence was specified. Aborting!", windowTitleOrCommand);
+            NSLog(@"Encountered window association %@ but no Autotype sequence was specified. Aborting!", windowTitleOrCommand);
             *stop = YES;
             return;
           }
