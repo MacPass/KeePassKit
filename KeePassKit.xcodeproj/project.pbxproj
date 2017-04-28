@@ -148,12 +148,7 @@
 		4C5CF4691BE10E100019AA81 /* KPKTree+Serializing.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF4481BE10E100019AA81 /* KPKTree+Serializing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C5CF46A1BE10E100019AA81 /* KPKTree+Serializing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4491BE10E100019AA81 /* KPKTree+Serializing.m */; };
 		4C5CF4761BE10E170019AA81 /* KeePassKit_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF4751BE10E170019AA81 /* KeePassKit_Private.h */; };
-		4C5CF47E1BE10E200019AA81 /* KPKHeaderReading.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF4781BE10E200019AA81 /* KPKHeaderReading.h */; };
-		4C5CF47F1BE10E200019AA81 /* KPKHeaderWriting.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF4791BE10E200019AA81 /* KPKHeaderWriting.h */; };
 		4C5CF4801BE10E200019AA81 /* KPKModificationRecording.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF47A1BE10E200019AA81 /* KPKModificationRecording.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4C5CF4811BE10E200019AA81 /* KPKTreeCrypting.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF47B1BE10E200019AA81 /* KPKTreeCrypting.h */; };
-		4C5CF4821BE10E200019AA81 /* KPKTreeReading.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF47C1BE10E200019AA81 /* KPKTreeReading.h */; };
-		4C5CF4831BE10E200019AA81 /* KPKTreeWriting.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF47D1BE10E200019AA81 /* KPKTreeWriting.h */; };
 		4C5CF48D1BE10E250019AA81 /* KPKIconTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF4851BE10E250019AA81 /* KPKIconTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C5CF48E1BE10E250019AA81 /* KPKLegacyHeaderUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF4861BE10E250019AA81 /* KPKLegacyHeaderUtility.h */; };
 		4C5CF48F1BE10E250019AA81 /* KPKLegacyHeaderUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4871BE10E250019AA81 /* KPKLegacyHeaderUtility.m */; };
@@ -410,12 +405,7 @@
 		4C5CF4481BE10E100019AA81 /* KPKTree+Serializing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KPKTree+Serializing.h"; sourceTree = "<group>"; };
 		4C5CF4491BE10E100019AA81 /* KPKTree+Serializing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KPKTree+Serializing.m"; sourceTree = "<group>"; };
 		4C5CF4751BE10E170019AA81 /* KeePassKit_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KeePassKit_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		4C5CF4781BE10E200019AA81 /* KPKHeaderReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKHeaderReading.h; sourceTree = "<group>"; };
-		4C5CF4791BE10E200019AA81 /* KPKHeaderWriting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKHeaderWriting.h; sourceTree = "<group>"; };
 		4C5CF47A1BE10E200019AA81 /* KPKModificationRecording.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKModificationRecording.h; sourceTree = "<group>"; };
-		4C5CF47B1BE10E200019AA81 /* KPKTreeCrypting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKTreeCrypting.h; sourceTree = "<group>"; };
-		4C5CF47C1BE10E200019AA81 /* KPKTreeReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKTreeReading.h; sourceTree = "<group>"; };
-		4C5CF47D1BE10E200019AA81 /* KPKTreeWriting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKTreeWriting.h; sourceTree = "<group>"; };
 		4C5CF4851BE10E250019AA81 /* KPKIconTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKIconTypes.h; sourceTree = "<group>"; };
 		4C5CF4861BE10E250019AA81 /* KPKLegacyHeaderUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKLegacyHeaderUtility.h; sourceTree = "<group>"; };
 		4C5CF4871BE10E250019AA81 /* KPKLegacyHeaderUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKLegacyHeaderUtility.m; sourceTree = "<group>"; };
@@ -915,13 +905,8 @@
 		4C5CF4771BE10E200019AA81 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				4C5CF4781BE10E200019AA81 /* KPKHeaderReading.h */,
-				4C5CF4791BE10E200019AA81 /* KPKHeaderWriting.h */,
 				4C5CF47A1BE10E200019AA81 /* KPKModificationRecording.h */,
 				4C5547EB1E0300CD00CE079A /* KPKExtendedModificationRecording.h */,
-				4C5CF47B1BE10E200019AA81 /* KPKTreeCrypting.h */,
-				4C5CF47C1BE10E200019AA81 /* KPKTreeReading.h */,
-				4C5CF47D1BE10E200019AA81 /* KPKTreeWriting.h */,
 				4C835B511D22AA3B0037E4B8 /* KPKTreeDelegate.h */,
 			);
 			path = Protocols;
@@ -1135,8 +1120,6 @@
 				4C5547EC1E0300CD00CE079A /* KPKExtendedModificationRecording.h in Headers */,
 				4C5CF4761BE10E170019AA81 /* KeePassKit_Private.h in Headers */,
 				4C5CF4211BE10E000019AA81 /* KPKTree_Private.h in Headers */,
-				4C5CF47F1BE10E200019AA81 /* KPKHeaderWriting.h in Headers */,
-				4C5CF47E1BE10E200019AA81 /* KPKHeaderReading.h in Headers */,
 				4C5CF3DA1BE10DF80019AA81 /* NSString+KPKHexdata.h in Headers */,
 				4C5CF3C61BE10DF80019AA81 /* NSData+CommonCrypto.h in Headers */,
 				4C5CF4061BE10E000019AA81 /* KPKAutotype_Private.h in Headers */,
@@ -1146,13 +1129,11 @@
 				4C0B9DB81DBFB4FC00E66CD6 /* KPKKdbTreeWriter.h in Headers */,
 				4C5CF3C81BE10DF80019AA81 /* NSData+KPKGzip.h in Headers */,
 				4C5CF4591BE10E100019AA81 /* KPKDataStreamWriter.h in Headers */,
-				4C5CF4811BE10E200019AA81 /* KPKTreeCrypting.h in Headers */,
 				4CCE00C71D78598800B8D50A /* KPKTimeInfo_Private.h in Headers */,
 				4C5CF48E1BE10E250019AA81 /* KPKLegacyHeaderUtility.h in Headers */,
 				4C5CF4571BE10E100019AA81 /* KPKDataStreamReader.h in Headers */,
 				4C0B9DB21DBFB4FC00E66CD6 /* KPKKdbArchiver.h in Headers */,
 				4C5CF42F1BE10E070019AA81 /* KPKKdbFormat.h in Headers */,
-				4C5CF4831BE10E200019AA81 /* KPKTreeWriting.h in Headers */,
 				4CA1E48B1D8832BA00100002 /* blamka-round-ref.h in Headers */,
 				4C5CF41D1BE10E000019AA81 /* KPKTag.h in Headers */,
 				4C5CF40F1BE10E000019AA81 /* KPKEntry_Private.h in Headers */,
@@ -1165,7 +1146,6 @@
 				4C0B9D901DBFB49600E66CD6 /* KPKRandomStream.h in Headers */,
 				4C1118451DCCD88300254E1D /* KPKSalsa20Cipher.h in Headers */,
 				4C26021A1DB110930069B059 /* chacha20_simple.h in Headers */,
-				4C5CF4821BE10E200019AA81 /* KPKTreeReading.h in Headers */,
 				4CA1E48A1D8832BA00100002 /* blamka-round-opt.h in Headers */,
 				4C5CF3D01BE10DF80019AA81 /* NSDate+KPKPacked.h in Headers */,
 				4C11184F1DCCD93F00254E1D /* twofish.h in Headers */,

@@ -35,17 +35,6 @@
 
 #import "NSUUID+KPKAdditions.h"
 
-/*
- NSString *const KPKDidRemoveNodeNotification  = @"com.hicknhack.KeePassKit.KPKDidRemoveNodeNotification";
- NSString *const KPKWillAddNodeNotification    = @"com.hicknhack.KeePassKit.KPKWillAddNodeNotification";
- NSString *const KPKDidAddNodeNotification     = @"com.hicknhack.KeePassKit.KPKDidAddNodeNotification";
- 
- NSString *const kKPKNodeUUIDKey               = @"com.hicknhack.KeePassKit.kKPKNodeUUIDKey";
- */
-NSString *const KPKWillRemoveNodeNotification = @"com.hicknhack.KeePassKit.KPKWillRemoveNodeNotification";
-NSString *const KPKWillModifyNodeNotification = @"com.hicknhack.KeePassKit.KPKWillModifyNodeNotification";
-NSString *const kKPKNodeKey                   = @"com.hicknhack.KeePassKit.kKPKNodeKey";
-
 @interface KPKTree () {
   NSMutableDictionary *_tagsMap;
 }

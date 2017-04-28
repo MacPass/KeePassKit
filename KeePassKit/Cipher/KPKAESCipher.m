@@ -9,7 +9,6 @@
 #import "KPKAESCipher.h"
 #import "KPKCipher_Private.h"
 #import "KPKErrors.h"
-#import "KPKHeaderReading.h"
 #import "KPKCompositeKey.h"
 
 #import "NSData+CommonCrypto.h"

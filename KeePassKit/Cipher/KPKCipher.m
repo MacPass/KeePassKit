@@ -8,7 +8,6 @@
 
 #import "KPKCipher.h"
 #import "KPKCipher_Private.h"
-#import "KPKHeaderReading.h"
 
 #import "KPKAESCipher.h"
 #import "KPKChaCha20Cipher.h"

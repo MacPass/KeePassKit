@@ -247,7 +247,6 @@
 }
 
 - (void)touchModified {
-  [[NSNotificationCenter defaultCenter] postNotificationName:KPKWillModifyNodeNotification object:self.tree userInfo:@{kKPKNodeKey: self}];
   [self.timeInfo touchModified];
 }
 
@@ -281,7 +280,6 @@
 }
 
 - (void)remove {
-  [[NSNotificationCenter defaultCenter] postNotificationName:KPKWillRemoveNodeNotification object:self.tree userInfo:@{kKPKNodeKey: self}];
   [[self.undoManager prepareWithInvocationTarget:self] addToGroup:self.parent atIndex:self.index];
   NSAssert(nil == self.tree.mutableDeletedObjects[self.uuid], @"Node already registered as deleted!");
   self.tree.mutableDeletedObjects[self.uuid] = [[KPKDeletedNode alloc] initWithNode:self];
@@ -361,7 +359,7 @@
   if (self) {
     _uuid = uuid ? [uuid copy] : [[[NSUUID alloc] init] copy];
     self.timeInfo = [[KPKTimeInfo alloc] init];
-    _iconId = [[self class] defaultIcon];
+    _iconId = self.class.defaultIcon;
     _mutableCustomData = [[NSMutableDictionary alloc] init];
   }
   return self;
