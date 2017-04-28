@@ -93,5 +93,4 @@
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index;
 - (void)removeCustomIcon:(KPKIcon *)icon;
 
-
 @end

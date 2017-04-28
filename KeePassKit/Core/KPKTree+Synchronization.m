@@ -18,6 +18,9 @@
 #import "KPKEntry.h"
 #import "KPKEntry_Private.h"
 
+#import "KPKMetaData.h"
+#import "KPKMetaData_Private.h"
+
 #import "KPKDeletedNode.h"
 
 #import "KPKTimeInfo.h"
@@ -43,8 +46,8 @@ rollbackValue = _rollbackValue; \
   [self _mergeEntriesFromTree:tree options:options];
   [self _mergeDeletedObjects:tree.mutableDeletedObjects];
   [self _reapplyDeletions];
-  
-  
+  [self.metaData _mergeWithMetaData:tree.metaData];
+  ;
   /* clear undo stack just to be save */
   [self.undoManager removeAllActions];
   
@@ -101,10 +104,10 @@ rollbackValue = _rollbackValue; \
       /* no local group for extern group found */
       continue;
     }
-    KPKGroup *externParent = externGroup.parent;
+    KPKGroup *externParent = [self.root groupForUUID:externGroup.parent.uuid];
     KPKGroup *localParent = localGroup.parent;
     
-    if(nil == externParent || nil == localParent) {
+    if(!externParent || !localParent) {
       continue;
     }
     
@@ -112,13 +115,13 @@ rollbackValue = _rollbackValue; \
       /* parents are the same */
       continue;
     }
-    if(NSOrderedAscending == [localGroup.timeInfo.locationChanged compare:externGroup.timeInfo.locationChanged]) {
-      KPKGroup *newLocalParent = [self.root groupForUUID:externParent.uuid];
-      if(newLocalParent) {
-        KPK_SCOPED_ROLLBACK_BEGIN(localGroup.updateTiming, NO)
-        [localGroup moveToGroup:newLocalParent];
-        KPK_SCOPED_ROLLBACK_END(localGroup.updateTiming)
-      }
+
+    
+    switch([localGroup.timeInfo.locationChanged compare:externGroup.timeInfo.locationChanged]) {
+      case NSOrderedAscending:
+      case NSOrderedDescending:
+      case NSOrderedSame:
+        continue;
     }
   }
 }
@@ -242,6 +245,9 @@ rollbackValue = _rollbackValue; \
     /* re-queue the skipped uuids */
     pending = [skipped copy];
   }
+}
+
+- (void)_mergeMetaDataFromTree:(KPKTree *)tree {
   
 }
 

@@ -19,4 +19,6 @@
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableCustomData;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, id> *mutableCustomPublicData;
 
+- (void)_mergeWithMetaData:(KPKMetaData *)metaData;
+
 @end

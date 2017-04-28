@@ -74,19 +74,19 @@
     _protectUrl = NO;
     _protectUserName = NO;
     _generator = [@"MacPass" copy];
-    _settingsChanged = [[NSDate date ] copy];
+    _settingsChanged = [NSDate.date copy];
     _databaseName = [NSLocalizedString(@"DATABASE", "") copy];
-    _databaseNameChanged = [[NSDate date] copy];
+    _databaseNameChanged = [NSDate.date copy];
     _databaseDescription = [@"" copy];
-    _databaseDescriptionChanged = [[NSDate date] copy];
+    _databaseDescriptionChanged = [NSDate.date copy];
     _defaultUserName = [@"" copy];
-    _defaultUserNameChanged = [[NSDate date] copy];
-    _entryTemplatesGroupChanged = [[NSDate date] copy];
-    _entryTemplatesGroup = [[NSUUID kpk_nullUUID] copy];
-    _trashChanged = [[NSDate date] copy];
-    _trashUuid = [[NSUUID kpk_nullUUID] copy];
-    _lastSelectedGroup = [[NSUUID kpk_nullUUID] copy];
-    _lastTopVisibleGroup = [[NSUUID kpk_nullUUID] copy];
+    _defaultUserNameChanged = [NSDate.date copy];
+    _entryTemplatesGroupChanged = [NSDate.date copy];
+    _entryTemplatesGroup = [NSUUID.kpk_nullUUID copy];
+    _trashChanged = [NSDate.date copy];
+    _trashUuid = [NSUUID.kpk_nullUUID copy];
+    _lastSelectedGroup = [NSUUID.kpk_nullUUID copy];
+    _lastTopVisibleGroup = [NSUUID.kpk_nullUUID copy];
     _historyMaxItems = 10;
     _historyMaxSize = 6 * 1024 * 1024; // 6 MB
     _maintenanceHistoryDays = 365;
@@ -256,6 +256,10 @@
 
 - (KPKIcon *)findIcon:(NSUUID *)uuid {
   return _customIconCache[uuid];
+}
+
+- (void)_mergeWithMetaData:(KPKMetaData *)metaData {
+  return;
 }
 
 #pragma mark KVO

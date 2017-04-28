@@ -47,11 +47,11 @@
 - (instancetype)init {
   self = [super init];
   if(self) {
-    NSDate *now = [NSDate date];
+    NSDate *now = NSDate.date;
     _creationDate = now;
     _modificationDate = now;
     _accessDate = now;
-    _expirationDate = [NSDate distantFuture];
+    _expirationDate = NSDate.distantFuture;
     _locationChanged = now;
     _expires = NO;
     _usageCount = 0;
@@ -68,13 +68,13 @@
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
-  if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
-    _creationDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(creationDate))];
-    _modificationDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(modificationDate))];
-    _accessDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(accessDate))];
-    _expirationDate = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(expirationDate))];
+  if(self && [aDecoder isKindOfClass:NSKeyedUnarchiver.class]) {
+    _creationDate = [aDecoder decodeObjectOfClass:NSDate.class forKey:NSStringFromSelector(@selector(creationDate))];
+    _modificationDate = [aDecoder decodeObjectOfClass:NSDate.class forKey:NSStringFromSelector(@selector(modificationDate))];
+    _accessDate = [aDecoder decodeObjectOfClass:NSDate.class forKey:NSStringFromSelector(@selector(accessDate))];
+    _expirationDate = [aDecoder decodeObjectOfClass:NSDate.class forKey:NSStringFromSelector(@selector(expirationDate))];
     _expires = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(expires))];
-    _locationChanged = [aDecoder decodeObjectOfClass:[NSDate class] forKey:NSStringFromSelector(@selector(locationChanged))];
+    _locationChanged = [aDecoder decodeObjectOfClass:NSDate.class forKey:NSStringFromSelector(@selector(locationChanged))];
     _usageCount = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(usageCount))];
   }
   return self;
@@ -136,7 +136,7 @@
 }
 
 - (void)reset {
-  NSDate *now = [NSDate date];
+  NSDate *now = NSDate.date;
   self.creationDate = now;
   self.modificationDate = now;
   self.accessDate = now;
@@ -149,7 +149,7 @@
   if(!self.updateTiming) {
     return;
   }
-  self.modificationDate = [NSDate date];
+  self.modificationDate = NSDate.date;
 }
 
 - (void)touchAccessed {
@@ -157,14 +157,14 @@
     return;
   }
   
-  self.accessDate = [NSDate date];
+  self.accessDate = NSDate.date;
 }
 
 - (void)touchMoved {
   if(!self.updateTiming) {
     return;
   }
-  self.locationChanged = [NSDate date];
+  self.locationChanged = NSDate.date;
 }
 
 - (void)_updateExpireState {
