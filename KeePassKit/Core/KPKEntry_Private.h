@@ -41,6 +41,4 @@
  */
 - (void)_addHistoryEntry:(KPKEntry *)entry;
 
-- (BOOL)_isEqualToEntry:(KPKEntry *)entry options:(KPKNodeEqualityOptions)options;
-
 @end

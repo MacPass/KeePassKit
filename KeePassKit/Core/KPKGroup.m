@@ -196,10 +196,11 @@ static NSSet *_observedKeyPathsSet;
 
 - (BOOL)isEqualToGroup:(KPKGroup *)aGroup {
   /* normal compare does not ignroe anything */
-  return [self _isEqualToGroup:aGroup options:0];
+  return [self _isEqualToNode:aGroup options:0];
 }
 
-- (BOOL)_isEqualToGroup:(KPKGroup *)aGroup options:(KPKNodeEqualityOptions)options {
+- (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options {
+  KPKGroup *aGroup = node.asGroup;
   NSAssert([aGroup isKindOfClass:[KPKGroup class]], @"No valid object supplied!");
   if(![aGroup isKindOfClass:[KPKGroup class]]) {
     return NO;
@@ -222,7 +223,7 @@ static NSSet *_observedKeyPathsSet;
     [_groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
       KPKGroup *otherGroup = obj;
       KPKGroup *myGroup = _groups[idx];
-      isEqual &= [myGroup _isEqualToGroup:otherGroup options:options];
+      isEqual &= [myGroup _isEqualToNode:otherGroup options:options];
       *stop = !isEqual;
     }];
     
@@ -238,7 +239,7 @@ static NSSet *_observedKeyPathsSet;
     for(KPKEntry *entry in _entries) {
       BOOL foundEntry = NO;
       for(KPKEntry *otherEntry in aGroup->_entries) {
-        foundEntry = [entry _isEqualToEntry:otherEntry options:options];
+        foundEntry = [entry _isEqualToNode:otherEntry options:options];
         if(foundEntry) {
           break;
         }

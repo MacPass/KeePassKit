@@ -88,7 +88,7 @@ rollbackValue = _rollbackValue; \
        KPKNodeEqualityIgnoreHistory not needed since we do not compare entries at all
        */
       KPKNodeEqualityOptions equalityOptions = KPKNodeEqualityIgnoreGroupsOption | KPKNodeEqualityIgnoreEntriesOption;
-      if([localGroup _isEqualToGroup:externGroup options:equalityOptions]) {
+      if([localGroup _isEqualToNode:externGroup options:equalityOptions]) {
         continue; // Groups has not changed at all, no updates needed
       }
       KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime : 0;
@@ -131,7 +131,7 @@ rollbackValue = _rollbackValue; \
        KPKNodeEqualityIgnoreHistory not needed since we do not compare entries at all
        */
       KPKNodeEqualityOptions equalityOptions = KPKNodeEqualityIgnoreHistoryOption;
-      if([localEntry _isEqualToEntry:externEntry options:equalityOptions]) {
+      if([localEntry _isEqualToNode:externEntry options:equalityOptions]) {
         continue; // Entry has not changed at all, no updates needed
       }
       KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime : 0;

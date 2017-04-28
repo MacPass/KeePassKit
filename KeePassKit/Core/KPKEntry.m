@@ -300,13 +300,14 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (BOOL)isEqualToEntry:(KPKEntry *)entry {
-  return [self _isEqualToEntry:entry options:0];
+  return [self _isEqualToNode:entry options:0];
 }
 
-- (BOOL)_isEqualToEntry:(KPKEntry *)entry options:(KPKNodeEqualityOptions)options {
+- (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options {
+  KPKEntry *entry = node.asEntry;
   NSAssert([entry isKindOfClass:[KPKEntry class]], @"Test only allowed with KPKEntry classes");
   
-  if(![self _isEqualToNode:entry options:options]) {
+  if(![super _isEqualToNode:node options:options]) {
     return NO;
   }
   
