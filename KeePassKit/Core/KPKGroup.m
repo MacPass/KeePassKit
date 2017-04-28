@@ -206,7 +206,7 @@ static NSSet *_observedKeyPathsSet;
     return NO;
   }
   
-  if(![self _isEqualToNode:aGroup options:options]) {
+  if(![super _isEqualToNode:aGroup options:options]) {
     return NO;
   }
   
