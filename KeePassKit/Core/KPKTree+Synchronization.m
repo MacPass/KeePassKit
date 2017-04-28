@@ -22,6 +22,14 @@
 
 #import "KPKTimeInfo.h"
 
+#define KPK_SCOPED_ROLLBACK_BEGIN(rollbackValue, value) { \
+BOOL _rollbackValue = rollbackValue; \
+rollbackValue = value; \
+
+#define KPK_SCOPED_ROLLBACK_END(rollbackValue) \
+rollbackValue = _rollbackValue; \
+} \
+
 @implementation KPKTree (Synchronization)
 
 - (void)syncronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
@@ -64,10 +72,9 @@
       if(!localParent) {
         localParent = self.root;
       }
-      BOOL updateTiming = localGroup.updateTiming;
-      localGroup.updateTiming = NO;
+      KPK_SCOPED_ROLLBACK_BEGIN(localGroup.updateTiming, NO)
       [localGroup addToGroup:localParent atIndex:externGroup.index];
-      localGroup.updateTiming = updateTiming;
+      KPK_SCOPED_ROLLBACK_END(localGroup.updateTiming)
     }
     else {
       NSAssert(options != KPKSynchronizationCreateNewUuidsOption, @"UUID collision while merging trees!");
@@ -108,7 +115,9 @@
     if(NSOrderedAscending == [localGroup.timeInfo.locationChanged compare:externGroup.timeInfo.locationChanged]) {
       KPKGroup *newLocalParent = [self.root groupForUUID:externParent.uuid];
       if(newLocalParent) {
+        KPK_SCOPED_ROLLBACK_BEGIN(localGroup.updateTiming, NO)
         [localGroup moveToGroup:newLocalParent];
+        KPK_SCOPED_ROLLBACK_END(localGroup.updateTiming)
       }
     }
   }
@@ -133,10 +142,9 @@
       if(!localParent) {
         localParent = self.root;
       }
-      BOOL updateTiming = localEntry.updateTiming;
-      localEntry.updateTiming = NO;
+      KPK_SCOPED_ROLLBACK_BEGIN(localEntry.updateTiming, NO)
       [localEntry addToGroup:localParent atIndex:externEntry.index];
-      localEntry.updateTiming = updateTiming;
+      KPK_SCOPED_ROLLBACK_END(localEntry.updateTiming)
     }
     else {
       NSAssert(options != KPKSynchronizationCreateNewUuidsOption, @"UUID collision while merging trees!");
