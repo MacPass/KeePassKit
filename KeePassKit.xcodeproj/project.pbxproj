@@ -32,6 +32,7 @@
 		4C0B9DB91DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */; };
 		4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */; };
 		4C0BF1531DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */; };
+		4C1032171EB38E4400FD605F /* KPKSynchronizationOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1032161EB38B5400FD605F /* KPKSynchronizationOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C1118451DCCD88300254E1D /* KPKSalsa20Cipher.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1118431DCCD88300254E1D /* KPKSalsa20Cipher.h */; };
 		4C1118461DCCD88300254E1D /* KPKSalsa20Cipher.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1118441DCCD88300254E1D /* KPKSalsa20Cipher.m */; };
 		4C1118491DCCD90100254E1D /* KPKTwofishCipher.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1118471DCCD90100254E1D /* KPKTwofishCipher.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -285,6 +286,7 @@
 		4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKKdbTreeWriter.m; sourceTree = "<group>"; };
 		4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argon2KDF_AES_Cipher_test.kdbx; sourceTree = "<group>"; };
 		4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argon2KDF_ChaCha_Cipher_test.kdbx; sourceTree = "<group>"; };
+		4C1032161EB38B5400FD605F /* KPKSynchronizationOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKSynchronizationOptions.h; sourceTree = "<group>"; };
 		4C1118431DCCD88300254E1D /* KPKSalsa20Cipher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKSalsa20Cipher.h; sourceTree = "<group>"; };
 		4C1118441DCCD88300254E1D /* KPKSalsa20Cipher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKSalsa20Cipher.m; sourceTree = "<group>"; };
 		4C1118471DCCD90100254E1D /* KPKTwofishCipher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKTwofishCipher.h; sourceTree = "<group>"; };
@@ -877,6 +879,7 @@
 				4C5CF4291BE10E070019AA81 /* KPKFormat.m */,
 				4C5CF42A1BE10E070019AA81 /* KPKKdbFormat.h */,
 				4C5CF42C1BE10E070019AA81 /* KPKKdbxFormat.h */,
+				4C1032161EB38B5400FD605F /* KPKSynchronizationOptions.h */,
 			);
 			path = Format;
 			sourceTree = "<group>";
@@ -1053,6 +1056,7 @@
 				4C5CF4161BE10E000019AA81 /* KPKIcon.h in Headers */,
 				4CA1E4991D8832BA00100002 /* thread.h in Headers */,
 				4CD607AE1DFAAECE00C815E5 /* KPKPlatformIncludes.h in Headers */,
+				4C1032171EB38E4400FD605F /* KPKSynchronizationOptions.h in Headers */,
 				4C1118491DCCD90100254E1D /* KPKTwofishCipher.h in Headers */,
 				4CA1E4881D8832BA00100002 /* blake2.h in Headers */,
 				4C5CF4901BE10E250019AA81 /* KPKTypes.h in Headers */,

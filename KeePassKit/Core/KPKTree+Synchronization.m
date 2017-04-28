@@ -46,7 +46,7 @@ rollbackValue = _rollbackValue; \
   [self _mergeEntriesFromTree:tree options:options];
   [self _mergeDeletedObjects:tree.mutableDeletedObjects];
   [self _reapplyDeletions];
-  [self.metaData _mergeWithMetaData:tree.metaData];
+  [self.metaData _mergeWithMetaData:tree.metaData options:options];
   ;
   /* clear undo stack just to be save */
   [self.undoManager removeAllActions];

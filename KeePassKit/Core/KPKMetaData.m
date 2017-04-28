@@ -31,10 +31,15 @@
 
 #import "NSUUID+KPKAdditions.h"
 
+#define KPK_METADATA_UPDATE_DATE(value) \
+if( self.updateTiming ) { \
+  value = NSDate.date; \
+} \
+
+
 @interface KPKMetaData () {
   NSMutableDictionary *_customIconCache;
 }
-
 @end
 
 @implementation KPKMetaData
@@ -135,51 +140,42 @@
      thus we just stripp it
      */
     _color = [[color colorWithAlphaComponent:1.0] copy];
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged)
   }
 }
 
 - (void)setDatabaseName:(NSString *)databaseName {
   if(![_databaseName isEqualToString:databaseName]) {
     _databaseName = [databaseName copy];
-    if(self.updateTiming) {
-      self.databaseNameChanged = [NSDate date];
-    }
+    KPK_METADATA_UPDATE_DATE(self.databaseNameChanged)
   }
 }
 
 - (void)setDatabaseDescription:(NSString *)databaseDescription {
   if(![_databaseDescription isEqualToString:databaseDescription]) {
     _databaseDescription = [databaseDescription copy];
-    if(self.updateTiming) {
-      self.databaseNameChanged = [NSDate date];
-    }
+    KPK_METADATA_UPDATE_DATE(self.databaseDescriptionChanged)
   }
 }
 
 - (void)setDefaultUserName:(NSString *)defaultUserName {
   if(![_defaultUserName isEqualToString:defaultUserName]) {
     _defaultUserName = [defaultUserName copy];
-    if(self.updateTiming) {
-      self.defaultUserNameChanged = [NSDate date];
-    }
+    KPK_METADATA_UPDATE_DATE(self.defaultUserNameChanged)
   }
 }
 
 - (void)setEntryTemplatesGroup:(NSUUID *)entryTemplatesGroup {
   if(![_entryTemplatesGroup isEqual:entryTemplatesGroup]) {
     _entryTemplatesGroup = entryTemplatesGroup;
-    if(self.updateTiming) {
-      self.entryTemplatesGroupChanged = [NSDate date];
-    }
+    KPK_METADATA_UPDATE_DATE(self.entryTemplatesGroupChanged)
   }
 }
 
 - (void)setTrashUuid:(NSUUID *)trashUuid {
   if(![_trashUuid isEqual:trashUuid]) {
     _trashUuid = trashUuid;
-    if(self.updateTiming) {
-      self.trashChanged = [NSDate date];
-    }
+    KPK_METADATA_UPDATE_DATE(self.trashChanged)
   }
 }
 
@@ -258,8 +254,13 @@
   return _customIconCache[uuid];
 }
 
-- (void)_mergeWithMetaData:(KPKMetaData *)metaData {
-  return;
+- (void)_mergeWithMetaData:(KPKMetaData *)metaData options:(KPKSynchronizationOptions)options {
+  BOOL forceUpdate = options == KPKSynchronizationOverwriteExistingOption;
+  BOOL otherIsNewer = NSOrderedAscending == [metaData.settingsChanged compare:self.settingsChanged];
+  if(forceUpdate || otherIsNewer) {
+    self.settingsChanged = metaData.settingsChanged;
+    self.color = metaData.color;
+  }
 }
 
 #pragma mark KVO

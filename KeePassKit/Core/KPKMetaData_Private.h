@@ -8,6 +8,7 @@
 
 #import "KPKMetaData.h"
 #import "KPKExtendedModificationRecording.h"
+#import "KPKSynchronizationOptions.h"
 
 @class KPKBinary;
 @class KPKIcon;
@@ -19,6 +20,6 @@
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableCustomData;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, id> *mutableCustomPublicData;
 
-- (void)_mergeWithMetaData:(KPKMetaData *)metaData;
+- (void)_mergeWithMetaData:(KPKMetaData *)metaData options:(KPKSynchronizationOptions)options;
 
 @end

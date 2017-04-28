@@ -22,6 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import "KPKFormat.h"
+#import "KPKSynchronizationOptions.h"
 #import "KPKNode.h"
 #import "KPKTreeDelegate.h"
 
@@ -100,14 +101,6 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
 - (NSString * _Nullable)defaultAutotypeSequence;
 
 @end
-
-typedef NS_ENUM(NSUInteger, KPKSynchronizationOptions) {
-  KPKSynchronizationOverwriteExistingOption = 1,
-  KPKSynchronizationKeepExistingOption = 2,
-  KPKSynchronizationOverwriteIfNewerOption = 3,
-  KPKSynchronizationCreateNewUuidsOption = 4,
-  KPKSynchronizationSynchronizeOption = 5
-};
 
 @interface KPKTree (Synchronization)
 
