@@ -29,7 +29,7 @@
 @interface NSUUID (KPKAdditions)
 #endif
 
-@property (class, readonly, copy) NSUUID *kpk_nullUUID;
++ (NSUUID *)kpk_nullUUID;
 + (NSUUID *)kpk_uuidWithEncodedString:(NSString *)string;
 
 @property (nonatomic, readonly, copy) NSData *kpk_uuidData;
