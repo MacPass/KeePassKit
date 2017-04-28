@@ -44,6 +44,8 @@ rollbackValue = _rollbackValue; \
   
   [self _mergeGroupsFromTree:tree options:options];
   [self _mergeEntriesFromTree:tree options:options];
+  [self _mergeLocationFromNodes:tree.allEntries];
+  [self _mergeLocationFromNodes:tree.allGroups];
   [self _mergeDeletedObjects:tree.mutableDeletedObjects];
   [self _reapplyDeletions];
   [self.metaData _mergeWithMetaData:tree.metaData options:options];
@@ -97,33 +99,6 @@ rollbackValue = _rollbackValue; \
       }
     }
   }
-  /* Update Location */
-  for(KPKGroup *externGroup in otherTree.allGroups) {
-    KPKGroup *localGroup = [self.root groupForUUID:externGroup.uuid];
-    if(!localGroup) {
-      /* no local group for extern group found */
-      continue;
-    }
-    KPKGroup *externParent = [self.root groupForUUID:externGroup.parent.uuid];
-    KPKGroup *localParent = localGroup.parent;
-    
-    if(!externParent || !localParent) {
-      continue;
-    }
-    
-    if([localParent.uuid isEqual:externParent.uuid]) {
-      /* parents are the same */
-      continue;
-    }
-
-    
-    switch([localGroup.timeInfo.locationChanged compare:externGroup.timeInfo.locationChanged]) {
-      case NSOrderedAscending:
-      case NSOrderedDescending:
-      case NSOrderedSame:
-        continue;
-    }
-  }
 }
 - (void)_mergeEntriesFromTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
   for(KPKEntry *externEntry in tree.allEntries) {
@@ -167,29 +142,35 @@ rollbackValue = _rollbackValue; \
       }
     }
   }
-  /* Update Location */
-  for(KPKEntry *externEntry in tree.allEntries) {
-    KPKEntry *localEntry = [self.root entryForUUID:externEntry.uuid];
-    if(!localEntry) {
+}
+
+- (void)_mergeLocationFromNodes:(NSArray <KPKNode *>*)nodes {
+  for(KPKNode *externNode in nodes) {
+    KPKNode *localNode = externNode.asGroup ? [self.root groupForUUID:externNode.uuid] : [self.root entryForUUID:externNode.uuid];
+    if(!localNode) {
       /* no local group for extern group found */
       continue;
     }
-    KPKGroup *externParent = externEntry.parent;
-    KPKGroup *localParent = localEntry.parent;
+    KPKGroup *localExternParent = [self.root groupForUUID:externNode.parent.uuid];
+    KPKGroup *localParent = localNode.parent;
     
-    if(nil == externParent || nil == localParent) {
+    if(!localExternParent || !localParent) {
       continue;
     }
     
-    if([localParent.uuid isEqual:externParent.uuid]) {
+    if([localParent.uuid isEqual:localExternParent.uuid]) {
       /* parents are the same */
       continue;
     }
-    if(NSOrderedAscending == [localEntry.timeInfo.locationChanged compare:externEntry.timeInfo.locationChanged]) {
-      KPKGroup *newLocalParent = [self.root groupForUUID:externParent.uuid];
-      if(newLocalParent) {
-        [localEntry moveToGroup:newLocalParent];
-      }
+    
+    switch([localNode.timeInfo.locationChanged compare:externNode.timeInfo.locationChanged]) {
+      case NSOrderedAscending:
+        KPK_SCOPED_ROLLBACK_BEGIN(localNode.updateTiming, NO)
+        [localNode addToGroup:localExternParent];
+        KPK_SCOPED_ROLLBACK_END(localNode.updateTiming)
+      case NSOrderedSame:
+      case NSOrderedDescending:
+        continue;
     }
   }
 }
@@ -245,10 +226,6 @@ rollbackValue = _rollbackValue; \
     /* re-queue the skipped uuids */
     pending = [skipped copy];
   }
-}
-
-- (void)_mergeMetaDataFromTree:(KPKTree *)tree {
-  
 }
 
 @end
