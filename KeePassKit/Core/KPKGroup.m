@@ -107,8 +107,10 @@ static NSSet *_observedKeyPathsSet;
     self.updateTiming = NO;
     self.title = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(title))];
     self.notes = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(notes))];
-    _groups = [[aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(groups))] mutableCopy];
-    _entries = [[aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(entries))] mutableCopy];
+    _groups = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKGroup.class]]
+                                        forKey:NSStringFromSelector(@selector(groups))] mutableCopy];
+    _entries = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKEntry.class]]
+                                         forKey:NSStringFromSelector(@selector(entries))] mutableCopy];
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];

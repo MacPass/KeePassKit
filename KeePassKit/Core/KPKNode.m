@@ -373,7 +373,7 @@
     _iconUUID = [[aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))] copy];
     /* decode time info at last */
     self.timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
-    _mutableCustomData = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableCustomData))];
+    _mutableCustomData = [aDecoder decodeObjectOfClass:[NSMutableDictionary class] forKey:NSStringFromSelector(@selector(mutableCustomData))];
   }
   return self;
 }

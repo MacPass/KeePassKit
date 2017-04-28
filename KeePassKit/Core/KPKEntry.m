@@ -214,9 +214,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     /* Disable timing since we init via coder */
     self.updateTiming = NO;
     /* use setter for internal consistency */
-    self.mutableAttributes = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableAttributes))];
-    self.mutableHistory = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(mutableHistory))];
-    _binaries = [aDecoder decodeObjectOfClass:[NSMutableArray class] forKey:NSStringFromSelector(@selector(binaries))];
+    self.mutableAttributes = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKAttribute.class]]
+                                                      forKey:NSStringFromSelector(@selector(mutableAttributes))];
+    self.mutableHistory = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKEntry.class]]
+                                                   forKey:NSStringFromSelector(@selector(mutableHistory))];
+    _binaries = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKBinary.class]]
+                                       forKey:NSStringFromSelector(@selector(binaries))];
     _tags = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(tags))] copy];
     _foregroundColor = [[aDecoder decodeObjectOfClass:[NSUIColor class] forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
     _backgroundColor = [[aDecoder decodeObjectOfClass:[NSUIColor class] forKey:NSStringFromSelector(@selector(backgroundColor))] copy];

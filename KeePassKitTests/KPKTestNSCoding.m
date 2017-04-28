@@ -152,13 +152,11 @@
 }
 
 - (id)decode:(NSData *)data ofClass:(Class)class usingSecureCoding:(BOOL)secureCoding {
-  if(secureCoding && ![class instancesRespondToSelector:@selector(supportsSecureCoding)]) {
-    return nil;
-  }
   if(![class instancesRespondToSelector:@selector(initWithCoder:)]) {
     return nil;
   }
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+  unarchiver.requiresSecureCoding = secureCoding;
   id object = [[class alloc] initWithCoder:unarchiver];
   [unarchiver finishDecoding];
   return object;
@@ -166,7 +164,7 @@
 
 
 - (id)decode:(NSData *)data ofClass:(Class)class {
-  return [self decode:data ofClass:class usingSecureCoding:NO];
+  return [self decode:data ofClass:class usingSecureCoding:YES];
 }
 
 @end
