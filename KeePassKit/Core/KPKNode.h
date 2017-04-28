@@ -79,7 +79,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  *	Returns the default icon number for a Group
  *	@return	default icon index for a group
  */
-@property (class, readonly) NSUInteger defaultIcon;
++ (NSUInteger)defaultIcon;
 
 /**
  *  Returns a copy of the node assigned with a new UUID. Use copy on KPKEntry or KPKGroup to get a carbon copy
