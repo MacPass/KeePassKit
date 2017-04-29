@@ -90,6 +90,7 @@ if( self.updateTiming ) { \
     _entryTemplatesGroup = [NSUUID.kpk_nullUUID copy];
     _trashChanged = [NSDate.date copy];
     _trashUuid = [NSUUID.kpk_nullUUID copy];
+    _useTrash = NO;
     _lastSelectedGroup = [NSUUID.kpk_nullUUID copy];
     _lastTopVisibleGroup = [NSUUID.kpk_nullUUID copy];
     _historyMaxItems = 10;
@@ -169,6 +170,13 @@ if( self.updateTiming ) { \
   if(![_entryTemplatesGroup isEqual:entryTemplatesGroup]) {
     _entryTemplatesGroup = entryTemplatesGroup;
     KPK_METADATA_UPDATE_DATE(self.entryTemplatesGroupChanged)
+  }
+}
+
+- (void)setUseTrash:(BOOL)useTrash {
+  if(_useTrash != useTrash) {
+    _useTrash = useTrash;
+    KPK_METADATA_UPDATE_DATE(self.trashChanged)
   }
 }
 

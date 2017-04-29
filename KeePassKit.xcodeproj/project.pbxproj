@@ -440,6 +440,7 @@
 		4C5D91E31D89519C00029558 /* KPKNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKNumber.m; sourceTree = "<group>"; };
 		4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = BinaryAttachments_test.kdbx; sourceTree = "<group>"; };
 		4C62F6231D1D77DE0031795C /* KPKAttribute_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKAttribute_Private.h; sourceTree = "<group>"; };
+		4C69DD561EB4705800194900 /* KPKRollback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKRollback.h; sourceTree = "<group>"; };
 		4C6C6EF91DDE231A0079C26D /* KPKTree+Synchronization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KPKTree+Synchronization.m"; sourceTree = "<group>"; };
 		4C70F4541D92BF56003564E2 /* KPKTestVariantDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestVariantDictionary.m; sourceTree = "<group>"; };
 		4C71F1941E1EACA80060857C /* KPKTestSynchronization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestSynchronization.m; sourceTree = "<group>"; };
@@ -931,6 +932,7 @@
 				4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */,
 				4CE95AE41E97BC330019BBDC /* KPKData.h */,
 				4CE95AE51E97BC330019BBDC /* KPKData.m */,
+				4C69DD561EB4705800194900 /* KPKRollback.h */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
