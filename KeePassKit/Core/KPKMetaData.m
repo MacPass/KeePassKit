@@ -29,6 +29,8 @@
 #import "KPKAESCipher.h"
 #import "KPKAESKeyDerivation.h"
 
+#import "KPKRollback.h"
+
 #import "NSUUID+KPKAdditions.h"
 
 #define KPK_METADATA_UPDATE_DATE(value) \
@@ -265,10 +267,30 @@ if( self.updateTiming ) { \
 - (void)_mergeWithMetaData:(KPKMetaData *)metaData options:(KPKSynchronizationOptions)options {
   BOOL forceUpdate = options == KPKSynchronizationOverwriteExistingOption;
   BOOL otherIsNewer = NSOrderedAscending == [metaData.settingsChanged compare:self.settingsChanged];
+  KPK_SCOPED_DISABLE_BEGIN(self.updateTiming)
   if(forceUpdate || otherIsNewer) {
     self.settingsChanged = metaData.settingsChanged;
     self.color = metaData.color;
   }
+  if(forceUpdate || NSOrderedAscending == [self.databaseNameChanged compare:metaData.databaseNameChanged]) {
+    self.databaseName = metaData.databaseName;
+    self.databaseNameChanged = metaData.databaseNameChanged;
+  }
+
+  if(forceUpdate || NSOrderedAscending == [self.databaseDescriptionChanged compare:metaData.databaseDescriptionChanged]) {
+    self.databaseDescription = metaData.databaseDescription;
+    self.databaseDescriptionChanged = metaData.databaseDescriptionChanged;
+  }
+
+  if(forceUpdate || NSOrderedAscending == [self.defaultUserNameChanged compare:metaData.defaultUserNameChanged]) {
+    self.defaultUserName = metaData.defaultUserName;
+    self.defaultUserNameChanged = metaData.defaultUserNameChanged;
+  }
+
+  if(forceUpdate || otherIsNewer) {
+    
+  }
+  KPK_SCOPED_DISABLE_END(self.updateTiming)
 }
 
 #pragma mark KVO
