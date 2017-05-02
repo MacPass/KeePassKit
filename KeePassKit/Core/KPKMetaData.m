@@ -29,7 +29,7 @@
 #import "KPKAESCipher.h"
 #import "KPKAESKeyDerivation.h"
 
-#import "KPKRollback.h"
+#import "KPKScopedSet.h"
 
 #import "NSUUID+KPKAdditions.h"
 
@@ -267,7 +267,7 @@ if( self.updateTiming ) { \
 - (void)_mergeWithMetaData:(KPKMetaData *)metaData options:(KPKSynchronizationOptions)options {
   BOOL forceUpdate = options == KPKSynchronizationOverwriteExistingOption;
   BOOL otherIsNewer = NSOrderedAscending == [metaData.settingsChanged compare:self.settingsChanged];
-  KPK_SCOPED_DISABLE_BEGIN(self.updateTiming)
+  KPK_SCOPED_NO_BEGIN(self.updateTiming)
   if(forceUpdate || otherIsNewer) {
     self.settingsChanged = metaData.settingsChanged;
     self.color = metaData.color;
@@ -290,7 +290,7 @@ if( self.updateTiming ) { \
   if(forceUpdate || otherIsNewer) {
     
   }
-  KPK_SCOPED_DISABLE_END(self.updateTiming)
+  KPK_SCOPED_NO_END(self.updateTiming)
 }
 
 #pragma mark KVO

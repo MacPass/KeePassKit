@@ -35,6 +35,8 @@
 #import "KPKTimeInfo.h"
 #import "KPKUTIs.h"
 
+#import "KPKScopedSet.h"
+
 NSString *const KPKMetaEntryBinaryDescription   = @"bin-stream";
 NSString *const KPKMetaEntryTitle               = @"Meta-Info";
 NSString *const KPKMetaEntryUsername            = @"SYSTEM";
@@ -253,13 +255,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKLocalizable", "");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
-  BOOL enabled = copy.undoManager.isUndoRegistrationEnabled;
-  /* disable undo of title set otherwise undo/redo will clear this too! */
-  [copy.undoManager disableUndoRegistration];
+  KPK_SCOPED_DISABLE_UNDO_BEGIN(copy.undoManager)
   copy.title = titleOrNil;
-  if(enabled) {
-    [copy.undoManager enableUndoRegistration];
-  }
+  KPK_SCOPED_DISABLE_UNDO_END
   [copy.timeInfo reset];
   return copy;
 }

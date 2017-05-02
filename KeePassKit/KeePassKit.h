@@ -23,6 +23,8 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import "KPKData.h"
 #import "KPKNumber.h"
 
+#import "KPKScopedSet.h"
+
 #import "KPKFormat.h"
 #import "KPKKdbxFormat.h"
 #import "KPKKeyDerivation.h"

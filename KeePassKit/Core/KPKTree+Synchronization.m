@@ -25,7 +25,7 @@
 
 #import "KPKTimeInfo.h"
 
-#import "KPKRollback.h"
+#import "KPKScopedSet.h"
 
 @implementation KPKTree (Synchronization)
 
@@ -71,9 +71,9 @@
       if(!localParent) {
         localParent = self.root;
       }
-      KPK_SCOPED_DISABLE_BEGIN(localGroup.updateTiming)
+      KPK_SCOPED_NO_BEGIN(localGroup.updateTiming)
       [localGroup addToGroup:localParent atIndex:externGroup.index];
-      KPK_SCOPED_DISABLE_END(localGroup.updateTiming)
+      KPK_SCOPED_NO_END(localGroup.updateTiming)
     }
     else {
       NSAssert(options != KPKSynchronizationCreateNewUuidsOption, @"UUID collision while merging trees!");
@@ -114,9 +114,9 @@
       if(!localParent) {
         localParent = self.root;
       }
-      KPK_SCOPED_DISABLE_BEGIN(localEntry.updateTiming)
+      KPK_SCOPED_NO_BEGIN(localEntry.updateTiming)
       [localEntry addToGroup:localParent atIndex:externEntry.index];
-      KPK_SCOPED_DISABLE_END(localEntry.updateTiming)
+      KPK_SCOPED_NO_END(localEntry.updateTiming)
     }
     else {
       NSAssert(options != KPKSynchronizationCreateNewUuidsOption, @"UUID collision while merging trees!");
@@ -159,9 +159,9 @@
     
     switch([localNode.timeInfo.locationChanged compare:externNode.timeInfo.locationChanged]) {
       case NSOrderedAscending:
-        KPK_SCOPED_DISABLE_BEGIN(localNode.updateTiming)
+        KPK_SCOPED_NO_BEGIN(localNode.updateTiming)
         [localNode addToGroup:localExternParent];
-        KPK_SCOPED_DISABLE_END(localNode.updateTiming)
+        KPK_SCOPED_NO_END(localNode.updateTiming)
       case NSOrderedSame:
       case NSOrderedDescending:
         continue;

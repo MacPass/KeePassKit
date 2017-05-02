@@ -241,6 +241,7 @@
 		4CCC95061E24F2BD00593E65 /* KPKTestNodeForUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */; };
 		4CCE00C71D78598800B8D50A /* KPKTimeInfo_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCE00C51D78598800B8D50A /* KPKTimeInfo_Private.h */; };
 		4CD607AE1DFAAECE00C815E5 /* KPKPlatformIncludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CDA35721EB88621003CD59F /* KPKScopedSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C69DD561EB4705800194900 /* KPKScopedSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CE471EE1E08327D00AA3D81 /* KPKTestKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE471ED1E08327D00AA3D81 /* KPKTestKVO.m */; };
 		4CE95AE61E97BC330019BBDC /* KPKData.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CE95AE41E97BC330019BBDC /* KPKData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CE95AE71E97BC330019BBDC /* KPKData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE95AE51E97BC330019BBDC /* KPKData.m */; };
@@ -440,7 +441,7 @@
 		4C5D91E31D89519C00029558 /* KPKNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKNumber.m; sourceTree = "<group>"; };
 		4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = BinaryAttachments_test.kdbx; sourceTree = "<group>"; };
 		4C62F6231D1D77DE0031795C /* KPKAttribute_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKAttribute_Private.h; sourceTree = "<group>"; };
-		4C69DD561EB4705800194900 /* KPKRollback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKRollback.h; sourceTree = "<group>"; };
+		4C69DD561EB4705800194900 /* KPKScopedSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKScopedSet.h; sourceTree = "<group>"; };
 		4C6C6EF91DDE231A0079C26D /* KPKTree+Synchronization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KPKTree+Synchronization.m"; sourceTree = "<group>"; };
 		4C70F4541D92BF56003564E2 /* KPKTestVariantDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestVariantDictionary.m; sourceTree = "<group>"; };
 		4C71F1941E1EACA80060857C /* KPKTestSynchronization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestSynchronization.m; sourceTree = "<group>"; };
@@ -932,7 +933,7 @@
 				4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */,
 				4CE95AE41E97BC330019BBDC /* KPKData.h */,
 				4CE95AE51E97BC330019BBDC /* KPKData.m */,
-				4C69DD561EB4705800194900 /* KPKRollback.h */,
+				4C69DD561EB4705800194900 /* KPKScopedSet.h */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -1059,6 +1060,7 @@
 				4CA1E4991D8832BA00100002 /* thread.h in Headers */,
 				4CD607AE1DFAAECE00C815E5 /* KPKPlatformIncludes.h in Headers */,
 				4C1032171EB38E4400FD605F /* KPKSynchronizationOptions.h in Headers */,
+				4CDA35721EB88621003CD59F /* KPKScopedSet.h in Headers */,
 				4C1118491DCCD90100254E1D /* KPKTwofishCipher.h in Headers */,
 				4CA1E4881D8832BA00100002 /* blake2.h in Headers */,
 				4C5CF4901BE10E250019AA81 /* KPKTypes.h in Headers */,

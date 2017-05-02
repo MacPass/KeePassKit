@@ -43,7 +43,7 @@
   
   
   /* Disable undo registration in the setup to have a clean test environment */
-  [_undoManager disableUndoRegistration];
+  KPK_SCOPED_DISABLE_UNDO_BEGIN(_undoManager)
   
   _root = [[KPKGroup alloc] init];
   
@@ -71,8 +71,7 @@
   
   [_entryB addToGroup:_groupB];
   
-  /* Enable undo registration for the tests */
-  [_undoManager enableUndoRegistration];
+  KPK_SCOPED_DISABLE_UNDO_END
 }
 
 - (void)tearDown {
