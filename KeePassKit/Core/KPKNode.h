@@ -45,7 +45,12 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 @interface KPKNode : NSObject <KPKModificationRecording>
 
-@property(nonatomic, readonly) NSUInteger index; // position of the node in it's parent container (groups, entries)
+
+/**
+ Indexes are independet for KPKGroups and KPKEntries. Henve a group and and entry inside the same parent group can share the same index!
+ @return The Index of the Node inside it's parent.
+ */
+@property(nonatomic, readonly) NSUInteger index;
 
 @property(nonatomic) NSInteger iconId;
 @property(nonatomic, copy) NSUUID *iconUUID;
@@ -110,7 +115,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 /**
  *	Determines if the receiving group is an ancestor of the supplied group
  *	@param	group	group to test ancestorship for
- *	@return	YES if reveiver is ancestor of group, NO otherwise
+ *	@return	YES if receiver is ancestor of group, NO otherwise
  */
 - (BOOL)isAnchestorOf:(KPKNode *)node;
 
