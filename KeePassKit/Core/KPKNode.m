@@ -167,7 +167,7 @@
 }
 
 - (BOOL)isUserTemplateGroup {
-  return [self.asGroup.uuid isEqual:self.tree.metaData.entryTemplatesGroup];
+  return [self.asGroup.uuid isEqual:self.tree.metaData.entryTemplatesGroupUuid];
 }
 
 - (BOOL)isUserTemplate {

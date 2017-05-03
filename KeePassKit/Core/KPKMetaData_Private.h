@@ -20,6 +20,6 @@
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableCustomData;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, id> *mutableCustomPublicData;
 
-- (void)_mergeWithMetaData:(KPKMetaData *)metaData options:(KPKSynchronizationOptions)options;
+- (void)_mergeWithMetaDataFromTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
 
 @end

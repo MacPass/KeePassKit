@@ -202,7 +202,7 @@
   data.useTrash = KPKXmlBool(metaElement, kKPKXmlRecycleBinEnabled);
   data.trashUuid = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlRecycleBinUUID)];
   data.trashChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlRecycleBinChanged);
-  data.entryTemplatesGroup = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlEntryTemplatesGroup)];
+  data.entryTemplatesGroupUuid = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlEntryTemplatesGroup)];
   data.entryTemplatesGroupChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlEntryTemplatesGroupChanged);
   data.historyMaxItems = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxItems);
   data.historyMaxSize = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxSize);

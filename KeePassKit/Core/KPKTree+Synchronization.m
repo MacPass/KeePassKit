@@ -42,7 +42,7 @@
   [self _mergeLocationFromNodes:tree.allGroups];
   [self _mergeDeletedObjects:tree.mutableDeletedObjects];
   [self _reapplyDeletions];
-  [self.metaData _mergeWithMetaData:tree.metaData options:options];
+  [self.metaData _mergeWithMetaDataFromTree:tree options:options];
   ;
   /* clear undo stack just to be save */
   [self.undoManager removeAllActions];

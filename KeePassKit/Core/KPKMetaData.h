@@ -67,7 +67,7 @@
 @property(nonatomic, copy) NSUUID *trashUuid;
 @property(nonatomic, copy) NSDate *trashChanged;
 
-@property(nonatomic, copy) NSUUID *entryTemplatesGroup;
+@property(nonatomic, copy) NSUUID *entryTemplatesGroupUuid;
 @property(nonatomic, copy) NSDate *entryTemplatesGroupChanged;
 
 @property(nonatomic, readonly) BOOL isHistoryEnabled;

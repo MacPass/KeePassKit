@@ -180,11 +180,11 @@
 }
 
 - (KPKGroup *)templates {
-  return [self.root groupForUUID:self.metaData.entryTemplatesGroup];
+  return [self.root groupForUUID:self.metaData.entryTemplatesGroupUuid];
 }
 
 - (void)setTemplates:(KPKGroup *)templates {
-  self.metaData.entryTemplatesGroup = templates.uuid;
+  self.metaData.entryTemplatesGroupUuid = templates.uuid;
 }
 
 - (void)setRoot:(KPKGroup *)root {

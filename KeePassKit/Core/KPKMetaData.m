@@ -26,6 +26,7 @@
 #import "KPKKdbxFormat.h"
 #import "KPKIcon.h"
 #import "KPKTree.h"
+#import "KPKGroup.h"
 #import "KPKAESCipher.h"
 #import "KPKAESKeyDerivation.h"
 
@@ -89,7 +90,7 @@ if( self.updateTiming ) { \
     _defaultUserName = [@"" copy];
     _defaultUserNameChanged = [NSDate.date copy];
     _entryTemplatesGroupChanged = [NSDate.date copy];
-    _entryTemplatesGroup = [NSUUID.kpk_nullUUID copy];
+    _entryTemplatesGroupUuid = [NSUUID.kpk_nullUUID copy];
     _trashChanged = [NSDate.date copy];
     _trashUuid = [NSUUID.kpk_nullUUID copy];
     _useTrash = NO;
@@ -169,8 +170,8 @@ if( self.updateTiming ) { \
 }
 
 - (void)setEntryTemplatesGroup:(NSUUID *)entryTemplatesGroup {
-  if(![_entryTemplatesGroup isEqual:entryTemplatesGroup]) {
-    _entryTemplatesGroup = entryTemplatesGroup;
+  if(![_entryTemplatesGroupUuid isEqual:entryTemplatesGroup]) {
+    _entryTemplatesGroupUuid = entryTemplatesGroup;
     KPK_METADATA_UPDATE_DATE(self.entryTemplatesGroupChanged)
   }
 }
@@ -223,7 +224,7 @@ if( self.updateTiming ) { \
   self.useTrash == other.useTrash &&
   [self.trashUuid isEqual:other.trashUuid] &&
   [self.trashChanged isEqualToDate:other.trashChanged] &&
-  [self.entryTemplatesGroup isEqualTo:other.entryTemplatesGroup] &&
+  [self.entryTemplatesGroupUuid isEqualTo:other.entryTemplatesGroupUuid] &&
   [self.entryTemplatesGroupChanged isEqualToDate:other.entryTemplatesGroupChanged] &&
   self.isHistoryEnabled == other.isHistoryEnabled &&
   self.historyMaxItems == other.historyMaxItems &&
@@ -264,31 +265,67 @@ if( self.updateTiming ) { \
   return _customIconCache[uuid];
 }
 
-- (void)_mergeWithMetaData:(KPKMetaData *)metaData options:(KPKSynchronizationOptions)options {
+- (void)_mergeWithMetaDataFromTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
+  KPKMetaData *otherMetaData = tree.metaData;
+  
   BOOL forceUpdate = options == KPKSynchronizationOverwriteExistingOption;
-  BOOL otherIsNewer = NSOrderedAscending == [metaData.settingsChanged compare:self.settingsChanged];
+  BOOL otherIsNewer = NSOrderedAscending == [otherMetaData.settingsChanged compare:self.settingsChanged];
   KPK_SCOPED_NO_BEGIN(self.updateTiming)
   if(forceUpdate || otherIsNewer) {
-    self.settingsChanged = metaData.settingsChanged;
-    self.color = metaData.color;
+    self.settingsChanged = otherMetaData.settingsChanged;
+    self.color = otherMetaData.color;
   }
-  if(forceUpdate || NSOrderedAscending == [self.databaseNameChanged compare:metaData.databaseNameChanged]) {
-    self.databaseName = metaData.databaseName;
-    self.databaseNameChanged = metaData.databaseNameChanged;
-  }
-
-  if(forceUpdate || NSOrderedAscending == [self.databaseDescriptionChanged compare:metaData.databaseDescriptionChanged]) {
-    self.databaseDescription = metaData.databaseDescription;
-    self.databaseDescriptionChanged = metaData.databaseDescriptionChanged;
+  if(forceUpdate || NSOrderedAscending == [self.databaseNameChanged compare:otherMetaData.databaseNameChanged]) {
+    self.databaseName = otherMetaData.databaseName;
+    self.databaseNameChanged = otherMetaData.databaseNameChanged;
   }
 
-  if(forceUpdate || NSOrderedAscending == [self.defaultUserNameChanged compare:metaData.defaultUserNameChanged]) {
-    self.defaultUserName = metaData.defaultUserName;
-    self.defaultUserNameChanged = metaData.defaultUserNameChanged;
+  if(forceUpdate || NSOrderedAscending == [self.databaseDescriptionChanged compare:otherMetaData.databaseDescriptionChanged]) {
+    self.databaseDescription = otherMetaData.databaseDescription;
+    self.databaseDescriptionChanged = otherMetaData.databaseDescriptionChanged;
   }
 
-  if(forceUpdate || otherIsNewer) {
+  if(forceUpdate || NSOrderedAscending == [self.defaultUserNameChanged compare:otherMetaData.defaultUserNameChanged]) {
+    self.defaultUserName = otherMetaData.defaultUserName;
+    self.defaultUserNameChanged = otherMetaData.defaultUserNameChanged;
+  }
+
+  if(forceUpdate || NSOrderedAscending == [self.trashChanged compare:otherMetaData.trashChanged]) {
     
+    self.trashChanged = otherMetaData.trashChanged;
+    self.useTrash = otherMetaData.useTrash;
+    
+    if([tree.root groupForUUID:otherMetaData.trashUuid]) {
+      self.trashUuid = otherMetaData.trashUuid;
+    }
+    else if(![tree.root groupForUUID:self.trashUuid]) {
+      self.trashUuid = [NSUUID kpk_nullUUID];
+    }
+    // else keep old uuid!
+  }
+  
+  if(forceUpdate || NSOrderedAscending == [self.entryTemplatesGroupChanged compare:otherMetaData.entryTemplatesGroupChanged]) {
+    self.entryTemplatesGroupChanged = otherMetaData.entryTemplatesGroupChanged;
+    
+    if([tree.root groupForUUID:otherMetaData.entryTemplatesGroupUuid]) {
+      self.entryTemplatesGroupUuid = otherMetaData.entryTemplatesGroupUuid;
+    }
+    else if(![tree.root groupForUUID:self.entryTemplatesGroupUuid]) {
+      self.entryTemplatesGroupUuid = [NSUUID kpk_nullUUID];
+    }
+    // else keep old uuid
+  }
+  for(NSString *key in otherMetaData.mutableCustomData) {
+    if(otherIsNewer || self.mutableCustomData[key]) {
+      self.mutableCustomData[key] = otherMetaData.mutableCustomData[key];
+    }
+  }
+  NSDictionary *backup = [[NSDictionary alloc] initWithDictionary:self.mutableCustomPublicData copyItems:YES];
+  self.mutableCustomPublicData = [[NSMutableDictionary alloc] initWithDictionary:otherMetaData.mutableCustomPublicData copyItems:YES];
+  if(!otherIsNewer) {
+    for(NSString *key in backup) {
+      self.mutableCustomPublicData[key] = [backup[key] copy];
+    }
   }
   KPK_SCOPED_NO_END(self.updateTiming)
 }

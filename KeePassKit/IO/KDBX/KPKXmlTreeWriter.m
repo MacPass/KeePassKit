@@ -147,7 +147,7 @@
   KPKAddXmlElement(metaElement, kKPKXmlRecycleBinEnabled, KPKStringFromBool(metaData.useTrash));
   KPKAddXmlElement(metaElement, kKPKXmlRecycleBinUUID, metaData.trashUuid.kpk_encodedString);
   KPKAddXmlElement(metaElement, kKPKXmlRecycleBinChanged, KPKStringFromDate(self.dateFormatter, metaData.trashChanged));
-  KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroup, metaData.entryTemplatesGroup.kpk_encodedString);
+  KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroup, metaData.entryTemplatesGroupUuid.kpk_encodedString);
   KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroupChanged, KPKStringFromDate(self.dateFormatter, metaData.entryTemplatesGroupChanged));
   KPKAddXmlElement(metaElement, kKPKXmlHistoryMaxItems, KPKStringFromLong(metaData.historyMaxItems));
   KPKAddXmlElement(metaElement, kKPKXmlHistoryMaxSize, KPKStringFromLong(metaData.historyMaxSize));
