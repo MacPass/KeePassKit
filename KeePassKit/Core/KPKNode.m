@@ -36,15 +36,15 @@
 
 #import "NSUUID+KPKAdditions.h"
 
-@implementation KPKNode {
-  KPKTree *_tree;
-}
+@implementation KPKNode
 
 @dynamic notes;
 @dynamic title;
 @dynamic minimumVersion;
 @dynamic updateTiming;
 @dynamic customData;
+
+@synthesize tree = _tree;
 
 + (NSUInteger)defaultIcon {
   return KPKIconPassword;
