@@ -74,6 +74,7 @@
   
   /* desc */
   self.treeB.metaData.databaseDescription = @"DescriptionB";
+  usleep(10);
   self.treeA.metaData.databaseDescription = @"DescriptionA";
   
   /* trash */
