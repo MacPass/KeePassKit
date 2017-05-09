@@ -282,26 +282,116 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
   return YES;
 }
 
-/*
- A VariantDictionary is a key-value dictionary (with the key being a string and the value being an object), which is serialized as follows:
- [2 bytes] Version, as UInt16, little-endian, currently 0x0100 (version 1.0). The high byte is critical (i.e. the loading code should refuse to load the data if the high byte is too high), the low byte is informational (i.e. it can be ignored).
- [n items] n serialized items (see below).
- [1 byte] Null terminator byte.
- Each of the n serialized items has the following form:
- [1 byte] Value type, can be one of the following:
- 0x04: UInt32.
- 0x05: UInt64.
- 0x08: Bool.
- 0x0C: Int32.
- 0x0D: Int64.
- 0x18: String (UTF-8, without BOM, without null terminator).
- 0x42: Byte array.
- [4 bytes] Length k of the key name in bytes, Int32, little-endian.
- [k bytes] Key name (string, UTF-8, without BOM, without null terminator).
- [4 bytes] Length v of the value in bytes, Int32, little-endian.
- [v bytes] Value. Integers are stored in little-endian encoding, and a Bool is one byte (false = 0, true = 1); the other types are clear.
- 
- */
+
+- (NSString *)stringForKey:(NSString *)key {
+  NSString *value = self[key];
+  if(!value || [value isKindOfClass:NSString.class]) {
+    return value;
+  }
+  NSAssert(NO, @"No string value for this key!");
+  return nil;
+}
+
+- (NSData *)dataForKey:(NSString *)key {
+  NSData *value = self[key];
+  if(!value || [value isKindOfClass:NSData.class]) {
+    return value;
+  }
+  NSAssert(NO, @"No data value for this key!");
+  return nil;
+}
+
+- (BOOL)boolForKey:(NSString *)key {
+  KPKNumber *value = self[key];
+  if(!value || [value isKindOfClass:KPKNumber.class]) {
+    return value.boolValue;
+  }
+  NSAssert(NO, @"No Bool value for this key!");
+  return NO;
+}
+
+- (uint32_t)unsignedInteger32ForKey:(NSString *)key {
+  KPKNumber *value = self[key];
+  if(!value || [value isKindOfClass:KPKNumber.class]) {
+    return value.unsignedInteger32Value;
+  }
+  NSAssert(NO, @"No uint32_t value for this key!");
+  return 0;
+}
+
+- (int32_t)integer32ForKey:(NSString *)key {
+  KPKNumber *value = self[key];
+  if(!value || [value isKindOfClass:KPKNumber.class]) {
+    return value.integer32Value;
+  }
+  NSAssert(NO, @"No int32_t value for this key!");
+  return 0;
+}
+
+- (uint64_t)unsignedInteger64ForKey:(NSString *)key {
+  KPKNumber *value = self[key];
+  if(!value || [value isKindOfClass:KPKNumber.class]) {
+    return value.unsignedInteger64Value;
+  }
+  NSAssert(NO, @"No uint64_t value for this key!");
+  return 0;
+}
+
+- (int64_t)integer64ForKey:(NSString *)key {
+  KPKNumber *value = self[key];
+  if(!value || [value isKindOfClass:KPKNumber.class]) {
+    return value.integer64Value;
+  }
+  NSAssert(NO, @"No int64_t value for this key!");
+  return 0;
+}
+
+- (KPKNumber *)numberForKey:(NSString *)key {
+  KPKNumber *value = self[key];
+  if(!value || [value isKindOfClass:KPKNumber.class]) {
+    return value;
+  }
+  NSAssert(NO, @"No KPKNumber value for this key!");
+  return nil;
+}
+
 
 @end
 
+@implementation NSMutableDictionary (KPKVariant)
+
+- (void)setData:(NSData *)data forKey:(NSString *)key {
+  NSAssert([data isKindOfClass:NSData.class], @"Only NSData parameter allowed!");
+  self[key] = data;
+}
+
+- (void)setString:(NSString *)string forKey:(NSString *)key {
+  NSAssert([string isKindOfClass:NSString.class], @"Only NSString paramter allowed!");
+  self[key] = string;
+}
+
+- (void)setBool:(BOOL)aBool forKey:(NSString *)key {
+  self[key] = [KPKNumber numberWithBool:aBool];
+}
+
+- (void)setUnsignedInteger32:(uint32_t)value forKey:(NSString *)key {
+  self[key] = [KPKNumber numberWithUnsignedInteger32:value];
+}
+
+- (void)setInteger32:(int32_t)value forKey:(NSString *)key {
+  self[key] = [KPKNumber numberWithInteger32:value];
+}
+
+- (void)setUnsignedInteger64:(uint64_t)value forKey:(NSString *)key {
+  self[key] = [KPKNumber numberWithUnsignedInteger64:value];
+}
+
+- (void)setInteger64:(int64_t)value forKey:(NSString *)key {
+  self[key] = [KPKNumber numberWithInteger64:value];
+}
+
+- (void)setNumber:(KPKNumber *)number forKey:(NSString *)key {
+  self[key] = number;
+}
+
+@end
