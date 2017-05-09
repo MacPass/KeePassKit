@@ -47,7 +47,7 @@ typedef uint32_t CCOptions;
 typedef uint32_t CCHmacAlgorithm;
 
 @interface NSError (CommonCryptoErrorDomain)
-+ (NSError *) errorWithCCCryptorStatus: (CCCryptorStatus) status;
++ (NSError *)errorWithCCCryptorStatus:(CCCryptorStatus)status;
 @end
 
 @interface NSData (CommonDigest)
@@ -66,50 +66,50 @@ typedef uint32_t CCHmacAlgorithm;
 
 @interface NSData (CommonCryptor)
 
-- (NSData *) AES256EncryptedDataUsingKey: (id) key error: (NSError **) error;
-- (NSData *) decryptedAES256DataUsingKey: (id) key error: (NSError **) error;
+- (NSData *)AES256EncryptedDataUsingKey:(id)key error:(NSError **)error;
+- (NSData *)decryptedAES256DataUsingKey:(id)key error:(NSError **)error;
 
-- (NSData *) DESEncryptedDataUsingKey: (id) key error: (NSError **) error;
-- (NSData *) decryptedDESDataUsingKey: (id) key error: (NSError **) error;
+- (NSData *)DESEncryptedDataUsingKey:(id)key error: (NSError **)error;
+- (NSData *)decryptedDESDataUsingKey:(id)key error: (NSError **)error;
 
-- (NSData *) CASTEncryptedDataUsingKey: (id) key error: (NSError **) error;
-- (NSData *) decryptedCASTDataUsingKey: (id) key error: (NSError **) error;
+- (NSData *)CASTEncryptedDataUsingKey:(id)key error:(NSError **)error;
+- (NSData *)decryptedCASTDataUsingKey:(id)key error:(NSError **)error;
 
 @end
 
 @interface NSData (LowLevelCommonCryptor)
 
-- (NSData *) dataEncryptedUsingAlgorithm: (CCAlgorithm) algorithm
-                                     key: (id) key		// data or string
-                                   error: (CCCryptorStatus *) error;
-- (NSData *) dataEncryptedUsingAlgorithm: (CCAlgorithm) algorithm
-                                     key: (id) key		// data or string
-                                 options: (CCOptions) options
-                                   error: (CCCryptorStatus *) error;
-- (NSData *) dataEncryptedUsingAlgorithm: (CCAlgorithm) algorithm
-                                     key: (id) key		// data or string
-                    initializationVector: (id) iv		// data or string
-                                 options: (CCOptions) options
-                                   error: (CCCryptorStatus *) error;
+- (NSData *)dataEncryptedUsingAlgorithm:(CCAlgorithm)algorithm
+                                    key:(id)key		// data or string
+                                  error:(CCCryptorStatus *)error;
+- (NSData *)dataEncryptedUsingAlgorithm:(CCAlgorithm)algorithm
+                                    key:(id)key		// data or string
+                                options:(CCOptions)options
+                                  error:(CCCryptorStatus *)error;
+- (NSData *)dataEncryptedUsingAlgorithm:(CCAlgorithm)algorithm
+                                    key:(id)key		// data or string
+                   initializationVector:(id)iv		// data or string
+                                options:(CCOptions)options
+                                  error:(CCCryptorStatus *)error;
 
-- (NSData *) decryptedDataUsingAlgorithm: (CCAlgorithm) algorithm
-                                     key: (id) key		// data or string
-                                   error: (CCCryptorStatus *) error;
-- (NSData *) decryptedDataUsingAlgorithm: (CCAlgorithm) algorithm
-                                     key: (id) key		// data or string
-                                 options: (CCOptions) options
-                                   error: (CCCryptorStatus *) error;
-- (NSData *) decryptedDataUsingAlgorithm: (CCAlgorithm) algorithm
-                                     key: (id) key		// data or string
-                    initializationVector: (id) iv		// data or string
-                                 options: (CCOptions) options
-                                   error: (CCCryptorStatus *) error;
+- (NSData *)decryptedDataUsingAlgorithm:(CCAlgorithm)algorithm
+                                    key:(id)key		// data or string
+                                  error:(CCCryptorStatus *)error;
+- (NSData *)decryptedDataUsingAlgorithm:(CCAlgorithm)algorithm
+                                    key:(id)key		// data or string
+                                options:(CCOptions)options
+                                  error:(CCCryptorStatus *)error;
+- (NSData *)decryptedDataUsingAlgorithm:(CCAlgorithm)algorithm
+                                    key:(id)key		// data or string
+                   initializationVector:(id)iv		// data or string
+                                options:(CCOptions)options
+                                  error:(CCCryptorStatus *)error;
 
 @end
 
 @interface NSData (CommonHMAC)
 
-- (NSData *) HMACWithAlgorithm: (CCHmacAlgorithm) algorithm;
-- (NSData *) HMACWithAlgorithm: (CCHmacAlgorithm) algorithm key: (id) key;
+- (NSData *)HMACWithAlgorithm:(CCHmacAlgorithm)algorithm;
+- (NSData *)HMACWithAlgorithm:(CCHmacAlgorithm)algorithm key:(id)key;
 
 @end
