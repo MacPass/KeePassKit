@@ -71,25 +71,25 @@
 }
 
 - (instancetype)init {
-  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
+  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass(self.class));
   self = nil;
   return nil;
 }
 
 - (instancetype)initWithUUID:(NSUUID *)uuid {
-  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
+  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass(self.class));
   self = nil;
   return self;
 }
 
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
   /* not implemented */
-  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class]));
+  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass(self.class));
   return nil;
 }
 
 - (BOOL)isEqual:(id)object {
-  if(![self isKindOfClass:[KPKNode class]]) {
+  if(![self isKindOfClass:KPKNode.class]) {
     return NO;
   }
   return [self isEqualToNode:object];
@@ -105,7 +105,7 @@
     return YES;
   }
   /* We do not compare UUIDs as those are supposed to be different for nodes unless they are encoded/decoded */
-  NSAssert([aNode isKindOfClass:[KPKNode class]], @"Unsupported type for quality test");
+  NSAssert([aNode isKindOfClass:KPKNode.class], @"Unsupported type for quality test");
   
   if(!(options & KPKNodeEqualityIgnoreAccessDateOption)) {
     NSComparisonResult result = [self.timeInfo.accessDate compare:aNode.timeInfo.accessDate];
@@ -148,7 +148,7 @@
   if(self.iconUUID) {
     return NO;
   }
-  return (self.iconId == [[self class] defaultIcon]);
+  return (self.iconId == [self.class defaultIcon]);
 }
 
 - (KPKIcon *)icon {
@@ -368,12 +368,12 @@
 - (instancetype)_initWithCoder:(NSCoder *)aDecoder {
   self = [self _init];
   if(self) {
-    _uuid = [[aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))] copy];
+    _uuid = [[aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(uuid))] copy];
     _iconId = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(iconId))];
-    _iconUUID = [[aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(iconUUID))] copy];
+    _iconUUID = [[aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(iconUUID))] copy];
     /* decode time info at last */
-    self.timeInfo = [aDecoder decodeObjectOfClass:[KPKTimeInfo class] forKey:NSStringFromSelector(@selector(timeInfo))];
-    _mutableCustomData = [aDecoder decodeObjectOfClass:[NSMutableDictionary class] forKey:NSStringFromSelector(@selector(mutableCustomData))];
+    self.timeInfo = [aDecoder decodeObjectOfClass:KPKTimeInfo.class forKey:NSStringFromSelector(@selector(timeInfo))];
+    _mutableCustomData = [aDecoder decodeObjectOfClass:NSMutableDictionary.class forKey:NSStringFromSelector(@selector(mutableCustomData))];
   }
   return self;
 }
@@ -387,7 +387,7 @@
 }
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
-  KPKNode *copy = [[[self class] alloc] _initWithUUID:uuid];
+  KPKNode *copy = [[self.class alloc] _initWithUUID:uuid];
   copy.iconId = self.iconId;
   copy.iconUUID = self.iconUUID;
   copy.notes = self.notes;

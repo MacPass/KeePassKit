@@ -70,8 +70,8 @@
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-  NSString *name = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(name))];
-  NSData *data = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(data))];
+  NSString *name = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(name))];
+  NSData *data = [aDecoder decodeObjectOfClass:NSData.class forKey:NSStringFromSelector(@selector(data))];
   BOOL protected = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(protectInMemory))];
   self = [self initWithName:name data:data];
   self.protectInMemory = protected;
@@ -98,7 +98,7 @@
   if(self == object) {
     return YES;
   }
-  if(![object isKindOfClass:[KPKBinary class]]) {
+  if(![object isKindOfClass:KPKBinary.class]) {
     return NO;
   }
   return [self isEqualtoBinary:object];

@@ -408,7 +408,7 @@
 }
 
 - (void)_writeTimeInfo:(KPKNode *)node {
-  BOOL isEntry = [node isKindOfClass:[KPKEntry class]];
+  BOOL isEntry = [node isKindOfClass:KPKEntry.class];
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryCreationTime : KPKFieldTypeGroupCreationTime )
                data:[NSDate kpk_packedBytesFromDate:node.timeInfo.creationDate]];

@@ -27,7 +27,7 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
 }
 
 + (void)_registerCipher:(Class)cipherClass {
-  NSAssert([cipherClass isSubclassOfClass:[KPKCipher class]], @"Wrong class %@ supplied to register.", NSStringFromClass(cipherClass) );
+  NSAssert([cipherClass isSubclassOfClass:KPKCipher.class], @"Wrong class %@ supplied to register.", NSStringFromClass(cipherClass) );
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     _ciphers = [[NSMutableDictionary alloc] init];
@@ -58,7 +58,7 @@ static NSMutableDictionary<NSUUID *, Class> *_ciphers;
 }
 
 - (KPKCipher *)initWithKey:(NSData *)key initializationVector:(NSData *)iv {
-  if(self.class == [KPKCipher class]) {
+  if(self.class == KPKCipher.class) {
     NSAssert(NO, @"%@ should not be called on abstract class!", NSStringFromSelector(_cmd));
     return nil;
   }

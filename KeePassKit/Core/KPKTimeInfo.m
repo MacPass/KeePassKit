@@ -82,7 +82,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   /* TODO update to NSStringFromSelector */
-  if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
+  if([aCoder isKindOfClass:NSKeyedArchiver.class]) {
     [aCoder encodeObject:self.creationDate forKey:NSStringFromSelector(@selector(creationDate))];
     [aCoder encodeObject:self.accessDate forKey:NSStringFromSelector(@selector(accessDate))];
     [aCoder encodeObject:self.expirationDate forKey:NSStringFromSelector(@selector(expirationDate))];

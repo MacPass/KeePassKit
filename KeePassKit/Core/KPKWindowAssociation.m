@@ -63,9 +63,9 @@
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
-  if(self && [aDecoder isKindOfClass:[NSKeyedUnarchiver class]]) {
-    _windowTitle = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(windowTitle))] copy];
-    _keystrokeSequence = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(keystrokeSequence))] copy];
+  if(self && [aDecoder isKindOfClass:NSKeyedUnarchiver.class]) {
+    _windowTitle = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(windowTitle))] copy];
+    _keystrokeSequence = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(keystrokeSequence))] copy];
     _regularExpressionValid = NO;
   }
   return self;
@@ -95,7 +95,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
+  if([aCoder isKindOfClass:NSKeyedArchiver.class]) {
     [aCoder encodeObject:_windowTitle forKey:NSStringFromSelector(@selector(windowTitle))];
     [aCoder encodeObject:_keystrokeSequence forKey:NSStringFromSelector(@selector(keystrokeSequence))];
   }
@@ -109,7 +109,7 @@
 #pragma mark Validation
 
 - (BOOL)validateWindowTitle:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError {
-  if(![*ioValue isKindOfClass:[NSString class]]) {
+  if(![*ioValue isKindOfClass:NSString.class]) {
     KPKCreateError(outError, KPKErrorWindowTitleFormatValidationFailed);
     return NO;
   }

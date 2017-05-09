@@ -25,7 +25,7 @@
 @implementation KPKTestKdbxLoading
 
 - (void)setUp {
-  NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
   NSURL *url = [myBundle URLForResource:@"Test_Password_1234" withExtension:@"kdbx"];
   _data = [NSData dataWithContentsOfURL:url];
   _key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
@@ -117,7 +117,7 @@
 }
 
 - (void)testAutotypeLoading {
-  NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
   NSURL *url = [myBundle URLForResource:@"Autotype_test" withExtension:@"kdbx"];
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
   NSError *error;
@@ -130,7 +130,7 @@
 }
 
 - (NSData *)_loadTestDataBase:(NSString *)name extension:(NSString *)extension {
-  NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
   NSURL *url = [myBundle URLForResource:name withExtension:extension];
   return [NSData dataWithContentsOfURL:url];
 }

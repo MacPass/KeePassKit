@@ -70,7 +70,7 @@
 }
 
 - (NSData *)_loadTestDataBase:(NSString *)name extension:(NSString *)extension {
-  NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
   NSURL *url = [myBundle URLForResource:name withExtension:extension];
   return [NSData dataWithContentsOfURL:url];
 }

@@ -7,7 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
-@import KeePassKit;
+
+#import "KeePassKit/KeePassKit.h"
 
 @interface KPKTestVariantDictionary : XCTestCase
 

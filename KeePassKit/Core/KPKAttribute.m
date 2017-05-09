@@ -107,13 +107,13 @@
 }
 
 - (BOOL)isEqualToAttribute:(KPKAttribute *)attribtue {
-  NSAssert([attribtue isKindOfClass:[self class]], @"Only KPKAttributes are allowed in this test");
+  NSAssert([attribtue isKindOfClass:self.class], @"Only KPKAttributes are allowed in this test");
   return ([self.value isEqualToString:attribtue.value]
           && [self.key isEqualToString:attribtue.key]);
 }
 
 - (BOOL)validateKey:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError {
-  if(![*ioValue isKindOfClass:[NSString class]] ) {
+  if(![*ioValue isKindOfClass:NSString.class] ) {
     KPKCreateError(outError, KPKErrorAttributeKeyValidationFailed);
     return NO; // No string, so we cannot process it further
   }

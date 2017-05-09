@@ -73,15 +73,15 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [[KPKIcon alloc] init];
   if(self) {
-    NSData *imageData = [aDecoder decodeObjectOfClass:[NSData class] forKey:NSStringFromSelector(@selector(image))];
+    NSData *imageData = [aDecoder decodeObjectOfClass:NSData.class forKey:NSStringFromSelector(@selector(image))];
     _image = [[NSUIImage alloc] initWithData:imageData];
-    _uuid = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(uuid))];
+    _uuid = [aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(uuid))];
   }
   return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  if([aCoder isKindOfClass:[NSKeyedArchiver class]]) {
+  if([aCoder isKindOfClass:NSKeyedArchiver.class]) {
     [aCoder encodeObject:self.pngData forKey:NSStringFromSelector(@selector(image))];
     [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
   }
@@ -103,7 +103,7 @@
 #pragma mark Equality
 
 - (BOOL)isEqual:(id)object {
-  if([object isKindOfClass:[KPKIcon class]]) {
+  if([object isKindOfClass:KPKIcon.class]) {
     return [self isEqualToIcon:object];
   }
   return NO;
@@ -113,7 +113,7 @@
   if(self == icon) {
     return YES; // Pointers match, should be the same object
   }
-  NSAssert([icon isKindOfClass:[KPKIcon class]], @"icon needs to be of class KPKIcon");
+  NSAssert([icon isKindOfClass:KPKIcon.class], @"icon needs to be of class KPKIcon");
   BOOL equal = [self.uuid isEqual:icon.uuid] && [self.encodedString isEqualToString:icon.encodedString];
   return equal;
 }
@@ -131,7 +131,7 @@
 - (NSData *)pngData {
 #if KPK_MAC
   NSImageRep *imageRep = (self.image).representations.lastObject;
-  if([imageRep isKindOfClass:[NSBitmapImageRep class]]) {
+  if([imageRep isKindOfClass:NSBitmapImageRep.class]) {
     NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
     //[bitmapRep setProperty:NSImageGamma withValue:@1.0];
     return [bitmapRep representationUsingType:NSPNGFileType properties:@{}];

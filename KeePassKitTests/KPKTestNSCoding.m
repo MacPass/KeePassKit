@@ -21,7 +21,7 @@
 - (void)testAttributeCoding {
   KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:kKPKXmlKey value:kKPKXmlValue isProtected:YES];
   NSData *data =  [self encode:attribute];
-  KPKAttribute *copy = [self decode:data ofClass:[KPKAttribute class]];
+  KPKAttribute *copy = [self decode:data ofClass:KPKAttribute.class];
   
   XCTAssertTrue([copy.value isEqualToString:attribute.value], @"Values should be preseved");
   XCTAssertTrue([copy.key isEqualToString:attribute.key], @"Keys should be preserved");
@@ -34,7 +34,7 @@
   binary.data = [NSData kpk_dataWithRandomBytes:1*1024*1024];
   
   NSData *data = [self encode:binary];
-  KPKBinary *decodedBinary = [self decode:data ofClass:[KPKBinary class]];
+  KPKBinary *decodedBinary = [self decode:data ofClass:KPKBinary.class];
   
   XCTAssertTrue([decodedBinary.data isEqualToData:binary.data]);
   XCTAssertTrue([decodedBinary.name isEqualToString:binary.name]);
@@ -63,7 +63,7 @@
   [entry.autotype addAssociation:  [[KPKWindowAssociation alloc] initWithWindowTitle:@"Window2" keystrokeSequence:nil]];
   
   NSData *encodedData = [self encode:entry];
-  KPKEntry *copyEntry = [self decode:encodedData ofClass:[KPKEntry class]];
+  KPKEntry *copyEntry = [self decode:encodedData ofClass:KPKEntry.class];
   
   XCTAssertNotNil(copyEntry, @"Copied Entry cannot be nil");
   XCTAssertTrue([copyEntry.title isEqualToString:entry.title], @"Titles should match");
@@ -82,11 +82,11 @@
   NSURL *imageURL = [myBundle URLForImageResource:@"image.png"];
   KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:imageURL];
   NSData *data = [self encode:icon];
-  KPKIcon *decodedIcon = [self decode:data ofClass:[KPKIcon class]];
+  KPKIcon *decodedIcon = [self decode:data ofClass:KPKIcon.class];
   NSImageRep *originalRep = icon.image.representations.lastObject;
   NSImageRep *decodedRep = decodedIcon.image.representations.lastObject;
-  XCTAssertTrue([originalRep isKindOfClass:[NSBitmapImageRep class]]);
-  XCTAssertTrue([decodedRep isKindOfClass:[NSBitmapImageRep class]]);
+  XCTAssertTrue([originalRep isKindOfClass:NSBitmapImageRep.class]);
+  XCTAssertTrue([decodedRep isKindOfClass:NSBitmapImageRep.class]);
   /*
    We cannot assert bit depth since TIFF conversion might just strip a full white alpha channel
    XCTAssertEqual([originalRep bitsPerPixel], [decodedRep bitsPerPixel]);
@@ -123,7 +123,7 @@
   [subEntry addToGroup:childGroup];
   
   NSData *data = [self encode:group];
-  KPKGroup *decodedGroup = [self decode:data ofClass:[KPKGroup class]];
+  KPKGroup *decodedGroup = [self decode:data ofClass:KPKGroup.class];
   
   XCTAssertTrue([group.uuid isEqual:decodedGroup.uuid]);
   XCTAssertTrue([group.title isEqualToString:decodedGroup.title]);

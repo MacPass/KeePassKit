@@ -19,7 +19,7 @@
 @implementation KPKIconLoading
 
 - (void)setUp {
-    NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
+    NSBundle *myBundle = [NSBundle bundleForClass:self.class];
   _image = [myBundle imageForResource:@"image.png"];
   _imageData = [((NSBitmapImageRep *)_image.representations.lastObject) representationUsingType:NSPNGFileType properties:@{}];
 }
@@ -30,7 +30,7 @@
 }
 
 - (void)testLoading {
-  KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[[NSBundle bundleForClass:[self class]] URLForImageResource:@"image.png"]];
+  KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[[NSBundle bundleForClass:self.class] URLForImageResource:@"image.png"]];
   XCTAssertNotNil(icon, @"Icon should have been loaded");
   
   NSString *iconString = icon.encodedString;
@@ -39,7 +39,7 @@
  
   NSImageRep *imageRep = icon.image.representations.lastObject;
   XCTAssertNotNil(imageRep, @"One image rep should be there");
-  XCTAssertTrue([imageRep isKindOfClass:[NSBitmapImageRep class]], @"Representation should be bitmap");
+  XCTAssertTrue([imageRep isKindOfClass:NSBitmapImageRep.class], @"Representation should be bitmap");
   
   NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
   NSData *pngData = [bitmapRep representationUsingType:NSPNGFileType properties:@{}];

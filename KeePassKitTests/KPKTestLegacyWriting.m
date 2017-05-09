@@ -38,7 +38,7 @@
 }
 
 - (NSURL *)_urlForFile:(NSString *)file extension:(NSString *)extension {
-  return [[NSBundle bundleForClass:[self class]] URLForResource:file withExtension:extension];
+  return [[NSBundle bundleForClass:self.class] URLForResource:file withExtension:extension];
 }
 
 

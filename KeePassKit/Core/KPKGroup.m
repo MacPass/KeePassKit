@@ -105,8 +105,8 @@ static NSSet *_observedKeyPathsSet;
   self = [super _initWithCoder:aDecoder];
   if(self) {
     self.updateTiming = NO;
-    self.title = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(title))];
-    self.notes = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(notes))];
+    self.title = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(title))];
+    self.notes = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(notes))];
     _groups = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKGroup.class]]
                                         forKey:NSStringFromSelector(@selector(groups))] mutableCopy];
     _entries = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKEntry.class]]
@@ -114,8 +114,8 @@ static NSSet *_observedKeyPathsSet;
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
-    self.defaultAutoTypeSequence = [aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultAutoTypeSequence))];
-    self.lastTopVisibleEntry = [aDecoder decodeObjectOfClass:[NSUUID class] forKey:NSStringFromSelector(@selector(lastTopVisibleEntry))];
+    self.defaultAutoTypeSequence = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(defaultAutoTypeSequence))];
+    self.lastTopVisibleEntry = [aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(lastTopVisibleEntry))];
     
     [self _updateGroupObserving];
     [self _updateParents];
@@ -188,7 +188,7 @@ static NSSet *_observedKeyPathsSet;
   if(self == object) {
     return YES; // Pointers match;
   }
-  if(object && [object isKindOfClass:[KPKGroup class]]) {
+  if(object && [object isKindOfClass:KPKGroup.class]) {
     KPKGroup *group = (KPKGroup *)object;
     NSAssert(group, @"Equality is only possible on groups");
     return [self isEqualToGroup:group];
@@ -203,8 +203,8 @@ static NSSet *_observedKeyPathsSet;
 
 - (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options {
   KPKGroup *aGroup = node.asGroup;
-  NSAssert([aGroup isKindOfClass:[KPKGroup class]], @"No valid object supplied!");
-  if(![aGroup isKindOfClass:[KPKGroup class]]) {
+  NSAssert([aGroup isKindOfClass:KPKGroup.class], @"No valid object supplied!");
+  if(![aGroup isKindOfClass:KPKGroup.class]) {
     return NO;
   }
   
@@ -547,7 +547,7 @@ static NSSet *_observedKeyPathsSet;
   if(self.isAutotypeable) {
     /* KPKEntries have their own autotype settings, hence we need to filter them as well */
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-      NSAssert([evaluatedObject isKindOfClass:[KPKEntry class]], @"entry array should contain only KPKEntry objects");
+      NSAssert([evaluatedObject isKindOfClass:KPKEntry.class], @"entry array should contain only KPKEntry objects");
       KPKEntry *entry = evaluatedObject;
       return entry.autotype.enabled;
     }];

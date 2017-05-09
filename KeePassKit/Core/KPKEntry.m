@@ -222,11 +222,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
                                                    forKey:NSStringFromSelector(@selector(mutableHistory))];
     _binaries = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKBinary.class]]
                                        forKey:NSStringFromSelector(@selector(binaries))];
-    _tags = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(tags))] copy];
-    _foregroundColor = [[aDecoder decodeObjectOfClass:[NSUIColor class] forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
-    _backgroundColor = [[aDecoder decodeObjectOfClass:[NSUIColor class] forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
-    _overrideURL = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(overrideURL))] copy];
-    self.autotype = [aDecoder decodeObjectOfClass:[KPKAutotype class] forKey:NSStringFromSelector(@selector(autotype))];
+    _tags = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(tags))] copy];
+    _foregroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
+    _backgroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
+    _overrideURL = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(overrideURL))] copy];
+    self.autotype = [aDecoder decodeObjectOfClass:KPKAutotype.class forKey:NSStringFromSelector(@selector(autotype))];
     _isHistory = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isHistory))];
     
     self.updateTiming = YES;
@@ -306,8 +306,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options {
   KPKEntry *entry = node.asEntry;
-  NSAssert([entry isKindOfClass:[KPKEntry class]], @"Test only allowed with KPKEntry classes");
-  
+  NSAssert([entry isKindOfClass:KPKEntry.class], @"Test only allowed with KPKEntry classes");
+
   if(![super _isEqualToNode:node options:options]) {
     return NO;
   }

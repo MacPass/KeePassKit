@@ -100,7 +100,7 @@
 }
 
 - (BOOL)isEqual:(id)object {
-  if(![object isKindOfClass:[KPKNumber class]]) {
+  if(![object isKindOfClass:KPKNumber.class]) {
     return NO;
   }
   return [self isEqualToNumber:object];

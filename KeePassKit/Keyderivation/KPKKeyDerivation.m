@@ -25,7 +25,7 @@ static NSMutableDictionary *_keyDerivations;
 }
 
 + (void)_registerKeyDerivation:(Class)derivationClass {
-  if(![derivationClass isSubclassOfClass:[KPKKeyDerivation class]]) {
+  if(![derivationClass isSubclassOfClass:KPKKeyDerivation.class]) {
     NSAssert(NO, @"%@ is no valid key derivation class", derivationClass);
     return;
   }
@@ -63,7 +63,7 @@ static NSMutableDictionary *_keyDerivations;
 
 - (KPKKeyDerivation *)initWithParameters:(NSDictionary *)parameters {
   NSData *uuidData = parameters[KPKKeyDerivationOptionUUID];
-  if(!uuidData || ![uuidData isKindOfClass:[NSData class]]) {
+  if(!uuidData || ![uuidData isKindOfClass:NSData.class]) {
     self = nil;
     return self;
   }

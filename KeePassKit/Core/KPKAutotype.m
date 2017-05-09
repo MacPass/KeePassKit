@@ -137,7 +137,7 @@
   if(self) {
     _enabled = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isEnabled))];
     _obfuscateDataTransfer = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(obfuscateDataTransfer))];
-    _defaultKeystrokeSequence = [[aDecoder decodeObjectOfClass:[NSString class] forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))] copy];
+    _defaultKeystrokeSequence = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(defaultKeystrokeSequence))] copy];
     self.mutableAssociations = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKWindowAssociation.class]]
                                                         forKey:NSStringFromSelector(@selector(associations))];
   }

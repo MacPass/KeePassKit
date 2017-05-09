@@ -191,7 +191,7 @@
 }
 
 - (NSURL *)_bundleURLForData:(NSString *)name extension:(NSString *)extension {
-  NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
   return [myBundle URLForResource:name withExtension:extension];
 }
 

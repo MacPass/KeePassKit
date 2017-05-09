@@ -17,7 +17,7 @@
 @implementation KPKTestKeyfileParsing
 
 - (void)testXmlKeyfileLoadingValidFile {
-  NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
   NSURL *url = [myBundle URLForResource:@"Keepass2Key" withExtension:@"xml"];
   NSError *error;
   NSData *data = [NSData kpk_dataWithContentsOfKeyFile:url version:KPKDatabaseFormatKdb error:&error];
