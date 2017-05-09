@@ -261,6 +261,15 @@ if( self.updateTiming ) { \
   }
 }
 
+- (void)setValue:(NSString *)value forCustomDataKey:(NSString *)key {
+
+}
+
+- (void)setValue:(id)value forPublicCustomDataKey:(NSString *)key {
+  
+  self.mutableCustomPublicData[key] = value;
+}
+
 - (KPKIcon *)findIcon:(NSUUID *)uuid {
   return _customIconCache[uuid];
 }
@@ -349,5 +358,18 @@ if( self.updateTiming ) { \
     _customIconCache[icon.uuid] = nil;
   }
 }
+
+- (NSUInteger)countOfCustomData {
+  return self.mutableCustomData.count;
+}
+
+- (NSEnumerator *)enumeratorOfCustomData {
+  return self.mutableCustomData.objectEnumerator;
+}
+
+- (NSString *)memberOfCustomData:(NSString *)object {
+  return self.mutableCustomData[object];
+}
+
 
 @end

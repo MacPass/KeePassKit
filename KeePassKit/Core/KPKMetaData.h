@@ -93,4 +93,7 @@
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index;
 - (void)removeCustomIcon:(KPKIcon *)icon;
 
+- (void)setValue:(NSString *)value forCustomDataKey:(NSString *)key;
+- (void)setValue:(id)value forPublicCustomDataKey:(NSString *)key;
+
 @end
