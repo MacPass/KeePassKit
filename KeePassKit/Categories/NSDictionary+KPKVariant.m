@@ -391,6 +391,7 @@ static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
 }
 
 - (void)setNumber:(KPKNumber *)number forKey:(NSString *)key {
+  NSAssert([number isKindOfClass:KPKNumber.class], @"Only KPKNumber paramter allowed!");
   self[key] = number;
 }
 
