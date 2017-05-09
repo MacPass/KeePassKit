@@ -43,7 +43,7 @@
                            @"3" : [KPKNumber numberWithInteger32:-32],
                            @"4" : [KPKNumber numberWithUnsignedInteger32:32],
                            @"5" : [NSData dataWithBytes:bytes length:4] };
-
+  
   XCTAssertTrue(dict.kpk_isValidVariantDictionary);
   NSData *data = dict.kpk_variantDictionaryData;
   XCTAssertNotNil(data);
@@ -53,6 +53,16 @@
     XCTAssertNotNil(dictFromData[key]);
     XCTAssertEqualObjects(dictFromData[key], dict[key]);
   }
+}
+
+- (void)testInvalidParameters {
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  
+  [dict setData:[NSData data] forKey:@"Data"];
+  XCTAssertThrows([dict setData:@"No Data" forKey:@"NoData"]);
+  
+  [dict setString:@"String" forKey:@"String"];
+  XCTAssertThrows([dict setString:[NSData data] forKey:@"NoString"]);
 }
 
 @end

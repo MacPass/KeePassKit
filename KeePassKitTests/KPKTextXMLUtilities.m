@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "KeePassKit.h"
+@import KeePassKit;
 
 @interface KPKTextXMLUtilities : XCTestCase
 
