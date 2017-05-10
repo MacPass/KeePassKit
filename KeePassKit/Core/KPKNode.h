@@ -135,6 +135,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 
 - (void)removeCustomDataValueForKey:(NSString *)key;
 - (void)addCustomDataValue:(NSString *)value forKey:(NSString *)key;
+- (void)clearCustomData;
 
 @property(nonatomic, readonly) KPKGroup *asGroup;
 @property(nonatomic, readonly) KPKEntry *asEntry;

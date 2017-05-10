@@ -343,6 +343,10 @@
   self.mutableCustomData[key] = value;
 }
 
+- (void)clearCustomData {
+  [self.mutableCustomData removeAllObjects];
+}
+
 #pragma mark -
 #pragma mark KVO
 
