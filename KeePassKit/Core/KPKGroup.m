@@ -335,12 +335,41 @@ static NSSet *_observedKeyPathsSet;
 - (NSUInteger)childIndex {
   return [self.parent->_groups indexOfObject:self];
 }
+
+/*
 - (NSArray<KPKGroup *> *)groups {
   return [_groups copy];
 }
+*/
 
+- (NSUInteger)countOfCountOfGroups {
+  return _groups.count;
+}
+
+- (NSArray *)groupsAtIndexes:(NSIndexSet *)indexes {
+  return [_groups objectsAtIndexes:indexes];
+}
+
+- (void)getGroups:(KPKGroup *__unsafe_unretained *)buffer range:(NSRange)inRange {
+  [_groups getObjects:buffer range:inRange];
+}
+
+/*
 - (NSArray<KPKEntry *> *)entries {
   return  [_entries copy];
+}
+*/
+
+- (NSUInteger)countOfEntries {
+  return _entries.count;
+}
+
+- (NSArray *)entriesAtIndexes:(NSIndexSet *)indexes {
+  return [_entries objectsAtIndexes:indexes];
+}
+
+- (void)getEntries:(KPKEntry *__unsafe_unretained *)buffer range:(NSRange)inRange {
+  [_entries getObjects:buffer range:inRange];
 }
 
 - (NSArray<KPKNode *> *)children {

@@ -12,9 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface KPKPair : NSObject
 
-@property (nonatomic,readonly,copy) NSString *key;
-@property (nonatomic,readonly,copy) NSString *value;
-
+@property (readonly,copy) NSString *key;
+@property (readonly,copy) NSString *value;
 
 + (instancetype)pairWithKey:(NSString *)key value:(NSString *)value;
 

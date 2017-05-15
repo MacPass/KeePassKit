@@ -36,21 +36,6 @@
 
 #import "NSUUID+KPKAdditions.h"
 
-@interface NSArray (MPKeyValueStoring)
-
-@property (nonatomic,readonly,copy) NSString *valueString
-@property (nonatomic,readonly,copy) NSString *keyString;
-
-@end
-
-@implementation NSArray (MPKeyValueStoring)
-
-@dynamic valueString;
-@dynamic keyString;
-
-
-@end
-
 @implementation KPKNode
 
 @dynamic notes;

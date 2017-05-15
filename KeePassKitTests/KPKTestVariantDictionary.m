@@ -60,10 +60,10 @@
   NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
   
   [dict setData:[NSData data] forKey:@"Data"];
-  XCTAssertThrows([dict setData:@"No Data" forKey:@"NoData"]);
+  XCTAssertThrows([dict setData:(id)@"No Data" forKey:@"NoData"]);
   
   [dict setString:@"String" forKey:@"String"];
-  XCTAssertThrows([dict setString:[NSData data] forKey:@"NoString"]);
+  XCTAssertThrows([dict setString:(id)[NSData data] forKey:@"NoString"]);
 }
 
 @end

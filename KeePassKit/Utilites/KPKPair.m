@@ -7,6 +7,7 @@
 //
 
 #import "KPKPair.h"
+#import "KPKPair_Private.h"
 
 @implementation KPKPair
 
@@ -31,11 +32,15 @@
 @dynamic key;
 
 - (void)setKey:(NSString *)key {
-
+  if(![_key isEqualToString:key]) {
+    _key = [key copy];
+  }
 }
 
 - (void)setValue:(NSString *)value {
-  if(_value)
+  if(![_value isEqualToString:value]) {
+    _value = [value copy];
+  }
 }
 
 @end
