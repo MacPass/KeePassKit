@@ -356,13 +356,15 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [self.mutableAttributes getObjects:buffer range:inRange];
 }
 
-- (NSArray *)defaultAttributes {
+
+ - (NSArray *)defaultAttributes {
   return [self.mutableAttributes subarrayWithRange:NSMakeRange(0, kKPKDefaultEntryKeysCount)];
 }
 
 - (NSArray *)customAttributes {
   return [self.mutableAttributes subarrayWithRange:NSMakeRange(kKPKDefaultEntryKeysCount, self.mutableAttributes.count - kKPKDefaultEntryKeysCount)];
 }
+
 
 - (NSUInteger)countOfCustomAttributes {
   return (self.mutableAttributes.count - kKPKDefaultEntryKeysCount);
@@ -378,8 +380,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (NSArray<KPKAttribute *> *)attributes {
-  return [self.mutableAttributes copy];
+  return self.mutableAttributes;
 }
+
 
 - (NSUInteger)countOfAttributes {
   return self.mutableAttributes.count;

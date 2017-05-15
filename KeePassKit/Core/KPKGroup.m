@@ -339,13 +339,13 @@ static NSSet *_observedKeyPathsSet;
 }
 
 - (NSArray<KPKGroup *> *)groups {
-  return [_groups copy];
+  return _groups;
 }
 
 - (NSArray<KPKEntry *> *)entries {
-  return  [_entries copy];
+  return _entries;
 }
-
+ 
 - (NSArray<KPKNode *> *)children {
   NSMutableArray *children = [[NSMutableArray alloc] init];
   [self _collectChildren:children];

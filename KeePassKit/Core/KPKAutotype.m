@@ -242,7 +242,7 @@
 }
 
 - (NSArray *)associations {
-  return [self.mutableAssociations copy];
+  return self.mutableAssociations;
 }
 
 - (void)addAssociation:(KPKWindowAssociation *)association {
