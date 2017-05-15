@@ -344,6 +344,18 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark -
 #pragma mark Attribute accessors
+- (NSUInteger)countOfDefaultAttributes {
+  return kKPKDefaultEntryKeysCount;
+}
+
+- (id)objectInDefaultAttributesAtIndex:(NSUInteger)index {
+  return [self.mutableAttributes objectAtIndex:index];
+}
+
+- (void)getDefaultAttributes:(KPKAttribute *__unsafe_unretained *)buffer range:(NSRange)inRange {
+  [self.mutableAttributes getObjects:buffer range:inRange];
+}
+
 - (NSArray *)defaultAttributes {
   return [self.mutableAttributes subarrayWithRange:NSMakeRange(0, kKPKDefaultEntryKeysCount)];
 }
@@ -352,8 +364,44 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return [self.mutableAttributes subarrayWithRange:NSMakeRange(kKPKDefaultEntryKeysCount, self.mutableAttributes.count - kKPKDefaultEntryKeysCount)];
 }
 
-- (NSArray *)attributes {
+- (NSUInteger)countOfCustomAttributes {
+  return (self.mutableAttributes.count - kKPKDefaultEntryKeysCount);
+}
+
+- (id)objectInCustomAttributesAtIndex:(NSUInteger)index {
+  return [self.mutableAttributes objectAtIndex:index + kKPKDefaultEntryKeysCount];
+}
+
+- (void)getCustomAttributes:(KPKAttribute *__unsafe_unretained *)buffer range:(NSRange)inRange {
+  inRange.location += kKPKDefaultEntryKeysCount;
+  [self.mutableAttributes getObjects:buffer range:inRange];
+}
+
+- (NSArray<KPKAttribute *> *)attributes {
   return [self.mutableAttributes copy];
+}
+
+- (NSUInteger)countOfAttributes {
+  return self.mutableAttributes.count;
+}
+
+- (NSArray *)attributesAtIndexes:(NSIndexSet *)indexes {
+  return [self.mutableAttributes objectsAtIndexes:indexes];
+}
+
+- (void)getAttributes:(KPKAttribute *__unsafe_unretained *)buffer range:(NSRange)inRange {
+  [self.mutableAttributes getObjects:buffer range:inRange];
+}
+
+- (void)insertObject:(KPKAttribute *)object inMutableAttributesAtIndex:(NSUInteger)index {
+  index = MIN(self.mutableAttributes.count, index);
+  [self.mutableAttributes insertObject:object atIndex:index];
+}
+
+- (void)removeObjectFromMutableAttributesAtIndex:(NSUInteger)index {
+  if(index < self.mutableAttributes.count) {
+    [self.mutableAttributes removeObjectAtIndex:index];
+  }
 }
 
 - (KPKAttribute *)attributeWithKey:(NSString *)key {
@@ -800,22 +848,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark -
 #pragma mark KVO
-
-
-- (NSUInteger)countOfAttributes {
-  return self.mutableAttributes.count;
-}
-
-- (void)insertObject:(KPKAttribute *)object inMutableAttributesAtIndex:(NSUInteger)index {
-  index = MIN(self.mutableAttributes.count, index);
-  [self.mutableAttributes insertObject:object atIndex:index];
-}
-
-- (void)removeObjectFromMutableAttributesAtIndex:(NSUInteger)index {
-  if(index < self.mutableAttributes.count) {
-    [self.mutableAttributes removeObjectAtIndex:index];
-  }
-}
 
 /* Binaries */
 - (NSUInteger)countOfBinaries {

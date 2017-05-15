@@ -48,6 +48,8 @@
 static NSSet *_observedKeyPathsSet;
 
 @dynamic updateTiming;
+@dynamic entries;
+@dynamic groups;
 
 @synthesize defaultAutoTypeSequence = _defaultAutoTypeSequence;
 @synthesize title = _title;
@@ -336,17 +338,13 @@ static NSSet *_observedKeyPathsSet;
   return [self.parent->_groups indexOfObject:self];
 }
 
-/*
 - (NSArray<KPKGroup *> *)groups {
   return [_groups copy];
 }
-*/
 
-/*
 - (NSArray<KPKEntry *> *)entries {
   return  [_entries copy];
 }
-*/
 
 - (NSArray<KPKNode *> *)children {
   NSMutableArray *children = [[NSMutableArray alloc] init];
