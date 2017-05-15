@@ -36,6 +36,21 @@
 
 #import "NSUUID+KPKAdditions.h"
 
+@interface NSArray (MPKeyValueStoring)
+
+@property (nonatomic,readonly,copy) NSString *valueString
+@property (nonatomic,readonly,copy) NSString *keyString;
+
+@end
+
+@implementation NSArray (MPKeyValueStoring)
+
+@dynamic valueString;
+@dynamic keyString;
+
+
+@end
+
 @implementation KPKNode
 
 @dynamic notes;
@@ -335,11 +350,11 @@
   return NO;
 }
 
-- (void)removeCustomDataValueForKey:(NSString *)key {
+- (void)removeCustomDataForKey:(NSString *)key {
   self.mutableCustomData[key] = nil;
 }
 
-- (void)addCustomDataValue:(NSString *)value forKey:(NSString *)key {
+- (void)addCustomData:(NSString *)value forKey:(NSString *)key {
   self.mutableCustomData[key] = value;
 }
 
@@ -417,6 +432,14 @@
 
 - (void)_regenerateUUIDs {
   _uuid = [[[NSUUID alloc] init] copy];
+}
+
+- (void)removeCustomData:(NSSet *)objects {
+
+}
+
+- (void)removeCustomDataObject:(NSArray *)keyValueArray {
+
 }
 
 @end

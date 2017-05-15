@@ -235,6 +235,8 @@
 		4CA1E49C1D8838BC00100002 /* KPKTestArgon2.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */; };
 		4CA6DB8E1DC3574200650417 /* KPKChaCha20RandomStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA6DB8C1DC3574200650417 /* KPKChaCha20RandomStream.h */; };
 		4CA6DB8F1DC3574200650417 /* KPKChaCha20RandomStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA6DB8D1DC3574200650417 /* KPKChaCha20RandomStream.m */; };
+		4CBE26331EC595D200B93BE2 /* KPKPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBE26311EC595D200B93BE2 /* KPKPair.h */; };
+		4CBE26341EC595D200B93BE2 /* KPKPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE26321EC595D200B93BE2 /* KPKPair.m */; };
 		4CC34FE71D21290D00D79EC1 /* KPKTestUndoAutotype.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */; };
 		4CC57A281DCD454A003EE16C /* KPKTestTwofish.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC57A271DCD454A003EE16C /* KPKTestTwofish.m */; };
 		4CCB50AC1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCB50AB1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m */; };
@@ -497,6 +499,8 @@
 		4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestArgon2.m; sourceTree = "<group>"; };
 		4CA6DB8C1DC3574200650417 /* KPKChaCha20RandomStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKChaCha20RandomStream.h; sourceTree = "<group>"; };
 		4CA6DB8D1DC3574200650417 /* KPKChaCha20RandomStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKChaCha20RandomStream.m; sourceTree = "<group>"; };
+		4CBE26311EC595D200B93BE2 /* KPKPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKPair.h; sourceTree = "<group>"; };
+		4CBE26321EC595D200B93BE2 /* KPKPair.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKPair.m; sourceTree = "<group>"; };
 		4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestUndoAutotype.m; sourceTree = "<group>"; };
 		4CC57A271DCD454A003EE16C /* KPKTestTwofish.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestTwofish.m; sourceTree = "<group>"; };
 		4CCB50AB1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestWindowAssociationTitleMatching.m; sourceTree = "<group>"; };
@@ -934,6 +938,8 @@
 				4CE95AE41E97BC330019BBDC /* KPKData.h */,
 				4CE95AE51E97BC330019BBDC /* KPKData.m */,
 				4C69DD561EB4705800194900 /* KPKScopedSet.h */,
+				4CBE26311EC595D200B93BE2 /* KPKPair.h */,
+				4CBE26321EC595D200B93BE2 /* KPKPair.m */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -1139,6 +1145,7 @@
 				4C5CF4591BE10E100019AA81 /* KPKDataStreamWriter.h in Headers */,
 				4CCE00C71D78598800B8D50A /* KPKTimeInfo_Private.h in Headers */,
 				4C5CF48E1BE10E250019AA81 /* KPKLegacyHeaderUtility.h in Headers */,
+				4CBE26331EC595D200B93BE2 /* KPKPair.h in Headers */,
 				4C5CF4571BE10E100019AA81 /* KPKDataStreamReader.h in Headers */,
 				4C0B9DB21DBFB4FC00E66CD6 /* KPKKdbArchiver.h in Headers */,
 				4C5CF42F1BE10E070019AA81 /* KPKKdbFormat.h in Headers */,
@@ -1311,6 +1318,7 @@
 				4CA1E4891D8832BA00100002 /* blake2b.c in Sources */,
 				4C5CF41C1BE10E000019AA81 /* KPKNode.m in Sources */,
 				4C2ADBF21D7C649F002C3190 /* KPKUnarchiver.m in Sources */,
+				4CBE26341EC595D200B93BE2 /* KPKPair.m in Sources */,
 				4C6C6EFB1DDE231A0079C26D /* KPKTree+Synchronization.m in Sources */,
 				4C5CF4261BE10E000019AA81 /* KPKWindowAssociation.m in Sources */,
 				4C5D91E51D89519C00029558 /* KPKNumber.m in Sources */,
