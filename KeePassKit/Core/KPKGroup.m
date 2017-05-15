@@ -342,35 +342,11 @@ static NSSet *_observedKeyPathsSet;
 }
 */
 
-- (NSUInteger)countOfCountOfGroups {
-  return _groups.count;
-}
-
-- (NSArray *)groupsAtIndexes:(NSIndexSet *)indexes {
-  return [_groups objectsAtIndexes:indexes];
-}
-
-- (void)getGroups:(KPKGroup *__unsafe_unretained *)buffer range:(NSRange)inRange {
-  [_groups getObjects:buffer range:inRange];
-}
-
 /*
 - (NSArray<KPKEntry *> *)entries {
   return  [_entries copy];
 }
 */
-
-- (NSUInteger)countOfEntries {
-  return _entries.count;
-}
-
-- (NSArray *)entriesAtIndexes:(NSIndexSet *)indexes {
-  return [_entries objectsAtIndexes:indexes];
-}
-
-- (void)getEntries:(KPKEntry *__unsafe_unretained *)buffer range:(NSRange)inRange {
-  [_entries getObjects:buffer range:inRange];
-}
 
 - (NSArray<KPKNode *> *)children {
   NSMutableArray *children = [[NSMutableArray alloc] init];
@@ -659,9 +635,16 @@ static NSSet *_observedKeyPathsSet;
 
 #pragma mark -
 #pragma mark KVC
-
 - (NSUInteger)countOfEntries {
   return _entries.count;
+}
+
+- (NSArray *)entriesAtIndexes:(NSIndexSet *)indexes {
+  return [_entries objectsAtIndexes:indexes];
+}
+
+- (void)getEntries:(KPKEntry *__unsafe_unretained *)buffer range:(NSRange)inRange {
+  [_entries getObjects:buffer range:inRange];
 }
 
 - (void)insertObject:(KPKEntry *)entry inEntriesAtIndex:(NSUInteger)index {
@@ -674,6 +657,14 @@ static NSSet *_observedKeyPathsSet;
 
 - (NSUInteger)countOfGroups {
   return _groups.count;
+}
+
+- (NSArray *)groupsAtIndexes:(NSIndexSet *)indexes {
+  return [_groups objectsAtIndexes:indexes];
+}
+
+- (void)getGroups:(KPKGroup *__unsafe_unretained *)buffer range:(NSRange)inRange {
+  [_groups getObjects:buffer range:inRange];
 }
 
 - (void)insertObject:(KPKGroup *)group inGroupsAtIndex:(NSUInteger)index {
