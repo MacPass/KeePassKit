@@ -48,8 +48,8 @@
 static NSSet *_observedKeyPathsSet;
 
 @dynamic updateTiming;
-//@dynamic entries;
-//@dynamic groups;
+@dynamic entries;
+@dynamic groups;
 
 @synthesize defaultAutoTypeSequence = _defaultAutoTypeSequence;
 @synthesize title = _title;
@@ -339,11 +339,11 @@ static NSSet *_observedKeyPathsSet;
 }
 
 - (NSArray<KPKGroup *> *)groups {
-  return _groups;
+  return [_groups copy];
 }
 
 - (NSArray<KPKEntry *> *)entries {
-  return _entries;
+  return [_entries copy];
 }
  
 - (NSArray<KPKNode *> *)children {
@@ -633,36 +633,12 @@ static NSSet *_observedKeyPathsSet;
 
 #pragma mark -
 #pragma mark KVC
-- (NSUInteger)countOfEntries {
-  return _entries.count;
-}
-
-- (NSArray *)entriesAtIndexes:(NSIndexSet *)indexes {
-  return [_entries objectsAtIndexes:indexes];
-}
-
-- (void)getEntries:(KPKEntry *__unsafe_unretained *)buffer range:(NSRange)inRange {
-  [_entries getObjects:buffer range:inRange];
-}
-
 - (void)insertObject:(KPKEntry *)entry inEntriesAtIndex:(NSUInteger)index {
   [_entries insertObject:entry atIndex:index];
 }
 
 - (void)removeObjectFromEntriesAtIndex:(NSUInteger)index {
   [_entries removeObjectAtIndex:index];
-}
-
-- (NSUInteger)countOfGroups {
-  return _groups.count;
-}
-
-- (NSArray *)groupsAtIndexes:(NSIndexSet *)indexes {
-  return [_groups objectsAtIndexes:indexes];
-}
-
-- (void)getGroups:(KPKGroup *__unsafe_unretained *)buffer range:(NSRange)inRange {
-  [_groups getObjects:buffer range:inRange];
 }
 
 - (void)insertObject:(KPKGroup *)group inGroupsAtIndex:(NSUInteger)index {
