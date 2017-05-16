@@ -11,6 +11,9 @@
 
 @interface KPKGroup ()
 
+@property (nonatomic,strong) NSMutableArray <KPKGroup *> *mutableGroups;
+@property (nonatomic,strong) NSMutableArray <KPKEntry *> *mutableEntries;
+
 - (void)_removeChild:(KPKNode *)node;
 - (void)_addChild:(KPKNode *)node atIndex:(NSUInteger)index;
 - (NSUInteger)_indexForNode:(KPKNode *)node;

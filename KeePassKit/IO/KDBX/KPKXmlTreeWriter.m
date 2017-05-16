@@ -31,6 +31,7 @@
 #import "KPKKdbxFormat.h"
 #import "KPKNode_Private.h"
 #import "KPKGroup.h"
+#import "KPKGroup_Private.h"
 #import "KPKEntry.h"
 #import "KPKFormat.h"
 #import "KPKMetaData.h"
@@ -212,11 +213,11 @@
     [groupElement addChild:customDataElement];
   }
   
-  for(KPKEntry *entry in group.entries) {
+  for(KPKEntry *entry in group.mutableEntries) {
     [groupElement addChild:[self _xmlEntry:entry skipHistory:NO]];
   }
   
-  for (KPKGroup *subGroup in group.groups) {
+  for (KPKGroup *subGroup in group.mutableGroups) {
     [groupElement addChild:[self _xmlGroup:subGroup]];
   }
   

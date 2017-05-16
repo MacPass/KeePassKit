@@ -64,21 +64,6 @@
 
 }
 
-- (void)testFoo {
-  self.entryArrayController = [[NSArrayController alloc] init];
-  KPKGroup *group = [[KPKGroup alloc] init];
-  [self.entryArrayController bind:NSContentArrayBinding toObject:group withKeyPath:NSStringFromSelector(@selector(entryList)) options:nil];
-  
-  NSUInteger groupCount = 10;
-  while(groupCount--) {
-    [[[KPKGroup alloc] init] addToGroup:group];
-  }
-  NSUInteger entryCount = 10;
-  while(entryCount--) {
-    [[[KPKEntry alloc] init] addToGroup:group];
-  }
-}
-
 - (void)_bindAndTestGroup:(KPKGroup *)group selector:(SEL)selector {
   [self bind:NSStringFromSelector(@selector(string)) toObject:group withKeyPath:NSStringFromSelector(selector) options:nil];
   [group setValue:@"Test" forKey:NSStringFromSelector(selector)];

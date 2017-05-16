@@ -36,21 +36,13 @@
 
 #import "NSUUID+KPKAdditions.h"
 
-@interface KPKGroup () {
-@private
-  NSMutableArray *_groups;
-  NSMutableArray *_entries;
-}
-@end
-
 @implementation KPKGroup
 
 static NSSet *_observedKeyPathsSet;
 
 @dynamic updateTiming;
-//@dynamic entries;
-//@dynamic groups;
-@dynamic entryList;
+@dynamic entries;
+@dynamic groups;
 
 @synthesize defaultAutoTypeSequence = _defaultAutoTypeSequence;
 @synthesize title = _title;
@@ -61,15 +53,19 @@ static NSSet *_observedKeyPathsSet;
 }
 
 + (NSSet *)keyPathsForValuesAffectingChildren {
-  return [NSSet setWithArray:@[NSStringFromSelector(@selector(groups)), NSStringFromSelector(@selector(entries)) ]];
+  return [NSSet setWithArray:@[NSStringFromSelector(@selector(mutableGroups)), NSStringFromSelector(@selector(mutableEntries)) ]];
 }
 
 + (NSSet *)keyPathsForValuesAffectingChildEntries {
-  return [NSSet setWithObject:NSStringFromSelector(@selector(entries))];
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
 }
 
-+ (NSSet<NSString *> *)keyPathsForValuesAffectingEntryList {
-  return [NSSet setWithObject:NSStringFromSelector(@selector(entries))];
++ (NSSet<NSString *> *)keyPathsForValuesAffectingGroups {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableGroups))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingEntries {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
 }
 
 + (NSUInteger)defaultIcon {
@@ -94,8 +90,8 @@ static NSSet *_observedKeyPathsSet;
 - (instancetype)_initWithUUID:(NSUUID *)uuid {
   self = [super _initWithUUID:uuid];
   if(self) {
-    _groups = [@[] mutableCopy];
-    _entries = [@[] mutableCopy];
+    _mutableGroups = [@[] mutableCopy];
+    _mutableEntries = [@[] mutableCopy];
     _isAutoTypeEnabled = KPKInherit;
     _isSearchEnabled = KPKInherit;
     _lastTopVisibleEntry = [NSUUID kpk_nullUUID];
@@ -114,10 +110,10 @@ static NSSet *_observedKeyPathsSet;
     self.updateTiming = NO;
     self.title = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(title))];
     self.notes = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(notes))];
-    _groups = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKGroup.class]]
-                                        forKey:NSStringFromSelector(@selector(groups))] mutableCopy];
-    _entries = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKEntry.class]]
-                                         forKey:NSStringFromSelector(@selector(entries))] mutableCopy];
+    _mutableGroups = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKGroup.class]]
+                                        forKey:NSStringFromSelector(@selector(mutableGroups))] mutableCopy];
+    _mutableEntries = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKEntry.class]]
+                                         forKey:NSStringFromSelector(@selector(mutableEntries))] mutableCopy];
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
@@ -133,7 +129,7 @@ static NSSet *_observedKeyPathsSet;
 }
 
 - (void)dealloc {
-  for(KPKGroup *group in _groups) {
+  for(KPKGroup *group in self.mutableGroups) {
     [self _endObservingGroup:group];
   }
   [self.undoManager removeAllActionsWithTarget:self];
@@ -143,8 +139,8 @@ static NSSet *_observedKeyPathsSet;
   [super _encodeWithCoder:aCoder];
   [aCoder encodeObject:_title forKey:NSStringFromSelector(@selector(title))];
   [aCoder encodeObject:_notes forKey:NSStringFromSelector(@selector(notes))];
-  [aCoder encodeObject:_groups forKey:NSStringFromSelector(@selector(groups))];
-  [aCoder encodeObject:_entries forKey:NSStringFromSelector(@selector(entries))];
+  [aCoder encodeObject:_mutableGroups forKey:NSStringFromSelector(@selector(mutableGroups))];
+  [aCoder encodeObject:_mutableEntries forKey:NSStringFromSelector(@selector(mutableEntries))];
   [aCoder encodeInteger:_isAutoTypeEnabled forKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
   [aCoder encodeInteger:_isSearchEnabled forKey:NSStringFromSelector(@selector(isSearchEnabled))];
   [aCoder encodeBool:_isExpanded forKey:NSStringFromSelector(@selector(isExpanded))];
@@ -166,8 +162,8 @@ static NSSet *_observedKeyPathsSet;
   copy.isSearchEnabled = self.isSearchEnabled;
   copy.isExpanded = self.isExpanded;
   copy.lastTopVisibleEntry = self.lastTopVisibleEntry;
-  copy->_entries = [[[NSMutableArray alloc] initWithArray:_entries copyItems:YES] mutableCopy];
-  copy->_groups = [[[NSMutableArray alloc] initWithArray:_groups copyItems:YES] mutableCopy];
+  copy.mutableEntries = [[[NSMutableArray alloc] initWithArray:self.mutableEntries copyItems:YES] mutableCopy];
+  copy.mutableGroups = [[[NSMutableArray alloc] initWithArray:self.mutableGroups copyItems:YES] mutableCopy];
   
   [copy _updateGroupObserving];
   [copy _updateParents];
@@ -225,13 +221,13 @@ static NSSet *_observedKeyPathsSet;
   
   __block BOOL isEqual = YES;
   if(!(KPKNodeEqualityIgnoreGroupsOption & options)) {
-    if( _groups.count != aGroup->_groups.count) {
+    if( self.mutableGroups.count != aGroup.mutableGroups.count) {
       return NO;
     }
     /* Indexes in groups matter, so we need to compare them */
-    [_groups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    [self.mutableGroups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
       KPKGroup *otherGroup = obj;
-      KPKGroup *myGroup = _groups[idx];
+      KPKGroup *myGroup = self.mutableGroups[idx];
       isEqual &= [myGroup _isEqualToNode:otherGroup options:options];
       *stop = !isEqual;
     }];
@@ -242,12 +238,12 @@ static NSSet *_observedKeyPathsSet;
   }
   
   if(!(KPKNodeEqualityIgnoreEntriesOption & options)) {
-    if( _entries.count != aGroup->_entries.count ) {
+    if( self.mutableEntries.count != aGroup.mutableEntries.count ) {
       return NO;
     }
-    for(KPKEntry *entry in _entries) {
+    for(KPKEntry *entry in self.mutableEntries) {
       BOOL foundEntry = NO;
-      for(KPKEntry *otherEntry in aGroup->_entries) {
+      for(KPKEntry *otherEntry in aGroup.mutableEntries) {
         foundEntry = [entry _isEqualToNode:otherEntry options:options];
         if(foundEntry) {
           break;
@@ -288,27 +284,27 @@ static NSSet *_observedKeyPathsSet;
 
 #pragma mark Strucural Helper
 - (void)_updateParents {
-  for(KPKGroup *childGroup in _groups) {
+  for(KPKGroup *childGroup in self.mutableGroups) {
     childGroup.parent = self;
     [childGroup _updateParents];
   }
-  for(KPKEntry *childEntry in _entries) {
+  for(KPKEntry *childEntry in self.mutableEntries) {
     childEntry.parent = self;
   }
 }
 
 - (void)_updateGroupObserving {
-  for(KPKGroup *group in _groups) {
+  for(KPKGroup *group in self.mutableGroups) {
     [self _beginObservingGroup:group];
   }
 }
 
 - (void)_regenerateUUIDs {
   [super _regenerateUUIDs];
-  for(KPKEntry *entry in _entries) {
+  for(KPKEntry *entry in self.mutableEntries) {
     [entry _regenerateUUIDs];
   }
-  for(KPKGroup *group  in _groups) {
+  for(KPKGroup *group  in self.mutableGroups) {
     [group _regenerateUUIDs];
   }
 }
@@ -340,17 +336,17 @@ static NSSet *_observedKeyPathsSet;
 #pragma mark -
 #pragma mark Properties
 - (NSUInteger)childIndex {
-  return [self.parent->_groups indexOfObject:self];
+  return [self.parent.mutableGroups indexOfObject:self];
 }
 
 - (NSArray<KPKGroup *> *)groups {
-  return [_groups copy];
+  return [self.mutableGroups copy];
 }
 
 - (NSArray<KPKEntry *> *)entries {
-  return [_entries copy];
+  return [self.mutableEntries copy];
 }
- 
+
 - (NSArray<KPKNode *> *)children {
   NSMutableArray *children = [[NSMutableArray alloc] init];
   [self _collectChildren:children];
@@ -413,10 +409,10 @@ static NSSet *_observedKeyPathsSet;
     minimum.format = KPKDatabaseFormatKdbx;
     minimum.version = kKPKKdbxFileVersion4;
   }
-  for(KPKGroup *group in _groups) {
+  for(KPKGroup *group in self.mutableGroups) {
     minimum = KPKFileVersionMax(minimum, group.minimumVersion);
   }
-  for(KPKEntry *entry in _entries) {
+  for(KPKEntry *entry in self.mutableEntries) {
     minimum = KPKFileVersionMax(minimum, entry.minimumVersion);
   }
   return minimum;
@@ -425,16 +421,16 @@ static NSSet *_observedKeyPathsSet;
 #pragma mark -
 #pragma mark Accessors
 - (NSArray *)childEntries {
-  NSMutableArray *childEntries = [NSMutableArray arrayWithArray:_entries];
-  for(KPKGroup *group in _groups) {
+  NSMutableArray *childEntries = [NSMutableArray arrayWithArray:self.mutableEntries];
+  for(KPKGroup *group in self.mutableGroups) {
     [childEntries addObjectsFromArray:group.childEntries];
   }
   return childEntries;
 }
 
 - (NSArray *)childGroups {
-  NSMutableArray *childGroups = [NSMutableArray arrayWithArray:_groups];
-  for(KPKGroup *group in _groups) {
+  NSMutableArray *childGroups = [NSMutableArray arrayWithArray:self.mutableGroups];
+  for(KPKGroup *group in self.mutableGroups) {
     [childGroups addObjectsFromArray:group.childGroups];
   }
   return childGroups;
@@ -452,12 +448,12 @@ static NSSet *_observedKeyPathsSet;
   KPKGroup *group = node.asGroup;
   
   if(group) {
-    index = MAX(0, MIN(_groups.count, index));
-    [self insertObject:group inGroupsAtIndex:index];
+    index = MAX(0, MIN(self.mutableGroups.count, index));
+    [self insertObject:group inMutableGroupsAtIndex:index];
   }
   else if(entry) {
-    index = MAX(0, MIN(_entries.count, index));
-    [self insertObject:entry inEntriesAtIndex:index];
+    index = MAX(0, MIN(self.mutableEntries.count, index));
+    [self insertObject:entry inMutableEntriesAtIndex:index];
   }
   
   node.parent = self;
@@ -469,19 +465,19 @@ static NSSet *_observedKeyPathsSet;
   
   if(group) {
     /* deleted objects should be registred, no undo registration */
-    [self removeObjectFromGroupsAtIndex:[_groups indexOfObject:node]];
+    [self removeObjectFromMutableGroupsAtIndex:[self.mutableGroups indexOfObject:group]];
   }
   else if(entry) {
-    [self removeObjectFromEntriesAtIndex:[_entries indexOfObject:node]];
+    [self removeObjectFromMutableEntriesAtIndex:[self.mutableEntries indexOfObject:entry]];
   }
   node.parent = nil;
 }
 
 - (NSUInteger)_indexForNode:(KPKNode *)node {
   if(node.asGroup) {
-    return [_groups indexOfObject:node];
+    return [self.mutableGroups indexOfObject:node.asGroup];
   }
-  return [_entries indexOfObject:node];
+  return [self.mutableEntries indexOfObject:node.asEntry];
 }
 
 #pragma mark Seaching
@@ -489,12 +485,12 @@ static NSSet *_observedKeyPathsSet;
   if(!uuid) {
     return nil;
   }
-  for(KPKEntry *entry in _entries) {
+  for(KPKEntry *entry in self.mutableEntries) {
     if([entry.uuid isEqual:uuid]) {
       return entry;
     }
   }
-  for(KPKGroup *group in _groups) {
+  for(KPKGroup *group in self.mutableGroups) {
     KPKEntry *match = [group entryForUUID:uuid];
     if(match) {
       return match;
@@ -510,7 +506,7 @@ static NSSet *_observedKeyPathsSet;
   if([self.uuid isEqual:uuid]) {
     return self;
   }
-  for(KPKGroup *group in _groups) {
+  for(KPKGroup *group in self.mutableGroups) {
     KPKGroup *match = [group groupForUUID:uuid];
     if(match) {
       return match;
@@ -522,12 +518,12 @@ static NSSet *_observedKeyPathsSet;
 - (NSArray<KPKEntry *> *)searchableChildEntries {
   NSMutableArray<KPKEntry *> *searchableEntries;
   if([self _isSearchable]) {
-    searchableEntries = [NSMutableArray arrayWithArray:_entries];
+    searchableEntries = [NSMutableArray arrayWithArray:self.mutableEntries];
   }
   else {
     searchableEntries = [[NSMutableArray alloc] init];
   }
-  for(KPKGroup *group in _groups) {
+  for(KPKGroup *group in self.mutableGroups) {
     [searchableEntries addObjectsFromArray:group.searchableChildEntries];
   }
   return searchableEntries;
@@ -559,12 +555,12 @@ static NSSet *_observedKeyPathsSet;
       KPKEntry *entry = evaluatedObject;
       return entry.autotype.enabled;
     }];
-    autotypeEntries = [NSMutableArray arrayWithArray:[_entries filteredArrayUsingPredicate:predicate]];
+    autotypeEntries = [NSMutableArray arrayWithArray:[self.mutableEntries filteredArrayUsingPredicate:predicate]];
   }
   else {
     autotypeEntries = [[NSMutableArray alloc] init];
   }
-  for(KPKGroup *group in _groups) {
+  for(KPKGroup *group in self.mutableGroups) {
     [autotypeEntries addObjectsFromArray:[group autotypeableChildEntries]];
   }
   return autotypeEntries;
@@ -594,8 +590,8 @@ static NSSet *_observedKeyPathsSet;
   if(!children) {
     children = [[NSMutableArray alloc] init];
   }
-  [children addObjectsFromArray:_entries];
-  for(KPKGroup *group in _groups) {
+  [children addObjectsFromArray:self.mutableEntries];
+  for(KPKGroup *group in self.mutableGroups) {
     [children addObject:group];
     [group _collectChildren:children];
   }
@@ -626,46 +622,34 @@ static NSSet *_observedKeyPathsSet;
 #pragma mark Delete
 
 - (void)clear {
-  NSUInteger groupCount = _groups.count;
+  NSUInteger groupCount = self.mutableGroups.count;
   for(NSInteger index = (groupCount - 1); index > -1; index--) {
-    [self removeObjectFromGroupsAtIndex:index];
+    [self removeObjectFromMutableGroupsAtIndex:index];
   }
-  NSUInteger entryCount = _entries.count;
+  NSUInteger entryCount = self.mutableEntries.count;
   for(NSInteger index = (entryCount - 1); index > -1; index--) {
-    [self removeObjectFromEntriesAtIndex:index];
+    [self removeObjectFromMutableEntriesAtIndex:index];
   }
 }
 
 #pragma mark -
 #pragma mark KVC
-- (NSUInteger)countOfEntryList {
-  return _entries.count;
+- (void)insertObject:(KPKEntry *)entry inMutableEntriesAtIndex:(NSUInteger)index {
+  [_mutableEntries insertObject:entry atIndex:index];
 }
 
-- (NSArray *)entryListAtIndexes:(NSIndexSet *)indexes {
-  return [_entries objectsAtIndexes:indexes];
+- (void)removeObjectFromMutableEntriesAtIndex:(NSUInteger)index {
+  [_mutableEntries removeObjectAtIndex:index];
 }
 
-- (void)getEntryList:(KPKEntry *__unsafe_unretained*)buffer range:(NSRange)inRange {
-  [_entries getObjects:buffer range:inRange];
-}
-
-- (void)insertObject:(KPKEntry *)entry inEntriesAtIndex:(NSUInteger)index {
-  [_entries insertObject:entry atIndex:index];
-}
-
-- (void)removeObjectFromEntriesAtIndex:(NSUInteger)index {
-  [_entries removeObjectAtIndex:index];
-}
-
-- (void)insertObject:(KPKGroup *)group inGroupsAtIndex:(NSUInteger)index {
-  [_groups insertObject:group atIndex:index];
+- (void)insertObject:(KPKGroup *)group inMutableGroupsAtIndex:(NSUInteger)index {
+  [_mutableGroups insertObject:group atIndex:index];
   [self _beginObservingGroup:group];
 }
 
-- (void)removeObjectFromGroupsAtIndex:(NSUInteger)index {
-  KPKGroup *group = _groups[index];
-  [_groups removeObjectAtIndex:index];
+- (void)removeObjectFromMutableGroupsAtIndex:(NSUInteger)index {
+  KPKGroup *group = _mutableGroups[index];
+  [_mutableGroups removeObjectAtIndex:index];
   [self _endObservingGroup:group];
 }
 
