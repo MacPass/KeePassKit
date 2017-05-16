@@ -50,6 +50,7 @@ static NSSet *_observedKeyPathsSet;
 @dynamic updateTiming;
 @dynamic entries;
 @dynamic groups;
+@dynamic entryList;
 
 @synthesize defaultAutoTypeSequence = _defaultAutoTypeSequence;
 @synthesize title = _title;
@@ -64,6 +65,10 @@ static NSSet *_observedKeyPathsSet;
 }
 
 + (NSSet *)keyPathsForValuesAffectingChildEntries {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(entries))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingEntryList {
   return [NSSet setWithObject:NSStringFromSelector(@selector(entries))];
 }
 
@@ -633,6 +638,18 @@ static NSSet *_observedKeyPathsSet;
 
 #pragma mark -
 #pragma mark KVC
+- (NSUInteger)countOfEntryList {
+  return _entries.count;
+}
+
+- (NSArray *)entryListAtIndexes:(NSIndexSet *)indexes {
+  return [_entries objectsAtIndexes:indexes];
+}
+
+- (void)getEntryList:(KPKEntry *__unsafe_unretained*)buffer range:(NSRange)inRange {
+  [_entries getObjects:buffer range:inRange];
+}
+
 - (void)insertObject:(KPKEntry *)entry inEntriesAtIndex:(NSUInteger)index {
   [_entries insertObject:entry atIndex:index];
 }
