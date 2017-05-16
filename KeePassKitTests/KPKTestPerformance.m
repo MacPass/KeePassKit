@@ -14,6 +14,7 @@ NSUInteger const _kKPKEntryCount = 1000;
 
 @interface KPKTestPerformance : XCTestCase {
   KPKEntry *testEntry;
+  NSMutableDictionary *benchmarkDict;
 }
 @end
 
@@ -22,10 +23,12 @@ NSUInteger const _kKPKEntryCount = 1000;
 - (void)setUp {
   [super setUp];
   testEntry = [[KPKEntry alloc] init];
+  benchmarkDict = [[NSMutableDictionary alloc] init];
   NSUInteger count = _kKPKEntryCount;
   while(count-- > 0) {
     [testEntry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@(count).stringValue
                                                               value:@(count).stringValue]];
+    benchmarkDict[@(count).stringValue] = @(count).stringValue;
   }
 }
 
@@ -36,13 +39,23 @@ NSUInteger const _kKPKEntryCount = 1000;
 
 - (void)testAttributeLookupPerformanceA {
   [self measureBlock:^{
-    [testEntry customAttributeForKey:@(0).stringValue];
+    id result = [testEntry customAttributeForKey:@(0).stringValue];
+  }];
+}
+- (void)testDictLockupPerformanceA {
+  [self measureBlock:^{
+    id result = benchmarkDict[@(0).stringValue];
   }];
 }
 
 - (void)testAttributeLookupPerformanceB {
   [self measureBlock:^{
-    [testEntry customAttributeForKey:@(_kKPKEntryCount - 1).stringValue];
+    id result = [testEntry customAttributeForKey:@(_kKPKEntryCount - 1).stringValue];
+  }];
+}
+- (void)testDictLockupPerformanceB {
+  [self measureBlock:^{
+    id result = benchmarkDict[@(_kKPKEntryCount - 1).stringValue];
   }];
 }
 
@@ -50,6 +63,14 @@ NSUInteger const _kKPKEntryCount = 1000;
   [self measureBlock:^{
     [testEntry customAttributeForKey:kKPKTitleKey];
   }];
+}
+
+- (void)testCacheMissAfterKeyChange {
+  KPKAttribute *attribute = testEntry.customAttributes[10];
+  NSString *value = [attribute.value copy];
+  NSString *changedKey = @"ChangedKey";
+  attribute.key = changedKey;
+  XCTAssertEqualObjects([testEntry customAttributeForKey:changedKey].value, value);
 }
 
 

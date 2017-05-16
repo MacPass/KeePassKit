@@ -55,6 +55,7 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 @interface KPKEntry () {
 @private
   NSMutableArray *_binaries;
+  NSMapTable *_attributeMap;
 }
 
 @property (nonatomic, strong) NSMutableArray<KPKEntry *> *mutableHistory;
@@ -159,11 +160,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     /* !Note! - Title -> Name */
     _mutableAttributes = [[NSMutableArray alloc] init];
     /* create the default attributes */
-    
+    _attributeMap = [NSMapTable strongToWeakObjectsMapTable];
     for(NSString *key in [KPKFormat sharedFormat].entryDefaultKeys) {
       KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:key value:@""];
       attribute.entry = self;
       [_mutableAttributes addObject:attribute];
+      [_attributeMap setObject:attribute forKey:key];
     }
     _binaries = [[NSMutableArray alloc] init];
     _mutableHistory = [[NSMutableArray alloc] init];
@@ -359,11 +361,14 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (void)insertObject:(KPKAttribute *)object inMutableAttributesAtIndex:(NSUInteger)index {
   index = MIN(self.mutableAttributes.count, index);
   [self.mutableAttributes insertObject:object atIndex:index];
+  [_attributeMap setObject:object forKey:object.key];
 }
 
 - (void)removeObjectFromMutableAttributesAtIndex:(NSUInteger)index {
   if(index < self.mutableAttributes.count) {
+    NSString *key = self.mutableAttributes[index].key;
     [self.mutableAttributes removeObjectAtIndex:index];
+    [_attributeMap removeObjectForKey:key];
   }
 }
 
@@ -371,8 +376,20 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(!key) {
     return nil;
   }
+  KPKAttribute *cachedAttribute = [_attributeMap objectForKey:key];
+  if(!cachedAttribute || cachedAttribute.entry != self ) {
+    [_attributeMap removeObjectForKey:key];
+  }
+  else if([cachedAttribute.key isEqualToString:key]) {
+    return cachedAttribute;
+  }
+  else {
+    [_attributeMap removeObjectForKey:key];
+    [_attributeMap setObject:cachedAttribute forKey:cachedAttribute.key];
+  }
   for(KPKAttribute *attribute in self.mutableAttributes) {
     if([attribute.key isEqualToString:key]) {
+      [_attributeMap setObject:attribute forKey:key];
       return attribute;
     }
   }
@@ -500,8 +517,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)setMutableAttributes:(NSMutableArray<KPKAttribute *> *)mutableAttributes {
   _mutableAttributes = mutableAttributes;
+  [_attributeMap removeAllObjects];
   for(KPKAttribute *attribute in self.mutableAttributes) {
     attribute.entry = self;
+    [_attributeMap setObject:attribute forKey:attribute.key];
   }
 }
 
