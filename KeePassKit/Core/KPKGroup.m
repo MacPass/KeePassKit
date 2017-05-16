@@ -48,8 +48,8 @@
 static NSSet *_observedKeyPathsSet;
 
 @dynamic updateTiming;
-@dynamic entries;
-@dynamic groups;
+//@dynamic entries;
+//@dynamic groups;
 
 @synthesize defaultAutoTypeSequence = _defaultAutoTypeSequence;
 @synthesize title = _title;
