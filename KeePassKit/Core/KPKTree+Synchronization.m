@@ -87,18 +87,26 @@
       if([localNode _isEqualToNode:externNode options:equalityOptions]) {
         continue; // node did not change
       }
-      KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime : 0;
+      KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionUpdateHistory : 0;
       if(options == KPKSynchronizationOverwriteExistingOption ||
          options == KPKSynchronizationOverwriteIfNewerOption ||
          options == KPKSynchronizationSynchronizeOption) {
         
+        KPKEntry *localEntry = localNode.asEntry;
+        
         if(options != KPKSynchronizationOverwriteExistingOption) {
-          KPKEntry *localEntry = localNode.asEntry;
           if(localEntry && ![localEntry hasHistoryOfEntry:externNode.asEntry]) {
             [localEntry pushHistory];
           }
         }
+        
         [localNode _updateFromNode:externNode options:updateOptions];
+        
+        if(options != KPKSynchronizationOverwriteExistingOption) {
+          if(localEntry) {
+            [self _mergeHistory:localEntry ofEntry:externNode.asEntry];
+          }
+        }
       }
     }
   }

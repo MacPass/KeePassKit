@@ -311,7 +311,9 @@
   self.parent = group;
   [[self.undoManager prepareWithInvocationTarget:self] remove];
   [group _addChild:self atIndex:index];
+  /* remove deleted object if we undo a remove */
   self.tree.mutableDeletedObjects[self.uuid] = nil;
+  /* clean node store since we now have a strong ref again */
   self.tree.mutableDeletedNodes[self.uuid] = nil;
   [self touchMoved];
 }
