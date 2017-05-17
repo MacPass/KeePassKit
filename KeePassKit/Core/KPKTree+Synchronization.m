@@ -63,7 +63,7 @@
     /* Node is unkown, create a copy and integrate it */
     if(!localNode) {
       localNode = [[externNode.class alloc] initWithUUID:externNode.uuid];
-      [localNode _updateFromNode:externNode options:KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionUpateMovedTime | KPKUpdateOptionUpdateHistory];
+      [localNode _updateFromNode:externNode options:KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionIncludeMovedTime | KPKUpdateOptionIncludeHistory];
       
       KPKGroup *localParent = [self.root groupForUUID:externNode.parent.uuid];
       if(!localParent) {
@@ -87,25 +87,21 @@
       if([localNode _isEqualToNode:externNode options:equalityOptions]) {
         continue; // node did not change
       }
-      KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionUpdateHistory : 0;
+      KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionIncludeHistory : 0;
       if(options == KPKSynchronizationOverwriteExistingOption ||
          options == KPKSynchronizationOverwriteIfNewerOption ||
          options == KPKSynchronizationSynchronizeOption) {
         
+        
         KPKEntry *localEntry = localNode.asEntry;
         
-        if(options != KPKSynchronizationOverwriteExistingOption) {
-          if(localEntry && ![localEntry hasHistoryOfEntry:externNode.asEntry]) {
-            [localEntry pushHistory];
-          }
+        if(options != KPKSynchronizationOverwriteExistingOption && ![localEntry hasHistoryOfEntry:externNode.asEntry]) {
+          [localEntry pushHistory];
         }
-        
         [localNode _updateFromNode:externNode options:updateOptions];
         
         if(options != KPKSynchronizationOverwriteExistingOption) {
-          if(localEntry) {
-            [self _mergeHistory:localEntry ofEntry:externNode.asEntry];
-          }
+          [self _mergeHistory:localEntry ofEntry:externNode.asEntry options:options];
         }
       }
     }
@@ -143,8 +139,46 @@
   }
 }
 
-- (void)_mergeHistory:(KPKEntry *)entry ofEntry:(KPKEntry *)otherEntry {
+- (void)_mergeHistory:(KPKEntry *)entry ofEntry:(KPKEntry *)otherEntry options:(KPKSynchronizationOptions)options {
+  if(!entry || !otherEntry) {
+    return; // nil parameters
+  }
+  NSAssert([entry.uuid isEqual:otherEntry.uuid],@"History entry has UUID mismatch!");
   
+  if(entry.mutableHistory.count == otherEntry.mutableHistory.count) {
+    BOOL historyEqual = YES;
+    for(NSUInteger index = 0; index < entry.mutableHistory.count; index++) {
+      if(NSOrderedSame != [entry.mutableHistory[index].timeInfo.modificationDate compare:otherEntry.mutableHistory[index].timeInfo.modificationDate]) {
+        historyEqual = NO;
+        break;
+      }
+    }
+    if(historyEqual) {
+      return; // No need to merge anything
+    }
+  }
+  
+  NSMutableDictionary <NSDate *, KPKEntry *> *historyDict = [[NSMutableDictionary alloc] init];
+  for(KPKEntry *historyEntry in entry.mutableHistory) {
+    NSAssert([historyEntry.uuid isEqual:entry.uuid], @"UUID of history entry does not match corresponding entry!");
+    historyDict[historyEntry.timeInfo.modificationDate] = historyEntry;
+  }
+  /* overwrite maching only if forced, otherwise keep local entry in history */
+  for(KPKEntry *externalHistoryEntry in otherEntry.mutableHistory) {
+    NSAssert([externalHistoryEntry.uuid isEqual:entry.uuid], @"UUID of history entry does not match corresponding entry!");
+    NSDate *modificationDate = externalHistoryEntry.timeInfo.modificationDate;
+    if(historyDict[modificationDate] && (options & KPKSynchronizationOverwriteExistingOption)) {
+      historyDict[modificationDate] = externalHistoryEntry;
+    }
+    else {
+      historyDict[modificationDate] = externalHistoryEntry;
+    }
+  }
+  /* sort array an reassing it, copy items to be sure */
+  NSArray *sortedEntries = [historyDict.allValues sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    return [((KPKEntry *)obj1).timeInfo.modificationDate compare:((KPKEntry *)obj2).timeInfo.modificationDate];
+  }];
+  entry.mutableHistory = [[NSMutableArray alloc] initWithArray:sortedEntries copyItems:YES];
 }
 
 - (void)_mergeDeletedObjects:(NSDictionary<NSUUID *,KPKDeletedNode *> *)deletedObjects {

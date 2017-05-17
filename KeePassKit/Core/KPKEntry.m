@@ -679,6 +679,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
 }
 
+- (void)_regenerateUUIDs {
+  [super _regenerateUUIDs];
+  for(KPKEntry *entry in self.mutableHistory) {
+    entry->_uuid = self->_uuid;
+  }
+}
+
 #pragma mark Mergin
 - (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
   BOOL didChange = [super _updateFromNode:node options:options];
@@ -693,7 +700,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     /* collections */
     self.mutableAttributes = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableAttributes copyItems:YES];
     self.mutableHistory = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableHistory copyItems:YES];
-    if(options & KPKUpdateOptionUpdateHistory) {
+    if(options & KPKUpdateOptionIncludeHistory) {
       self.mutableBinaries = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableBinaries copyItems:YES];
     }
     
@@ -706,7 +713,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     
     NSDate *oldMovedTime = self.timeInfo.locationChanged;
     self.timeInfo = sourceEntry.timeInfo;
-    if(!(options & KPKUpdateOptionUpateMovedTime)) {
+    if(!(options & KPKUpdateOptionIncludeMovedTime )) {
       self.timeInfo.locationChanged = oldMovedTime;
     }
     return YES;

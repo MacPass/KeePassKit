@@ -274,7 +274,7 @@ static NSSet *_observedKeyPathsSet;
     
     NSDate *movedTime = self.timeInfo.locationChanged;
     self.timeInfo = group.timeInfo;
-    if(!(options & KPKUpdateOptionUpateMovedTime)) {
+    if(!(options & KPKUpdateOptionIncludeMovedTime)) {
       self.timeInfo.locationChanged = movedTime;
     }
     return YES;

@@ -14,8 +14,8 @@
 
 typedef NS_OPTIONS(NSUInteger, KPKUpdateOptions) {
   KPKUpdateOptionIgnoreModificationTime = 1<<1, // Only use properties from node if node has newer updates
-  KPKUpdateOptionUpateMovedTime         = 1<<2, // LocationChanged will only be overwritten if this flag is set
-  KPKUpdateOptionUpdateHistory          = 1<<3  // History will only be updated if flag is set
+  KPKUpdateOptionIncludeMovedTime       = 1<<2, // LocationChanged will only be overwritten if this flag is set
+  KPKUpdateOptionIncludeHistory         = 1<<3,  // History will be copied from source
 };
 
 typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {
@@ -26,7 +26,10 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {
   KPKNodeEqualityIgnoreGroupsOption           = 1<<4 // KPKGroup only, do not compare sub-groups (and entries in those sub-groups!)
 };
 
-@interface KPKNode () <KPKExtendedModificationRecording>
+@interface KPKNode () <KPKExtendedModificationRecording> {
+  @protected
+  NSUUID *_uuid; // changes to uuid should be handled with utmost care!
+}
 
 @property(nonatomic, readwrite, weak) KPKTree *tree;
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;
