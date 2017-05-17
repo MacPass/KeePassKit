@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface KPKPair : NSObject
+@interface KPKPair : NSObject <NSCopying>
 
 @property (readonly,copy) NSString *key;
 @property (readonly,copy) NSString *value;
@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithKey:(NSString *)key value:(NSString *)value NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
+
+- (BOOL)isEqualToPair:(KPKPair *)pair;
 
 @end
 

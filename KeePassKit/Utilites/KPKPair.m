@@ -24,6 +24,28 @@
   return self;
 }
 
+- (instancetype)copyWithZone:(NSZone *)zone {
+  return [KPKPair pairWithKey:self.key value:self.value];
+}
+
+- (BOOL)isEqual:(id)object {
+  return [self isEqualToPair:object];
+}
+
+- (BOOL)isEqualToPair:(KPKPair *)pair {
+  if(self == pair) {
+    return YES;
+  }
+  if(![pair isKindOfClass:KPKPair.class]) {
+    return NO;
+  }
+  return ([self.key isEqualToString:pair.key] && [self.value isEqualToString:pair.value]);
+}
+
+- (NSUInteger)hash {
+  return ((self.value.hash + 21) ^ self.key.hash);
+}
+
 @end
 
 @implementation KPKMutablePair
@@ -42,5 +64,10 @@
     _value = [value copy];
   }
 }
+
+- (instancetype)copyWithZone:(NSZone *)zone {
+  return [KPKMutablePair pairWithKey:self.key value:self.value];
+}
+
 
 @end

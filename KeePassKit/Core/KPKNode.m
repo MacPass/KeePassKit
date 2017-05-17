@@ -34,6 +34,7 @@
 #import "KPKTree_Private.h"
 #import "KPKMetaData.h"
 
+#import "KPKPair.h"
 #import "NSUUID+KPKAdditions.h"
 
 @implementation KPKNode
@@ -101,7 +102,7 @@
 
 - (BOOL)_isEqualToNode:(KPKNode *)aNode options:(KPKNodeEqualityOptions)options {
   /* pointing to the same instance */
-  if(nil != self && self == aNode) {
+  if(self == aNode) {
     return YES;
   }
   /* We do not compare UUIDs as those are supposed to be different for nodes unless they are encoded/decoded */
@@ -336,15 +337,26 @@
 }
 
 - (void)removeCustomDataForKey:(NSString *)key {
-  self.mutableCustomData[key] = nil;
+  if(!key) {
+    return;
+  }
+  NSString *value = self.mutableCustomData[key];
+  if(!value) {
+    return;
+  }
+  [self removeCustomDataObject:[KPKPair pairWithKey:key value:value]];
 }
 
 - (void)addCustomData:(NSString *)value forKey:(NSString *)key {
-  self.mutableCustomData[key] = value;
+  if(key && value) {
+    [self addCustomDataObject:[KPKPair pairWithKey:key value:value]];
+  }
 }
 
 - (void)clearCustomData {
-  [self.mutableCustomData removeAllObjects];
+  for(NSString *key in self.mutableCustomData) {
+    [self removeCustomDataObject:[KPKPair pairWithKey:key value:self.mutableCustomData[key]]];
+  }
 }
 
 #pragma mark -
@@ -419,12 +431,25 @@
   _uuid = [[[NSUUID alloc] init] copy];
 }
 
-- (void)removeCustomData:(NSSet *)objects {
-
+- (void)addCustomDataObject:(KPKPair *)pair {
+  NSAssert(pair.key, @"Custom data key cannot be nil!");
+  NSAssert(pair.value, @"Custom data value cannot be nil!");
+  self.mutableCustomData[pair.key] = pair.value;
 }
 
-- (void)removeCustomDataObject:(NSArray *)keyValueArray {
+- (void)removeCustomDataObject:(KPKPair *)pair {
+  [self removeCustomData:[NSSet setWithObject:pair]];
+}
 
+- (void)removeCustomData:(NSSet *)setOfPairs {
+  for(KPKPair *pair in setOfPairs) {
+    NSAssert(pair.key, @"Custom data object key cannot be nil!");
+    NSString *value = self.mutableCustomData[pair.key];
+    if(![value isEqualToString:pair.value]) {
+      NSLog(@"Warning. Expected value for key is %@, but actual value is: %@", pair.value, value);
+    }
+    self.mutableCustomData[pair.key] = nil;
+  }
 }
 
 @end
