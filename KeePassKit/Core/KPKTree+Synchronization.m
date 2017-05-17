@@ -63,7 +63,7 @@
     /* Node is unkown, create a copy and integrate it */
     if(!localNode) {
       localNode = [[externNode.class alloc] initWithUUID:externNode.uuid];
-      [localNode _updateFromNode:externNode options:KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionUpateMovedTime];
+      [localNode _updateFromNode:externNode options:KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionUpateMovedTime | KPKUpdateOptionUpdateHistory];
       
       KPKGroup *localParent = [self.root groupForUUID:externNode.parent.uuid];
       if(!localParent) {
@@ -91,6 +91,13 @@
       if(options == KPKSynchronizationOverwriteExistingOption ||
          options == KPKSynchronizationOverwriteIfNewerOption ||
          options == KPKSynchronizationSynchronizeOption) {
+        
+        if(options != KPKSynchronizationOverwriteExistingOption) {
+          KPKEntry *localEntry = localNode.asEntry;
+          if(localEntry && ![localEntry hasHistoryOfEntry:externNode.asEntry]) {
+            [localEntry pushHistory];
+          }
+        }
         [localNode _updateFromNode:externNode options:updateOptions];
       }
     }

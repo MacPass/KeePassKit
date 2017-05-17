@@ -25,6 +25,7 @@
 
 #import "KPKBinary.h"
 #import "KPKEntry.h"
+#import "KPKEntry_Private.h"
 #import "KPKGroup.h"
 #import "KPKIcon.h"
 #import "KPKMetaData.h"
@@ -191,7 +192,7 @@
   [self _writeTimeInfo:entry];
   
   /* We only save the last binary if there is more than one */
-  KPKBinary *firstBinary = entry.binaries.lastObject;
+  KPKBinary *firstBinary = entry.mutableBinaries.lastObject;
   [self _writeString:firstBinary.name forField:KPKFieldTypeEntryBinaryDescription];
   if(firstBinary && firstBinary.data.length > 0) {
     [self _writeField:KPKFieldTypeEntryBinaryData data:firstBinary.data];

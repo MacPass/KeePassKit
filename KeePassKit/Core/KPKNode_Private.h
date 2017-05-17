@@ -14,7 +14,8 @@
 
 typedef NS_OPTIONS(NSUInteger, KPKUpdateOptions) {
   KPKUpdateOptionIgnoreModificationTime = 1<<1, // Only use properties from node if node has newer updates
-  KPKUpdateOptionUpateMovedTime         = 1<<2 // LocationChanged will only be overwritten if this flag is set
+  KPKUpdateOptionUpateMovedTime         = 1<<2, // LocationChanged will only be overwritten if this flag is set
+  KPKUpdateOptionUpdateHistory          = 1<<3  // History will only be updated if flag is set
 };
 
 typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {

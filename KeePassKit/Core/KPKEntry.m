@@ -54,12 +54,9 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 @interface KPKEntry () {
 @private
-  NSMutableArray *_binaries;
   NSMapTable *_attributeMap;
 }
 
-@property (nonatomic, strong) NSMutableArray<KPKEntry *> *mutableHistory;
-@property (nonatomic, strong) NSArray<KPKBinary *> *binaries;
 @property (nonatomic) BOOL isHistory;
 
 @end
@@ -67,11 +64,13 @@ NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
 
 @implementation KPKEntry
 
-@dynamic title;
-@dynamic notes;
 @dynamic attributes;
-@dynamic defaultAttributes;
+@dynamic binaries;
 @dynamic customAttributes;
+@dynamic defaultAttributes;
+@dynamic history;
+@dynamic notes;
+@dynamic title;
 @dynamic updateTiming;
 
 NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
@@ -104,6 +103,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 + (NSSet *)keyPathsForValuesAffectingHistory {
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableHistory))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingBinaries {
+  return  [NSSet setWithObject:NSStringFromSelector(@selector(mutableBinaries))];
 }
 
 /* The only storage for attributes is the mutableAttributes array, so all getter depend on it*/
@@ -167,7 +170,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
       [_mutableAttributes addObject:attribute];
       [_attributeMap setObject:attribute forKey:key];
     }
-    _binaries = [[NSMutableArray alloc] init];
+    _mutableBinaries = [[NSMutableArray alloc] init];
     _mutableHistory = [[NSMutableArray alloc] init];
     _autotype = [[[KPKAutotype alloc] init] copy];
     
@@ -192,7 +195,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   /* Default attributes */
   copy.overrideURL = self.overrideURL;
   
-  copy.binaries = [[NSMutableArray alloc] initWithArray:self->_binaries copyItems:YES];
+  copy.mutableBinaries = [[NSMutableArray alloc] initWithArray:self.mutableBinaries copyItems:YES];
   copy.mutableAttributes = [[NSMutableArray alloc] initWithArray:self.mutableAttributes copyItems:YES];
   copy.tags = self.tags;
   copy.autotype = self.autotype;
@@ -222,8 +225,8 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
                                                       forKey:NSStringFromSelector(@selector(mutableAttributes))];
     self.mutableHistory = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKEntry.class]]
                                                    forKey:NSStringFromSelector(@selector(mutableHistory))];
-    _binaries = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKBinary.class]]
-                                       forKey:NSStringFromSelector(@selector(binaries))];
+    self.mutableBinaries = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKBinary.class]]
+                                         forKey:NSStringFromSelector(@selector(mutableBinaries))];
     _tags = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(tags))] copy];
     _foregroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
     _backgroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
@@ -239,7 +242,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   [super _encodeWithCoder:aCoder];
   [aCoder encodeObject:_mutableAttributes forKey:NSStringFromSelector(@selector(mutableAttributes))];
-  [aCoder encodeObject:_binaries forKey:NSStringFromSelector(@selector(binaries))];
+  [aCoder encodeObject:_mutableBinaries forKey:NSStringFromSelector(@selector(mutableBinaries))];
   [aCoder encodeObject:_tags forKey:NSStringFromSelector(@selector(tags))];
   [aCoder encodeObject:_foregroundColor forKey:NSStringFromSelector(@selector(foregroundColor))];
   [aCoder encodeObject:_backgroundColor forKey:NSStringFromSelector(@selector(backgroundColor))];
@@ -309,7 +312,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options {
   KPKEntry *entry = node.asEntry;
   NSAssert([entry isKindOfClass:KPKEntry.class], @"Test only allowed with KPKEntry classes");
-
+  
   if(![super _isEqualToNode:node options:options]) {
     return NO;
   }
@@ -447,7 +450,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (NSArray *)binaries {
-  return [_binaries copy];
+  return [self.mutableBinaries copy];
 }
 
 - (NSArray *)history {
@@ -476,7 +479,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (BOOL)isMeta {
   /* Meta entries always contain data */
-  KPKBinary *binary = self.binaries.lastObject;
+  KPKBinary *binary = self.mutableBinaries.lastObject;
   if(!binary) {
     return NO;
   }
@@ -645,19 +648,19 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark Attachments
 
 - (void)addBinary:(KPKBinary *)binary {
-  [self _addBinary:binary atIndex:_binaries.count];
+  [self _addBinary:binary atIndex:self.mutableBinaries.count];
 }
 
 - (void)_addBinary:(KPKBinary *)binary atIndex:(NSUInteger)index {
   if(nil == binary) {
     return; // nil not allowed
   }
-  if(index > _binaries.count) {
+  if(index > self.mutableBinaries.count) {
     return; // index out of bounds!
   }
   [[self.undoManager prepareWithInvocationTarget:self] removeBinary:binary];
   [self touchModified];
-  [self insertObject:binary inBinariesAtIndex:index];
+  [self insertObject:binary inMutableBinariesAtIndex:index];
   
 }
 
@@ -668,11 +671,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
    So we do not need to take care of cleanup after we did
    delete an attachment
    */
-  NSUInteger index = [_binaries indexOfObject:binary];
+  NSUInteger index = [self.mutableBinaries indexOfObject:binary];
   if(index != NSNotFound) {
     [[self.undoManager prepareWithInvocationTarget:self] addBinary:binary];
     [self touchModified];
-    [self removeObjectFromBinariesAtIndex:index];
+    [self removeObjectFromMutableBinariesAtIndex:index];
   }
 }
 
@@ -686,11 +689,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     if(!sourceEntry) {
       return didChange;
     }
-
+    
     /* collections */
     self.mutableAttributes = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableAttributes copyItems:YES];
     self.mutableHistory = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableHistory copyItems:YES];
-    self->_binaries = [[NSMutableArray alloc] initWithArray:sourceEntry->_binaries copyItems:YES];
+    if(options & KPKUpdateOptionUpdateHistory) {
+      self.mutableBinaries = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableBinaries copyItems:YES];
+    }
     
     self.overrideURL = sourceEntry.overrideURL;
     self.tags = sourceEntry.tags;
@@ -699,10 +704,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     self.foregroundColor = sourceEntry.foregroundColor;
     self.backgroundColor = sourceEntry.backgroundColor;
     
-    NSDate *movedTime = self.timeInfo.locationChanged;
+    NSDate *oldMovedTime = self.timeInfo.locationChanged;
     self.timeInfo = sourceEntry.timeInfo;
     if(!(options & KPKUpdateOptionUpateMovedTime)) {
-      self.timeInfo.locationChanged = movedTime;
+      self.timeInfo.locationChanged = oldMovedTime;
     }
     return YES;
   }
@@ -733,6 +738,15 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [self removeMutableHistoryAtIndexes:indexes];
 }
 
+- (BOOL)hasHistoryOfEntry:(KPKEntry *)entry {
+  for(KPKEntry *historyEntry in self.mutableHistory) {
+    if([historyEntry _isEqualToNode:entry options:(KPKNodeEqualityIgnoreAccessDateOption|KPKNodeEqualityIgnoreModificationDateOption)]) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
 - (void)revertToEntry:(KPKEntry *)entry {
   NSAssert([self.mutableHistory containsObject:entry], @"Supplied entry is not part of history of this entry!");
   NSAssert([entry.uuid isEqual:self.uuid], @"UUID of history entry needs to be the same as receivers");
@@ -748,7 +762,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   
   self.timeInfo.expires = entry.timeInfo.expires;
   self.timeInfo.expirationDate = entry.timeInfo.expirationDate;
-
+  
   self.mutableAttributes = entry.mutableAttributes;
   // TODO copy binaries
   // TODO copy custom attributes
@@ -832,27 +846,19 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark KVO
 
 /* Binaries */
-- (NSUInteger)countOfBinaries {
-  return _binaries.count;
-}
-
-- (void)insertObject:(KPKBinary *)binary inBinariesAtIndex:(NSUInteger)index {
+- (void)insertObject:(KPKBinary *)binary inMutableBinariesAtIndex:(NSUInteger)index {
   /* Clamp the index to make sure we do not add at wrong places */
-  index = MIN([_binaries count], index);
-  [_binaries insertObject:binary atIndex:index];
+  index = MIN([self.mutableBinaries count], index);
+  [self.mutableBinaries insertObject:binary atIndex:index];
 }
 
-- (void)removeObjectFromBinariesAtIndex:(NSUInteger)index {
-  if(index < _binaries.count) {
-    [_binaries removeObjectAtIndex:index];
+- (void)removeObjectFromMutableBinariesAtIndex:(NSUInteger)index {
+  if(index < self.mutableBinaries.count) {
+    [self.mutableBinaries removeObjectAtIndex:index];
   }
 }
 
 /* History */
-- (NSUInteger)countOfMutableHistory {
-  return self.mutableHistory.count;
-}
-
 - (void)insertObject:(KPKEntry *)entry inMutableHistoryAtIndex:(NSUInteger)index {
   index = MIN(self.mutableHistory.count, index);
   /* Entries in history should not have a history of their own */

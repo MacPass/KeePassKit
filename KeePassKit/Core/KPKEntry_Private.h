@@ -12,6 +12,8 @@
 @interface KPKEntry ()
 @property (nonatomic, copy) KPKAutotype *autotype;
 @property (nonatomic, strong) NSMutableArray<KPKAttribute *> *mutableAttributes;
+@property (nonatomic, strong) NSMutableArray<KPKBinary *> *mutableBinaries;
+@property (nonatomic, strong) NSMutableArray<KPKEntry *> *mutableHistory;
 /**
  *  Generic getter for the protected property of a attribute with the supplied key,
  *

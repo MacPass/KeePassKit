@@ -33,6 +33,7 @@
 #import "KPKGroup.h"
 #import "KPKGroup_Private.h"
 #import "KPKEntry.h"
+#import "KPKEntry_Private.h"
 #import "KPKFormat.h"
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
@@ -246,10 +247,10 @@
     [entryElement addChild:customDataElement];
   }
   
-  for(KPKAttribute *attribute in entry.attributes) {
+  for(KPKAttribute *attribute in entry.mutableAttributes) {
     [entryElement addChild:[self _xmlAttribute:attribute metaData:entry.tree.metaData]];
   }
-  for(KPKBinary *binary in entry.binaries) {
+  for(KPKBinary *binary in entry.mutableBinaries) {
     [entryElement addChild:[self _xmlBinary:binary]];
   }
   
@@ -258,7 +259,7 @@
   // Add the history entries
   if(!skipHistory) {
     DDXMLElement *historyElement = [DDXMLElement elementWithName:kKPKXmlHistory];
-    for (KPKEntry *historyEntry in entry.history) {
+    for (KPKEntry *historyEntry in entry.mutableHistory) {
       [historyElement addChild:[self _xmlEntry:historyEntry skipHistory:YES]];
     }
     [entryElement addChild:historyElement];

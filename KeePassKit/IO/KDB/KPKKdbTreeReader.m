@@ -30,6 +30,7 @@
 #import "KPKBinary.h"
 #import "KPKBinary_Private.h"
 #import "KPKEntry.h"
+#import "KPKEntry_Private.h"
 #import "KPKErrors.h"
 #import "KPKGroup.h"
 #import "KPKIcon.h"
@@ -521,7 +522,7 @@
       [metaEntries addObject:entry];
       if(![self _parseMetaEntry:entry metaData:tree.metaData]) {
         /* We need to store unknown data to write it back out */
-        KPKBinary *binary = (entry.binaries).lastObject;
+        KPKBinary *binary = (entry.mutableBinaries).lastObject;
         if(binary) {
           KPKBinary *metaBinary = [[KPKBinary alloc] init];
           metaBinary.data = binary.data;
@@ -535,7 +536,7 @@
 }
 
 - (BOOL)_parseMetaEntry:(KPKEntry *)entry metaData:(KPKMetaData *)metaData {
-  KPKBinary *binary = (entry.binaries).lastObject;
+  KPKBinary *binary = (entry.mutableBinaries).lastObject;
   NSData *data = binary.data;
   if(data.length == 0) {
     return NO;

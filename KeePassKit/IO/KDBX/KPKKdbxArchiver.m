@@ -12,6 +12,7 @@
 #import "KPKBinary.h"
 #import "KPKCompositeKey.h"
 #import "KPKEntry.h"
+#import "KPKEntry_Private.h"
 #import "KPKTree.h"
 
 #import "KPKCipher.h"
@@ -118,7 +119,7 @@
     NSArray *allEntries = [self.tree.allEntries arrayByAddingObjectsFromArray:self.tree.allHistoryEntries];
     NSMutableArray *tempBinaries = [[NSMutableArray alloc] init];
     for(KPKEntry *entry in allEntries) {
-      for(KPKBinary *binary in entry.binaries) {
+      for(KPKBinary *binary in entry.mutableBinaries) {
         if(![tempBinaries containsObject:binary]) {
           [tempBinaries addObject:binary];
         }

@@ -65,7 +65,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *url;
 
-@property (nonatomic, strong, readonly) NSArray<KPKBinary *> *binaries;
+@property (nonatomic, copy, readonly) NSArray<KPKBinary *> *binaries;
 @property (nonatomic, copy) NSArray<NSString *> *tags;
 @property (nonatomic, copy) NSUIColor *foregroundColor;
 @property (nonatomic, copy) NSUIColor *backgroundColor;
@@ -168,6 +168,11 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *  @param entry The history entry to revert to. If the entry is not part of the history of the receiving entry, an assertion is raised.
  */
 - (void)revertToEntry:(KPKEntry *)entry;
+/**
+ * @returns YES if the entry has a history entry equal to entry. Dates are ignored!
+ *
+ */
+- (BOOL)hasHistoryOfEntry:(KPKEntry *)entry;
 
 #pragma mark Maintainance
 /**

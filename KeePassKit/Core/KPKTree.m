@@ -24,6 +24,7 @@
 #import "KPKTree_Private.h"
 #import "KPKNode_Private.h"
 #import "KPKEntry.h"
+#import "KPKEntry_Private.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
@@ -224,8 +225,8 @@
   }
   NSMutableArray *historyEntries = [[NSMutableArray alloc] init];
   for(KPKEntry *entry in allEntries) {
-    NSAssert(entry.history != nil, @"History object cannot be nil");
-    [historyEntries addObjectsFromArray:entry.history];
+    NSAssert(entry.mutableHistory != nil, @"History object cannot be nil");
+    [historyEntries addObjectsFromArray:entry.mutableHistory];
   }
   return historyEntries;
 }
