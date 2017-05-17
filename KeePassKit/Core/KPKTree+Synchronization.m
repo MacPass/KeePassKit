@@ -36,8 +36,8 @@
     [tree.root _regenerateUUIDs];
   }
   
-  [self _mergeGroupsFromTree:tree options:options];
-  [self _mergeEntriesFromTree:tree options:options];
+  [self _mergeNodes:tree.allGroups options:options];
+  [self _mergeNodes:tree.allEntries options:options];
   [self _mergeLocationFromNodes:tree.allEntries];
   [self _mergeLocationFromNodes:tree.allGroups];
   [self _mergeDeletedObjects:tree.mutableDeletedObjects];
@@ -49,31 +49,29 @@
   
 }
 
-- (void)_mergeGroupsFromTree:(KPKTree *)otherTree options:(KPKSynchronizationOptions)options {
-  /* Updated Properties */
-  for(KPKGroup *externGroup in otherTree.allGroups) {
-    KPKDeletedNode *deletedNode = self.deletedObjects[externGroup.uuid];
+- (void)_mergeNodes:(NSArray<KPKNode *> *)nodes options:(KPKSynchronizationOptions)options {
+  for(KPKNode *externNode in nodes) {
+    KPKDeletedNode *deletedNode = self.deletedObjects[externNode.uuid];
     if(nil != deletedNode) {
-      NSComparisonResult result = [deletedNode.deletionDate compare:externGroup.timeInfo.modificationDate];
+      NSComparisonResult result = [deletedNode.deletionDate compare:externNode.timeInfo.modificationDate];
       if(result == NSOrderedDescending ) {
-        continue; // Group was delted in the destination after is was modified in the source
+        continue; // Node was deleted in destination after being modified in source
       }
     }
+    KPKNode *localNode = externNode.asGroup ? [self.root groupForUUID:externNode.uuid] : [self.root entryForUUID:externNode.uuid];
     
-    KPKGroup *localGroup = [self.root groupForUUID:externGroup.uuid];
-    
-    /* group is unkown, create a copy and integrate it */
-    if(!localGroup) {
-      localGroup = [[KPKGroup alloc] initWithUUID:externGroup.uuid];
-      [localGroup _updateFromNode:externGroup options:KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionUpateMovedTime];
+    /* Node is unkown, create a copy and integrate it */
+    if(!localNode) {
+      localNode = [[externNode.class alloc] initWithUUID:externNode.uuid];
+      [localNode _updateFromNode:externNode options:KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionUpateMovedTime];
       
-      KPKGroup *localParent = [self.root groupForUUID:externGroup.parent.uuid];
+      KPKGroup *localParent = [self.root groupForUUID:externNode.parent.uuid];
       if(!localParent) {
         localParent = self.root;
       }
-      KPK_SCOPED_NO_BEGIN(localGroup.updateTiming)
-      [localGroup addToGroup:localParent atIndex:externGroup.index];
-      KPK_SCOPED_NO_END(localGroup.updateTiming)
+      KPK_SCOPED_NO_BEGIN(localNode.updateTiming)
+      [localNode addToGroup:localParent atIndex:externNode.index];
+      KPK_SCOPED_NO_END(localNode.updateTiming)
     }
     else {
       NSAssert(options != KPKSynchronizationCreateNewUuidsOption, @"UUID collision while merging trees!");
@@ -81,58 +79,19 @@
        ignore entries and subgroups to just compare the group attributes,
        KPKNodeEqualityIgnoreHistory not needed since we do not compare entries at all
        */
-      KPKNodeEqualityOptions equalityOptions = KPKNodeEqualityIgnoreGroupsOption | KPKNodeEqualityIgnoreEntriesOption;
-      if([localGroup _isEqualToNode:externGroup options:equalityOptions]) {
-        continue; // Groups has not changed at all, no updates needed
-      }
-      KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime : 0;
-      if(options == KPKSynchronizationOverwriteExistingOption ||
-         options == KPKSynchronizationOverwriteIfNewerOption ||
-         options == KPKSynchronizationSynchronizeOption) {
-        [localGroup _updateFromNode:externGroup options:updateOptions];
-      }
-    }
-  }
-}
-- (void)_mergeEntriesFromTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
-  for(KPKEntry *externEntry in tree.allEntries) {
-    KPKDeletedNode *deletedNode = self.deletedObjects[externEntry.uuid];
-    if(nil != deletedNode) {
-      NSComparisonResult result = [deletedNode.deletionDate compare:externEntry.timeInfo.modificationDate];
-      if(result == NSOrderedDescending ) {
-        continue; // Group was delted in the destination after is was modified in the source
-      }
-    }
-    
-    KPKEntry *localEntry = [self.root entryForUUID:externEntry.uuid];
-    
-    if(!localEntry) {
-      localEntry = [[KPKEntry alloc] initWithUUID:externEntry.uuid];
-      [localEntry _updateFromNode:externEntry options:KPKUpdateOptionUpateMovedTime | KPKUpdateOptionIgnoreModificationTime];
+      KPKNodeEqualityOptions equalityOptions = (KPKNodeEqualityIgnoreGroupsOption |
+                                                KPKNodeEqualityIgnoreEntriesOption |
+                                                KPKNodeEqualityIgnoreGroupsOption |
+                                                KPKNodeEqualityIgnoreEntriesOption);
       
-      KPKGroup *localParent = [self.root groupForUUID:externEntry.parent.uuid];
-      if(!localParent) {
-        localParent = self.root;
-      }
-      KPK_SCOPED_NO_BEGIN(localEntry.updateTiming)
-      [localEntry addToGroup:localParent atIndex:externEntry.index];
-      KPK_SCOPED_NO_END(localEntry.updateTiming)
-    }
-    else {
-      NSAssert(options != KPKSynchronizationCreateNewUuidsOption, @"UUID collision while merging trees!");
-      /*
-       just compare entry attributes, ignore history!
-       KPKNodeEqualityIgnoreHistory not needed since we do not compare entries at all
-       */
-      KPKNodeEqualityOptions equalityOptions = KPKNodeEqualityIgnoreHistoryOption;
-      if([localEntry _isEqualToNode:externEntry options:equalityOptions]) {
-        continue; // Entry has not changed at all, no updates needed
+      if([localNode _isEqualToNode:externNode options:equalityOptions]) {
+        continue; // node did not change
       }
       KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime : 0;
       if(options == KPKSynchronizationOverwriteExistingOption ||
          options == KPKSynchronizationOverwriteIfNewerOption ||
          options == KPKSynchronizationSynchronizeOption) {
-        [localEntry _updateFromNode:externEntry options:updateOptions];
+        [localNode _updateFromNode:externNode options:updateOptions];
       }
     }
   }
@@ -173,7 +132,7 @@
   
 }
 
-- (BOOL)_mergeDeletedObjects:(NSDictionary<NSUUID *,KPKDeletedNode *> *)deletedObjects {
+- (void)_mergeDeletedObjects:(NSDictionary<NSUUID *,KPKDeletedNode *> *)deletedObjects {
   for(NSUUID *uuid in deletedObjects) {
     KPKDeletedNode *otherDeletedNode = deletedObjects[uuid];
     KPKDeletedNode *localDeletedNode = self.mutableDeletedObjects[uuid];
@@ -188,22 +147,12 @@
       self.mutableDeletedObjects[uuid] = otherDeletedNode;
     }
   }
-  /* reapply deletion */
-  //FIXME: this causes data loss if a deleted group now has children!!!
-  for(NSUUID *uuid in self.mutableDeletedObjects) {
-    KPKGroup *group = [self.root groupForUUID:uuid];
-    [group.parent _removeChild:group];
-    KPKEntry *entry = [self.root entryForUUID:uuid];
-    [entry.parent _removeChild:entry];
-  }
-  return NO;
 }
 
 - (void)_reapplyDeletions {
   NSArray *pending = self.mutableDeletedObjects.allKeys;
   NSMutableArray *skipped = [[NSMutableArray alloc] initWithCapacity:pending.count];
   while(pending.count > 0) {
-    /* FIXME if group is not emptry and has not-deleted sub group or sub entry will run in infinite loop! */
     for(NSUUID *uuid in pending) {
       KPKEntry *deletedEntry = [self.root entryForUUID:uuid];
       /* delete the entry using low level API not remove */
@@ -216,6 +165,11 @@
       else {
         [skipped addObject:uuid];
       }
+    }
+    /* If we have skipped everything, there's something wrong! */
+    if([pending isEqualToArray:skipped]) {
+      [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"Reapplying deletions after mergin not possible" userInfo:nil] raise];
+      break;
     }
     /* re-queue the skipped uuids */
     pending = [skipped copy];
