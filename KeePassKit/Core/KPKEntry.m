@@ -736,6 +736,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(!self.tree.metaData.isHistoryEnabled) {
     return; // Pushing history but it's disabled
   }
+  NSAssert(!self.isHistory, @"Pushing history on a history entry is not possible!");
+  if(self.isHistory) {
+    return; // Pushin history on a history entry is wrong!
+  }
   [self _addHistoryEntry:[self _copyWithUUID:self.uuid]];
   [self _maintainHistory];
 }
