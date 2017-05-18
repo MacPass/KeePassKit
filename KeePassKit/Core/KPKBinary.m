@@ -126,7 +126,7 @@
 - (NSData *)_dataForEncodedString:(NSString *)string compressed:(BOOL)compressed {
   NSData *data = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
   if(data && compressed) {
-    return data.kpk_gzipDeflated;
+    return data.kpk_gzipInflated;
   }
   return data;
 }
