@@ -198,7 +198,9 @@
   KPKAddXmlElement(groupElement, kKPKXmlName, group.title.kpk_xmlCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlNotes, group.notes.kpk_xmlCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlIconId, KPKStringFromLong(group.iconId));
-  
+  if(group.iconUUID) {
+    KPKAddXmlElement(groupElement, kKPKXmlCustomIconUUID, group.iconUUID.kpk_encodedString);
+  }
   DDXMLElement *timesElement = [self _xmlTimeinfo:group.timeInfo];
   [groupElement addChild:timesElement];
   
