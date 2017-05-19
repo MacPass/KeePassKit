@@ -24,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
 @interface KPKMutablePair : KPKPair
 
 @property (nonatomic, readwrite, copy) NSString *key;

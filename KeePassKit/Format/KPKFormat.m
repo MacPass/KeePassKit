@@ -168,6 +168,23 @@ NSString *const kKPKReferenceNotesKey       = @"N";
 NSString *const kKPKReferenceUUIDKey        = @"I";
 NSString *const kKPKReferenceCustomFieldKey = @"O";
 
+#pragma mark Placeholders
+
+NSString *const kKPKPlaceholderDatabasePath           = @"{DB_PATH}";
+NSString *const kKPKPlaceholderDatabaseFolder         = @"{DB_DIR}";
+NSString *const kKPKPlaceholderDatabaseName           = @"{DB_NAME}";
+NSString *const kKPKPlaceholderDatabaseBasename       = @"{DB_BASENAME}";
+NSString *const kKPKPlaceholderDatabaseFileExtension  = @"{DB_EXT}";
+
+NSString *const kKPKPlaceholderSelectedGroup      = @"{GROUP_SEL}";
+NSString *const kKPKPlaceholderSelectedGroupPath  = @"{GROUP_SEL_PATH}";
+NSString *const kKPKPlaceholderSelectedGroupNotes = @"{GROUP_SEL_NOTES}";
+
+NSString *const kKPKPlaceholderGroup      = @"{GROUP}";
+NSString *const kKPKPlaceholderGroupPath  = @"{GROUP_PATH}";
+NSString *const kKPKPlaceholderGroupNotes = @"{GROUP_NOTES}";
+
+
 #pragma mark Autotype commands
 /*
  Tab	{TAB}

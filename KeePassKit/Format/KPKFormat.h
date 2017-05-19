@@ -201,6 +201,24 @@ FOUNDATION_EXPORT NSString *const kKPKReferenceUUIDKey;
 FOUNDATION_EXPORT NSString *const kKPKReferenceCustomFieldKey;
 
 /**
+ *  Placeholder keys
+ */
+
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderDatabasePath;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderDatabaseFolder;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderDatabaseName;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderDatabaseBasename;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderDatabaseFileExtension;
+
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderSelectedGroup;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderSelectedGroupPath;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderSelectedGroupNotes;
+
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderGroup;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderGroupPath;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderGroupNotes;
+
+/**
  *  Autotype Commands
  */
 

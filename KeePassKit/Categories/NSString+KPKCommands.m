@@ -480,27 +480,32 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }
   /* mis mappings */
   //mappings[@"{APPDIR}"] = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
-  caseInsensitiveMappings[@"{GROUP}"] = entry.parent.title ? entry.parent.title : @"";
-  caseInsensitiveMappings[@"{GROUP_PATH}"] = entry.parent ? entry.parent.breadcrumb : @"";
-  caseInsensitiveMappings[@"{GROUP_NOTES}"] = entry.parent ? entry.parent.notes : @"";
-  /*
-   Those need environment infomration we're not getting form KeePassKit - delegation?
-   
-   {GROUP_SEL}	Name of the group that is currently selected in the main window.
-   {GROUP_SEL_PATH}	Full path of the group that is currently selected in the main window.
-   {GROUP_SEL_NOTES}	Notes of the group that is currently selected in the main window.
-   */
+  caseInsensitiveMappings[kKPKPlaceholderGroup] = entry.parent.title ? entry.parent.title : @"";
+  caseInsensitiveMappings[kKPKPlaceholderGroupPath] = entry.parent ? entry.parent.breadcrumb : @"";
+  caseInsensitiveMappings[kKPKPlaceholderGroupNotes] = entry.parent ? entry.parent.notes : @"";
+
   caseInsensitiveMappings[@"{ENV_DIRSEP}"] = @"/";
   NSURL *appDirURL = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask][0];
   caseInsensitiveMappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  appDirURL.path : @"";
-  /*
-   These mappings require access to the mpdocument.
-   {DB_PATH} Full path of the current database.
-   {DB_DIR} Directory of the current database.
-   {DB_NAME}	File name (including extension) of the current database.
-   {DB_BASENAME}	File name (excluding extension) of the current database.
-   {DB_EXT} File name extension of the current database.
-  */
+  
+  id<KPKTreeDelegate> treeDelegate = entry.tree.delegate;
+  if([treeDelegate respondsToSelector:@selector(resolvePlaceholder:forTree:)]) {
+    NSArray *dbPlaceholder = @[ kKPKPlaceholderDatabasePath,
+                                kKPKPlaceholderDatabaseFolder,
+                                kKPKPlaceholderDatabaseName,
+                                kKPKPlaceholderDatabaseBasename,
+                                kKPKPlaceholderDatabaseFileExtension,
+                                kKPKPlaceholderSelectedGroup,
+                                kKPKPlaceholderSelectedGroupPath,
+                                kKPKPlaceholderSelectedGroupNotes
+                                ];
+    for(NSString *placeHolder in dbPlaceholder) {
+      NSString *value = [treeDelegate resolvePlaceholder:placeHolder forTree:entry.tree];
+      if(value) {
+        caseInsensitiveMappings[dbPlaceholder] = value;
+      }
+    }
+  }
   /* Dates
    {DT_SIMPLE}	Current local date/time as a simple, sortable string. For example, for 2012-07-25 17:05:34 the value is 20120725170534.
    {DT_YEAR}	Year component of the current local date/time.

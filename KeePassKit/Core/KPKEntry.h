@@ -74,6 +74,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 @property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *attributes;
 @property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *customAttributes;
 @property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *defaultAttributes;
+@property (nonatomic, readonly) BOOL hasCustomAttributes;
 
 @property (nonatomic, copy, readonly) KPKAutotype *autotype;
 @property (nonatomic, copy, readonly) NSArray<KPKEntry *> *history;
