@@ -765,6 +765,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (void)revertToEntry:(KPKEntry *)entry {
   NSAssert([self.mutableHistory containsObject:entry], @"Supplied entry is not part of history of this entry!");
   NSAssert([entry.uuid isEqual:self.uuid], @"UUID of history entry needs to be the same as receivers");
+  self.title = entry.title;
+  self.iconId = entry.iconId;
+  self.iconUUID = entry.iconUUID;
   self.password = entry.password;
   self.username = entry.username;
   self.url = entry.url;
@@ -778,9 +781,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   self.timeInfo.expires = entry.timeInfo.expires;
   self.timeInfo.expirationDate = entry.timeInfo.expirationDate;
   
-  self.mutableAttributes = entry.mutableAttributes;
-  // TODO copy binaries
-  // TODO copy custom attributes
+  self.mutableAttributes = [[NSMutableArray alloc] initWithArray:entry.mutableAttributes copyItems:YES];
+  self.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:entry.mutableCustomData copyItems:YES];
+  self.mutableBinaries = [[NSMutableArray alloc] initWithArray:entry.mutableBinaries copyItems:YES];
 }
 
 - (void)_maintainHistory {
