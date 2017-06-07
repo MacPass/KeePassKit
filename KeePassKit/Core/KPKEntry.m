@@ -797,12 +797,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   /* remove item if count is too high */
   NSInteger removeCount = self.mutableHistory.count - self.tree.metaData.historyMaxItems;
   if(removeCount > 0) {
-    [self removeMutableHistoryAtIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(self.tree.metaData.historyMaxItems - 1, removeCount)]];
+    [self removeMutableHistoryAtIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, removeCount)]];
   }
-  /* remove items is size it to big */
+  /* remove items if size it to big */
   NSUInteger historySize = 0;
   NSInteger removeIndex = -1;
-  NSEnumerator *enumerator = [self.mutableHistory reverseObjectEnumerator];
+  NSEnumerator *enumerator = self.mutableHistory.reverseObjectEnumerator;
   KPKEntry *historyEntry;
   while(historyEntry = [enumerator nextObject]){
     historySize += historyEntry.estimatedByteSize;

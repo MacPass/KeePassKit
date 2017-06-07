@@ -29,7 +29,7 @@
 @property (nonatomic, copy) NSString *key;
 @property (nonatomic, copy) NSString *value;
 @property (nonatomic) BOOL isProtected;
-@property (nonatomic, readonly) BOOL editable;
+@property (nonatomic, readonly, getter=isEditable) BOOL editable;
 @property (nonatomic, readonly) NSString *referencedValue;
 @property (nonatomic, readonly) NSString *placeholderValue;
 /**
