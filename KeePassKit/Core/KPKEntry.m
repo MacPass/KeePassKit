@@ -730,12 +730,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [self insertObject:entry inMutableHistoryAtIndex:self.mutableHistory.count];
 }
 
-- (void)_removeHistoryEntry:(KPKEntry *)entry {
+- (void)removeHistoryEntry:(KPKEntry *)entry {
   NSUInteger index = [self.mutableHistory indexOfObject:entry];
   if(index != NSNotFound) {
     [self removeObjectFromMutableHistoryAtIndex:index];
   }
 }
+
 - (void)pushHistory {
   if(!self.tree.metaData.isHistoryEnabled) {
     return; // Pushing history but it's disabled

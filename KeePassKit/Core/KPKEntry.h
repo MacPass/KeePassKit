@@ -160,6 +160,10 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 - (void)pushHistory;
 /**
+ * Removes an entry for the history list.
+ */
+- (void)removeHistoryEntry:(KPKEntry *)entry;
+/**
  *	Clears the history and removes all entries
  */
 - (void)clearHistory;
