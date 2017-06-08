@@ -330,7 +330,24 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   if(level > _KPKMaxiumRecursionLevel) {
     return self;
   }
-  NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:@"\\{REF:(T|U|A|P|N|I){1}@(T|U|A|P|N|I|O){1}:([^\\}]*)\\}"
+  NSString *referencePattern = [NSString stringWithFormat:@"\\{%@(%@|%@|%@|%@|%@|%@){1}@(%@|%@|%@|%@|%@|%@|%@){1}:([^\\}]*)\\}",
+   kKPKReferencePrefix,
+   kKPKReferenceTitleKey,
+   kKPKReferenceUsernameKey,
+   kKPKReferenceURLKey,
+   kKPKReferencePasswordKey,
+   kKPKReferenceNotesKey,
+   kKPKReferenceUUIDKey,
+   kKPKReferenceTitleKey,
+   kKPKReferenceUsernameKey,
+   kKPKReferenceURLKey,
+   kKPKReferencePasswordKey,
+   kKPKReferenceNotesKey,
+   kKPKReferenceUUIDKey,
+   kKPKReferenceCustomFieldKey
+   ];
+  
+  NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:referencePattern
                                                                           options:NSRegularExpressionCaseInsensitive
                                                                             error:NULL];
   __block NSMutableString *mutableSelf = [self mutableCopy];

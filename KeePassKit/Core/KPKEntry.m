@@ -34,6 +34,7 @@
 #import "KPKFormat.h"
 #import "KPKTimeInfo.h"
 #import "KPKUTIs.h"
+#import "KPKReferenceBuilder.h"
 
 #import "KPKScopedSet.h"
 
@@ -262,6 +263,19 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
   KPK_SCOPED_DISABLE_UNDO_BEGIN(copy.undoManager)
   copy.title = titleOrNil;
+  
+  if(options & kKPKCopyOptionReferencePassword) {
+    copy.password = [KPKReferenceBuilder reference:KPKReferenceFieldPassword where:KPKReferenceFieldUUID is:self.uuid.UUIDString];
+  }
+  
+  if(options & kKPKCopyOptionReferenceUsername) {
+    copy.username = [KPKReferenceBuilder reference:KPKReferenceFieldUsername where:KPKReferenceFieldUUID is:self.uuid.UUIDString];
+  }
+  
+  if(!(options & kKPKCopyOptionCopyHistory)) {
+    [copy clearHistory];
+  }
+  
   KPK_SCOPED_DISABLE_UNDO_END
   [copy.timeInfo reset];
   return copy;
