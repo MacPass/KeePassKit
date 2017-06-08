@@ -9,16 +9,9 @@
 #import "KPKReferenceBuilder.h"
 #import "KPKFormat.h"
 
-@interface KPKReferenceBuilder ()
-
-@property (readonly, class) NSDictionary<NSNumber *, NSString *> *referenceMapping;
-
-@end
-
-
 @implementation KPKReferenceBuilder
 
-+ (NSDictionary *)referenceMapping {
++ (NSDictionary *)_referenceMapping {
   static NSDictionary *dict;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
@@ -35,9 +28,9 @@
 }
 
 + (NSString *)reference:(KPKReferenceField)field where:(KPKReferenceField)whereField is:(NSString *)text {
-  NSAssert(self.referenceMapping[@(field)], @"Unknown field reference");
-  NSAssert(self.referenceMapping[@(whereField)], @"Unknown field reference");
-  return [NSString stringWithFormat:@"{%@%@@%@:%@}",kKPKReferencePrefix,self.referenceMapping[@(field)],self.referenceMapping[@(whereField)],text];
+  NSAssert([self _referenceMapping][@(field)], @"Unknown field reference");
+  NSAssert([self _referenceMapping][@(whereField)], @"Unknown field reference");
+  return [NSString stringWithFormat:@"{%@%@@%@:%@}", kKPKReferencePrefix, [self _referenceMapping][@(field)], [self _referenceMapping][@(whereField)], text];
 }
 
 @end
