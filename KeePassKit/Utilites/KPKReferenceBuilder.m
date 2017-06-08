@@ -24,11 +24,11 @@
   dispatch_once(&onceToken, ^{
     dict = @{ @(KPKReferenceFieldTitle)   : kKPKReferenceTitleKey,
               @(KPKReferenceFieldUsername): kKPKReferenceUsernameKey,
-              @(KPKReferenceFieldPassword): kKPKReferenceTitleKey,
-              @(KPKReferenceFieldUrl)     : kKPKReferenceTitleKey,
-              @(KPKReferenceFieldNotes)   : kKPKReferenceTitleKey,
-              @(KPKReferenceFieldUUID)    : kKPKReferenceTitleKey,
-              @(KPKReferenceFieldOther)   : kKPKReferenceTitleKey
+              @(KPKReferenceFieldPassword): kKPKReferencePasswordKey,
+              @(KPKReferenceFieldUrl)     : kKPKReferenceURLKey,
+              @(KPKReferenceFieldNotes)   : kKPKReferenceNotesKey,
+              @(KPKReferenceFieldUUID)    : kKPKReferenceUUIDKey,
+              @(KPKReferenceFieldOther)   : kKPKReferenceCustomFieldKey
               };
   });
   return dict;
