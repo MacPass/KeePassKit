@@ -60,7 +60,7 @@
 - (void)_writeHeaderField:(KPKHeaderKey)key bytes:(const void *)bytes length:(NSUInteger)length useWideField:(BOOL)wideField {
   [self writeByte:key];
   if(wideField) {
-    [self write4Bytes:CFSwapInt16HostToLittle(length)];
+    [self write4Bytes:CFSwapInt32HostToLittle((uint32_t)length)];
   }
   else {
     [self write2Bytes:CFSwapInt16HostToLittle(length)];
@@ -315,14 +315,16 @@
     [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyRandomStreamId bytes:&LErandomStreamId length:sizeof(LErandomStreamId)];
     [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyRandomStreamKey data:self.randomStreamKey];
     for(KPKBinary *binary in self.binaries) {
-      uint8_t buffer[binary.data.length + 1];
-      memset(buffer, 0, sizeof(buffer)); // zero the memory!
+      NSUInteger length = binary.data.length + 1;
+      uint8_t *buffer = malloc(sizeof(uint8_t) * (length));
+      memset(buffer, 0, (binary.data.length + 1));
       if(binary.protectInMemory) {
         buffer[0] |= KPKBinaryProtectMemoryFlag;
       }
       /* copy data after flags */
       [binary.data getBytes:(buffer+1)];
-      [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyBinary bytes:buffer length:sizeof(buffer)];
+      [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyBinary bytes:buffer length:length];
+      free(buffer);
     }
     [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyEndOfHeader data:nil];
     

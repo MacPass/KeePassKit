@@ -20,8 +20,8 @@
 - (void)setUp {
   [super setUp];
   
-  uint8_t bytes[] = {0x00,0x01,0x02,0x03,0x04,0x05};
-  self.data = [NSData dataWithBytes:bytes length:sizeof(bytes)/sizeof(uint8_t)];
+  //uint8_t bytes[] = {0x00,0x01,0x02,0x03,0x04,0x05};
+  self.data = [NSData kpk_dataWithRandomBytes:1024*1024*10]; //[NSData dataWithBytes:bytes length:sizeof(bytes)/sizeof(uint8_t)];
   
   self.tree = [[KPKTree alloc] init];
   self.tree.root = [[KPKGroup alloc] init];
