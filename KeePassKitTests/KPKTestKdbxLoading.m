@@ -35,7 +35,6 @@
 
   _kdbx4.format = KPKDatabaseFormatKdbx;
   _kdbx4.version = kKPKKdbxFileVersion4;
-
 }
 
 - (void)tearDown {

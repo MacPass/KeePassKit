@@ -316,9 +316,12 @@
     [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyRandomStreamKey data:self.randomStreamKey];
     for(KPKBinary *binary in self.binaries) {
       uint8_t buffer[binary.data.length + 1];
+      memset(buffer, 0, sizeof(buffer)); // zero the memory!
       if(binary.protectInMemory) {
-        buffer[0] &= KPKBinaryProtectMemoryFlag;
+        buffer[0] |= KPKBinaryProtectMemoryFlag;
       }
+      /* copy data after flags */
+      [binary.data getBytes:(buffer+1)];
       [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyBinary bytes:buffer length:sizeof(buffer)];
     }
     [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyEndOfHeader data:nil];
