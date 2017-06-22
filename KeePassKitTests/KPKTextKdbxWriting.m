@@ -9,9 +9,11 @@
 #import <XCTest/XCTest.h>
 
 #import "KeePassKit.h"
+#import "KeePassKit_Private.h"
 
 @interface KPKTextKdbxWriting : XCTestCase
 @property (strong) KPKTree *tree;
+@property (strong) KPKEntry *entry;
 @property (strong) NSData *data;
 @end
 
@@ -28,18 +30,20 @@
   
   [[[KPKGroup alloc] init] addToGroup:self.tree.root];
   
-  KPKEntry *entry = [[KPKEntry alloc] init];
-  entry.title = @"TestEntry";
+  self.entry = [[KPKEntry alloc] init];
+  self.entry.title = @"TestEntry";
   
-  [entry addBinary:[[KPKBinary alloc] initWithName:@"Binary1" data:self.data]];
-  [entry addBinary:[[KPKBinary alloc] initWithName:@"Binary2" data:self.data]];
-  [entry addBinary:[[KPKBinary alloc] initWithName:@"Binary3" data:self.data]];
+  [self.entry addBinary:[[KPKBinary alloc] initWithName:@"Binary0" data:self.data]];
+  [self.entry addBinary:[[KPKBinary alloc] initWithName:@"Binary1" data:self.data]];
+  [self.entry addBinary:[[KPKBinary alloc] initWithName:@"Binary2" data:self.data]];
   
-  [entry addToGroup:self.tree.root.groups.firstObject];
+  [self.entry addToGroup:self.tree.root.groups.firstObject];
+  
+  /* kill all time info that cannot be serialized to ensure equality checks work out! */
+  [self.entry.timeInfo _reducePrecicionToSeconds];
 }
 
 - (void)testKdbx4BinarySerialization {
-  
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"Test" key:nil];
   self.tree.metaData.keyDerivationParameters = [[KPKArgon2KeyDerivation alloc] init].parameters;
   NSError *error;
@@ -53,7 +57,9 @@
   XCTAssertNotNil(loadedTree);
   XCTAssertEqualObjects(loadedTree.metaData.keyDerivationParameters[KPKKeyDerivationOptionUUID], [KPKArgon2KeyDerivation uuid].kpk_uuidData);
   
+  KPKEntry *entry = loadedTree.root.groups.firstObject.entries.firstObject;
   
+  XCTAssertEqualObjects(self.entry, entry);
 }
 
 

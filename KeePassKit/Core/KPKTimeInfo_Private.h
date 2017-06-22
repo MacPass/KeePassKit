@@ -15,4 +15,6 @@
 
 @property (weak) KPKNode *node;
 
+- (void)_reducePrecicionToSeconds;
+
 @end

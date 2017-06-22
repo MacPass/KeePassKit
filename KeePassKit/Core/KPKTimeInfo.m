@@ -187,4 +187,12 @@
   }
 }
 
+- (void)_reducePrecicionToSeconds {
+  self.creationDate = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.creationDate.timeIntervalSinceReferenceDate)];
+  self.modificationDate = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.modificationDate.timeIntervalSinceReferenceDate)];
+  self.accessDate = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.accessDate.timeIntervalSinceReferenceDate)];
+  self.expirationDate = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.expirationDate.timeIntervalSinceReferenceDate)];
+  self.locationChanged = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.locationChanged.timeIntervalSinceReferenceDate)];
+}
+
 @end

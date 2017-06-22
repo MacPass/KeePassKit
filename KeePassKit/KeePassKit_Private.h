@@ -8,6 +8,8 @@
 
 @import Foundation;
 
+#import "NSDate+KPKPacked.h"
+
 #import "KPKXmlTreeReader.h"
 
 #import "KPKAttribute_Private.h"
