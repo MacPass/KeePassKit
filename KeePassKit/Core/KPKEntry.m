@@ -331,31 +331,27 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     return NO;
   }
   
+  /* Compare Attributes (do not care about order!) */
   if(self.mutableAttributes.count != entry.mutableAttributes.count) {
     return NO;
   }
-  
   for(KPKAttribute *attribute in self.mutableAttributes) {
     KPKAttribute *otherAttribute = [entry attributeWithKey:attribute.key];
-    if(!otherAttribute) {
-      return NO;
-    }
-    if(![otherAttribute isEqualToAttribute:attribute]) {
+    if(NO == [otherAttribute isEqualToAttribute:attribute]) {
       return NO;
     }
   }
   
+  /* Compare History - order has to match! */
   if(!(options & KPKNodeEqualityIgnoreHistoryOption)) {
-    if(self.mutableHistory.count != entry.mutableHistory.count) {
+    if(NO == [self.mutableHistory isEqualToArray:entry.mutableHistory]) {
       return NO;
     }
-    BOOL __block historyEqual = YES;
-    [self.mutableHistory enumerateObjectsUsingBlock:^(KPKEntry * _Nonnull historyEntry, NSUInteger idx, BOOL * _Nonnull stop) {
-      *stop = [historyEntry isEqualToEntry:entry.mutableHistory[idx]];
-      if(*stop) {
-        historyEqual = NO;
-      }
-    }];
+  }
+  
+  /* Compare Binaries - order has to macht! */
+  if(NO == [self.mutableBinaries isEqualToArray:entry.mutableBinaries]) {
+    return NO;
   }
   
   return [self.autotype isEqualToAutotype:entry.autotype];
