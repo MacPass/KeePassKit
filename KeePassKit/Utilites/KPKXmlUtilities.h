@@ -23,9 +23,10 @@
 #ifndef MacPass_KPKXmlUtilities_h
 #define MacPass_KPKXmlUtilities_h
 
-@import Foundation;
+#import <Foundation/Foundation.h>
+#import <KissXML/KissXML.h>
+
 #import "KPKTypes.h"
-#import "DDXMLElement.h"
 
 #pragma mark Writing Helper
 /**

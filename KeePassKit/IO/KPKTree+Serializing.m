@@ -20,13 +20,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#import <KissXML/KissXML.h>
+
 #import "KPKTree+Serializing.h"
 
 #import "KPKArchiver.h"
 #import "KPKUnarchiver.h"
 #import "KPKXmlTreeReader.h"
 #import "KPKXmlTreeWriter.h"
-#import "DDXMLDocument.h"
 
 @implementation KPKTree (Serializing)
 

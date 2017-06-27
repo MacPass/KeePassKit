@@ -6,6 +6,8 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
+#import <KissXML/KissXML.h>
+
 #import "KPKKdbxArchiver.h"
 #import "KPKArchiver_Private.h"
 
@@ -43,8 +45,6 @@
 #import "NSUUID+KPKAdditions.h"
 
 #import "NSDictionary+KPKVariant.h"
-
-#import "DDXMLDocument.h"
 
 @interface KPKDataStreamWriter (KPKHeaderWriting)
 
