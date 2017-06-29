@@ -200,14 +200,28 @@
   data.protectNotes = KPKXmlBool(memoryProtectionElement, kKPKXmlProtectNotes);
   
   data.useTrash = KPKXmlBool(metaElement, kKPKXmlRecycleBinEnabled);
-  data.trashUuid = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlRecycleBinUUID)];
   data.trashChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlRecycleBinChanged);
-  data.entryTemplatesGroupUuid = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlEntryTemplatesGroup)];
   data.entryTemplatesGroupChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlEntryTemplatesGroupChanged);
   data.historyMaxItems = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxItems);
   data.historyMaxSize = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxSize);
-  data.lastSelectedGroup = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlLastSelectedGroup)];
-  data.lastTopVisibleGroup = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(metaElement, kKPKXmlLastTopVisibleGroup)];
+  
+  /* pares uuids only if string is valid */
+  NSString *uuidString = KPKXmlString(metaElement, kKPKXmlRecycleBinUUID);
+  if(uuidString) {
+    data.trashUuid = [NSUUID kpk_uuidWithEncodedString:uuidString];
+  }
+  uuidString = KPKXmlString(metaElement, kKPKXmlEntryTemplatesGroup);
+  if(uuidString) {
+    data.entryTemplatesGroupUuid = [NSUUID kpk_uuidWithEncodedString:uuidString];
+  }
+  uuidString = KPKXmlString(metaElement, kKPKXmlLastSelectedGroup);
+  if(uuidString) {
+    data.lastSelectedGroup = [NSUUID kpk_uuidWithEncodedString:uuidString];
+  }
+  uuidString = KPKXmlString(metaElement, kKPKXmlLastTopVisibleGroup);
+  if(uuidString) {
+    data.lastTopVisibleGroup = [NSUUID kpk_uuidWithEncodedString:uuidString];
+  }
   
   [self _parseCustomIcons:metaElement meta:data];
   [self _parseBinaries:metaElement meta:data];
