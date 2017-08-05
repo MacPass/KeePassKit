@@ -3,17 +3,27 @@ language: objective-c
 osx_image: xcode8.3
 xcode_project: KeePassKit.xcodeproj
 
-matrix:
-  include:
-    - xcode_sdk: macosx
-      xcode_scheme: "KeePassKit macOS"
-      env: PLATFORM=macOS
-    - xcode_sdk: iphonesimulator
-      xcode_scheme: "KeePassKit iOS"
-      env: PLATFORM=iOS
-    - xcode_sdk: appletvsimulator
-      xcode_scheme: "KeePassKit tvOS"
-      env: PLATFORM=tvOS
-    - xcode_sdk: watchsimulator
-      xcode_scheme: "KeePassKit watchOS"
-      env: PLATFORM=watchOS
+env:
+  matrix:
+    - TEST_TYPE=iOS
+    - TEST_TYPE=macOS
+    - TEST_TYPE=tvOS
+
+before_install:
+- |
+  if [ "$TEST_TYPE" = iOS ] || [ "$TEST_TYPE" = macOS ] || [ "$TEST_TYPE" = tvOS ]; then
+    gem install xcpretty --no-ri --no-rdoc --no-document --quiet
+  fi
+
+script:
+- |
+  if [ "$TEST_TYPE" = iOS ]; then
+    set -o pipefail
+    xcodebuild test -scheme "KeePassKit iOS" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 6" | xcpretty -c
+  elif [ "$TEST_TYPE" = macOS ]; then
+    set -o pipefail
+    xcodebuild test -scheme "KeePassKit macOS" -sdk macosx | xcpretty -c
+  elif [ "$TEST_TYPE" = tvOS ]; then
+    set -o pipefail
+    xcodebuild test -scheme "KeePassKit tvOS" -sdk appletvsimulator -destination "platform=tvOS Simulator,name=Apple TV 1080p" | xcpretty -c
+  fi
