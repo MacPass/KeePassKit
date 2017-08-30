@@ -36,15 +36,25 @@
     [tree.root _regenerateUUIDs];
   }
   
-  [self _mergeNodes:tree.allGroups options:options];
+  /* merge strategy is as follows:
+   1) add all unkown entries from other
+   2) update all known entires to latest version
+   3) add all unkown groups from other
+   4) update all known groups to latest version
+   5) locate entries to correct postion
+   6) locate groups to correct position
+   7) update deleted information
+   8) reapply deletions to ensure entries and groups are at final place
+   */
+  [self _mergeNodes:[@[tree.root] arrayByAddingObjectsFromArray:tree.allGroups] options:options];
   [self _mergeNodes:tree.allEntries options:options];
   [self _mergeLocationFromNodes:tree.allEntries];
   [self _mergeLocationFromNodes:tree.allGroups];
   [self _mergeDeletedObjects:tree.mutableDeletedObjects];
-  [self _reapplyDeletions];
+  [self _reapplyDeletions:self.root];
   [self.metaData _mergeWithMetaDataFromTree:tree options:options];
   ;
-  /* clear undo stack just to be save */
+  /* clear undo stack since merge is not supposed to be undoable */
   [self.undoManager removeAllActions];
   
 }
@@ -191,7 +201,7 @@
       continue; // done;
     }
     
-    /* if the other node was deleted later, we use this other node instaed and remove ours */
+    /* if the other node was deleted later, we use this other node instead and remove ours */
     NSComparisonResult result = [localDeletedNode.deletionDate compare:otherDeletedNode.deletionDate];
     if(result == NSOrderedAscending) {
       self.mutableDeletedObjects[uuid] = otherDeletedNode;
@@ -199,30 +209,51 @@
   }
 }
 
-- (void)_reapplyDeletions {
-  NSArray *pending = self.mutableDeletedObjects.allKeys;
-  NSMutableArray *skipped = [[NSMutableArray alloc] initWithCapacity:pending.count];
-  while(pending.count > 0) {
-    for(NSUUID *uuid in pending) {
-      KPKEntry *deletedEntry = [self.root entryForUUID:uuid];
-      /* delete the entry using low level API not remove */
-      [deletedEntry.parent _removeChild:deletedEntry];
-      
-      KPKGroup *deletedGroup = [self.root groupForUUID:uuid];
-      if(deletedGroup.countOfGroups == 0 && deletedGroup.countOfEntries == 0) {
-        [deletedGroup.parent _removeChild:deletedGroup];
-      }
-      else {
-        [skipped addObject:uuid];
-      }
+- (void)_reapplyDeletions:(KPKGroup *)group {
+  
+  /* first go deep to start at the leaf */
+  for(KPKGroup *subGroup in group.mutableGroups) {
+    [self _reapplyDeletions:subGroup];
+  }
+  
+  NSMutableIndexSet *indexesToDelete = [[NSMutableIndexSet alloc] init];
+  for(KPKEntry *entry in group.mutableEntries) {
+    KPKDeletedNode *delNode = self.mutableDeletedObjects[entry.uuid];
+    if(!delNode) {
+      continue; // node is not deleted
     }
-    /* If we have skipped everything, there's something wrong! */
-    if([pending isEqualToArray:skipped]) {
-      [[NSException exceptionWithName:NSInternalInconsistencyException reason:@"Reapplying deletions after mergin not possible" userInfo:nil] raise];
-      break;
+    NSComparisonResult result = [entry.timeInfo.modificationDate compare:delNode.deletionDate];
+    switch(result) {
+      case NSOrderedAscending:
+        [indexesToDelete addIndex:entry.index];
+        break;
+      case NSOrderedSame:
+      case NSOrderedDescending:
+      default:
+        /* undelete to prevent data loss! */
+        self.mutableDeletedObjects[entry.uuid] = nil;
     }
-    /* re-queue the skipped uuids */
-    pending = [skipped copy];
+  }
+  /* remove all marked entries */
+  [group.mutableEntries removeObjectsAtIndexes:indexesToDelete];
+  
+  BOOL groupIsEmptry = (group.mutableGroups.count == 0 && group.mutableEntries.count == 0);
+  KPKDeletedNode *delNode = self.mutableDeletedObjects[group.uuid];
+  if(delNode) {
+    NSComparisonResult result = [delNode.deletionDate compare:group.timeInfo.modificationDate];
+    switch(result) {
+      case NSOrderedAscending:
+        if(groupIsEmptry) {
+          [group.parent _removeChild:group];
+          break;
+        }
+        // fall through to undelete!
+      case NSOrderedSame:
+      case NSOrderedDescending:
+      default:
+        /* undelete to prevent data loss! */
+        self.mutableDeletedObjects[group.uuid] = nil;
+    }
   }
 }
 
