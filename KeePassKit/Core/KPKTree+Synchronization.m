@@ -129,6 +129,7 @@
     
     switch([localNode.timeInfo.locationChanged compare:externNode.timeInfo.locationChanged]) {
       case NSOrderedAscending:
+        localNode.timeInfo.locationChanged = externNode.timeInfo.locationChanged;
         KPK_SCOPED_NO_BEGIN(localNode.updateTiming)
         [localNode addToGroup:localExternParent];
         KPK_SCOPED_NO_END(localNode.updateTiming)
