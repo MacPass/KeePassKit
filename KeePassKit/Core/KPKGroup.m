@@ -35,6 +35,7 @@
 #import "KPKTimeInfo.h"
 
 #import "NSUUID+KPKAdditions.h"
+#import "KPKScopedSet.h"
 
 @implementation KPKGroup
 
@@ -622,16 +623,22 @@ static NSSet *_observedKeyPathsSet;
 #pragma mark Delete
 
 - (void)clear {
-  NSUInteger groupCount = self.mutableGroups.count;
-  for(NSInteger index = (groupCount - 1); index > -1; index--) {
-    [self removeObjectFromMutableGroupsAtIndex:index];
-  }
-  NSUInteger entryCount = self.mutableEntries.count;
-  for(NSInteger index = (entryCount - 1); index > -1; index--) {
-    [self removeObjectFromMutableEntriesAtIndex:index];
-  }
+  KPK_SCOPED_DISABLE_UNDO_BEGIN(self.undoManager);
+  [self _clear:YES];
+  KPK_SCOPED_DISABLE_UNDO_END;
 }
 
+- (void)_clear:(BOOL)keepGroup {
+  for(KPKGroup *group in self.mutableGroups) {
+    [group _clear:NO];
+  }
+  for(KPKEntry *entry in self.entries) {
+    [entry remove];
+  }
+  if(!keepGroup) {
+    [self remove];
+  }
+}
 #pragma mark -
 #pragma mark KVC
 - (void)insertObject:(KPKEntry *)entry inMutableEntriesAtIndex:(NSUInteger)index {
