@@ -55,6 +55,19 @@
   self.subEntryUUID = self.treeA.root.groups.firstObject.entries.firstObject.uuid;
 }
 
+- (void)tearDown {
+  self.treeB = nil;
+  self.treeA = nil;
+  
+  self.rootGroupUUID = nil;
+  self.groupUUID = nil;
+  self.subGroupUUID = nil;
+  self.entryUUID = nil;
+  self.subEntryUUID = nil;
+  
+  [super tearDown];
+}
+
 - (void)testAddedEntry {
   KPKEntry *newEntry = [[KPKEntry alloc] init];
   [newEntry addToGroup:self.treeB.root];
@@ -140,7 +153,21 @@
 
 
 - (void)testDeletedGroup {
-  //KPKGroup *
+  KPKGroup *group = [self.treeB.root groupForUUID:self.groupUUID];
+  XCTAssertNotNil(group);
+  [group remove];
+  
+  /* make sure entry is actually deleted */
+  XCTAssertNil([self.treeB.root groupForUUID:self.groupUUID]);
+  XCTAssertNil([self.treeB.root groupForUUID:self.subGroupUUID]);
+  XCTAssertNil([self.treeB.root entryForUUID:self.subEntryUUID]);
+  
+  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  /* make sure deletion was carried over */
+  XCTAssertNil([self.treeA.root groupForUUID:self.groupUUID]);
+  XCTAssertNil([self.treeA.root groupForUUID:self.subGroupUUID]);
+  XCTAssertNil([self.treeA.root entryForUUID:self.subEntryUUID]);
 }
 
 - (void)testChangedExternalGroup {
