@@ -24,7 +24,7 @@
 @implementation KPKTestSynchronization
 
 - (void)setUp {
-
+  
   //
   //  rootgroup
   //    - group
@@ -47,7 +47,7 @@
   /* load both trees to ensure dates are seconds precision */
   self.treeB = [[KPKTree alloc] initWithData:data key:key error:nil];
   self.treeA = [[KPKTree alloc] initWithData:data key:key error:nil];
-
+  
   self.rootGroupUUID = self.treeA.root.uuid;
   self.groupUUID = self.treeA.root.groups.firstObject.uuid;
   self.subGroupUUID = self.treeA.root.groups.firstObject.groups.firstObject.uuid;
@@ -181,6 +181,36 @@
   XCTAssertNotNil(changedGroup);
   XCTAssertEqualObjects(changedGroup.title, @"TheTitleHasChanged");
 }
+
+- (void)testLocalModifiedExternalDeletedGroup {
+  KPKGroup *group = [self.treeB.root groupForUUID:self.groupUUID];
+  XCTAssertNotNil(group);
+  [group remove];
+  
+  /* make sure group and subcontent is actually deleted */
+  XCTAssertNil([self.treeB.root groupForUUID:self.groupUUID]);
+  XCTAssertNil([self.treeB.root groupForUUID:self.subGroupUUID]);
+  XCTAssertNil([self.treeB.root entryForUUID:self.subEntryUUID]);
+  
+  usleep(10);
+  
+  KPKGroup *groupA = [self.treeA.root groupForUUID:self.groupUUID];
+  groupA.title = @"TitleChangeAfterDeletion";
+  
+  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  /* make sure deletion was carried over */
+  KPKGroup *synchronizedGroup = [self.treeA.root groupForUUID:self.groupUUID];
+  XCTAssertNotNil(synchronizedGroup);
+  XCTAssertNil(self.treeA.mutableDeletedObjects[self.groupUUID]);
+  XCTAssertEqualObjects(synchronizedGroup, groupA);
+  XCTAssertEqualObjects(synchronizedGroup.title, @"TitleChangeAfterDeletion");
+  
+  /* other non-modified nodes should be delete */
+  XCTAssertNil([self.treeA.root groupForUUID:self.subGroupUUID]);
+  XCTAssertNil([self.treeA.root entryForUUID:self.subEntryUUID]);
+}
+
 
 - (void)testChangedLocalGroup {
   KPKGroup *groupB = self.treeB.root.groups.firstObject;
