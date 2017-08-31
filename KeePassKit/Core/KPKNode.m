@@ -281,6 +281,12 @@
 }
 
 - (void)remove {
+  for(KPKGroup *group in self.asGroup.mutableGroups) {
+    [group remove];
+  }
+  for(KPKEntry *entry in self.asGroup.mutableEntries) {
+    [entry remove];
+  }
   [[self.undoManager prepareWithInvocationTarget:self] addToGroup:self.parent atIndex:self.index];
   NSAssert(nil == self.tree.mutableDeletedObjects[self.uuid], @"Node already registered as deleted!");
   self.tree.mutableDeletedObjects[self.uuid] = [[KPKDeletedNode alloc] initWithNode:self];
