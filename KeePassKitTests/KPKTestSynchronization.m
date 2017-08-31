@@ -200,7 +200,18 @@
   
   XCTAssertNotNil(movedEntry);
   XCTAssertEqualObjects(movedEntry.parent.uuid, groupUUID);
-}
+  
+  NSMutableSet *uuids = [[NSMutableSet alloc] init];
+  for(KPKEntry *entry in self.treeA.allEntries) {
+    XCTAssertFalse([uuids containsObject:entry.uuid]);
+    [uuids addObject:entry.uuid];
+  }
+  
+  [uuids removeAllObjects];
+  for(KPKGroup *group in self.treeA.allGroups) {
+    XCTAssertFalse([uuids containsObject:group.uuid]);
+    [uuids addObject:group.uuid];
+  }
 
 - (void)testMovedGroup {
   KPKGroup *group = self.treeB.root.groups.firstObject;
