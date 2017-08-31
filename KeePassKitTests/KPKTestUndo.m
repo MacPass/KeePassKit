@@ -196,6 +196,7 @@
   XCTAssertEqual([_tree.root.groups indexOfObject:group], 1, @"Created group is at index 1 after redo");
   
   XCTAssertEqual(_tree.deletedObjects.count, 0, @"There are no deleted objects in the database");
+  XCTAssertEqual(_tree.mutableDeletedNodes.count, 0, @"No deleted node in tree after redo of add");
 }
 
 - (void)testUndoRedoMoveEntry {
@@ -393,6 +394,9 @@
 
   XCTAssertFalse(_undoManager.canUndo, @"Undo stack is empty after undo");
   XCTAssertTrue(_undoManager.canRedo, @"Undomanager can redo after undo");
+  
+  XCTAssertEqual(_tree.mutableDeletedObjects.count, 0, @"Deleted Entry node is not stored in tree");
+  XCTAssertEqual(_tree.mutableDeletedNodes.count, 0, @"Deleted Entry node is not stored in tree");
   
   XCTAssertEqualObjects(_entryA, copy, @"Entries has not changed fater undo/redo");
 }
