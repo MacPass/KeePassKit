@@ -241,7 +241,7 @@
   BOOL groupIsEmptry = (group.mutableGroups.count == 0 && group.mutableEntries.count == 0);
   KPKDeletedNode *delNode = self.mutableDeletedObjects[group.uuid];
   if(delNode) {
-    NSComparisonResult result = [delNode.deletionDate compare:group.timeInfo.modificationDate];
+    NSComparisonResult result = [group.timeInfo.modificationDate compare:delNode.deletionDate];
     switch(result) {
       case NSOrderedAscending:
         if(groupIsEmptry) {
