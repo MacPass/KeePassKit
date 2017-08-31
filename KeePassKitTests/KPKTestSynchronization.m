@@ -212,6 +212,7 @@
     XCTAssertFalse([uuids containsObject:group.uuid]);
     [uuids addObject:group.uuid];
   }
+}
 
 - (void)testMovedGroup {
   KPKGroup *group = self.treeB.root.groups.firstObject;
