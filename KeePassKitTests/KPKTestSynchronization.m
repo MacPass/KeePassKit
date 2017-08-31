@@ -208,6 +208,9 @@
   }
   
   [uuids removeAllObjects];
+  
+  XCTAssertFalse([uuids containsObject:self.treeA.root.uuid]);
+  [uuids addObject:self.treeA.root];
   for(KPKGroup *group in self.treeA.allGroups) {
     XCTAssertFalse([uuids containsObject:group.uuid]);
     [uuids addObject:group.uuid];
