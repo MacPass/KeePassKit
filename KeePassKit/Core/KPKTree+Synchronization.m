@@ -211,14 +211,12 @@
 }
 
 - (void)_reapplyDeletions:(KPKGroup *)group {
-  
-  /* first go deep to start at the leaf */
-  for(KPKGroup *subGroup in group.mutableGroups) {
+
+  for(KPKGroup *subGroup in group.mutableGroups.reverseObjectEnumerator) {
     [self _reapplyDeletions:subGroup];
   }
   
-  NSMutableIndexSet *indexesToDelete = [[NSMutableIndexSet alloc] init];
-  for(KPKEntry *entry in group.mutableEntries) {
+  for(KPKEntry *entry in group.mutableEntries.reverseObjectEnumerator) {
     KPKDeletedNode *delNode = self.mutableDeletedObjects[entry.uuid];
     if(!delNode) {
       continue; // node is not deleted
@@ -226,7 +224,7 @@
     NSComparisonResult result = [entry.timeInfo.modificationDate compare:delNode.deletionDate];
     switch(result) {
       case NSOrderedAscending:
-        [indexesToDelete addIndex:entry.index];
+        [entry.parent _removeChild:entry];
         break;
       case NSOrderedSame:
       case NSOrderedDescending:
@@ -235,9 +233,6 @@
         self.mutableDeletedObjects[entry.uuid] = nil;
     }
   }
-  /* remove all marked entries */
-  [group.mutableEntries removeObjectsAtIndexes:indexesToDelete];
-  
   BOOL groupIsEmptry = (group.mutableGroups.count == 0 && group.mutableEntries.count == 0);
   KPKDeletedNode *delNode = self.mutableDeletedObjects[group.uuid];
   if(delNode) {

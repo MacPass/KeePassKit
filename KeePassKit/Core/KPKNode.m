@@ -281,11 +281,11 @@
 }
 
 - (void)remove {
-  while(self.asGroup.mutableGroups.count > 0) {
-    [self.asGroup.mutableGroups.lastObject remove];
+  for(KPKGroup *group in self.asGroup.mutableGroups.reverseObjectEnumerator) {
+    [group remove];
   }
-  while(self.asGroup.mutableEntries.count > 0) {
-    [self.asGroup.mutableEntries.lastObject remove];
+  for(KPKEntry *entry in self.asGroup.mutableEntries.reverseObjectEnumerator) {
+    [entry remove];
   }
   [[self.undoManager prepareWithInvocationTarget:self] addToGroup:self.parent atIndex:self.index];
   NSAssert(nil == self.tree.mutableDeletedObjects[self.uuid], @"Node already registered as deleted!");
