@@ -30,7 +30,7 @@
 }
 
 - (instancetype)initWithNode:(KPKNode *)node {
-  self = [self initWithUUID:self.uuid date:[NSDate date]];
+  self = [self initWithUUID:node.uuid date:[NSDate date]];
   return self;
 }
 

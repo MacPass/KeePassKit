@@ -94,9 +94,13 @@
   
   XCTAssertEqual(self.tree.mutableDeletedObjects.count, 4);
   XCTAssertNotNil(self.tree.mutableDeletedObjects[groupAUUID]);
+  XCTAssertEqualObjects(groupAUUID,self.tree.mutableDeletedObjects[groupAUUID].uuid);
   XCTAssertNotNil(self.tree.mutableDeletedObjects[subgroupUUID]);
+  XCTAssertEqualObjects(subgroupUUID,self.tree.mutableDeletedObjects[subgroupUUID].uuid);
   XCTAssertNotNil(self.tree.mutableDeletedObjects[subentryUUID]);
+  XCTAssertEqualObjects(subentryUUID,self.tree.mutableDeletedObjects[subentryUUID].uuid);
   XCTAssertNotNil(self.tree.mutableDeletedObjects[subsubentryUUID]);
+  XCTAssertEqualObjects(subgroupUUID,self.tree.mutableDeletedObjects[subgroupUUID].uuid);
   
   XCTAssertEqual(self.tree.mutableDeletedNodes.count, 4);
   XCTAssertNotNil(self.tree.mutableDeletedNodes[groupAUUID]);
