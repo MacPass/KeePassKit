@@ -281,11 +281,11 @@
 }
 
 - (void)remove {
-  for(NSUInteger groupIndex = 0; groupIndex < self.asGroup.mutableGroups.count; groupIndex++) {
-    [self.asGroup.mutableGroups[groupIndex] remove];
+  while(self.asGroup.mutableGroups.count > 0) {
+    [self.asGroup.mutableGroups.lastObject remove];
   }
-  for(NSUInteger entryIndex = 0; entryIndex < self.asGroup.mutableEntries.count; entryIndex++) {
-    [self.asGroup.mutableEntries[entryIndex] remove];
+  while(self.asGroup.mutableEntries.count > 0) {
+    [self.asGroup.mutableEntries.lastObject remove];
   }
   [[self.undoManager prepareWithInvocationTarget:self] addToGroup:self.parent atIndex:self.index];
   NSAssert(nil == self.tree.mutableDeletedObjects[self.uuid], @"Node already registered as deleted!");
