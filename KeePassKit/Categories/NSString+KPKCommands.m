@@ -60,6 +60,10 @@ static NSString *const _KPKSpaceSaveGuard = @"{KPK_LITERAL_SPACE}";
 
 @interface KPKCommandCache : NSObject
 
+@property (nonatomic, strong) NSDictionary <NSString *, NSString *> *shortFormats;
+@property (nonatomic, strong) NSDictionary <NSString *, NSString *> *unsafeShortFormats;
+@property (nonatomic, strong) NSArray <NSString *> *valueCommands;
+
 + (instancetype)sharedCache;
 
 @end
@@ -102,7 +106,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   return shortFormats;
 }
 /**
- *  Short formats that contain modifier and cannot have to be considered spearately when replacing modifer
+ *  Short formats that contain modifier and have to be considered spearately when replacing modifer
  */
 - (NSDictionary *)unsafeShortFormats {
   static NSDictionary *unsafeShortFormats;
@@ -189,7 +193,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     [matchingIndices addIndex:result.range.location];
   }];
   /* Enumerate the indices backwards, to not invalidate them by replacing strings */
-  NSDictionary *unsafeShortFormats = [self unsafeShortFormats];
+  NSDictionary *unsafeShortFormats = self.unsafeShortFormats;
   [matchingIndices enumerateIndexesInRange:NSMakeRange(0, command.length) options:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *stop) {
     NSString *shortFormatKey = [mutableCommand substringWithRange:NSMakeRange(idx, 1)];
     [mutableCommand replaceCharactersInRange:NSMakeRange(idx, 1) withString:unsafeShortFormats[shortFormatKey]];
@@ -207,21 +211,35 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
    {VKEY-EX X}
    */
   /* TODO: - not matched */
-  NSString *valueMatch = [[NSString alloc] initWithFormat:@"\\{((s:)?[a-z]+|\\%@|\\%@|%@|\\%@)\\ ([0-9]*)\\}", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
-  NSRegularExpression *valueRegExp = [[NSRegularExpression alloc] initWithPattern:valueMatch options:NSRegularExpressionCaseInsensitive error:0];
+  
+  /*
+   \\{(s:)?(.+?)\\ ?([0-9]*)\\}
+   
+   0 - full
+   1 - customPrefix
+   2 - command
+   3 - number
+   */
+  NSRegularExpression *valueRegExp = [[NSRegularExpression alloc] initWithPattern:@"\\{(s:)?(.+?)\\ ?([0-9]*)\\}" options:NSRegularExpressionCaseInsensitive error:0];
   NSAssert(valueRegExp, @"Repeater RegExp should be corret!");
   NSMutableDictionary __block *repeaterValues = [[NSMutableDictionary alloc] init];
   [valueRegExp enumerateMatchesInString:mutableCommand options:0 range:NSMakeRange(0, mutableCommand.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
     @autoreleasepool {
       NSString *key = [mutableCommand substringWithRange:result.range];
-      NSString *command = [mutableCommand substringWithRange:[result rangeAtIndex:1]];
+      NSString *command = [result rangeAtIndex:2].location != NSNotFound ? [mutableCommand substringWithRange:[result rangeAtIndex:2]] : nil;
       NSString *value = [mutableCommand substringWithRange:[result rangeAtIndex:3]];
-      BOOL isCustomPlaceholder = ([result rangeAtIndex:2].location != NSNotFound);
-      BOOL isValueCommand = [[self valueCommands] containsObject:command.uppercaseString];
-      if(isCustomPlaceholder || isValueCommand) {
+      
+      BOOL isCustomPlaceholder = ([result rangeAtIndex:1].location != NSNotFound);
+      BOOL isValueCommand = [self.valueCommands containsObject:command.uppercaseString];
+      if(isValueCommand || isCustomPlaceholder) {
         /* Spaces need to be masked to be replaced to actual spaces again */
-        repeaterValues[key] = [NSString stringWithFormat:@"{%@%@%@}", command, _KPKSpaceSaveGuard, value];
-        return; // Value-Commands is schould not be repeated
+        repeaterValues[key] = [key stringByReplacingOccurrencesOfString:@" " withString:_KPKSpaceSaveGuard];
+        return; // Repeat for Value-Commands and Custom-Key Placeholder is not supported
+      }
+      
+      if(value.length == 0) {
+        /* no value, skip*/
+        return;
       }
       NSScanner *numberScanner = [[NSScanner alloc] initWithString:value];
       NSInteger repeatCounter = 0;
@@ -244,7 +262,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   
   /* TODO replace {+},{-},{^},{%} */
   
-  NSDictionary *shortFormats = [self shortFormats];
+  NSDictionary *shortFormats = self.shortFormats;
   for(NSString *needle in shortFormats) {
     NSString *replace = shortFormats[needle];
     [mutableCommand replaceOccurrencesOfString:needle withString:replace options:NSCaseInsensitiveSearch range:NSMakeRange(0, mutableCommand.length)];
