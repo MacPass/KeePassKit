@@ -21,12 +21,18 @@
 }
 
 - (void)testSimpleNormalization {
-  XCTAssertTrue([@"Whoo %{%}{^}{SHIFT}+ {SPACE}{ENTER}^V%V~T".kpk_normalizedAutotypeSequence isEqualToString:@"Whoo{SPACE}{ALT}{PERCENT}{CARET}{SHIFT}{SHIFT}{SPACE}{SPACE}{ENTER}{CONTROL}V{ALT}V{ENTER}T"]);
+  XCTAssertEqualObjects(@"Whoo %{%}{^}{SHIFT}+ {SPACE}{ENTER}^V%V~T".kpk_normalizedAutotypeSequence, @"Whoo{SPACE}{ALT}{PERCENT}{CARET}{SHIFT}{SHIFT}{SPACE}{SPACE}{ENTER}{CONTROL}V{ALT}V{ENTER}T");
 }
 
 - (void)testCommandRepetition {
-  XCTAssertTrue([@"Whoo %{% 2}{^}{SHIFT 5}+ {SPACE}{ENTER}^V%V~T".kpk_normalizedAutotypeSequence isEqualToString:@"Whoo{SPACE}{ALT}{PERCENT}{PERCENT}{CARET}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SPACE}{SPACE}{ENTER}{CONTROL}V{ALT}V{ENTER}T"]);
-  XCTAssertTrue([@"{TAB 5}TAB{TAB}{SHIFT}{SHIFT 10}ENTER{ENTER}{%%}".kpk_normalizedAutotypeSequence isEqualToString:@"{TAB}{TAB}{TAB}{TAB}{TAB}TAB{TAB}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}ENTER{ENTER}{%%}"]);
+  XCTAssertEqualObjects(@"Whoo %{% 2}{^}{SHIFT 5}+ {SPACE}{ENTER}^V%V~T".kpk_normalizedAutotypeSequence, @"Whoo{SPACE}{ALT}{PERCENT}{PERCENT}{CARET}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SPACE}{SPACE}{ENTER}{CONTROL}V{ALT}V{ENTER}T");
+  XCTAssertEqualObjects(@"{TAB 5}TAB{TAB}{SHIFT}{SHIFT 10}ENTER{ENTER}{%%}".kpk_normalizedAutotypeSequence, @"{TAB}{TAB}{TAB}{TAB}{TAB}TAB{TAB}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}{SHIFT}ENTER{ENTER}{%%}");
+}
+
+- (void)testComplexCommandNormalization {
+  NSString *sequence = [NSString stringWithFormat:@"{TAB 2}{s:1}{s: 1}{%@ 10}{%@ 10}{%@ 10}{%@ 10}", kKPKAutotypeVirtualKey, kKPKAutotypeVirtualExtendedKey, kKPKAutotypeVirtualNonExtendedKey, kKPKAutotypeDelay];
+  NSString *result = [NSString stringWithFormat:@"{TAB}{TAB}{s:1}{s: 1}{%@ 10}{%@ 10}{%@ 10}{%@ 10}", kKPKAutotypeVirtualKey, kKPKAutotypeVirtualExtendedKey, kKPKAutotypeVirtualNonExtendedKey, kKPKAutotypeDelay];
+  XCTAssertEqualObjects(sequence.kpk_normalizedAutotypeSequence, result);
 }
 
 - (void)testeBracketValidation {
@@ -60,13 +66,21 @@
   KPKEntry *entry = [[KPKEntry alloc] init];
   [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@"Key A" value:@"Value A"]];
   [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@"key A" value:@"value A"]];
+  [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@" key A" value:@" value A"]];
+  [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@" 1" value:@" value 1"]];
   
-  NSString *sequence1 = [NSString stringWithFormat:@"{S:%@}", entry.customAttributes[0].key].kpk_normalizedAutotypeSequence;
-  XCTAssertEqualObjects([sequence1 kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[0].value);
+  NSString *sequence = [NSString stringWithFormat:@"{S:%@}", entry.customAttributes[0].key].kpk_normalizedAutotypeSequence;
+  XCTAssertEqualObjects([sequence kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[0].value);
 
+  sequence = [NSString stringWithFormat:@"{S:%@}", entry.customAttributes[1].key].kpk_normalizedAutotypeSequence;
+  XCTAssertEqualObjects([sequence kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[1].value);
   
-  NSString *sequence2 = [NSString stringWithFormat:@"{S:%@}", entry.customAttributes[1].key].kpk_normalizedAutotypeSequence;
-  XCTAssertEqualObjects([sequence2 kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[1].value);
+  sequence = [NSString stringWithFormat:@"{S:%@}", entry.customAttributes[2].key].kpk_normalizedAutotypeSequence;
+  XCTAssertEqualObjects([sequence kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[2].value);
+  
+  sequence = [NSString stringWithFormat:@"{S:%@}", entry.customAttributes[3].key].kpk_normalizedAutotypeSequence;
+  XCTAssertEqualObjects([sequence kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[3].value);
+
 }
 
 @end
