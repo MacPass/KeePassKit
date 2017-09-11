@@ -257,7 +257,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }];
   
   for(NSString *needle in repeaterValues) {
-    [mutableCommand replaceOccurrencesOfString:needle withString:repeaterValues[needle] options:NSCaseInsensitiveSearch range:NSMakeRange(0, mutableCommand.length)];
+    [mutableCommand replaceOccurrencesOfString:needle withString:repeaterValues[needle] options:0 range:NSMakeRange(0, mutableCommand.length)];
   }
 
   

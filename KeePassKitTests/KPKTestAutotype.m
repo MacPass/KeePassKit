@@ -68,23 +68,19 @@
 
 - (void)testCustomFieldPlaceholder {
   KPKEntry *entry = [[KPKEntry alloc] init];
-  [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@"Key A" value:@"Value A"]];
-  [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@"key A" value:@"value A"]];
-  [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@" key A" value:@" value A"]];
-  [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@" 1" value:@" value 1"]];
+  KPKAttribute *camelCase = [[KPKAttribute alloc] initWithKey:@"Key A" value:@"Value A"];
+  KPKAttribute *lowerCase = [[KPKAttribute alloc] initWithKey:@"key A" value:@"value A"];
+  KPKAttribute *spacedLetter = [[KPKAttribute alloc] initWithKey:@" key A" value:@" value A"];
+  KPKAttribute *spacedNumber = [[KPKAttribute alloc] initWithKey:@" 1" value:@" value 1"];
+  [entry addCustomAttribute:camelCase];
+  [entry addCustomAttribute:lowerCase];
+  [entry addCustomAttribute:spacedLetter];
+  [entry addCustomAttribute:spacedNumber];
   
-  NSString *sequence = [NSString stringWithFormat:@"{s:%@}", entry.customAttributes[0].key].kpk_normalizedAutotypeSequence;
-  XCTAssertEqualObjects([sequence kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[0].value);
-
-  sequence = [NSString stringWithFormat:@"{S:%@}", entry.customAttributes[1].key].kpk_normalizedAutotypeSequence;
-  XCTAssertEqualObjects([sequence kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[1].value);
-  
-  sequence = [NSString stringWithFormat:@"{s:%@}", entry.customAttributes[2].key].kpk_normalizedAutotypeSequence;
-  XCTAssertEqualObjects([sequence kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[2].value);
-  
-  sequence = [NSString stringWithFormat:@"{S:%@}", entry.customAttributes[3].key].kpk_normalizedAutotypeSequence;
-  XCTAssertEqualObjects([sequence kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[3].value);
-
+  NSString *sequence = [NSString stringWithFormat:@"{s:%@}{s:%@}{S:%@}{S:%@}", camelCase.key, lowerCase.key, spacedLetter.key, spacedNumber.key];
+  XCTAssertEqualObjects(sequence, sequence.kpk_normalizedAutotypeSequence);
+  NSString *result = [NSString stringWithFormat:@"%@%@%@%@", camelCase.value, lowerCase.value, spacedLetter.value, spacedNumber.value];
+  XCTAssertEqualObjects([sequence kpk_evaluatePlaceholderWithEntry:entry], result);
 }
 
 @end
