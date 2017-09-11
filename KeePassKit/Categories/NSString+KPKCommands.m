@@ -38,7 +38,7 @@ static NSString *const _KPKSpaceSaveGuard = @"{KPK_LITERAL_SPACE}";
  */
 @interface KPKCommandCacheEntry : NSObject
 
-@property (strong) NSDate *lastUsed;
+@property (assign) CFAbsoluteTime lastUsed; // -[NSDate timeIntervealSinceReferenceDate];
 @property (copy) NSString *command;
 
 - (instancetype)initWithCommand:(NSString *)command;
@@ -50,7 +50,7 @@ static NSString *const _KPKSpaceSaveGuard = @"{KPK_LITERAL_SPACE}";
 - (instancetype)initWithCommand:(NSString *)command {
   self = [super init];
   if(self) {
-    _lastUsed = [NSDate date];
+    _lastUsed = CFAbsoluteTimeGetCurrent();
     _command = [command copy];
   }
   return self;
@@ -150,7 +150,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
       __block NSMutableArray *keysToRemove = [[NSMutableArray alloc] init];
       [cache enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         KPKCommandCacheEntry *entry = obj;
-        if((entry.lastUsed).timeIntervalSinceNow > kMPCacheLifeTime) {
+        if((CFAbsoluteTimeGetCurrent() - entry.lastUsed) > kMPCacheLifeTime) {
           [keysToRemove addObject:key];
         }
       }];
@@ -160,7 +160,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }
   else {
     /* Update the cahce date since we hit it */
-    cacheHit.lastUsed = [NSDate date];
+    cacheHit.lastUsed = CFAbsoluteTimeGetCurrent();
   }
   return cacheHit.command;
 }
