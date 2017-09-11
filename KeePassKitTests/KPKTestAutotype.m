@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "KeePassKit.h"
+#import "KeePassKit_Private.h"
 
 @interface KPKTestAutotype : XCTestCase
 @end
@@ -53,6 +54,19 @@
 }
 
 - (void)testKDBAutotypeExport {
+}
+
+- (void)testCustomFieldPlaceholder {
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@"Key A" value:@"Value A"]];
+  [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@"key A" value:@"value A"]];
+  
+  NSString *sequence1 = [NSString stringWithFormat:@"{S:%@}", entry.customAttributes[0].key].kpk_normalizedAutotypeSequence;
+  XCTAssertEqualObjects([sequence1 kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[0].value);
+
+  
+  NSString *sequence2 = [NSString stringWithFormat:@"{S:%@}", entry.customAttributes[1].key].kpk_normalizedAutotypeSequence;
+  XCTAssertEqualObjects([sequence2 kpk_evaluatePlaceholderWithEntry:entry], entry.customAttributes[1].value);
 }
 
 @end
