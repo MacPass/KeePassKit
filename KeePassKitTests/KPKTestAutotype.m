@@ -35,6 +35,18 @@
   XCTAssertTrue(@"{}{}{}{}{}{      }ThisIsValid{}{STOP}".kpk_validCommand);
 }
 
+
+- (void)testCommandCachePerformance {
+  NSString *command = @"MyCustomCommand";
+  [self measureBlock:^{
+    NSUInteger count = 1000000;
+    while(count--) {
+      NSString *hit = command.kpk_normalizedAutotypeSequence;
+    }
+  }];
+}
+
+
 - (void)testKDBAutotypeImport {
   NSString *string = @"Auto-Type: {USERNAME}{TAB}{PASSWORD}{ENTER}\nAuto-Type-Window: Some Dialog - *\nAuto-Type-1: {USERNAME}{ENTER}\nAuto-Type-Window-1: * - Editor\nAuto-Type-Window-1: * - Notepad\nAuto-Type-Window-1: * - WordPad\nAuto-Type-2: {PASSWORD}{ENTER}\nAuto-Type-Window-2: Some Web Page - *";
   KPKAutotype *autotype = [KPKAutotype autotypeFromNotes:string];
