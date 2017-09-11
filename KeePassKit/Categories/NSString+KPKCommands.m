@@ -220,17 +220,18 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
    2 - command
    3 - number
    */
-  NSRegularExpression *valueRegExp = [[NSRegularExpression alloc] initWithPattern:@"\\{(s:)?(.+?)\\ ?([0-9]*)\\}" options:NSRegularExpressionCaseInsensitive error:0];
+  NSRegularExpression *valueRegExp = [[NSRegularExpression alloc] initWithPattern:@"\\{(s:)?(.+?)(:?\\ ([0-9]*))?\\}" options:NSRegularExpressionCaseInsensitive error:0];
   NSAssert(valueRegExp, @"Repeater RegExp should be corret!");
   NSMutableDictionary __block *repeaterValues = [[NSMutableDictionary alloc] init];
   [valueRegExp enumerateMatchesInString:mutableCommand options:0 range:NSMakeRange(0, mutableCommand.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
     @autoreleasepool {
       NSString *key = [mutableCommand substringWithRange:result.range];
       NSString *command = [result rangeAtIndex:2].location != NSNotFound ? [mutableCommand substringWithRange:[result rangeAtIndex:2]] : nil;
-      NSString *value = [mutableCommand substringWithRange:[result rangeAtIndex:3]];
+      NSString *value = [result rangeAtIndex:3].location != NSNotFound ? [mutableCommand substringWithRange:[result rangeAtIndex:3]] : nil;
       
       BOOL isCustomPlaceholder = ([result rangeAtIndex:1].location != NSNotFound);
       BOOL isValueCommand = [self.valueCommands containsObject:command.uppercaseString];
+      /* TODO Function and Numpad*/
       if(isValueCommand || isCustomPlaceholder) {
         /* Spaces need to be masked to be replaced to actual spaces again */
         repeaterValues[key] = [key stringByReplacingOccurrencesOfString:@" " withString:_KPKSpaceSaveGuard];
