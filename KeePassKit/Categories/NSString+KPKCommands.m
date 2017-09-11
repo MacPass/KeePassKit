@@ -207,11 +207,11 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
    {VKEY-EX X}
    */
   /* TODO: - not matched */
-  NSString *repeaterMatch = [[NSString alloc] initWithFormat:@"\\{((s:)?[a-z]+|\\%@|\\%@|%@|\\%@)\\ ([0-9]*)\\}", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
-  NSRegularExpression *repeaterRegExp = [[NSRegularExpression alloc] initWithPattern:repeaterMatch options:NSRegularExpressionCaseInsensitive error:0];
-  NSAssert(repeaterRegExp, @"Repeater RegExp should be corret!");
+  NSString *valueMatch = [[NSString alloc] initWithFormat:@"\\{((s:)?[a-z]+|\\%@|\\%@|%@|\\%@)\\ ([0-9]*)\\}", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
+  NSRegularExpression *valueRegExp = [[NSRegularExpression alloc] initWithPattern:valueMatch options:NSRegularExpressionCaseInsensitive error:0];
+  NSAssert(valueRegExp, @"Repeater RegExp should be corret!");
   NSMutableDictionary __block *repeaterValues = [[NSMutableDictionary alloc] init];
-  [repeaterRegExp enumerateMatchesInString:mutableCommand options:0 range:NSMakeRange(0, mutableCommand.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+  [valueRegExp enumerateMatchesInString:mutableCommand options:0 range:NSMakeRange(0, mutableCommand.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
     @autoreleasepool {
       NSString *key = [mutableCommand substringWithRange:result.range];
       NSString *command = [mutableCommand substringWithRange:[result rangeAtIndex:1]];
@@ -221,7 +221,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
       if(isCustomPlaceholder || isValueCommand) {
         /* Spaces need to be masked to be replaced to actual spaces again */
         repeaterValues[key] = [NSString stringWithFormat:@"{%@%@%@}", command, _KPKSpaceSaveGuard, value];
-        return; // Commands is schould not be repeated
+        return; // Value-Commands is schould not be repeated
       }
       NSScanner *numberScanner = [[NSScanner alloc] initWithString:value];
       NSInteger repeatCounter = 0;
