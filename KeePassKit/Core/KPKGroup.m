@@ -629,7 +629,8 @@ static NSSet *_observedKeyPathsSet;
 }
 
 - (void)_clear:(BOOL)keepGroup {
-  for(KPKGroup *group in self.mutableGroups) {
+  /* enumarte backwards to be able to mutate array */
+  for(KPKGroup *group in self.mutableGroups.reverseObjectEnumerator) {
     [group _clear:NO];
   }
   for(KPKEntry *entry in self.entries) {
