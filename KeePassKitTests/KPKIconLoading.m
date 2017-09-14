@@ -46,14 +46,19 @@
   //XCTAssertEqualObjects(pngData, _imageData, @"Image and PNG data shoudl be identical");
 }
 
+- (void)testPDFLoading {
+  KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.pdf"]];
+  XCTAssertEqual(icon.image.representations.count,1);
+}
+
 - (void)testIcnsLoading {
   KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.icns"]];
-  //icon.image.size
+  XCTAssertEqual(icon.image.representations.count,1);
 }
 
 - (void)testIcoLoading {
   KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.ico"]];
-  //icon.image.size
+  XCTAssertEqual(icon.image.representations.count,1);
 }
 
 - (NSURL *)urlForImageResource:(NSString *)imageName {

@@ -15,18 +15,6 @@
     return nil;
   }
   
-  NSBitmapImageRep *rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
-                                                                  pixelsWide:newSize.width
-                                                                  pixelsHigh:newSize.height
-                                                               bitsPerSample:8
-                                                             samplesPerPixel:4
-                                                                    hasAlpha:YES
-                                                                    isPlanar:NO
-                                                              colorSpaceName:NSCalibratedRGBColorSpace
-                                                                 bytesPerRow:0
-                                                                bitsPerPixel:0];
-  rep.size = newSize;
-  
   NSImageRep *fittingRep = [sourceImage bestRepresentationForRect:NSMakeRect(0, 0, newSize.width, newSize.height) context:nil hints:nil];
   NSSize sourceSize = NSMakeSize(fittingRep.pixelsWide, fittingRep.pixelsHigh);
   
@@ -39,6 +27,18 @@
     NSAssert(sourceImage.representations.count == 1, @"Resizing should leave only one representation!");
     return sourceImage; // image is exactly the size we want it to be.
   }
+  
+  NSBitmapImageRep *rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
+                                                                  pixelsWide:newSize.width
+                                                                  pixelsHigh:newSize.height
+                                                               bitsPerSample:8
+                                                             samplesPerPixel:4
+                                                                    hasAlpha:YES
+                                                                    isPlanar:NO
+                                                              colorSpaceName:NSCalibratedRGBColorSpace
+                                                                 bytesPerRow:0
+                                                                bitsPerPixel:0];
+  rep.size = newSize;
   
   [NSGraphicsContext saveGraphicsState];
   [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:rep]];

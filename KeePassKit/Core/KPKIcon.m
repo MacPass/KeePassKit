@@ -27,7 +27,6 @@
 
 @interface KPKIcon ()
 @property (nonatomic, strong) NSUUID *uuid;
-@property (nonatomic, strong) NSUIImage *image;
 
 @end
 
@@ -64,7 +63,10 @@
     _image = image;
 #else
     _image = [NSUIImage kpk_resizedImage:image toPixelDimensions:NSMakeSize(256, 256)];
-    _image = [[NSUIImage alloc] initWithData:self.pngData];
+    NSData *pngData = self.pngData;
+    if(pngData) {
+      _image = [[NSUIImage alloc] initWithData:pngData];
+    }
 #endif
     
   }
