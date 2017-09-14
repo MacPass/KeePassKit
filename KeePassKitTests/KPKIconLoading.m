@@ -46,4 +46,19 @@
   //XCTAssertEqualObjects(pngData, _imageData, @"Image and PNG data shoudl be identical");
 }
 
+- (void)testIcnsLoading {
+  KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.icns"]];
+  //icon.image.size
+}
+
+- (void)testIcoLoading {
+  KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.ico"]];
+  //icon.image.size
+}
+
+- (NSURL *)urlForImageResource:(NSString *)imageName {
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
+  return [myBundle URLForImageResource:imageName];
+}
+
 @end

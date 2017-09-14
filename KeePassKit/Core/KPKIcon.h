@@ -25,8 +25,8 @@
 
 @interface KPKIcon : NSObject <NSCopying, NSSecureCoding>
 
-@property (nonatomic, strong) NSUUID *uuid;
-@property (nonatomic, strong) NSUIImage *image;
+@property (nonatomic, readonly, strong) NSUUID *uuid;
+@property (nonatomic, readonly, strong) NSUIImage *image;
 @property (nonatomic, readonly) NSData *pngData;
 @property (nonatomic, readonly) NSString *encodedString;
 

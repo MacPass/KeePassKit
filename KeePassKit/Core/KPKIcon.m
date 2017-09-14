@@ -21,6 +21,15 @@
 //
 
 #import "KPKIcon.h"
+#if KPK_MAC
+#import "NSImage+KPKAdditions.h"
+#endif
+
+@interface KPKIcon ()
+@property (nonatomic, strong) NSUUID *uuid;
+@property (nonatomic, strong) NSUIImage *image;
+
+@end
 
 @implementation KPKIcon
 
@@ -45,8 +54,13 @@
 - (instancetype)initWithImageAtURL:(NSURL *)imageLocation {
   self = [self init];
   if(self) {
-    _image = [[NSUIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageLocation]];    /* convert the Image to be in our PNG representation */
+#ifndef KPK_MAC
+    /* todo better support for other plattforms */
+    _image = [[NSUIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageLocation]];
+#else
+    _image = [NSUIImage resizedImage:[[NSUIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageLocation]] toPixelDimensions:NSMakeSize(256, 256)];
     _image = [[NSUIImage alloc] initWithData:self.pngData];
+#endif
   }
   return self;
 }
@@ -130,11 +144,16 @@
 
 - (NSData *)pngData {
 #if KPK_MAC
-  NSImageRep *imageRep = (self.image).representations.lastObject;
-  if([imageRep isKindOfClass:NSBitmapImageRep.class]) {
-    NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
-    return [bitmapRep representationUsingType:NSPNGFileType properties:@{}];
+  NSImageRep *bestRep = nil;
+  
+  for(NSImageRep *imageRep in self.image.representations.reverseObjectEnumerator) {
+    if([imageRep isKindOfClass:NSBitmapImageRep.class]) {
+      if(imageRep.pixelsWide > bestRep.pixelsWide || imageRep.pixelsHigh > bestRep.pixelsHigh) {
+        bestRep = imageRep;
+      }
+    }
   }
+  return [(NSBitmapImageRep *)bestRep representationUsingType:NSPNGFileType properties:@{}];
 #endif
   return nil;
 }

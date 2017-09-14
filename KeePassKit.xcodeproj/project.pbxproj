@@ -184,6 +184,10 @@
 		4C5D91E51D89519C00029558 /* KPKNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5D91E31D89519C00029558 /* KPKNumber.m */; };
 		4C5FFA911DCB5597004EF778 /* BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */; };
 		4C62F6251D1D77DE0031795C /* KPKAttribute_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C62F6231D1D77DE0031795C /* KPKAttribute_Private.h */; };
+		4C639E2A1F6A642500E6C5CD /* test.ico in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E291F6A642500E6C5CD /* test.ico */; };
+		4C639E2C1F6A644400E6C5CD /* test.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E2B1F6A644400E6C5CD /* test.icns */; };
+		4C639E551F6AC9AB00E6C5CD /* NSImage+KPKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C639E531F6AC9AB00E6C5CD /* NSImage+KPKAdditions.h */; };
+		4C639E561F6AC9AB00E6C5CD /* NSImage+KPKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C639E541F6AC9AB00E6C5CD /* NSImage+KPKAdditions.m */; };
 		4C6C6EFB1DDE231A0079C26D /* KPKTree+Synchronization.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6C6EF91DDE231A0079C26D /* KPKTree+Synchronization.m */; };
 		4C70F4551D92BF56003564E2 /* KPKTestVariantDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C70F4541D92BF56003564E2 /* KPKTestVariantDictionary.m */; };
 		4C71F1951E1EACA80060857C /* KPKTestSynchronization.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C71F1941E1EACA80060857C /* KPKTestSynchronization.m */; };
@@ -450,6 +454,10 @@
 		4C5D91E31D89519C00029558 /* KPKNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKNumber.m; sourceTree = "<group>"; };
 		4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = BinaryAttachments_test.kdbx; sourceTree = "<group>"; };
 		4C62F6231D1D77DE0031795C /* KPKAttribute_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKAttribute_Private.h; sourceTree = "<group>"; };
+		4C639E291F6A642500E6C5CD /* test.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = test.ico; sourceTree = "<group>"; };
+		4C639E2B1F6A644400E6C5CD /* test.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = test.icns; sourceTree = "<group>"; };
+		4C639E531F6AC9AB00E6C5CD /* NSImage+KPKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+KPKAdditions.h"; sourceTree = "<group>"; };
+		4C639E541F6AC9AB00E6C5CD /* NSImage+KPKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+KPKAdditions.m"; sourceTree = "<group>"; };
 		4C69DD561EB4705800194900 /* KPKScopedSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKScopedSet.h; sourceTree = "<group>"; };
 		4C6C6EF91DDE231A0079C26D /* KPKTree+Synchronization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KPKTree+Synchronization.m"; sourceTree = "<group>"; };
 		4C70F4541D92BF56003564E2 /* KPKTestVariantDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestVariantDictionary.m; sourceTree = "<group>"; };
@@ -841,6 +849,8 @@
 				4C4E23021D7DC10700E58983 /* NSDictionary+KPKVariant.m */,
 				4C7F84271DC8B6D2000B6EF7 /* NSData+KPKKeyComputation.h */,
 				4C7F84281DC8B6D2000B6EF7 /* NSData+KPKKeyComputation.m */,
+				4C639E531F6AC9AB00E6C5CD /* NSImage+KPKAdditions.h */,
+				4C639E541F6AC9AB00E6C5CD /* NSImage+KPKAdditions.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1002,6 +1012,8 @@
 		4C8138221BE282DC001BF195 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4C639E2B1F6A644400E6C5CD /* test.icns */,
+				4C639E291F6A642500E6C5CD /* test.ico */,
 				4C8138231BE282DC001BF195 /* image.png */,
 			);
 			path = Images;
@@ -1152,6 +1164,7 @@
 				4C5CF4211BE10E000019AA81 /* KPKTree_Private.h in Headers */,
 				4C5CF3DA1BE10DF80019AA81 /* NSString+KPKHexdata.h in Headers */,
 				4C5CF3C61BE10DF80019AA81 /* NSData+CommonCrypto.h in Headers */,
+				4C639E551F6AC9AB00E6C5CD /* NSImage+KPKAdditions.h in Headers */,
 				4C5CF4061BE10E000019AA81 /* KPKAutotype_Private.h in Headers */,
 				4C2ADBF11D7C649F002C3190 /* KPKUnarchiver.h in Headers */,
 				4C4FF1B81BE119E60015827B /* DDXMLElementAdditions.h in Headers */,
@@ -1274,12 +1287,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C8138281BE282DC001BF195 /* CustomIcon_Password_1234.xml in Resources */,
+				4C639E2A1F6A642500E6C5CD /* test.ico in Resources */,
 				4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */,
 				4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
 				4C199DA31DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx in Resources */,
 				4C8138291BE282DC001BF195 /* KDB1_KeePassX_test.kdb in Resources */,
 				4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
 				4C81382B1BE282DC001BF195 /* Test_Password_1234.kdb in Resources */,
+				4C639E2C1F6A644400E6C5CD /* test.icns in Resources */,
 				4C81382C1BE282DC001BF195 /* Test_Password_1234.kdbx in Resources */,
 				4C8138261BE282DC001BF195 /* Autotype_test.kdbx in Resources */,
 				4C81382A1BE282DC001BF195 /* KeePass1_native_test.kdb in Resources */,
@@ -1335,6 +1350,7 @@
 				4C5CF41C1BE10E000019AA81 /* KPKNode.m in Sources */,
 				4C2ADBF21D7C649F002C3190 /* KPKUnarchiver.m in Sources */,
 				4CBE26341EC595D200B93BE2 /* KPKPair.m in Sources */,
+				4C639E561F6AC9AB00E6C5CD /* NSImage+KPKAdditions.m in Sources */,
 				4C6C6EFB1DDE231A0079C26D /* KPKTree+Synchronization.m in Sources */,
 				4C5CF4261BE10E000019AA81 /* KPKWindowAssociation.m in Sources */,
 				4C5D91E51D89519C00029558 /* KPKNumber.m in Sources */,
