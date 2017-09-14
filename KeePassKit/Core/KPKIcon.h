@@ -32,7 +32,8 @@
 
 - (instancetype)initWithImageAtURL:(NSURL *)imageLocation;
 - (instancetype)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString;
-- (instancetype)initWithData:(NSData *)data;
+- (instancetype)initWithImageData:(NSData *)data;
+- (instancetype)initWithImage:(NSImage *)image;
 
 - (BOOL)isEqualToIcon:(KPKIcon *)icon;
 

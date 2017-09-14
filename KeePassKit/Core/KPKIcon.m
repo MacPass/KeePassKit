@@ -52,15 +52,21 @@
 }
 
 - (instancetype)initWithImageAtURL:(NSURL *)imageLocation {
+  self = [self initWithImage:[[NSUIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageLocation]]];
+  return self;
+}
+
+- (instancetype)initWithImage:(NSImage *)image {
   self = [self init];
   if(self) {
 #ifndef KPK_MAC
     /* todo better support for other plattforms */
-    _image = [[NSUIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageLocation]];
+    _image = image;
 #else
-    _image = [NSUIImage kpk_resizedImage:[[NSUIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageLocation]] toPixelDimensions:NSMakeSize(256, 256)];
+    _image = [NSUIImage kpk_resizedImage:image toPixelDimensions:NSMakeSize(256, 256)];
     _image = [[NSUIImage alloc] initWithData:self.pngData];
 #endif
+    
   }
   return self;
 }
@@ -74,7 +80,7 @@
   return self;
 }
 
-- (instancetype)initWithData:(NSData *)data {
+- (instancetype)initWithImageData:(NSData *)data {
   self = [self init];
   if(self) {
     self.image =[[NSUIImage alloc] initWithData:data];

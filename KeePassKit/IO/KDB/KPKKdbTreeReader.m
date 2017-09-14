@@ -675,7 +675,7 @@
     if(dataReader.readableBytes < iconDataSize) {
       return NO; // Data is truncated
     }
-    KPKIcon *icon = [[KPKIcon alloc] initWithData:[dataReader readDataWithLength:iconDataSize]];
+    KPKIcon *icon = [[KPKIcon alloc] initWithImageData:[dataReader readDataWithLength:iconDataSize]];
     [metaData addCustomIcon:icon];
     [iconUUIDs addObject:icon.uuid];
   }
