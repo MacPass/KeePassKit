@@ -10,4 +10,6 @@
 
 @interface NSImage (KPKAdditions)
 
++ (NSImage *)resizedImage:(NSImage *)sourceImage toPixelDimensions:(NSSize)newSize;
+
 @end
