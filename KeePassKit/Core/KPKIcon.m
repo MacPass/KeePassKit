@@ -58,7 +58,7 @@
     /* todo better support for other plattforms */
     _image = [[NSUIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageLocation]];
 #else
-    _image = [NSUIImage resizedImage:[[NSUIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageLocation]] toPixelDimensions:NSMakeSize(256, 256)];
+    _image = [NSUIImage kpk_resizedImage:[[NSUIImage alloc] initWithData:[NSData dataWithContentsOfURL:imageLocation]] toPixelDimensions:NSMakeSize(256, 256)];
     _image = [[NSUIImage alloc] initWithData:self.pngData];
 #endif
   }
