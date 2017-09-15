@@ -26,7 +26,7 @@
   
   if(![bestRep isKindOfClass:[NSBitmapImageRep class]]) {
     NSSize renderSize = NSMakeSize(256, 256);
-    NSBitmapImageRep *bestRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
+    bestRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
                                                                     pixelsWide:renderSize.width
                                                                     pixelsHigh:renderSize.height
                                                                  bitsPerSample:8
@@ -39,7 +39,7 @@
     bestRep.size = renderSize;
     
     [NSGraphicsContext saveGraphicsState];
-    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:bestRep]];
+    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:(NSBitmapImageRep *)bestRep]];
     [self drawInRect:NSMakeRect(0, 0, renderSize.width, renderSize.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
     [NSGraphicsContext restoreGraphicsState];
   }
