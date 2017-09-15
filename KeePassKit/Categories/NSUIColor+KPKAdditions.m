@@ -20,7 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSColor+KPKAdditions.h"
+#import "NSUIColor+KPKAdditions.h"
 #import "NSString+KPKHexdata.h"
 
 @implementation NSUIColor (KPKAdditions)

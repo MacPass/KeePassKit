@@ -34,7 +34,7 @@
   XCTAssertNotNil(icon, @"Icon should have been loaded");
   
   NSString *iconString = icon.encodedString;
-  KPKIcon *iconFromString = [[KPKIcon alloc] initWithUUID:[NSUUID UUID] encodedString:iconString];
+  //KPKIcon *iconFromString = [[KPKIcon alloc] initWithUUID:[NSUUID UUID] encodedString:iconString];
   //XCTAssertEqualObjects(iconString, iconFromString.encodedString, @"Encoding and Decoding should result in the same string");
  
   NSImageRep *imageRep = icon.image.representations.lastObject;
@@ -43,7 +43,7 @@
   
   NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
   NSData *pngData = [bitmapRep representationUsingType:NSPNGFileType properties:@{}];
-  //XCTAssertEqualObjects(pngData, _imageData, @"Image and PNG data shoudl be identical");
+  XCTAssertEqualObjects(pngData, _imageData, @"Image and PNG data shoudl be identical");
 }
 
 - (void)testPDFLoading {
@@ -53,12 +53,12 @@
 
 - (void)testIcnsLoading {
   KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.icns"]];
-  XCTAssertEqual(icon.image.representations.count,1);
+  XCTAssertEqual(icon.image.representations.count,10);
 }
 
 - (void)testIcoLoading {
   KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.ico"]];
-  XCTAssertEqual(icon.image.representations.count,1);
+  XCTAssertEqual(icon.image.representations.count,5);
 }
 
 - (NSURL *)urlForImageResource:(NSString *)imageName {

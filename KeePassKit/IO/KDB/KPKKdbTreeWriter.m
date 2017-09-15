@@ -39,7 +39,8 @@
 #import "NSString+KPKEmpty.h"
 #import "NSData+KPKRandom.h"
 #import "NSDate+KPKPacked.h"
-#import "NSColor+KPKAdditions.h"
+#import "NSUIColor+KPKAdditions.h"
+#import "NSUIImage+KPKAdditions.h"
 
 #import "NSUUID+KPKAdditions.h"
 
@@ -292,9 +293,11 @@
   
   
   for(KPKIcon *icon in icons) {
-    NSData *pngData = icon.pngData;
-    [dataWriter write4Bytes:(uint32_t)pngData.length];
-    [dataWriter writeData:pngData];
+    NSData *pngData = icon.image.kpk_pngData;
+    if(pngData) {
+      [dataWriter write4Bytes:(uint32_t)pngData.length];
+      [dataWriter writeData:pngData];
+    }
   }
   
   for(KPKEntry *entry in _iconEntries) {

@@ -6,10 +6,10 @@
 //  Copyright © 2017 HicknHack Software GmbH. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import "KPKPlatformIncludes.h"
 
-@interface NSImage (KPKAdditions)
+@interface NSUIImage (KPKAdditions)
 
-+ (NSImage *)kpk_resizedImage:(NSImage *)sourceImage toPixelDimensions:(NSSize)newSize;
+@property (readonly, copy) NSData *kpk_pngData;
 
 @end

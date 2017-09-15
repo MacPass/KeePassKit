@@ -45,7 +45,7 @@
 #import "KPKAutotype.h"
 #import "KPKWindowAssociation.h"
 
-#import "NSColor+KPKAdditions.h"
+#import "NSUIColor+KPKAdditions.h"
 #import "NSString+KPKXmlUtilities.h"
 
 #import "KPKRandomStream.h"

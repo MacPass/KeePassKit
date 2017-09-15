@@ -21,9 +21,7 @@
 //
 
 #import "KPKIcon.h"
-#if KPK_MAC
-#import "NSImage+KPKAdditions.h"
-#endif
+#import "NSUIImage+KPKAdditions.h"
 
 @interface KPKIcon ()
 @property (nonatomic, strong) NSUUID *uuid;
@@ -33,7 +31,6 @@
 @implementation KPKIcon
 
 /* Prevent autosynthesizeis on derrived properties */
-@dynamic pngData;
 @dynamic encodedString;
 
 + (BOOL)supportsSecureCoding {
@@ -55,20 +52,10 @@
   return self;
 }
 
-- (instancetype)initWithImage:(NSImage *)image {
+- (instancetype)initWithImage:(NSUIImage *)image {
   self = [self init];
   if(self) {
-#ifndef KPK_MAC
-    /* todo better support for other plattforms */
     _image = image;
-#else
-    _image = [NSUIImage kpk_resizedImage:image toPixelDimensions:NSMakeSize(256, 256)];
-    NSData *pngData = self.pngData;
-    if(pngData) {
-      _image = [[NSUIImage alloc] initWithData:pngData];
-    }
-#endif
-    
   }
   return self;
 }
@@ -95,8 +82,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [[KPKIcon alloc] init];
   if(self) {
-    NSData *imageData = [aDecoder decodeObjectOfClass:NSData.class forKey:NSStringFromSelector(@selector(image))];
-    _image = [[NSUIImage alloc] initWithData:imageData];
+    _image = [aDecoder decodeObjectOfClass:NSImage.class forKey:NSStringFromSelector(@selector(image))];
     _uuid = [aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(uuid))];
   }
   return self;
@@ -104,7 +90,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   if([aCoder isKindOfClass:NSKeyedArchiver.class]) {
-    [aCoder encodeObject:self.pngData forKey:NSStringFromSelector(@selector(image))];
+    [aCoder encodeObject:self.image forKey:NSStringFromSelector(@selector(image))];
     [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
   }
 }
@@ -115,10 +101,11 @@
   KPKIcon *copy = [[KPKIcon alloc] init];
 #if KPK_MAC
   copy.image = [self.image copyWithZone:zone];
+  copy.uuid = [self.uuid copyWithZone:zone];
 #else
   copy.image = [self.image copy];
+  copy.uuid = [self.uuid copy];
 #endif
-  copy.uuid = [self.uuid copyWithZone:zone];
   return copy;
 }
 
@@ -147,23 +134,7 @@
 }
 
 - (NSString *)encodedString {
-  return [self.pngData base64EncodedStringWithOptions:0];
-}
-
-- (NSData *)pngData {
-#if KPK_MAC
-  NSImageRep *bestRep = nil;
-  
-  for(NSImageRep *imageRep in self.image.representations.reverseObjectEnumerator) {
-    if([imageRep isKindOfClass:NSBitmapImageRep.class]) {
-      if(imageRep.pixelsWide > bestRep.pixelsWide || imageRep.pixelsHigh > bestRep.pixelsHigh) {
-        bestRep = imageRep;
-      }
-    }
-  }
-  return [(NSBitmapImageRep *)bestRep representationUsingType:NSPNGFileType properties:@{}];
-#endif
-  return nil;
+  return [self.image.kpk_pngData base64EncodedStringWithOptions:0];
 }
 
 #pragma mark Private

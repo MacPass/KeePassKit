@@ -54,7 +54,7 @@
 
 #import "NSData+CommonCrypto.h"
 #import "NSUUID+KPKAdditions.h"
-#import "NSColor+KPKAdditions.h"
+#import "NSUIColor+KPKAdditions.h"
 
 @interface KPKXmlTreeReader ()
 

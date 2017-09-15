@@ -43,7 +43,7 @@
 
 #import "NSDate+KPKPacked.h"
 #import "NSUUID+KPKAdditions.h"
-#import "NSColor+KPKAdditions.h"
+#import "NSUIColor+KPKAdditions.h"
 
 @interface KPKKdbTreeReader () {
   NSData *_data;
