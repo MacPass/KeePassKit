@@ -43,7 +43,7 @@
     [self drawInRect:NSMakeRect(0, 0, renderSize.width, renderSize.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
     [NSGraphicsContext restoreGraphicsState];
   }
-  return [(NSBitmapImageRep *)bestRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
+  return [(NSBitmapImageRep *)bestRep representationUsingType:NSPNGFileType properties:@{}];
 #else
   NSAssert(NO, @"Property not implemented on this plattform!");
   return nil; // TODO: Add UIKit compatible getter

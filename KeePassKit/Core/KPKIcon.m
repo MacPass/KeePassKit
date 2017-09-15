@@ -101,11 +101,10 @@
   KPKIcon *copy = [[KPKIcon alloc] init];
 #if KPK_MAC
   copy.image = [self.image copyWithZone:zone];
-  copy.uuid = [self.uuid copyWithZone:zone];
 #else
-  copy.image = [self.image copy];
-  copy.uuid = [self.uuid copy];
+  copy.image = self.image;
 #endif
+  copy.uuid = [self.uuid copyWithZone:zone];
   return copy;
 }
 
