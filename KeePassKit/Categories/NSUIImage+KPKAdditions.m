@@ -26,6 +26,13 @@
   
   if(![bestRep isKindOfClass:[NSBitmapImageRep class]]) {
     NSSize renderSize = NSMakeSize(256, 256);
+    CGFloat aspect = bestRep.size.width / bestRep.size.height;
+    if(aspect > 1) {
+      renderSize.height = (renderSize.width / aspect);
+    }
+    else {
+      renderSize.width = (renderSize.height / aspect);
+    }
     bestRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
                                                                     pixelsWide:renderSize.width
                                                                     pixelsHigh:renderSize.height
