@@ -49,6 +49,8 @@
 - (void)testPDFLoading {
   KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.pdf"]];
   XCTAssertEqual(icon.image.representations.count,1);
+  NSData *pngData = icon.image.kpk_pngData;
+  XCTAssertNotNil(pngData);
 }
 
 - (void)testIcnsLoading {
