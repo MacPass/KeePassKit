@@ -254,6 +254,7 @@
 		4CD607AE1DFAAECE00C815E5 /* KPKPlatformIncludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CDA35721EB88621003CD59F /* KPKScopedSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C69DD561EB4705800194900 /* KPKScopedSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CDDF04C1F6BAF980047F1C7 /* NSUIImage+KPKAdditions.m in Headers */ = {isa = PBXBuildFile; fileRef = 4C639E541F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.m */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CE082C01F6D111C0034FF56 /* aspect.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4CE082BF1F6D111C0034FF56 /* aspect.pdf */; };
 		4CE471EE1E08327D00AA3D81 /* KPKTestKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE471ED1E08327D00AA3D81 /* KPKTestKVO.m */; };
 		4CE94DD11F69885E00EE9A5A /* KPKTestTrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE94DD01F69885E00EE9A5A /* KPKTestTrash.m */; };
 		4CE95AE61E97BC330019BBDC /* KPKData.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CE95AE41E97BC330019BBDC /* KPKData.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -526,6 +527,7 @@
 		4CCB50AB1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestWindowAssociationTitleMatching.m; sourceTree = "<group>"; };
 		4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestNodeForUUID.m; sourceTree = "<group>"; };
 		4CCE00C51D78598800B8D50A /* KPKTimeInfo_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKTimeInfo_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4CE082BF1F6D111C0034FF56 /* aspect.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = aspect.pdf; sourceTree = "<group>"; };
 		4CE471ED1E08327D00AA3D81 /* KPKTestKVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestKVO.m; sourceTree = "<group>"; };
 		4CE94DD01F69885E00EE9A5A /* KPKTestTrash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestTrash.m; sourceTree = "<group>"; };
 		4CE95AE41E97BC330019BBDC /* KPKData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKData.h; sourceTree = "<group>"; };
@@ -1015,6 +1017,7 @@
 		4C8138221BE282DC001BF195 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4CE082BF1F6D111C0034FF56 /* aspect.pdf */,
 				4C639E571F6AE81600E6C5CD /* test.pdf */,
 				4C639E2B1F6A644400E6C5CD /* test.icns */,
 				4C639E291F6A642500E6C5CD /* test.ico */,
@@ -1293,6 +1296,7 @@
 			files = (
 				4C8138281BE282DC001BF195 /* CustomIcon_Password_1234.xml in Resources */,
 				4C639E2A1F6A642500E6C5CD /* test.ico in Resources */,
+				4CE082C01F6D111C0034FF56 /* aspect.pdf in Resources */,
 				4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */,
 				4C639E581F6AE81600E6C5CD /* test.pdf in Resources */,
 				4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
