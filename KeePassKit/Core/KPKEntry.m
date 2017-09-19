@@ -588,26 +588,31 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)setTitle:(NSString *)title {
   [[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_TITLE", @"KPKLocalizable", @"")];
   [self _setValue:title forAttributeWithKey:kKPKTitleKey];
 }
 
 - (void)setUsername:(NSString *)username {
   [[self.undoManager prepareWithInvocationTarget:self] setUsername:self.username];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_USERNAME", @"KPKLocalizable", @"")];
   [self _setValue:username forAttributeWithKey:kKPKUsernameKey];
 }
 
 - (void)setPassword:(NSString *)password {
   [[self.undoManager prepareWithInvocationTarget:self] setPassword:self.password];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_PASSWORD", @"KPKLocalizable", @"")];
   [self _setValue:password forAttributeWithKey:kKPKPasswordKey];
 }
 
 - (void)setNotes:(NSString *)notes {
   [[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_NOTES", @"KPKLocalizable", @"")];
   [self _setValue:notes forAttributeWithKey:kKPKNotesKey];
 }
 
 - (void)setUrl:(NSString *)url {
   [[self.undoManager prepareWithInvocationTarget:self] setUrl:self.url];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_URL", @"KPKLocalizable", @"")];
   [self _setValue:url forAttributeWithKey:kKPKURLKey];
 }
 
