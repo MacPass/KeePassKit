@@ -142,6 +142,8 @@
   if(self.value != value) {
     if(!self.isDefault) {
       [(KPKAttribute *)[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
+      NSString *template = NSLocalizedStringFromTable(@"SET_CUSTOM_ATTTRIBUTE_%@", @"KPKLocalizable", @"");
+      [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key ]];
     }
     [self.entry touchModified];
     [self _encodeValue:value];
