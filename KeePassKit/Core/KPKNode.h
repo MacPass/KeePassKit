@@ -60,9 +60,10 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, copy) NSString *notes;
 @property(nonatomic, copy) NSDictionary<NSString *, NSString *> *customData;
 
-@property(nonatomic, copy, readonly) KPKTimeInfo *timeInfo;
+@property(nonatomic, readonly, copy) KPKTimeInfo *timeInfo;
 
-@property(nonatomic, weak, readonly) KPKGroup *parent;
+@property(nonatomic, readonly, weak) KPKGroup *parent;
+@property(nonatomic, readonly, weak) KPKTree *tree;
 
 @property(nonatomic, readonly) NSUndoManager *undoManager;
 
