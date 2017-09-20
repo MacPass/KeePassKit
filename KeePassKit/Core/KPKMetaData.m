@@ -250,6 +250,8 @@ if( self.updateTiming ) { \
 }
 
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index {
+  [[self.tree.undoManager prepareWithInvocationTarget:self] removeCustomIcon:icon];
+  [self.tree.undoManager setActionName:NSLocalizedStringFromTable(@"ADD_CUSTOM_ATTRIBUTE", @"KPKLocalizable", @"")];
   index = MIN(_mutableCustomIcons.count, index);
   [self insertObject:icon inMutableCustomIconsAtIndex:index];
 }
@@ -257,6 +259,8 @@ if( self.updateTiming ) { \
 - (void)removeCustomIcon:(KPKIcon *)icon {
   NSUInteger index = [_mutableCustomIcons indexOfObject:icon];
   if(index != NSNotFound) {
+    [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
+    [self.tree.undoManager setActionName:NSLocalizedStringFromTable(@"DELETE_CUSTOM_ATTRIBUTE", @"KPKLocalizable", @"")];
     [self removeObjectFromMutableCustomIconsAtIndex:index];
   }
 }

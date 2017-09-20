@@ -58,10 +58,10 @@
 - (instancetype)init {
   self = [super init];
   if(self) {
-    _metaData = [[KPKMetaData alloc] init];
     _mutableDeletedObjects = [[NSMutableDictionary alloc] init];
     _mutableDeletedNodes = [[NSMutableDictionary alloc] init];
     _tagsMap = [[NSMutableDictionary alloc] init];
+    self.metaData = [[KPKMetaData alloc] init]; // use setter!
   }
   return self;
 }
@@ -162,6 +162,11 @@
     return [self.delegate shouldEditTree:self];
   }
   return YES;
+}
+
+- (void)setMetaData:(KPKMetaData *)metaData {
+  _metaData = metaData;
+  self.metaData.tree = self;
 }
 
 - (KPKGroup *)trash {
