@@ -255,6 +255,13 @@ if( self.updateTiming ) { \
   [self.tree.undoManager setActionName:NSLocalizedStringFromTable(@"ADD_CUSTOM_ICON", @"KPKLocalizable", @"")];
   index = MIN(_mutableCustomIcons.count, index);
   [self insertObject:icon inMutableCustomIconsAtIndex:index];
+  /* trigger a change notification although to encourage reavaluation*/
+  [self.tree.root _traverseNodesWithBlock:^(KPKNode *node) {
+    if([node.iconUUID isEqual:icon.uuid]) {
+      [node willChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
+      [node didChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
+    }
+  }];
 }
 
 - (void)removeCustomIcon:(KPKIcon *)icon {
@@ -263,9 +270,9 @@ if( self.updateTiming ) { \
     [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
     [self.tree.undoManager setActionName:NSLocalizedStringFromTable(@"DELETE_CUSTOM_ICON", @"KPKLocalizable", @"")];
     [self removeObjectFromMutableCustomIconsAtIndex:index];
+    /* trigger a change notification although to encourage reavaluation*/
     [self.tree.root _traverseNodesWithBlock:^(KPKNode *node) {
       if([node.iconUUID isEqual:icon.uuid]) {
-        /* trigger a change notification although to encourage reavaluation*/
         [node willChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
         [node didChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
       }
