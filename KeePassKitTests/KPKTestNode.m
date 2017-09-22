@@ -34,8 +34,9 @@
     [[[KPKGroup alloc] init] addToGroup:group];
     group = group.groups.firstObject;
   }
-  XCTAssertEqualObjects(root, root.rootGroup, @"Root group of root is root group itself!");
-  XCTAssertEqualObjects(root, group.rootGroup, @"Root group of leaf group is root itself!");
+  /* Pointer have to match, not just equality! */
+  XCTAssertEqual(root, root.rootGroup, @"Root group of root is root group itself!");
+  XCTAssertEqual(root, group.rootGroup, @"Root group of leaf group is root itself!");
 }
 
 @end

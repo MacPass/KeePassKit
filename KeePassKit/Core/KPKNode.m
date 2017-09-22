@@ -187,14 +187,10 @@
 }
 
 - (KPKGroup *)rootGroup {
-  KPKGroup *rootGroup = self.parent;
-  if(!rootGroup) {
-    return self.asGroup;
+  if(!self.parent) {
+    return self;
   }
-  while(rootGroup.parent) {
-    rootGroup = rootGroup.parent;
-  }
-  return rootGroup;
+  return self.parent.rootGroup;
 }
 
 - (BOOL)isAnchestorOf:(KPKNode *)node {
