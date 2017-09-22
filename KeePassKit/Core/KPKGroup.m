@@ -432,19 +432,29 @@ static NSSet *_observedKeyPathsSet;
 #pragma mark -
 #pragma mark Accessors
 - (NSArray *)childEntries {
-  NSMutableArray *childEntries = [NSMutableArray arrayWithArray:self.mutableEntries];
+  NSMutableArray *entries = [[NSMutableArray alloc] init];
+  [self _collectChildEntries:entries];
+  return entries;
+}
+
+- (void)_collectChildEntries:(NSMutableArray *)entries {
+  [entries addObjectsFromArray:self.mutableEntries];
   for(KPKGroup *group in self.mutableGroups) {
-    [childEntries addObjectsFromArray:group.childEntries];
+    [group _collectChildEntries:entries];
   }
-  return childEntries;
 }
 
 - (NSArray *)childGroups {
-  NSMutableArray *childGroups = [NSMutableArray arrayWithArray:self.mutableGroups];
+  NSMutableArray *groups = [[NSMutableArray alloc] init];
+  [self _collectChildGroups:groups];
+  return groups;
+}
+
+- (void)_collectChildGroups:(NSMutableArray *)groups {
+  [groups addObjectsFromArray:self.mutableGroups];
   for(KPKGroup *group in self.mutableGroups) {
-    [childGroups addObjectsFromArray:group.childGroups];
+    [group _collectChildGroups:groups];
   }
-  return childGroups;
 }
 
 - (KPKGroup *)asGroup {

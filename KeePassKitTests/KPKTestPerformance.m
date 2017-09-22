@@ -12,6 +12,8 @@
 #import "KeePassKit_Private.h"
 
 NSUInteger const _kKPKEntryCount = 1000;
+NSUInteger const _kKPKItemCount = 100;
+NSUInteger const _kKPKTreeDepth = 100;
 
 @interface KPKTestPerformance : XCTestCase {
   KPKEntry *testEntry;
@@ -35,8 +37,8 @@ NSUInteger const _kKPKEntryCount = 1000;
   
   tree = [[KPKTree alloc] init];
   tree.root = [[KPKGroup alloc] init];
-  NSUInteger depth = 100;
-  [self _add:100 ofItemsToGroup:tree.root depth:&depth];
+  NSUInteger depth = _kKPKTreeDepth;
+  [self _add:_kKPKItemCount ofItemsToGroup:tree.root depth:&depth];
 }
 
 - (void)_add:(NSUInteger)number ofItemsToGroup:(KPKGroup *)root depth:(NSUInteger *)depth{
@@ -99,6 +101,14 @@ NSUInteger const _kKPKEntryCount = 1000;
   [self measureBlock:^{
     NSArray <KPKEntry *> *entries = tree.allEntries;
   }];
+}
+
+- (void)testAllGroupsRetrieval {
+  XCTAssertEqual(tree.allGroups.count, _kKPKItemCount * _kKPKTreeDepth);
+}
+
+- (void)testAllEntriesRetrieval {
+  XCTAssertEqual(tree.allEntries.count, _kKPKItemCount * _kKPKTreeDepth);
 }
 
 - (void)testAllGroupsRetirevalByCopyPerformance {
