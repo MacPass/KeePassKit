@@ -26,6 +26,7 @@
 #import "KPKKdbxFormat.h"
 #import "KPKIcon.h"
 #import "KPKTree.h"
+#import "KPKNode_Private.h"
 #import "KPKGroup.h"
 #import "KPKAESCipher.h"
 #import "KPKAESKeyDerivation.h"
@@ -251,7 +252,7 @@ if( self.updateTiming ) { \
 
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index {
   [[self.tree.undoManager prepareWithInvocationTarget:self] removeCustomIcon:icon];
-  [self.tree.undoManager setActionName:NSLocalizedStringFromTable(@"ADD_CUSTOM_ATTRIBUTE", @"KPKLocalizable", @"")];
+  [self.tree.undoManager setActionName:NSLocalizedStringFromTable(@"ADD_CUSTOM_ICON", @"KPKLocalizable", @"")];
   index = MIN(_mutableCustomIcons.count, index);
   [self insertObject:icon inMutableCustomIconsAtIndex:index];
 }
@@ -260,8 +261,13 @@ if( self.updateTiming ) { \
   NSUInteger index = [_mutableCustomIcons indexOfObject:icon];
   if(index != NSNotFound) {
     [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
-    [self.tree.undoManager setActionName:NSLocalizedStringFromTable(@"DELETE_CUSTOM_ATTRIBUTE", @"KPKLocalizable", @"")];
+    [self.tree.undoManager setActionName:NSLocalizedStringFromTable(@"DELETE_CUSTOM_ICON", @"KPKLocalizable", @"")];
     [self removeObjectFromMutableCustomIconsAtIndex:index];
+    [self.tree.root _traverseNodesWithBlock:^(KPKNode *node) {
+      if([node.iconUUID isEqual:icon.uuid]) {
+        node.iconUUID = nil;
+      }
+    }];
   }
 }
 

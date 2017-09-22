@@ -48,6 +48,10 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {
 
 - (void)_regenerateUUIDs;
 
+#pragma mark Traversal
+
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *node))block;
+
 #pragma mark Copy Helper
 /**
  *  Creates a deep copy of the Node.

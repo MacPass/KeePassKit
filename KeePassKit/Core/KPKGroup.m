@@ -283,6 +283,16 @@ static NSSet *_observedKeyPathsSet;
   return didChange;
 }
 
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block {
+  [super _traverseNodesWithBlock:block];
+  for(KPKGroup *group in self.mutableGroups) {
+    [group _traverseNodesWithBlock:block];
+  }
+  for(KPKEntry *entry in self.mutableEntries) {
+    [entry _traverseNodesWithBlock:block];
+  }
+}
+
 #pragma mark Strucural Helper
 - (void)_updateParents {
   for(KPKGroup *childGroup in self.mutableGroups) {

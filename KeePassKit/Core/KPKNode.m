@@ -446,6 +446,12 @@
   _uuid = [[[NSUUID alloc] init] copy];
 }
 
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *node))block {
+  if(block) {
+    block(self);
+  }
+}
+
 - (void)addCustomDataObject:(KPKPair *)pair {
   NSAssert(pair.key, @"Custom data key cannot be nil!");
   NSAssert(pair.value, @"Custom data value cannot be nil!");

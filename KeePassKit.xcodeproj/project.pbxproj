@@ -41,6 +41,7 @@
 		4C11184F1DCCD93F00254E1D /* twofish.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C11184D1DCCD93F00254E1D /* twofish.h */; };
 		4C15091D1C74AD10008A2C8E /* KPKMetaData_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */; };
 		4C152C5E1C7617D900380A3B /* KPKGroup_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */; };
+		4C188B731F74F49500B77D6E /* KPKTextUndoCustomIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C188B721F74F49500B77D6E /* KPKTextUndoCustomIcons.m */; };
 		4C199DA11DCF310D00D4FDC8 /* TwofishCipher256bit_test.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C199DA01DCF310D00D4FDC8 /* TwofishCipher256bit_test.kdb */; };
 		4C199DA31DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C199DA21DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx */; };
 		4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */; };
@@ -310,6 +311,7 @@
 		4C11184D1DCCD93F00254E1D /* twofish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = twofish.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKMetaData_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKGroup_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4C188B721F74F49500B77D6E /* KPKTextUndoCustomIcons.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTextUndoCustomIcons.m; sourceTree = "<group>"; };
 		4C199DA01DCF310D00D4FDC8 /* TwofishCipher256bit_test.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; name = TwofishCipher256bit_test.kdb; path = Kdb/TwofishCipher256bit_test.kdb; sourceTree = "<group>"; };
 		4C199DA21DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; name = TwoFishCipher256bit_test.kdbx; path = Kdbx3/TwoFishCipher256bit_test.kdbx; sourceTree = "<group>"; };
 		4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AutotypeCustomKeystrokeSequence_1234.xml; path = Kdbx3/AutotypeCustomKeystrokeSequence_1234.xml; sourceTree = "<group>"; };
@@ -798,6 +800,7 @@
 				4C5CF4A11BE10F090019AA81 /* KPKTestPlaceholder.m */,
 				4C5CF4A21BE10F090019AA81 /* KPKTestReference.m */,
 				4C5CF4A31BE10F090019AA81 /* KPKTestUndo.m */,
+				4C188B721F74F49500B77D6E /* KPKTextUndoCustomIcons.m */,
 				4C9466221D78923A00F70457 /* KPKTestUndoTimeInfo.m */,
 				4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */,
 				4C5CF4A41BE10F090019AA81 /* KPKTestUUIDAdditions.m */,
@@ -1462,6 +1465,7 @@
 				4C5CF4AD1BE10F090019AA81 /* KPKTestHexColor.m in Sources */,
 				4CFAE3711D88537C007B57DB /* KPKTestKPKNumber.m in Sources */,
 				4CF7E8A61DCA4B4700BB652F /* KPKTestKeyComputation.m in Sources */,
+				4C188B731F74F49500B77D6E /* KPKTextUndoCustomIcons.m in Sources */,
 				4CCB50AC1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m in Sources */,
 				4C44988F1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m in Sources */,
 				4C5CF4BC1BE10F090019AA81 /* KPKTextXMLUtilities.m in Sources */,
