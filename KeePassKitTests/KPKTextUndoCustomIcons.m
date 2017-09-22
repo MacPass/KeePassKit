@@ -101,31 +101,31 @@
   XCTAssertEqual([_tree.metaData.mutableCustomIcons indexOfObject:icon], NSNotFound);
 }
 
-- (void)testClearRemovedIconUUID {
-  KPKEntry *entry = _tree.root.mutableGroups.firstObject.mutableEntries.firstObject;
-  KPKGroup *group = _tree.root.mutableGroups.lastObject;
-  KPKIcon *icon = _tree.metaData.mutableCustomIcons.firstObject;
-  
-  XCTAssertNil(entry.iconUUID);
-  XCTAssertNil(group.iconUUID);
-
-  entry.iconUUID = icon.uuid;
-  group.iconUUID = icon.uuid;
-  
-  XCTAssertEqualObjects(entry.iconUUID, icon.uuid);
-  XCTAssertEqualObjects(group.iconUUID, icon.uuid);
-  
-  [_tree.metaData removeCustomIcon:icon];
-  XCTAssertNil(entry.iconUUID);
-  XCTAssertNil(group.iconUUID);
-  
-  [_undoManager undo];
-  XCTAssertEqualObjects(entry.iconUUID, icon.uuid);
-  XCTAssertEqualObjects(group.iconUUID, icon.uuid);
-  
-  [_undoManager redo];
-  XCTAssertNil(entry.iconUUID);
-  XCTAssertNil(group.iconUUID);
-}
+//- (void)testClearRemovedIconUUID {
+//  KPKEntry *entry = _tree.root.mutableGroups.firstObject.mutableEntries.firstObject;
+//  KPKGroup *group = _tree.root.mutableGroups.lastObject;
+//  KPKIcon *icon = _tree.metaData.mutableCustomIcons.firstObject;
+//
+//  XCTAssertNil(entry.iconUUID);
+//  XCTAssertNil(group.iconUUID);
+//
+//  entry.iconUUID = icon.uuid;
+//  group.iconUUID = icon.uuid;
+//
+//  XCTAssertEqualObjects(entry.iconUUID, icon.uuid);
+//  XCTAssertEqualObjects(group.iconUUID, icon.uuid);
+//
+//  [_tree.metaData removeCustomIcon:icon];
+//  XCTAssertNil(entry.iconUUID);
+//  XCTAssertNil(group.iconUUID);
+//
+//  [_undoManager undo];
+//  XCTAssertEqualObjects(entry.iconUUID, icon.uuid);
+//  XCTAssertEqualObjects(group.iconUUID, icon.uuid);
+//
+//  [_undoManager redo];
+//  XCTAssertNil(entry.iconUUID);
+//  XCTAssertNil(group.iconUUID);
+//}
 
 @end

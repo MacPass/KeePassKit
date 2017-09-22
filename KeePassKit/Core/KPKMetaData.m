@@ -265,7 +265,9 @@ if( self.updateTiming ) { \
     [self removeObjectFromMutableCustomIconsAtIndex:index];
     [self.tree.root _traverseNodesWithBlock:^(KPKNode *node) {
       if([node.iconUUID isEqual:icon.uuid]) {
-        node.iconUUID = nil;
+        /* trigger a change notification although to encourage reavaluation*/
+        [node willChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
+        [node didChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
       }
     }];
   }
