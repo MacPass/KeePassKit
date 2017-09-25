@@ -188,7 +188,7 @@
 
 - (KPKGroup *)rootGroup {
   if(!self.parent) {
-    return self;
+    return self.asGroup;
   }
   return self.parent.rootGroup;
 }
