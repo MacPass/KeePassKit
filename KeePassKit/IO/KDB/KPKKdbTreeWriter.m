@@ -271,9 +271,10 @@
    struct KPXGroupIconInfo groupIcon[groupCount];
    };
    */
-  NSMutableArray *_iconEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,self.entries.count)];
+  NSArray <KPKEntry *> *entries = self.tree.allEntries;
+  NSMutableArray *_iconEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,entries.count)];
   NSMutableArray *_iconGroups = [[NSMutableArray alloc] initWithCapacity:MAX(1,self.groups.count)];
-  for(KPKNode *node in self.entries) {
+  for(KPKNode *node in entries) {
     if(node.iconUUID) {
       [_iconEntries addObject:node];
     }
