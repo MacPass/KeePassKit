@@ -21,12 +21,8 @@
 //
 
 #import "KPKIcon.h"
+#import "KPKIcon_Private.h"
 #import "NSUIImage+KPKAdditions.h"
-
-@interface KPKIcon ()
-@property (nonatomic, strong) NSUUID *uuid;
-
-@end
 
 @implementation KPKIcon
 
@@ -60,20 +56,22 @@
   return self;
 }
 
-- (instancetype)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString {
+- (instancetype)initWithUUID:(NSUUID *)uuid imageData:(NSData *)data {
   self = [self init];
   if(self) {
     _uuid = uuid;
-    _image = [self _decodeString:encodedString];
+    _image =[[NSUIImage alloc] initWithData:data];
   }
   return self;
 }
 
+- (instancetype)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString {
+  self = [self initWithUUID:uuid imageData:[self _decodeString:encodedString]];
+  return self;
+}
+
 - (instancetype)initWithImageData:(NSData *)data {
-  self = [self init];
-  if(self) {
-    self.image =[[NSUIImage alloc] initWithData:data];
-  }
+  self = [self initWithUUID:nil imageData:data];
   return self;
 }
 

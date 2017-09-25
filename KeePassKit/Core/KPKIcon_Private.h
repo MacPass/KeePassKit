@@ -9,5 +9,5 @@
 #import <KeePassKit/KeePassKit.h>
 
 @interface KPKIcon ()
-
+@property (nonatomic, strong) NSUUID *uuid;
 @end
