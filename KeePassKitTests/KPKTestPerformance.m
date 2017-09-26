@@ -140,6 +140,39 @@ NSUInteger const _kKPKTreeDepth = 100;
   }];
 }
 
+- (void)testKDBSeralizationPerformance {
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  [self measureBlock:^{
+    NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:nil];
+  }];
+}
+
+- (void)testKDBDeseralizationPerformance {
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:nil];
+  [self measureBlock:^{
+    KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:nil];
+    XCTAssertNotNil(tree);
+  }];
+}
+
+
+
+- (void)testKDBXSerializationPerformance {
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  [self measureBlock:^{
+    NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
+  }];
+}
+
+- (void)testKDBXDeserializationPerformance {
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
+  [self measureBlock:^{
+    KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:nil];
+    XCTAssertNotNil(tree);
+  }];
+}
 
 
 
