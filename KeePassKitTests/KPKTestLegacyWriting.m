@@ -56,9 +56,13 @@
   XCTAssertNil(error);
   XCTAssertNotNil(loadedTree);
   XCTAssertEqual(loadedTree.metaData.mutableCustomIcons.count, 1);
-  XCTAssertEqualObjects(loadedTree.metaData.mutableCustomIcons.firstObject.uuid, icon.uuid);
+  KPKIcon *loadedIcon = loadedTree.metaData.mutableCustomIcons.firstObject;
+  XCTAssertNotNil(loadedIcon.uuid);
+  XCTAssertNotNil(loadedIcon.image);
   KPKEntry *loadedEntry = [loadedTree.root entryForUUID:entry.uuid];
   XCTAssertNotNil(loadedEntry);
+  XCTAssertNotNil(loadedEntry.iconUUID);
+  XCTAssertEqualObjects(loadedEntry.iconUUID, loadedIcon.uuid);
 }
 
 - (NSData *)_dataForFile:(NSString *)name extension:(NSString *)extension {

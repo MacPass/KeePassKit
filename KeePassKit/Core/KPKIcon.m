@@ -59,8 +59,10 @@
 - (instancetype)initWithUUID:(NSUUID *)uuid imageData:(NSData *)data {
   self = [self init];
   if(self) {
-    _uuid = uuid;
     _image =[[NSUIImage alloc] initWithData:data];
+    if(uuid) {
+      _uuid = uuid;
+    }
   }
   return self;
 }
@@ -136,9 +138,8 @@
 
 #pragma mark Private
 
-- (NSUIImage *)_decodeString:(NSString *)imageString {
-  NSData *data = [[NSData alloc] initWithBase64EncodedString:imageString options:NSDataBase64DecodingIgnoreUnknownCharacters];
-  return [[NSUIImage alloc] initWithData:data];
+- (NSData *)_decodeString:(NSString *)imageString {
+  return [[NSData alloc] initWithBase64EncodedString:imageString options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
 @end

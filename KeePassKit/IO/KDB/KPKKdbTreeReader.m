@@ -666,7 +666,6 @@
   uint32_t numberOfGroups = CFSwapInt32LittleToHost([dataReader read4Bytes]);
   
   /* Read Icons */
-  NSMutableArray *iconUUIDs = [[NSMutableArray alloc] initWithCapacity:MAX(1,numberOfIcons)];
   for(NSUInteger index = 0; index < numberOfIcons; index++) {
     if(dataReader.readableBytes < 4) {
       return NO; // Data is truncated
@@ -677,7 +676,6 @@
     }
     KPKIcon *icon = [[KPKIcon alloc] initWithImageData:[dataReader readDataWithLength:iconDataSize]];
     [metaData addCustomIcon:icon];
-    [iconUUIDs addObject:icon.uuid];
   }
   
   if(dataReader.readableBytes < (numberOfEntries * 20)) {
@@ -688,10 +686,10 @@
     NSUUID *entryUUID = [[NSUUID alloc] initWithData:[dataReader readDataWithLength:16]];
     uint32_t iconId = CFSwapInt32LittleToHost([dataReader read4Bytes]);
     KPKEntry *entry = [self _findEntryForUUID:entryUUID];
-    if(iconUUIDs.count <= iconId) {
+    if(metaData.mutableCustomIcons.count <= iconId) {
       return NO;
     }
-    entry.iconUUID = iconUUIDs[iconId];
+    entry.iconUUID = metaData.mutableCustomIcons[iconId].uuid;
   }
   if(dataReader.readableBytes < (numberOfGroups * 8)) {
     return NO; // Data truncated
@@ -701,11 +699,11 @@
     uint32_t groupId = CFSwapInt32LittleToHost([dataReader read4Bytes]);
     uint32_t groupIconId = CFSwapInt32LittleToHost([dataReader read4Bytes]);
     NSUUID *groupUUID = _groupIdToUUID[ @(groupId) ];
-    if( !groupUUID || groupIconId >= iconUUIDs.count) {
+    if( !groupUUID || groupIconId >= metaData.mutableCustomIcons.count) {
       return NO;
     }
     KPKGroup *group = [self _findGroupForUUID:groupUUID];
-    group.iconUUID = iconUUIDs[groupIconId];
+    group.iconUUID = metaData.mutableCustomIcons[groupIconId].uuid;
   }
   return YES;
 }
