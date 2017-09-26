@@ -476,7 +476,7 @@ typedef Twofish_UInt32  UInt32;
  * Somewhere, someday, this is going to save somebody a lot of time,
  * because misbehaving macros are hard to debug.
  */
-static void test_platform()
+static void test_platform(void)
 {
   /* Buffer with test values. */
   Byte buf[] = {0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0};
@@ -1228,7 +1228,7 @@ static int Twofish_initialised = 0;
  * This routine also does some sanity checks, to make sure that
  * all the macros behave, and it tests the whole cipher.
  */
-void Twofish_initialise()
+void Twofish_initialise(void)
 {
   /* First test the various platform-specific definitions. */
   test_platform();

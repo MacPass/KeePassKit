@@ -93,7 +93,7 @@ typedef struct {
  * If the Twofish_fatal function is not called, the code passed the test.
  * (See the twofish.c file for details on the Twofish_fatal function.)
  */
-extern void Twofish_initialise();
+extern void Twofish_initialise(void);
 
 
 /*
