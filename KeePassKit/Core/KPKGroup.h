@@ -28,6 +28,8 @@
 @class KPKEntry;
 
 FOUNDATION_EXPORT NSString *const KPKGroupUTI;
+FOUNDATION_EXPORT NSString *const KPKEntriesArrayBinding;
+FOUNDATION_EXPORT NSString *const KPKGroupArrayBinding;
 /**
  *  A group is like a folder in the database.
  *  It can hold subgroups as well as entries.
@@ -39,8 +41,8 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 @interface KPKGroup : KPKNode <NSSecureCoding, NSCopying>
 #endif
 
-@property(nonatomic, copy, readonly) NSArray<KPKGroup *> *groups;
-@property(nonatomic, copy, readonly) NSArray<KPKEntry *> *entries;
+@property(nonatomic, copy, readonly) NSArray<KPKGroup *> *groups; // if you need a performance oriented binding interface, use KPKGroupsArrayBinding
+@property(nonatomic, copy, readonly) NSArray<KPKEntry *> *entries; // if you need a performance oriented read only bindable interface, use KPKEntriesArrayBinding
 @property(nonatomic, copy, readonly) NSArray<KPKEntry *> *childEntries;
 @property(nonatomic, copy, readonly) NSArray<KPKGroup *> *childGroups;
 @property(nonatomic, copy, readonly) NSArray<KPKNode *> *children;

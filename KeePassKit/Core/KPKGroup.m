@@ -37,6 +37,9 @@
 #import "NSUUID+KPKAdditions.h"
 #import "KPKScopedSet.h"
 
+NSString *const KPKEntriesArrayBinding = @"entriesArray";
+NSString *const KPKGroupArrayBinding = @"groupsArray";
+
 @implementation KPKGroup
 
 static NSSet *_observedKeyPathsSet;
@@ -66,6 +69,14 @@ static NSSet *_observedKeyPathsSet;
 }
 
 + (NSSet<NSString *> *)keyPathsForValuesAffectingEntries {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingGroupsArray {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableGroups))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingEntriesArray {
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
 }
 
@@ -662,6 +673,30 @@ static NSSet *_observedKeyPathsSet;
 }
 #pragma mark -
 #pragma mark KVC
+- (NSUInteger)countOfGroupsArray {
+  return self.mutableGroups.count;
+}
+
+- (KPKGroup *)objectInGroupsAtIndex:(NSUInteger)index {
+  return self.mutableGroups[index];
+}
+
+- (void)getGroupsArray:(KPKGroup *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:(NSRange)inRange {
+  [self.mutableGroups getObjects:buffer range:inRange];
+}
+
+- (NSUInteger)countOfEntriesArray {
+  return self.mutableEntries.count;
+}
+
+- (KPKEntry *)objectInEntriesArrayAtIndex:(NSUInteger)index {
+  return self.mutableEntries[index];
+}
+
+- (void)getEntries:(KPKEntry *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:(NSRange)inRange {
+  [self.mutableEntries getObjects:(KPKEntry *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:inRange];
+}
+
 - (void)insertObject:(KPKEntry *)entry inMutableEntriesAtIndex:(NSUInteger)index {
   [_mutableEntries insertObject:entry atIndex:index];
 }
