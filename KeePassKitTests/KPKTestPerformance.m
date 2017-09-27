@@ -13,7 +13,7 @@
 
 NSUInteger const _kKPKAttributeCount = 1000;
 NSUInteger const _kKPKItemCount = 100;
-NSUInteger const _kKPKTreeDepth = 100;
+NSUInteger const _kKPKTreeDepth = 10;
 NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 @interface KPKTestPerformance : XCTestCase {
@@ -157,7 +157,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
     }];
   }];
 }
-/*
+
 - (void)testKDBSeralizationPerformance {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   [self measureBlock:^{
@@ -190,12 +190,18 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
   }];
 }
 
-*/
 
 - (void)testEntryEqualityPerformance {
   KPKEntry *lastEntry = entries.lastObject;
   [self measureBlock:^{
     XCTAssertNotEqual(NSNotFound, [entries indexOfObject:lastEntry]);
+  }];
+}
+
+- (void)testEntryIdentityPerformance {
+  KPKEntry *lastEntry = entries.lastObject;
+  [self measureBlock:^{
+    XCTAssertNotEqual(NSNotFound, [entries indexOfObjectIdenticalTo:lastEntry]);
   }];
 }
 
