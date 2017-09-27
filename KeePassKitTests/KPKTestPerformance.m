@@ -11,14 +11,20 @@
 #import "KeePassKit.h"
 #import "KeePassKit_Private.h"
 
-NSUInteger const _kKPKEntryCount = 1000;
+NSUInteger const _kKPKAttributeCount = 1000;
 NSUInteger const _kKPKItemCount = 100;
 NSUInteger const _kKPKTreeDepth = 100;
+NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 @interface KPKTestPerformance : XCTestCase {
   KPKEntry *testEntry;
   NSMutableDictionary *benchmarkDict;
   KPKTree *tree;
+  NSMutableArray<KPKEntry *> *entries;
+  NSMutableArray<KPKGroup *> *groups;
+  NSMutableArray<NSUUID *> *entryUUIDs;
+  NSMutableArray<NSUUID *> *groupUUIDs;
+
 }
 @end
 
@@ -28,7 +34,7 @@ NSUInteger const _kKPKTreeDepth = 100;
   [super setUp];
   testEntry = [[KPKEntry alloc] init];
   benchmarkDict = [[NSMutableDictionary alloc] init];
-  NSUInteger count = _kKPKEntryCount;
+  NSUInteger count = _kKPKAttributeCount;
   while(count-- > 0) {
     [testEntry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@(count).stringValue
                                                               value:@(count).stringValue]];
@@ -39,6 +45,18 @@ NSUInteger const _kKPKTreeDepth = 100;
   tree.root = [[KPKGroup alloc] init];
   NSUInteger depth = _kKPKTreeDepth;
   [self _add:_kKPKItemCount ofItemsToGroup:tree.root depth:&depth];
+  
+  entries = [[NSMutableArray alloc] initWithCapacity:_kKPKGroupAndEntryCount];
+  groups = [[NSMutableArray alloc] initWithCapacity:_kKPKGroupAndEntryCount];
+  entryUUIDs = [[NSMutableArray alloc] initWithCapacity:_kKPKGroupAndEntryCount];
+  groupUUIDs = [[NSMutableArray alloc] initWithCapacity:_kKPKGroupAndEntryCount];
+  count = _kKPKGroupAndEntryCount;
+  while(count-- > 0) {
+    [entries addObject:[[KPKEntry alloc] init]];
+    [entryUUIDs addObject:entries.lastObject.uuid];
+    [groups addObject:[[KPKGroup alloc] init]];
+    [groupUUIDs addObject:groups.lastObject.uuid];
+  }
 }
 
 - (void)_add:(NSUInteger)number ofItemsToGroup:(KPKGroup *)root depth:(NSUInteger *)depth{
@@ -74,12 +92,12 @@ NSUInteger const _kKPKTreeDepth = 100;
 
 - (void)testAttributeLookupPerformanceB {
   [self measureBlock:^{
-    id result = [testEntry customAttributeForKey:@(_kKPKEntryCount - 1).stringValue];
+    id result = [testEntry customAttributeForKey:@(_kKPKAttributeCount+ - 1).stringValue];
   }];
 }
 - (void)testDictLockupPerformanceB {
   [self measureBlock:^{
-    id result = benchmarkDict[@(_kKPKEntryCount - 1).stringValue];
+    id result = benchmarkDict[@(_kKPKAttributeCount - 1).stringValue];
   }];
 }
 
@@ -156,8 +174,6 @@ NSUInteger const _kKPKTreeDepth = 100;
   }];
 }
 
-
-
 - (void)testKDBXSerializationPerformance {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   [self measureBlock:^{
@@ -171,6 +187,32 @@ NSUInteger const _kKPKTreeDepth = 100;
   [self measureBlock:^{
     KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:nil];
     XCTAssertNotNil(tree);
+  }];
+}
+
+- (void)testEntryEqualityPerformance {
+  KPKEntry *lastEntry = entries.lastObject;
+  [self measureBlock:^{
+    XCTAssertNotEqual(NSNotFound, [entries indexOfObject:lastEntry]);
+  }];
+}
+
+- (void)testUUIDEqualityPerformanceA {
+  [self measureBlock:^{
+    XCTAssertNotEqual(NSNotFound, [entryUUIDs indexOfObject:entryUUIDs.lastObject]);
+  }];
+}
+
+- (void)testUUIDEqualityPerformanceB {
+  [self measureBlock:^{
+    XCTAssertNotEqual(NSNotFound, [groupUUIDs indexOfObject:groupUUIDs.lastObject]);
+  }];
+}
+
+- (void)testGroupEqualityPerformance {
+  KPKGroup *lastGroup = groups.lastObject;
+  [self measureBlock:^{
+    [groups indexOfObject:lastGroup];
   }];
 }
 
