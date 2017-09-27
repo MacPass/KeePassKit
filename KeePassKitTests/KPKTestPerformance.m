@@ -157,7 +157,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
     }];
   }];
 }
-
+/*
 - (void)testKDBSeralizationPerformance {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   [self measureBlock:^{
@@ -189,6 +189,8 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
     XCTAssertNotNil(tree);
   }];
 }
+
+*/
 
 - (void)testEntryEqualityPerformance {
   KPKEntry *lastEntry = entries.lastObject;
