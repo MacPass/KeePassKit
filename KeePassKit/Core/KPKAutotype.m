@@ -257,7 +257,7 @@
 }
 
 - (void)removeAssociation:(KPKWindowAssociation *)association {
-  NSUInteger index = [self.mutableAssociations indexOfObject:association];
+  NSUInteger index = [self.mutableAssociations indexOfObjectIdenticalTo:association];
   if(index != NSNotFound) {
     [[self.entry.undoManager prepareWithInvocationTarget:self] addAssociation:association atIndex:index];
     [self.entry touchModified];

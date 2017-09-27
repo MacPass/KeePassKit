@@ -347,7 +347,7 @@ static NSSet *_observedKeyPathsSet;
 #pragma mark -
 #pragma mark Properties
 - (NSUInteger)childIndex {
-  return [self.parent.mutableGroups indexOfObject:self];
+  return [self.parent.mutableGroups indexOfObjectIdenticalTo:self];
 }
 
 - (NSArray<KPKGroup *> *)groups {
@@ -486,19 +486,19 @@ static NSSet *_observedKeyPathsSet;
   
   if(group) {
     /* deleted objects should be registred, no undo registration */
-    [self removeObjectFromMutableGroupsAtIndex:[self.mutableGroups indexOfObject:group]];
+    [self removeObjectFromMutableGroupsAtIndex:[self.mutableGroups indexOfObjectIdenticalTo:group]];
   }
   else if(entry) {
-    [self removeObjectFromMutableEntriesAtIndex:[self.mutableEntries indexOfObject:entry]];
+    [self removeObjectFromMutableEntriesAtIndex:[self.mutableEntries indexOfObjectIdenticalTo:entry]];
   }
   node.parent = nil;
 }
 
 - (NSUInteger)_indexForNode:(KPKNode *)node {
   if(node.asGroup) {
-    return [self.mutableGroups indexOfObject:node.asGroup];
+    return [self.mutableGroups indexOfObjectIdenticalTo:node.asGroup];
   }
-  return [self.mutableEntries indexOfObject:node.asEntry];
+  return [self.mutableEntries indexOfObjectIdenticalTo:node.asEntry];
 }
 
 #pragma mark Seaching
@@ -631,7 +631,7 @@ static NSSet *_observedKeyPathsSet;
 
 - (NSIndexPath *)indexPath {
   if(self.parent) {
-    NSUInteger myIndex = [self.parent.groups indexOfObject:self];
+    NSUInteger myIndex = [self.parent.groups indexOfObjectIdenticalTo:self];
     NSIndexPath *parentIndexPath = [self.parent indexPath];
     NSAssert( nil != parentIndexPath, @"existing parents should always yield a indexPath");
     return [parentIndexPath indexPathByAddingIndex:myIndex];

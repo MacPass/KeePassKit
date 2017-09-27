@@ -305,7 +305,7 @@
     KPKIcon *entryIcon = [self.tree.metaData findIcon:entry.iconUUID];
     if(entryIcon) {
       [dataWriter writeData:entry.uuid.kpk_uuidData];
-      NSInteger index = [icons indexOfObject:entryIcon];
+      NSInteger index = [icons indexOfObjectIdenticalTo:entryIcon];
       NSAssert(index != NSNotFound, @"Icon cannot be missing");
       [dataWriter write4Bytes:(uint32_t)index];
     }
@@ -317,7 +317,7 @@
       uint32_t groupId = [self _groupIdForGroup:group];
       NSAssert(groupId != 0, @"Group has to have Id != 0");
       [dataWriter write4Bytes:groupId];
-      NSInteger index = [icons indexOfObject:groupIcon];
+      NSInteger index = [icons indexOfObjectIdenticalTo:groupIcon];
       NSAssert(index != NSNotFound, @"Icon cannot be missing");
       [dataWriter write4Bytes:(uint32_t)index];
     }
@@ -451,7 +451,7 @@
   if(nil == group) {
     return 0;
   }
-  NSUInteger groupId = [self.groups indexOfObject:group];
+  NSUInteger groupId = [self.groups indexOfObjectIdenticalTo:group];
   if(groupId == NSNotFound) {
     return 0;
   }

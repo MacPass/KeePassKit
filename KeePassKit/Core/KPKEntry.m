@@ -310,10 +310,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark Equality
 
 - (BOOL)isEqual:(id)object {
-  if(![super isEqual:object]) {
-    return NO;
+  if(self == object) {
+    return YES;
   }
-  if([object isKindOfClass:self.class]) {
+  if([object isKindOfClass:KPKEntry.class]) {
     return [self isEqualToEntry:object];
   }
   return NO;
@@ -656,7 +656,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
-  NSUInteger index = [self.mutableAttributes indexOfObject:attribute];
+  NSUInteger index = [self.mutableAttributes indexOfObjectIdenticalTo:attribute];
   if(NSNotFound != index) {
     [[self.undoManager prepareWithInvocationTarget:self] _addCustomAttribute:attribute atIndex:index];
     [self touchModified];
@@ -690,7 +690,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
    So we do not need to take care of cleanup after we did
    delete an attachment
    */
-  NSUInteger index = [self.mutableBinaries indexOfObject:binary];
+  NSUInteger index = [self.mutableBinaries indexOfObjectIdenticalTo:binary];
   if(index != NSNotFound) {
     [[self.undoManager prepareWithInvocationTarget:self] addBinary:binary];
     [self touchModified];
@@ -746,7 +746,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)removeHistoryEntry:(KPKEntry *)entry {
-  NSUInteger index = [self.mutableHistory indexOfObject:entry];
+  NSUInteger index = [self.mutableHistory indexOfObjectIdenticalTo:entry];
   if(index != NSNotFound) {
     [self removeObjectFromMutableHistoryAtIndex:index];
   }
@@ -826,7 +826,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   while(historyEntry = [enumerator nextObject]){
     historySize += historyEntry.estimatedByteSize;
     if(historySize > self.tree.metaData.historyMaxSize) {
-      removeIndex = [self.mutableHistory indexOfObject:historyEntry];
+      removeIndex = [self.mutableHistory indexOfObjectIdenticalTo:historyEntry];
       break;
     }
   }

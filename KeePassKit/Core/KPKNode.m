@@ -90,6 +90,9 @@
 }
 
 - (BOOL)isEqual:(id)object {
+  if(self == object) {
+    return YES;
+  }
   if(![self isKindOfClass:KPKNode.class]) {
     return NO;
   }
@@ -105,8 +108,14 @@
   if(self == aNode) {
     return YES;
   }
+  
   /* We do not compare UUIDs as those are supposed to be different for nodes unless they are encoded/decoded */
   NSAssert([aNode isKindOfClass:KPKNode.class], @"Unsupported type for quality test");
+  
+  /* if UUIDs dont's match, nodes aren't considered equal! */
+  if(![self.uuid isEqual:aNode.uuid]) {
+    return NO;
+  }
   
   if(!(options & KPKNodeEqualityIgnoreAccessDateOption)) {
     NSComparisonResult result = [self.timeInfo.accessDate compare:aNode.timeInfo.accessDate];

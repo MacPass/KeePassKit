@@ -33,6 +33,7 @@
 #import "KPKEntry_Private.h"
 #import "KPKErrors.h"
 #import "KPKGroup.h"
+#import "KPKGroup_Private.h"
 #import "KPKIcon.h"
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
@@ -160,11 +161,12 @@
       group.updateTiming = NO;
     }
   }
-  for(KPKEntry *entry in tree.root.entries) {
+  for(KPKEntry *entry in tree.root.mutableEntries) {
     entry.updateTiming = YES;
   }
+  
   for(KPKGroup *group in tree.allGroups) {
-    for(KPKEntry *entry in group.entries) {
+    for(KPKEntry *entry in group.mutableEntries) {
       entry.updateTiming = YES;
     }
   }

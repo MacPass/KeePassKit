@@ -265,7 +265,7 @@ if( self.updateTiming ) { \
 }
 
 - (void)removeCustomIcon:(KPKIcon *)icon {
-  NSUInteger index = [_mutableCustomIcons indexOfObject:icon];
+  NSUInteger index = [_mutableCustomIcons indexOfObjectIdenticalTo:icon];
   if(index != NSNotFound) {
     [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
     [self.tree.undoManager setActionName:NSLocalizedStringFromTable(@"DELETE_CUSTOM_ICON", @"KPKLocalizable", @"")];
