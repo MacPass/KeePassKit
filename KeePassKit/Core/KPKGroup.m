@@ -44,6 +44,8 @@ static NSSet *_observedKeyPathsSet;
 @dynamic updateTiming;
 @dynamic entries;
 @dynamic groups;
+@dynamic subGroups;
+@dynamic subEntries;
 
 @synthesize defaultAutoTypeSequence = _defaultAutoTypeSequence;
 @synthesize title = _title;
@@ -66,6 +68,14 @@ static NSSet *_observedKeyPathsSet;
 }
 
 + (NSSet<NSString *> *)keyPathsForValuesAffectingEntries {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingSubGroups {
+ return [NSSet setWithObject:NSStringFromSelector(@selector(mutableGroups))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingSubEntries {
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
 }
 
@@ -112,9 +122,9 @@ static NSSet *_observedKeyPathsSet;
     self.title = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(title))];
     self.notes = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(notes))];
     _mutableGroups = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKGroup.class]]
-                                        forKey:NSStringFromSelector(@selector(mutableGroups))] mutableCopy];
+                                               forKey:NSStringFromSelector(@selector(mutableGroups))] mutableCopy];
     _mutableEntries = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKEntry.class]]
-                                         forKey:NSStringFromSelector(@selector(mutableEntries))] mutableCopy];
+                                                forKey:NSStringFromSelector(@selector(mutableEntries))] mutableCopy];
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
@@ -662,6 +672,18 @@ static NSSet *_observedKeyPathsSet;
 }
 #pragma mark -
 #pragma mark KVC
+- (NSUInteger)countOfSubEntries {
+  return self.mutableEntries.count;
+}
+
+- (KPKEntry *)objectInSubEntriesAtIndex:(NSUInteger)index {
+  return self.mutableEntries[index];
+}
+
+- (void)getSubEntries:(KPKEntry * __unsafe_unretained *)buffer range:(NSRange)inRange {
+  [self.mutableEntries getObjects:buffer range:inRange];
+}
+
 - (void)insertObject:(KPKEntry *)entry inMutableEntriesAtIndex:(NSUInteger)index {
   [_mutableEntries insertObject:entry atIndex:index];
 }
