@@ -32,7 +32,7 @@
 
 - (void)tearDown {
   [super tearDown];
-  self.group = nil,
+  self.group = nil;
   self.entry = nil;
   self.tree = nil;
 }
