@@ -351,11 +351,11 @@ static NSSet *_observedKeyPathsSet;
 }
 
 - (NSArray<KPKGroup *> *)groups {
-  return self.mutableGroups;
+  return [self.mutableGroups copy];
 }
 
 - (NSArray<KPKEntry *> *)entries {
-  return self.mutableEntries;
+  return [self.mutableEntries copy];
 }
 
 - (NSArray<KPKNode *> *)children {

@@ -39,8 +39,8 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 @interface KPKGroup : KPKNode <NSSecureCoding, NSCopying>
 #endif
 
-@property(nonatomic, strong, readonly) NSArray<KPKGroup *> *groups;
-@property(nonatomic, strong, readonly) NSArray<KPKEntry *> *entries;
+@property(nonatomic, copy, readonly) NSArray<KPKGroup *> *groups;
+@property(nonatomic, copy, readonly) NSArray<KPKEntry *> *entries;
 @property(nonatomic, copy, readonly) NSArray<KPKEntry *> *childEntries;
 @property(nonatomic, copy, readonly) NSArray<KPKGroup *> *childGroups;
 @property(nonatomic, copy, readonly) NSArray<KPKNode *> *children;
