@@ -29,7 +29,7 @@
 
 FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 FOUNDATION_EXPORT NSString *const KPKEntriesArrayBinding;
-FOUNDATION_EXPORT NSString *const KPKGroupArrayBinding;
+FOUNDATION_EXPORT NSString *const KPKGroupsArrayBinding;
 /**
  *  A group is like a folder in the database.
  *  It can hold subgroups as well as entries.

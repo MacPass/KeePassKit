@@ -38,7 +38,7 @@
 #import "KPKScopedSet.h"
 
 NSString *const KPKEntriesArrayBinding = @"entriesArray";
-NSString *const KPKGroupArrayBinding = @"groupsArray";
+NSString *const KPKGroupsArrayBinding = @"groupsArray";
 
 @implementation KPKGroup
 
@@ -677,7 +677,7 @@ static NSSet *_observedKeyPathsSet;
   return self.mutableGroups.count;
 }
 
-- (KPKGroup *)objectInGroupsAtIndex:(NSUInteger)index {
+- (KPKGroup *)objectInGroupsArrayAtIndex:(NSUInteger)index {
   return self.mutableGroups[index];
 }
 
@@ -693,7 +693,7 @@ static NSSet *_observedKeyPathsSet;
   return self.mutableEntries[index];
 }
 
-- (void)getEntries:(KPKEntry *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:(NSRange)inRange {
+- (void)getEEntriesArray:(KPKEntry *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:(NSRange)inRange {
   [self.mutableEntries getObjects:(KPKEntry *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:inRange];
 }
 
