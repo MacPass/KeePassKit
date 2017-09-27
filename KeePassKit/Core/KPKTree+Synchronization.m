@@ -90,7 +90,9 @@
        KPKNodeEqualityIgnoreHistory not needed since we do not compare entries at all
        */
       KPKNodeEqualityOptions equalityOptions = (KPKNodeEqualityIgnoreGroupsOption |
-                                                KPKNodeEqualityIgnoreEntriesOption );
+                                                KPKNodeEqualityIgnoreEntriesOption |
+                                                KPKNodeEqualityIgnoreGroupsOption |
+                                                KPKNodeEqualityIgnoreEntriesOption);
       
       if([localNode _isEqualToNode:externNode options:equalityOptions]) {
         continue; // node did not change

@@ -51,9 +51,6 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 @property(nonatomic, copy) NSUUID *lastTopVisibleEntry;
 @property(nonatomic) BOOL isExpanded;
 
-@property(nonatomic, copy, readonly) NSArray<KPKGroup *> *subGroups; // Exposed for Bindings!
-@property(nonatomic, copy, readonly) NSArray<KPKEntry *> *subEntries; // Exposed for Bindings
-
 /**
  All actions register with the undomanager and
  thus are undoable.
