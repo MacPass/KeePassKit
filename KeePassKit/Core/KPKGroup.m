@@ -55,10 +55,6 @@ static NSSet *_observedKeyPathsSet;
   return YES;
 }
 
-+ (BOOL)accessInstanceVariablesDirectly {
-  return NO;
-}
-
 + (NSSet *)keyPathsForValuesAffectingChildren {
   return [NSSet setWithArray:@[NSStringFromSelector(@selector(mutableGroups)), NSStringFromSelector(@selector(mutableEntries)) ]];
 }
@@ -75,12 +71,12 @@ static NSSet *_observedKeyPathsSet;
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
 }
 
-+ (NSSet<NSString *> *)keyPathsForValuesAffectingSubEntries {
-  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
++ (NSSet<NSString *> *)keyPathsForValuesAffectingSubGroups {
+ return [NSSet setWithObject:NSStringFromSelector(@selector(mutableGroups))];
 }
 
-+ (NSSet<NSString *> *)keyPathsForValuesAffectingSubGroups {
-  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableGroups))];
++ (NSSet<NSString *> *)keyPathsForValuesAffectingSubEntries {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
 }
 
 + (NSUInteger)defaultIcon {
@@ -488,7 +484,7 @@ static NSSet *_observedKeyPathsSet;
   }
   else if(entry) {
     index = MAX(0, MIN(self.mutableEntries.count, index));
-    [self insertObject:entry inSubEntriesAtIndex:index];
+    [self insertObject:entry inMutableEntriesAtIndex:index];
   }
   
   node.parent = self;
@@ -503,7 +499,7 @@ static NSSet *_observedKeyPathsSet;
     [self removeObjectFromMutableGroupsAtIndex:[self.mutableGroups indexOfObject:group]];
   }
   else if(entry) {
-    [self removeObjectFromSubEntriesAtIndex:[self.mutableEntries indexOfObject:entry]];
+    [self removeObjectFromMutableEntriesAtIndex:[self.mutableEntries indexOfObject:entry]];
   }
   node.parent = nil;
 }
@@ -688,11 +684,11 @@ static NSSet *_observedKeyPathsSet;
   [self.mutableEntries getObjects:buffer range:inRange];
 }
 
-- (void)insertObject:(KPKEntry *)entry inSubEntriesAtIndex:(NSUInteger)index {
+- (void)insertObject:(KPKEntry *)entry inMutableEntriesAtIndex:(NSUInteger)index {
   [_mutableEntries insertObject:entry atIndex:index];
 }
 
-- (void)removeObjectFromSubEntriesAtIndex:(NSUInteger)index {
+- (void)removeObjectFromMutableEntriesAtIndex:(NSUInteger)index {
   [_mutableEntries removeObjectAtIndex:index];
 }
 

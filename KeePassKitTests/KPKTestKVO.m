@@ -60,8 +60,8 @@
   }
 }
 
-- (void)testGroupChildEntriesKVO {
-  
+- (void)testGroupChildEntreisKVO {
+
 }
 
 - (void)_bindAndTestGroup:(KPKGroup *)group selector:(SEL)selector {
