@@ -89,7 +89,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 /**
  *  Test for Equality
  *  @param entry entry to test for equality
- *  @return YES if receiver is equal to entry based on all attributes. UUID and parents are NOT considered
+ *  @return YES if receiver is equal to entry based on all attributes. Parents are NOT considered
  */
 - (BOOL)isEqualToEntry:(KPKEntry *)entry;
 
