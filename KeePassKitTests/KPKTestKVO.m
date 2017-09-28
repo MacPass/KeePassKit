@@ -60,8 +60,52 @@
   }
 }
 
-- (void)testGroupChildEntreisKVO {
+- (void)testGroupsAndEntriesArrayValues {
+  KPKGroup *group = [[KPKGroup alloc] init];
+  id groups = [group valueForKey:KPKGroupsArrayBinding];
+  id entries = [group valueForKey:KPKEntriesArrayBinding];
+  XCTAssertEqual([groups count], 0);
+  XCTAssertEqual([entries count], 0);
+  
+  for(NSUInteger index=0; index < 5; index++) {
+    [[[KPKGroup alloc] init] addToGroup:group];
+  }
 
+  XCTAssertEqual([groups count], 5);
+  XCTAssertEqual([entries count], 0);
+  
+  for(NSUInteger index=0; index < 5; index++) {
+    [[[KPKEntry alloc] init] addToGroup:group];
+  }
+
+  XCTAssertEqual([groups count], 5);
+  XCTAssertEqual([entries count], 5);
+
+  for(NSUInteger index=0; index < 5; index++) {
+    KPKGroup *subGroup = [groups objectAtIndex:4-index];
+    KPKGroup *actualSubgroup = group.mutableGroups[4-index];
+    XCTAssertNotNil(subGroup);
+    XCTAssertEqual(subGroup, actualSubgroup);
+    XCTAssertEqual([groups count], group.mutableGroups.count);
+    [subGroup remove];
+  }
+  
+  XCTAssertEqual([groups count], 0);
+  XCTAssertEqual([entries count], 5);
+  
+  for(NSInteger index=0; index < 5 ; index++) {
+    KPKEntry *subEntry = [entries objectAtIndex:4-index];
+    KPKEntry *actualSubEntry = group.mutableEntries[4-index];
+    XCTAssertNotNil(subEntry);
+    XCTAssertEqual(subEntry, actualSubEntry);
+    XCTAssertEqual([entries count], group.mutableEntries.count);
+    
+    [subEntry remove];
+  }
+  
+  XCTAssertEqual([groups count], 0);
+  XCTAssertEqual([entries count], 0);
+  
 }
 
 - (void)_bindAndTestGroup:(KPKGroup *)group selector:(SEL)selector {
