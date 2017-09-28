@@ -451,10 +451,17 @@
   _uuid = [[[NSUUID alloc] init] copy];
 }
 
-- (void)_traverseNodesWithBlock:(void (^)(KPKNode *node))block {
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block options:(KPKNodeTraversalOptions)options {
   if(block) {
-    block(self);
+    if((!(options & KPKNodeTraversalOptionSkipGroups) && self.asGroup) ||
+       (!(options & KPKNodeTraversalOptionSkipEntries) && self.asEntry)) {
+      block(self);
+    }
   }
+}
+
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *node))block {
+  [self _traverseNodesWithBlock:block options:0];
 }
 
 - (void)addCustomDataObject:(KPKPair *)pair {

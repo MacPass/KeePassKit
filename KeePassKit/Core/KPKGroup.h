@@ -41,7 +41,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupsArrayBinding;
 @interface KPKGroup : KPKNode <NSSecureCoding, NSCopying>
 #endif
 
-@property(nonatomic, copy, readonly) NSArray<KPKGroup *> *groups; // if you need a performance oriented binding interface, use KPKGroupsArrayBinding
+@property(nonatomic, copy, readonly) NSArray<KPKGroup *> *groups; // if you need a performance oriented read only binding interface, use KPKGroupsArrayBinding
 @property(nonatomic, copy, readonly) NSArray<KPKEntry *> *entries; // if you need a performance oriented read only bindable interface, use KPKEntriesArrayBinding
 @property(nonatomic, copy, readonly) NSArray<KPKEntry *> *childEntries;
 @property(nonatomic, copy, readonly) NSArray<KPKGroup *> *childGroups;

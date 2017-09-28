@@ -294,13 +294,13 @@ static NSSet *_observedKeyPathsSet;
   return didChange;
 }
 
-- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block {
-  [super _traverseNodesWithBlock:block];
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block options:(KPKNodeTraversalOptions)options {
+  [super _traverseNodesWithBlock:block options:options];
   for(KPKGroup *group in self.mutableGroups) {
-    [group _traverseNodesWithBlock:block];
+    [group _traverseNodesWithBlock:block options:options];
   }
   for(KPKEntry *entry in self.mutableEntries) {
-    [entry _traverseNodesWithBlock:block];
+    [entry _traverseNodesWithBlock:block options:options];
   }
 }
 

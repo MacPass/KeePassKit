@@ -26,6 +26,11 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {
   KPKNodeEqualityIgnoreGroupsOption           = 1<<4 // KPKGroup only, do not compare sub-groups (and entries in those sub-groups!)
 };
 
+typedef NS_OPTIONS(NSUInteger, KPKNodeTraversalOptions) {
+  KPKNodeTraversalOptionSkipEntries   = 1<<0,
+  KPKNodeTraversalOptionSkipGroups    = 1<< 1
+};
+
 @interface KPKNode () <KPKExtendedModificationRecording> {
   @protected
   NSUUID *_uuid; // changes to uuid should be handled with utmost care!
@@ -51,6 +56,7 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {
 #pragma mark Traversal
 
 - (void)_traverseNodesWithBlock:(void (^)(KPKNode *node))block;
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block options:(KPKNodeTraversalOptions)options;
 
 #pragma mark Copy Helper
 /**
