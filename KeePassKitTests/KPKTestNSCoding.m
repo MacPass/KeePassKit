@@ -75,7 +75,7 @@
   XCTAssertTrue([copiedBinary.data isEqualToData:binary.data], @"Binary data should match");
   XCTAssertTrue([copiedBinary.name isEqualToString:binary.name], @"Binary names should match");
   
-  XCTAssertEqualObjects(entry, copyEntry, @"Decoede entry is the equal to encoded one!");
+  XCTAssertTrue([entry isEqualToEntry:copyEntry], @"Decoede entry is the equal to encoded one!");
 }
 
 - (void)testIconCoding {

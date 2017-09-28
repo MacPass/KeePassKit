@@ -199,6 +199,7 @@ static NSSet *_observedKeyPathsSet;
   return copy;
 }
 
+/*
 - (BOOL)isEqual:(id)object {
   if(self == object) {
     return YES; // Pointers match;
@@ -210,6 +211,7 @@ static NSSet *_observedKeyPathsSet;
   }
   return NO;
 }
+*/
 
 - (BOOL)isEqualToGroup:(KPKGroup *)aGroup {
   /* normal compare does not ignroe anything */

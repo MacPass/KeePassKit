@@ -309,6 +309,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark Equality
 
+/*
 - (BOOL)isEqual:(id)object {
   if(self == object) {
     return YES;
@@ -318,6 +319,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
   return NO;
 }
+*/
 
 - (BOOL)isEqualToEntry:(KPKEntry *)entry {
   return [self _isEqualToNode:entry options:0];

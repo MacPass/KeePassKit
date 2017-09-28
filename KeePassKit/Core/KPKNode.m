@@ -89,6 +89,7 @@
   return nil;
 }
 
+/*
 - (BOOL)isEqual:(id)object {
   if(self == object) {
     return YES;
@@ -98,6 +99,7 @@
   }
   return [self isEqualToNode:object];
 }
+*/
 
 - (BOOL)isEqualToNode:(KPKNode *)aNode {
   return [self _isEqualToNode:aNode options:0];

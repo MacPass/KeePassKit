@@ -109,7 +109,7 @@
   
   KPKGroup *copy = [root copy];
   
-  XCTAssertEqualObjects(root, copy);
+  XCTAssertTrue([root isEqualToGroup:copy]);
 }
 
 @end
