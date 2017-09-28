@@ -47,6 +47,7 @@
   entry.url = @"URL";
   entry.username = @"Username";
   entry.password = @"Password";
+  entry.tags = @[@"Tag1", @"Tag2", @"Tag3"];
   
   uint8_t bytes[] = { 0xFF, 0x00, 0xFF, 0x00, 0xFF };
   NSData *data = [[NSData alloc] initWithBytes:bytes length:5];

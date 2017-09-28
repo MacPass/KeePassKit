@@ -228,7 +228,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
                                                    forKey:NSStringFromSelector(@selector(mutableHistory))];
     self.mutableBinaries = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKBinary.class]]
                                          forKey:NSStringFromSelector(@selector(mutableBinaries))];
-    _tags = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(tags))] copy];
+    _tags = [[aDecoder decodeObjectOfClass:NSArray.class forKey:NSStringFromSelector(@selector(tags))] copy];
     _foregroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
     _backgroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
     _overrideURL = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(overrideURL))] copy];
@@ -614,6 +614,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [[self.undoManager prepareWithInvocationTarget:self] setUrl:self.url];
   [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_URL", @"KPKLocalizable", @"")];
   [self _setValue:url forAttributeWithKey:kKPKURLKey];
+}
+
+- (void)setTags:(NSArray<NSString *> *)tags {
+  [[self.undoManager prepareWithInvocationTarget:self] setTags:self.tags];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_URL", @"KPKLocalizable", @"")];
+  _tags = [[NSArray alloc] initWithArray:tags copyItems:YES]; // depp copy just to make sure!
 }
 
 - (KPKEntry *)asEntry {
