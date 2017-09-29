@@ -22,7 +22,17 @@
 
 #import "NSDate+KPKPacked.h"
 
+static NSCalendar *_gregorianCalendar(void) {
+  static NSCalendar *_kpkCalendar;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    _kpkCalendar = [NSCalendar calendarWithIdentifier:NSGregorianCalendar];
+  });
+  return _kpkCalendar;
+}
+
 @implementation NSDate (KPKPacked)
+
 
 + (NSDate *)kpk_dateFromPackedBytes:(uint8_t *)buffer {
   uint32_t dw1, dw2, dw3, dw4, dw5;
@@ -47,8 +57,7 @@
   dateComponents.minute = min;
   dateComponents.second = s;
   
-  NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-  NSDate *date = [calendar dateFromComponents:dateComponents];
+  NSDate *date = [_gregorianCalendar() dateFromComponents:dateComponents];
   
   return date;
 }
@@ -68,9 +77,8 @@
   uint32_t seconds;
   
   if(date) {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSUInteger calendarComponents = (NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit);
-    NSDateComponents *dateComponents = [calendar components:calendarComponents fromDate:date];
+    NSDateComponents *dateComponents = [_gregorianCalendar() components:calendarComponents fromDate:date];
     
     year = (uint32_t)dateComponents.year;
     month = (uint32_t)dateComponents.month;
@@ -95,6 +103,10 @@
   byteBuffer[4] = (uint8_t)(((minutes & 0x00000003) << 6) | (seconds & 0x0000003F));
   
   return [NSData dataWithBytes:byteBuffer length:sizeof(byteBuffer)];
+}
+
+- (NSData *)kpk_packedBytes {
+  return [NSDate kpk_packedBytesFromDate:self];
 }
 
 @end

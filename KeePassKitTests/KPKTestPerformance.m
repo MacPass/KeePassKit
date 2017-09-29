@@ -174,15 +174,33 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
   }];
 }
 
-- (void)testKDBXSerializationPerformance {
+- (void)testKDBX31SerializationPerformance {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   [self measureBlock:^{
     NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
   }];
 }
 
-- (void)testKDBXDeserializationPerformance {
+- (void)testKDBX31DeserializationPerformance {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
+  [self measureBlock:^{
+    KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:nil];
+    XCTAssertNotNil(tree);
+  }];
+}
+
+- (void)testKDBX4SerializationPerformance {
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  tree.metaData.keyDerivationParameters = [KPKArgon2KeyDerivation defaultParameters];
+  [self measureBlock:^{
+    NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
+  }];
+}
+
+- (void)testKDBX4DeserializationPerformance {
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  tree.metaData.keyDerivationParameters = [KPKArgon2KeyDerivation defaultParameters];
   NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
   [self measureBlock:^{
     KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:nil];

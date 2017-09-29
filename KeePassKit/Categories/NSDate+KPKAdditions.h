@@ -22,10 +22,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSDate (KPKPacked)
+@interface NSDate (KPKAddtions)
 
 + (NSDate *)kpk_dateFromPackedBytes:(uint8_t *)buffer;
 + (NSData *)kpk_packedBytesFromDate:(NSDate *)date;
 + (void)kpk_getPackedBytes:(uint8_t *)buffer fromDate:(NSDate *)date;
+
+- (NSData *)kpk_packedBytes;
 
 @end
