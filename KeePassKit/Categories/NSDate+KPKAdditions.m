@@ -20,7 +20,8 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSDate+KPKPacked.h"
+#import "NSDate+KPKAdditions.h"
+#import <time.h>
 
 static NSCalendar *_gregorianCalendar(void) {
   static NSCalendar *_kpkCalendar;
@@ -31,8 +32,7 @@ static NSCalendar *_gregorianCalendar(void) {
   return _kpkCalendar;
 }
 
-@implementation NSDate (KPKPacked)
-
+@implementation NSDate (KPKAdditions)
 
 + (NSDate *)kpk_dateFromPackedBytes:(uint8_t *)buffer {
   uint32_t dw1, dw2, dw3, dw4, dw5;
@@ -107,6 +107,35 @@ static NSCalendar *_gregorianCalendar(void) {
 
 - (NSData *)kpk_packedBytes {
   return [NSDate kpk_packedBytesFromDate:self];
+}
+
+@end
+
+@implementation NSDate (KPKDateFormat)
+
++ (NSDate *)kpk_dateFromKdbxString:(NSString *)string {
+  if (!string) {
+    return nil;
+  }
+  
+  struct tm tm;
+  time_t t;
+  strptime([string cStringUsingEncoding:NSUTF8StringEncoding], "%Y-%m-%dT%H:%M:%SZ", &tm);
+  tm.tm_isdst = -1;
+  t = mktime(&tm);
+  return [NSDate dateWithTimeIntervalSince1970:t + [NSTimeZone localTimeZone].secondsFromGMT];
+}
+
+- (NSString *)kpk_kdbxString {
+  struct tm *timeinfo;
+  char buffer[80];
+  
+  time_t rawtime = self.timeIntervalSince1970 - [NSTimeZone localTimeZone].secondsFromGMT;
+  timeinfo = localtime(&rawtime);
+  
+  strftime(buffer, 80, "%Y-%m-%dT%H:%M:%SZ", timeinfo);
+  
+  return [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
 }
 
 @end

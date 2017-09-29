@@ -21,8 +21,11 @@
 //
 
 #import "KPKXmlUtilities.h"
-#import <Foundation/Foundation.h>
+
+#import "NSDate+KPKAdditions.h"
+
 #import "DDXMLElementAdditions.h"
+#import <Foundation/Foundation.h>
 
 static NSDate *referenceDate(void) {
   static NSDate *referenceDate;
@@ -62,12 +65,12 @@ NSString * KPKStringFromLong(NSInteger integer) {
   return [NSString stringWithFormat:@"%ld", integer];
 }
 
-NSString *KPKStringFromDate(NSDateFormatter *dateFormatter, NSDate *date){
-  if(!dateFormatter) {
+NSString *KPKStringFromDate(NSDate *date, BOOL isRelativeDate) {
+  if(isRelativeDate) {
     uint64_t interval = [date timeIntervalSinceDate:referenceDate()];
     return [[NSData dataWithBytesNoCopy:&interval length:8 freeWhenDone:NO] base64EncodedStringWithOptions:0];
   }
-  return [dateFormatter stringFromDate:date];
+  return date.kpk_kdbxString;
 }
 
 NSString *KPKStringFromBool(BOOL value) {
@@ -122,9 +125,9 @@ BOOL KPKXmlBoolAttribute(DDXMLElement *element, NSString *attribute) {
   return NO;
 }
 
-NSDate *KPKXmlDate(NSDateFormatter *dateFormatter, DDXMLElement *element, NSString *name) {
+NSDate *KPKXmlDate(DDXMLElement *element, NSString *name, BOOL isRelativeDate) {
   NSString *value = [[element elementForName:name] stringValue];
-  if(!dateFormatter) {
+  if(isRelativeDate) {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
     if(data.length != 8) {
       NSLog(@"Invalid date format!");
@@ -134,7 +137,8 @@ NSDate *KPKXmlDate(NSDateFormatter *dateFormatter, DDXMLElement *element, NSStri
     [data getBytes:&interval length:8];
     return [referenceDate() dateByAddingTimeInterval:interval];
   }
-  return [dateFormatter dateFromString:value];
+  return [NSDate kpk_dateFromKdbxString:value];
+  return nil;//[dateFormatter dateFromString:value];
 }
 
 KPKInheritBool parseInheritBool(DDXMLElement *element, NSString *name) {

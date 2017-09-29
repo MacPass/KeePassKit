@@ -38,7 +38,7 @@
 
 #import "NSString+KPKEmpty.h"
 #import "NSData+KPKRandom.h"
-#import "NSDate+KPKPacked.h"
+#import "NSDate+KPKAdditions.h"
 #import "NSUIColor+KPKAdditions.h"
 #import "NSUIImage+KPKAdditions.h"
 
@@ -413,7 +413,7 @@
 }
 
 - (void)_writeTimeInfo:(KPKNode *)node {
-  BOOL isEntry = [node isKindOfClass:KPKEntry.class];
+  BOOL isEntry = (nil != node.asEntry);
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryCreationTime : KPKFieldTypeGroupCreationTime )
                data:[NSDate kpk_packedBytesFromDate:node.timeInfo.creationDate]];

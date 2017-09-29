@@ -7,33 +7,32 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "KeePassKit_Private.h"
 
 @interface KPKTestDateAdditions : XCTestCase
-
+@property (strong) NSDateFormatter *dateFormatter;
 @end
 
 @implementation KPKTestDateAdditions
 
 - (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+  [super setUp];
+  self.dateFormatter = [[NSDateFormatter alloc] init];
+  self.dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
+  self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+  
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
+  [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testKdbxDateFormat {
+  NSDate *date = [NSDate date];
+  XCTAssertEqualObjects(date.kpk_kdbxString, [self.dateFormatter stringFromDate:date]);
+
+  XCTAssertEqualObjects([self.dateFormatter dateFromString:date.kpk_kdbxString], [NSDate kpk_dateFromKdbxString:date.kpk_kdbxString]);
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
-}
 
 @end

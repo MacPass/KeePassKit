@@ -69,7 +69,7 @@ NSString *KPKStringFromLong(NSInteger integer);
  *
  *  @return string representation of the date.
  */
-NSString *KPKStringFromDate(NSDateFormatter *dateFormatter, NSDate *date);
+NSString *KPKStringFromDate(NSDate *date, BOOL isRelativeDate);
 /**
  *  Generates a string value from the given bool
  *
@@ -95,7 +95,7 @@ NSString *KPKXmlNonEmptyString(DDXMLElement *element, NSString *name);
 NSInteger KPKXmlInteger(DDXMLElement *element, NSString *name);
 BOOL KPKXmlBool(DDXMLElement *element, NSString *name);
 BOOL KPKXmlBoolAttribute(DDXMLElement *element, NSString *attribute);
-NSDate *KPKXmlDate(NSDateFormatter *dateFormatter, DDXMLElement *element, NSString *name);
+NSDate *KPKXmlDate(DDXMLElement *element, NSString *name, BOOL isRelativeDate);
 KPKInheritBool parseInheritBool(DDXMLElement *element, NSString *name);
 
 #endif
