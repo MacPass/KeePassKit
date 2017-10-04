@@ -395,11 +395,11 @@
     length = CFSwapInt32LittleToHost([reader read4Bytes]);
     switch(type) {
       case KPKInnerHeaderKeyEndOfHeader:
-        if(length == 0) {
-          return reader.offset;
+        if(length != 0) {
+          [reader skipBytes:length];
+          NSLog(@"Malformed end of inner header data encountered. Skipping %u bytes!", length);
         }
-        KPKCreateError(error, KPKErrorKdbxCorruptedInnerHeader);
-        return 0;
+        return reader.offset;
         
       case KPKInnerHeaderKeyBinary:
         if(length > 1) {
