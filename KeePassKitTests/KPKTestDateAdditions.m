@@ -31,6 +31,8 @@
   NSDate *date = [NSDate date];
   XCTAssertEqualObjects(date.kpk_kdbxString, [self.dateFormatter stringFromDate:date]);
 
+  NSLog(@"%@", [self.dateFormatter dateFromString:date.kpk_kdbxString]);
+  NSLog(@"%@", [NSDate kpk_dateFromKdbxString:date.kpk_kdbxString]);
   XCTAssertEqualObjects([self.dateFormatter dateFromString:date.kpk_kdbxString], [NSDate kpk_dateFromKdbxString:date.kpk_kdbxString]);
 }
 

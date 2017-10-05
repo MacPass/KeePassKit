@@ -31,7 +31,6 @@
 		4C0B9DB81DBFB4FC00E66CD6 /* KPKKdbTreeWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C0B9DA61DBFB4FC00E66CD6 /* KPKKdbTreeWriter.h */; };
 		4C0B9DB91DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */; };
 		4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */; };
-		4C0BF1531DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */; };
 		4C1032171EB38E4400FD605F /* KPKSynchronizationOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1032161EB38B5400FD605F /* KPKSynchronizationOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C1118451DCCD88300254E1D /* KPKSalsa20Cipher.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1118431DCCD88300254E1D /* KPKSalsa20Cipher.h */; };
 		4C1118461DCCD88300254E1D /* KPKSalsa20Cipher.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1118441DCCD88300254E1D /* KPKSalsa20Cipher.m */; };
@@ -253,6 +252,7 @@
 		4CCC95061E24F2BD00593E65 /* KPKTestNodeForUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */; };
 		4CCE00C71D78598800B8D50A /* KPKTimeInfo_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCE00C51D78598800B8D50A /* KPKTimeInfo_Private.h */; };
 		4CD607AE1DFAAECE00C815E5 /* KPKPlatformIncludes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CD89C201F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CD89C1F1F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx */; };
 		4CD9727E1F7E756500956EEB /* KPKTestDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9727D1F7E756500956EEB /* KPKTestDateAdditions.m */; };
 		4CDA35721EB88621003CD59F /* KPKScopedSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C69DD561EB4705800194900 /* KPKScopedSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CDDED0B1F79685C00BBB014 /* KPKIcon_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CDDED0A1F79685C00BBB014 /* KPKIcon_Private.h */; };
@@ -303,7 +303,6 @@
 		4C0B9DA61DBFB4FC00E66CD6 /* KPKKdbTreeWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKKdbTreeWriter.h; sourceTree = "<group>"; };
 		4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKKdbTreeWriter.m; sourceTree = "<group>"; };
 		4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argon2KDF_AES_Cipher_test.kdbx; sourceTree = "<group>"; };
-		4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argon2KDF_ChaCha_Cipher_test.kdbx; sourceTree = "<group>"; };
 		4C1032161EB38B5400FD605F /* KPKSynchronizationOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKSynchronizationOptions.h; sourceTree = "<group>"; };
 		4C1118431DCCD88300254E1D /* KPKSalsa20Cipher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKSalsa20Cipher.h; sourceTree = "<group>"; };
 		4C1118441DCCD88300254E1D /* KPKSalsa20Cipher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKSalsa20Cipher.m; sourceTree = "<group>"; };
@@ -531,6 +530,7 @@
 		4CCB50AB1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestWindowAssociationTitleMatching.m; sourceTree = "<group>"; };
 		4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestNodeForUUID.m; sourceTree = "<group>"; };
 		4CCE00C51D78598800B8D50A /* KPKTimeInfo_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKTimeInfo_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4CD89C1F1F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argon2KDF_ChaCha_Cipher_test.kdbx; sourceTree = "<group>"; };
 		4CD9727D1F7E756500956EEB /* KPKTestDateAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestDateAdditions.m; sourceTree = "<group>"; };
 		4CDDED0A1F79685C00BBB014 /* KPKIcon_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKIcon_Private.h; sourceTree = "<group>"; };
 		4CE082BF1F6D111C0034FF56 /* aspect.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = aspect.pdf; sourceTree = "<group>"; };
@@ -614,7 +614,7 @@
 			children = (
 				4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */,
 				4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */,
-				4C0BF1511DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx */,
+				4CD89C1F1F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx */,
 			);
 			path = Kdbx4;
 			sourceTree = "<group>";
@@ -1306,6 +1306,7 @@
 			files = (
 				4C8138281BE282DC001BF195 /* CustomIcon_Password_1234.xml in Resources */,
 				4C639E2A1F6A642500E6C5CD /* test.ico in Resources */,
+				4CD89C201F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
 				4CE082C01F6D111C0034FF56 /* aspect.pdf in Resources */,
 				4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */,
 				4C639E581F6AE81600E6C5CD /* test.pdf in Resources */,
@@ -1321,7 +1322,6 @@
 				4C5FFA911DCB5597004EF778 /* BinaryAttachments_test.kdbx in Resources */,
 				4C8138271BE282DC001BF195 /* CustomIcon_Password_1234.kdbx in Resources */,
 				4C199DA11DCF310D00D4FDC8 /* TwofishCipher256bit_test.kdb in Resources */,
-				4C0BF1531DC1199900193AD1 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
 				4C81382D1BE282DC001BF195 /* image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

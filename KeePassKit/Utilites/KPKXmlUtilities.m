@@ -138,7 +138,6 @@ NSDate *KPKXmlDate(DDXMLElement *element, NSString *name, BOOL isRelativeDate) {
     return [referenceDate() dateByAddingTimeInterval:interval];
   }
   return [NSDate kpk_dateFromKdbxString:value];
-  return nil;//[dateFormatter dateFromString:value];
 }
 
 KPKInheritBool parseInheritBool(DDXMLElement *element, NSString *name) {

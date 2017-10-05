@@ -114,15 +114,17 @@ static NSCalendar *_gregorianCalendar(void) {
 @implementation NSDate (KPKDateFormat)
 
 + (NSDate *)kpk_dateFromKdbxString:(NSString *)string {
-  if (!string) {
+  if(nil == string) {
     return nil;
   }
   
-  struct tm tm;
-  time_t t;
-  strptime([string cStringUsingEncoding:NSUTF8StringEncoding], "%Y-%m-%dT%H:%M:%SZ", &tm);
-  tm.tm_isdst = -1;
-  t = mktime(&tm);
+  struct tm time;
+  char *result = strptime([string cStringUsingEncoding:NSUTF8StringEncoding], "%Y-%m-%dT%H:%M:%SZ", &time);
+  NSAssert(result != NULL, @"Internal inconsitency. Unable to parse date format!");
+  time.tm_isdst = -1;
+  time.tm_gmtoff = 0;
+  time.tm_zone = "UTC";
+  time_t t = mktime(&time);
   return [NSDate dateWithTimeIntervalSince1970:t + [NSTimeZone localTimeZone].secondsFromGMT];
 }
 
@@ -130,8 +132,8 @@ static NSCalendar *_gregorianCalendar(void) {
   struct tm *timeinfo;
   char buffer[80];
   
-  time_t rawtime = self.timeIntervalSince1970 - [NSTimeZone localTimeZone].secondsFromGMT;
-  timeinfo = localtime(&rawtime);
+  time_t rawtime = self.timeIntervalSince1970;
+  timeinfo = gmtime(&rawtime);
   
   strftime(buffer, 80, "%Y-%m-%dT%H:%M:%SZ", timeinfo);
   

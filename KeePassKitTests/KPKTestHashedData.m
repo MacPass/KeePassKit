@@ -23,7 +23,7 @@
   XCTAssertTrue([unhashedData isEqualToData:data], @"Data needs to be the same after hashing and unhashing");
 }
 
-- (void)testHmacSha256Hasing {
+- (void)testHmacSha256HashingUnalignedBlock {
   /* use more than 1 block of unaligned data */
   NSData *data = [NSData kpk_dataWithRandomBytes:1024*1024*8 + 512];
   NSData *key = [NSData kpk_dataWithRandomBytes:64];
@@ -32,4 +32,24 @@
   NSData *unhashedData = [hashedData kpk_unhashedHmacSha256DataWithKey:key error:&error];
   XCTAssertEqualObjects(data, unhashedData, @"Hashed and unhashed data are the same");
 }
+
+- (void)testHmacSha256HashingLessThanBlock {
+  NSData *data = [NSData kpk_dataWithRandomBytes:512]; // exactly one block
+  NSData *key = [NSData kpk_dataWithRandomBytes:64];
+  NSError *error;
+  NSData *hashedData = [data kpk_hashedHmacSha256DataWithKey:key error:&error];
+  NSData *unhashedData = [hashedData kpk_unhashedHmacSha256DataWithKey:key error:&error];
+  XCTAssertEqualObjects(data, unhashedData, @"Hashed and unhashed data are the same");
+}
+
+- (void)testHmacSha256HashingAlignedBlock {
+  NSData *data = [NSData kpk_dataWithRandomBytes:1024*1024]; // exactly one block
+  NSData *key = [NSData kpk_dataWithRandomBytes:64];
+  NSError *error;
+  NSData *hashedData = [data kpk_hashedHmacSha256DataWithKey:key error:&error];
+  NSData *unhashedData = [hashedData kpk_unhashedHmacSha256DataWithKey:key error:&error];
+  XCTAssertEqualObjects(data, unhashedData, @"Hashed and unhashed data are the same");
+}
+
+
 @end
