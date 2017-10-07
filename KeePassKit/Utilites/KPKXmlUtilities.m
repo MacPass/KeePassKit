@@ -70,7 +70,7 @@ NSString *KPKStringFromDate(NSDate *date, BOOL isRelativeDate) {
     uint64_t interval = [date timeIntervalSinceDate:referenceDate()];
     return [[NSData dataWithBytesNoCopy:&interval length:8 freeWhenDone:NO] base64EncodedStringWithOptions:0];
   }
-  return date.kpk_kdbxString;
+  return date.kpk_UTCString;
 }
 
 NSString *KPKStringFromBool(BOOL value) {
@@ -137,7 +137,7 @@ NSDate *KPKXmlDate(DDXMLElement *element, NSString *name, BOOL isRelativeDate) {
     [data getBytes:&interval length:8];
     return [referenceDate() dateByAddingTimeInterval:interval];
   }
-  return [NSDate kpk_dateFromKdbxString:value];
+  return [NSDate kpk_dateFromUTCString:value];
 }
 
 KPKInheritBool parseInheritBool(DDXMLElement *element, NSString *name) {

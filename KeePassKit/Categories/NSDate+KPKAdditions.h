@@ -33,7 +33,7 @@
 
 @interface NSDate (KPKDateFormat)
 
-@property (nonatomic, readonly) NSString *kpk_kdbxString;
-+ (NSDate *)kpk_dateFromKdbxString:(NSString *)string;
+@property (nonatomic, readonly) NSString *kpk_UTCString;
++ (NSDate *)kpk_dateFromUTCString:(NSString *)string;
 
 @end

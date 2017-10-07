@@ -20,7 +20,6 @@
   self.dateFormatter = [[NSDateFormatter alloc] init];
   self.dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
   self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
-  
 }
 
 - (void)tearDown {
@@ -29,11 +28,14 @@
 
 - (void)testKdbxDateFormat {
   NSDate *date = [NSDate date];
-  XCTAssertEqualObjects(date.kpk_kdbxString, [self.dateFormatter stringFromDate:date]);
+  NSDate *lowPrecisionDate = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(date.timeIntervalSinceReferenceDate)];
+  XCTAssertEqualObjects(date.kpk_UTCString, [self.dateFormatter stringFromDate:date]);
 
-  NSLog(@"%@", [self.dateFormatter dateFromString:date.kpk_kdbxString]);
-  NSLog(@"%@", [NSDate kpk_dateFromKdbxString:date.kpk_kdbxString]);
-  XCTAssertEqualObjects([self.dateFormatter dateFromString:date.kpk_kdbxString], [NSDate kpk_dateFromKdbxString:date.kpk_kdbxString]);
+  NSLog(@"%@", [self.dateFormatter dateFromString:date.kpk_UTCString]);
+  NSLog(@"%@", [NSDate kpk_dateFromUTCString:date.kpk_UTCString]);
+  XCTAssertEqualObjects([self.dateFormatter dateFromString:date.kpk_UTCString], [NSDate kpk_dateFromUTCString:date.kpk_UTCString]);
+  XCTAssertEqualObjects(lowPrecisionDate, [self.dateFormatter dateFromString:date.kpk_UTCString]);
+  XCTAssertEqualObjects(lowPrecisionDate, [NSDate kpk_dateFromUTCString:date.kpk_UTCString]);
 }
 
 

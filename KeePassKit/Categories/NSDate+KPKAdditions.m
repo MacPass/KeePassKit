@@ -113,22 +113,32 @@ static NSCalendar *_gregorianCalendar(void) {
 
 @implementation NSDate (KPKDateFormat)
 
-+ (NSDate *)kpk_dateFromKdbxString:(NSString *)string {
+
++ (NSDate *)kpk_dateFromUTCString:(NSString *)string {
   if(nil == string) {
     return nil;
+  }
+  /* fallback to a reference date for empty strings */
+  if(string.length == 0) {
+    static NSDate *referenceDate;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      referenceDate = [NSDate dateWithTimeIntervalSinceReferenceDate:0];
+    });
+    return referenceDate;
   }
   
   struct tm time;
   char *result = strptime([string cStringUsingEncoding:NSUTF8StringEncoding], "%Y-%m-%dT%H:%M:%SZ", &time);
   NSAssert(result != NULL, @"Internal inconsitency. Unable to parse date format!");
-  time.tm_isdst = -1;
+  time.tm_isdst = 0;
   time.tm_gmtoff = 0;
   time.tm_zone = "UTC";
-  time_t t = mktime(&time);
-  return [NSDate dateWithTimeIntervalSince1970:t + [NSTimeZone localTimeZone].secondsFromGMT];
+  time_t t = timegm(&time);
+  return [NSDate dateWithTimeIntervalSince1970:t];
 }
 
-- (NSString *)kpk_kdbxString {
+- (NSString *)kpk_UTCString {
   struct tm *timeinfo;
   char buffer[80];
   
