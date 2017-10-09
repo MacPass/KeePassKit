@@ -266,10 +266,15 @@
   }
 }
 
-- (KPKWindowAssociation *)windowAssociationMatchingWindowTitle:(NSString *)windowTitle {
+- (NSArray<KPKWindowAssociation *> *)windowAssociationsMatchingWindowTitle:(NSString *)windowTitle {
+  if(self.mutableAssociations.count == 0) {
+    return @[];
+  }
+  NSAssert(self.mutableAssociations.count > 0, @"Internal Inconsitency");
+  NSMutableArray *matches = [[NSMutableArray alloc] initWithCapacity:self.mutableAssociations.count];
   for(KPKWindowAssociation *association in self.mutableAssociations) {
     if([association matchesWindowTitle:windowTitle]) {
-      return association;
+      [matches addObject:association];
     }
   }
   return nil;
