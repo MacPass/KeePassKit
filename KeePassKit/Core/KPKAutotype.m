@@ -277,7 +277,7 @@
       [matches addObject:association];
     }
   }
-  return nil;
+  return matches;
 }
 
 - (BOOL)hasDefaultKeystrokeSequence {
