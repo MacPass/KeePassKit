@@ -44,11 +44,33 @@
 }
 
 - (void)testRegularExpressionWindowTitle {
-  KPKWindowAssociation *a = [[KPKWindowAssociation alloc] initWithWindowTitle:@"//.*//" keystrokeSequence:@""];
-  XCTAssertTrue([a matchesWindowTitle:@"Test"]);
-  XCTAssertTrue([a matchesWindowTitle:@"Testing"]);
-  XCTAssertTrue([a matchesWindowTitle:@"Test - some more!"]);
-  XCTAssertTrue([a matchesWindowTitle:@"This is a Test!"]);
+  KPKWindowAssociation *catchAllAssociation = [[KPKWindowAssociation alloc] initWithWindowTitle:@"//.*//" keystrokeSequence:@""];
+  XCTAssertTrue([catchAllAssociation matchesWindowTitle:@"Test"]);
+  XCTAssertTrue([catchAllAssociation matchesWindowTitle:@"Testing"]);
+  XCTAssertTrue([catchAllAssociation matchesWindowTitle:@"Test - some more!"]);
+  XCTAssertTrue([catchAllAssociation matchesWindowTitle:@"This is a Test!"]);
+
+  KPKWindowAssociation *option = [[KPKWindowAssociation alloc] initWithWindowTitle:@"//match|this|or|that//" keystrokeSequence:@""];
+  XCTAssertTrue([option matchesWindowTitle:@"match"]);
+  XCTAssertTrue([option matchesWindowTitle:@"this"]);
+  XCTAssertTrue([option matchesWindowTitle:@"or"]);
+  XCTAssertTrue([option matchesWindowTitle:@"that"]);
+  XCTAssertFalse([option matchesWindowTitle:@"matc"]);
+  XCTAssertFalse([option matchesWindowTitle:@"hi"]);
+  XCTAssertFalse([option matchesWindowTitle:@"r"]);
+  XCTAssertFalse([option matchesWindowTitle:@"hat"]);
+
+  KPKWindowAssociation *characterClasses = [[KPKWindowAssociation alloc] initWithWindowTitle:@"//^([a-z]*|[0-9]+)$//" keystrokeSequence:@""];
+  XCTAssertTrue([characterClasses matchesWindowTitle:@"0"]);
+  XCTAssertTrue([characterClasses matchesWindowTitle:@"9"]);
+  XCTAssertTrue([characterClasses matchesWindowTitle:@"123456789"]);
+  XCTAssertTrue([characterClasses matchesWindowTitle:@"abcd"]);
+  XCTAssertTrue([characterClasses matchesWindowTitle:@"hallo"]);
+  XCTAssertTrue([characterClasses matchesWindowTitle:@"nicematchyougotthere"]);
+  XCTAssertFalse([characterClasses matchesWindowTitle:@"I don't think so!"]);
+  XCTAssertFalse([characterClasses matchesWindowTitle:@"a9"]);
+  XCTAssertFalse([characterClasses matchesWindowTitle:@"9a"]);
+  XCTAssertFalse([characterClasses matchesWindowTitle:@"a9"]);
 }
 
 

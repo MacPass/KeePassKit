@@ -162,7 +162,7 @@
 		4C5CF4941BE10E250019AA81 /* KPKXmlUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF48C1BE10E250019AA81 /* KPKXmlUtilities.m */; };
 		4C5CF4A91BE10F090019AA81 /* KPKTestHashedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4951BE10F090019AA81 /* KPKTestHashedData.m */; };
 		4C5CF4AA1BE10F090019AA81 /* KPKIconLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4961BE10F090019AA81 /* KPKIconLoading.m */; };
-		4C5CF4AB1BE10F090019AA81 /* KPKTestAutotype.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */; };
+		4C5CF4AB1BE10F090019AA81 /* KPKTestNSString+KPKCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4971BE10F090019AA81 /* KPKTestNSString+KPKCommands.m */; };
 		4C5CF4AC1BE10F090019AA81 /* KPKTestEntryLookup.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4981BE10F090019AA81 /* KPKTestEntryLookup.m */; };
 		4C5CF4AD1BE10F090019AA81 /* KPKTestHexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4991BE10F090019AA81 /* KPKTestHexColor.m */; };
 		4C5CF4AE1BE10F090019AA81 /* KPKTestKeyfileParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49A1BE10F090019AA81 /* KPKTestKeyfileParsing.m */; };
@@ -438,7 +438,7 @@
 		4C5CF48C1BE10E250019AA81 /* KPKXmlUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKXmlUtilities.m; sourceTree = "<group>"; };
 		4C5CF4951BE10F090019AA81 /* KPKTestHashedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestHashedData.m; sourceTree = "<group>"; };
 		4C5CF4961BE10F090019AA81 /* KPKIconLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKIconLoading.m; sourceTree = "<group>"; };
-		4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestAutotype.m; sourceTree = "<group>"; };
+		4C5CF4971BE10F090019AA81 /* KPKTestNSString+KPKCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KPKTestNSString+KPKCommands.m"; sourceTree = "<group>"; };
 		4C5CF4981BE10F090019AA81 /* KPKTestEntryLookup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestEntryLookup.m; sourceTree = "<group>"; };
 		4C5CF4991BE10F090019AA81 /* KPKTestHexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestHexColor.m; sourceTree = "<group>"; };
 		4C5CF49A1BE10F090019AA81 /* KPKTestKeyfileParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestKeyfileParsing.m; sourceTree = "<group>"; };
@@ -784,7 +784,7 @@
 				4CD9727D1F7E756500956EEB /* KPKTestDateAdditions.m */,
 				4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */,
 				4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */,
-				4C5CF4971BE10F090019AA81 /* KPKTestAutotype.m */,
+				4C5CF4971BE10F090019AA81 /* KPKTestNSString+KPKCommands.m */,
 				4CCB50AB1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m */,
 				4C93C4AC1DC2704600260DD4 /* KPKTestChaCha20.m */,
 				4CC57A271DCD454A003EE16C /* KPKTestTwofish.m */,
@@ -1481,7 +1481,7 @@
 				4C5CF4B81BE10F090019AA81 /* KPKTestUUIDAdditions.m in Sources */,
 				4C5CF4A91BE10F090019AA81 /* KPKTestHashedData.m in Sources */,
 				4CA1E49C1D8838BC00100002 /* KPKTestArgon2.m in Sources */,
-				4C5CF4AB1BE10F090019AA81 /* KPKTestAutotype.m in Sources */,
+				4C5CF4AB1BE10F090019AA81 /* KPKTestNSString+KPKCommands.m in Sources */,
 				4C71F1951E1EACA80060857C /* KPKTestSynchronization.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
