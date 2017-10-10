@@ -56,7 +56,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupsArrayBinding;
  Action names aren't set by the model
  */
 
-- (BOOL)isEqualToGroup:(KPKGroup *)aGroup;
+- (KPKNodeComparsionResult)compareToGroup:(KPKGroup *)aGroup;
 
 #pragma mark Search
 /**

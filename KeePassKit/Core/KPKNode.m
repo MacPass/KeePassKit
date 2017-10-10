@@ -89,26 +89,14 @@
   return nil;
 }
 
-/*
-- (BOOL)isEqual:(id)object {
-  if(self == object) {
-    return YES;
-  }
-  if(![self isKindOfClass:KPKNode.class]) {
-    return NO;
-  }
-  return [self isEqualToNode:object];
-}
-*/
-
-- (BOOL)isEqualToNode:(KPKNode *)aNode {
-  return [self _isEqualToNode:aNode options:0];
+- (KPKNodeComparsionResult)compareToNode:(KPKNode *)aNode {
+  return [self _compareToNode:aNode options:0];
 }
 
-- (BOOL)_isEqualToNode:(KPKNode *)aNode options:(KPKNodeEqualityOptions)options {
+- (KPKNodeComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
   /* pointing to the same instance */
   if(self == aNode) {
-    return YES;
+    return KPKNodeComparsionEqual;
   }
   
   /* We do not compare UUIDs as those are supposed to be different for nodes unless they are encoded/decoded */
@@ -116,27 +104,27 @@
   
   /* if UUIDs dont's match, nodes aren't considered equal! */
   if(![self.uuid isEqual:aNode.uuid]) {
-    return NO;
+    return KPKNodeComparsionDifferent;
   }
   
-  if(!(options & KPKNodeEqualityIgnoreAccessDateOption)) {
+  if(!(options & KPKNodeCompareIgnoreAccessDateOption)) {
     NSComparisonResult result = [self.timeInfo.accessDate compare:aNode.timeInfo.accessDate];
     if(result != NSOrderedSame) {
-      return NO;
+      return KPKNodeComparsionDifferent;
     }
   }
-  if(!(options & KPKNodeEqualityIgnoreModificationDateOption)) {
+  if(!(options & KPKNodeCompareIgnoreModificationDateOption)) {
     NSComparisonResult result = [self.timeInfo.modificationDate compare:aNode.timeInfo.modificationDate];
     if(result != NSOrderedSame) {
-      return NO;
+      return KPKNodeComparsionDifferent;
     }
   }
-  
+
   BOOL isEqual = (_iconId == aNode->_iconId)
   && (_iconUUID == aNode.iconUUID || [_iconUUID isEqual:aNode->_iconUUID])
   && (self.title == aNode.title || [self.title isEqual:aNode.title])
   && (self.notes == aNode.notes || [self.notes isEqual:aNode.notes]);
-  return isEqual;
+  return (isEqual ? KPKNodeComparsionEqual : KPKNodeComparsionDifferent);
 }
 
 - (NSString*)description {

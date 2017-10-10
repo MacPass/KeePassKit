@@ -75,7 +75,7 @@
   XCTAssertTrue([copiedBinary.data isEqualToData:binary.data], @"Binary data should match");
   XCTAssertTrue([copiedBinary.name isEqualToString:binary.name], @"Binary names should match");
   
-  XCTAssertTrue([entry isEqualToEntry:copyEntry], @"Decoede entry is the equal to encoded one!");
+  XCTAssertEqual(KPKNodeComparsionEqual, [entry compareToEntry:copyEntry], @"Decoede entry is the equal to encoded one!");
 }
 
 - (void)testIconCoding {
@@ -138,7 +138,7 @@
   KPKEntry *decodedEntry = [decodedGroup entryForUUID:entry.uuid];
   XCTAssertNotNil(decodedEntry);
   XCTAssertEqualObjects(decodedEntry.parent, decodedGroup);
-  XCTAssertTrue([decodedEntry isEqualToEntry:entry]);
+  XCTAssertEqual(KPKNodeComparsionEqual, [decodedEntry compareToEntry:entry]);
 }
 
 - (NSData *)encode:(id)object {

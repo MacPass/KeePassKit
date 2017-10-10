@@ -18,12 +18,12 @@ typedef NS_OPTIONS(NSUInteger, KPKUpdateOptions) {
   KPKUpdateOptionIncludeHistory         = 1<<3,  // History will be copied from source
 };
 
-typedef NS_OPTIONS(NSUInteger, KPKNodeEqualityOptions) {
-  KPKNodeEqualityIgnoreAccessDateOption       = 1<<0, // Do not compare access dates
-  KPKNodeEqualityIgnoreModificationDateOption = 1<<1, // Don't compare modification dates
-  KPKNodeEqualityIgnoreHistoryOption          = 1<<2, // Do not compare entry histories
-  KPKNodeEqualityIgnoreEntriesOption          = 1<<3, // KPKGroup only do not compare sub-entries
-  KPKNodeEqualityIgnoreGroupsOption           = 1<<4 // KPKGroup only, do not compare sub-groups (and entries in those sub-groups!)
+typedef NS_OPTIONS(NSUInteger, KPKNodeCompareOptions) {
+  KPKNodeCompareIgnoreAccessDateOption       = 1<<0, // Do not compare access dates
+  KPKNodeCompareIgnoreModificationDateOption = 1<<1, // Don't compare modification dates
+  KPKNodeCompareIgnoreHistoryOption          = 1<<2, // Do not compare entry histories
+  KPKNodeCompareIgnoreEntriesOption          = 1<<3, // KPKGroup only do not compare sub-entries
+  KPKNodeCompareIgnoreGroupsOption           = 1<<4 // KPKGroup only, do not compare sub-groups (and entries in those sub-groups!)
 };
 
 typedef NS_OPTIONS(NSUInteger, KPKNodeTraversalOptions) {
@@ -81,8 +81,8 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeTraversalOptions) {
  */
 - (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options;
 
-#pragma mark Extended Equality
-- (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options;
+#pragma mark comparsion
+- (KPKNodeComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options;
 
 @end
 

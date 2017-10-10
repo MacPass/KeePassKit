@@ -109,7 +109,7 @@
   
   KPKGroup *copy = [root copy];
   
-  XCTAssertTrue([root isEqualToGroup:copy]);
+  XCTAssertEqual(KPKNodeComparsionEqual, [root compareToGroup:copy]);
 }
 
 @end

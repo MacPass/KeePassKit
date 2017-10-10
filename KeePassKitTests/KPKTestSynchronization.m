@@ -76,7 +76,7 @@
   
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:newEntry.uuid];
   XCTAssertNotNil(synchronizedEntry);
-  XCTAssertTrue([newEntry isEqualToEntry:synchronizedEntry]);
+  XCTAssertEqual(KPKNodeComparsionEqual, [newEntry compareToEntry:synchronizedEntry]);
 }
 
 - (void)testDeletedEntry {
@@ -135,7 +135,7 @@
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:self.entryUUID];
   XCTAssertNotNil(synchronizedEntry);
   XCTAssertNil(self.treeA.mutableDeletedObjects[self.entryUUID]);
-  XCTAssertTrue([synchronizedEntry isEqualToEntry:entryB]);
+  XCTAssertEqual(KPKNodeComparsionEqual, [synchronizedEntry compareToEntry:entryB]);
   XCTAssertEqualObjects(synchronizedEntry.title, @"TitleChangeAfterDeletion");
 }
 
@@ -148,7 +148,7 @@
   
   KPKGroup *synchronizedGroup = [self.treeA.root groupForUUID:newGroup.uuid];
   XCTAssertNotNil(synchronizedGroup);
-  XCTAssertTrue([newGroup isEqualToGroup:synchronizedGroup]);
+  XCTAssertEqual(KPKNodeComparsionEqual, [newGroup compareToGroup:synchronizedGroup]);
 }
 
 

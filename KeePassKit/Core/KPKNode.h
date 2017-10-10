@@ -39,6 +39,11 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
   kKPKCopyOptionReferencePassword  = 1<<2, // KPKEntry only - copy references the password of the source
 };
 
+typedef NS_ENUM(NSUInteger, KPKNodeComparsionResult) {
+  KPKNodeComparsionDifferent = 0,
+  KPKNodeComparsionEqual     = 1
+};
+
 /**
  *  Abstract base class for all Nodes (Entries and Groups)
  *  Do not instanciate an instance of KPKnode
@@ -106,8 +111,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 - (instancetype)initWithUUID:(NSUUID *)uuid;
 
-- (BOOL)isEqualToNode:(KPKNode *)aNode;
-
+- (KPKNodeComparsionResult)compareToNode:(KPKNode *)aNode;
 /**
  *	Returns the root group of the node by walking up the tree
  *	@return	root group of the node

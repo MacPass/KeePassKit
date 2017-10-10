@@ -199,76 +199,62 @@ static NSSet *_observedKeyPathsSet;
   return copy;
 }
 
-/*
-- (BOOL)isEqual:(id)object {
-  if(self == object) {
-    return YES; // Pointers match;
-  }
-  if(object && [object isKindOfClass:KPKGroup.class]) {
-    KPKGroup *group = (KPKGroup *)object;
-    NSAssert(group, @"Equality is only possible on groups");
-    return [self isEqualToGroup:group];
-  }
-  return NO;
-}
-*/
-
-- (BOOL)isEqualToGroup:(KPKGroup *)aGroup {
+- (KPKNodeComparsionResult)compareToGroup:(KPKGroup *)aGroup {
   /* normal compare does not ignroe anything */
-  return [self _isEqualToNode:aGroup options:0];
+  return [self _compareToNode:aGroup options:0];
 }
 
-- (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options {
-  KPKGroup *aGroup = node.asGroup;
+- (KPKNodeComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
+  KPKGroup *aGroup = aNode.asGroup;
   NSAssert([aGroup isKindOfClass:KPKGroup.class], @"No valid object supplied!");
   if(![aGroup isKindOfClass:KPKGroup.class]) {
-    return NO;
+    return KPKNodeComparsionDifferent;
   }
   
-  if(![super _isEqualToNode:aGroup options:options]) {
-    return NO;
+  if(KPKNodeComparsionDifferent == [super _compareToNode:aGroup options:options]) {
+    return KPKNodeComparsionDifferent;
   }
   
   if((_isAutoTypeEnabled != aGroup->_isAutoTypeEnabled) || (_isSearchEnabled != aGroup->_isSearchEnabled)) {
-    return NO;
+    return KPKNodeComparsionDifferent;
   };
   
   __block BOOL isEqual = YES;
-  if(!(KPKNodeEqualityIgnoreGroupsOption & options)) {
+  if(!(KPKNodeCompareIgnoreGroupsOption & options)) {
     if( self.mutableGroups.count != aGroup.mutableGroups.count) {
-      return NO;
+      return KPKNodeComparsionDifferent;
     }
     /* Indexes in groups matter, so we need to compare them */
     [self.mutableGroups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
       KPKGroup *otherGroup = obj;
       KPKGroup *myGroup = self.mutableGroups[idx];
-      isEqual &= [myGroup _isEqualToNode:otherGroup options:options];
+      isEqual &= (KPKNodeComparsionEqual == [myGroup _compareToNode:otherGroup options:options]);
       *stop = !isEqual;
     }];
     
     if(!isEqual) {
-      return NO;
+      return KPKNodeComparsionDifferent;
     }
   }
   
-  if(!(KPKNodeEqualityIgnoreEntriesOption & options)) {
+  if(!(KPKNodeCompareIgnoreEntriesOption & options)) {
     if( self.mutableEntries.count != aGroup.mutableEntries.count ) {
-      return NO;
+      return KPKNodeComparsionDifferent;
     }
     for(KPKEntry *entry in self.mutableEntries) {
-      BOOL foundEntry = NO;
+      KPKNodeComparsionResult foundEntry = KPKNodeComparsionDifferent;
       for(KPKEntry *otherEntry in aGroup.mutableEntries) {
-        foundEntry = [entry _isEqualToNode:otherEntry options:options];
-        if(foundEntry) {
+        foundEntry = [entry _compareToNode:otherEntry options:options];
+        if(foundEntry == KPKNodeComparsionEqual) {
           break;
         }
       }
-      if(!foundEntry) {
-        return NO; // no matching entry found
+      if(KPKNodeComparsionDifferent == foundEntry) {
+        return KPKNodeComparsionDifferent; // no matching entry found
       }
     }
   }
-  return YES;
+  return KPKNodeComparsionEqual;
 }
 
 - (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {

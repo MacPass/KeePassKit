@@ -59,7 +59,7 @@
   
   KPKEntry *entry = loadedTree.root.groups.firstObject.entries.firstObject;
   
-  XCTAssertTrue([self.entry isEqualToEntry:entry]);
+  XCTAssertEqual(KPKNodeComparsionEqual, [self.entry compareToEntry:entry]);
 }
 
 

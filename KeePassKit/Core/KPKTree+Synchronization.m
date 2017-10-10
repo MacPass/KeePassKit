@@ -89,12 +89,12 @@
        ignore entries and subgroups to just compare the group attributes,
        KPKNodeEqualityIgnoreHistory not needed since we do not compare entries at all
        */
-      KPKNodeEqualityOptions equalityOptions = (KPKNodeEqualityIgnoreGroupsOption |
-                                                KPKNodeEqualityIgnoreEntriesOption |
-                                                KPKNodeEqualityIgnoreGroupsOption |
-                                                KPKNodeEqualityIgnoreEntriesOption);
+      KPKNodeCompareOptions equalityOptions = (KPKNodeCompareIgnoreGroupsOption |
+                                                KPKNodeCompareIgnoreEntriesOption |
+                                                KPKNodeCompareIgnoreGroupsOption |
+                                                KPKNodeCompareIgnoreEntriesOption);
       
-      if([localNode _isEqualToNode:externNode options:equalityOptions]) {
+      if(KPKNodeComparsionEqual == [localNode _compareToNode:externNode options:equalityOptions]) {
         continue; // node did not change
       }
       KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionIncludeHistory : 0;
