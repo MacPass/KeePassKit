@@ -103,6 +103,7 @@ if( self.updateTiming ) { \
     /* No Key change recommandation or enforcement */
     _masterKeyChangeRecommendationInterval=-1;
     _masterKeyChangeEnforcementInterval=-1;
+    _enforceMasterKeyChangeOnce = NO;
     _updateTiming = YES;
   }
   return self;

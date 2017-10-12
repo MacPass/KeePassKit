@@ -195,6 +195,7 @@
   data.masterKeyChanged = KPKXmlDate(metaElement, kKPKXmlMasterKeyChanged, self.useRelativeDates);
   data.masterKeyChangeRecommendationInterval = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeRecommendationInterval);
   data.masterKeyChangeEnforcementInterval = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeForceInterval);
+  data.enforceMasterKeyChangeOnce = KPKXmlBool(metaElement, kKPKXmlMasterKeyChangeForceOnce);
   
   DDXMLElement *memoryProtectionElement = [metaElement elementForName:kKPKXmlMemoryProtection];
   

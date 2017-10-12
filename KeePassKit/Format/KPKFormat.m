@@ -73,6 +73,7 @@ NSString *const kKPKXmlColor = @"Color";
 NSString *const kKPKXmlMasterKeyChanged = @"MasterKeyChanged";
 NSString *const kKPKXmlMasterKeyChangeRecommendationInterval = @"MasterKeyChangeRec";
 NSString *const kKPKXmlMasterKeyChangeForceInterval = @"MasterKeyChangeForce";
+NSString *const kKPKXmlMasterKeyChangeForceOnce = @"MasterKeyChangeForceOnce";
 
 NSString *const kKPKXmlMemoryProtection = @"MemoryProtection";
 NSString *const kKPKXmlProtectTitle = @"ProtectTitle";

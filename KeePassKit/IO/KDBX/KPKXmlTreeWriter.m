@@ -137,6 +137,9 @@
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChanged, KPKStringFromDate(metaData.masterKeyChanged, self.useRelativeDate));
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeRecommendationInterval, KPKStringFromLong(metaData.masterKeyChangeRecommendationInterval));
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeForceInterval, KPKStringFromLong(metaData.masterKeyChangeEnforcementInterval));
+  if(metaData.enforceMasterKeyChangeOnce) {
+    KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeForceOnce, KPKStringFromBool(metaData.enforceMasterKeyChangeOnce));
+  }
   
   DDXMLElement *memoryProtectionElement = [DDXMLElement elementWithName:kKPKXmlMemoryProtection];
   KPKAddXmlElement(memoryProtectionElement, kKPKXmlProtectTitle, KPKStringFromBool(metaData.protectTitle));
