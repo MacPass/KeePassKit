@@ -25,7 +25,7 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
 
 + (NSDictionary *)defaultParameters {
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:[super defaultParameters]];
-  parameters[KPKAESRoundsOption] = [[KPKNumber alloc] initWithUnsignedInteger64:50000];
+  parameters[KPKAESRoundsOption] = [[KPKNumber alloc] initWithUnsignedInteger64:60000];
   return [parameters copy];
 }
 
