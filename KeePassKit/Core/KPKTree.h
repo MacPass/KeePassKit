@@ -149,4 +149,10 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
 
 @end
 
+@interface KPKTree (History)
+
+- (void)maintainHistory;
+
+@end
+
 NS_ASSUME_NONNULL_END

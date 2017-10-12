@@ -801,6 +801,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)_maintainHistory {
   if(!self.tree.metaData) {
+    /* early return to prevent preemtive history clearing */
     return;
   }
   /* if size or count is set to zero, just clear the history */

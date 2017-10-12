@@ -43,4 +43,9 @@
  */
 - (void)_addHistoryEntry:(KPKEntry *)entry;
 
+/**
+ *  Updates history entries to adhere to settings in tree's metadata
+ */
+- (void)_maintainHistory;
+
 @end
