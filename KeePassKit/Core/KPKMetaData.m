@@ -218,6 +218,7 @@ if( self.updateTiming ) { \
   self.masterKeyChangeRecommendationInterval == other.masterKeyChangeRecommendationInterval &&
   self.enforceMasterKeyChange == other.enforceMasterKeyChange &&
   self.masterKeyChangeEnforcementInterval == other.masterKeyChangeEnforcementInterval &&
+  self.enforceMasterKeyChangeOnce == other.enforceMasterKeyChangeOnce &&
   self.protectTitle == other.protectTitle &&
   self.protectUserName == other.protectUserName &&
   self.protectPassword == other.protectPassword &&
