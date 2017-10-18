@@ -120,6 +120,10 @@
     }
   }
 
+  if(![self.mutableCustomData isEqualToDictionary:aNode.mutableCustomData]) {
+    return KPKComparsionDifferent;
+  }
+
   BOOL isEqual = (_iconId == aNode->_iconId)
   && (_iconUUID == aNode.iconUUID || [_iconUUID isEqual:aNode->_iconUUID])
   && (self.title == aNode.title || [self.title isEqual:aNode.title])
@@ -337,6 +341,7 @@
     self.iconUUID = node.iconUUID;
     self.title = node.title;
     self.notes = node.notes;
+    self.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:node.mutableCustomData copyItems:YES];
     return YES;
   }
   return NO;
@@ -350,13 +355,11 @@
   if(!value) {
     return;
   }
-  //[[self.undoManager prepareWithInvocationTarget:self] addCustomData:value forKey:key];
   [self removeCustomDataObject:[KPKPair pairWithKey:key value:value]];
 }
 
 - (void)addCustomData:(NSString *)value forKey:(NSString *)key {
   if(key && value) {
-    //[[self.undoManager prepareWithInvocationTarget:self] removeCustomDataForKey:key];
     [self addCustomDataObject:[KPKPair pairWithKey:key value:value]];
   }
 }
@@ -419,6 +422,7 @@
   copy.notes = self.notes;
   copy.title = self.title;
   copy.timeInfo = self.timeInfo;
+  copy.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:self.mutableCustomData copyItems:YES];
   return copy;
 }
 
