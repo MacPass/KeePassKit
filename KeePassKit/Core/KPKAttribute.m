@@ -106,7 +106,7 @@
   return NO;
 }
 
-- (BOOL)isEqualToAttribute:(KPKAttribute *)attribtue {
+- (BOOL)isEqualToAttribute:(KPKAttribute *)attribute {
   NSAssert([attribtue isKindOfClass:self.class], @"Only KPKAttributes are allowed in this test");
   return ([self.value isEqualToString:attribtue.value]
           && [self.key isEqualToString:attribtue.key]);
@@ -152,7 +152,9 @@
 
 - (void)setKey:(NSString *)key {
   if(![_key isEqualToString:key]) {
-    /* Key changes should never happen on default attributes */
+    if([self.entry hasAttributeWithKey:key]) {
+      key = [self.entry proposedKeyForAttributeKey:key];
+    }
     [[self.entry.undoManager prepareWithInvocationTarget:self] setKey:self.key];
     [self.entry touchModified];
     _key = [key copy];

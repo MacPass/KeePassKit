@@ -646,6 +646,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(index > self.mutableAttributes.count) {
     return; // index out of bounds
   }
+  attribute.entry = nil; // kill the entry to ensure no undo/redo hickups
+  KPKAttribute *duplicate = [self attributeWithKey:attribute.key];
+  if(nil != duplicate) {
+    attribute.key = [self proposedKeyForAttributeKey:attribute.key];
+    NSLog(@"Warning. Attribute with key %@ already present! Changing key to %@", duplicate.key, attribute.key);
+  }
   [[self.undoManager prepareWithInvocationTarget:self] removeCustomAttribute:attribute];
   [self touchModified];
   [self insertObject:attribute inMutableAttributesAtIndex:index];
