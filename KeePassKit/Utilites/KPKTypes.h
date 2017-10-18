@@ -31,4 +31,9 @@ typedef NS_ENUM(NSInteger, KPKInheritBool) {
   KPKInheritYES = YES,
 };
 
+typedef NS_ENUM(NSUInteger, KPKComparsionResult) {
+  KPKComparsionDifferent = 0,
+  KPKComparsionEqual     = 1
+};
+
 #endif

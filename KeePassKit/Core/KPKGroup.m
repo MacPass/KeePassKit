@@ -199,62 +199,62 @@ static NSSet *_observedKeyPathsSet;
   return copy;
 }
 
-- (KPKNodeComparsionResult)compareToGroup:(KPKGroup *)aGroup {
+- (KPKComparsionResult)compareToGroup:(KPKGroup *)aGroup {
   /* normal compare does not ignroe anything */
   return [self _compareToNode:aGroup options:0];
 }
 
-- (KPKNodeComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
+- (KPKComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
   KPKGroup *aGroup = aNode.asGroup;
   NSAssert([aGroup isKindOfClass:KPKGroup.class], @"No valid object supplied!");
   if(![aGroup isKindOfClass:KPKGroup.class]) {
-    return KPKNodeComparsionDifferent;
+    return KPKComparsionDifferent;
   }
   
-  if(KPKNodeComparsionDifferent == [super _compareToNode:aGroup options:options]) {
-    return KPKNodeComparsionDifferent;
+  if(KPKComparsionDifferent == [super _compareToNode:aGroup options:options]) {
+    return KPKComparsionDifferent;
   }
   
   if((_isAutoTypeEnabled != aGroup->_isAutoTypeEnabled) || (_isSearchEnabled != aGroup->_isSearchEnabled)) {
-    return KPKNodeComparsionDifferent;
+    return KPKComparsionDifferent;
   };
   
   __block BOOL isEqual = YES;
   if(!(KPKNodeCompareIgnoreGroupsOption & options)) {
     if( self.mutableGroups.count != aGroup.mutableGroups.count) {
-      return KPKNodeComparsionDifferent;
+      return KPKComparsionDifferent;
     }
     /* Indexes in groups matter, so we need to compare them */
     [self.mutableGroups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
       KPKGroup *otherGroup = obj;
       KPKGroup *myGroup = self.mutableGroups[idx];
-      isEqual &= (KPKNodeComparsionEqual == [myGroup _compareToNode:otherGroup options:options]);
+      isEqual &= (KPKComparsionEqual == [myGroup _compareToNode:otherGroup options:options]);
       *stop = !isEqual;
     }];
     
     if(!isEqual) {
-      return KPKNodeComparsionDifferent;
+      return KPKComparsionDifferent;
     }
   }
   
   if(!(KPKNodeCompareIgnoreEntriesOption & options)) {
     if( self.mutableEntries.count != aGroup.mutableEntries.count ) {
-      return KPKNodeComparsionDifferent;
+      return KPKComparsionDifferent;
     }
     for(KPKEntry *entry in self.mutableEntries) {
-      KPKNodeComparsionResult foundEntry = KPKNodeComparsionDifferent;
+      KPKComparsionResult foundEntry = KPKComparsionDifferent;
       for(KPKEntry *otherEntry in aGroup.mutableEntries) {
         foundEntry = [entry _compareToNode:otherEntry options:options];
-        if(foundEntry == KPKNodeComparsionEqual) {
+        if(foundEntry == KPKComparsionEqual) {
           break;
         }
       }
-      if(KPKNodeComparsionDifferent == foundEntry) {
-        return KPKNodeComparsionDifferent; // no matching entry found
+      if(KPKComparsionDifferent == foundEntry) {
+        return KPKComparsionDifferent; // no matching entry found
       }
     }
   }
-  return KPKNodeComparsionEqual;
+  return KPKComparsionEqual;
 }
 
 - (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {

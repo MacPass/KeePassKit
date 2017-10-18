@@ -94,7 +94,7 @@
                                                 KPKNodeCompareIgnoreGroupsOption |
                                                 KPKNodeCompareIgnoreEntriesOption);
       
-      if(KPKNodeComparsionEqual == [localNode _compareToNode:externNode options:equalityOptions]) {
+      if(KPKComparsionEqual == [localNode _compareToNode:externNode options:equalityOptions]) {
         continue; // node did not change
       }
       KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionIncludeHistory : 0;

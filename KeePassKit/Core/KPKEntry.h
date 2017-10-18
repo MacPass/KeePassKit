@@ -86,7 +86,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  */
 @property (nonatomic, readonly) BOOL isMeta;
 
-- (KPKNodeComparsionResult)compareToEntry:(KPKEntry *)entry;
+- (KPKComparsionResult)compareToEntry:(KPKEntry *)entry;
 
 #pragma mark MetaEntries
 /**

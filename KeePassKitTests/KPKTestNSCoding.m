@@ -41,7 +41,10 @@
 }
 
 - (void)testEntryCoding {
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.root = [[KPKGroup alloc] init];
   KPKEntry *entry = [[KPKEntry alloc] init];
+  [entry addToGroup:tree.root];
   
   entry.title = @"Title";
   entry.url = @"URL";
@@ -63,6 +66,9 @@
   [entry.autotype addAssociation:[[KPKWindowAssociation alloc] initWithWindowTitle:@"Window1" keystrokeSequence:@"Sequence1"]];
   [entry.autotype addAssociation:  [[KPKWindowAssociation alloc] initWithWindowTitle:@"Window2" keystrokeSequence:nil]];
   
+  [entry pushHistory];
+  XCTAssertEqual(entry.mutableHistory.count, 1);
+  
   NSData *encodedData = [self encode:entry];
   KPKEntry *copyEntry = [self decode:encodedData ofClass:KPKEntry.class];
   
@@ -75,7 +81,9 @@
   XCTAssertTrue([copiedBinary.data isEqualToData:binary.data], @"Binary data should match");
   XCTAssertTrue([copiedBinary.name isEqualToString:binary.name], @"Binary names should match");
   
-  XCTAssertEqual(KPKNodeComparsionEqual, [entry compareToEntry:copyEntry], @"Decoede entry is the equal to encoded one!");
+  XCTAssertEqual(KPKComparsionEqual, [entry compareToEntry:copyEntry], @"Decoede entry is the equal to encoded one!");
+  [entry clearHistory];
+  XCTAssertEqual(KPKComparsionDifferent, [entry compareToEntry:copyEntry], @"Decoede entry is the equal to encoded one!");
 }
 
 - (void)testIconCoding {
@@ -138,7 +146,7 @@
   KPKEntry *decodedEntry = [decodedGroup entryForUUID:entry.uuid];
   XCTAssertNotNil(decodedEntry);
   XCTAssertEqualObjects(decodedEntry.parent, decodedGroup);
-  XCTAssertEqual(KPKNodeComparsionEqual, [decodedEntry compareToEntry:entry]);
+  XCTAssertEqual(KPKComparsionEqual, [decodedEntry compareToEntry:entry]);
 }
 
 - (NSData *)encode:(id)object {

@@ -89,14 +89,14 @@
   return nil;
 }
 
-- (KPKNodeComparsionResult)compareToNode:(KPKNode *)aNode {
+- (KPKComparsionResult)compareToNode:(KPKNode *)aNode {
   return [self _compareToNode:aNode options:0];
 }
 
-- (KPKNodeComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
+- (KPKComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
   /* pointing to the same instance */
   if(self == aNode) {
-    return KPKNodeComparsionEqual;
+    return KPKComparsionEqual;
   }
   
   /* We do not compare UUIDs as those are supposed to be different for nodes unless they are encoded/decoded */
@@ -104,19 +104,19 @@
   
   /* if UUIDs dont's match, nodes aren't considered equal! */
   if(![self.uuid isEqual:aNode.uuid]) {
-    return KPKNodeComparsionDifferent;
+    return KPKComparsionDifferent;
   }
   
   if(!(options & KPKNodeCompareIgnoreAccessDateOption)) {
     NSComparisonResult result = [self.timeInfo.accessDate compare:aNode.timeInfo.accessDate];
     if(result != NSOrderedSame) {
-      return KPKNodeComparsionDifferent;
+      return KPKComparsionDifferent;
     }
   }
   if(!(options & KPKNodeCompareIgnoreModificationDateOption)) {
     NSComparisonResult result = [self.timeInfo.modificationDate compare:aNode.timeInfo.modificationDate];
     if(result != NSOrderedSame) {
-      return KPKNodeComparsionDifferent;
+      return KPKComparsionDifferent;
     }
   }
 
@@ -124,7 +124,7 @@
   && (_iconUUID == aNode.iconUUID || [_iconUUID isEqual:aNode->_iconUUID])
   && (self.title == aNode.title || [self.title isEqual:aNode.title])
   && (self.notes == aNode.notes || [self.notes isEqual:aNode.notes]);
-  return (isEqual ? KPKNodeComparsionEqual : KPKNodeComparsionDifferent);
+  return (isEqual ? KPKComparsionEqual : KPKComparsionDifferent);
 }
 
 - (NSString*)description {

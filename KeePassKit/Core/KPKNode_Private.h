@@ -82,7 +82,7 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeTraversalOptions) {
 - (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options;
 
 #pragma mark comparsion
-- (KPKNodeComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options;
+- (KPKComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options;
 
 @end
 

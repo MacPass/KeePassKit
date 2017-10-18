@@ -310,42 +310,53 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark Equality
 
 
-- (KPKNodeComparsionResult)compareToEntry:(KPKEntry *)entry {
+- (KPKComparsionResult)compareToEntry:(KPKEntry *)entry {
   return [self _compareToNode:entry options:0];
 }
 
-- (KPKNodeComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
+- (KPKComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
   KPKEntry *entry = aNode.asEntry;
   NSAssert([entry isKindOfClass:KPKEntry.class], @"Test only allowed with KPKEntry classes");
   
-  if(KPKNodeComparsionDifferent == [super _compareToNode:aNode options:options]) {
-    return KPKNodeComparsionDifferent;
+  if(KPKComparsionDifferent == [super _compareToNode:aNode options:options]) {
+    return KPKComparsionDifferent;
   }
   
   /* Compare Attributes (do not care about order!) */
   if(self.mutableAttributes.count != entry.mutableAttributes.count) {
-    return KPKNodeComparsionDifferent;
+    return KPKComparsionDifferent;
   }
   for(KPKAttribute *attribute in self.mutableAttributes) {
     KPKAttribute *otherAttribute = [entry attributeWithKey:attribute.key];
     if(NO == [otherAttribute isEqualToAttribute:attribute]) {
-      return KPKNodeComparsionDifferent;
+      return KPKComparsionDifferent;
     }
   }
   
   /* Compare History - order has to match! */
   if(!(options & KPKNodeCompareIgnoreHistoryOption)) {
-    if(NO == [self.mutableHistory isEqualToArray:entry.mutableHistory]) {
-      return KPKNodeComparsionDifferent;
+    /* TODO ensure order by date ?*/
+    if(self.mutableHistory.count != entry.mutableHistory.count) {
+      return KPKComparsionDifferent;
+    }
+    __block KPKComparsionResult historyCompareResult = KPKComparsionEqual;
+    [self.mutableHistory enumerateObjectsUsingBlock:^(KPKEntry * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      KPKEntry *otherHistoryEntry = entry.mutableHistory[idx];
+      if(KPKComparsionDifferent == [obj _compareToNode:otherHistoryEntry options:options]) {
+        *stop = YES;
+        historyCompareResult = KPKComparsionDifferent;
+      }
+    }];
+    for(NSUInteger index = 0; index < self.mutableHistory.count; index++) {
+      
     }
   }
-  
   /* Compare Binaries - order has to macht! */
   if(NO == [self.mutableBinaries isEqualToArray:entry.mutableBinaries]) {
-    return KPKNodeComparsionDifferent;
+    return KPKComparsionDifferent;
   }
   
-  return ([self.autotype isEqualToAutotype:entry.autotype] ? KPKNodeComparsionEqual : KPKNodeComparsionDifferent);
+  return ([self.autotype isEqualToAutotype:entry.autotype] ? KPKComparsionEqual : KPKComparsionDifferent);
 }
 
 #pragma mark -
@@ -774,7 +785,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (BOOL)hasHistoryOfEntry:(KPKEntry *)entry {
   for(KPKEntry *historyEntry in self.mutableHistory) {
-    if(KPKNodeComparsionEqual == [historyEntry _compareToNode:entry options:(KPKNodeCompareIgnoreAccessDateOption|KPKNodeCompareIgnoreModificationDateOption)]) {
+    if(KPKComparsionEqual == [historyEntry _compareToNode:entry options:(KPKNodeCompareIgnoreAccessDateOption|KPKNodeCompareIgnoreModificationDateOption)]) {
       return YES;
     }
   }

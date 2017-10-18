@@ -22,6 +22,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import "KPKTypes.h"
 #import "KPKFormat.h"
 #import "KPKModificationRecording.h"
 
@@ -37,11 +38,6 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
   kKPKCopyOptionCopyHistory        = 1<<0, // KPKEntry only - make a copy of the soures' history.
   kKPKCopyOptionReferenceUsername  = 1<<1, // KPKEntry only - copy refernces the username of the source
   kKPKCopyOptionReferencePassword  = 1<<2, // KPKEntry only - copy references the password of the source
-};
-
-typedef NS_ENUM(NSUInteger, KPKNodeComparsionResult) {
-  KPKNodeComparsionDifferent = 0,
-  KPKNodeComparsionEqual     = 1
 };
 
 /**
@@ -63,7 +59,7 @@ typedef NS_ENUM(NSUInteger, KPKNodeComparsionResult) {
 @property(nonatomic, readonly, copy) NSUUID *uuid;
 @property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *notes;
-@property(nonatomic, copy) NSDictionary<NSString *, NSString *> *customData;
+@property(nonatomic, readonly, copy) NSDictionary<NSString *, NSString *> *customData;
 
 @property(nonatomic, readonly, copy) KPKTimeInfo *timeInfo;
 
@@ -111,7 +107,7 @@ typedef NS_ENUM(NSUInteger, KPKNodeComparsionResult) {
  */
 - (instancetype)initWithUUID:(NSUUID *)uuid;
 
-- (KPKNodeComparsionResult)compareToNode:(KPKNode *)aNode;
+- (KPKComparsionResult)compareToNode:(KPKNode *)aNode;
 /**
  *	Returns the root group of the node by walking up the tree
  *	@return	root group of the node
