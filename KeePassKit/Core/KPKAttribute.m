@@ -107,9 +107,9 @@
 }
 
 - (BOOL)isEqualToAttribute:(KPKAttribute *)attribute {
-  NSAssert([attribtue isKindOfClass:self.class], @"Only KPKAttributes are allowed in this test");
-  return ([self.value isEqualToString:attribtue.value]
-          && [self.key isEqualToString:attribtue.key]);
+  NSAssert([attribute isKindOfClass:self.class], @"Only KPKAttributes are allowed in this test");
+  return ([self.value isEqualToString:attribute.value]
+          && [self.key isEqualToString:attribute.key]);
 }
 
 - (BOOL)validateKey:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError {
