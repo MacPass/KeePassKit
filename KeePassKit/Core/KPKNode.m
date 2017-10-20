@@ -132,7 +132,7 @@
 }
 
 - (NSString*)description {
-  return [NSString stringWithFormat:@"%@\rimage=%ld\rname=%@\r%@]",
+  return [NSString stringWithFormat:@"%@\rimage=%d\rname=%@\r%@]",
           self.class,
           self.iconId,
           self.title,

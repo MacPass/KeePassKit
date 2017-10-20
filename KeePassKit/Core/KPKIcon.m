@@ -82,7 +82,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [[KPKIcon alloc] init];
   if(self) {
-    _image = [aDecoder decodeObjectOfClass:NSImage.class forKey:NSStringFromSelector(@selector(image))];
+    _image = [aDecoder decodeObjectOfClass:NSUIImage.class forKey:NSStringFromSelector(@selector(image))];
     _uuid = [aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(uuid))];
   }
   return self;

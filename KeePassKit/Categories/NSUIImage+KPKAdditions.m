@@ -11,7 +11,7 @@
 @implementation NSUIImage (KPKAdditions)
 
 - (NSData *)kpk_pngData {
-#ifdef KPK_MAC
+#if KPK_MAC
   if(!self.isValid) {
     return nil;
   }

@@ -6,6 +6,7 @@
 //  Copyright © 2017 HicknHack Software GmbH. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import "KPKPlatformIncludes.h"
 
 @interface NSUIImage (KPKAdditions)
