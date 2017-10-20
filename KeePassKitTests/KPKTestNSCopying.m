@@ -31,7 +31,10 @@
 }
 
 - (void)testEntryCopying {
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.root = [[KPKGroup alloc] init];
   KPKEntry *entry = [[KPKEntry alloc] init];
+  [entry addToGroup:tree.root];
   
   entry.title = @"Title";
   entry.url = @"URL";
@@ -48,11 +51,17 @@
   [entry addBinary:binary];
   [entry addCustomAttribute:[[KPKAttribute alloc] initWithKey:@"Custom" value:kKPKXmlValue isProtected:NO]];
 
+  [entry pushHistory];
+  XCTAssertEqual(entry.mutableHistory.count, 1);
+  
   KPKEntry *copyEntry = [entry copy];
+  XCTAssertEqual(KPKComparsionEqual, [entry compareToEntry:copyEntry]);
   
   entry.title = @"NewTitle";
   [entry removeBinary:binary];
   ((KPKAttribute *)entry.customAttributes.lastObject).key = @"NewCustomKey";
+  
+  XCTAssertEqual(KPKComparsionDifferent, [entry compareToEntry:copyEntry]);
   
   XCTAssertNotNil(copyEntry, @"Copied Entry cannot be nil");
   XCTAssertEqualObjects(copyEntry.title, @"Title", @"Titles should match");
@@ -109,7 +118,7 @@
   
   KPKGroup *copy = [root copy];
   
-  XCTAssertEqualObjects(root, copy);
+  XCTAssertEqual(KPKComparsionEqual, [root compareToGroup:copy]);
 }
 
 @end

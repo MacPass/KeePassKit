@@ -89,43 +89,46 @@
   return nil;
 }
 
-- (BOOL)isEqual:(id)object {
-  if(![self isKindOfClass:KPKNode.class]) {
-    return NO;
-  }
-  return [self isEqualToNode:object];
+- (KPKComparsionResult)compareToNode:(KPKNode *)aNode {
+  return [self _compareToNode:aNode options:0];
 }
 
-- (BOOL)isEqualToNode:(KPKNode *)aNode {
-  return [self _isEqualToNode:aNode options:0];
-}
-
-- (BOOL)_isEqualToNode:(KPKNode *)aNode options:(KPKNodeEqualityOptions)options {
+- (KPKComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
   /* pointing to the same instance */
   if(self == aNode) {
-    return YES;
+    return KPKComparsionEqual;
   }
+  
   /* We do not compare UUIDs as those are supposed to be different for nodes unless they are encoded/decoded */
   NSAssert([aNode isKindOfClass:KPKNode.class], @"Unsupported type for quality test");
   
-  if(!(options & KPKNodeEqualityIgnoreAccessDateOption)) {
-    NSComparisonResult result = [self.timeInfo.accessDate compare:aNode.timeInfo.accessDate];
-    if(result != NSOrderedSame) {
-      return NO;
-    }
-  }
-  if(!(options & KPKNodeEqualityIgnoreModificationDateOption)) {
-    NSComparisonResult result = [self.timeInfo.modificationDate compare:aNode.timeInfo.modificationDate];
-    if(result != NSOrderedSame) {
-      return NO;
-    }
+  /* if UUIDs dont's match, nodes aren't considered equal! */
+  if(![self.uuid isEqual:aNode.uuid]) {
+    return KPKComparsionDifferent;
   }
   
+  if(!(options & KPKNodeCompareIgnoreAccessDateOption)) {
+    NSComparisonResult result = [self.timeInfo.accessDate compare:aNode.timeInfo.accessDate];
+    if(result != NSOrderedSame) {
+      return KPKComparsionDifferent;
+    }
+  }
+  if(!(options & KPKNodeCompareIgnoreModificationDateOption)) {
+    NSComparisonResult result = [self.timeInfo.modificationDate compare:aNode.timeInfo.modificationDate];
+    if(result != NSOrderedSame) {
+      return KPKComparsionDifferent;
+    }
+  }
+
+  if(![self.mutableCustomData isEqualToDictionary:aNode.mutableCustomData]) {
+    return KPKComparsionDifferent;
+  }
+
   BOOL isEqual = (_iconId == aNode->_iconId)
   && (_iconUUID == aNode.iconUUID || [_iconUUID isEqual:aNode->_iconUUID])
   && (self.title == aNode.title || [self.title isEqual:aNode.title])
   && (self.notes == aNode.notes || [self.notes isEqual:aNode.notes]);
-  return isEqual;
+  return (isEqual ? KPKComparsionEqual : KPKComparsionDifferent);
 }
 
 - (NSString*)description {
@@ -187,14 +190,10 @@
 }
 
 - (KPKGroup *)rootGroup {
-  KPKGroup *rootGroup = self.parent;
-  if(!rootGroup) {
+  if(!self.parent) {
     return self.asGroup;
   }
-  while(rootGroup.parent) {
-    rootGroup = rootGroup.parent;
-  }
-  return rootGroup;
+  return self.parent.rootGroup;
 }
 
 - (BOOL)isAnchestorOf:(KPKNode *)node {
@@ -304,6 +303,9 @@
   /* TODO handle moving accross trees! */
   [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:self.index];
   [self.parent _removeChild:self];
+  if(self.tree && group.tree) {
+    NSAssert(self.tree == group.tree, @"Moving nodes between trees is not supported. Use -remove and -addToGroup: instead.");
+  }
   [group _addChild:self atIndex:index];
   [self touchMoved];
 }
@@ -339,6 +341,7 @@
     self.iconUUID = node.iconUUID;
     self.title = node.title;
     self.notes = node.notes;
+    self.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:node.mutableCustomData copyItems:YES];
     return YES;
   }
   return NO;
@@ -352,13 +355,11 @@
   if(!value) {
     return;
   }
-  //[[self.undoManager prepareWithInvocationTarget:self] addCustomData:value forKey:key];
   [self removeCustomDataObject:[KPKPair pairWithKey:key value:value]];
 }
 
 - (void)addCustomData:(NSString *)value forKey:(NSString *)key {
   if(key && value) {
-    //[[self.undoManager prepareWithInvocationTarget:self] removeCustomDataForKey:key];
     [self addCustomDataObject:[KPKPair pairWithKey:key value:value]];
   }
 }
@@ -421,6 +422,7 @@
   copy.notes = self.notes;
   copy.title = self.title;
   copy.timeInfo = self.timeInfo;
+  copy.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:self.mutableCustomData copyItems:YES];
   return copy;
 }
 
@@ -441,6 +443,19 @@
 
 - (void)_regenerateUUIDs {
   _uuid = [[[NSUUID alloc] init] copy];
+}
+
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block options:(KPKNodeTraversalOptions)options {
+  if(block) {
+    if((!(options & KPKNodeTraversalOptionSkipGroups) && self.asGroup) ||
+       (!(options & KPKNodeTraversalOptionSkipEntries) && self.asEntry)) {
+      block(self);
+    }
+  }
+}
+
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *node))block {
+  [self _traverseNodesWithBlock:block options:0];
 }
 
 - (void)addCustomDataObject:(KPKPair *)pair {

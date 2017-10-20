@@ -102,6 +102,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlColor;
 FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChanged;
 FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeRecommendationInterval;
 FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeForceInterval;
+FOUNDATION_EXTERN NSString *const kKPKXmlMasterKeyChangeForceOnce;
 
 FOUNDATION_EXTERN NSString *const kKPKXmlMemoryProtection;
 FOUNDATION_EXTERN NSString *const kKPKXmlProtectTitle;

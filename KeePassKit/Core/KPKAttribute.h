@@ -57,7 +57,7 @@
  *  @param attribtue The attribute to test for equality
  *  @return YES if the reciever is euqal to the attribute. This is a value based equality!
  */
-- (BOOL)isEqualToAttribute:(KPKAttribute *)attribtue;
+- (BOOL)isEqualToAttribute:(KPKAttribute *)attribute;
 /**
  *  Determines if the reciever is a default attribute or not
  *  @return YES if the reciever is a defautl attribute, NO otherwise

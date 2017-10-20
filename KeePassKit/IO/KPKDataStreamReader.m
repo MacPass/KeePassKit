@@ -42,6 +42,9 @@
 
 - (NSData *)readDataWithLength:(NSUInteger)length {
   // FIXME: test for maxsize
+  if(length == 0) {
+    return nil;
+  }
   length = MIN(self.data.length - self.offset, length);
   NSData *data = [self.data subdataWithRange:NSMakeRange(self.offset, length)];
   self.offset += length;

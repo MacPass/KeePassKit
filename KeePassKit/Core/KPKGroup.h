@@ -28,6 +28,8 @@
 @class KPKEntry;
 
 FOUNDATION_EXPORT NSString *const KPKGroupUTI;
+FOUNDATION_EXPORT NSString *const KPKEntriesArrayBinding;
+FOUNDATION_EXPORT NSString *const KPKGroupsArrayBinding;
 /**
  *  A group is like a folder in the database.
  *  It can hold subgroups as well as entries.
@@ -39,14 +41,11 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
 @interface KPKGroup : KPKNode <NSSecureCoding, NSCopying>
 #endif
 
-@property(nonatomic, copy, readonly) NSArray<KPKGroup *> *groups;
-@property(nonatomic, copy, readonly) NSArray<KPKEntry *> *entries;
+@property(nonatomic, copy, readonly) NSArray<KPKGroup *> *groups; // if you need a performance oriented read only binding interface, use KPKGroupsArrayBinding
+@property(nonatomic, copy, readonly) NSArray<KPKEntry *> *entries; // if you need a performance oriented read only bindable interface, use KPKEntriesArrayBinding
 @property(nonatomic, copy, readonly) NSArray<KPKEntry *> *childEntries;
 @property(nonatomic, copy, readonly) NSArray<KPKGroup *> *childGroups;
 @property(nonatomic, copy, readonly) NSArray<KPKNode *> *children;
-
-@property(nonatomic, assign, readonly) NSUInteger countOfEntries;
-@property(nonatomic, assign, readonly) NSUInteger countOfGroups;
 
 @property(nonatomic, copy) NSUUID *lastTopVisibleEntry;
 @property(nonatomic) BOOL isExpanded;
@@ -57,7 +56,7 @@ FOUNDATION_EXPORT NSString *const KPKGroupUTI;
  Action names aren't set by the model
  */
 
-- (BOOL)isEqualToGroup:(KPKGroup *)aGroup;
+- (KPKComparsionResult)compareToGroup:(KPKGroup *)aGroup;
 
 #pragma mark Search
 /**

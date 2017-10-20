@@ -53,6 +53,12 @@
   XCTAssertEqual(icon.image.representations.count,1);
   NSData *pngData = icon.image.kpk_pngData;
   XCTAssertNotNil(pngData);
+  
+  icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"aspect.pdf"]];
+  XCTAssertEqual(icon.image.representations.count,1);
+  pngData = icon.image.kpk_pngData;
+  XCTAssertNotNil(pngData);
+
 }
 
 - (void)testIcnsLoading {

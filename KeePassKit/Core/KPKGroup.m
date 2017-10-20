@@ -37,6 +37,9 @@
 #import "NSUUID+KPKAdditions.h"
 #import "KPKScopedSet.h"
 
+NSString *const KPKEntriesArrayBinding = @"entriesArray";
+NSString *const KPKGroupsArrayBinding = @"groupsArray";
+
 @implementation KPKGroup
 
 static NSSet *_observedKeyPathsSet;
@@ -66,6 +69,14 @@ static NSSet *_observedKeyPathsSet;
 }
 
 + (NSSet<NSString *> *)keyPathsForValuesAffectingEntries {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingGroupsArray {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableGroups))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingEntriesArray {
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
 }
 
@@ -188,74 +199,62 @@ static NSSet *_observedKeyPathsSet;
   return copy;
 }
 
-- (BOOL)isEqual:(id)object {
-  if(self == object) {
-    return YES; // Pointers match;
-  }
-  if(object && [object isKindOfClass:KPKGroup.class]) {
-    KPKGroup *group = (KPKGroup *)object;
-    NSAssert(group, @"Equality is only possible on groups");
-    return [self isEqualToGroup:group];
-  }
-  return NO;
-}
-
-- (BOOL)isEqualToGroup:(KPKGroup *)aGroup {
+- (KPKComparsionResult)compareToGroup:(KPKGroup *)aGroup {
   /* normal compare does not ignroe anything */
-  return [self _isEqualToNode:aGroup options:0];
+  return [self _compareToNode:aGroup options:0];
 }
 
-- (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options {
-  KPKGroup *aGroup = node.asGroup;
+- (KPKComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
+  KPKGroup *aGroup = aNode.asGroup;
   NSAssert([aGroup isKindOfClass:KPKGroup.class], @"No valid object supplied!");
   if(![aGroup isKindOfClass:KPKGroup.class]) {
-    return NO;
+    return KPKComparsionDifferent;
   }
   
-  if(![super _isEqualToNode:aGroup options:options]) {
-    return NO;
+  if(KPKComparsionDifferent == [super _compareToNode:aGroup options:options]) {
+    return KPKComparsionDifferent;
   }
   
   if((_isAutoTypeEnabled != aGroup->_isAutoTypeEnabled) || (_isSearchEnabled != aGroup->_isSearchEnabled)) {
-    return NO;
+    return KPKComparsionDifferent;
   };
   
   __block BOOL isEqual = YES;
-  if(!(KPKNodeEqualityIgnoreGroupsOption & options)) {
+  if(!(KPKNodeCompareIgnoreGroupsOption & options)) {
     if( self.mutableGroups.count != aGroup.mutableGroups.count) {
-      return NO;
+      return KPKComparsionDifferent;
     }
     /* Indexes in groups matter, so we need to compare them */
     [self.mutableGroups enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
       KPKGroup *otherGroup = obj;
       KPKGroup *myGroup = self.mutableGroups[idx];
-      isEqual &= [myGroup _isEqualToNode:otherGroup options:options];
+      isEqual &= (KPKComparsionEqual == [myGroup _compareToNode:otherGroup options:options]);
       *stop = !isEqual;
     }];
     
     if(!isEqual) {
-      return NO;
+      return KPKComparsionDifferent;
     }
   }
   
-  if(!(KPKNodeEqualityIgnoreEntriesOption & options)) {
+  if(!(KPKNodeCompareIgnoreEntriesOption & options)) {
     if( self.mutableEntries.count != aGroup.mutableEntries.count ) {
-      return NO;
+      return KPKComparsionDifferent;
     }
     for(KPKEntry *entry in self.mutableEntries) {
-      BOOL foundEntry = NO;
+      KPKComparsionResult foundEntry = KPKComparsionDifferent;
       for(KPKEntry *otherEntry in aGroup.mutableEntries) {
-        foundEntry = [entry _isEqualToNode:otherEntry options:options];
-        if(foundEntry) {
+        foundEntry = [entry _compareToNode:otherEntry options:options];
+        if(foundEntry == KPKComparsionEqual) {
           break;
         }
       }
-      if(!foundEntry) {
-        return NO; // no matching entry found
+      if(KPKComparsionDifferent == foundEntry) {
+        return KPKComparsionDifferent; // no matching entry found
       }
     }
   }
-  return YES;
+  return KPKComparsionEqual;
 }
 
 - (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
@@ -281,6 +280,16 @@ static NSSet *_observedKeyPathsSet;
     return YES;
   }
   return didChange;
+}
+
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block options:(KPKNodeTraversalOptions)options {
+  [super _traverseNodesWithBlock:block options:options];
+  for(KPKGroup *group in self.mutableGroups) {
+    [group _traverseNodesWithBlock:block options:options];
+  }
+  for(KPKEntry *entry in self.mutableEntries) {
+    [entry _traverseNodesWithBlock:block options:options];
+  }
 }
 
 #pragma mark Strucural Helper
@@ -337,7 +346,7 @@ static NSSet *_observedKeyPathsSet;
 #pragma mark -
 #pragma mark Properties
 - (NSUInteger)childIndex {
-  return [self.parent.mutableGroups indexOfObject:self];
+  return [self.parent.mutableGroups indexOfObjectIdenticalTo:self];
 }
 
 - (NSArray<KPKGroup *> *)groups {
@@ -422,19 +431,29 @@ static NSSet *_observedKeyPathsSet;
 #pragma mark -
 #pragma mark Accessors
 - (NSArray *)childEntries {
-  NSMutableArray *childEntries = [NSMutableArray arrayWithArray:self.mutableEntries];
+  NSMutableArray *entries = [[NSMutableArray alloc] init];
+  [self _collectChildEntries:entries];
+  return entries;
+}
+
+- (void)_collectChildEntries:(NSMutableArray *)entries {
+  [entries addObjectsFromArray:self.mutableEntries];
   for(KPKGroup *group in self.mutableGroups) {
-    [childEntries addObjectsFromArray:group.childEntries];
+    [group _collectChildEntries:entries];
   }
-  return childEntries;
 }
 
 - (NSArray *)childGroups {
-  NSMutableArray *childGroups = [NSMutableArray arrayWithArray:self.mutableGroups];
+  NSMutableArray *groups = [[NSMutableArray alloc] init];
+  [self _collectChildGroups:groups];
+  return groups;
+}
+
+- (void)_collectChildGroups:(NSMutableArray *)groups {
+  [groups addObjectsFromArray:self.mutableGroups];
   for(KPKGroup *group in self.mutableGroups) {
-    [childGroups addObjectsFromArray:group.childGroups];
+    [group _collectChildGroups:groups];
   }
-  return childGroups;
 }
 
 - (KPKGroup *)asGroup {
@@ -466,19 +485,19 @@ static NSSet *_observedKeyPathsSet;
   
   if(group) {
     /* deleted objects should be registred, no undo registration */
-    [self removeObjectFromMutableGroupsAtIndex:[self.mutableGroups indexOfObject:group]];
+    [self removeObjectFromMutableGroupsAtIndex:[self.mutableGroups indexOfObjectIdenticalTo:group]];
   }
   else if(entry) {
-    [self removeObjectFromMutableEntriesAtIndex:[self.mutableEntries indexOfObject:entry]];
+    [self removeObjectFromMutableEntriesAtIndex:[self.mutableEntries indexOfObjectIdenticalTo:entry]];
   }
   node.parent = nil;
 }
 
 - (NSUInteger)_indexForNode:(KPKNode *)node {
   if(node.asGroup) {
-    return [self.mutableGroups indexOfObject:node.asGroup];
+    return [self.mutableGroups indexOfObjectIdenticalTo:node.asGroup];
   }
-  return [self.mutableEntries indexOfObject:node.asEntry];
+  return [self.mutableEntries indexOfObjectIdenticalTo:node.asEntry];
 }
 
 #pragma mark Seaching
@@ -611,7 +630,7 @@ static NSSet *_observedKeyPathsSet;
 
 - (NSIndexPath *)indexPath {
   if(self.parent) {
-    NSUInteger myIndex = [self.parent.groups indexOfObject:self];
+    NSUInteger myIndex = [self.parent.groups indexOfObjectIdenticalTo:self];
     NSIndexPath *parentIndexPath = [self.parent indexPath];
     NSAssert( nil != parentIndexPath, @"existing parents should always yield a indexPath");
     return [parentIndexPath indexPathByAddingIndex:myIndex];
@@ -642,6 +661,30 @@ static NSSet *_observedKeyPathsSet;
 }
 #pragma mark -
 #pragma mark KVC
+- (NSUInteger)countOfGroupsArray {
+  return self.mutableGroups.count;
+}
+
+- (KPKGroup *)objectInGroupsArrayAtIndex:(NSUInteger)index {
+  return self.mutableGroups[index];
+}
+
+- (void)getGroupsArray:(KPKGroup *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:(NSRange)inRange {
+  [self.mutableGroups getObjects:buffer range:inRange];
+}
+
+- (NSUInteger)countOfEntriesArray {
+  return self.mutableEntries.count;
+}
+
+- (KPKEntry *)objectInEntriesArrayAtIndex:(NSUInteger)index {
+  return self.mutableEntries[index];
+}
+
+- (void)getEEntriesArray:(KPKEntry *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:(NSRange)inRange {
+  [self.mutableEntries getObjects:(KPKEntry *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:inRange];
+}
+
 - (void)insertObject:(KPKEntry *)entry inMutableEntriesAtIndex:(NSUInteger)index {
   [_mutableEntries insertObject:entry atIndex:index];
 }

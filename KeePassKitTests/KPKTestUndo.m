@@ -142,7 +142,7 @@
   
   XCTAssertEqual(_tree.deletedObjects.count, 0, @"There are no deleted objects in the database");
 
-  XCTAssertEqualObjects(entry, copy, @"Entries has not changed fater undo/redo");
+  XCTAssertEqual(KPKComparsionEqual, [entry compareToEntry:copy], @"Entries has not changed fater undo/redo");
   
 }
 
@@ -398,7 +398,7 @@
   XCTAssertEqual(_tree.mutableDeletedObjects.count, 0, @"Deleted Entry node is not stored in tree");
   XCTAssertEqual(_tree.mutableDeletedNodes.count, 0, @"Deleted Entry node is not stored in tree");
   
-  XCTAssertEqualObjects(_entryA, copy, @"Entries has not changed fater undo/redo");
+  XCTAssertEqual(KPKComparsionEqual, [_entryA compareToEntry:copy], @"Entries has not changed fater undo/redo");
 }
 
 - (void)testUndoRedoDeleteGroupWithTrash {

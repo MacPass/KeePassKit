@@ -38,7 +38,7 @@
 
 #import "NSString+KPKEmpty.h"
 #import "NSData+KPKRandom.h"
-#import "NSDate+KPKPacked.h"
+#import "NSDate+KPKAdditions.h"
 #import "NSUIColor+KPKAdditions.h"
 #import "NSUIImage+KPKAdditions.h"
 
@@ -271,9 +271,10 @@
    struct KPXGroupIconInfo groupIcon[groupCount];
    };
    */
-  NSMutableArray *_iconEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,self.entries.count)];
+  NSArray <KPKEntry *> *entries = self.tree.allEntries;
+  NSMutableArray *_iconEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,entries.count)];
   NSMutableArray *_iconGroups = [[NSMutableArray alloc] initWithCapacity:MAX(1,self.groups.count)];
-  for(KPKNode *node in self.entries) {
+  for(KPKNode *node in entries) {
     if(node.iconUUID) {
       [_iconEntries addObject:node];
     }
@@ -304,7 +305,7 @@
     KPKIcon *entryIcon = [self.tree.metaData findIcon:entry.iconUUID];
     if(entryIcon) {
       [dataWriter writeData:entry.uuid.kpk_uuidData];
-      NSInteger index = [icons indexOfObject:entryIcon];
+      NSInteger index = [icons indexOfObjectIdenticalTo:entryIcon];
       NSAssert(index != NSNotFound, @"Icon cannot be missing");
       [dataWriter write4Bytes:(uint32_t)index];
     }
@@ -316,7 +317,7 @@
       uint32_t groupId = [self _groupIdForGroup:group];
       NSAssert(groupId != 0, @"Group has to have Id != 0");
       [dataWriter write4Bytes:groupId];
-      NSInteger index = [icons indexOfObject:groupIcon];
+      NSInteger index = [icons indexOfObjectIdenticalTo:groupIcon];
       NSAssert(index != NSNotFound, @"Icon cannot be missing");
       [dataWriter write4Bytes:(uint32_t)index];
     }
@@ -412,7 +413,7 @@
 }
 
 - (void)_writeTimeInfo:(KPKNode *)node {
-  BOOL isEntry = [node isKindOfClass:KPKEntry.class];
+  BOOL isEntry = (nil != node.asEntry);
   
   [self _writeField:(isEntry ? KPKFieldTypeEntryCreationTime : KPKFieldTypeGroupCreationTime )
                data:[NSDate kpk_packedBytesFromDate:node.timeInfo.creationDate]];
@@ -450,7 +451,7 @@
   if(nil == group) {
     return 0;
   }
-  NSUInteger groupId = [self.groups indexOfObject:group];
+  NSUInteger groupId = [self.groups indexOfObjectIdenticalTo:group];
   if(groupId == NSNotFound) {
     return 0;
   }

@@ -25,7 +25,7 @@ typedef NS_ENUM(NSUInteger, KPKNumberType) {
 @property (readonly) KPKNumberType type;
 
 /**
- *  Supported accessorf of internal values
+ *  Supported accessor of internal values
  */
 @property (readonly) int32_t integer32Value;
 @property (readonly) uint32_t unsignedInteger32Value;

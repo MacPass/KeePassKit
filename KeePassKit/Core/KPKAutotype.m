@@ -257,7 +257,7 @@
 }
 
 - (void)removeAssociation:(KPKWindowAssociation *)association {
-  NSUInteger index = [self.mutableAssociations indexOfObject:association];
+  NSUInteger index = [self.mutableAssociations indexOfObjectIdenticalTo:association];
   if(index != NSNotFound) {
     [[self.entry.undoManager prepareWithInvocationTarget:self] addAssociation:association atIndex:index];
     [self.entry touchModified];
@@ -266,13 +266,18 @@
   }
 }
 
-- (KPKWindowAssociation *)windowAssociationMatchingWindowTitle:(NSString *)windowTitle {
+- (NSArray<KPKWindowAssociation *> *)windowAssociationsMatchingWindowTitle:(NSString *)windowTitle {
+  if(self.mutableAssociations.count == 0) {
+    return @[];
+  }
+  NSAssert(self.mutableAssociations.count > 0, @"Internal Inconsitency");
+  NSMutableArray *matches = [[NSMutableArray alloc] initWithCapacity:self.mutableAssociations.count];
   for(KPKWindowAssociation *association in self.mutableAssociations) {
     if([association matchesWindowTitle:windowTitle]) {
-      return association;
+      [matches addObject:association];
     }
   }
-  return nil;
+  return matches;
 }
 
 - (BOOL)hasDefaultKeystrokeSequence {

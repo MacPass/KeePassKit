@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param windowTitle The window title to search associations for
  *  @return first matching association, if there are found more, only the first match is returned
  */
-- (nullable KPKWindowAssociation *)windowAssociationMatchingWindowTitle:(NSString *)windowTitle;
+- (NSArray<KPKWindowAssociation *> *)windowAssociationsMatchingWindowTitle:(NSString *)windowTitle;
 
 @end
 

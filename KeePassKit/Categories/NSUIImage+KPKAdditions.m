@@ -26,6 +26,18 @@
   
   if(![bestRep isKindOfClass:[NSBitmapImageRep class]]) {
     NSSize renderSize = NSMakeSize(256, 256);
+    bestRep = [self bestRepresentationForRect:NSMakeRect(0, 0, renderSize.width, renderSize.height) context:nil hints:nil];
+    NSAssert(bestRep, @"No image representation present to render image!");
+    if(!bestRep) {
+      return nil;
+    }
+    CGFloat aspect = bestRep.size.width / bestRep.size.height;
+    if(aspect > 1) {
+      renderSize.height = (renderSize.width / aspect);
+    }
+    else {
+      renderSize.width = (renderSize.height * aspect);
+    }
     bestRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
                                                                     pixelsWide:renderSize.width
                                                                     pixelsHigh:renderSize.height
@@ -43,7 +55,7 @@
     [self drawInRect:NSMakeRect(0, 0, renderSize.width, renderSize.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
     [NSGraphicsContext restoreGraphicsState];
   }
-  return [(NSBitmapImageRep *)bestRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
+  return [(NSBitmapImageRep *)bestRep representationUsingType:NSPNGFileType properties:@{}];
 #else
   NSAssert(NO, @"Property not implemented on this plattform!");
   return nil; // TODO: Add UIKit compatible getter

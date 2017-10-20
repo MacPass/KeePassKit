@@ -31,6 +31,7 @@
 
 - (instancetype)initWithImageAtURL:(NSURL *)imageLocation;
 - (instancetype)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString;
+- (instancetype)initWithUUID:(NSUUID *)uuid imageData:(NSData *)data;
 - (instancetype)initWithImageData:(NSData *)data;
 - (instancetype)initWithImage:(NSUIImage *)image;
 

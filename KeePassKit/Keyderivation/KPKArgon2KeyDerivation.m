@@ -97,6 +97,14 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
   [self.mutableParameters setUnsignedInteger64:memory forKey:KPKArgon2MemoryParameter];
 }
 
+- (uint64_t)minimumMemory {
+  return KPKArgon2MaxMemory;
+}
+
+- (uint64_t)maximumMemory {
+  return KPKArgon2MaxMemory;
+}
+
 - (void)randomize {
   [self.mutableParameters setData:[NSData kpk_dataWithRandomBytes:32] forKey:KPKArgon2SaltParameter];
 }

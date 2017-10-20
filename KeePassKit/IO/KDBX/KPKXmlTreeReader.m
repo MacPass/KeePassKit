@@ -60,7 +60,8 @@
 
 @property (strong) DDXMLDocument *document;
 @property (nonatomic, strong) KPKRandomStream *randomStream;
-@property (strong) NSDateFormatter *dateFormatter;
+//@property (strong) NSDateFormatter *dateFormatter;
+@property (assign) BOOL useRelativeDates;
 @property (strong) NSMutableDictionary *binaryMap;
 @property (strong) NSMutableDictionary *iconMap;
 
@@ -80,6 +81,7 @@
   if(self) {
     _delegate = delegate;
     _document = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
+    _useRelativeDates = YES;
   }
   return self;
 }
@@ -91,9 +93,12 @@
 - (KPKTree *)tree:(NSError *__autoreleasing *)error {
   
   if(!self.randomStream || (kKPKKdbxFileVersion4 > [self.delegate fileVersionForReader:self])) {
+    self.useRelativeDates = NO;
+    /*
     self.dateFormatter = [[NSDateFormatter alloc] init];
     self.dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
     self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+   */
   }
   
   if(!self.document) {
@@ -177,19 +182,20 @@
   
   data.generator = KPKXmlString(metaElement, kKPKXmlGenerator);
   data.databaseName = KPKXmlString(metaElement, kKPKXmlDatabaseName);
-  data.databaseNameChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlDatabaseNameChanged);
+  data.databaseNameChanged = KPKXmlDate(metaElement, kKPKXmlDatabaseNameChanged, self.useRelativeDates);
   data.databaseDescription = KPKXmlString(metaElement, kKPKXmlDatabaseDescription);
-  data.databaseDescriptionChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlDatabaseDescriptionChanged);
+  data.databaseDescriptionChanged = KPKXmlDate(metaElement, kKPKXmlDatabaseDescriptionChanged, self.useRelativeDates);
   data.defaultUserName = KPKXmlString(metaElement, kKPKXmlDefaultUserName);
-  data.defaultUserNameChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlDefaultUserNameChanged);
+  data.defaultUserNameChanged = KPKXmlDate(metaElement, kKPKXmlDefaultUserNameChanged, self.useRelativeDates);
   data.maintenanceHistoryDays = KPKXmlInteger(metaElement, kKPKXmlMaintenanceHistoryDays);
   /*
    Color is coded in Hex #001122
    */
   data.color = [NSUIColor kpk_colorWithHexString:KPKXmlString(metaElement, kKPKXmlColor)];
-  data.masterKeyChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlMasterKeyChanged);
+  data.masterKeyChanged = KPKXmlDate(metaElement, kKPKXmlMasterKeyChanged, self.useRelativeDates);
   data.masterKeyChangeRecommendationInterval = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeRecommendationInterval);
   data.masterKeyChangeEnforcementInterval = KPKXmlInteger(metaElement, kKPKXmlMasterKeyChangeForceInterval);
+  data.enforceMasterKeyChangeOnce = KPKXmlBool(metaElement, kKPKXmlMasterKeyChangeForceOnce);
   
   DDXMLElement *memoryProtectionElement = [metaElement elementForName:kKPKXmlMemoryProtection];
   
@@ -200,8 +206,8 @@
   data.protectNotes = KPKXmlBool(memoryProtectionElement, kKPKXmlProtectNotes);
   
   data.useTrash = KPKXmlBool(metaElement, kKPKXmlRecycleBinEnabled);
-  data.trashChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlRecycleBinChanged);
-  data.entryTemplatesGroupChanged = KPKXmlDate(self.dateFormatter, metaElement, kKPKXmlEntryTemplatesGroupChanged);
+  data.trashChanged = KPKXmlDate(metaElement, kKPKXmlRecycleBinChanged, self.useRelativeDates);
+  data.entryTemplatesGroupChanged = KPKXmlDate(metaElement, kKPKXmlEntryTemplatesGroupChanged, self.useRelativeDates);
   data.historyMaxItems = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxItems);
   data.historyMaxSize = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxSize);
   
@@ -321,13 +327,13 @@
 }
 
 - (void)_parseTimes:(KPKTimeInfo *)timeInfo element:(DDXMLElement *)nodeElement {
-  timeInfo.modificationDate = KPKXmlDate(self.dateFormatter, nodeElement, kKPKXmlLastModificationDate);
-  timeInfo.creationDate = KPKXmlDate(self.dateFormatter, nodeElement, kKPKXmlCreationDate);
-  timeInfo.accessDate = KPKXmlDate(self.dateFormatter, nodeElement, kKPKXmlLastAccessDate);
-  timeInfo.expirationDate = KPKXmlDate(self.dateFormatter, nodeElement, kKPKXmlExpirationDate);
+  timeInfo.modificationDate = KPKXmlDate(nodeElement, kKPKXmlLastModificationDate, self.useRelativeDates);
+  timeInfo.creationDate = KPKXmlDate(nodeElement, kKPKXmlCreationDate, self.useRelativeDates);
+  timeInfo.accessDate = KPKXmlDate(nodeElement, kKPKXmlLastAccessDate, self.useRelativeDates);
+  timeInfo.expirationDate = KPKXmlDate(nodeElement, kKPKXmlExpirationDate, self.useRelativeDates);
   timeInfo.expires = KPKXmlBool(nodeElement, kKPKXmlExpires);
   timeInfo.usageCount = KPKXmlInteger(nodeElement, kKPKXmlUsageCount);
-  timeInfo.locationChanged = KPKXmlDate(self.dateFormatter, nodeElement, kKPKXmlLocationChanged);
+  timeInfo.locationChanged = KPKXmlDate(nodeElement, kKPKXmlLocationChanged, self.useRelativeDates);
 }
 
 - (void)_parseCustomIcons:(DDXMLElement *)root meta:(KPKMetaData *)metaData {
@@ -472,7 +478,7 @@
   DDXMLElement *deletedObjects = [root elementForName:kKPKXmlDeletedObjects];
   for(DDXMLElement *deletedObject in [deletedObjects elementsForName:kKPKXmlDeletedObject]) {
     NSUUID *uuid = [[NSUUID alloc] initWithEncodedUUIDString:KPKXmlString(deletedObject, kKPKXmlUUID)];
-    NSDate *date = KPKXmlDate(self.dateFormatter, deletedObject, kKPKXmlDeletionTime);
+    NSDate *date = KPKXmlDate(deletedObject, kKPKXmlDeletionTime, self.useRelativeDates);
     KPKDeletedNode *deletedNode = [[KPKDeletedNode alloc] initWithUUID:uuid date:date];
     tree.mutableDeletedObjects[ deletedNode.uuid ] = deletedNode;
   }

@@ -12,6 +12,7 @@
 
 @class KPKBinary;
 @class KPKIcon;
+@class KPKBinary;
 
 @interface KPKMetaData () <KPKExtendedModificationRecording>
 
@@ -19,6 +20,7 @@
 @property(nonatomic, strong) NSMutableArray<KPKBinary *> *mutableUnknownMetaEntryData;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableCustomData;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, id> *mutableCustomPublicData;
+@property(weak) KPKTree *tree;
 
 - (void)_mergeWithMetaDataFromTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
 

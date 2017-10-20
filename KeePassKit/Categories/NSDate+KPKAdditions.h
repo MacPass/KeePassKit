@@ -27,5 +27,13 @@
 + (NSDate *)kpk_dateFromPackedBytes:(uint8_t *)buffer;
 + (NSData *)kpk_packedBytesFromDate:(NSDate *)date;
 + (void)kpk_getPackedBytes:(uint8_t *)buffer fromDate:(NSDate *)date;
+- (NSData *)kpk_packedBytes;
+
+@end
+
+@interface NSDate (KPKDateFormat)
+
+@property (nonatomic, readonly) NSString *kpk_UTCString;
++ (NSDate *)kpk_dateFromUTCString:(NSString *)string;
 
 @end

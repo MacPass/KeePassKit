@@ -22,6 +22,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import "KPKTypes.h"
 #import "KPKFormat.h"
 #import "KPKModificationRecording.h"
 
@@ -58,11 +59,12 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly, copy) NSUUID *uuid;
 @property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *notes;
-@property(nonatomic, copy) NSDictionary<NSString *, NSString *> *customData;
+@property(nonatomic, readonly, copy) NSDictionary<NSString *, NSString *> *customData;
 
-@property(nonatomic, copy, readonly) KPKTimeInfo *timeInfo;
+@property(nonatomic, readonly, copy) KPKTimeInfo *timeInfo;
 
-@property(nonatomic, weak, readonly) KPKGroup *parent;
+@property(nonatomic, readonly, weak) KPKGroup *parent;
+@property(nonatomic, readonly, weak) KPKTree *tree;
 
 @property(nonatomic, readonly) NSUndoManager *undoManager;
 
@@ -105,8 +107,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 - (instancetype)initWithUUID:(NSUUID *)uuid;
 
-- (BOOL)isEqualToNode:(KPKNode *)aNode;
-
+- (KPKComparsionResult)compareToNode:(KPKNode *)aNode;
 /**
  *	Returns the root group of the node by walking up the tree
  *	@return	root group of the node

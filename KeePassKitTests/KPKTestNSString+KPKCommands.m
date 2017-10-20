@@ -53,6 +53,7 @@
     NSUInteger count = 1000000;
     while(count--) {
       NSString *hit = command.kpk_normalizedAutotypeSequence;
+      XCTAssertNotNil(command.kpk_normalizedAutotypeSequence);
     }
   }];
 }

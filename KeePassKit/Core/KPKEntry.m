@@ -228,7 +228,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
                                                    forKey:NSStringFromSelector(@selector(mutableHistory))];
     self.mutableBinaries = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKBinary.class]]
                                          forKey:NSStringFromSelector(@selector(mutableBinaries))];
-    _tags = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(tags))] copy];
+    _tags = [[aDecoder decodeObjectOfClass:NSArray.class forKey:NSStringFromSelector(@selector(tags))] copy];
     _foregroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
     _backgroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
     _overrideURL = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(overrideURL))] copy];
@@ -309,52 +309,54 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark Equality
 
-- (BOOL)isEqual:(id)object {
-  if(![super isEqual:object]) {
-    return NO;
-  }
-  if([object isKindOfClass:self.class]) {
-    return [self isEqualToEntry:object];
-  }
-  return NO;
+
+- (KPKComparsionResult)compareToEntry:(KPKEntry *)entry {
+  return [self _compareToNode:entry options:0];
 }
 
-- (BOOL)isEqualToEntry:(KPKEntry *)entry {
-  return [self _isEqualToNode:entry options:0];
-}
-
-- (BOOL)_isEqualToNode:(KPKNode *)node options:(KPKNodeEqualityOptions)options {
-  KPKEntry *entry = node.asEntry;
+- (KPKComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
+  KPKEntry *entry = aNode.asEntry;
   NSAssert([entry isKindOfClass:KPKEntry.class], @"Test only allowed with KPKEntry classes");
   
-  if(![super _isEqualToNode:node options:options]) {
-    return NO;
+  if(KPKComparsionDifferent == [super _compareToNode:aNode options:options]) {
+    return KPKComparsionDifferent;
   }
   
   /* Compare Attributes (do not care about order!) */
   if(self.mutableAttributes.count != entry.mutableAttributes.count) {
-    return NO;
+    return KPKComparsionDifferent;
   }
   for(KPKAttribute *attribute in self.mutableAttributes) {
     KPKAttribute *otherAttribute = [entry attributeWithKey:attribute.key];
     if(NO == [otherAttribute isEqualToAttribute:attribute]) {
-      return NO;
+      return KPKComparsionDifferent;
     }
   }
   
   /* Compare History - order has to match! */
-  if(!(options & KPKNodeEqualityIgnoreHistoryOption)) {
-    if(NO == [self.mutableHistory isEqualToArray:entry.mutableHistory]) {
-      return NO;
+  if(!(options & KPKNodeCompareIgnoreHistoryOption)) {
+    /* TODO ensure order by date ?*/
+    if(self.mutableHistory.count != entry.mutableHistory.count) {
+      return KPKComparsionDifferent;
+    }
+    __block KPKComparsionResult historyCompareResult = KPKComparsionEqual;
+    [self.mutableHistory enumerateObjectsUsingBlock:^(KPKEntry * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      KPKEntry *otherHistoryEntry = entry.mutableHistory[idx];
+      if(KPKComparsionDifferent == [obj _compareToNode:otherHistoryEntry options:options]) {
+        *stop = YES;
+        historyCompareResult = KPKComparsionDifferent;
+      }
+    }];
+    for(NSUInteger index = 0; index < self.mutableHistory.count; index++) {
+      
     }
   }
-  
   /* Compare Binaries - order has to macht! */
   if(NO == [self.mutableBinaries isEqualToArray:entry.mutableBinaries]) {
-    return NO;
+    return KPKComparsionDifferent;
   }
   
-  return [self.autotype isEqualToAutotype:entry.autotype];
+  return ([self.autotype isEqualToAutotype:entry.autotype] ? KPKComparsionEqual : KPKComparsionDifferent);
 }
 
 #pragma mark -
@@ -588,27 +590,38 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)setTitle:(NSString *)title {
   [[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_TITLE", @"KPKLocalizable", @"")];
   [self _setValue:title forAttributeWithKey:kKPKTitleKey];
 }
 
 - (void)setUsername:(NSString *)username {
   [[self.undoManager prepareWithInvocationTarget:self] setUsername:self.username];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_USERNAME", @"KPKLocalizable", @"")];
   [self _setValue:username forAttributeWithKey:kKPKUsernameKey];
 }
 
 - (void)setPassword:(NSString *)password {
   [[self.undoManager prepareWithInvocationTarget:self] setPassword:self.password];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_PASSWORD", @"KPKLocalizable", @"")];
   [self _setValue:password forAttributeWithKey:kKPKPasswordKey];
 }
 
 - (void)setNotes:(NSString *)notes {
   [[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_NOTES", @"KPKLocalizable", @"")];
   [self _setValue:notes forAttributeWithKey:kKPKNotesKey];
 }
 
 - (void)setUrl:(NSString *)url {
   [[self.undoManager prepareWithInvocationTarget:self] setUrl:self.url];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_URL", @"KPKLocalizable", @"")];
   [self _setValue:url forAttributeWithKey:kKPKURLKey];
+}
+
+- (void)setTags:(NSArray<NSString *> *)tags {
+  [[self.undoManager prepareWithInvocationTarget:self] setTags:self.tags];
+  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_URL", @"KPKLocalizable", @"")];
+  _tags = [[NSArray alloc] initWithArray:tags copyItems:YES]; // depp copy just to make sure!
 }
 
 - (KPKEntry *)asEntry {
@@ -644,6 +657,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(index > self.mutableAttributes.count) {
     return; // index out of bounds
   }
+  attribute.entry = nil; // kill the entry to ensure no undo/redo hickups
+  KPKAttribute *duplicate = [self attributeWithKey:attribute.key];
+  if(nil != duplicate) {
+    attribute.key = [self proposedKeyForAttributeKey:attribute.key];
+    NSLog(@"Warning. Attribute with key %@ already present! Changing key to %@", duplicate.key, attribute.key);
+  }
   [[self.undoManager prepareWithInvocationTarget:self] removeCustomAttribute:attribute];
   [self touchModified];
   [self insertObject:attribute inMutableAttributesAtIndex:index];
@@ -651,7 +670,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
-  NSUInteger index = [self.mutableAttributes indexOfObject:attribute];
+  NSUInteger index = [self.mutableAttributes indexOfObjectIdenticalTo:attribute];
   if(NSNotFound != index) {
     [[self.undoManager prepareWithInvocationTarget:self] _addCustomAttribute:attribute atIndex:index];
     [self touchModified];
@@ -685,7 +704,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
    So we do not need to take care of cleanup after we did
    delete an attachment
    */
-  NSUInteger index = [self.mutableBinaries indexOfObject:binary];
+  NSUInteger index = [self.mutableBinaries indexOfObjectIdenticalTo:binary];
   if(index != NSNotFound) {
     [[self.undoManager prepareWithInvocationTarget:self] addBinary:binary];
     [self touchModified];
@@ -741,7 +760,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)removeHistoryEntry:(KPKEntry *)entry {
-  NSUInteger index = [self.mutableHistory indexOfObject:entry];
+  NSUInteger index = [self.mutableHistory indexOfObjectIdenticalTo:entry];
   if(index != NSNotFound) {
     [self removeObjectFromMutableHistoryAtIndex:index];
   }
@@ -766,7 +785,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (BOOL)hasHistoryOfEntry:(KPKEntry *)entry {
   for(KPKEntry *historyEntry in self.mutableHistory) {
-    if([historyEntry _isEqualToNode:entry options:(KPKNodeEqualityIgnoreAccessDateOption|KPKNodeEqualityIgnoreModificationDateOption)]) {
+    if(KPKComparsionEqual == [historyEntry _compareToNode:entry options:(KPKNodeCompareIgnoreAccessDateOption|KPKNodeCompareIgnoreModificationDateOption)]) {
       return YES;
     }
   }
@@ -799,6 +818,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)_maintainHistory {
   if(!self.tree.metaData) {
+    /* early return to prevent preemtive history clearing */
     return;
   }
   /* if size or count is set to zero, just clear the history */
@@ -821,7 +841,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   while(historyEntry = [enumerator nextObject]){
     historySize += historyEntry.estimatedByteSize;
     if(historySize > self.tree.metaData.historyMaxSize) {
-      removeIndex = [self.mutableHistory indexOfObject:historyEntry];
+      removeIndex = [self.mutableHistory indexOfObjectIdenticalTo:historyEntry];
       break;
     }
   }

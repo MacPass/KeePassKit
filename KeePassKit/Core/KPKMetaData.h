@@ -56,6 +56,7 @@
 @property(nonatomic) NSInteger masterKeyChangeRecommendationInterval;
 @property(nonatomic, readonly) BOOL enforceMasterKeyChange;
 @property(nonatomic) NSInteger masterKeyChangeEnforcementInterval;
+@property(nonatomic) BOOL enforceMasterKeyChangeOnce;
 
 @property(nonatomic) BOOL protectTitle;
 @property(nonatomic) BOOL protectUserName;

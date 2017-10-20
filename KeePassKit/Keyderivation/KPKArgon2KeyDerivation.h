@@ -23,4 +23,7 @@ FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataParameter; // NSData
 @property (nonatomic, assign) uint64_t memory;
 @property (nonatomic, assign) uint32_t threads;
 
+@property (nonatomic, readonly, assign) uint64_t minimumMemory;
+@property (nonatomic, readonly, assign) uint64_t maximumMemory;
+
 @end

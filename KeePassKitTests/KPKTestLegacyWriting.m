@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "KeePassKit.h"
+#import "KeePassKit_Private.h"
 
 @interface KPKTestLegacyWriting : XCTestCase
 
@@ -30,6 +31,38 @@
   [data writeToFile:tempFile atomically:YES];
   KPKTree *loadTree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(loadTree, @"Tree should be loadable from kdb file data");
+}
+
+- (void)testLegacyCustomIconSupport {
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.root = [[KPKGroup alloc] init];
+
+  KPKGroup *group = [[KPKGroup alloc] init];
+  [group addToGroup:tree.root];
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  [entry addToGroup:tree.root.mutableGroups.firstObject];
+  
+  
+  KPKIcon *icon = [[KPKIcon alloc] initWithImage:[NSImage imageNamed:NSImageNameCaution]];
+  [tree.metaData addCustomIcon:icon];
+  entry.iconUUID = icon.uuid;
+  
+  NSError *error;
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(data);
+  KPKTree *loadedTree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(loadedTree);
+  XCTAssertEqual(loadedTree.metaData.mutableCustomIcons.count, 1);
+  KPKIcon *loadedIcon = loadedTree.metaData.mutableCustomIcons.firstObject;
+  XCTAssertNotNil(loadedIcon.uuid);
+  XCTAssertNotNil(loadedIcon.image);
+  KPKEntry *loadedEntry = [loadedTree.root entryForUUID:entry.uuid];
+  XCTAssertNotNil(loadedEntry);
+  XCTAssertNotNil(loadedEntry.iconUUID);
+  XCTAssertEqualObjects(loadedEntry.iconUUID, loadedIcon.uuid);
 }
 
 - (NSData *)_dataForFile:(NSString *)name extension:(NSString *)extension {

@@ -20,9 +20,19 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "NSDate+KPKPacked.h"
+#import "NSDate+KPKAdditions.h"
+#import <time.h>
 
-@implementation NSDate (KPKPacked)
+static NSCalendar *_gregorianCalendar(void) {
+  static NSCalendar *_kpkCalendar;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    _kpkCalendar = [NSCalendar calendarWithIdentifier:NSGregorianCalendar];
+  });
+  return _kpkCalendar;
+}
+
+@implementation NSDate (KPKAdditions)
 
 + (NSDate *)kpk_dateFromPackedBytes:(uint8_t *)buffer {
   uint32_t dw1, dw2, dw3, dw4, dw5;
@@ -47,8 +57,7 @@
   dateComponents.minute = min;
   dateComponents.second = s;
   
-  NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-  NSDate *date = [calendar dateFromComponents:dateComponents];
+  NSDate *date = [_gregorianCalendar() dateFromComponents:dateComponents];
   
   return date;
 }
@@ -68,9 +77,8 @@
   uint32_t seconds;
   
   if(date) {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSUInteger calendarComponents = (NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit);
-    NSDateComponents *dateComponents = [calendar components:calendarComponents fromDate:date];
+    NSDateComponents *dateComponents = [_gregorianCalendar() components:calendarComponents fromDate:date];
     
     year = (uint32_t)dateComponents.year;
     month = (uint32_t)dateComponents.month;
@@ -95,6 +103,51 @@
   byteBuffer[4] = (uint8_t)(((minutes & 0x00000003) << 6) | (seconds & 0x0000003F));
   
   return [NSData dataWithBytes:byteBuffer length:sizeof(byteBuffer)];
+}
+
+- (NSData *)kpk_packedBytes {
+  return [NSDate kpk_packedBytesFromDate:self];
+}
+
+@end
+
+@implementation NSDate (KPKDateFormat)
+
+
++ (NSDate *)kpk_dateFromUTCString:(NSString *)string {
+  if(nil == string) {
+    return nil;
+  }
+  /* fallback to a reference date for empty strings */
+  if(string.length == 0) {
+    static NSDate *referenceDate;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      referenceDate = [NSDate dateWithTimeIntervalSinceReferenceDate:0];
+    });
+    return referenceDate;
+  }
+  
+  struct tm time;
+  char *result = strptime([string cStringUsingEncoding:NSUTF8StringEncoding], "%Y-%m-%dT%H:%M:%SZ", &time);
+  NSAssert(result != NULL, @"Internal inconsitency. Unable to parse date format!");
+  time.tm_isdst = 0;
+  time.tm_gmtoff = 0;
+  time.tm_zone = "UTC";
+  time_t t = timegm(&time);
+  return [NSDate dateWithTimeIntervalSince1970:t];
+}
+
+- (NSString *)kpk_UTCString {
+  struct tm *timeinfo;
+  char buffer[80];
+  
+  time_t rawtime = self.timeIntervalSince1970;
+  timeinfo = gmtime(&rawtime);
+  
+  strftime(buffer, 80, "%Y-%m-%dT%H:%M:%SZ", timeinfo);
+  
+  return [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
 }
 
 @end

@@ -106,10 +106,10 @@
   return NO;
 }
 
-- (BOOL)isEqualToAttribute:(KPKAttribute *)attribtue {
-  NSAssert([attribtue isKindOfClass:self.class], @"Only KPKAttributes are allowed in this test");
-  return ([self.value isEqualToString:attribtue.value]
-          && [self.key isEqualToString:attribtue.key]);
+- (BOOL)isEqualToAttribute:(KPKAttribute *)attribute {
+  NSAssert([attribute isKindOfClass:self.class], @"Only KPKAttributes are allowed in this test");
+  return ([self.value isEqualToString:attribute.value]
+          && [self.key isEqualToString:attribute.key]);
 }
 
 - (BOOL)validateKey:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError {
@@ -142,6 +142,8 @@
   if(self.value != value) {
     if(!self.isDefault) {
       [(KPKAttribute *)[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
+      NSString *template = NSLocalizedStringFromTable(@"SET_CUSTOM_ATTTRIBUTE_%@", @"KPKLocalizable", @"");
+      [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key ]];
     }
     [self.entry touchModified];
     [self _encodeValue:value];
@@ -150,7 +152,9 @@
 
 - (void)setKey:(NSString *)key {
   if(![_key isEqualToString:key]) {
-    /* Key changes should never happen on default attributes */
+    if([self.entry hasAttributeWithKey:key]) {
+      key = [self.entry proposedKeyForAttributeKey:key];
+    }
     [[self.entry.undoManager prepareWithInvocationTarget:self] setKey:self.key];
     [self.entry touchModified];
     _key = [key copy];

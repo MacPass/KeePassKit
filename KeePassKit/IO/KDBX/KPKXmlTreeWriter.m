@@ -57,7 +57,8 @@
 @property (strong, readwrite) KPKTree *tree;
 @property (readonly, copy) NSData *headerHash;
 @property (readonly, strong) KPKRandomStream *randomStream;
-@property (strong) NSDateFormatter *dateFormatter;
+//@property (strong) NSDateFormatter *dateFormatter;
+@property BOOL useRelativeDate;
 @property (readonly, copy) NSArray *binaries;
 
 @property (nonatomic, readonly) BOOL encrypted;
@@ -71,6 +72,7 @@
   if(self) {
     _delegate = delegate;
     _tree = tree;
+    _useRelativeDate = YES;
   }
   return self;
 }
@@ -112,26 +114,32 @@
   }
   
   if(!self.randomStream || kKPKKdbxFileVersion4 > [self.delegate fileVersionForWriter:self]) {
+    self.useRelativeDate = NO;
+    /*
     self.dateFormatter = [[NSDateFormatter alloc] init];
     self.dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
     self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+     */
   }
   
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseName, metaData.databaseName.kpk_xmlCompatibleString);
-  KPKAddXmlElement(metaElement, kKPKXmlDatabaseNameChanged, KPKStringFromDate(self.dateFormatter, metaData.databaseNameChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlDatabaseNameChanged, KPKStringFromDate(metaData.databaseNameChanged, self.useRelativeDate));
   KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescription, metaData.databaseDescription.kpk_xmlCompatibleString);
-  KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescriptionChanged, KPKStringFromDate(self.dateFormatter, metaData.databaseDescriptionChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlDatabaseDescriptionChanged, KPKStringFromDate(metaData.databaseDescriptionChanged, self.useRelativeDate));
   KPKAddXmlElement(metaElement, kKPKXmlDefaultUserName, metaData.defaultUserName.kpk_xmlCompatibleString);
-  KPKAddXmlElement(metaElement, kKPKXmlDefaultUserNameChanged, KPKStringFromDate(self.dateFormatter, metaData.defaultUserNameChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlDefaultUserNameChanged, KPKStringFromDate(metaData.defaultUserNameChanged, self.useRelativeDate));
   KPKAddXmlElement(metaElement, kKPKXmlMaintenanceHistoryDays, KPKStringFromLong(metaData.maintenanceHistoryDays));
   KPKAddXmlElement(metaElement, kKPKXmlColor, metaData.color.kpk_hexString);
   /* Settings changed only in KDBX4 */
   if(kKPKKdbxFileVersion4 <= [self.delegate fileVersionForWriter:self]) {
-    KPKAddXmlElement(metaElement, kKPKXmlSettingsChanged, KPKStringFromDate(self.dateFormatter, metaData.settingsChanged));
+    KPKAddXmlElement(metaElement, kKPKXmlSettingsChanged, KPKStringFromDate(metaData.settingsChanged, self.useRelativeDate));
   }
-  KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChanged, KPKStringFromDate(self.dateFormatter, metaData.masterKeyChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChanged, KPKStringFromDate(metaData.masterKeyChanged, self.useRelativeDate));
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeRecommendationInterval, KPKStringFromLong(metaData.masterKeyChangeRecommendationInterval));
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeForceInterval, KPKStringFromLong(metaData.masterKeyChangeEnforcementInterval));
+  if(metaData.enforceMasterKeyChangeOnce) {
+    KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChangeForceOnce, KPKStringFromBool(metaData.enforceMasterKeyChangeOnce));
+  }
   
   DDXMLElement *memoryProtectionElement = [DDXMLElement elementWithName:kKPKXmlMemoryProtection];
   KPKAddXmlElement(memoryProtectionElement, kKPKXmlProtectTitle, KPKStringFromBool(metaData.protectTitle));
@@ -148,9 +156,9 @@
   
   KPKAddXmlElement(metaElement, kKPKXmlRecycleBinEnabled, KPKStringFromBool(metaData.useTrash));
   KPKAddXmlElement(metaElement, kKPKXmlRecycleBinUUID, metaData.trashUuid.kpk_encodedString);
-  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinChanged, KPKStringFromDate(self.dateFormatter, metaData.trashChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlRecycleBinChanged, KPKStringFromDate(metaData.trashChanged, self.useRelativeDate));
   KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroup, metaData.entryTemplatesGroupUuid.kpk_encodedString);
-  KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroupChanged, KPKStringFromDate(self.dateFormatter, metaData.entryTemplatesGroupChanged));
+  KPKAddXmlElement(metaElement, kKPKXmlEntryTemplatesGroupChanged, KPKStringFromDate(metaData.entryTemplatesGroupChanged, self.useRelativeDate));
   KPKAddXmlElement(metaElement, kKPKXmlHistoryMaxItems, KPKStringFromLong(metaData.historyMaxItems));
   KPKAddXmlElement(metaElement, kKPKXmlHistoryMaxSize, KPKStringFromLong(metaData.historyMaxSize));
   KPKAddXmlElement(metaElement, kKPKXmlLastSelectedGroup, metaData.lastSelectedGroup.kpk_encodedString);
@@ -192,7 +200,7 @@
 
 - (DDXMLElement *)_xmlGroup:(KPKGroup *)group {
   DDXMLElement *groupElement = [DDXMLNode elementWithName:kKPKXmlGroup];
-    
+  
   // Add the standard properties
   KPKAddXmlElement(groupElement, kKPKXmlUUID, group.uuid.kpk_encodedString);
   KPKAddXmlElement(groupElement, kKPKXmlName, group.title.kpk_xmlCompatibleString);
@@ -350,7 +358,7 @@
   BOOL compress = (self.tree.metaData.compressionAlgorithm == KPKCompressionGzip);
   for(KPKBinary *binary in self.binaries) {
     DDXMLElement *binaryElement = [DDXMLElement elementWithName:kKPKXmlBinary];
-    KPKAddXmlAttribute(binaryElement, kKPKXmlBinaryId, KPKStringFromLong([self.binaries indexOfObject:binary]));
+    KPKAddXmlAttribute(binaryElement, kKPKXmlBinaryId, KPKStringFromLong([self.binaries indexOfObjectIdenticalTo:binary]));
     KPKAddXmlAttribute(binaryElement, kKPKXmlCompressed, KPKStringFromBool(compress));
     binaryElement.stringValue = [binary encodedStringUsingCompression:compress];
     [binaryElements addChild:binaryElement];
@@ -400,7 +408,7 @@
     KPKDeletedNode *node = self.tree.mutableDeletedObjects[ uuid ];
     DDXMLElement *deletedElement = [DDXMLNode elementWithName:kKPKXmlDeletedObject];
     KPKAddXmlElement(deletedElement, kKPKXmlUUID, node.uuid.kpk_encodedString);
-    KPKAddXmlElement(deletedElement, kKPKXmlDeletionTime, KPKStringFromDate(self.dateFormatter, node.deletionDate));
+    KPKAddXmlElement(deletedElement, kKPKXmlDeletionTime, KPKStringFromDate(node.deletionDate, self.useRelativeDate));
     [deletedObjectsElement addChild:deletedElement];
   }
   return deletedObjectsElement;
@@ -408,13 +416,13 @@
 
 - (DDXMLElement *)_xmlTimeinfo:(KPKTimeInfo *)timeInfo {
   DDXMLElement *timesElement = [DDXMLNode elementWithName:kKPKXmlTimes];
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastModificationDate, KPKStringFromDate(self.dateFormatter, timeInfo.modificationDate));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlCreationDate, KPKStringFromDate(self.dateFormatter, timeInfo.creationDate));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastAccessDate, KPKStringFromDate(self.dateFormatter, timeInfo.accessDate));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlExpirationDate, KPKStringFromDate(self.dateFormatter, timeInfo.expirationDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastModificationDate, KPKStringFromDate(timeInfo.modificationDate, self.useRelativeDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlCreationDate, KPKStringFromDate(timeInfo.creationDate, self.useRelativeDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLastAccessDate, KPKStringFromDate(timeInfo.accessDate, self.useRelativeDate));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlExpirationDate, KPKStringFromDate(timeInfo.expirationDate, self.useRelativeDate));
   KPKAddXmlElement(timesElement, kKPKXmlExpires, KPKStringFromBool(timeInfo.expires));
   KPKAddXmlElement(timesElement, kKPKXmlUsageCount, KPKStringFromLong(timeInfo.usageCount));
-  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLocationChanged, KPKStringFromDate(self.dateFormatter, timeInfo.locationChanged));
+  KPKAddXmlElementIfNotNil(timesElement, kKPKXmlLocationChanged, KPKStringFromDate(timeInfo.locationChanged, self.useRelativeDate));
   return timesElement;
 }
 

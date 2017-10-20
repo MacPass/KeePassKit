@@ -21,12 +21,8 @@
 //
 
 #import "KPKIcon.h"
+#import "KPKIcon_Private.h"
 #import "NSUIImage+KPKAdditions.h"
-
-@interface KPKIcon ()
-@property (nonatomic, strong) NSUUID *uuid;
-
-@end
 
 @implementation KPKIcon
 
@@ -60,20 +56,24 @@
   return self;
 }
 
-- (instancetype)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString {
+- (instancetype)initWithUUID:(NSUUID *)uuid imageData:(NSData *)data {
   self = [self init];
   if(self) {
-    _uuid = uuid;
-    _image = [self _decodeString:encodedString];
+    _image =[[NSUIImage alloc] initWithData:data];
+    if(uuid) {
+      _uuid = uuid;
+    }
   }
   return self;
 }
 
+- (instancetype)initWithUUID:(NSUUID *)uuid encodedString:(NSString *)encodedString {
+  self = [self initWithUUID:uuid imageData:[self _decodeString:encodedString]];
+  return self;
+}
+
 - (instancetype)initWithImageData:(NSData *)data {
-  self = [self init];
-  if(self) {
-    self.image =[[NSUIImage alloc] initWithData:data];
-  }
+  self = [self initWithUUID:nil imageData:data];
   return self;
 }
 
@@ -101,11 +101,10 @@
   KPKIcon *copy = [[KPKIcon alloc] init];
 #if KPK_MAC
   copy.image = [self.image copyWithZone:zone];
-  copy.uuid = [self.uuid copyWithZone:zone];
 #else
-  copy.image = [self.image copy];
-  copy.uuid = [self.uuid copy];
+  copy.image = self.image;
 #endif
+  copy.uuid = [self.uuid copyWithZone:zone];
   return copy;
 }
 
@@ -139,9 +138,8 @@
 
 #pragma mark Private
 
-- (NSUIImage *)_decodeString:(NSString *)imageString {
-  NSData *data = [[NSData alloc] initWithBase64EncodedString:imageString options:NSDataBase64DecodingIgnoreUnknownCharacters];
-  return [[NSUIImage alloc] initWithData:data];
+- (NSData *)_decodeString:(NSString *)imageString {
+  return [[NSData alloc] initWithBase64EncodedString:imageString options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
 @end

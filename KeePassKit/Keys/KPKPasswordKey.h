@@ -10,5 +10,4 @@
 
 @interface KPKPasswordKey : KPKKey
 
-
 @end

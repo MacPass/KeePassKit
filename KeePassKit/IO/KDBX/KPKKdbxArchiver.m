@@ -149,7 +149,7 @@
 }
 
 - (NSUInteger)writer:(KPKXmlTreeWriter *)writer referenceForBinary:(KPKBinary *)binary {
-  return [self.binaries indexOfObject:binary];
+  return [self.binaries indexOfObjectIdenticalTo:binary];
 }
 
 - (NSArray *)binariesForWriter:(KPKXmlTreeWriter *)writer {
@@ -185,14 +185,15 @@
   
   self.masterSeed = [NSData kpk_dataWithRandomBytes:32];
   self.encryptionIV = [NSData kpk_dataWithRandomBytes:cipher.IVLength];
-  self.randomStreamKey = [NSData kpk_dataWithRandomBytes:32];
   
   if(self.outputVersion4) {
     self.randomStreamID = KPKRandomStreamChaCha20;
+    self.randomStreamKey = [NSData kpk_dataWithRandomBytes:64];
   }
   else {
-    self.streamStartBytes = [NSData kpk_dataWithRandomBytes:32];
     self.randomStreamID = KPKRandomStreamSalsa20;
+    self.randomStreamKey = [NSData kpk_dataWithRandomBytes:32];
+    self.streamStartBytes = [NSData kpk_dataWithRandomBytes:32];
   }
   
   NSMutableData *data = [[NSMutableData alloc] init];
