@@ -592,6 +592,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 @implementation NSString (KPKEvaluation)
 
 - (NSString *)kpk_finalValueForEntry:(KPKEntry *)entry {
+  /* FIXME this setup does not catch all constallations of reference/placeholder nestings */
   return[[self kpk_resolveReferencesWithTree:entry.tree] kpk_evaluatePlaceholderWithEntry:entry];
 }
 

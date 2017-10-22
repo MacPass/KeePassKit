@@ -57,8 +57,7 @@
   }
   return [(NSBitmapImageRep *)bestRep representationUsingType:NSPNGFileType properties:@{}];
 #else
-  NSAssert(NO, @"Property not implemented on this plattform!");
-  return nil; // TODO: Add UIKit compatible getter
+  return UIImagePNGRepresentation(self);
 #endif
 }
 

@@ -42,8 +42,9 @@
   KPKEntry *entry = [[KPKEntry alloc] init];
   [entry addToGroup:tree.root.mutableGroups.firstObject];
   
+  NSData *imageData = [self _dataForFile:@"image" extension:@"png"];
+  KPKIcon *icon = [[KPKIcon alloc] initWithImage:[[NSUIImage alloc] initWithData:imageData]];
   
-  KPKIcon *icon = [[KPKIcon alloc] initWithImage:[NSImage imageNamed:NSImageNameCaution]];
   [tree.metaData addCustomIcon:icon];
   entry.iconUUID = icon.uuid;
   

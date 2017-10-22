@@ -7,10 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-
 #import "KeePassKit.h"
-
-#if KPK_MAC
 
 @interface KPKIconLoading : XCTestCase {
   NSUIImage *_image;
@@ -21,9 +18,14 @@
 @implementation KPKIconLoading
 
 - (void)setUp {
-    NSBundle *myBundle = [NSBundle bundleForClass:self.class];
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
+#if KPK_MAC
   _image = [myBundle imageForResource:@"image.png"];
   _imageData = [((NSBitmapImageRep *)_image.representations.lastObject) representationUsingType:NSPNGFileType properties:@{}];
+#else
+  _image = [NSUIImage imageNamed:@"image.png" inBundle:myBundle compatibleWithTraitCollection:nil];
+  _imageData = UIImagePNGRepresentation(_image);
+#endif
 }
 
 - (void)tearDown {
@@ -32,30 +34,34 @@
 }
 
 - (void)testLoading {
-  KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[[NSBundle bundleForClass:self.class] URLForImageResource:@"image.png"]];
+  KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"image.png"]];
   XCTAssertNotNil(icon, @"Icon should have been loaded");
   
-  NSString *iconString = icon.encodedString;
-  //KPKIcon *iconFromString = [[KPKIcon alloc] initWithUUID:[NSUUID UUID] encodedString:iconString];
-  //XCTAssertEqualObjects(iconString, iconFromString.encodedString, @"Encoding and Decoding should result in the same string");
- 
+#if KPK_MAC
   NSImageRep *imageRep = icon.image.representations.lastObject;
   XCTAssertNotNil(imageRep, @"One image rep should be there");
   XCTAssertTrue([imageRep isKindOfClass:NSBitmapImageRep.class], @"Representation should be bitmap");
-  
+
   NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
   NSData *pngData = [bitmapRep representationUsingType:NSPNGFileType properties:@{}];
+#else
+  NSData *pngData = UIImagePNGRepresentation(icon.image);
+#endif
   XCTAssertEqualObjects(pngData, _imageData, @"Image and PNG data shoudl be identical");
 }
 
 - (void)testPDFLoading {
   KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.pdf"]];
+#if KPK_MAC
   XCTAssertEqual(icon.image.representations.count,1);
+#endif
   NSData *pngData = icon.image.kpk_pngData;
   XCTAssertNotNil(pngData);
   
   icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"aspect.pdf"]];
+#if KPK_MAC
   XCTAssertEqual(icon.image.representations.count,1);
+#endif
   pngData = icon.image.kpk_pngData;
   XCTAssertNotNil(pngData);
 
@@ -63,19 +69,31 @@
 
 - (void)testIcnsLoading {
   KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.icns"]];
+#if KPK_MAC
   XCTAssertEqual(icon.image.representations.count,10);
+#else
+  XCTAssertNotNil(icon.image);
+  XCTAssertNotNil(icon.image.kpk_pngData);
+#endif
 }
 
 - (void)testIcoLoading {
   KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.ico"]];
+#if KPK_MAC
   XCTAssertEqual(icon.image.representations.count,5);
+#else
+  XCTAssertNotNil(icon.image);
+  XCTAssertNotNil(icon.image.kpk_pngData);
+#endif
 }
 
 - (NSURL *)urlForImageResource:(NSString *)imageName {
   NSBundle *myBundle = [NSBundle bundleForClass:self.class];
-  return [myBundle URLForImageResource:imageName];
+  NSString *file = imageName.lastPathComponent;
+  NSString *extension = file.lastPathComponent.pathExtension;
+  NSString *base = [file substringToIndex:(extension.length + 1)];
+  return [myBundle URLForResource:base withExtension:extension];
 }
 
 @end
 
-#endif

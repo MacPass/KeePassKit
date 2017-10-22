@@ -245,7 +245,6 @@
 		2D51255F1E9BD06700D7EAF6 /* BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */; };
 		2D5125601E9BD06700D7EAF6 /* CustomIcon_Password_1234.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */; };
 		2D5125611E9BD06700D7EAF6 /* TwofishCipher256bit_test.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C199DA01DCF310D00D4FDC8 /* TwofishCipher256bit_test.kdb */; };
-		2D5125621E9BD06700D7EAF6 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		2D5125631E9BD06700D7EAF6 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138231BE282DC001BF195 /* image.png */; };
 		2D51256B1E9BD24500D7EAF6 /* KPKKdbTreeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */; };
 		2D51256C1E9BD24500D7EAF6 /* KPKLegacyHeaderUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4871BE10E250019AA81 /* KPKLegacyHeaderUtility.m */; };
@@ -486,7 +485,6 @@
 		2D51266B1E9BD29500D7EAF6 /* BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */; };
 		2D51266C1E9BD29500D7EAF6 /* CustomIcon_Password_1234.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C81381C1BE282DC001BF195 /* CustomIcon_Password_1234.kdbx */; };
 		2D51266D1E9BD29500D7EAF6 /* TwofishCipher256bit_test.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C199DA01DCF310D00D4FDC8 /* TwofishCipher256bit_test.kdb */; };
-		2D51266E1E9BD29500D7EAF6 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		2D51266F1E9BD29500D7EAF6 /* image.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8138231BE282DC001BF195 /* image.png */; };
 		2D5126771E9BD34900D7EAF6 /* KPKKdbTreeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */; };
 		2D5126781E9BD34900D7EAF6 /* KPKLegacyHeaderUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4871BE10E250019AA81 /* KPKLegacyHeaderUtility.m */; };
@@ -948,6 +946,15 @@
 		4CBEFF3E1F99E5CC007362E4 /* NSUIImage+KPKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C639E541F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.m */; };
 		4CBEFF3F1F99E5CC007362E4 /* NSUIImage+KPKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C639E531F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CBEFF401F99E5CC007362E4 /* NSUIImage+KPKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C639E541F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.m */; };
+		4CBEFF411F99EA59007362E4 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CD89C1F1F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx */; };
+		4CBEFF421F99EA83007362E4 /* aspect.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4CE082BF1F6D111C0034FF56 /* aspect.pdf */; };
+		4CBEFF431F99EA83007362E4 /* test.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E571F6AE81600E6C5CD /* test.pdf */; };
+		4CBEFF441F99EA83007362E4 /* test.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E2B1F6A644400E6C5CD /* test.icns */; };
+		4CBEFF451F99EA83007362E4 /* test.ico in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E291F6A642500E6C5CD /* test.ico */; };
+		4CBEFF461F99EA87007362E4 /* aspect.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4CE082BF1F6D111C0034FF56 /* aspect.pdf */; };
+		4CBEFF471F99EA87007362E4 /* test.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E571F6AE81600E6C5CD /* test.pdf */; };
+		4CBEFF481F99EA87007362E4 /* test.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E2B1F6A644400E6C5CD /* test.icns */; };
+		4CBEFF491F99EA87007362E4 /* test.ico in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E291F6A642500E6C5CD /* test.ico */; };
 		4CC34FE71D21290D00D79EC1 /* KPKTestUndoAutotype.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */; };
 		4CC57A281DCD454A003EE16C /* KPKTestTwofish.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC57A271DCD454A003EE16C /* KPKTestTwofish.m */; };
 		4CCB50AC1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCB50AB1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m */; };
@@ -2540,17 +2547,21 @@
 				2D5125551E9BD06700D7EAF6 /* CustomIcon_Password_1234.xml in Resources */,
 				2D5125561E9BD06700D7EAF6 /* Keepass2Key.xml in Resources */,
 				2D5125571E9BD06700D7EAF6 /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
-				2D5125581E9BD06700D7EAF6 /* TwoFishCipher256bit_test.kdbx in Resources */,
 				2D5125591E9BD06700D7EAF6 /* KDB1_KeePassX_test.kdb in Resources */,
-				2D51255A1E9BD06700D7EAF6 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
 				2D51255B1E9BD06700D7EAF6 /* Test_Password_1234.kdb in Resources */,
 				2D51255C1E9BD06700D7EAF6 /* Test_Password_1234.kdbx in Resources */,
 				2D51255D1E9BD06700D7EAF6 /* Autotype_test.kdbx in Resources */,
 				2D51255E1E9BD06700D7EAF6 /* KeePass1_native_test.kdb in Resources */,
 				2D51255F1E9BD06700D7EAF6 /* BinaryAttachments_test.kdbx in Resources */,
+				2D5125581E9BD06700D7EAF6 /* TwoFishCipher256bit_test.kdbx in Resources */,
+				2D51255A1E9BD06700D7EAF6 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
+				4CBEFF411F99EA59007362E4 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
 				2D5125601E9BD06700D7EAF6 /* CustomIcon_Password_1234.kdbx in Resources */,
 				2D5125611E9BD06700D7EAF6 /* TwofishCipher256bit_test.kdb in Resources */,
-				2D5125621E9BD06700D7EAF6 /* (null) in Resources */,
+				4CBEFF421F99EA83007362E4 /* aspect.pdf in Resources */,
+				4CBEFF431F99EA83007362E4 /* test.pdf in Resources */,
+				4CBEFF441F99EA83007362E4 /* test.icns in Resources */,
+				4CBEFF451F99EA83007362E4 /* test.ico in Resources */,
 				2D5125631E9BD06700D7EAF6 /* image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2579,7 +2590,10 @@
 				2D51266B1E9BD29500D7EAF6 /* BinaryAttachments_test.kdbx in Resources */,
 				2D51266C1E9BD29500D7EAF6 /* CustomIcon_Password_1234.kdbx in Resources */,
 				2D51266D1E9BD29500D7EAF6 /* TwofishCipher256bit_test.kdb in Resources */,
-				2D51266E1E9BD29500D7EAF6 /* (null) in Resources */,
+				4CBEFF461F99EA87007362E4 /* aspect.pdf in Resources */,
+				4CBEFF471F99EA87007362E4 /* test.pdf in Resources */,
+				4CBEFF481F99EA87007362E4 /* test.icns in Resources */,
+				4CBEFF491F99EA87007362E4 /* test.ico in Resources */,
 				2D51266F1E9BD29500D7EAF6 /* image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2603,23 +2617,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C8138281BE282DC001BF195 /* CustomIcon_Password_1234.xml in Resources */,
-				4C639E2A1F6A642500E6C5CD /* test.ico in Resources */,
 				4CD89C201F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
-				4CE082C01F6D111C0034FF56 /* aspect.pdf in Resources */,
 				4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */,
-				4C639E581F6AE81600E6C5CD /* test.pdf in Resources */,
 				4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
 				4C199DA31DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx in Resources */,
 				4C8138291BE282DC001BF195 /* KDB1_KeePassX_test.kdb in Resources */,
 				4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
 				4C81382B1BE282DC001BF195 /* Test_Password_1234.kdb in Resources */,
-				4C639E2C1F6A644400E6C5CD /* test.icns in Resources */,
 				4C81382C1BE282DC001BF195 /* Test_Password_1234.kdbx in Resources */,
 				4C8138261BE282DC001BF195 /* Autotype_test.kdbx in Resources */,
 				4C81382A1BE282DC001BF195 /* KeePass1_native_test.kdb in Resources */,
 				4C5FFA911DCB5597004EF778 /* BinaryAttachments_test.kdbx in Resources */,
 				4C8138271BE282DC001BF195 /* CustomIcon_Password_1234.kdbx in Resources */,
 				4C199DA11DCF310D00D4FDC8 /* TwofishCipher256bit_test.kdb in Resources */,
+				4CE082C01F6D111C0034FF56 /* aspect.pdf in Resources */,
+				4C639E581F6AE81600E6C5CD /* test.pdf in Resources */,
+				4C639E2C1F6A644400E6C5CD /* test.icns in Resources */,
+				4C639E2A1F6A642500E6C5CD /* test.ico in Resources */,
 				4C81382D1BE282DC001BF195 /* image.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
