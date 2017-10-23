@@ -919,6 +919,7 @@
 		4C8FE3B91E004DF5008C75BF /* KPKTestEntryOrGroupByUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8FE3B81E004DF5008C75BF /* KPKTestEntryOrGroupByUUID.m */; };
 		4C93C4AD1DC2704600260DD4 /* KPKTestChaCha20.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C93C4AC1DC2704600260DD4 /* KPKTestChaCha20.m */; };
 		4C9466231D78923A00F70457 /* KPKTestUndoTimeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9466221D78923A00F70457 /* KPKTestUndoTimeInfo.m */; };
+		4C96A43F1F9DEB2300F071D3 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CD89C1F1F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx */; };
 		4CA1E3441D87F5ED00100002 /* KPKArgon2KeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E3421D87F5ED00100002 /* KPKArgon2KeyDerivation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CA1E3451D87F5ED00100002 /* KPKArgon2KeyDerivation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E3431D87F5ED00100002 /* KPKArgon2KeyDerivation.m */; };
 		4CA1E4841D8832BA00100002 /* argon2.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E46C1D8832BA00100002 /* argon2.h */; };
@@ -2577,6 +2578,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C96A43F1F9DEB2300F071D3 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
 				2D5126611E9BD29500D7EAF6 /* CustomIcon_Password_1234.xml in Resources */,
 				2D5126621E9BD29500D7EAF6 /* Keepass2Key.xml in Resources */,
 				2D5126631E9BD29500D7EAF6 /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
