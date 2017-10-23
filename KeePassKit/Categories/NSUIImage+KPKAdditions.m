@@ -57,7 +57,13 @@
   }
   return [(NSBitmapImageRep *)bestRep representationUsingType:NSPNGFileType properties:@{}];
 #else
-  return UIImagePNGRepresentation(self);
+  /* test for bitmap content, if so, just use simple API to generate PNG */
+  CGImageRef cgImageRef = self.CGImage;
+  if(cgImageRef) {
+    return UIImagePNGRepresentation(self);
+  }
+  return nil;
+  /* no bitmap data is present, we need to render it first */
 #endif
 }
 
