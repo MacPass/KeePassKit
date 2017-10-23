@@ -27,7 +27,7 @@ static NSCalendar *_gregorianCalendar(void) {
   static NSCalendar *_kpkCalendar;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    _kpkCalendar = [NSCalendar calendarWithIdentifier:NSGregorianCalendar];
+    _kpkCalendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
   });
   return _kpkCalendar;
 }
@@ -77,7 +77,7 @@ static NSCalendar *_gregorianCalendar(void) {
   uint32_t seconds;
   
   if(date) {
-    NSUInteger calendarComponents = (NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit);
+    NSUInteger calendarComponents = (NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond);
     NSDateComponents *dateComponents = [_gregorianCalendar() components:calendarComponents fromDate:date];
     
     year = (uint32_t)dateComponents.year;

@@ -641,7 +641,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   NSUInteger counter = 1;
   NSString *base = key;
   while(nil != [self attributeWithKey:key]) {
-    key = [NSString stringWithFormat:@"%@-%d", base, counter++];
+    key = [NSString stringWithFormat:@"%@-%lu", base, (unsigned long)counter++];
   }
   return key;
 }
