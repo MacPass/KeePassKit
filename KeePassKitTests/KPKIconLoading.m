@@ -66,10 +66,10 @@
 }
 
 - (void)testIcnsLoading {
-  KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.icns"]];
+  /* only macOS hast native support for ICNS files */
 #if KPK_MAC
+  KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.icns"]];
   XCTAssertEqual(icon.image.representations.count,10);
-#else
   XCTAssertNotNil(icon.image);
   XCTAssertNotNil(icon.image.kpk_pngData);
 #endif
