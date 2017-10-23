@@ -323,7 +323,7 @@
         buffer[0] |= KPKBinaryProtectMemoryFlag;
       }
       /* copy data after flags */
-      [binary.data getBytes:(buffer+1)];
+      [binary.data getBytes:(buffer+1) length:binary.data.length];
       [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyBinary bytes:buffer length:length];
       free(buffer);
     }
