@@ -43,22 +43,6 @@
 
 @end
 
-@interface NSString (KPKReference)
-
-- (NSString *)kpk_resolveReferencesWithTree:(KPKTree *)tree;
-
-@end
-
-@interface NSString (KPKPlaceholder)
-/**
- *	Evaluates all placeholders inside the string an replaces them with values found in the entry
- *	@param	entry	The enty to use a source
- *	@return	NSString with all found placeholder filled
- */
-- (NSString *)kpk_evaluatePlaceholderWithEntry:(KPKEntry *)entry;
-
-@end
-
 @interface NSString (KPKEvaluation)
 
 - (NSString *)kpk_finalValueForEntry:(KPKEntry *)entry;

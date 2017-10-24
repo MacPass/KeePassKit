@@ -28,7 +28,7 @@
   [entry addCustomAttribute:attribute];
   
   NSString *placeholder = @"{USERNAME}{PASSWORD}{NOTHING}{URL}{S:extended}";
-  NSString *evaluated = [placeholder kpk_evaluatePlaceholderWithEntry:entry];
+  NSString *evaluated = [placeholder kpk_finalValueForEntry:entry];
   NSString *evaluatedGoal = [NSString stringWithFormat:@"%@%@{NOTHING}%@%@", entry.username, entry.password, entry.url, attribute.value];
   XCTAssertTrue([evaluated isEqualToString:evaluatedGoal], @"Evaluated string must match");
 }

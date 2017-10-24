@@ -30,7 +30,6 @@
 #import "KPKFormat.h"
 
 static NSUInteger const _KPKMaxiumRecursionLevel = 10;
-static NSDictionary *_attributeKeyForReferenceKey;
 static NSString *const _KPKSpaceSaveGuard = @"{KPK_LITERAL_SPACE}";
 
 /**
@@ -259,7 +258,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   for(NSString *needle in repeaterValues) {
     [mutableCommand replaceOccurrencesOfString:needle withString:repeaterValues[needle] options:0 range:NSMakeRange(0, mutableCommand.length)];
   }
-
+  
   
   /* TODO replace {+},{-},{^},{%} */
   
@@ -273,7 +272,6 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 }
 
 @end
-
 
 @implementation NSString (KPKAutotype)
 
@@ -317,7 +315,31 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 
 @end
 
-@implementation NSString (KPKReference)
+@implementation NSString (KPKEvaluation)
+
+- (NSString *)kpk_finalValueForEntry:(KPKEntry *)entry {
+  return [self _kpk_finalValueForEntry:entry recursion:0];
+}
+
+- (NSString *)_kpk_finalValueForEntry:(KPKEntry *)entry recursion:(NSUInteger)recursion {
+  if(recursion > _KPKMaxiumRecursionLevel) {
+    return self;
+  }
+  BOOL foundReference = NO;
+  BOOL foundPlaceholder = NO;
+  @autoreleasepool {
+    NSString *value = self;
+    value = [value _kpk_resolveReferencesWithTree:entry.tree recursionLevel:recursion didChange:&foundReference];
+    value = [value _kpk_evaluatePlaceholderWithEntry:entry recursionLevel:recursion didChange:&foundPlaceholder];
+    if(foundPlaceholder || foundReference ) {
+      return [value _kpk_finalValueForEntry:entry recursion:recursion+1];
+    }
+    else {
+      return self;
+    }
+  }
+}
+
 
 /*
  References are formatted as follows:
@@ -332,15 +354,11 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
  {REF:P@I:46C9B1FFBD4ABC4BBB260C6190BAD20C}
  {REF:<WantedField>@<SearchIn>:<Text>}
  */
-- (NSString *)kpk_resolveReferencesWithTree:(KPKTree *)tree {
-  NSString *resolved;
-  @autoreleasepool {
-    resolved = [self _kpk_resolveReferencesWithTree:tree recursionLevel:0];
-  }
-  return resolved;
-}
 
-- (NSString *)_kpk_resolveReferencesWithTree:(KPKTree *)tree recursionLevel:(NSUInteger)level {
+- (NSString *)_kpk_resolveReferencesWithTree:(KPKTree *)tree recursionLevel:(NSUInteger)level didChange:(BOOL *)didChange {
+  if(NULL != didChange) {
+    *didChange = NO;
+  }
   /* No tree, no real references */
   if(!tree) {
     return self;
@@ -349,22 +367,27 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   if(level > _KPKMaxiumRecursionLevel) {
     return self;
   }
-  NSString *referencePattern = [NSString stringWithFormat:@"\\{%@(%@|%@|%@|%@|%@|%@){1}@(%@|%@|%@|%@|%@|%@|%@){1}:([^\\}]*)\\}",
-   kKPKReferencePrefix,
-   kKPKReferenceTitleKey,
-   kKPKReferenceUsernameKey,
-   kKPKReferenceURLKey,
-   kKPKReferencePasswordKey,
-   kKPKReferenceNotesKey,
-   kKPKReferenceUUIDKey,
-   kKPKReferenceTitleKey,
-   kKPKReferenceUsernameKey,
-   kKPKReferenceURLKey,
-   kKPKReferencePasswordKey,
-   kKPKReferenceNotesKey,
-   kKPKReferenceUUIDKey,
-   kKPKReferenceCustomFieldKey
-   ];
+  
+  static NSString *referencePattern = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    referencePattern = [NSString stringWithFormat:@"\\{%@(%@|%@|%@|%@|%@|%@){1}@(%@|%@|%@|%@|%@|%@|%@){1}:([^\\}]*)\\}",
+                        kKPKReferencePrefix,
+                        kKPKReferenceTitleKey,
+                        kKPKReferenceUsernameKey,
+                        kKPKReferenceURLKey,
+                        kKPKReferencePasswordKey,
+                        kKPKReferenceNotesKey,
+                        kKPKReferenceUUIDKey,
+                        kKPKReferenceTitleKey,
+                        kKPKReferenceUsernameKey,
+                        kKPKReferenceURLKey,
+                        kKPKReferencePasswordKey,
+                        kKPKReferenceNotesKey,
+                        kKPKReferenceUUIDKey,
+                        kKPKReferenceCustomFieldKey
+                        ];
+  });
   
   NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:referencePattern
                                                                           options:NSRegularExpressionCaseInsensitive
@@ -376,26 +399,36 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     NSString *searchField = [self substringWithRange:[result rangeAtIndex:2]];
     NSString *criteria = [self substringWithRange:[result rangeAtIndex:3]];
     NSString *substitute = [self _kpk_retrieveValueOfKey:valueField
-                                             withKey:searchField
-                                            matching:criteria
-                                            withTree:tree];
+                                                 withKey:searchField
+                                                matching:criteria
+                                                withTree:tree
+                                               recursion:level];
     if(substitute) {
       [mutableSelf replaceCharactersInRange:result.range withString:substitute];
       didReplace = YES;
     }
   }];
-  return (didReplace ? [mutableSelf _kpk_resolveReferencesWithTree:tree recursionLevel:level+1] : [self copy]);
+  
+  if(NULL != didChange) {
+    *didChange = didReplace;
+  }
+  /* do not return a copy to minimize string copies each recursion */
+  return didReplace ? [mutableSelf copy] : self;
 }
 
-- (NSString *)_kpk_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match withTree:(KPKTree *)tree {
+- (NSString *)_kpk_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match withTree:(KPKTree *)tree recursion:(NSUInteger)recursion {
   /* Custom and UUID will get special treatment, so we do not collect them inside the array */
-  _attributeKeyForReferenceKey = @{
-                            kKPKReferenceTitleKey : kKPKTitleKey,
-                            kKPKReferenceUsernameKey : kKPKUsernameKey,
-                            kKPKReferencePasswordKey : kKPKPasswordKey,
-                            kKPKReferenceURLKey : kKPKURLKey,
-                            kKPKReferenceNotesKey : kKPKNotesKey,
-                            };
+  static NSDictionary<NSString *, NSString *> *attributeKeyForReferenceKey;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    attributeKeyForReferenceKey = @{
+                                    kKPKReferenceTitleKey : kKPKTitleKey,
+                                    kKPKReferenceUsernameKey : kKPKUsernameKey,
+                                    kKPKReferencePasswordKey : kKPKPasswordKey,
+                                    kKPKReferenceURLKey : kKPKURLKey,
+                                    kKPKReferenceNotesKey : kKPKNotesKey,
+                                    };
+  });
   /* Noramlize the keys */
   searchKey = searchKey.uppercaseString;
   valueKey = valueKey.uppercaseString;
@@ -407,7 +440,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   if([searchKey isEqualToString:kKPKReferenceCustomFieldKey]) {
     for(KPKEntry *entry in allEntries) {
       for(KPKAttribute *attribute in entry.customAttributes) {
-        NSRange matchRange = [attribute.value rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, attribute.value.length) locale:[NSLocale currentLocale ]];
+        NSString *finalValue = [attribute.value _kpk_finalValueForEntry:entry recursion:recursion + 1];
+        NSRange matchRange = [finalValue rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, finalValue.length) locale:[NSLocale currentLocale ]];
         if(matchRange.length > 0) {
           matchingEntry = entry;
           break;
@@ -431,12 +465,12 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }
   /* Default attribute search */
   else {
-    NSString *searchAttributeKey = _attributeKeyForReferenceKey[searchKey];
+    NSString *searchAttributeKey = attributeKeyForReferenceKey[searchKey];
     if(!searchAttributeKey) {
       return nil; // no valid attribute key supplied
     }
     for(KPKEntry *entry in allEntries) {
-      NSString *value = [entry valueForAttributeWithKey:searchAttributeKey];
+      NSString *value = [[entry valueForAttributeWithKey:searchAttributeKey] _kpk_finalValueForEntry:entry recursion:recursion + 1];
       NSRange matchRange = [value rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, value.length) locale:[NSLocale currentLocale ]];
       if(matchRange.length > 0) {
         /* First hit wins */
@@ -452,22 +486,13 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   if([valueKey isEqualToString:kKPKReferenceUUIDKey]) {
     return matchingEntry.uuid.UUIDString;
   }
-  return [matchingEntry valueForAttributeWithKey:_attributeKeyForReferenceKey[valueKey]];
+  return [[matchingEntry valueForAttributeWithKey:attributeKeyForReferenceKey[valueKey]] _kpk_finalValueForEntry:matchingEntry recursion:recursion + 1];
 }
 
-@end
-
-@implementation NSString (KPKPlaceholder)
-
-- (NSString *)kpk_evaluatePlaceholderWithEntry:(KPKEntry *)entry {
-  NSString *evaluated;
-  @autoreleasepool {
-    evaluated = [self _kpk_evaluatePlaceholderWithEntry:entry recursionLevel:0];
+- (NSString *)_kpk_evaluatePlaceholderWithEntry:(KPKEntry *)entry recursionLevel:(NSUInteger)recursion didChange:(BOOL *)didChange {
+  if(didChange) {
+    *didChange = NO;
   }
-  return evaluated;
-}
-
-- (NSString *)_kpk_evaluatePlaceholderWithEntry:(KPKEntry *)entry recursionLevel:(NSUInteger)recursion {
   if(recursion > _KPKMaxiumRecursionLevel) {
     return [self copy];
   }
@@ -519,22 +544,26 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   caseInsensitiveMappings[kKPKPlaceholderGroup] = entry.parent.title ? entry.parent.title : @"";
   caseInsensitiveMappings[kKPKPlaceholderGroupPath] = entry.parent ? entry.parent.breadcrumb : @"";
   caseInsensitiveMappings[kKPKPlaceholderGroupNotes] = entry.parent ? entry.parent.notes : @"";
-
+  
   caseInsensitiveMappings[@"{ENV_DIRSEP}"] = @"/";
   NSURL *appDirURL = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask][0];
   caseInsensitiveMappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  appDirURL.path : @"";
   
   id<KPKTreeDelegate> treeDelegate = entry.tree.delegate;
   if([treeDelegate respondsToSelector:@selector(resolvePlaceholder:forTree:)]) {
-    NSArray *dbPlaceholder = @[ kKPKPlaceholderDatabasePath,
-                                kKPKPlaceholderDatabaseFolder,
-                                kKPKPlaceholderDatabaseName,
-                                kKPKPlaceholderDatabaseBasename,
-                                kKPKPlaceholderDatabaseFileExtension,
-                                kKPKPlaceholderSelectedGroup,
-                                kKPKPlaceholderSelectedGroupPath,
-                                kKPKPlaceholderSelectedGroupNotes
-                                ];
+    static NSArray *dbPlaceholder;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      dbPlaceholder = @[ kKPKPlaceholderDatabasePath,
+                         kKPKPlaceholderDatabaseFolder,
+                         kKPKPlaceholderDatabaseName,
+                         kKPKPlaceholderDatabaseBasename,
+                         kKPKPlaceholderDatabaseFileExtension,
+                         kKPKPlaceholderSelectedGroup,
+                         kKPKPlaceholderSelectedGroupPath,
+                         kKPKPlaceholderSelectedGroupNotes
+                         ];
+    });
     for(NSString *placeHolder in dbPlaceholder) {
       NSString *value = [treeDelegate resolvePlaceholder:placeHolder forTree:entry.tree];
       if(value) {
@@ -557,43 +586,34 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
    {DT_UTC_HOUR}	Hour component of the current UTC date/time.
    {DT_UTC_MINUTE}	Minute component of the current UTC date/time.
    {DT_UTC_SECOND}	Seconds component of the current UTC date/time.
-  
+   
    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:@"YYYYMMddHHmmss" allowNaturalLanguage:NO];
-  [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
-  NSDate *currentDate = [NSDate date];
-  [dateFormatter stringFromDate:currentDate];
-  NSCalendar *currentCalender = [NSCalendar currentCalendar];
+   [dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+   NSDate *currentDate = [NSDate date];
+   [dateFormatter stringFromDate:currentDate];
+   NSCalendar *currentCalender = [NSCalendar currentCalendar];
    */
   
   NSMutableString *supstitudedString = [self mutableCopy];
   /* defaults and standars should be mapped case insensitively */
+  BOOL didReplace = NO;
   for(NSString *placeholderKey in caseInsensitiveMappings) {
-    [supstitudedString replaceOccurrencesOfString:placeholderKey
+    didReplace |= (0 != [supstitudedString replaceOccurrencesOfString:placeholderKey
                                        withString:caseInsensitiveMappings[placeholderKey]
                                           options:NSCaseInsensitiveSearch
-                                            range:NSMakeRange(0, supstitudedString.length)];
+                                            range:NSMakeRange(0, supstitudedString.length)]);
   }
   /* Custom keys should be mapped case senstiviely */
   for(NSString *placeholderKey in caseSensitiviveMappings) {
-    [supstitudedString replaceOccurrencesOfString:placeholderKey
+    didReplace |= (0 != [supstitudedString replaceOccurrencesOfString:placeholderKey
                                        withString:caseSensitiviveMappings[placeholderKey]
                                           options:0
-                                            range:NSMakeRange(0, supstitudedString.length)];
+                                            range:NSMakeRange(0, supstitudedString.length)]);
   }
-  if([supstitudedString isEqualToString:self]) {
-    return [self copy];
+  if(didChange) {
+    *didChange = didReplace;
   }
-  return [supstitudedString _kpk_evaluatePlaceholderWithEntry:entry recursionLevel:recursion + 1];
-}
-
-
-@end
-
-@implementation NSString (KPKEvaluation)
-
-- (NSString *)kpk_finalValueForEntry:(KPKEntry *)entry {
-  /* FIXME this setup does not catch all constallations of reference/placeholder nestings */
-  return[[self kpk_resolveReferencesWithTree:entry.tree] kpk_evaluatePlaceholderWithEntry:entry];
+  return (didReplace ? [supstitudedString copy] : [self copy]);
 }
 
 @end

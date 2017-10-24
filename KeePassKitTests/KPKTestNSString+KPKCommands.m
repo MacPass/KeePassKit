@@ -81,7 +81,7 @@
   NSString *sequence = [NSString stringWithFormat:@"{s:%@}{s:%@}{S:%@}{S:%@}", camelCase.key, lowerCase.key, spacedLetter.key, spacedNumber.key];
   XCTAssertEqualObjects(sequence, sequence.kpk_normalizedAutotypeSequence);
   NSString *result = [NSString stringWithFormat:@"%@%@%@%@", camelCase.value, lowerCase.value, spacedLetter.value, spacedNumber.value];
-  XCTAssertEqualObjects([sequence kpk_evaluatePlaceholderWithEntry:entry], result);
+  XCTAssertEqualObjects([sequence kpk_finalValueForEntry:entry], result);
 }
 
 @end

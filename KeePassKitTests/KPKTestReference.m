@@ -32,6 +32,7 @@
   self.entry1 = entry1;
   self.entry2 = entry2;
   
+  self.entry1.url = @"-Entry1URL-";
   self.entry2.url = @"-Entry2URL-";
   
   [super setUp];
@@ -47,38 +48,55 @@
   self.entry2.title = [[NSString alloc] initWithFormat:@"Nothing{ref:t@i:%@}Changed", self.entry1.uuid.UUIDString];;
   self.entry2.url = @"-Entry2URL-";
   
-  NSString *result = [self.entry2.title kpk_resolveReferencesWithTree:self.tree];
-  XCTAssertTrue([result isEqualToString:@"Nothing-Entry1Title-Changed"], @"Reference with delemited UUID string matches!");
+  NSString *result = [self.entry2.title kpk_finalValueForEntry:self.entry2];
+  XCTAssertEqualObjects(result, @"Nothing-Entry1Title-Changed", @"Reference with delemited UUID string matches!");
   
   NSString *undelemitedUUIDString = [self.entry1.uuid.UUIDString stringByReplacingOccurrencesOfString:@"-" withString:@""];
   self.entry2.title = [[NSString alloc] initWithFormat:@"Nothing{ref:t@i:%@}Changed", undelemitedUUIDString];;
   
-  result = [self.entry2.title kpk_resolveReferencesWithTree:self.tree];
-  XCTAssertTrue([result isEqualToString:@"Nothing-Entry1Title-Changed"], @"Reference with undelemtied UUID string matches!");
+  XCTAssertEqualObjects([self.entry2.title kpk_finalValueForEntry:self.entry2], @"Nothing-Entry1Title-Changed", @"Reference with undelemtied UUID string matches!");
 }
 
 - (void)testRecursiveUUIDReference{
   self.entry1.title = [[NSString alloc] initWithFormat:@"Title1{REF:A@i:%@}", self.entry2.uuid.UUIDString];
   self.entry2.title = [[NSString alloc] initWithFormat:@"Nothing{REF:t@I:%@}Changed", self.entry1.uuid.UUIDString];
   
-  NSString *result = [self.entry2.title kpk_resolveReferencesWithTree:self.tree];
-  XCTAssertTrue([result isEqualToString:@"NothingTitle1-Entry2URL-Changed"], @"Replaced Strings should match");
+  XCTAssertEqualObjects([self.entry2.title kpk_finalValueForEntry:self.entry2], @"NothingTitle1-Entry2URL-Changed", @"Replaced Strings should match");
+}
+
+- (void)testPlaceholderReference {
+  self.entry1.title = [NSString stringWithFormat:@"{%@}", kKPKUsernameKey];
+  self.entry1.username = [NSString stringWithFormat:@"Title1{REF:T@i:%@}", self.entry2.uuid.UUIDString];
+  self.entry1.notes = [NSString stringWithFormat:@"Notes1{REF:U@i:%@}", self.entry2.uuid.UUIDString];
+  self.entry2.title = @"-Entry2Title-";
+  self.entry2.username = [NSString stringWithFormat:@"{%@}", kKPKURLKey];
+  
+  XCTAssertEqualObjects([self.entry1.title kpk_finalValueForEntry:self.entry1], @"Title1-Entry2Title-", @"Reverences in placeholders should be evaluated");
+  XCTAssertEqualObjects([self.entry1.notes kpk_finalValueForEntry:self.entry1], @"Notes1-Entry2URL-", @"Placeholder in references should evaluate to references entry");
+}
+
+- (void)testRecursion {
+  self.entry1.title = [NSString stringWithFormat:@"{%@}", kKPKUsernameKey];
+  self.entry1.username = [NSString stringWithFormat:@"{%@}", kKPKTitleKey];
+
+  XCTAssertNotNil([self.entry1.title kpk_finalValueForEntry:self.entry1]);
+  XCTAssertNotNil([self.entry1.username kpk_finalValueForEntry:self.entry1]);
 }
 
 - (void)testMalformedUUIDReferences {
   self.entry1.title = @"Title1";
   self.entry2.title = [[NSString alloc] initWithFormat:@"{REF:T@I:%@-}", self.entry1.uuid.UUIDString];
   
-  XCTAssertNoThrow([self.entry2.title kpk_resolveReferencesWithTree:self.tree], @"Malformed UUID string does not throw exception!");
-  XCTAssertTrue([[self.entry2.title kpk_resolveReferencesWithTree:self.tree] isEqualToString:self.entry2.title], @"Malformed UUID does not yield a match!");
+  XCTAssertNoThrow([self.entry2.title kpk_finalValueForEntry:self.entry2], @"Malformed UUID string does not throw exception!");
+  XCTAssertEqualObjects([self.entry2.title kpk_finalValueForEntry:self.entry2], self.entry2.title, @"Malformed UUID does not yield a match!");
 }
 
 - (void)testReferncePasswordByTitle {
   self.entry1.title = [[NSString alloc] initWithFormat:@"Title1{REF:A@i:%@}", self.entry2.uuid.UUIDString];
   self.entry2.title = [[NSString alloc] initWithFormat:@"Nothing{REF:t@I:%@}Changed", self.entry1.uuid.UUIDString];
   
-  NSString *result = [self.entry2.title kpk_resolveReferencesWithTree:self.tree];
-  XCTAssertTrue([result isEqualToString:@"NothingTitle1-Entry2URL-Changed"], @"Replaced Strings should match");
+  NSString *result = [self.entry2.title kpk_finalValueForEntry:self.entry2];
+  XCTAssertEqualObjects(result, @"NothingTitle1-Entry2URL-Changed", @"Replaced Strings should match");
 }
 
 - (void)testReferncePasswordByCustomAttribute {
