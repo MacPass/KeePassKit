@@ -56,7 +56,7 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeTraversalOptions) {
 #pragma mark Traversal
 
 - (void)_traverseNodesWithBlock:(void (^)(KPKNode *node))block;
-- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block options:(KPKNodeTraversalOptions)options;
+- (void)_traverseNodesWithOptions:(KPKNodeTraversalOptions)options block:(void (^)(KPKNode *node))block;
 
 #pragma mark Copy Helper
 /**

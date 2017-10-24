@@ -72,20 +72,19 @@
 }
 
 - (instancetype)init {
-  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass(self.class));
+  [self doesNotRecognizeSelector:_cmd];
   self = nil;
   return nil;
 }
 
 - (instancetype)initWithUUID:(NSUUID *)uuid {
-  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass(self.class));
+  [self doesNotRecognizeSelector:_cmd];
   self = nil;
   return self;
 }
 
 - (instancetype)copyWithTitle:(NSString *)titleOrNil options:(KPKCopyOptions)options {
-  /* not implemented */
-  NSAssert(NO, @"Unable to call %@ on %@", NSStringFromSelector(_cmd), NSStringFromClass(self.class));
+  [self doesNotRecognizeSelector:_cmd];
   return nil;
 }
 
@@ -445,17 +444,12 @@
   _uuid = [[[NSUUID alloc] init] copy];
 }
 
-- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block options:(KPKNodeTraversalOptions)options {
-  if(block) {
-    if((!(options & KPKNodeTraversalOptionSkipGroups) && self.asGroup) ||
-       (!(options & KPKNodeTraversalOptionSkipEntries) && self.asEntry)) {
-      block(self);
-    }
-  }
+- (void)_traverseNodesWithOptions:(KPKNodeTraversalOptions)options block:(void (^)(KPKNode *node))block {
+  [self doesNotRecognizeSelector:_cmd];
 }
 
-- (void)_traverseNodesWithBlock:(void (^)(KPKNode *node))block {
-  [self _traverseNodesWithBlock:block options:0];
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block {
+  [self _traverseNodesWithOptions:0 block:block];
 }
 
 - (void)addCustomDataObject:(KPKPair *)pair {

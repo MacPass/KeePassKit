@@ -282,13 +282,21 @@ static NSSet *_observedKeyPathsSet;
   return didChange;
 }
 
-- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block options:(KPKNodeTraversalOptions)options {
-  [super _traverseNodesWithBlock:block options:options];
-  for(KPKGroup *group in self.mutableGroups) {
-    [group _traverseNodesWithBlock:block options:options];
+- (void)_traverseNodesWithOptions:(KPKNodeTraversalOptions)options block:(void (^)(KPKNode *))block {
+  if(block) {
+    block(self);
   }
-  for(KPKEntry *entry in self.mutableEntries) {
-    [entry _traverseNodesWithBlock:block options:options];
+  if(!(options & KPKNodeTraversalOptionSkipGroups)) {
+    for(KPKGroup *group in self.mutableGroups) {
+      [group _traverseNodesWithOptions:options block:block];
+    }
+  }
+  if(!(options & KPKNodeTraversalOptionSkipEntries)) {
+    for(KPKEntry *entry in self.mutableEntries) {
+      if(block) {
+        block(entry);
+      }
+    }
   }
 }
 
