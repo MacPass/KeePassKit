@@ -117,7 +117,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 - (void)testAllEntriesRetirevalByCopyPerformance {
   [self measureBlock:^{
-    NSArray <KPKEntry *> *entries = tree.allEntries;
+    for(KPKEntry *entry in tree.allEntries) {}
   }];
 }
 
@@ -131,30 +131,20 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 - (void)testAllGroupsRetirevalByCopyPerformance {
   [self measureBlock:^{
-    NSArray <KPKGroup *> *groups = tree.allGroups;
+    for(KPKGroup *group in tree.allGroups) {}
   }];
 }
 
 
 - (void)testAllEntriesRetirevalByTraversalPerformance {
   [self measureBlock:^{
-    __block NSMutableArray *entries = [[NSMutableArray alloc] init];
-    [tree.root _traverseNodesWithBlock:^(KPKNode *node) {
-      if(node.asEntry) {
-        [entries addObject:node];
-      }
-    }];
+    [tree.root _traverseNodesWithBlock:^(KPKNode *node){}];
   }];
 }
 
 - (void)testAllGroupsRetirevalByTraversalPerformance {
   [self measureBlock:^{
-    __block NSMutableArray *groups = [[NSMutableArray alloc] init];
-    [tree.root _traverseNodesWithBlock:^(KPKNode *node) {
-      if(node.asGroup) {
-        [groups addObject:node];
-      }
-    }];
+    [tree.root _traverseNodesWithBlock:^(KPKNode *node){}];
   }];
 }
 
