@@ -69,7 +69,7 @@
   __block NSUInteger groupCount = 0;
   __block NSUInteger entryCount = 0;
   __block NSMutableSet <NSUUID *> *uuids = [[NSMutableSet alloc] init];
-  [tree.root _traverseNodesWithBlock:^(KPKNode *node) {
+  [tree.root _traverseNodesWithOptions:0 block:^(KPKNode *node) {
     XCTAssertFalse([uuids containsObject:node.uuid]);
     if(node.asGroup) {
       groupCount++;
@@ -78,7 +78,7 @@
       entryCount++;
     }
     [uuids addObject:node.uuid];
-  } options:0];
+  }];
   
   XCTAssertEqual(groupCount, 10*10 + 10 + 1); /* 10*10 subgroups, 10 groups, 1 root */
   XCTAssertEqual(entryCount, 10*10 + 10*10*10); /* 10*10 entries, 10*10*10 subEntries */
@@ -87,7 +87,8 @@
   groupCount = 0;
   entryCount = 0;
   [uuids removeAllObjects];
-  [tree.root _traverseNodesWithBlock:^(KPKNode *node) {
+  [tree.root _traverseNodesWithOptions:KPKNodeTraversalOptionSkipEntries
+   block:^(KPKNode *node) {
     XCTAssertFalse([uuids containsObject:node.uuid]);
     if(node.asGroup) {
       groupCount++;
@@ -96,7 +97,7 @@
       entryCount++;
     }
     [uuids addObject:node.uuid];
-  } options:KPKNodeTraversalOptionSkipEntries];
+  }];
   
   XCTAssertEqual(groupCount, 10*10 + 10 + 1); /* 10*10 subgroups, 10 groups, 1 root */
   XCTAssertEqual(entryCount, 0);
@@ -105,7 +106,8 @@
   groupCount = 0;
   entryCount = 0;
   [uuids removeAllObjects];
-  [tree.root _traverseNodesWithBlock:^(KPKNode *node) {
+  [tree.root _traverseNodesWithOptions:KPKNodeTraversalOptionSkipGroups
+   block:^(KPKNode *node) {
     XCTAssertFalse([uuids containsObject:node.uuid]);
     if(node.asGroup) {
       groupCount++;
@@ -114,7 +116,7 @@
       entryCount++;
     }
     [uuids addObject:node.uuid];
-  } options:KPKNodeTraversalOptionSkipGroups];
+  }];
   
   XCTAssertEqual(groupCount, 0);
   XCTAssertEqual(entryCount, 10*10 + 10*10*10);

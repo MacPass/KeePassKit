@@ -123,9 +123,9 @@ static NSSet *_observedKeyPathsSet;
     self.title = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(title))];
     self.notes = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(notes))];
     _mutableGroups = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKGroup.class]]
-                                        forKey:NSStringFromSelector(@selector(mutableGroups))] mutableCopy];
+                                               forKey:NSStringFromSelector(@selector(mutableGroups))] mutableCopy];
     _mutableEntries = [[aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKEntry.class]]
-                                         forKey:NSStringFromSelector(@selector(mutableEntries))] mutableCopy];
+                                                forKey:NSStringFromSelector(@selector(mutableEntries))] mutableCopy];
     self.isAutoTypeEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isAutoTypeEnabled))];
     self.isSearchEnabled = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(isSearchEnabled))];
     self.isExpanded = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isExpanded))];
@@ -283,13 +283,11 @@ static NSSet *_observedKeyPathsSet;
 }
 
 - (void)_traverseNodesWithOptions:(KPKNodeTraversalOptions)options block:(void (^)(KPKNode *))block {
-  if(block) {
+  if(block && !(options & KPKNodeTraversalOptionSkipGroups)) {
     block(self);
   }
-  if(!(options & KPKNodeTraversalOptionSkipGroups)) {
-    for(KPKGroup *group in self.mutableGroups) {
-      [group _traverseNodesWithOptions:options block:block];
-    }
+  for(KPKGroup *group in self.mutableGroups) {
+    [group _traverseNodesWithOptions:options block:block];
   }
   if(!(options & KPKNodeTraversalOptionSkipEntries)) {
     for(KPKEntry *entry in self.mutableEntries) {

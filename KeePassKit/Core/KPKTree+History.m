@@ -8,15 +8,17 @@
 
 #import "KPKTree.h"
 #import "KPKGroup.h"
-#import "KPKGroup_Private.h"
 #import "KPKEntry_Private.h"
+#import "KPKNode_Private.h"
 
 @implementation KPKTree (History)
 
 - (void)maintainHistory {
-  [self.root _traverseNodesWithBlock:^(KPKNode *node) {
-    [node.asEntry _maintainHistory];
-  } options:KPKNodeTraversalOptionSkipGroups];
+  
+  [self.root _traverseNodesWithOptions:KPKNodeTraversalOptionSkipGroups
+                                 block:^(KPKNode *node) {
+                                   [node.asEntry _maintainHistory]; 
+                                 }];
 }
 
 @end
