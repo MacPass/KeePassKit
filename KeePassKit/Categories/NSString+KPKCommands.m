@@ -538,7 +538,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     for(NSString *placeHolder in dbPlaceholder) {
       NSString *value = [treeDelegate resolvePlaceholder:placeHolder forTree:entry.tree];
       if(value) {
-        caseInsensitiveMappings[dbPlaceholder] = value;
+        caseInsensitiveMappings[placeHolder] = value;
       }
     }
   }
