@@ -33,13 +33,6 @@
     return self;
   }
   
-  NSUInteger full_length = self.length;
-  NSUInteger half_length = self.length / 2;
-  
-  NSMutableData *decompressed = [NSMutableData dataWithLength:(full_length + half_length)];
-  BOOL done = NO;
-  int status;
-  
   z_stream strm;
   strm.next_in = (Bytef *)self.bytes;
   strm.avail_in = (uInt)self.length;
@@ -50,6 +43,13 @@
   if (inflateInit2(&strm, (15+32)) != Z_OK) {
     return nil;
   }
+
+  NSUInteger full_length = self.length;
+  NSUInteger half_length = self.length / 2;
+  
+  NSMutableData *decompressed = [NSMutableData dataWithLength:(full_length + half_length)];
+  BOOL done = NO;
+  int status;
   
   while(!done) {
     // Make sure we have enough room and reset the lengths.
@@ -73,7 +73,7 @@
   // Set real length.
   if(done) {
     decompressed.length = strm.total_out;
-    return [NSData dataWithData: decompressed];
+    return [NSData dataWithData:decompressed];
   }
   else {
     return nil;
@@ -105,12 +105,12 @@
   }
   
   // 16K chunks for expansion
-  NSMutableData *compressed = [NSMutableData dataWithLength:16384];
+  NSMutableData *compressed = [NSMutableData dataWithLength:(16*1024)];
   
   do {
     
     if(strm.total_out >= compressed.length) {
-      [compressed increaseLengthBy: 16384];
+      [compressed increaseLengthBy:(16*1024)];
     }
     
     strm.next_out = compressed.mutableBytes + strm.total_out;
