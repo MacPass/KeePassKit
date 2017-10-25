@@ -77,7 +77,7 @@ static NSCalendar *_gregorianCalendar(void) {
   uint32_t seconds;
   
   if(date) {
-    NSUInteger calendarComponents = (NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond);
+    static NSUInteger calendarComponents = (NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond);
     NSDateComponents *dateComponents = [_gregorianCalendar() components:calendarComponents fromDate:date];
     
     year = (uint32_t)dateComponents.year;

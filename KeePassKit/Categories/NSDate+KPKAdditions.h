@@ -22,18 +22,23 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSDate (KPKPacked)
+NS_ASSUME_NONNULL_BEGIN
 
-+ (NSDate *)kpk_dateFromPackedBytes:(uint8_t *)buffer;
-+ (NSData *)kpk_packedBytesFromDate:(NSDate *)date;
-+ (void)kpk_getPackedBytes:(uint8_t *)buffer fromDate:(NSDate *)date;
-- (NSData *)kpk_packedBytes;
+@interface NSDate (KPKPacked)
++ (NSDate * _Nullable)kpk_dateFromPackedBytes:(uint8_t *)buffer;
++ (NSData *)kpk_packedBytesFromDate:(NSDate * _Nullable)date;
++ (void)kpk_getPackedBytes:(uint8_t *)buffer fromDate:(NSDate * _Nullable)date;
+
+@property (copy, readonly) NSData *kpk_packedBytes;
 
 @end
 
 @interface NSDate (KPKDateFormat)
 
++ (NSDate * _Nullable)kpk_dateFromUTCString:(NSString *)string;
+
 @property (nonatomic, readonly) NSString *kpk_UTCString;
-+ (NSDate *)kpk_dateFromUTCString:(NSString *)string;
 
 @end
+
+NS_ASSUME_NONNULL_END
