@@ -107,7 +107,7 @@
   }
   
   DDXMLElement *rootElement = [self.document rootElement];
-  if(![[rootElement name] isEqualToString:kKPKXmlKeePassFile]) {
+  if(![rootElement.name isEqualToString:kKPKXmlKeePassFile]) {
     KPKCreateError(error, KPKErrorKdbxKeePassFileElementMissing);
     return nil;
   }
@@ -128,8 +128,8 @@
     KPKCreateError(error, KPKErrorKdbxMetaElementMissing);
     return nil;
   }
-  if(metaElement.parent != rootElement) {
-    NSLog(@"Warning: Meta Element is not a child of Root element!");
+  if(![metaElement.parent isEqual:rootElement]) {
+    NSLog(@"Warning: Meta Element is not a direct child of KeePassFile element!");
   }
   NSString *headerHash = KPKXmlString(metaElement, kKPKXmlHeaderHash);
   if(headerHash) {
@@ -142,6 +142,9 @@
   if(!root) {
     KPKCreateError(error, KPKErrorKdbxRootElementMissing);
     return nil;
+  }
+  if(![root.parent isEqual:rootElement]) {
+    NSLog(@"Warning: Root element is not direct child of KeePassFile element");
   }
   
   DDXMLElement *rootGroup = [root elementForName:kKPKXmlGroup];
