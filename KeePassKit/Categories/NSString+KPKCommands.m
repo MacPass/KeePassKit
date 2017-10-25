@@ -281,6 +281,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 }
 
 - (BOOL)kpk_validCommand {
+  /* TODO: Cache result? */
   if(self.length == 0) {
     return NO;
   }
@@ -596,6 +597,10 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   
   NSMutableString *supstitudedString = [self mutableCopy];
   /* defaults and standars should be mapped case insensitively */
+  /*
+   TODO: The current implementation might re-replace a key if pairs are mapped,
+   this might be bad in edge cases but normally no use-case should rely on this behaviour
+   */
   BOOL didReplace = NO;
   for(NSString *placeholderKey in caseInsensitiveMappings) {
     didReplace |= (0 != [supstitudedString replaceOccurrencesOfString:placeholderKey
