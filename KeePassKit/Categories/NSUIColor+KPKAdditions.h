@@ -23,6 +23,8 @@
 #import "KPKPlatformIncludes.h"
 @import Foundation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSUIColor (KPKAdditions)
 /**
  *	Create an NSColor object form a hexadeciaml (eg #FF0000)
@@ -30,7 +32,7 @@
  *	@param	hex	The String to parse
  *	@return	NSColor created form the hex string
  */
-+ (NSUIColor *)kpk_colorWithHexString:(NSString *)hex;
++ (nullable NSUIColor *)kpk_colorWithHexString:(NSString *)hex;
 /**
  *  Creates an NSCOlor object form the Data provieded
  *  data shoule be of the following format:
@@ -39,22 +41,24 @@
  *  @param	data	Date to parse as color
  *  @return	NSColor object with the suplied values set
  */
-+ (NSUIColor *)kpk_colorWithData:(NSData *)data;
++ (nullable NSUIColor *)kpk_colorWithData:(NSData *)data;
 /**
  *  Generates a Hexstring representing the color
  *  @param	color	Color to convert to hexadecimal format
  *  @return	string with color encoded in hexadecimal format
  */
-+ (NSString *)kpk_hexStringFromColor:(NSUIColor *)color;
++ (nullable NSString *)kpk_hexStringFromColor:(NSUIColor *)color;
 /**
  *  Return a hexadecimal string representation of the color
  *  @return	hexadecimal string of the recieving NSColor object
  */
-@property (nonatomic, readonly, copy) NSString *kpk_hexString;
+@property (nonatomic, readonly, copy, nullable) NSString *kpk_hexString;
 /**
  *  Returns the color represented as 4 byte data. This format is used in KDB files
  *  @return	NSData for the receiving color
  */
-@property (nonatomic, readonly, copy) NSData *kpk_colorData;
+@property (nonatomic, readonly, copy, nullable) NSData *kpk_colorData;
 
 @end
+
+NS_ASSUME_NONNULL_END

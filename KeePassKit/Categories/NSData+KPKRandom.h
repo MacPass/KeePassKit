@@ -24,6 +24,6 @@
 
 @interface NSData (KPKRandom)
 
-+ (NSData *)kpk_dataWithRandomBytes:(NSUInteger)length;
++ (nullable NSData *)kpk_dataWithRandomBytes:(NSUInteger)length;
 
 @end
