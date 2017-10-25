@@ -30,8 +30,7 @@
     return nil;
   }
   uint8_t *bytes = malloc(sizeof(uint8_t) * length);
-  int ret = SecRandomCopyBytes(kSecRandomDefault, length, bytes);
-  if(ret != 0) {
+  if(errSecSuccess != SecRandomCopyBytes(kSecRandomDefault, length, bytes)) {
     free(bytes);
     return nil;
   }
