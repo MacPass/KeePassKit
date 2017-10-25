@@ -27,14 +27,12 @@
 
 @interface NSData (KPKGzip)
 
-#pragma mark -
-#pragma mark Gzip Compression routines
-/*
- Returns a data object containing a Gzip decompressed copy of the receivers contents.
+/**
+ @returns a data object containing a Gzip decompressed copy of the receivers contents.
  */
 @property (nonatomic, readonly, copy) NSData *kpk_gzipInflated;
-/*
- Returns a data object containing a Gzip compressed copy of the receivers contents.
+/**
+ @returns a data object containing a Gzip compressed copy of the receivers contents.
  */
 @property (nonatomic, readonly, copy) NSData *kpk_gzipDeflated;
 
