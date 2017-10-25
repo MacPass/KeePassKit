@@ -354,16 +354,22 @@
   if(!value) {
     return;
   }
+  [[self.undoManager prepareWithInvocationTarget:self] addCustomData:value forKey:key];
   [self removeCustomDataObject:[KPKPair pairWithKey:key value:value]];
 }
 
 - (void)addCustomData:(NSString *)value forKey:(NSString *)key {
   if(key && value) {
+    [[self.undoManager prepareWithInvocationTarget:self] removeCustomDataForKey:key];
     [self addCustomDataObject:[KPKPair pairWithKey:key value:value]];
   }
 }
 
 - (void)clearCustomData {
+  for(NSString *key in self.mutableCustomData) {
+    [[self.undoManager prepareWithInvocationTarget:self] addCustomData:self.mutableCustomData[key] forKey:key];
+  }
+  
   NSMutableSet *pairs = [[NSMutableSet alloc] initWithCapacity:self.mutableCustomData.count];
   for(NSString *key in self.mutableCustomData) {
     [pairs addObject:[KPKPair pairWithKey:key value:self.mutableCustomData[key]]];
