@@ -29,7 +29,7 @@
 
 @implementation KPKTree (Synchronization)
 
-- (void)syncronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
+- (void)synchronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
   
   if(options == KPKSynchronizationCreateNewUuidsOption) {
     /* create new uuid in the sourc tree */
@@ -233,13 +233,13 @@
         self.mutableDeletedObjects[entry.uuid] = nil;
     }
   }
-  BOOL groupIsEmptry = (group.mutableGroups.count == 0 && group.mutableEntries.count == 0);
+  BOOL groupIsEmpty = (group.mutableGroups.count == 0 && group.mutableEntries.count == 0);
   KPKDeletedNode *delNode = self.mutableDeletedObjects[group.uuid];
   if(delNode) {
     NSComparisonResult result = [group.timeInfo.modificationDate compare:delNode.deletionDate];
     switch(result) {
       case NSOrderedAscending:
-        if(groupIsEmptry) {
+        if(groupIsEmpty) {
           [group.parent _removeChild:group];
           break;
         }

@@ -72,7 +72,7 @@
   KPKEntry *newEntry = [[KPKEntry alloc] init];
   [newEntry addToGroup:self.treeB.root];
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:newEntry.uuid];
   XCTAssertNotNil(synchronizedEntry);
@@ -87,7 +87,7 @@
   /* make sure entry is actually deleted */
   XCTAssertNil([self.treeB.root entryForUUID:self.entryUUID]);
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   /* make sure deletion was carried over */
   XCTAssertNil([self.treeA.root entryForUUID:self.entryUUID]);
@@ -106,7 +106,7 @@
   KPKEntry *entryA = [self.treeA.root entryForUUID:self.entryUUID];
   entryA.title = @"TitleChangeAfterDeletion";
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   /* make sure deletion was carried over */
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:self.entryUUID];
@@ -129,7 +129,7 @@
   KPKEntry *entryB = [self.treeB.root entryForUUID:self.entryUUID];
   entryB.title = @"TitleChangeAfterDeletion";
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   /* make sure deletion was carried over */
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:self.entryUUID];
@@ -144,7 +144,7 @@
   KPKGroup *newGroup = [[KPKGroup alloc] init];
   [newGroup addToGroup:self.treeB.root];
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   KPKGroup *synchronizedGroup = [self.treeA.root groupForUUID:newGroup.uuid];
   XCTAssertNotNil(synchronizedGroup);
@@ -162,7 +162,7 @@
   XCTAssertNil([self.treeB.root groupForUUID:self.subGroupUUID]);
   XCTAssertNil([self.treeB.root entryForUUID:self.subEntryUUID]);
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   /* make sure deletion was carried over */
   XCTAssertNil([self.treeA.root groupForUUID:self.groupUUID]);
@@ -175,7 +175,7 @@
   NSUUID *uuid = group.uuid;
   group.title = @"TheTitleHasChanged";
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   KPKGroup *changedGroup = [self.treeA.root groupForUUID:uuid];
   XCTAssertNotNil(changedGroup);
@@ -197,7 +197,7 @@
   KPKGroup *groupA = [self.treeA.root groupForUUID:self.groupUUID];
   groupA.title = @"TitleChangeAfterDeletion";
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   /* make sure deletion was carried over */
   KPKGroup *synchronizedGroup = [self.treeA.root groupForUUID:self.groupUUID];
@@ -222,7 +222,7 @@
   KPKGroup *groupA = [self.treeA.root groupForUUID:uuid];
   groupA.title = @"ThisChangeWasLaterSoItStays";
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   KPKGroup *changedGroup = [self.treeA.root groupForUUID:uuid];
   XCTAssertNotNil(changedGroup);
@@ -251,7 +251,7 @@
   [entry moveToGroup:self.treeB.root.groups.firstObject];
   
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   KPKEntry *movedEntry = [self.treeA.root entryForUUID:entryUUID];
   
@@ -281,7 +281,7 @@
   
   [subGroup moveToGroup:self.treeB.root];
   
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   KPKGroup *movedGroup = [self.treeA.root groupForUUID:subGroupUUID];
   
@@ -301,7 +301,7 @@
   
   /* trash */
   self.treeB.metaData.useTrash = YES;
-  [self.treeA syncronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   XCTAssertEqualObjects(self.treeA.metaData.databaseName, @"NameB");
   XCTAssertEqualObjects(self.treeA.metaData.databaseNameChanged, self.treeB.metaData.databaseNameChanged);

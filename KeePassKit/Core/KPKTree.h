@@ -145,7 +145,7 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
 
 @interface KPKTree (Synchronization)
 
-- (void)syncronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
+- (void)synchronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
 
 @end
 
