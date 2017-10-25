@@ -67,7 +67,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorKdbInvalidFieldType, // KDB Invalid field type
   KPKErrorKdbInvalidFieldSize, // KDB Invalid field size
   KPKErrorKdbCorruptTree, // Tree sturcture is corrupted
-
+  KPKErrorKdbxMalformedXmlStructure, // KDBX XML file has malformed structure
   /* Validation error */
   KPKErrorAttributeKeyValidationFailed, // Validation of attribute key failed
   KPKErrorWindowTitleFormatValidationFailed, // The Window title for autotype is not supported

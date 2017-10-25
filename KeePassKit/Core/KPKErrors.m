@@ -50,6 +50,7 @@ NSString *KPKErrorMessageForCode(NSInteger errorCode) {
              @(KPKErrorKdbxKeyUnsupportedVersion)         : @"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION",
              @(KPKErrorKdbxMetaElementMissing)            : @"ERROR_META_ELEMENT_MISSING",
              @(KPKErrorKdbxRootElementMissing)            : @"ERROR_ROOT_ELEMENT_MISSING",
+             @(KPKErrorKdbxMalformedXmlStructure)         : @"ERRROR_XML_STRUCUTRE_MALFORMED",
              @(KPKErrorKeyDerivationFailed)               : @"ERROR_KEY_DERIVATION_FAILED",
              @(KPKErrorNoData)                            : @"ERROR_NO_DATA",
              @(KPKErrorPasswordAndOrKeyfileWrong)         : @"ERROR_PASSWORD_OR_KEYFILE_WRONG",
