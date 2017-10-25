@@ -128,6 +128,9 @@
     KPKCreateError(error, KPKErrorKdbxMetaElementMissing);
     return nil;
   }
+  if(metaElement.parent != rootElement) {
+    NSLog(@"Warning: Meta Element is not a child of Root element!");
+  }
   NSString *headerHash = KPKXmlString(metaElement, kKPKXmlHeaderHash);
   if(headerHash) {
     self.headerHash = [[NSData alloc] initWithBase64EncodedString:headerHash options:NSDataBase64DecodingIgnoreUnknownCharacters];
@@ -235,6 +238,7 @@
 }
 
 - (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement {
+  /* TODO: Add error handling when UUID reading fails! */
   NSUUID *uuid = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlUUID)];
   KPKGroup *group = [[KPKGroup alloc] initWithUUID:uuid];
   
@@ -259,7 +263,10 @@
   
   group.isAutoTypeEnabled = parseInheritBool(groupElement, kKPKXmlEnableAutoType);
   group.isSearchEnabled = parseInheritBool(groupElement, kKPKXmlEnableSearching);
-  group.lastTopVisibleEntry = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(groupElement, kKPKXmlLastTopVisibleEntry)];
+  NSString *uuidString = KPKXmlString(groupElement, kKPKXmlLastTopVisibleEntry);
+  if(uuidString) {
+    group.lastTopVisibleEntry = [NSUUID kpk_uuidWithEncodedString:uuidString];
+  }
   
   [self _parseCustomData:groupElement intoDictionary:group.mutableCustomData];
   
@@ -402,7 +409,7 @@
 }
 
 - (void)_parseCustomData:(DDXMLElement *)root intoDictionary:(NSMutableDictionary<NSString *, NSString *> *)dict{
-  DDXMLElement *customDataElement = [root elementForName:@"CustomData"];
+  DDXMLElement *customDataElement = [root elementForName:kKPKXmlCustomData];
   for(DDXMLElement *dataElement in [customDataElement elementsForName:kKPKXmlCustomDataItem]) {
     /*
      <CustomData>
