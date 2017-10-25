@@ -346,7 +346,7 @@ if( self.updateTiming ) { \
     // else keep old uuid
   }
   for(NSString *key in otherMetaData.mutableCustomData) {
-    if(otherIsNewer || self.mutableCustomData[key]) {
+    if(otherIsNewer || (nil == self.mutableCustomData[key])) {
       self.mutableCustomData[key] = otherMetaData.mutableCustomData[key];
     }
   }
