@@ -61,6 +61,17 @@
   return YES;
 }
 
++ (NSSet<NSString *> *)keyPathsForValuesAffectingEditable {
+  
+  static NSSet *pathSet;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSString *entryHistoryPath = [NSString stringWithFormat:@"%@.%@", NSStringFromSelector(@selector(entry)), NSStringFromSelector(@selector(isEditable))];
+    pathSet = [NSSet setWithArray:@[ NSStringFromSelector(@selector(entry)), entryHistoryPath ]];
+  });
+  return pathSet;
+}
+
 - (instancetype)initWithKey:(NSString *)key value:(NSString *)value isProtected:(BOOL)protected {
   self = [super init];
   if(self) {
