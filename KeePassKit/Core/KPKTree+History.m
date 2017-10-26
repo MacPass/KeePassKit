@@ -14,7 +14,6 @@
 @implementation KPKTree (History)
 
 - (void)maintainHistory {
-  
   [self.root _traverseNodesWithOptions:KPKNodeTraversalOptionSkipGroups
                                  block:^(KPKNode *node) {
                                    [node.asEntry _maintainHistory]; 
