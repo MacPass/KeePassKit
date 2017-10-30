@@ -13,7 +13,7 @@
 
 @implementation KPKTree (FormatSupport)
 
-- (KPKFileVersion)minimumVersionForAddingNode:(KPKNode *)node toGroup:(KPKGroup *)group {
+- (KPKFileVersion)minimumVersionForAddingEntryToGroup:(KPKGroup *)group {
   if(group.parent != nil) {
     return KPKMakeFileVersion(KPKDatabaseFormatKdb, kKPKKdbFileVersion);
   }
