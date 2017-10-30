@@ -155,4 +155,13 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
 
 @end
 
+@interface KPKTree (FormatSupport)
+
+- (KPKFileVersion)minimumVersionForAddingNode:(KPKNode *)node toGroup:(KPKGroup *)group;
+- (KPKFileVersion)minimumVersionForAddingAttachmentToEntry:(KPKEntry *)entry;
+- (KPKFileVersion)minimumVersionForHistory;
+- (KPKFileVersion)minimumVersionForAddingAttribute;
+
+@end
+
 NS_ASSUME_NONNULL_END

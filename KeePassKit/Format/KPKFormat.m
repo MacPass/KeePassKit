@@ -369,6 +369,11 @@ NSComparisonResult KPKFileVersionCompare(KPKFileVersion a, KPKFileVersion b) {
   return NSOrderedSame;
 }
 
+KPKFileVersion KPKMakeFileVersion(KPKDatabaseFormat format, NSUInteger version) {
+  KPKFileVersion fileVersion = { format, version };
+  return fileVersion;
+}
+
 
 @implementation KPKFormat
 

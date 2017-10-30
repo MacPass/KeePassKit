@@ -58,6 +58,7 @@ typedef struct {
 FOUNDATION_EXPORT KPKFileVersion KPKFileVersionMax(KPKFileVersion a, KPKFileVersion b);
 FOUNDATION_EXPORT KPKFileVersion KPKFileVersionMin(KPKFileVersion a, KPKFileVersion b);
 FOUNDATION_EXTERN NSComparisonResult KPKFileVersionCompare(KPKFileVersion a, KPKFileVersion b);
+FOUNDATION_EXTERN KPKFileVersion KPKMakeFileVersion(KPKDatabaseFormat format, NSUInteger version);
 
 BOOL KPKIsValidFileInfo(KPKFileVersion fileInfo);
 
@@ -311,12 +312,23 @@ FOUNDATION_EXPORT NSString *const kKPKAutotypeActivateApplication;
  @returns The shared format instance
  */
 + (instancetype)sharedFormat;
+/**
+ Determines the file version for the given raw file data
 
+ @param data file data for version inspection
+ @return file version of the data. KPKFileVersion.format is set to KPKDatabaseFormatUnknown if no version was determines. Values in KPKFileVersion.format are only valid if version is not unknown
+ */
 - (KPKFileVersion)fileVersionForData:(NSData *)data;
 /**
  @returns A set containing the strings that are default keys for enty attributes
  */
 @property (nonatomic, strong, readonly) NSArray<NSString *> *entryDefaultKeys;
+/**
+ Retrieves the index of the default attribute
+
+ @param key default attribute key
+ @return index of the key, NSNotFound if an invalid key was supplied
+ */
 - (NSInteger)indexForDefaultKey:(NSString *)key;
 
 @end
