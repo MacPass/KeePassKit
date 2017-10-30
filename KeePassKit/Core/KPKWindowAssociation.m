@@ -43,6 +43,10 @@
   return YES;
 }
 
++ (NSSet<NSString *> *)keyPathsForValuesAffectingKeystrokeSequence {
+  return [NSSet setWithArray:@[@"autotype.defaultKeystrokeSequence"]];
+}
+
 #pragma mark -
 #pragma mark Lifecylce
 
