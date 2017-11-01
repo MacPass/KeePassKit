@@ -474,12 +474,16 @@ static NSSet *_observedKeyPathsSet;
   KPKGroup *group = node.asGroup;
   
   if(group) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeWillAddGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKGroupKey: group }];
     index = MAX(0, MIN(self.mutableGroups.count, index));
     [self insertObject:group inMutableGroupsAtIndex:index];
+    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeDidAddGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKGroupKey: group }];
   }
   else if(entry) {
     index = MAX(0, MIN(self.mutableEntries.count, index));
+    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeWillAddEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
     [self insertObject:entry inMutableEntriesAtIndex:index];
+    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeDidAddEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
   }
   
   node.parent = self;
@@ -490,11 +494,15 @@ static NSSet *_observedKeyPathsSet;
   KPKGroup *group = node.asGroup;
   
   if(group) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeWillRemoveGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: group }];
     /* deleted objects should be registred, no undo registration */
     [self removeObjectFromMutableGroupsAtIndex:[self.mutableGroups indexOfObjectIdenticalTo:group]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeDidRemoveGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: group }];
   }
   else if(entry) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeWillRemoveEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
     [self removeObjectFromMutableEntriesAtIndex:[self.mutableEntries indexOfObjectIdenticalTo:entry]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeDidRemoveEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
   }
   node.parent = nil;
 }

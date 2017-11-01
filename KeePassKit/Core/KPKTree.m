@@ -36,6 +36,21 @@
 
 #import "NSUUID+KPKAdditions.h"
 
+NSString *const KPKTreeWillAddGroupNotification     = @"com.hicknhack.macpass.KPKTreeWillAddGroupNotification";
+NSString *const KPKTreeDidAddGroupNotification      = @"com.hicknhack.macpass.KPKTreeDidAddGroupNotification";
+NSString *const KPKTreeWillRemoveGroupNotification  = @"com.hicknhack.macpass.KPKTreeWillRemoveGroupNotification";
+NSString *const KPKTreeDidRemoveGroupNotification   = @"com.hicknhack.macpass.KPKTreeDidRemoveGroupNotification";
+
+NSString *const KPKTreeWillAddEntryNotification     = @"com.hicknhack.macpass.KPKTreeWillAddEntryNotification";
+NSString *const KPKTreeDidAddEntryNotification      = @"com.hicknhack.macpass.KPKTreeDidAddEntryNotification";
+NSString *const KPKTreeWillRemoveEntryNotification  = @"com.hicknhack.macpass.KPKTreeWillRemoveEntryNotification";
+NSString *const KPKTreeDidRemoveEntryNotification   = @"com.hicknhack.macpass.KPKTreeDidRemoveEntryNotification";
+
+NSString *const KPKParentGroupKey = @"KPKParentGroupKey";
+NSString *const KPKGroupKey       = @"KPKGroupKey";
+NSString *const KPKEntryKey       = @"KPKEntryKey";
+
+
 @interface KPKTree () {
   NSMutableDictionary *_tagsMap;
 }

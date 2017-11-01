@@ -27,6 +27,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+FOUNDATION_EXTERN NSString *const KPKTreeWillAddGroupNotification;
+FOUNDATION_EXTERN NSString *const KPKTreeDidAddGroupNotification;
+FOUNDATION_EXTERN NSString *const KPKTreeWillRemoveGroupNotification;
+FOUNDATION_EXTERN NSString *const KPKTreeDidRemoveGroupNotification;
+
+FOUNDATION_EXTERN NSString *const KPKTreeWillAddEntryNotification;
+FOUNDATION_EXTERN NSString *const KPKTreeDidAddEntryNotification;
+FOUNDATION_EXTERN NSString *const KPKTreeWillRemoveEntryNotification;
+FOUNDATION_EXTERN NSString *const KPKTreeDidRemoveEntryNotification;
+
+FOUNDATION_EXTERN NSString *const KPKParentGroupKey;
+FOUNDATION_EXTERN NSString *const KPKGroupKey;
+FOUNDATION_EXTERN NSString *const KPKEntryKey;
+
 @class KPKTree;
 
 @protocol KPKTreeDelegate <NSObject>
