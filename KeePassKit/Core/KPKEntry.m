@@ -424,7 +424,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)_setProtect:(BOOL)protect valueForkey:(NSString *)key {
-  [self attributeWithKey:key].protected = protect;
+  [self attributeWithKey:key].isProtected = protect;
 }
 
 - (NSString *)valueForAttributeWithKey:(NSString *)key {
