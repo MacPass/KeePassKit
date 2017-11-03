@@ -77,7 +77,7 @@
   if(self) {
     [self _encodeValue:value];
     _key = [key copy];
-    _isProtected = protected;
+    _protected = protected;
   }
   return self;
 }
@@ -94,7 +94,7 @@
   self = [self init];
   if(self) {
     self.key = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(key))];
-    self.isProtected = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isProtected))];
+    self.protected = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isProtected))];
     self.data = [aDecoder decodeObjectOfClass:KPKData.class forKey:NSStringFromSelector(@selector(data))];
   }
   return self;
@@ -152,7 +152,7 @@
 - (void)setValue:(NSString *)value {
   if(self.value != value) {
     if(!self.isDefault) {
-      [(KPKAttribute *)[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
+      [[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
       NSString *template = NSLocalizedStringFromTable(@"SET_CUSTOM_ATTTRIBUTE_%@", @"KPKLocalizable", @"");
       [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key ]];
     }
@@ -169,6 +169,18 @@
     [[self.entry.undoManager prepareWithInvocationTarget:self] setKey:self.key];
     [self.entry touchModified];
     _key = [key copy];
+  }
+}
+
+- (void)setProtected:(BOOL)protected {
+  if(_protected != protected) {
+    if(!self.isDefault) {
+      [[self.entry.undoManager prepareWithInvocationTarget:self] setProtected:_protected];
+      NSString *template = (protected ? NSLocalizedStringFromTable(@"PROTECT_%@", @"KPKLocalizeable", @"Action name for setting a custom string value protected")
+                            : NSLocalizedStringFromTable(@"UNPROTECT_%@", @"KPKLocalizeable", @"Action name for setting a custom string value non-protected") );
+      [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key]];
+    }
+    _protected = protected;
   }
 }
 

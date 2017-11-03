@@ -22,7 +22,7 @@
   
   attribute.key = @"NewKey";
   attribute.value = @"NewValue";
-  attribute.isProtected = YES;
+  attribute.protected = YES;
   
   XCTAssertNotNil(copy, @"Copy shoule exist");
   XCTAssertTrue([copy.key isEqualToString:@"Key"], @"Copy key should be key");
