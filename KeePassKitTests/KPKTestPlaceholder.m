@@ -11,11 +11,11 @@
 #import "KeePassKit.h"
 
 
-@interface KPKTextPlaceholder : XCTestCase
+@interface KPKTestPlaceholder : XCTestCase
 
 @end
 
-@implementation KPKTextPlaceholder
+@implementation KPKTestPlaceholder
 
 - (void)testPlaceholder {
   KPKEntry *entry = [[KPKEntry alloc] init];

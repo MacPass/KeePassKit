@@ -10,11 +10,11 @@
 
 #import "KeePassKit.h"
 
-@interface KPKTextXMLUtilities : XCTestCase
+@interface KPKTestXMLUtilities : XCTestCase
 
 @end
 
-@implementation KPKTextXMLUtilities
+@implementation KPKTestXMLUtilities
 
 - (void)setUp {
   [super setUp];

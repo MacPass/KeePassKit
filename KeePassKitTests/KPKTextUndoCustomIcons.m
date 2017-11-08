@@ -10,14 +10,14 @@
 #import "KeePassKit.h"
 #import "KeePassKit_Private.h"
 
-@interface KPKTextUndoCustomIcons : XCTestCase <KPKTreeDelegate> {
+@interface KPKTestUndoCustomIcons : XCTestCase <KPKTreeDelegate> {
   NSUndoManager *_undoManager;
   KPKTree *_tree;
 }
 
 @end
 
-@implementation KPKTextUndoCustomIcons
+@implementation KPKTestUndoCustomIcons
 
 - (NSUndoManager *)undoManagerForTree:(KPKTree *)tree {
   return _undoManager;

@@ -11,13 +11,13 @@
 #import "KeePassKit.h"
 #import "KeePassKit_Private.h"
 
-@interface KPKTextKdbxWriting : XCTestCase
+@interface KPKTestKdbxWriting : XCTestCase
 @property (strong) KPKTree *tree;
 @property (strong) KPKEntry *entry;
 @property (strong) NSData *data;
 @end
 
-@implementation KPKTextKdbxWriting
+@implementation KPKTestKdbxWriting
 
 - (void)setUp {
   [super setUp];
