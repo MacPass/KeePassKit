@@ -43,6 +43,8 @@
  */
 - (void)_addHistoryEntry:(KPKEntry *)entry;
 
+- (void)_pushHistoryAndMaintain:(BOOL)maintain;
+
 /**
  *  Updates history entries to adhere to settings in tree's metadata
  */

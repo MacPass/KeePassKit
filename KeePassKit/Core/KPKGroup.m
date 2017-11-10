@@ -261,7 +261,7 @@ static NSSet *_observedKeyPathsSet;
   BOOL didChange = [super _updateFromNode:node options:options];
   
   NSComparisonResult result = [self.timeInfo.modificationDate compare:node.timeInfo.modificationDate];
-  if(NSOrderedDescending == result || (options & KPKUpdateOptionIgnoreModificationTime)) {
+  if(NSOrderedAscending == result || (options & KPKUpdateOptionIgnoreModificationTime)) {
     KPKGroup *group = node.asGroup;
     if(!group) {
       return didChange;

@@ -90,9 +90,9 @@
        KPKNodeEqualityIgnoreHistory not needed since we do not compare entries at all
        */
       KPKNodeCompareOptions equalityOptions = (KPKNodeCompareIgnoreGroupsOption |
-                                                KPKNodeCompareIgnoreEntriesOption |
-                                                KPKNodeCompareIgnoreGroupsOption |
-                                                KPKNodeCompareIgnoreEntriesOption);
+                                               KPKNodeCompareIgnoreEntriesOption |
+                                               KPKNodeCompareIgnoreGroupsOption |
+                                               KPKNodeCompareIgnoreEntriesOption);
       
       if(KPKComparsionEqual == [localNode _compareToNode:externNode options:equalityOptions]) {
         continue; // node did not change
@@ -104,9 +104,16 @@
         
         
         KPKEntry *localEntry = localNode.asEntry;
+        NSComparisonResult result = [localEntry.timeInfo.modificationDate compare:externNode.timeInfo.modificationDate];
         
-        if(options != KPKSynchronizationOverwriteExistingOption && ![localEntry hasHistoryOfEntry:externNode.asEntry]) {
-          [localEntry pushHistory];
+        /* keep all changes as history so no extern/local edits will get lost */
+        if(nil != localEntry && options != KPKSynchronizationOverwriteExistingOption) {
+          if(result == NSOrderedAscending && ![externNode.asEntry hasHistoryOfEntry:localEntry]) {
+            [localEntry _pushHistoryAndMaintain:NO];
+          }
+          if(result == NSOrderedDescending && ![localEntry hasHistoryOfEntry:externNode.asEntry]) {
+            [externNode.asEntry _pushHistoryAndMaintain:NO];
+          }
         }
         [localNode _updateFromNode:externNode options:updateOptions];
         
@@ -211,7 +218,7 @@
 }
 
 - (void)_reapplyDeletions:(KPKGroup *)group {
-
+  
   for(KPKGroup *subGroup in group.mutableGroups.reverseObjectEnumerator) {
     [self _reapplyDeletions:subGroup];
   }

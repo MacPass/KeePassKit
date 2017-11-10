@@ -68,6 +68,29 @@
   [super tearDown];
 }
 
+- (void)testLocalModifiedEntry {
+  KPKEntry *entryA = [self.treeA.root entryForUUID:self.entryUUID];
+  
+  usleep(10);
+  
+  /* merge will create a history entry, so supply a appropriate one */
+  [entryA _pushHistoryAndMaintain:NO];
+  
+  entryA.title = @"TitleChanged";
+  entryA.username = @"ChangedUserName";
+  entryA.url = @"ChangedURL";
+  
+  KPKEntry *entryACopy = [entryA copy];
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  /* make sure deletion was carried over */
+  KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:self.entryUUID];
+  XCTAssertEqual(KPKComparsionEqual, [entryACopy compareToEntry:synchronizedEntry]);
+  XCTAssertEqualObjects(@"TitleChanged", synchronizedEntry.title);
+  XCTAssertEqualObjects(@"ChangedUserName", synchronizedEntry.username);
+  XCTAssertEqualObjects(@"ChangedURL", synchronizedEntry.url);
+}
+
 - (void)testAddedEntry {
   KPKEntry *newEntry = [[KPKEntry alloc] init];
   [newEntry addToGroup:self.treeB.root];
@@ -79,7 +102,7 @@
   XCTAssertEqual(KPKComparsionEqual, [newEntry compareToEntry:synchronizedEntry]);
 }
 
-- (void)testDeletedEntry {
+- (void)testExternalDeletedEntry {
   KPKEntry *entry = [self.treeB.root entryForUUID:self.entryUUID];
   XCTAssertNotNil(entry);
   [entry remove];
@@ -91,6 +114,21 @@
   
   /* make sure deletion was carried over */
   XCTAssertNil([self.treeA.root entryForUUID:self.entryUUID]);
+}
+
+- (void)testLocalDeletedEntry {
+  KPKEntry *entry = [self.treeA.root entryForUUID:self.entryUUID];
+  XCTAssertNotNil(entry);
+  [entry remove];
+  
+  /* make sure entry is actually deleted */
+  XCTAssertNil([self.treeA.root entryForUUID:self.entryUUID]);
+  
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  /* make sure deletion was carried over */
+  XCTAssertNil([self.treeA.root entryForUUID:self.entryUUID]);
+  XCTAssertNotNil(self.treeA.mutableDeletedObjects[self.entryUUID]);
 }
 
 - (void)testLocalModifiedExternalDeletedEntry {
@@ -135,12 +173,13 @@
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:self.entryUUID];
   XCTAssertNotNil(synchronizedEntry);
   XCTAssertNil(self.treeA.mutableDeletedObjects[self.entryUUID]);
+  XCTAssertNotEqualObjects(synchronizedEntry, entryB, @"Entries have to be different objects!");
   XCTAssertEqual(KPKComparsionEqual, [synchronizedEntry compareToEntry:entryB]);
   XCTAssertEqualObjects(synchronizedEntry.title, @"TitleChangeAfterDeletion");
 }
 
 
-- (void)testAddedGroup {
+- (void)testExternalAddedGroup {
   KPKGroup *newGroup = [[KPKGroup alloc] init];
   [newGroup addToGroup:self.treeB.root];
   
@@ -151,13 +190,33 @@
   XCTAssertEqual(KPKComparsionEqual, [newGroup compareToGroup:synchronizedGroup]);
 }
 
+- (void)testLocalDeletedGroup {
+  KPKGroup *group = [self.treeA.root groupForUUID:self.groupUUID];
+  XCTAssertNotNil(group);
+  [group remove];
+  
+  /* make sure group is actually deleted */
+  XCTAssertNil([self.treeA.root groupForUUID:self.groupUUID]);
+  XCTAssertNil([self.treeA.root groupForUUID:self.subGroupUUID]);
+  XCTAssertNil([self.treeA.root entryForUUID:self.subEntryUUID]);
+  
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  /* make sure deletion was carried over */
+  XCTAssertNil([self.treeA.root groupForUUID:self.groupUUID]);
+  XCTAssertNil([self.treeA.root groupForUUID:self.subGroupUUID]);
+  XCTAssertNil([self.treeA.root entryForUUID:self.subEntryUUID]);
+  XCTAssertNotNil(self.treeA.mutableDeletedObjects[self.groupUUID]);
+  XCTAssertNotNil(self.treeA.mutableDeletedObjects[self.subGroupUUID]);
+  XCTAssertNotNil(self.treeA.mutableDeletedObjects[self.subEntryUUID]);
+}
 
-- (void)testDeletedGroup {
+- (void)testExternalDeletedGroup {
   KPKGroup *group = [self.treeB.root groupForUUID:self.groupUUID];
   XCTAssertNotNil(group);
   [group remove];
   
-  /* make sure entry is actually deleted */
+  /* make sure group is actually deleted */
   XCTAssertNil([self.treeB.root groupForUUID:self.groupUUID]);
   XCTAssertNil([self.treeB.root groupForUUID:self.subGroupUUID]);
   XCTAssertNil([self.treeB.root entryForUUID:self.subEntryUUID]);
@@ -168,6 +227,9 @@
   XCTAssertNil([self.treeA.root groupForUUID:self.groupUUID]);
   XCTAssertNil([self.treeA.root groupForUUID:self.subGroupUUID]);
   XCTAssertNil([self.treeA.root entryForUUID:self.subEntryUUID]);
+  XCTAssertNotNil(self.treeA.mutableDeletedObjects[self.groupUUID]);
+  XCTAssertNotNil(self.treeA.mutableDeletedObjects[self.subGroupUUID]);
+  XCTAssertNotNil(self.treeA.mutableDeletedObjects[self.subEntryUUID]);
 }
 
 - (void)testChangedExternalGroup {
@@ -179,6 +241,7 @@
   
   KPKGroup *changedGroup = [self.treeA.root groupForUUID:uuid];
   XCTAssertNotNil(changedGroup);
+  XCTAssertEqual(KPKComparsionEqual, [group compareToGroup:changedGroup]);
   XCTAssertEqualObjects(changedGroup.title, @"TheTitleHasChanged");
 }
 

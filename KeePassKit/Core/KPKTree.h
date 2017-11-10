@@ -159,6 +159,15 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
 
 @interface KPKTree (Synchronization)
 
+/**
+ Synchronizes the changes from tree into the current tree. The synchronizationoptions determine how the process takes place
+ The supplied tree will get modified in the process and should NOT be reused. If you want to prevent modification, create a copy first.
+
+ Refer to the KPKSynchronizationOptions for details on their effect
+ 
+ @param tree the externa tree to merge in
+ @param options options for the merge
+ */
 - (void)synchronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
 
 @end

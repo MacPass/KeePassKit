@@ -724,7 +724,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   BOOL didChange = [super _updateFromNode:node options:options];
   
   NSComparisonResult result = [self.timeInfo.modificationDate compare:node.timeInfo.modificationDate];
-  if(NSOrderedDescending == result || (options & KPKUpdateOptionIgnoreModificationTime)) {
+  if(NSOrderedAscending == result || (options & KPKUpdateOptionIgnoreModificationTime)) {
     KPKEntry *sourceEntry = node.asEntry;
     if(!sourceEntry) {
       return didChange;
@@ -767,15 +767,23 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)pushHistory {
+  [self _pushHistoryAndMaintain:YES];
+}
+
+- (void)_pushHistoryAndMaintain:(BOOL)maintain {
   if(!self.tree.metaData.isHistoryEnabled) {
     return; // Pushing history but it's disabled
   }
+  
   NSAssert(!self.isHistory, @"Pushing history on a history entry is not possible!");
   if(self.isHistory) {
     return; // Pushin history on a history entry is wrong!
   }
   [self _addHistoryEntry:[self _copyWithUUID:self.uuid]];
-  [self _maintainHistory];
+  
+  if(maintain) {
+    [self _maintainHistory];
+  }
 }
 
 - (void)clearHistory {
@@ -785,7 +793,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (BOOL)hasHistoryOfEntry:(KPKEntry *)entry {
   for(KPKEntry *historyEntry in self.mutableHistory) {
-    if(KPKComparsionEqual == [historyEntry _compareToNode:entry options:(KPKNodeCompareIgnoreAccessDateOption|KPKNodeCompareIgnoreModificationDateOption)]) {
+    if(KPKComparsionEqual == [historyEntry _compareToNode:entry options:(KPKNodeCompareIgnoreAccessDateOption|KPKNodeCompareIgnoreHistoryOption)]) {
       return YES;
     }
   }

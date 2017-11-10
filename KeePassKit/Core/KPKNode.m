@@ -35,6 +35,7 @@
 #import "KPKMetaData.h"
 
 #import "KPKPair.h"
+#import "KPKScopedSet.h"
 #import "NSUUID+KPKAdditions.h"
 
 @implementation KPKNode
@@ -336,11 +337,13 @@
 - (BOOL)_updateFromNode:(KPKNode *)node options:(KPKUpdateOptions)options {
   NSComparisonResult result = [self.timeInfo.modificationDate compare:node.timeInfo.modificationDate];
   if(result == NSOrderedAscending || (options & KPKUpdateOptionIgnoreModificationTime)) {
+    KPK_SCOPED_NO_BEGIN(self.updateTiming)
     self.iconId = node.iconId;
     self.iconUUID = node.iconUUID;
     self.title = node.title;
     self.notes = node.notes;
     self.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:node.mutableCustomData copyItems:YES];
+    KPK_SCOPED_NO_END(self.updateTiming)
     return YES;
   }
   return NO;
