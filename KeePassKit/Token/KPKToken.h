@@ -10,16 +10,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXPORT NSInteger const KPKTokenInvalidLocation;
+/**
+ A Token represents a single item in a autotype sequence.
+ Tokens are either items wrapped in curly barakets e.g {ENTER}
+ or singe (compound)characters.
+ */
+@interface KPKToken : NSObject <NSCopying>
 
-@interface KPKToken : NSObject
+@property (readonly, copy) NSString *value; // the value the token was initialized with
+@property (readonly, copy) NSString *normalizedValue; // the interal normalized value. This mapps mutlipe represenationts to a single one.
 
-@property (readonly, copy) NSString *value;
-@property (readonly) BOOL isCommand;
-
-+ (NSArray<KPKToken *> *)tokenizeString:(NSString *)string;
-- (instancetype)initWithValue:(NSString *)value;
-- (instancetype)initWithValue:(NSString *)value location:(NSInteger)location NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithValue:(NSString *)value NS_DESIGNATED_INITIALIZER;
 
 @end
 
