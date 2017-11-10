@@ -184,16 +184,15 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
    Since modifer keys can be used in curly brackets,
    we only can replace the non-braceds ones with our own modifer commands
    */
-  /*NSString *modifierMatch = [[NSString alloc] initWithFormat:@"(?<!\\{)([\\%@|\\%@|%@|\\%@])(?!\\})", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
+  NSString *modifierMatch = [[NSString alloc] initWithFormat:@"(?<!\\{)([\\%@|\\%@|%@|\\%@])(?!\\})", kKPKAutotypeShortAlt, kKPKAutotypeShortControl, kKPKAutotypeShortEnter, kKPKAutotypeShortShift];
   NSRegularExpression *modifierRegExp = [[NSRegularExpression alloc] initWithPattern:modifierMatch options:NSRegularExpressionCaseInsensitive error:0];
   NSAssert(modifierRegExp, @"Modifier RegExp should be correct!");
   NSMutableIndexSet __block *matchingIndices = [[NSMutableIndexSet alloc] init];
   [modifierRegExp enumerateMatchesInString:command options:0 range:NSMakeRange(0, command.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
     [matchingIndices addIndex:result.range.location];
   }];
-  */
+  
   /* Enumerate the indices backwards, to not invalidate them by replacing strings */
-  /*
   NSDictionary *unsafeShortFormats = self.unsafeShortFormats;
   [matchingIndices enumerateIndexesInRange:NSMakeRange(0, command.length) options:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *stop) {
     NSString *shortFormatKey = [mutableCommand substringWithRange:NSMakeRange(idx, 1)];
@@ -263,17 +262,14 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   
   
   /* TODO replace {+},{-},{^},{%} */
-  /*
+  
   NSDictionary *shortFormats = self.shortFormats;
   for(NSString *needle in shortFormats) {
     NSString *replace = shortFormats[needle];
     [mutableCommand replaceOccurrencesOfString:needle withString:replace options:NSCaseInsensitiveSearch range:NSMakeRange(0, mutableCommand.length)];
   }
-  */
+  
   [mutableCommand replaceOccurrencesOfString:_KPKSpaceSaveGuard withString:kKPKAutotypeShortSpace options:NSCaseInsensitiveSearch range:NSMakeRange(0, mutableCommand.length)];
-  [mutableCommand replaceOccurrencesOfString:kKPKAutotypeCurlyBracketLeft withString:kKPKAutotypeShortCurlyBracketLeft options:0 range:NSMakeRange(0, mutableCommand.length)];
-  [mutableCommand replaceOccurrencesOfString:kKPKAutotypeCurlyBracketRight withString:kKPKAutotypeShortCurlyBracketRight options:0 range:NSMakeRange(0, mutableCommand.length)];
-
   return [[NSString alloc] initWithString:mutableCommand];
 }
 
