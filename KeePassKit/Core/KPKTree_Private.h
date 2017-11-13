@@ -31,6 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
 /* Deleted nodes are stored inside this dictionary for undomanager support */
 @property(strong) NSMutableDictionary<NSUUID *, KPKNode *> *mutableDeletedNodes;
 
+/* call this to add tags to the tree. Tags are counted, hence callit it twice will increase the counter on each tag */
+- (void)_registerTags:(NSArray <NSString *>*)tags;
+/* call this to remove tags from the tree. Tags are counted, hence you should call this only once fore each removal. */
+- (void)_unregisterTags:(NSArray <NSString *>*)tags;
+
 NS_ASSUME_NONNULL_END
 
 @end

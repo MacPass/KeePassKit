@@ -52,7 +52,7 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
 
 
 @interface KPKTree () {
-  NSMutableDictionary *_tagsMap;
+  NSCountedSet *_tags;
 }
 @property(nonatomic, strong) KPKMetaData *metaData;
 
@@ -61,6 +61,8 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
 @class KPKIcon;
 
 @implementation KPKTree
+
+@dynamic availableTags;
 
 + (NSSet *)keyPathsForValuesAffectingGroups {
   return [NSSet setWithObject:NSStringFromSelector(@selector(root))];
@@ -75,7 +77,7 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   if(self) {
     _mutableDeletedObjects = [[NSMutableDictionary alloc] init];
     _mutableDeletedNodes = [[NSMutableDictionary alloc] init];
-    _tagsMap = [[NSMutableDictionary alloc] init];
+    _tags = [[NSCountedSet alloc] init];
     self.metaData = [[KPKMetaData alloc] init]; // use setter!
   }
   return self;
@@ -272,5 +274,24 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   }
   return nil;
 }
+
+- (NSArray<NSString *> *)availableTags {
+  
+  return _tags.allObjects;
+}
+
+
+- (void)_registerTags:(NSArray<NSString *> *)tags {
+  for(NSString *tag in tags) {
+    [_tags addObject:tag];
+  }
+}
+
+- (void)_unregisterTags:(NSArray<NSString *> *)tags  {
+  for(NSString *tag in tags) {
+    [_tags removeObject:tag];
+  }
+}
+
 
 @end

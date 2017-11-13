@@ -129,6 +129,10 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
  *  NSArray of KPKEntries that are History elements
  */
 @property(nonatomic, readonly) NSArray<KPKEntry *> *allHistoryEntries;
+/**
+ Array of all currently known tags.
+ */
+@property(nonatomic, readonly, copy) NSArray<NSString *> *availableTags;
 
 /**
  Returns the minimum database version (tied to the minimum Type) to store the tree without data loss.

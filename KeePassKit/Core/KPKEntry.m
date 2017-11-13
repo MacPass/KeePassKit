@@ -35,6 +35,7 @@
 #import "KPKTimeInfo.h"
 #import "KPKUTIs.h"
 #import "KPKReferenceBuilder.h"
+#import "KPKTree_Private.h"
 
 #import "KPKScopedSet.h"
 
@@ -227,7 +228,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     self.mutableHistory = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKEntry.class]]
                                                    forKey:NSStringFromSelector(@selector(mutableHistory))];
     self.mutableBinaries = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKBinary.class]]
-                                         forKey:NSStringFromSelector(@selector(mutableBinaries))];
+                                                    forKey:NSStringFromSelector(@selector(mutableBinaries))];
     _tags = [[aDecoder decodeObjectOfClass:NSArray.class forKey:NSStringFromSelector(@selector(tags))] copy];
     _foregroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
     _backgroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
@@ -322,6 +323,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     return KPKComparsionDifferent;
   }
   
+  
   /* Compare Attributes (do not care about order!) */
   if(self.mutableAttributes.count != entry.mutableAttributes.count) {
     return KPKComparsionDifferent;
@@ -329,6 +331,21 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   for(KPKAttribute *attribute in self.mutableAttributes) {
     KPKAttribute *otherAttribute = [entry attributeWithKey:attribute.key];
     if(NO == [otherAttribute isEqualToAttribute:attribute]) {
+      return KPKComparsionDifferent;
+    }
+  }
+  if(self.tags.count != entry.tags.count) {
+    if(![self.tags isEqualToArray:entry.tags]) {
+      return KPKComparsionDifferent;
+    }
+  }
+  if(self.foregroundColor != entry.foregroundColor) {
+    if(![self.foregroundColor isEqual:entry.foregroundColor]) {
+      return KPKComparsionDifferent;
+    }
+  }
+  if(self.backgroundColor != entry.backgroundColor) {
+    if(![self.backgroundColor isEqual:entry.backgroundColor]) {
       return KPKComparsionDifferent;
     }
   }
@@ -621,7 +638,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (void)setTags:(NSArray<NSString *> *)tags {
   [[self.undoManager prepareWithInvocationTarget:self] setTags:self.tags];
   [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_URL", @"KPKLocalizable", @"")];
-  _tags = [[NSArray alloc] initWithArray:tags copyItems:YES]; // depp copy just to make sure!
+  [self.tree _unregisterTags:_tags];
+  _tags = tags ? [[NSArray alloc] initWithArray:tags copyItems:YES] : nil;
+  [self.tree _registerTags:_tags];
 }
 
 - (void)setForegroundColor:(NSUIColor *)foregroundColor {
