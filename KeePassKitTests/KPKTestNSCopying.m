@@ -36,10 +36,15 @@
   KPKEntry *entry = [[KPKEntry alloc] init];
   [entry addToGroup:tree.root];
   
+  entry.iconUUID = [[NSUUID alloc] initWithUUIDString:@"66873E56-2822-4258-A45F-92CFE194232F"];
+  entry.iconId = 500;
   entry.title = @"Title";
   entry.url = @"URL";
   entry.username = @"Username";
   entry.password = @"Password";
+  entry.tags = @[@"TagA", @"TagB", @"TagC"];
+  entry.foregroundColor = NSColor.redColor;
+  entry.backgroundColor = NSColor.greenColor;
   
   uint8_t bytes[] = { 0xFF, 0x00, 0xFF, 0x00, 0xFF };
   NSData *data = [[NSData alloc] initWithBytes:bytes length:5];
@@ -56,7 +61,7 @@
   
   KPKEntry *copyEntry = [entry copy];
   XCTAssertEqual(KPKComparsionEqual, [entry compareToEntry:copyEntry]);
-  
+   
   entry.title = @"NewTitle";
   [entry removeBinary:binary];
   ((KPKAttribute *)entry.customAttributes.lastObject).key = @"NewCustomKey";

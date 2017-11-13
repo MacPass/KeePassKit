@@ -27,20 +27,23 @@
   
   //
   //  rootgroup
-  //    - group
+  //    - group (custom data)
   //      - subgroup
   //      - subentry
-  //    - entry
+  //    - entry (custom data)
   
   [super setUp];
   self.treeA = [[KPKTree alloc] init];
   
   self.treeA.root = [[KPKGroup alloc] init];
   KPKGroup *group = [[KPKGroup alloc] init];
+  [group setCustomData:@"CustomGroupDataA" forKey:@"GroupKeyA"];
   [group addToGroup:self.treeA.root];
   [[[KPKGroup alloc] init] addToGroup:group];
   [[[KPKEntry alloc] init] addToGroup:group];
-  [[[KPKEntry alloc] init] addToGroup:self.treeA.root];
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  [entry setCustomData:@"CustomEntryDataA" forKey:@"EntryKeyA"];
+  [entry addToGroup:self.treeA.root];
   
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   NSData *data = [self.treeA encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
@@ -81,6 +84,7 @@
   entryA.url = @"ChangedURL";
   
   KPKEntry *entryACopy = [entryA copy];
+  
   [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   /* make sure deletion was carried over */
@@ -99,6 +103,7 @@
   
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:newEntry.uuid];
   XCTAssertNotNil(synchronizedEntry);
+  XCTAssertNotEqual(newEntry, synchronizedEntry, @"Entries are different objects!");
   XCTAssertEqual(KPKComparsionEqual, [newEntry compareToEntry:synchronizedEntry]);
 }
 
@@ -142,15 +147,19 @@
   usleep(10);
   
   KPKEntry *entryA = [self.treeA.root entryForUUID:self.entryUUID];
+  [entryA _pushHistoryAndMaintain:NO];
   entryA.title = @"TitleChangeAfterDeletion";
+  KPKEntry *entryACopy = [entryA copy];
   
   [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
   
   /* make sure deletion was carried over */
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:self.entryUUID];
   XCTAssertNotNil(synchronizedEntry);
+  XCTAssertEqual(entryA, synchronizedEntry, @"Objects stay the same after synchronization");
   XCTAssertNil(self.treeA.mutableDeletedObjects[self.entryUUID]);
-  XCTAssertEqualObjects(synchronizedEntry, entryA);
+  XCTAssertEqual(KPKComparsionEqual, [entryA compareToEntry:entryACopy]);
+  XCTAssertNotEqual(entry, entryACopy, @"Entries are different objects");
   XCTAssertEqualObjects(synchronizedEntry.title, @"TitleChangeAfterDeletion");
 }
 
@@ -165,6 +174,7 @@
   usleep(10);
   
   KPKEntry *entryB = [self.treeB.root entryForUUID:self.entryUUID];
+  [entryB _pushHistoryAndMaintain:NO];
   entryB.title = @"TitleChangeAfterDeletion";
   
   [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
@@ -174,6 +184,7 @@
   XCTAssertNotNil(synchronizedEntry);
   XCTAssertNil(self.treeA.mutableDeletedObjects[self.entryUUID]);
   XCTAssertNotEqualObjects(synchronizedEntry, entryB, @"Entries have to be different objects!");
+  XCTAssertNotEqualObjects(synchronizedEntry, entry, @"Entries have to be different objects!");
   XCTAssertEqual(KPKComparsionEqual, [synchronizedEntry compareToEntry:entryB]);
   XCTAssertEqualObjects(synchronizedEntry.title, @"TitleChangeAfterDeletion");
 }
@@ -187,6 +198,7 @@
   
   KPKGroup *synchronizedGroup = [self.treeA.root groupForUUID:newGroup.uuid];
   XCTAssertNotNil(synchronizedGroup);
+  XCTAssertNotEqual(newGroup, synchronizedGroup, @"Group objects are different!");
   XCTAssertEqual(KPKComparsionEqual, [newGroup compareToGroup:synchronizedGroup]);
 }
 
@@ -241,6 +253,7 @@
   
   KPKGroup *changedGroup = [self.treeA.root groupForUUID:uuid];
   XCTAssertNotNil(changedGroup);
+  XCTAssertNotEqual(group, changedGroup, @"No pointer match for groups");
   XCTAssertEqual(KPKComparsionEqual, [group compareToGroup:changedGroup]);
   XCTAssertEqualObjects(changedGroup.title, @"TheTitleHasChanged");
 }
@@ -289,6 +302,8 @@
   
   KPKGroup *changedGroup = [self.treeA.root groupForUUID:uuid];
   XCTAssertNotNil(changedGroup);
+  XCTAssertEqual(groupA, changedGroup, @"Group pointers stay the same!");
+  XCTAssertEqual(KPKComparsionEqual, [changedGroup compareToGroup:groupA]);
   XCTAssertEqualObjects(changedGroup.title, @"ThisChangeWasLaterSoItStays");
 }
 
@@ -378,6 +393,7 @@
 
 - (void)testRemovedPublicCustomData {
   
+  
 }
 
 - (void)testAddedPublicCustomData {
@@ -389,15 +405,91 @@
 }
 
 - (void)testRemovedCustomData {
+  KPKGroup *groupB = [self.treeB.root groupForUUID:self.groupUUID];
+  KPKEntry *entryB = [self.treeB.root entryForUUID:self.entryUUID];
   
+  usleep(10);
+  
+  XCTAssertEqual(groupB.mutableCustomData.count, 1);
+  XCTAssertEqual(entryB.mutableCustomData.count, 1);
+  [groupB removeCustomDataForKey:@"GroupKeyA"];
+  [entryB removeCustomDataForKey:@"EntryKeyA"];
+  XCTAssertEqual(groupB.mutableCustomData.count, 0);
+  XCTAssertEqual(entryB.mutableCustomData.count, 0);
+  
+  KPKGroup *groupA = [self.treeA.root groupForUUID:self.groupUUID];
+  XCTAssertNotEqual(groupA, groupB);
+  KPKEntry *entryA = [self.treeA.root entryForUUID:self.entryUUID];
+  XCTAssertNotEqual(entryA, entryB);
+  XCTAssertEqual(groupA.mutableCustomData.count, 1);
+  XCTAssertEqual(entryA.mutableCustomData.count, 1);
+  
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+
+  XCTAssertEqual(groupB.mutableCustomData.count, 0);
+  XCTAssertEqual(entryB.mutableCustomData.count, 0);
 }
 
 - (void)testAddedCustomData {
+  KPKGroup *groupB = [self.treeB.root groupForUUID:self.groupUUID];
+  KPKEntry *entryB = [self.treeB.root entryForUUID:self.entryUUID];
   
+  usleep(10);
+  
+  XCTAssertEqual(groupB.mutableCustomData.count, 1);
+  XCTAssertEqual(entryB.mutableCustomData.count, 1);
+  [groupB setCustomData:@"MoreData" forKey:@"GroupMoreDataKey"];
+  [entryB setCustomData:@"MoreData" forKey:@"EntryMoreDataKey"];
+  XCTAssertEqual(groupB.mutableCustomData.count, 2);
+  XCTAssertEqual(entryB.mutableCustomData.count, 2);
+  
+  KPKGroup *groupA = [self.treeA.root groupForUUID:self.groupUUID];
+  XCTAssertNotEqual(groupA, groupB);
+  KPKEntry *entryA = [self.treeA.root entryForUUID:self.entryUUID];
+  XCTAssertNotEqual(entryA, entryB);
+  XCTAssertEqual(groupA.mutableCustomData.count, 1);
+  XCTAssertEqual(entryA.mutableCustomData.count, 1);
+  
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  XCTAssertEqual(groupB.mutableCustomData.count, 2);
+  XCTAssertEqual(entryB.mutableCustomData.count, 2);
+  XCTAssertEqualObjects(entryB.mutableCustomData[@"EntryMoreDataKey"], @"MoreData");
+  XCTAssertEqualObjects(groupB.mutableCustomData[@"GroupMoreDataKey"], @"MoreData");
+  XCTAssertEqualObjects(entryB.mutableCustomData[@"EntryKeyA"], @"CustomEntryDataA");
+  XCTAssertEqualObjects(groupB.mutableCustomData[@"GroupKeyA"], @"CustomGroupDataA");
 }
 
 - (void)testChangedCustomData {
+  KPKEntry *entryB = [self.treeB.root entryForUUID:self.entryUUID];
+  KPKGroup *groupB = [self.treeB.root groupForUUID:self.groupUUID];
   
+  usleep(10);
+  
+  XCTAssertEqual(entryB.mutableCustomData.count, 1);
+  XCTAssertEqual(groupB.mutableCustomData.count, 1);
+  
+  [entryB setCustomData:@"ChangedEntryData" forKey:@"EntryKeyA"];
+  [groupB setCustomData:@"ChangedGroupData" forKey:@"GroupKeyA"];
+  XCTAssertEqual(entryB.mutableCustomData.count, 1);
+  XCTAssertEqual(groupB.mutableCustomData.count, 1);
+  
+  KPKGroup *groupA = [self.treeA.root groupForUUID:self.groupUUID];
+  XCTAssertNotEqual(groupA, groupB);
+  KPKEntry *entryA = [self.treeA.root entryForUUID:self.entryUUID];
+  XCTAssertNotEqual(entryA, entryB);
+  XCTAssertEqual(groupA.mutableCustomData.count, 1);
+  XCTAssertEqual(entryA.mutableCustomData.count, 1);
+  XCTAssertEqualObjects(entryA.mutableCustomData[@"EntryKeyA"], @"CustomEntryDataA");
+  XCTAssertEqualObjects(groupA.mutableCustomData[@"GroupKeyA"], @"CustomGroupDataA");
+
+  
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  XCTAssertEqual(groupB.mutableCustomData.count, 1);
+  XCTAssertEqual(entryB.mutableCustomData.count, 1);
+  XCTAssertEqualObjects(entryB.mutableCustomData[@"EntryKeyA"], @"ChangedEntryData");
+  XCTAssertEqualObjects(groupB.mutableCustomData[@"GroupKeyA"], @"ChangedGroupData");
 }
 
 @end
