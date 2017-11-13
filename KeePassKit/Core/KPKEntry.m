@@ -744,9 +744,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     
     /* collections */
     self.mutableAttributes = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableAttributes copyItems:YES];
-    self.mutableHistory = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableHistory copyItems:YES];
+    self.mutableBinaries = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableBinaries copyItems:YES];
     if(options & KPKUpdateOptionIncludeHistory) {
-      self.mutableBinaries = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableBinaries copyItems:YES];
+      self.mutableHistory = [[NSMutableArray alloc] initWithArray:sourceEntry.mutableHistory copyItems:YES];
     }
     
     self.overrideURL = sourceEntry.overrideURL;
