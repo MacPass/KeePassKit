@@ -624,13 +624,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   _tags = [[NSArray alloc] initWithArray:tags copyItems:YES]; // depp copy just to make sure!
 }
 
-- (void)setForegroundColor:(NSColor *)foregroundColor {
+- (void)setForegroundColor:(NSUIColor *)foregroundColor {
   [[self.undoManager prepareWithInvocationTarget:self] setForegroundColor:self.foregroundColor];
   [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_FOREGROUND_COLOR", @"KPKLocalizable", @"")];
   _foregroundColor = foregroundColor;
 }
 
-- (void)setBackgroundColor:(NSColor *)backgroundColor {
+- (void)setBackgroundColor:(NSUIColor *)backgroundColor {
   [[self.undoManager prepareWithInvocationTarget:self] setBackgroundColor:self.backgroundColor];
   [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_BACKGROUND_COLOR", @"KPKLocalizable", @"")];
   _backgroundColor = backgroundColor;
