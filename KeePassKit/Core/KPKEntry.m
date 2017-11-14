@@ -259,7 +259,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   /* Copy sets a new UUID */
   KPKEntry *copy = [self _copyWithUUID:nil];
   if(!titleOrNil) {
-    NSString *format = NSLocalizedStringFromTable(@"KPK_ENTRY_COPY_%@", @"KPKLocalizable", "");
+    NSString *format = NSLocalizedString(@"KPK_ENTRY_COPY_%@", "Title format for a copie of an entry. Contains a %@ placeholder");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
   KPK_SCOPED_DISABLE_UNDO_BEGIN(copy.undoManager)
@@ -607,37 +607,37 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)setTitle:(NSString *)title {
   [[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
-  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_TITLE", @"KPKLocalizable", @"")];
+  [self.undoManager setActionName:NSLocalizedString(@"SET_TITLE", @"Action name for setting the title of an enty")];
   [self _setValue:title forAttributeWithKey:kKPKTitleKey];
 }
 
 - (void)setUsername:(NSString *)username {
   [[self.undoManager prepareWithInvocationTarget:self] setUsername:self.username];
-  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_USERNAME", @"KPKLocalizable", @"")];
+  [self.undoManager setActionName:NSLocalizedString(@"SET_USERNAME", @"Action name for setting the username of an enty")];
   [self _setValue:username forAttributeWithKey:kKPKUsernameKey];
 }
 
 - (void)setPassword:(NSString *)password {
   [[self.undoManager prepareWithInvocationTarget:self] setPassword:self.password];
-  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_PASSWORD", @"KPKLocalizable", @"")];
+  [self.undoManager setActionName:NSLocalizedString(@"SET_PASSWORD", @"Action name for setting the password of an enty")];
   [self _setValue:password forAttributeWithKey:kKPKPasswordKey];
 }
 
 - (void)setNotes:(NSString *)notes {
   [[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
-  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_NOTES", @"KPKLocalizable", @"")];
+  [self.undoManager setActionName:NSLocalizedString(@"SET_NOTES", @"Action name for setting the notes of an enty")];
   [self _setValue:notes forAttributeWithKey:kKPKNotesKey];
 }
 
 - (void)setUrl:(NSString *)url {
   [[self.undoManager prepareWithInvocationTarget:self] setUrl:self.url];
-  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_URL", @"KPKLocalizable", @"")];
+  [self.undoManager setActionName:NSLocalizedString(@"SET_URL", @"Action name for setting the url of an enty")];
   [self _setValue:url forAttributeWithKey:kKPKURLKey];
 }
 
 - (void)setTags:(NSArray<NSString *> *)tags {
   [[self.undoManager prepareWithInvocationTarget:self] setTags:self.tags];
-  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_URL", @"KPKLocalizable", @"")];
+  [self.undoManager setActionName:NSLocalizedString(@"SET_TAGS", @"Action name for setting the tags of an enty")];
   [self.tree _unregisterTags:_tags];
   _tags = tags ? [[NSArray alloc] initWithArray:tags copyItems:YES] : nil;
   [self.tree _registerTags:_tags];
@@ -645,13 +645,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)setForegroundColor:(NSUIColor *)foregroundColor {
   [[self.undoManager prepareWithInvocationTarget:self] setForegroundColor:self.foregroundColor];
-  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_FOREGROUND_COLOR", @"KPKLocalizable", @"")];
+  [self.undoManager setActionName:NSLocalizedString(@"SET_FOREGROUND_COLOR", @"Action name for setting the foreground color of an enty")];
   _foregroundColor = foregroundColor;
 }
 
 - (void)setBackgroundColor:(NSUIColor *)backgroundColor {
   [[self.undoManager prepareWithInvocationTarget:self] setBackgroundColor:self.backgroundColor];
-  [self.undoManager setActionName:NSLocalizedStringFromTable(@"SET_BACKGROUND_COLOR", @"KPKLocalizable", @"")];
+  [self.undoManager setActionName:NSLocalizedString(@"SET_BACKGROUND_COLOR", @"Action name for setting the background color of an enty")];
   _backgroundColor = backgroundColor;
 }
 

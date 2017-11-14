@@ -191,7 +191,7 @@ static NSSet *_observedKeyPathsSet;
   KPKGroup *copy = [self _copyWithUUID:nil];
   
   if(nil == titleOrNil) {
-    NSString *format = NSLocalizedStringFromTable(@"KPK_GROUP_COPY_%@", @"KPKLocalizable", "");
+    NSString *format = NSLocalizedString(@"KPK_GROUP_COPY_%@", "");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
   copy.title = titleOrNil;

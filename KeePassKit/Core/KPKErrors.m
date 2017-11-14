@@ -30,47 +30,47 @@ NSString *KPKErrorMessageForCode(NSInteger errorCode) {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     dict = @{
-             @(KPKErrorAESDecryptionFailed)               : @"ERROR_AES_DECRYPTION_FAILED",
-             @(KPKErrorAESEncryptionFailed)               : @"ERROR_ENCRYPTION_FAILED",
-             @(KPKErrorAttributeKeyValidationFailed)      : @"ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED",
-             @(KPKErrorDecryptionFailed)                  : @"ERROR_DECRYPTION_FAILED",
-             @(KPKErrorIntegrityCheckFailed)              : @"ERROR_INTEGRITY_CHECK_FAILED",
-             @(KPKErrorKdbCorruptTree)                    : @"ERROR_KDB_CORRUPT_TREE",
-             @(KPKErrorKdbHeaderTruncated)                : @"ERROR_KDB_FILE_HEADER_TRUNCATED",
-             @(KPKErrorKdbInvalidFieldSize)               : @"ERROR_INVALID_FIELD_SIZE",
-             @(KPKErrorKdbInvalidFieldType)               : @"ERROR_INVALID_FIELD_TYPE",
-             @(KPKErrorKdbxGroupElementMissing)           : @"ERROR_GROUP_ELEMENT_MISSING",
-             @(KPKErrorKdbxHeaderHashVerificationFailed)  : @"ERROR_HEADER_HASH_VERIFICATION_FAILED",
-             @(KPKErrorKdbxInvalidHeaderFieldSize)        : @"ERROR_INVALID_HEADER_FIELD_SIZE",
-             @(KPKErrorKdbxInvalidHeaderFieldType)        : @"ERROR_INVALID_HEADER_FIELD_TYPE",
-             @(KPKErrorKdbxKeePassFileElementMissing)     : @"ERROR_KEEPASSFILE_ELEMENT_MISSING",
-             @(KPKErrorKdbxKeyDataElementMissing)         : @"ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT",
-             @(KPKErrorKdbxKeyDataParsingError)           : @"ERROR_XML_KEYFILE_DATA_PARSING_ERROR",
-             @(KPKErrorKdbxKeyKeyElementMissing)          : @"ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT",
-             @(KPKErrorKdbxKeyUnsupportedVersion)         : @"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION",
-             @(KPKErrorKdbxMetaElementMissing)            : @"ERROR_META_ELEMENT_MISSING",
-             @(KPKErrorKdbxRootElementMissing)            : @"ERROR_ROOT_ELEMENT_MISSING",
-             @(KPKErrorKdbxMalformedXmlStructure)         : @"ERRROR_XML_STRUCUTRE_MALFORMED",
-             @(KPKErrorKeyDerivationFailed)               : @"ERROR_KEY_DERIVATION_FAILED",
-             @(KPKErrorNoData)                            : @"ERROR_NO_DATA",
-             @(KPKErrorPasswordAndOrKeyfileWrong)         : @"ERROR_PASSWORD_OR_KEYFILE_WRONG",
-             @(KPKErrorUnknownFileFormat)                 : @"ERROR_UNKNOWN_FILE_FORMAT",
-             @(KPKErrorUnsupportedCipher)                 : @"ERROR_UNSUPPORTED_CIPHER",
-             @(KPKErrorUnsupportedCompressionAlgorithm)   : @"ERROR_UNSUPPORTED_KDBX_COMPRESSION_ALGORITHM",
-             @(KPKErrorUnsupportedDatabaseVersion)        : @"ERROR_UNSUPPORTED_DATABASER_VERSION",
-             @(KPKErrorUnsupportedKeyDerivation)          : @"ERROR_UNSUPPORTED_KEYDERIVATION",
-             @(KPKErrorUnsupportedRandomStream)           : @"ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM",
-             @(KPKErrorWindowTitleFormatValidationFailed) : @"ERROR_WINDOW_TITLE_VALIDATION_FAILED",
-             @(KPKErrorWrongIVVectorSize)                 : @"ERROR_INVALID_HEADER_IV_SIZE"
+             @(KPKErrorAESDecryptionFailed)               : NSLocalizedString(@"ERROR_AES_DECRYPTION_FAILED",@""),
+             @(KPKErrorAESEncryptionFailed)               : NSLocalizedString(@"ERROR_ENCRYPTION_FAILED",@""),
+             @(KPKErrorAttributeKeyValidationFailed)      : NSLocalizedString(@"ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED",@""),
+             @(KPKErrorDecryptionFailed)                  : NSLocalizedString(@"ERROR_DECRYPTION_FAILED",@""),
+             @(KPKErrorIntegrityCheckFailed)              : NSLocalizedString(@"ERROR_INTEGRITY_CHECK_FAILED",@""),
+             @(KPKErrorKdbCorruptTree)                    : NSLocalizedString(@"ERROR_KDB_CORRUPT_TREE",@""),
+             @(KPKErrorKdbHeaderTruncated)                : NSLocalizedString(@"ERROR_KDB_FILE_HEADER_TRUNCATED",@""),
+             @(KPKErrorKdbInvalidFieldSize)               : NSLocalizedString(@"ERROR_INVALID_FIELD_SIZE",@""),
+             @(KPKErrorKdbInvalidFieldType)               : NSLocalizedString(@"ERROR_INVALID_FIELD_TYPE",@""),
+             @(KPKErrorKdbxGroupElementMissing)           : NSLocalizedString(@"ERROR_GROUP_ELEMENT_MISSING",@""),
+             @(KPKErrorKdbxHeaderHashVerificationFailed)  : NSLocalizedString(@"ERROR_HEADER_HASH_VERIFICATION_FAILED",@""),
+             @(KPKErrorKdbxInvalidHeaderFieldSize)        : NSLocalizedString(@"ERROR_INVALID_HEADER_FIELD_SIZE",@""),
+             @(KPKErrorKdbxInvalidHeaderFieldType)        : NSLocalizedString(@"ERROR_INVALID_HEADER_FIELD_TYPE",@""),
+             @(KPKErrorKdbxKeePassFileElementMissing)     : NSLocalizedString(@"ERROR_KEEPASSFILE_ELEMENT_MISSING",@""),
+             @(KPKErrorKdbxKeyDataElementMissing)         : NSLocalizedString(@"ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT",@""),
+             @(KPKErrorKdbxKeyDataParsingError)           : NSLocalizedString(@"ERROR_XML_KEYFILE_DATA_PARSING_ERROR",@""),
+             @(KPKErrorKdbxKeyKeyElementMissing)          : NSLocalizedString(@"ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT",@""),
+             @(KPKErrorKdbxKeyUnsupportedVersion)         : NSLocalizedString(@"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION",@""),
+             @(KPKErrorKdbxMetaElementMissing)            : NSLocalizedString(@"ERROR_META_ELEMENT_MISSING",@""),
+             @(KPKErrorKdbxRootElementMissing)            : NSLocalizedString(@"ERROR_ROOT_ELEMENT_MISSING",@""),
+             @(KPKErrorKdbxMalformedXmlStructure)         : NSLocalizedString(@"ERRROR_XML_STRUCUTRE_MALFORMED",@""),
+             @(KPKErrorKeyDerivationFailed)               : NSLocalizedString(@"ERROR_KEY_DERIVATION_FAILED",@""),
+             @(KPKErrorNoData)                            : NSLocalizedString(@"ERROR_NO_DATA",@""),
+             @(KPKErrorPasswordAndOrKeyfileWrong)         : NSLocalizedString(@"ERROR_PASSWORD_OR_KEYFILE_WRONG",@""),
+             @(KPKErrorUnknownFileFormat)                 : NSLocalizedString(@"ERROR_UNKNOWN_FILE_FORMAT",@""),
+             @(KPKErrorUnsupportedCipher)                 : NSLocalizedString(@"ERROR_UNSUPPORTED_CIPHER",@""),
+             @(KPKErrorUnsupportedCompressionAlgorithm)   : NSLocalizedString(@"ERROR_UNSUPPORTED_KDBX_COMPRESSION_ALGORITHM",@""),
+             @(KPKErrorUnsupportedDatabaseVersion)        : NSLocalizedString(@"ERROR_UNSUPPORTED_DATABASER_VERSION",@""),
+             @(KPKErrorUnsupportedKeyDerivation)          : NSLocalizedString(@"ERROR_UNSUPPORTED_KEYDERIVATION",@""),
+             @(KPKErrorUnsupportedRandomStream)           : NSLocalizedString(@"ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM",@""),
+             @(KPKErrorWindowTitleFormatValidationFailed) : NSLocalizedString(@"ERROR_WINDOW_TITLE_VALIDATION_FAILED",@""),
+             @(KPKErrorWrongIVVectorSize)                 : NSLocalizedString(@"ERROR_INVALID_HEADER_IV_SIZE",@"")
              };
   });
   NSString *msg = dict[@(errorCode)];
-  return msg ? msg : @"ERROR_UNKNOWN_ERROR_CODE";
+  return msg ? msg : NSLocalizedString(@"ERROR_UNKNOWN_ERROR_CODE", @"Error message for unknown error code");
 }
 
 void KPKCreateError( NSError **errorPtr, NSInteger errorCode) {
   if(errorPtr == NULL) {
     return; // no valid error pointer
   }
-  *errorPtr = [NSError errorWithDomain:KPKErrorDomain code:errorCode userInfo:@{ NSLocalizedDescriptionKey:NSLocalizedStringFromTable(KPKErrorMessageForCode(errorCode), @"KPKLocalizable", "")}];
+  *errorPtr = [NSError errorWithDomain:KPKErrorDomain code:errorCode userInfo:@{ NSLocalizedDescriptionKey: KPKErrorMessageForCode(errorCode) }];
 }

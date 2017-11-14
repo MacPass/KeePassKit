@@ -938,6 +938,10 @@
 		4C93C4AD1DC2704600260DD4 /* KPKTestChaCha20.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C93C4AC1DC2704600260DD4 /* KPKTestChaCha20.m */; };
 		4C9466231D78923A00F70457 /* KPKTestUndoTimeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9466221D78923A00F70457 /* KPKTestUndoTimeInfo.m */; };
 		4C96A43F1F9DEB2300F071D3 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CD89C1F1F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx */; };
+		4CA0C0C51FBB050B00CFFFBE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CA0C0C31FBB050B00CFFFBE /* Localizable.strings */; };
+		4CA0C0C71FBB052500CFFFBE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CA0C0C31FBB050B00CFFFBE /* Localizable.strings */; };
+		4CA0C0C81FBB052600CFFFBE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CA0C0C31FBB050B00CFFFBE /* Localizable.strings */; };
+		4CA0C0C91FBB052600CFFFBE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CA0C0C31FBB050B00CFFFBE /* Localizable.strings */; };
 		4CA1E3441D87F5ED00100002 /* KPKArgon2KeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E3421D87F5ED00100002 /* KPKArgon2KeyDerivation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CA1E3451D87F5ED00100002 /* KPKArgon2KeyDerivation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E3431D87F5ED00100002 /* KPKArgon2KeyDerivation.m */; };
 		4CA1E4841D8832BA00100002 /* argon2.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E46C1D8832BA00100002 /* argon2.h */; };
@@ -1254,6 +1258,15 @@
 		4C8FE3B81E004DF5008C75BF /* KPKTestEntryOrGroupByUUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestEntryOrGroupByUUID.m; sourceTree = "<group>"; };
 		4C93C4AC1DC2704600260DD4 /* KPKTestChaCha20.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestChaCha20.m; sourceTree = "<group>"; };
 		4C9466221D78923A00F70457 /* KPKTestUndoTimeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KPKTestUndoTimeInfo.m; path = Keyfiles/KPKTestUndoTimeInfo.m; sourceTree = "<group>"; };
+		4CA0C0C41FBB050B00CFFFBE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4CA0C0CB1FBB05EA00CFFFBE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4CA0C0CC1FBB05EA00CFFFBE /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4CA0C0CD1FBB05EA00CFFFBE /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4CA0C0CE1FBB05EA00CFFFBE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4CA0C0CF1FBB05EA00CFFFBE /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4CA0C0D01FBB05EB00CFFFBE /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		4CA0C0D11FBB05EB00CFFFBE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4CA0C0D21FBB05EB00CFFFBE /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4CA1E3421D87F5ED00100002 /* KPKArgon2KeyDerivation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKArgon2KeyDerivation.h; sourceTree = "<group>"; };
 		4CA1E3431D87F5ED00100002 /* KPKArgon2KeyDerivation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKArgon2KeyDerivation.m; sourceTree = "<group>"; };
 		4CA1E46C1D8832BA00100002 /* argon2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = argon2.h; sourceTree = "<group>"; };
@@ -1566,6 +1579,7 @@
 				4C5CF3E01BE10E000019AA81 /* Core */,
 				4C5CF4271BE10E070019AA81 /* Format */,
 				4C5CF4321BE10E100019AA81 /* IO */,
+				4CA0C0C61FBB050F00CFFFBE /* Localization */,
 				4C5CF31B1BE10B650019AA81 /* KeePassKit.h */,
 				4C5CF4751BE10E170019AA81 /* KeePassKit_Private.h */,
 				4C5CF31D1BE10B650019AA81 /* Info.plist */,
@@ -1853,6 +1867,14 @@
 				4C8836AE1FB4407900CD2CD1 /* KPKTokenStream.m */,
 			);
 			path = Token;
+			sourceTree = "<group>";
+		};
+		4CA0C0C61FBB050F00CFFFBE /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				4CA0C0C31FBB050B00CFFFBE /* Localizable.strings */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		4CA1E46B1D8832BA00100002 /* include */ = {
@@ -2554,6 +2576,14 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				de,
+				nl,
+				fr,
+				es,
+				it,
+				"zh-Hans",
+				ru,
+				pl,
 			);
 			mainGroup = 4C5CF30E1BE10B650019AA81;
 			productRefGroup = 4C5CF3191BE10B650019AA81 /* Products */;
@@ -2576,6 +2606,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CA0C0C71FBB052500CFFFBE /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2609,6 +2640,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CA0C0C81FBB052600CFFFBE /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2642,6 +2674,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CA0C0C91FBB052600CFFFBE /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2649,6 +2682,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CA0C0C51FBB050B00CFFFBE /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3274,6 +3308,25 @@
 			targetProxy = 4C5CF3241BE10B650019AA81 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4CA0C0C31FBB050B00CFFFBE /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4CA0C0C41FBB050B00CFFFBE /* en */,
+				4CA0C0CB1FBB05EA00CFFFBE /* de */,
+				4CA0C0CC1FBB05EA00CFFFBE /* nl */,
+				4CA0C0CD1FBB05EA00CFFFBE /* fr */,
+				4CA0C0CE1FBB05EA00CFFFBE /* es */,
+				4CA0C0CF1FBB05EA00CFFFBE /* it */,
+				4CA0C0D01FBB05EB00CFFFBE /* zh-Hans */,
+				4CA0C0D11FBB05EB00CFFFBE /* ru */,
+				4CA0C0D21FBB05EB00CFFFBE /* pl */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		2D5125231E9BCFA700D7EAF6 /* Debug */ = {

@@ -153,7 +153,7 @@
   if(self.value != value) {
     if(!self.isDefault) {
       [(KPKAttribute *)[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
-      NSString *template = NSLocalizedStringFromTable(@"SET_CUSTOM_ATTTRIBUTE_%@", @"KPKLocalizable", @"");
+      NSString *template = NSLocalizedString(@"SET_CUSTOM_ATTTRIBUTE_%@", @"Action name for setting value of a custom attribute. Contains %@ placeholder");
       [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key ]];
     }
     [self.entry touchModified];
@@ -176,8 +176,8 @@
   if(_isProtected != protected) {
     if(!self.isDefault) {
       [[self.entry.undoManager prepareWithInvocationTarget:self] setIsProtected:_isProtected];
-      NSString *template = (protected ? NSLocalizedStringFromTable(@"PROTECT_%@", @"KPKLocalizeable", @"Action name for setting a custom string value protected")
-                            : NSLocalizedStringFromTable(@"UNPROTECT_%@", @"KPKLocalizeable", @"Action name for setting a custom string value non-protected") );
+      NSString *template = (protected ? NSLocalizedString(@"PROTECT_%@", @"Action name for setting a custom string value protected")
+                            : NSLocalizedString(@"UNPROTECT_%@", @"Action name for setting a custom string value non-protected") );
       [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key]];
     }
     _isProtected = protected;
