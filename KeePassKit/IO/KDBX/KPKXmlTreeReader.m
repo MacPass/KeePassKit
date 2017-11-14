@@ -303,7 +303,10 @@
   entry.foregroundColor =  [NSUIColor kpk_colorWithHexString:KPKXmlString(entryElement, @"ForegroundColor")];
   entry.backgroundColor = [NSUIColor kpk_colorWithHexString:KPKXmlString(entryElement, @"BackgroundColor")];
   entry.overrideURL = KPKXmlString(entryElement, @"OverrideURL");
-  entry.tags = [KPKXmlString(entryElement, @"Tags") componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@".,;"]];
+  NSString *tags = KPKXmlString(entryElement, @"Tags");
+  if(tags.length > 0) {
+    entry.tags = [tags componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@",;"]];
+  }
   
   DDXMLElement *timesElement = [entryElement elementForName:kKPKXmlTimes];
   [self _parseTimes:entry.timeInfo element:timesElement];
