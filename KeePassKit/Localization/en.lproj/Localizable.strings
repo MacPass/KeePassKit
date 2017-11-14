@@ -77,7 +77,7 @@
 "ERROR_KEEPASSFILE_ELEMENT_MISSING" = "The XML file is missing the KeePassFile element";
 
 /* No comment provided by engineer. */
-"ERROR_KEY_DERIVATION_FAILED" = "Key derication failed";
+"ERROR_KEY_DERIVATION_FAILED" = "Key derivation failed";
 
 /* No comment provided by engineer. */
 "ERROR_META_ELEMENT_MISSING" = "Meta XML element is missing";
