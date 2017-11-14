@@ -34,7 +34,6 @@
 #import "NSData+KPKRandom.h"
 #import "NSData+KPKXor.h"
 
-#import "KPKGlobalDefines.h"
 /*
  References are formatted as follows:
  T	Title
@@ -155,7 +154,7 @@
   if(self.value != value) {
     if(!self.isDefault) {
       [(KPKAttribute *)[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
-      NSString *template = KPKLocalizedString(@"SET_CUSTOM_ATTTRIBUTE_%@", @"Action name for setting value of a custom attribute. Contains %@ placeholder");
+      NSString *template = NSLocalizedStringFromTableInBundle(@"SET_CUSTOM_ATTTRIBUTE_%@", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting value of a custom attribute. Contains %@ placeholder");
       [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key ]];
     }
     [self.entry touchModified];
@@ -178,8 +177,8 @@
   if(_isProtected != protected) {
     if(!self.isDefault) {
       [[self.entry.undoManager prepareWithInvocationTarget:self] setIsProtected:_isProtected];
-      NSString *template = (protected ? KPKLocalizedString(@"PROTECT_%@", @"Action name for setting a custom string value protected")
-                            : KPKLocalizedString(@"UNPROTECT_%@", @"Action name for setting a custom string value non-protected") );
+      NSString *template = (protected ? NSLocalizedStringFromTableInBundle(@"PROTECT_%@", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting a custom string value protected")
+                            : NSLocalizedStringFromTableInBundle(@"UNPROTECT_%@", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting a custom string value non-protected") );
       [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key]];
     }
     _isProtected = protected;

@@ -36,7 +36,6 @@
 
 #import "NSUUID+KPKAdditions.h"
 #import "KPKScopedSet.h"
-#import "KPKGlobalDefines.h"
 
 NSString *const KPKEntriesArrayBinding = @"entriesArray";
 NSString *const KPKGroupsArrayBinding = @"groupsArray";
@@ -192,7 +191,7 @@ static NSSet *_observedKeyPathsSet;
   KPKGroup *copy = [self _copyWithUUID:nil];
   
   if(nil == titleOrNil) {
-    NSString *format = KPKLocalizedString(@"KPK_GROUP_COPY_%@", "");
+    NSString *format = NSLocalizedStringFromTableInBundle(@"KPK_GROUP_COPY_%@", nil, [NSBundle bundleForClass:[self class]], "Title format for a copie of a group. Contains a %@ placeholder");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
   copy.title = titleOrNil;

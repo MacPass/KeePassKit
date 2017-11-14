@@ -35,7 +35,6 @@
 #import "KPKAESKeyDerivation.h"
 
 #import "NSUUID+KPKAdditions.h"
-#import "KPKGlobalDefines.h"
 
 NSString *const KPKTreeWillAddGroupNotification     = @"com.hicknhack.macpass.KPKTreeWillAddGroupNotification";
 NSString *const KPKTreeDidAddGroupNotification      = @"com.hicknhack.macpass.KPKTreeDidAddGroupNotification";
@@ -89,33 +88,33 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   if (self) {
   }
   KPKGroup *parentGroup = [self createGroup:nil];
-  
-  parentGroup.title = KPKLocalizedString(@"GENERAL", "General");
+  NSBundle *kpkBundle = [NSBundle bundleForClass:[self class]];
+  parentGroup.title = NSLocalizedStringFromTableInBundle(@"GENERAL", nil, kpkBundle, "General");
   parentGroup.iconId = KPKIconFolder;
   self.root = parentGroup;
   
   KPKGroup *group = [self createGroup:parentGroup];
-  group.title = KPKLocalizedString(@"WINDOWS", "Windows");
+  group.title = NSLocalizedStringFromTableInBundle(@"WINDOWS", nil, kpkBundle, "Windows");
   group.iconId = KPKIconSambaUnmount;
   [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
-  group.title = KPKLocalizedString(@"NETWORK", "Network");
+  group.title = NSLocalizedStringFromTableInBundle(@"NETWORK", nil, kpkBundle, "Network");
   group.iconId = KPKIconServer;
   [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
-  group.title = KPKLocalizedString(@"INTERNET", "Internet");
+  group.title = NSLocalizedStringFromTableInBundle(@"INTERNET", nil, kpkBundle, "Internet");
   group.iconId = KPKIconPackageNetwork;
   [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
-  group.title = KPKLocalizedString(@"EMAIL", "EMail");
+  group.title = NSLocalizedStringFromTableInBundle(@"EMAIL", nil, kpkBundle, "EMail");
   group.iconId = KPKIconEmail;
   [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
-  group.title = KPKLocalizedString(@"HOMEBANKING", "Homebanking");
+  group.title = NSLocalizedStringFromTableInBundle(@"HOMEBANKING", nil, kpkBundle, "Homebanking");
   group.iconId = KPKIconPercentage;
   [group addToGroup:parentGroup];
   
@@ -160,7 +159,7 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   }
   trash = [self createGroup:self.root];
   trash.iconId = KPKIconTrash;
-  trash.title = KPKLocalizedString(@"TRASH", @"Name for the trash group");
+  trash.title = NSLocalizedStringFromTableInBundle(@"TRASH", nil, [NSBundle bundleForClass:[self class]], @"Name for the trash group");
   [trash addToGroup:self.root];
   self.metaData.trashUuid = trash.uuid;
   return trash;

@@ -46,8 +46,6 @@
 #import "NSUUID+KPKAdditions.h"
 #import "NSUIColor+KPKAdditions.h"
 
-#import "KPKGlobalDefines.h"
-
 @interface KPKKdbTreeReader () {
   NSData *_data;
   KPKDataStreamReader *_dataStreamer;
@@ -121,7 +119,7 @@
    initalize it with sane defaults
    */
   KPKGroup *rootGroup = [[KPKGroup alloc] init];
-  rootGroup.title = KPKLocalizedString(@"DATABASE", "");
+  rootGroup.title = NSLocalizedStringFromTableInBundle(@"DATABASE", nil, [NSBundle bundleForClass:[self class]], "");
   rootGroup.iconId = KPKIconFolder;
   tree.root = rootGroup;
   rootGroup.isExpanded = YES;

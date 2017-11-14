@@ -1,14 +1,44 @@
-/* (No Comment) */
-"ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED" = "The Attribute Key is not unique!";
+/* Action name for adding a customt icon. */
+"ADD_CUSTOM_ICON" = "Add custom icon";
+
+/* Error description */
+"Alignment Error" = "Alignment Error";
+
+/* Error description */
+"Buffer Too Small" = "Buffer Too Small";
+
+/* No comment provided by engineer. */
+"DATABASE" = "Database";
+
+/* Action name for deleting a custom icon */
+"DELETE_CUSTOM_ICON" = "Delete custom icon";
+
+/* Error description */
+"Decode Error" = "Decode Error";
+
+/* EMail */
+"EMAIL" = "EMail";
+
+/* No comment provided by engineer. */
+"ERROR_AES_DECRYPTION_FAILED" = "AES decryption failed";
+
+/* No comment provided by engineer. */
+"ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED" = "The attribute key is not unique!";
 
 /* (No Comment) */
-"ERROR_AUTOTYPE_SEQUENCE_VALIDATION_FAILED" = "The Autotype Sequence is not valid!";
+"ERROR_AUTOTYPE_SEQUENCE_VALIDATION_FAILED" = "The autotype sequence is not valid!";
 
 /* (No Comment) */
 "ERROR_CORRUPT_TREE" = "The internal file structure is corrupted!";
 
-/* (No Comment) */
-"ERROR_GROUP_ELEMENT_MISSING" = "The XML file contains no Group node";
+/* No comment provided by engineer. */
+"ERROR_DECRYPTION_FAILED" = "Decryption failed";
+
+/* No comment provided by engineer. */
+"ERROR_ENCRYPTION_FAILED" = "Encryption failed";
+
+/* No comment provided by engineer. */
+"ERROR_GROUP_ELEMENT_MISSING" = "The XML file contains no group node";
 
 /* (No Comment) */
 "ERROR_HEADER_CORRUPTED" = "Header is corrupted";
@@ -16,57 +46,180 @@
 /* (No Comment) */
 "ERROR_HEADER_HASH_MISSMATCH" = "The header hash doesn't match. File corrupted";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_HEADER_HASH_VERIFICATION_FAILED" = "The database header hash is wrong. Data integrity might be broken!";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_INTEGRITY_CHECK_FAILED" = "The database integrity isn't ensured";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_INVALID_FIELD_SIZE" = "Incorrect size at data field. Password wrong?";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_INVALID_FIELD_TYPE" = "Unknown data field. Password wrong?";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERROR_INVALID_HEADER_FIELD_SIZE" = "Invalid header field size";
+
+/* No comment provided by engineer. */
+"ERROR_INVALID_HEADER_FIELD_TYPE" = "Invalid header field type";
+
+/* No comment provided by engineer. */
+"ERROR_INVALID_HEADER_IV_SIZE" = "Invalid header initalization vector size";
+
+/* No comment provided by engineer. */
+"ERROR_KDB_CORRUPT_TREE" = "Corrupted KDB tree";
+
+/* No comment provided by engineer. */
+"ERROR_KDB_FILE_HEADER_TRUNCATED" = "KDB header truncated";
+
+/* No comment provided by engineer. */
 "ERROR_KEEPASSFILE_ELEMENT_MISSING" = "The XML file is missing the KeePassFile element";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERROR_KEY_DERIVATION_FAILED" = "Key derication failed";
+
+/* No comment provided by engineer. */
+"ERROR_META_ELEMENT_MISSING" = "Meta XML element is missing";
+
+/* No comment provided by engineer. */
+"ERROR_NO_DATA" = "No data";
+
+/* No comment provided by engineer. */
 "ERROR_PASSWORD_OR_KEYFILE_WRONG" = "The password and/or the keyfile is wrong";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_ROOT_ELEMENT_MISSING" = "The XML file contains no Root node";
 
-/* (No Comment) */
+/* Error message for unknown error code */
+"ERROR_UNKNOWN_ERROR_CODE" = "An unknown error occured";
+
+/* No comment provided by engineer. */
 "ERROR_UNKNOWN_FILE_FORMAT" = "Unknown file format";
 
 /* (No Comment) */
 "ERROR_UNSUPPORTED_CHIPHER" = "Unsupported cipher algorithm";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERROR_UNSUPPORTED_CIPHER" = "Unsupported cipher";
+
+/* No comment provided by engineer. */
 "ERROR_UNSUPPORTED_DATABASER_VERSION" = "The Database version is not supported";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_UNSUPPORTED_KDBX_COMPRESSION_ALGORITHM" = "Unsupported compression algorithm";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM" = "Unsupported random stream type";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERROR_UNSUPPORTED_KEYDERIVATION" = "Unsupported key derivation";
+
+/* No comment provided by engineer. */
 "ERROR_WINDOW_TITLE_VALIDATION_FAILED" = "The Format of the Window Title is not valid!";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_DATA_PARSING_ERROR" = "Unable to read the data of the XML keyfile";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION" = "Unsupported XML key file version";
+
+/* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT" = "The XML keyfile is missing the data element";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT" = "The XML keyfile is missing the key element";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERRROR_XML_STRUCUTRE_MALFORMED" = "Malformed XML structure";
+
+/* Error reason */
+"Failed to allocate memory" = "Failed to allocate memory";
+
+/* Error reason */
+"Function not implemented for the current algorithm" = "Function not implemented for the current algorithm";
+
+/* General */
+"GENERAL" = "General";
+
+/* Homebanking */
+"HOMEBANKING" = "Homebanking";
+
+/* Internet */
+"INTERNET" = "Internet";
+
+/* Error reason */
+"Illegal parameter supplied to encryption/decryption algorithm" = "Illegal parameter supplied to encryption/decryption algorithm";
+
+/* Error reason */
+"Input data did not decode or decrypt correctly" = "Input data did not decode or decrypt correctly";
+
+/* Error reason */
+"Input size to encryption algorithm was not aligned correctly" = "Input size to encryption algorithm was not aligned correctly";
+
+/* Error reason */
+"Insufficient buffer provided for specified operation" = "Insufficient buffer provided for specified operation";
+
+/* Title format for a copie of an entry. Contains a %@ placeholder */
 "KPK_ENTRY_COPY_%@" = "%@ copy";
 
-/* (No Comment) */
+/* Title format for a copie of a group. Contains a %@ placeholder */
 "KPK_GROUP_COPY_%@" = "%@ copy";
+
+/* Error description */
+"Memory Failure" = "Memory Failure";
+
+/* Network */
+"NETWORK" = "Network";
+
+/* Action name for setting a custom string value protected */
+"PROTECT_%@" = "Protect %@";
+
+/* Error description */
+"Parameter Error" = "Parameter Error";
+
+/* Action name for setting the background color of an enty */
+"SET_BACKGROUND_COLOR" = "Set background color";
+
+/* Action name for setting value of a custom attribute. Contains %@ placeholder */
+"SET_CUSTOM_ATTTRIBUTE_%@" = "Set custom attribute %@";
+
+/* Action name for setting the foreground color of an enty */
+"SET_FOREGROUND_COLOR" = "Set foreground color";
+
+/* Action name for setting the notes of an enty */
+"SET_NOTES" = "Set notes";
+
+/* Action name for setting the password of an enty */
+"SET_PASSWORD" = "Set password";
+
+/* Action name for setting the tags of an enty */
+"SET_TAGS" = "Set tags";
+
+/* Action name for setting the title of an enty */
+"SET_TITLE" = "Set title";
+
+/* Action name for setting the url of an enty */
+"SET_URL" = "Set URL";
+
+/* Action name for setting the username of an enty */
+"SET_USERNAME" = "Set Username";
+
+/* Error description */
+"Success" = "Success";
+
+/* Name for the trash group */
+"TRASH" = "Trash";
+
+/* Action name for setting a custom string value non-protected */
+"UNPROTECT_%@" = "Unprotect %@";
+
+/* Error description */
+"Unimplemented Function" = "Unimplemented Function";
+
+/* Error description */
+"Unknown Error" = "Unknown Error";
+
+/* Windows */
+"WINDOWS" = "Windows";
 
