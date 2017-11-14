@@ -35,6 +35,7 @@
 #import "KPKAESKeyDerivation.h"
 
 #import "NSUUID+KPKAdditions.h"
+#import "KPKGlobalDefines.h"
 
 NSString *const KPKTreeWillAddGroupNotification     = @"com.hicknhack.macpass.KPKTreeWillAddGroupNotification";
 NSString *const KPKTreeDidAddGroupNotification      = @"com.hicknhack.macpass.KPKTreeDidAddGroupNotification";
@@ -89,32 +90,32 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   }
   KPKGroup *parentGroup = [self createGroup:nil];
   
-  parentGroup.title = NSLocalizedString(@"GENERAL", "General");
+  parentGroup.title = KPKLocalizedString(@"GENERAL", "General");
   parentGroup.iconId = KPKIconFolder;
   self.root = parentGroup;
   
   KPKGroup *group = [self createGroup:parentGroup];
-  group.title = NSLocalizedString(@"WINDOWS", "Windows");
+  group.title = KPKLocalizedString(@"WINDOWS", "Windows");
   group.iconId = KPKIconSambaUnmount;
   [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
-  group.title = NSLocalizedString(@"NETWORK", "Network");
+  group.title = KPKLocalizedString(@"NETWORK", "Network");
   group.iconId = KPKIconServer;
   [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
-  group.title = NSLocalizedString(@"INTERNET", "Internet");
+  group.title = KPKLocalizedString(@"INTERNET", "Internet");
   group.iconId = KPKIconPackageNetwork;
   [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
-  group.title = NSLocalizedString(@"EMAIL", "EMail");
+  group.title = KPKLocalizedString(@"EMAIL", "EMail");
   group.iconId = KPKIconEmail;
   [group addToGroup:parentGroup];
   
   group = [self createGroup:parentGroup];
-  group.title = NSLocalizedString(@"HOMEBANKING", "Homebanking");
+  group.title = KPKLocalizedString(@"HOMEBANKING", "Homebanking");
   group.iconId = KPKIconPercentage;
   [group addToGroup:parentGroup];
   
@@ -159,7 +160,7 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   }
   trash = [self createGroup:self.root];
   trash.iconId = KPKIconTrash;
-  trash.title = NSLocalizedString(@"TRASH", @"Name for the trash group");
+  trash.title = KPKLocalizedString(@"TRASH", @"Name for the trash group");
   [trash addToGroup:self.root];
   self.metaData.trashUuid = trash.uuid;
   return trash;

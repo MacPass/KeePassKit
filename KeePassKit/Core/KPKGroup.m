@@ -36,6 +36,7 @@
 
 #import "NSUUID+KPKAdditions.h"
 #import "KPKScopedSet.h"
+#import "KPKGlobalDefines.h"
 
 NSString *const KPKEntriesArrayBinding = @"entriesArray";
 NSString *const KPKGroupsArrayBinding = @"groupsArray";
@@ -191,7 +192,7 @@ static NSSet *_observedKeyPathsSet;
   KPKGroup *copy = [self _copyWithUUID:nil];
   
   if(nil == titleOrNil) {
-    NSString *format = NSLocalizedString(@"KPK_GROUP_COPY_%@", "");
+    NSString *format = KPKLocalizedString(@"KPK_GROUP_COPY_%@", "");
     titleOrNil = [[NSString alloc] initWithFormat:format, self.title];
   }
   copy.title = titleOrNil;

@@ -32,6 +32,7 @@
 #import "KPKAESKeyDerivation.h"
 
 #import "KPKScopedSet.h"
+#import "KPKGlobalDefines.h"
 
 #import "NSUUID+KPKAdditions.h"
 
@@ -84,7 +85,7 @@ if( self.updateTiming ) { \
     _protectUserName = NO;
     _generator = [@"MacPass" copy];
     _settingsChanged = [NSDate.date copy];
-    _databaseName = [NSLocalizedString(@"DATABASE", "") copy];
+    _databaseName = [KPKLocalizedString(@"DATABASE", "") copy];
     _databaseNameChanged = [NSDate.date copy];
     _databaseDescription = [@"" copy];
     _databaseDescriptionChanged = [NSDate.date copy];
@@ -254,7 +255,7 @@ if( self.updateTiming ) { \
 
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index {
   [[self.tree.undoManager prepareWithInvocationTarget:self] removeCustomIcon:icon];
-  [self.tree.undoManager setActionName:NSLocalizedString(@"ADD_CUSTOM_ICON", @"Action name for adding a customt icon.")];
+  [self.tree.undoManager setActionName:KPKLocalizedString(@"ADD_CUSTOM_ICON", @"Action name for adding a customt icon.")];
   index = MIN(_mutableCustomIcons.count, index);
   [self insertObject:icon inMutableCustomIconsAtIndex:index];
   /* trigger a change notification although to encourage reavaluation*/
@@ -270,7 +271,7 @@ if( self.updateTiming ) { \
   NSUInteger index = [_mutableCustomIcons indexOfObjectIdenticalTo:icon];
   if(index != NSNotFound) {
     [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
-    [self.tree.undoManager setActionName:NSLocalizedString(@"DELETE_CUSTOM_ICON", @"Action name for deleting a custom icon")];
+    [self.tree.undoManager setActionName:KPKLocalizedString(@"DELETE_CUSTOM_ICON", @"Action name for deleting a custom icon")];
     [self removeObjectFromMutableCustomIconsAtIndex:index];
     /* trigger a change notification although to encourage reavaluation*/
     [self.tree.root _traverseNodesWithBlock:^(KPKNode *node) {

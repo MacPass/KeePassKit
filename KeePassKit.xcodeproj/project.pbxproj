@@ -942,6 +942,10 @@
 		4CA0C0C71FBB052500CFFFBE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CA0C0C31FBB050B00CFFFBE /* Localizable.strings */; };
 		4CA0C0C81FBB052600CFFFBE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CA0C0C31FBB050B00CFFFBE /* Localizable.strings */; };
 		4CA0C0C91FBB052600CFFFBE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4CA0C0C31FBB050B00CFFFBE /* Localizable.strings */; };
+		4CA0C0D41FBB231200CFFFBE /* KPKGlobalDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA0C0D31FBB231200CFFFBE /* KPKGlobalDefines.h */; };
+		4CA0C0D51FBB231200CFFFBE /* KPKGlobalDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA0C0D31FBB231200CFFFBE /* KPKGlobalDefines.h */; };
+		4CA0C0D61FBB231200CFFFBE /* KPKGlobalDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA0C0D31FBB231200CFFFBE /* KPKGlobalDefines.h */; };
+		4CA0C0D71FBB231200CFFFBE /* KPKGlobalDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA0C0D31FBB231200CFFFBE /* KPKGlobalDefines.h */; };
 		4CA1E3441D87F5ED00100002 /* KPKArgon2KeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E3421D87F5ED00100002 /* KPKArgon2KeyDerivation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CA1E3451D87F5ED00100002 /* KPKArgon2KeyDerivation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E3431D87F5ED00100002 /* KPKArgon2KeyDerivation.m */; };
 		4CA1E4841D8832BA00100002 /* argon2.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E46C1D8832BA00100002 /* argon2.h */; };
@@ -1267,6 +1271,7 @@
 		4CA0C0D01FBB05EB00CFFFBE /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4CA0C0D11FBB05EB00CFFFBE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4CA0C0D21FBB05EB00CFFFBE /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4CA0C0D31FBB231200CFFFBE /* KPKGlobalDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKGlobalDefines.h; sourceTree = "<group>"; };
 		4CA1E3421D87F5ED00100002 /* KPKArgon2KeyDerivation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKArgon2KeyDerivation.h; sourceTree = "<group>"; };
 		4CA1E3431D87F5ED00100002 /* KPKArgon2KeyDerivation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKArgon2KeyDerivation.m; sourceTree = "<group>"; };
 		4CA1E46C1D8832BA00100002 /* argon2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = argon2.h; sourceTree = "<group>"; };
@@ -1568,8 +1573,8 @@
 		4C5CF31A1BE10B650019AA81 /* KeePassKit */ = {
 			isa = PBXGroup;
 			children = (
-				4C8836A91FB34F0A00CD2CD1 /* Token */,
 				4C5CF4841BE10E250019AA81 /* Utilites */,
+				4C8836A91FB34F0A00CD2CD1 /* Token */,
 				4C5CF4771BE10E200019AA81 /* Protocols */,
 				4C5CF3A51BE10DF80019AA81 /* Categories */,
 				4C0B9D871DBFB49600E66CD6 /* Streams */,
@@ -1794,6 +1799,7 @@
 				4CBE26321EC595D200B93BE2 /* KPKPair.m */,
 				4C8990F91EE981940043B48D /* KPKReferenceBuilder.h */,
 				4C8990FA1EE981940043B48D /* KPKReferenceBuilder.m */,
+				4CA0C0D31FBB231200CFFFBE /* KPKGlobalDefines.h */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -2036,6 +2042,7 @@
 				2D51250D1E9BCFA700D7EAF6 /* KPKKdbFormat.h in Headers */,
 				2D51250E1E9BCFA700D7EAF6 /* (null) in Headers */,
 				2D51250F1E9BCFA700D7EAF6 /* blamka-round-ref.h in Headers */,
+				4CA0C0D51FBB231200CFFFBE /* KPKGlobalDefines.h in Headers */,
 				2D5125111E9BCFA700D7EAF6 /* KPKEntry_Private.h in Headers */,
 				2D5125121E9BCFA700D7EAF6 /* NSData+KPKXor.h in Headers */,
 				2D5125131E9BCFA700D7EAF6 /* KPKNode_Private.h in Headers */,
@@ -2159,6 +2166,7 @@
 				2D5126191E9BD24500D7EAF6 /* KPKKdbFormat.h in Headers */,
 				2D51261A1E9BD24500D7EAF6 /* (null) in Headers */,
 				2D51261B1E9BD24500D7EAF6 /* blamka-round-ref.h in Headers */,
+				4CA0C0D61FBB231200CFFFBE /* KPKGlobalDefines.h in Headers */,
 				2D51261D1E9BD24500D7EAF6 /* KPKEntry_Private.h in Headers */,
 				2D51261E1E9BD24500D7EAF6 /* NSData+KPKXor.h in Headers */,
 				2D51261F1E9BD24500D7EAF6 /* KPKNode_Private.h in Headers */,
@@ -2282,6 +2290,7 @@
 				2D5127251E9BD34900D7EAF6 /* KPKKdbFormat.h in Headers */,
 				2D5127261E9BD34900D7EAF6 /* (null) in Headers */,
 				2D5127271E9BD34900D7EAF6 /* blamka-round-ref.h in Headers */,
+				4CA0C0D71FBB231200CFFFBE /* KPKGlobalDefines.h in Headers */,
 				2D5127291E9BD34900D7EAF6 /* KPKEntry_Private.h in Headers */,
 				2D51272A1E9BD34900D7EAF6 /* NSData+KPKXor.h in Headers */,
 				2D51272B1E9BD34900D7EAF6 /* KPKNode_Private.h in Headers */,
@@ -2406,6 +2415,7 @@
 				4C5CF41A1BE10E000019AA81 /* KPKNode_Private.h in Headers */,
 				4C5CF4931BE10E250019AA81 /* KPKXmlUtilities.h in Headers */,
 				4C5CF4241BE10E000019AA81 /* KPKWindowAssociation_Private.h in Headers */,
+				4CA0C0D41FBB231200CFFFBE /* KPKGlobalDefines.h in Headers */,
 				4C79310D1D0FF42E00A511E8 /* KPKBinary_Private.h in Headers */,
 				4C4FF1BA1BE119E60015827B /* NSString+DDXML.h in Headers */,
 				4C0B9D901DBFB49600E66CD6 /* KPKRandomStream.h in Headers */,
@@ -2558,7 +2568,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = KPK;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = "HicknHack Software GmbH";
 				TargetAttributes = {
 					4C5CF3171BE10B650019AA81 = {
@@ -3542,6 +3552,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -3599,6 +3610,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
