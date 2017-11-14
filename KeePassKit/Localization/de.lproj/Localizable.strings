@@ -1,4 +1,28 @@
-/* (No Comment) */
+/* Action name for adding a customt icon. */
+"ADD_CUSTOM_ICON" = "Icon hinzufügen";
+
+/* Error description */
+"Alignment Error" = "Speicherausrichtungsfehler";
+
+/* Error description */
+"Buffer Too Small" = "Puffer zu  klein";
+
+/* No comment provided by engineer. */
+"DATABASE" = "Datenbank";
+
+/* Action name for deleting a custom icon */
+"DELETE_CUSTOM_ICON" = "Icon entfernen";
+
+/* Error description */
+"Decode Error" = "Dekodierungsfehler";
+
+/* EMail */
+"EMAIL" = "E-Mail";
+
+/* No comment provided by engineer. */
+"ERROR_AES_DECRYPTION_FAILED" = "AES Entschlüsselung fehlgeschlagen";
+
+/* No comment provided by engineer. */
 "ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED" = "Bezeichnung wird bereits verwendet!";
 
 /* (No Comment) */
@@ -7,8 +31,14 @@
 /* (No Comment) */
 "ERROR_CORRUPT_TREE" = "Interne Datenstruktur defekt!";
 
-/* (No Comment) */
-"ERROR_GROUP_ELEMENT_MISSING" = "Datenbank-XML enthält keine Group-Elemente";
+/* No comment provided by engineer. */
+"ERROR_DECRYPTION_FAILED" = "Entschlüsseln fehlgeschlagen";
+
+/* No comment provided by engineer. */
+"ERROR_ENCRYPTION_FAILED" = "Verschlüsseln fehlgeschlafen";
+
+/* No comment provided by engineer. */
+"ERROR_GROUP_ELEMENT_MISSING" = "Datenbank-XML enthält kein Group-Element";
 
 /* (No Comment) */
 "ERROR_HEADER_CORRUPTED" = "Header-Daten sind beschädigt";
@@ -16,57 +46,177 @@
 /* (No Comment) */
 "ERROR_HEADER_HASH_MISSMATCH" = "Fehlerhafte Datei: Header-Hash stimmt nicht mit Daten überein.";
 
-/* (No Comment) */
-"ERROR_HEADER_HASH_VERIFICATION_FAILED" = "The database header hash is wrong. Data integritiy might be broken!";
+/* No comment provided by engineer. */
+"ERROR_HEADER_HASH_VERIFICATION_FAILED" = "Datenbank-Hash falsch. Datenintegrität ist möglicherweise verletzt!";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_INTEGRITY_CHECK_FAILED" = "Die Integrität der Datei konnte nicht sichergestellt werden";
 
-/* (No Comment) */
-"ERROR_INVALID_FIELD_SIZE" = "Datenfeld mit falsche Größe. Password falsch?";
+/* No comment provided by engineer. */
+"ERROR_INVALID_FIELD_SIZE" = "Datenfeld mit falscher Größe. Password falsch?";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_INVALID_FIELD_TYPE" = "Unbekanntes Datenfeld. Password falsch?";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERROR_INVALID_HEADER_FIELD_SIZE" = "Falsche Größe eines Header-Feldes";
+
+/* No comment provided by engineer. */
+"ERROR_INVALID_HEADER_FIELD_TYPE" = "Falscher Typ eines Header-Feldes";
+
+/* No comment provided by engineer. */
+"ERROR_INVALID_HEADER_IV_SIZE" = "Falsche Größe des Initalisierungs-Vektor im Header";
+
+/* No comment provided by engineer. */
+"ERROR_KDB_CORRUPT_TREE" = "Defekter KDB-Baum";
+
+/* No comment provided by engineer. */
+"ERROR_KDB_FILE_HEADER_TRUNCATED" = "KDB-Header unvollständig";
+
+/* No comment provided by engineer. */
 "ERROR_KEEPASSFILE_ELEMENT_MISSING" = "Datenbank-XML enthält keine KeePassFile-Elemente";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERROR_META_ELEMENT_MISSING" = "Datenbank-XML enthält kein Meta-Element";
+
+/* No comment provided by engineer. */
+"ERROR_NO_DATA" = "Keine Daten";
+
+/* No comment provided by engineer. */
 "ERROR_PASSWORD_OR_KEYFILE_WRONG" = "Falsche Password und/oder die Schlüsseldatei";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_ROOT_ELEMENT_MISSING" = "Datenbank-XML enthält kein Root-Elementen";
 
-/* (No Comment) */
+/* Error message for unknown error code */
+"ERROR_UNKNOWN_ERROR_CODE" = "Ein unbekannter Fehler ist aufgetreten";
+
+/* No comment provided by engineer. */
 "ERROR_UNKNOWN_FILE_FORMAT" = "Unbekanntes Dateiformat";
 
 /* (No Comment) */
-"ERROR_UNSUPPORTED_CHIPHER" = "Verschlüsslungsalgorithmus wird nicht unterstützt";
+"ERROR_UNSUPPORTED_CHIPHER" = "Verschlüsselungsalgorithmus wird nicht unterstützt";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERROR_UNSUPPORTED_CIPHER" = "Verschlüsselungsalgorithmus wird nicht unterstützt";
+
+/* No comment provided by engineer. */
 "ERROR_UNSUPPORTED_DATABASER_VERSION" = "Datenbankformat wird nicht unterstützt";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_UNSUPPORTED_KDBX_COMPRESSION_ALGORITHM" = "Kompressionsalgorithmus wird nicht unterstützt";
 
-/* (No Comment) */
-"ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM" = "Format des Zufallsdatemstrom wird nicht unterstützt";
+/* No comment provided by engineer. */
+"ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM" = "Format des Zufallsdatenstroms wird nicht unterstützt";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERROR_UNSUPPORTED_KEYDERIVATION" = "Schlüsselherleitungsalgorithmus wird nicht unterstützt";
+
+/* No comment provided by engineer. */
 "ERROR_WINDOW_TITLE_VALIDATION_FAILED" = "Format des Fenstertitles ist fehlerhaft!";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_DATA_PARSING_ERROR" = "Daten des Schlüssels nicht lesbar";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION" = "Schlussel-XML-Datei Version wird nicht unterstützt";
+
+/* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT" = "Schlüssel-XML-Datei enhält kein Data-Element";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT" = "Schlüssel-XML-Datei enhält kein Key-Element";
 
-/* (No Comment) */
+/* No comment provided by engineer. */
+"ERRROR_XML_STRUCUTRE_MALFORMED" = "Datenbank-XML Struktur ist fehlerhaft";
+
+/* Error reason */
+"Failed to allocate memory" = "Konnte keinen Speicher belegen";
+
+/* Error reason */
+"Function not implemented for the current algorithm" = "Funktion ist im aktuellen Algorithmus nicht implementiert";
+
+/* General */
+"GENERAL" = "Allgemein";
+
+/* Homebanking */
+"HOMEBANKING" = "Homebanking";
+
+/* Internet */
+"INTERNET" = "Internet";
+
+/* Error reason */
+"Illegal parameter supplied to encryption/decryption algorithm" = "Falscher Parameter wurde für Ver-/Entschlüsselung übergeben";
+
+/* Error reason */
+"Input data did not decode or decrypt correctly" = "Eingangsdaten konnten nicht Dekodiert oder korrekt entschlüsselt werden";
+
+/* Error reason */
+"Input size to encryption algorithm was not aligned correctly" = "Eingabegröße für Verschlüsselung ist nicht korrekt auf Algorithmus ausgerichtet";
+
+/* Error reason */
+"Insufficient buffer provided for specified operation" = "Zu kleiner Puffer für Operation zur Verfügung";
+
+/* Title format for a copie of an entry. Contains a %@ placeholder */
 "KPK_ENTRY_COPY_%@" = "Kopie von %@";
 
-/* (No Comment) */
+/* Title format for a copie of a group. Contains a %@ placeholder */
 "KPK_GROUP_COPY_%@" = "Kopie von %@";
+
+/* Error description */
+"Memory Failure" = "Speicherfehler";
+
+/* Network */
+"NETWORK" = "Netzwerk";
+
+/* Action name for setting a custom string value protected */
+"PROTECT_%@" = "%@ schützen";
+
+/* Error description */
+"Parameter Error" = "Parameterfehler";
+
+/* Action name for setting the background color of an enty */
+"SET_BACKGROUND_COLOR" = "Hintergrundfarbe festlegen";
+
+/* Action name for setting value of a custom attribute. Contains %@ placeholder */
+"SET_CUSTOM_ATTTRIBUTE_%@" = "Benutzerdefinierten Werte festlegen";
+
+/* Action name for setting the foreground color of an enty */
+"SET_FOREGROUND_COLOR" = "Vordergrundfarbe festlegen";
+
+/* Action name for setting the notes of an enty */
+"SET_NOTES" = "Notizen festlegen";
+
+/* Action name for setting the password of an enty */
+"SET_PASSWORD" = "Password festlegen";
+
+/* Action name for setting the tags of an enty */
+"SET_TAGS" = "Tags festlegen";
+
+/* Action name for setting the title of an enty */
+"SET_TITLE" = "Titel festlegen";
+
+/* Action name for setting the url of an enty */
+"SET_URL" = "URL festlegen";
+
+/* Action name for setting the username of an enty */
+"SET_USERNAME" = "Benutzername festlegen";
+
+/* Error description */
+"Success" = "Erfolgreich";
+
+/* Name for the trash group */
+"TRASH" = "Mülleimer";
+
+/* Action name for setting a custom string value non-protected */
+"UNPROTECT_%@" = "%@ nicht schützen";
+
+/* Error description */
+"Unimplemented Function" = "Funktion nicht implementiert";
+
+/* Error description */
+"Unknown Error" = "Unbekannter Fehler";
+
+/* Windows */
+"WINDOWS" = "Windows";
 
