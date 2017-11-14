@@ -1,5 +1,5 @@
 /* Action name for adding a customt icon. */
-"ADD_CUSTOM_ICON" = "Add custom icon";
+"ADD_CUSTOM_ICON" = "Add Custom Icon";
 
 /* Error description */
 "Alignment Error" = "Alignment Error";
@@ -11,7 +11,7 @@
 "DATABASE" = "Database";
 
 /* Action name for deleting a custom icon */
-"DELETE_CUSTOM_ICON" = "Delete custom icon";
+"DELETE_CUSTOM_ICON" = "Delete Custom Icon";
 
 /* Error description */
 "Decode Error" = "Decode Error";
@@ -179,25 +179,25 @@
 "Parameter Error" = "Parameter Error";
 
 /* Action name for setting the background color of an enty */
-"SET_BACKGROUND_COLOR" = "Set background color";
+"SET_BACKGROUND_COLOR" = "Set Background Color";
 
 /* Action name for setting value of a custom attribute. Contains %@ placeholder */
-"SET_CUSTOM_ATTTRIBUTE_%@" = "Set custom attribute %@";
+"SET_CUSTOM_ATTTRIBUTE_%@" = "Set Custom Attribute %@";
 
 /* Action name for setting the foreground color of an enty */
-"SET_FOREGROUND_COLOR" = "Set foreground color";
+"SET_FOREGROUND_COLOR" = "Set Foreground Color";
 
 /* Action name for setting the notes of an enty */
-"SET_NOTES" = "Set notes";
+"SET_NOTES" = "Set Notes";
 
 /* Action name for setting the password of an enty */
-"SET_PASSWORD" = "Set password";
+"SET_PASSWORD" = "Set Password";
 
 /* Action name for setting the tags of an enty */
-"SET_TAGS" = "Set tags";
+"SET_TAGS" = "Set Tags";
 
 /* Action name for setting the title of an enty */
-"SET_TITLE" = "Set title";
+"SET_TITLE" = "Set Title";
 
 /* Action name for setting the url of an enty */
 "SET_URL" = "Set URL";
