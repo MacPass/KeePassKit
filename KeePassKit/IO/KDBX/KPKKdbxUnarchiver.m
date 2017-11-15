@@ -363,6 +363,7 @@
           KPKCreateError(error, KPKErrorKdbxCorrutpedPublicCustomData);
           return NO;
         }
+        break;
       default:
         KPKCreateError(error,KPKErrorKdbxInvalidHeaderFieldType);
         return NO;
