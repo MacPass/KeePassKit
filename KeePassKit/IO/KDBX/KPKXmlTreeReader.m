@@ -217,6 +217,11 @@
   data.historyMaxItems = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxItems);
   data.historyMaxSize = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxSize);
   
+  /* Settings changed might not be supported */
+  if([metaElement elementsForName:kKPKXmlSettingsChanged]) {
+    data.settingsChanged = KPKXmlDate(metaElement, kKPKXmlSettingsChanged, self.useRelativeDates);
+  }
+  
   /* pares uuids only if string is valid */
   NSString *uuidString = KPKXmlString(metaElement, kKPKXmlRecycleBinUUID);
   if(uuidString) {

@@ -69,6 +69,7 @@ if( self.updateTiming ) { \
 - (instancetype)init {
   self = [super init];
   if(self){
+    NSDate *now = [NSDate date];
     _mutableCustomData = [[NSMutableDictionary alloc] init];
     _mutableCustomPublicData = [[NSMutableDictionary alloc] init];
     _mutableCustomIcons = [[NSMutableArray alloc] init];
@@ -83,16 +84,16 @@ if( self.updateTiming ) { \
     _protectUrl = NO;
     _protectUserName = NO;
     _generator = [@"MacPass" copy];
-    _settingsChanged = [NSDate.date copy];
     _databaseName = [NSLocalizedStringFromTableInBundle(@"DATABASE", nil, [NSBundle bundleForClass:[self class]], "") copy];
-    _databaseNameChanged = [NSDate.date copy];
+    _databaseNameChanged = [now copy];
     _databaseDescription = [@"" copy];
-    _databaseDescriptionChanged = [NSDate.date copy];
+    _databaseDescriptionChanged = [now copy];
     _defaultUserName = [@"" copy];
-    _defaultUserNameChanged = [NSDate.date copy];
-    _entryTemplatesGroupChanged = [NSDate.date copy];
+    _defaultUserNameChanged = [now copy];
+    _entryTemplatesGroupChanged = [now copy];
     _entryTemplatesGroupUuid = [NSUUID.kpk_nullUUID copy];
-    _trashChanged = [NSDate.date copy];
+    _trashChanged = [now copy];
+    _settingsChanged = [now copy];
     _trashUuid = [NSUUID.kpk_nullUUID copy];
     _useTrash = NO;
     _lastSelectedGroup = [NSUUID.kpk_nullUUID copy];

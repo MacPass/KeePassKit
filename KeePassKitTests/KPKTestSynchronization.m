@@ -35,6 +35,18 @@
   [super setUp];
   self.treeA = [[KPKTree alloc] init];
   
+  self.treeA.metaData.mutableCustomData[@"CustomDataKeyA"] = @"CustomDataValueA";
+  self.treeA.metaData.mutableCustomData[@"CustomDataKeyB"] = @"CustomDataValueB";
+
+  uint8_t bytes[] = {0x00, 0x01, 0x02, 0x03};
+  self.treeA.metaData.mutableCustomPublicData[@"UInt32"] = [KPKNumber numberWithUnsignedInteger32:32];
+  self.treeA.metaData.mutableCustomPublicData[@"UInt64"] = [KPKNumber numberWithUnsignedInteger64:64];
+  self.treeA.metaData.mutableCustomPublicData[@"Int32"] = [KPKNumber numberWithInteger32:-32];
+  self.treeA.metaData.mutableCustomPublicData[@"Int64"] = [KPKNumber numberWithInteger64:-64];
+  self.treeA.metaData.mutableCustomPublicData[@"Data"] = [NSData dataWithBytes:bytes length:4];
+  self.treeA.metaData.mutableCustomPublicData[@"String"] = @"String";
+  
+  
   self.treeA.root = [[KPKGroup alloc] init];
   KPKGroup *group = [[KPKGroup alloc] init];
   [group setCustomData:@"CustomGroupDataA" forKey:@"GroupKeyA"];
@@ -391,8 +403,34 @@
   XCTAssertEqualObjects(self.treeA.metaData.trashChanged, self.treeB.metaData.trashChanged );
 }
 
-- (void)testRemovedPublicCustomData {
+- (void)testAddedCustomData {
+  self.treeB.metaData.mutableCustomData[@"NewKey"] = @"NewData";  
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  KPKMetaData *metaDataA = self.treeA.metaData;
+  XCTAssertEqual(3, metaDataA.mutableCustomData.count);
+  XCTAssertEqualObjects(@"CustomDataValueA", metaDataA.mutableCustomData[@"CustomDataKeyA"]);
+  XCTAssertEqualObjects(@"CustomDataValueB", metaDataA.mutableCustomData[@"CustomDataKeyB"]);
+  XCTAssertEqualObjects(@"NewData", metaDataA.mutableCustomData[@"NewKey"]);
+}
+
+- (void)testRemovedCustomData {
+  self.treeB.metaData.mutableCustomData[@"CustomDataKeyA"] = nil;
+  XCTAssertEqual(1, self.treeB.metaData.mutableCustomData.count);
   
+  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  
+  KPKMetaData *metaDataA = self.treeA.metaData;
+  XCTAssertEqual(2, metaDataA.mutableCustomData.count);
+  XCTAssertEqualObjects(@"CustomDataValueA", metaDataA.mutableCustomData[@"CustomDataKeyA"]);
+  XCTAssertEqualObjects(@"CustomDataValueB", metaDataA.mutableCustomData[@"CustomDataKeyB"]);
+}
+
+- (void)testChangedCustomData {
+  
+}
+
+
+- (void)testRemovedPublicCustomData {
   
 }
 
@@ -404,7 +442,7 @@
   
 }
 
-- (void)testRemovedCustomData {
+- (void)testRemovedCustomNodeData {
   KPKGroup *groupB = [self.treeB.root groupForUUID:self.groupUUID];
   KPKEntry *entryB = [self.treeB.root entryForUUID:self.entryUUID];
   
@@ -430,7 +468,7 @@
   XCTAssertEqual(entryB.mutableCustomData.count, 0);
 }
 
-- (void)testAddedCustomData {
+- (void)testAddedCustomNodeData {
   KPKGroup *groupB = [self.treeB.root groupForUUID:self.groupUUID];
   KPKEntry *entryB = [self.treeB.root entryForUUID:self.entryUUID];
   
@@ -460,7 +498,7 @@
   XCTAssertEqualObjects(groupB.mutableCustomData[@"GroupKeyA"], @"CustomGroupDataA");
 }
 
-- (void)testChangedCustomData {
+- (void)testChangedCustomNodeData {
   KPKEntry *entryB = [self.treeB.root entryForUUID:self.entryUUID];
   KPKGroup *groupB = [self.treeB.root groupForUUID:self.groupUUID];
   
