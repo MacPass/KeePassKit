@@ -43,8 +43,8 @@
   entry.username = @"Username";
   entry.password = @"Password";
   entry.tags = @[@"TagA", @"TagB", @"TagC"];
-  entry.foregroundColor = NSColor.redColor;
-  entry.backgroundColor = NSColor.greenColor;
+  entry.foregroundColor = NSUIColor.redColor;
+  entry.backgroundColor = NSUIColor.greenColor;
   
   uint8_t bytes[] = { 0xFF, 0x00, 0xFF, 0x00, 0xFF };
   NSData *data = [[NSData alloc] initWithBytes:bytes length:5];
