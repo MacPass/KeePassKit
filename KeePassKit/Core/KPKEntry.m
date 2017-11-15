@@ -926,6 +926,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     size += entry.estimatedByteSize;
   }
   
+  for(NSString *key in self.mutableCustomData) {
+    size += (key.length + self.mutableCustomData[key].length);
+  }
+  
   /* Color? */
   return size;
 }
