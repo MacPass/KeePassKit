@@ -6,6 +6,21 @@
   Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 */
 
+"SET_TITLE" = "Editar Título";
+"SET_USERNAME" = "Editar Nombre de Usuario";
+"SET_PASSWORD" = "Editar Contraseña";
+"SET_URL" = "Editar URL";
+"SET_NOTES" = "Editar Notas";
+
+"DATABASE" = "Base de Datos";
+"EMAIL" = "EMail";
+"GENERAL" = "General";
+"HOMEBANKING" = "Bancos";
+"INTERNET" = "Internet";
+"NETWORK" = "Red";
+"TRASH" = "Papelera";
+"WINDOWS" = "Windows";
+
 /* Copy */
 "KPK_GROUP_COPY_%@" = "Copia %@";
 "KPK_ENTRY_COPY_%@" = "Copia %@";

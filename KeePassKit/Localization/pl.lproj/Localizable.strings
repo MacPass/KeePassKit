@@ -1,3 +1,9 @@
+/* Default name database */
+"DATABASE" = "Baza danych";
+
+/* (No Comment) */
+"EMAIL" = "E-mail";
+
 /* (No Comment) */
 "ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED" = "Atrybut klucza nie jest unikatowy!";
 
@@ -65,8 +71,40 @@
 "ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT" = "XML pliku z kluczem nie zawiera elementu klucza";
 
 /* (No Comment) */
+"GENERAL" = "Ogólne";
+
+/* (No Comment) */
+"HOMEBANKING" = "Homebanking";
+
+/* (No Comment) */
+"INTERNET" = "Internet";
+
+/* (No Comment) */
 "KPK_ENTRY_COPY_%@" = "%@ kopiuj";
 
 /* (No Comment) */
 "KPK_GROUP_COPY_%@" = "%@ kopiuj";
 
+/* (No Comment) */
+"NETWORK" = "Sieć";
+
+/* (No Comment) */
+"SET_NOTES" = "Edit Notes";
+
+/* (No Comment) */
+"SET_PASSWORD" = "Edit Password";
+
+/* (No Comment) */
+"SET_TITLE" = "Edit Title";
+
+/* (No Comment) */
+"SET_URL" = "Edit URL";
+
+/* (No Comment) */
+"SET_USERNAME" = "Edit Username";
+
+/* (No Comment) */
+"TRASH" = "Kosz";
+
+/* (No Comment) */
+"WINDOWS" = "Windows";

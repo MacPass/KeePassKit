@@ -6,9 +6,24 @@
   Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 */
 
+"SET_TITLE" = "Wijzig Titel";
+"SET_USERNAME" = "Wijzig Gebruikersnaam";
+"SET_PASSWORD" = "Wijzig Wachtwoord";
+"SET_URL" = "Wijzig URL";
+"SET_NOTES" = "Wijzig Notities";
+
+"DATABASE" = "Database";
+"EMAIL" = "E-Mail";
+"INTERNET" = "Internet";
+"GENERAL" = "Algemeen";
+"HOMEBANKING" = "Thuisbankieren";
+"NETWORK" = "Netwerk";
+"TRASH" = "Prullenmand";
+"WINDOWS" = "Windows";
+
 /* Copy */
-"KPK_GROUP_COPY_%@" = "%@ copy";
-"KPK_ENTRY_COPY_%@" = "%@ copy";
+"KPK_GROUP_COPY_%@" = "%@ Kopieer";
+"KPK_ENTRY_COPY_%@" = "%@ Kopieer";
 
 /* Validation Errors */
 "ERROR_WINDOW_TITLE_VALIDATION_FAILED" = "Het Formaat van de Venster Titel is ongeldig!";

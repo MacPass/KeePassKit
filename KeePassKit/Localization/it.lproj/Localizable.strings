@@ -6,9 +6,24 @@
   Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 */
 
+"SET_TITLE" = "Modifica Titolo";
+"SET_USERNAME" = "Modifica Nome Utente";
+"SET_PASSWORD" = "Modifica Password";
+"SET_URL" = "Modifica URL";
+"SET_NOTES" = "Modifica Note";
+
+"DATABASE" = "Database";
+"EMAIL" = "EMail";
+"GENERAL" = "Generale";
+"HOMEBANKING" = "Homebanking";
+"INTERNET" = "Internet";
+"NETWORK" = "Rete";
+"TRASH" = "Cestino";
+"WINDOWS" = "Windows";
+
 /* Copy */
-"KPK_GROUP_COPY_%@" = "%@ copy";
-"KPK_ENTRY_COPY_%@" = "%@ copy";
+"KPK_GROUP_COPY_%@" = "%@ Copia";
+"KPK_ENTRY_COPY_%@" = "%@ Copia";
 
 /* Validation Errors */
 "ERROR_WINDOW_TITLE_VALIDATION_FAILED" = "Il Formato del Titolo della Finestra non é Valido!";

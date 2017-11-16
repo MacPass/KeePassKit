@@ -84,7 +84,7 @@ if( self.updateTiming ) { \
     _protectUrl = NO;
     _protectUserName = NO;
     _generator = [@"MacPass" copy];
-    _databaseName = [NSLocalizedStringFromTableInBundle(@"DATABASE", nil, [NSBundle bundleForClass:[self class]], "") copy];
+    _databaseName = [NSLocalizedStringFromTableInBundle(@"DATABASE", nil, [NSBundle bundleForClass:[self class]], "Default title for KDBX databases") copy];
     _databaseNameChanged = [now copy];
     _databaseDescription = [@"" copy];
     _databaseDescriptionChanged = [now copy];

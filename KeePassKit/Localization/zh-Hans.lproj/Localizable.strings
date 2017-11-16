@@ -6,6 +6,21 @@
   Copyright (c) 2013 HicknHack Software GmbH. All rights reserved.
 */
 
+"SET_TITLE" = "编辑标题";
+"SET_USERNAME" = "编辑用户名";
+"SET_PASSWORD" = "编辑密码";
+"SET_URL" = "编辑 URL";
+"SET_NOTES" = "编辑注释";
+
+"DATABASE" = "数据库";
+"GENERAL" = "通用";
+"EMAIL" = "电子邮件";
+"HOMEBANKING" = "家庭银行";
+"INTERNET" = "互联网";
+"NETWORK" = "网络";
+"TRASH" = "废纸篓";
+"WINDOWS" = "Windows";
+
 /* Copy */
 "KPK_GROUP_COPY_%@" = "%@ 拷贝";
 "KPK_ENTRY_COPY_%@" = "%@ 拷贝";

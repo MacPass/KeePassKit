@@ -206,7 +206,7 @@
 "Success" = "Erfolgreich";
 
 /* Name for the trash group */
-"TRASH" = "Mülleimer";
+"TRASH" = "Papierkorb";
 
 /* Action name for setting a custom string value non-protected */
 "UNPROTECT_%@" = "%@ nicht schützen";
