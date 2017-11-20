@@ -232,6 +232,21 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
   }];
 }
 
+- (void)testPlaceholderWarmupPerformance {
+  KPKEntry *placeholderEntry = entries.firstObject;
+  [self measureBlock:^{
+    XCTAssertNotNil(placeholderEntry.mutableAttributes.firstObject.evaluatedValue);
+  }];
+}
+
+- (void)testSinglePlaceholderEvaluationPerformace {
+  KPKEntry *placeholderEntry = entries.firstObject;
+  [self measureBlock:^{
+    XCTAssertNotNil(placeholderEntry.mutableAttributes.firstObject.evaluatedValue);
+  }];
+}
+
+
 
 
 @end

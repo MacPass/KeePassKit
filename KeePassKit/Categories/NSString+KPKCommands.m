@@ -23,6 +23,7 @@
 #import "NSString+KPKCommands.h"
 #import "KPKNode_Private.h"
 #import "KPKEntry.h"
+#import "KPKEntry_Private.h"
 #import "KPKAttribute.h"
 #import "KPKTree.h"
 #import "KPKGroup.h"
@@ -372,10 +373,10 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     return self;
   }
   
-  static NSString *referencePattern = nil;
   static dispatch_once_t onceToken;
+  static NSRegularExpression *referenceRegExp;
   dispatch_once(&onceToken, ^{
-    referencePattern = [NSString stringWithFormat:@"\\{%@(%@|%@|%@|%@|%@|%@){1}@(%@|%@|%@|%@|%@|%@|%@){1}:([^\\}]*)\\}",
+    NSString *referencePattern = [NSString stringWithFormat:@"\\{%@(%@|%@|%@|%@|%@|%@){1}@(%@|%@|%@|%@|%@|%@|%@){1}:([^\\}]*)\\}",
                         kKPKReferencePrefix,
                         kKPKReferenceTitleKey,
                         kKPKReferenceUsernameKey,
@@ -391,14 +392,16 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                         kKPKReferenceUUIDKey,
                         kKPKReferenceCustomFieldKey
                         ];
+    referenceRegExp = [NSRegularExpression regularExpressionWithPattern:referencePattern
+                                                                options:NSRegularExpressionCaseInsensitive
+                                                                  error:NULL];
   });
-  
-  NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:referencePattern
-                                                                          options:NSRegularExpressionCaseInsensitive
-                                                                            error:NULL];
-  NSMutableString *mutableSelf = [self mutableCopy];
   BOOL didReplace = NO;
-  NSArray <NSTextCheckingResult *> *results = [regexp matchesInString:self options:0 range:NSMakeRange(0, self.length)];
+  NSArray <NSTextCheckingResult *> *results = [referenceRegExp matchesInString:self options:0 range:NSMakeRange(0, self.length)];
+  NSMutableString *mutableSelf;
+  if(results.count > 0) {
+    mutableSelf = [self mutableCopy];
+  }
   for(NSTextCheckingResult *result in results.reverseObjectEnumerator) {
     NSString *valueField = [self substringWithRange:[result rangeAtIndex:1]];
     NSString *searchField = [self substringWithRange:[result rangeAtIndex:2]];
@@ -444,7 +447,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   NSArray *allEntries = tree.allEntries;
   if([searchKey isEqualToString:kKPKReferenceCustomFieldKey]) {
     for(KPKEntry *entry in allEntries) {
-      for(KPKAttribute *attribute in entry.customAttributes) {
+      for(KPKAttribute *attribute in entry.mutableAttributes) {
         NSString *finalValue = [attribute.value _kpk_finalValueForEntry:entry recursion:recursion + 1];
         NSRange matchRange = [finalValue rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, finalValue.length) locale:[NSLocale currentLocale ]];
         if(matchRange.length > 0) {
@@ -476,7 +479,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     }
     for(KPKEntry *entry in allEntries) {
       NSString *value = [[entry valueForAttributeWithKey:searchAttributeKey] _kpk_finalValueForEntry:entry recursion:recursion + 1];
-      NSRange matchRange = [value rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, value.length) locale:[NSLocale currentLocale ]];
+      NSRange matchRange = [value rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, value.length)];
       if(matchRange.length > 0) {
         /* First hit wins */
         matchingEntry = entry;
