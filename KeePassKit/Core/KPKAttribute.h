@@ -30,8 +30,8 @@
 @property (nonatomic, copy) NSString *value;
 @property (nonatomic) BOOL isProtected;
 @property (nonatomic, readonly, getter=isEditable) BOOL editable;
-@property (nonatomic, readonly) NSString *referencedValue;
-@property (nonatomic, readonly) NSString *placeholderValue;
+//@property (nonatomic, readonly) NSString *referencedValue;
+//@property (nonatomic, readonly) NSString *placeholderValue;
 /**
  *  @return Value evaluated with references and replaced placeholders
  */

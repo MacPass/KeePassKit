@@ -196,16 +196,6 @@
   return self.entry.isEditable;
 }
 
-- (NSString *)referencedValue {
-  //KPKGroup *rootGroup = [self.entry rootGroup];
-  // Determin what type to look for
-  return nil;
-}
-
-- (NSString *)placeholderValue {
-  return nil;
-}
-
 - (void)_encodeValue:(NSString *)string {
   if(!self.data) {
     self.data = [[KPKData alloc] init];
