@@ -109,5 +109,15 @@
   [self.entry2 addCustomAttribute:attribute2];
 }
 
+- (void)testMultipleReferences {
+  self.entry1.username = [NSString stringWithFormat:@"Username:{REF:U@I:%@} Password:{REF:P@I:%@}", self.entry2.uuid.UUIDString, self.entry2.uuid.UUIDString];
+  self.entry1.password = @"Password1";
+  self.entry2.username = @"Username2";
+  self.entry2.password = @"Password2";
+  NSString *actual = [self.entry1.username kpk_finalValueForEntry:self.entry1];
+  NSString *expected = [NSString stringWithFormat:@"Username:%@ Password:%@", self.entry2.username, self.entry2.password];
+  XCTAssertEqualObjects(actual,expected, @"Multiple references inside a string get resolved correctly");
+}
+
 
 @end

@@ -332,8 +332,9 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   BOOL foundPlaceholder = NO;
   @autoreleasepool {
     NSString *value = self;
-    value = [value _kpk_resolveReferencesWithTree:entry.tree recursionLevel:recursion didChange:&foundReference];
+    /* TODO references are resolved completely, there is no need to rerun the evaulation if a reference was found */
     value = [value _kpk_evaluatePlaceholderWithEntry:entry recursionLevel:recursion didChange:&foundPlaceholder];
+    value = [value _kpk_resolveReferencesWithTree:entry.tree recursionLevel:recursion didChange:&foundReference];
     if(foundPlaceholder || foundReference ) {
       return [value _kpk_finalValueForEntry:entry recursion:recursion+1];
     }
@@ -395,9 +396,10 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   NSRegularExpression *regexp = [NSRegularExpression regularExpressionWithPattern:referencePattern
                                                                           options:NSRegularExpressionCaseInsensitive
                                                                             error:NULL];
-  __block NSMutableString *mutableSelf = [self mutableCopy];
-  __block BOOL didReplace = NO;
-  [regexp enumerateMatchesInString:self options:0 range:NSMakeRange(0, self.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+  NSMutableString *mutableSelf = [self mutableCopy];
+  BOOL didReplace = NO;
+  NSArray <NSTextCheckingResult *> *results = [regexp matchesInString:self options:0 range:NSMakeRange(0, self.length)];
+  for(NSTextCheckingResult *result in results.reverseObjectEnumerator) {
     NSString *valueField = [self substringWithRange:[result rangeAtIndex:1]];
     NSString *searchField = [self substringWithRange:[result rangeAtIndex:2]];
     NSString *criteria = [self substringWithRange:[result rangeAtIndex:3]];
@@ -410,7 +412,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
       [mutableSelf replaceCharactersInRange:result.range withString:substitute];
       didReplace = YES;
     }
-  }];
+  };
   
   if(NULL != didChange) {
     *didChange = didReplace;
