@@ -544,14 +544,17 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     }
     
   }
-  /* mis mappings */
-  //mappings[@"{APPDIR}"] = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]];
+  /* misc mappings */
   caseInsensitiveMappings[kKPKPlaceholderGroup] = entry.parent.title ? entry.parent.title : @"";
   caseInsensitiveMappings[kKPKPlaceholderGroupPath] = entry.parent ? entry.parent.breadcrumb : @"";
   caseInsensitiveMappings[kKPKPlaceholderGroupNotes] = entry.parent ? entry.parent.notes : @"";
   
   caseInsensitiveMappings[@"{ENV_DIRSEP}"] = @"/";
-  NSURL *appDirURL = [[NSFileManager defaultManager] URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask][0];
+  static NSURL *appDirURL;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    appDirURL = [NSFileManager.defaultManager URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask].firstObject;
+  });
   caseInsensitiveMappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  appDirURL.path : @"";
   
   id<KPKTreeDelegate> treeDelegate = entry.tree.delegate;
