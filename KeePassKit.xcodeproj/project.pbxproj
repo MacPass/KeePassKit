@@ -960,6 +960,9 @@
 		4CA1E49C1D8838BC00100002 /* KPKTestArgon2.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */; };
 		4CA6DB8E1DC3574200650417 /* KPKChaCha20RandomStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA6DB8C1DC3574200650417 /* KPKChaCha20RandomStream.h */; };
 		4CA6DB8F1DC3574200650417 /* KPKChaCha20RandomStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA6DB8D1DC3574200650417 /* KPKChaCha20RandomStream.m */; };
+		4CB13A0E1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
+		4CB13A0F1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
+		4CB13A101FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
 		4CBE26331EC595D200B93BE2 /* KPKPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBE26311EC595D200B93BE2 /* KPKPair.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CBE26341EC595D200B93BE2 /* KPKPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE26321EC595D200B93BE2 /* KPKPair.m */; };
 		4CBEFF3A1F99E59E007362E4 /* KPKKdbTreeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */; };
@@ -1288,6 +1291,7 @@
 		4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestArgon2.m; sourceTree = "<group>"; };
 		4CA6DB8C1DC3574200650417 /* KPKChaCha20RandomStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKChaCha20RandomStream.h; sourceTree = "<group>"; };
 		4CA6DB8D1DC3574200650417 /* KPKChaCha20RandomStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKChaCha20RandomStream.m; sourceTree = "<group>"; };
+		4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Broken_BinaryAttachments_test.kdbx; sourceTree = "<group>"; };
 		4CBE26311EC595D200B93BE2 /* KPKPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKPair.h; sourceTree = "<group>"; };
 		4CBE26321EC595D200B93BE2 /* KPKPair.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKPair.m; sourceTree = "<group>"; };
 		4CBEFF381F99E468007362E4 /* KPKTestEntryAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestEntryAttributes.m; sourceTree = "<group>"; };
@@ -1418,6 +1422,7 @@
 		4C0BF14F1DC1199900193AD1 /* Kdbx4 */ = {
 			isa = PBXGroup;
 			children = (
+				4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */,
 				4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */,
 				4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */,
 				4CD89C1F1F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx */,
@@ -2619,6 +2624,7 @@
 				2D5125571E9BD06700D7EAF6 /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
 				2D5125591E9BD06700D7EAF6 /* KDB1_KeePassX_test.kdb in Resources */,
 				2D51255B1E9BD06700D7EAF6 /* Test_Password_1234.kdb in Resources */,
+				4CB13A0F1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				2D51255C1E9BD06700D7EAF6 /* Test_Password_1234.kdbx in Resources */,
 				2D51255D1E9BD06700D7EAF6 /* Autotype_test.kdbx in Resources */,
 				2D51255E1E9BD06700D7EAF6 /* KeePass1_native_test.kdb in Resources */,
@@ -2653,6 +2659,7 @@
 				2D5126621E9BD29500D7EAF6 /* Keepass2Key.xml in Resources */,
 				2D5126631E9BD29500D7EAF6 /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
 				2D5126641E9BD29500D7EAF6 /* TwoFishCipher256bit_test.kdbx in Resources */,
+				4CB13A101FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				2D5126651E9BD29500D7EAF6 /* KDB1_KeePassX_test.kdb in Resources */,
 				2D5126661E9BD29500D7EAF6 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
 				2D5126671E9BD29500D7EAF6 /* Test_Password_1234.kdb in Resources */,
@@ -2695,6 +2702,7 @@
 				4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */,
 				4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
 				4C199DA31DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx in Resources */,
+				4CB13A0E1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				4C8138291BE282DC001BF195 /* KDB1_KeePassX_test.kdb in Resources */,
 				4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
 				4C81382B1BE282DC001BF195 /* Test_Password_1234.kdb in Resources */,

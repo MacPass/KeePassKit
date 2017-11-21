@@ -16,7 +16,7 @@ NSUInteger const _kKPKItemCount = 100;
 NSUInteger const _kKPKTreeDepth = 10;
 NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
-@interface KPKTestPerformance : XCTestCase {
+@interface KPKTestPerformance : XCTestCase <KPKTreeDelegate> {
   KPKEntry *testEntry;
   NSMutableDictionary *benchmarkDict;
   KPKTree *tree;
@@ -233,20 +233,25 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 }
 
 - (void)testPlaceholderWarmupPerformance {
-  KPKEntry *placeholderEntry = entries.firstObject;
+  KPKEntry *placeholderEntry = tree.root.mutableEntries.firstObject;
   [self measureBlock:^{
     XCTAssertNotNil(placeholderEntry.mutableAttributes.firstObject.evaluatedValue);
   }];
 }
 
 - (void)testSinglePlaceholderEvaluationPerformace {
-  KPKEntry *placeholderEntry = entries.firstObject;
+  tree.delegate = self;
+  KPKEntry *placeholderEntry = tree.root.mutableEntries.firstObject;
   [self measureBlock:^{
     XCTAssertNotNil(placeholderEntry.mutableAttributes.firstObject.evaluatedValue);
   }];
 }
 
+#pragma mark - KPKTreeDelegate
 
+- (NSString * _Nullable)resolvePlaceholder:(NSString *)placeholder forTree:(KPKTree *)tree {
+  return @"";
+}
 
 
 @end
