@@ -73,13 +73,20 @@ FOUNDATION_EXTERN NSString *const KPKEntryKey;
 
 /**
  Resolves a placeholder for the tree. Some placeholders require access to document location and other attributes,
- that a KPKTree normally does not know.
+ that a KPKTree normally does not know. Addionally any placeholders made availabel via -[delegate addionalPlaceholdersForTree:]
+ will get retrieved via this message
  
  @param placeholder The placeholder to resolve
  @param tree The Tree asking for the resolving
  @return The resolved String, nil if no resolving is possible
  */
-- (NSString * _Nullable)resolvePlaceholder:(NSString *)placeholder forTree:(KPKTree *)tree;
+- (NSString * _Nullable)tree:(KPKTree *)tree resolvePlaceholder:(NSString *)placeholder forEntry:(KPKEntry *_Nullable)entry;
+
+/**
+ If you want to add addional placeholders that can be replaced you should supply a list of available placeholders.
+ If you return any those will be retrieved via -[delegate tree:resolvePlaceholder:forEntry]
+ */
+- (NSArray <NSString *> *)availablePlaceholdersForTree:(KPKTree *)tree;
 
 @end
 

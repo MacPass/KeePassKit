@@ -561,7 +561,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   caseInsensitiveMappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  appDirURL.path : @"";
   
   id<KPKTreeDelegate> treeDelegate = entry.tree.delegate;
-  if([treeDelegate respondsToSelector:@selector(resolvePlaceholder:forTree:)]) {
+  if([treeDelegate respondsToSelector:@selector(tree:resolvePlaceholder:forEntry:)]) {
     static NSArray *dbPlaceholder;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -576,9 +576,22 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                          ];
     });
     for(NSString *placeHolder in dbPlaceholder) {
-      NSString *value = [treeDelegate resolvePlaceholder:placeHolder forTree:entry.tree];
+      NSString *value = [treeDelegate tree:entry.tree resolvePlaceholder:placeHolder forEntry:entry];
       if(value) {
         caseInsensitiveMappings[placeHolder] = value;
+      }
+    }
+  }
+  /*
+   Allow for additinal placeholders to be introduced by the delegate
+   */
+  if([treeDelegate respondsToSelector:@selector(availablePlaceholdersForTree:)]) {
+    for(NSString *placeholder in [treeDelegate availablePlaceholdersForTree:entry.tree]) {
+      if([self rangeOfString:placeholder options:NSCaseInsensitiveSearch].location != NSNotFound) {
+        NSString *value = [treeDelegate tree:entry.tree resolvePlaceholder:placeholder forEntry:entry];
+        if(value) {
+          caseInsensitiveMappings[placeholder] = value;
+        }
       }
     }
   }

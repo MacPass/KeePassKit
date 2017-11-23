@@ -249,7 +249,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 #pragma mark - KPKTreeDelegate
 
-- (NSString * _Nullable)resolvePlaceholder:(NSString *)placeholder forTree:(KPKTree *)tree {
+- (NSString *)tree:(KPKTree *)tree resolvePlaceholder:(nonnull NSString *)placeholder forEntry:(KPKEntry * _Nullable)entry {
   return @"";
 }
 
