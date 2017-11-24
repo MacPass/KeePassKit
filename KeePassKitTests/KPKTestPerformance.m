@@ -81,23 +81,23 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 - (void)testAttributeLookupPerformanceA {
   [self measureBlock:^{
-    id result = [testEntry customAttributeForKey:@(0).stringValue];
+   [testEntry customAttributeForKey:@(0).stringValue];
   }];
 }
 - (void)testDictLockupPerformanceA {
   [self measureBlock:^{
-    id result = benchmarkDict[@(0).stringValue];
+    XCTAssertNotNil(benchmarkDict[@(0).stringValue]);
   }];
 }
 
 - (void)testAttributeLookupPerformanceB {
   [self measureBlock:^{
-    id result = [testEntry customAttributeForKey:@(_kKPKAttributeCount+ - 1).stringValue];
+    XCTAssertNotNil([testEntry customAttributeForKey:@(_kKPKAttributeCount+ - 1).stringValue]);
   }];
 }
 - (void)testDictLockupPerformanceB {
   [self measureBlock:^{
-    id result = benchmarkDict[@(_kKPKAttributeCount - 1).stringValue];
+    XCTAssertNotNil(benchmarkDict[@(_kKPKAttributeCount - 1).stringValue]);
   }];
 }
 
@@ -151,7 +151,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 - (void)testKDBSeralizationPerformance {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   [self measureBlock:^{
-    NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:nil];
+    [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:nil];
   }];
 }
 
@@ -167,7 +167,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 - (void)testKDBX31SerializationPerformance {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   [self measureBlock:^{
-    NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
+    [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
   }];
 }
 

@@ -104,7 +104,7 @@ typedef NS_ENUM(NSInteger, KPKTokenizingState) {
     _tokens = [@[] copy];
     return;
   }
-  __block NSMutableArray *tokenStrings = [[NSMutableArray alloc] initWithCapacity:MAX(1,_value.length)];
+  __block NSMutableArray *tokenStrings = [[NSMutableArray alloc] init];
   /*
    Split the string into single token strings but ensure we do not split up
    composed character e.g. emojis or accented characters
@@ -115,7 +115,7 @@ typedef NS_ENUM(NSInteger, KPKTokenizingState) {
                             [tokenStrings addObject:substring];
                           }];
   
-  NSMutableArray *tokens = [[NSMutableArray alloc] initWithCapacity:MAX(1,tokenStrings.count)];
+  NSMutableArray *tokens = [[NSMutableArray alloc] init];
   
   KPKTokenizingState state = KPKTokenizingStateNone;
   NSMutableString *tokenValue = [[NSMutableString alloc] init];

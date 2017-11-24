@@ -76,17 +76,30 @@ FOUNDATION_EXTERN NSString *const KPKEntryKey;
  that a KPKTree normally does not know. Addionally any placeholders made availabel via -[delegate addionalPlaceholdersForTree:]
  will get retrieved via this message
  
+ Some placeholders might even require user-interaction.
+ {PICKCHAR}, {PICKCHARS:Fld:Opt}, {PICKFIELD}, {HMACOTP}
+ 
+ 
  @param placeholder The placeholder to resolve
  @param tree The Tree asking for the resolving
  @return The resolved String, nil if no resolving is possible
  */
-- (NSString * _Nullable)tree:(KPKTree *)tree resolvePlaceholder:(NSString *)placeholder forEntry:(KPKEntry *_Nullable)entry;
-
+- (NSString *)tree:(KPKTree *)tree resolvePlaceholder:(NSString *)placeholder forEntry:(KPKEntry *)entry;
+/* specialized placeholder to speed up lookup */
+- (NSString *)tree:(KPKTree *)tree resolvePickCharsPlaceholderForEntry:(KPKEntry *)entry field:(NSString *_Nullable)field options:(NSString *_Nullable)options;
+- (NSString *)tree:(KPKTree *)tree resolveHMACOTPPlaceholderForEntry:(KPKEntry *)entry;
+- (NSString *)tree:(KPKTree *)tree resolvePickFieldPlaceholderForEntry:(KPKEntry *)entry;
 /**
- If you want to add addional placeholders that can be replaced you should supply a list of available placeholders.
- If you return any those will be retrieved via -[delegate tree:resolvePlaceholder:forEntry]
+ Allows the Tree to resolve unkown placeholders in the supplied string. Be aware that this string is raw and might still contain
+ placeholders that will get resolved after this message was sent.
+ This is a place to process values that KeePassKit is unable to replace (e.g. by custom sequences for plugins)
+ 
+ You should not process any placeholders or references on your own if you do not need the final value.
+ If you need final values, use -[NSString kpk_finalValueForEntry:] to retrieve them
+ 
+ If you do not change anythin simply return NO and do not touch the string
  */
-- (NSArray <NSString *> *)availablePlaceholdersForTree:(KPKTree *)tree;
+- (BOOL)tree:(KPKTree *)tree resolveUnknownPlaceholdersInString:(NSMutableString *)string forEntry:(KPKEntry *)entry;
 
 @end
 

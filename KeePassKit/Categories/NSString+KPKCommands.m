@@ -457,7 +457,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   NSArray *allEntries = tree.allEntries;
   if([searchKey isEqualToString:kKPKReferenceCustomFieldKey]) {
     for(KPKEntry *entry in allEntries) {
-      for(KPKAttribute *attribute in entry.mutableAttributes) {
+      for(KPKAttribute *attribute in entry.customAttributes) {
         NSString *finalValue = [attribute.value _kpk_finalValueForEntry:entry recursion:recursion + 1];
         NSRange matchRange = [finalValue rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, finalValue.length) locale:[NSLocale currentLocale ]];
         if(matchRange.length > 0) {
@@ -515,8 +515,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     return [self copy];
   }
   /* build mapping for all default fields */
-  NSMutableDictionary *caseInsensitiveMappings = [[NSMutableDictionary alloc] initWithCapacity:30];
-  NSMutableDictionary *caseSensitiviveMappings = [[NSMutableDictionary alloc] initWithCapacity:entry.customAttributes.count];
+  NSMutableDictionary *caseInsensitiveMappings = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *caseSensitiviveMappings = [[NSMutableDictionary alloc] init];
   for(KPKAttribute *defaultAttribute in entry.defaultAttributes) {
     NSString *keyString = [[NSString alloc] initWithFormat:@"{%@}", defaultAttribute.key];
     caseInsensitiveMappings[keyString] = defaultAttribute.value;
@@ -564,8 +564,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   
   caseInsensitiveMappings[@"{ENV_DIRSEP}"] = @"/";
   static NSURL *appDirURL;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
+  static dispatch_once_t appDirURLonceToken;
+  dispatch_once(&appDirURLonceToken, ^{
     appDirURL = [NSFileManager.defaultManager URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask].firstObject;
   });
   caseInsensitiveMappings[@"{ENV_PROGRAMFILES_X86}"] = appDirURL ?  appDirURL.path : @"";
@@ -593,14 +593,44 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     }
   }
   /*
-   Allow for additinal placeholders to be introduced by the delegate
+   the following placeholders might have side effect (e.g. increase counters, show ui)
+   therefor only call out for them if there are actually found!
    */
-  if([treeDelegate respondsToSelector:@selector(availablePlaceholdersForTree:)]) {
-    for(NSString *placeholder in [treeDelegate availablePlaceholdersForTree:entry.tree]) {
-      if([self rangeOfString:placeholder options:NSCaseInsensitiveSearch].location != NSNotFound) {
-        NSString *value = [treeDelegate tree:entry.tree resolvePlaceholder:placeholder forEntry:entry];
+  /* {HMACOTP} */
+  if([treeDelegate respondsToSelector:@selector(tree:resolveHMACOTPPlaceholderForEntry:)]) {
+    if(NSNotFound != [self rangeOfString:kKPKPlaceholderHMACOTP options:NSCaseInsensitiveSearch].location) {
+      NSString *value = [treeDelegate tree:entry.tree resolveHMACOTPPlaceholderForEntry:entry];
+      if(value) {
+        caseInsensitiveMappings[kKPKPlaceholderHMACOTP] = value;
+      }
+    }
+  }
+  /* {PICKFIELD} */
+  if([treeDelegate respondsToSelector:@selector(tree:resolvePickFieldPlaceholderForEntry:)]) {
+    if(NSNotFound != [self rangeOfString:kKPKPlaceholderPickField options:NSCaseInsensitiveSearch].location) {
+      NSString *value = [treeDelegate tree:entry.tree resolvePickFieldPlaceholderForEntry:entry];
+      if(value) {
+        caseInsensitiveMappings[kKPKPlaceholderPickField] = value;
+      }
+    }
+  }
+  /* {PICKCHARS:Field:Options} */
+  if([treeDelegate respondsToSelector:@selector(tree:resolvePickCharsPlaceholderForEntry:field:options:)]) {
+    static NSRegularExpression *pickCharsRegEx;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      pickCharsRegEx = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"\\{%@:?([^:\\{\\}]+)?:?([^:\\{\\}]+)?\\}", kKPKPlaceholderPickChars] options:NSRegularExpressionCaseInsensitive error:nil];
+      NSAssert(pickCharsRegEx, @"Internal error while trying to allocate pickchars regex");
+    });
+    if(NSNotFound != [self rangeOfString:kKPKPlaceholderPickChars options:NSCaseInsensitiveSearch].location) {
+      for(NSTextCheckingResult *result in [pickCharsRegEx matchesInString:self options:0 range:NSMakeRange(0, self.length)]) {
+        NSRange fieldRange = [result rangeAtIndex:1];
+        NSRange optionsRange = [result rangeAtIndex:2];
+        NSString *field = NSNotFound == fieldRange.location ? kKPKPasswordKey : [self substringWithRange:fieldRange];
+        NSString *options = NSNotFound == optionsRange.location ? nil : [self substringWithRange:optionsRange];
+        NSString *value = [treeDelegate tree:entry.tree resolvePickCharsPlaceholderForEntry:entry field:field options:options];
         if(value) {
-          caseInsensitiveMappings[placeholder] = value;
+          caseSensitiviveMappings[[self substringWithRange:result.range]] = value;
         }
       }
     }
@@ -648,6 +678,11 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
                                           options:0
                                             range:NSMakeRange(0, supstitudedString.length)]);
   }
+  
+  if([treeDelegate respondsToSelector:@selector(tree:resolveUnknownPlaceholdersInString:forEntry:)]) {
+    didReplace |= [treeDelegate tree:entry.tree resolveUnknownPlaceholdersInString:supstitudedString forEntry:entry];
+  }
+  
   if(didChange) {
     *didChange = didReplace;
   }

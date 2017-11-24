@@ -220,6 +220,19 @@ FOUNDATION_EXPORT NSString *const kKPKPlaceholderGroup;
 FOUNDATION_EXPORT NSString *const kKPKPlaceholderGroupPath;
 FOUNDATION_EXPORT NSString *const kKPKPlaceholderGroupNotes;
 
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickChars;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickCharsSpearator;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickCharsOptionDelemiter;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickCharsOptionID;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickCharsOptionCountShort;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickCharsOptionCount;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickCharsOptionHide;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickCharsOptionConvert;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickCharsOptionConvertOffset;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickCharsOptionConvertFormat;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderPickField;
+FOUNDATION_EXPORT NSString *const kKPKPlaceholderHMACOTP;
+
 /**
  *  Autotype Commands
  */
@@ -296,7 +309,7 @@ FOUNDATION_EXTERN NSString *const kKPKAutotypeCurlyBracketRight;
 /* Special Commands */
 FOUNDATION_EXPORT NSString *const kKPKAutotypeClearField;
 
-/* Value-Commands*/
+/* Value-Commands - those strings aren't encosed in {} so you should add them yourself if you need them! */
 FOUNDATION_EXTERN NSString *const kKPKAutotypeDelay;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualKey;
 FOUNDATION_EXTERN NSString *const kKPKAutotypeVirtualNonExtendedKey;

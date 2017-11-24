@@ -518,7 +518,7 @@
  the ones we do not know to not destroy the file on write
  */
 - (void)_readMetaEntries:(KPKTree *)tree {
-  NSMutableArray *metaEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,[_entries count] / 2)];
+  NSMutableArray *metaEntries = [[NSMutableArray alloc] initWithCapacity:MAX(1,_entries.count / 2)];
   for(KPKEntry *entry in _entries) {
     if(entry.isMeta) {
       [metaEntries addObject:entry];

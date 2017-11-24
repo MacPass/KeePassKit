@@ -185,6 +185,21 @@ NSString *const kKPKPlaceholderGroup      = @"{GROUP}";
 NSString *const kKPKPlaceholderGroupPath  = @"{GROUP_PATH}";
 NSString *const kKPKPlaceholderGroupNotes = @"{GROUP_NOTES}";
 
+/* Placeholder */
+NSString *const kKPKPlaceholderPickChars = @"PICKCHARS";
+NSString *const kKPKPlaceholderPickCharsSpearator = @":";
+NSString *const kKPKPlaceholderPickCharsOptionDelemiter = @",";
+NSString *const kKPKPlaceholderPickCharsOptionID = @"ID";
+NSString *const kKPKPlaceholderPickCharsOptionCountShort = @"C";
+NSString *const kKPKPlaceholderPickCharsOptionCount = @"Count";
+NSString *const kKPKPlaceholderPickCharsOptionHide = @"Hide";
+NSString *const kKPKPlaceholderPickCharsOptionConvert = @"Conv";
+NSString *const kKPKPlaceholderPickCharsOptionConvertOffset = @"Conv-Offset";
+NSString *const kKPKPlaceholderPickCharsOptionConvertFormat = @"Conv-Fmt";
+NSString *const kKPKPlaceholderPickField = @"{PICKFIELD}";
+NSString *const kKPKPlaceholderHMACOTP = @"{HMACOTP}";
+
+
 
 #pragma mark Autotype commands
 /*

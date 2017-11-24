@@ -103,6 +103,7 @@
   XCTAssertEqual(((const uint8_t*)binaryData.bytes)[90],0x3b);
 }
 
+/*
 - (void)testLoadingBrokenInnerHeaderBinaries {
   NSError *error;
   NSData *data =  [self _loadTestDataBase:@"Broken_BinaryAttachments_test" extension:@"kdbx"];
@@ -111,7 +112,7 @@
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
 }
-
+*/
 
 - (void)testLoadingVersion3 {
   NSError *error;

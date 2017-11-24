@@ -69,7 +69,24 @@
   }];
 }
 
+- (void)testPickCharPlaceholder {
+  self.tree.delegate = self;
+  
+  self.entry.username = @"myUserName";
+  self.entry.password = @"-{USERNAME}-";
+  self.entry.title = @"myTitle";
+  self.entry.notes = @"{username}{pickchars}{username}";
+  
+  XCTAssertEqualObjects([self.entry.notes kpk_finalValueForEntry:self.entry], @"myUserName-myUserName-myUserName");
 
+  self.entry.notes = @"{username}{pickchars:Title}{username}";
+  NSString *expected = [NSString stringWithFormat:@"%@%@%@", self.entry.username, self.entry.title, self.entry.username];
+  XCTAssertEqualObjects([self.entry.notes kpk_finalValueForEntry:self.entry], expected);
+}
+
+- (void)testPickFieldPlaceholder {
+  
+}
 
 #pragma mark - KPKTreeDelegate;
 - (NSString *)tree:(KPKTree *)tree resolvePlaceholder:(NSString *)placeholder forEntry:(KPKEntry *)entry {
@@ -79,8 +96,13 @@
   return nil;
 }
 
-- (NSArray <NSString *> *)availablePlaceholdersForTree:(KPKTree *)tree {
-  return @[ @"{MYPLACEHOLDER}" ];
+- (NSString *)tree:(KPKTree *)tree resolvePickCharsPlaceholderForEntry:(KPKEntry *)entry field:(NSString *)field options:(NSString *)options {
+  NSString *value = [entry valueForAttributeWithKey:field];
+  return value ? value : @"";
+}
+
+- (BOOL)tree:(KPKTree *)tree resolveUnknownPlaceholdersInString:(NSMutableString *)string forEntry:(KPKEntry *)entry {
+  return (0 < [string replaceOccurrencesOfString:@"{MYPLACEHOLDER}" withString:@"-MyPlaceholderValue-" options:NSCaseInsensitiveSearch range:NSMakeRange(0, string.length)]);
 }
 
 @end
