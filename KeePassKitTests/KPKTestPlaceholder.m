@@ -51,18 +51,36 @@
   self.tree.delegate = self;
   
   XCTAssertEqualObjects([self.entry.title kpk_finalValueForEntry:self.entry], @"username-MyPlaceholderValue-password", @"Custom placeholder is registered and evaluated");
-
 }
 
-- (NSArray <NSString *> *)availablePlaceholdersForTree:(KPKTree *)tree {
-  return @[ @"{MYPLACEHOLDER}" ];
+- (void)testNoPlaceholderOrReferencePerformance {
+  self.entry.password = @"0!1§2$3%4&5/6(7)8=9?t`h´i*s+I#s'A-V_e.r:s,L;o<n>g^P°aºs«s∑w€o®r†dΩW¨i⁄tøhπS•o±m‘eæEœx@t∆rºaªC©hƒa∂r‚aåc¥t≈eçs√9∫8~7µ6∞5…4–3¡2“1¶0¢";
+  [self measureBlock:^{
+    XCTAssertNotNil([self.entry.password kpk_finalValueForEntry:self.entry]);
+  }];
 }
 
+- (void)testSinglePlaceholderEvaluationPerformace {
+  self.tree.delegate = self;
+  self.entry.username = @"username";
+  self.entry.password = @"{USERNAME}";
+  [self measureBlock:^{
+    XCTAssertNotNil([self.entry.password kpk_finalValueForEntry:self.entry]);
+  }];
+}
+
+
+
+#pragma mark - KPKTreeDelegate;
 - (NSString *)tree:(KPKTree *)tree resolvePlaceholder:(NSString *)placeholder forEntry:(KPKEntry *)entry {
   if([placeholder isEqualToString:@"{MYPLACEHOLDER}"]) {
     return @"-MyPlaceholderValue-";
   }
   return nil;
+}
+
+- (NSArray <NSString *> *)availablePlaceholdersForTree:(KPKTree *)tree {
+  return @[ @"{MYPLACEHOLDER}" ];
 }
 
 @end

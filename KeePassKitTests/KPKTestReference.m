@@ -64,6 +64,15 @@
   XCTAssertEqualObjects([self.entry2.title kpk_finalValueForEntry:self.entry2], @"NothingTitle1-Entry2URL-Changed", @"Replaced Strings should match");
 }
 
+- (void)testRecursiveUUIDReferencePerformance {
+  self.entry1.title = [[NSString alloc] initWithFormat:@"Title1{REF:A@i:%@}", self.entry2.uuid.UUIDString];
+  self.entry2.title = [[NSString alloc] initWithFormat:@"Nothing{REF:t@I:%@}Changed", self.entry1.uuid.UUIDString];
+  
+  [self measureBlock:^{
+    XCTAssertEqualObjects([self.entry2.title kpk_finalValueForEntry:self.entry2], @"NothingTitle1-Entry2URL-Changed", @"Replaced Strings should match");
+  }];
+}
+
 - (void)testPlaceholderReference {
   self.entry1.title = [NSString stringWithFormat:@"{%@}", kKPKUsernameKey];
   self.entry1.username = [NSString stringWithFormat:@"Title1{REF:T@i:%@}", self.entry2.uuid.UUIDString];

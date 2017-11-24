@@ -329,6 +329,12 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   if(recursion > _KPKMaxiumRecursionLevel) {
     return self;
   }
+  /* if we do not have any curly brackets there's nothing to do */
+  
+  if([self rangeOfString:@"{" options:NSCaseInsensitiveSearch].location == NSNotFound) {
+    return self;
+  }
+  
   BOOL foundReference = NO;
   BOOL foundPlaceholder = NO;
   @autoreleasepool {
@@ -370,6 +376,10 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }
   /* Stop endless recurstion at 10 substitions */
   if(level > _KPKMaxiumRecursionLevel) {
+    return self;
+  }
+  
+  if([self rangeOfString:@"{REF:" options:NSCaseInsensitiveSearch].location == NSNotFound) {
     return self;
   }
   

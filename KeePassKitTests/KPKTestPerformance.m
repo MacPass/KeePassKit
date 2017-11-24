@@ -184,7 +184,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   tree.metaData.keyDerivationParameters = [KPKArgon2KeyDerivation defaultParameters];
   [self measureBlock:^{
-    NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
+    XCTAssertNotNil([tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil]);
   }];
 }
 
@@ -231,27 +231,5 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
     [groups indexOfObject:lastGroup];
   }];
 }
-
-- (void)testPlaceholderWarmupPerformance {
-  KPKEntry *placeholderEntry = tree.root.mutableEntries.firstObject;
-  [self measureBlock:^{
-    XCTAssertNotNil(placeholderEntry.mutableAttributes.firstObject.evaluatedValue);
-  }];
-}
-
-- (void)testSinglePlaceholderEvaluationPerformace {
-  tree.delegate = self;
-  KPKEntry *placeholderEntry = tree.root.mutableEntries.firstObject;
-  [self measureBlock:^{
-    XCTAssertNotNil(placeholderEntry.mutableAttributes.firstObject.evaluatedValue);
-  }];
-}
-
-#pragma mark - KPKTreeDelegate
-
-- (NSString *)tree:(KPKTree *)tree resolvePlaceholder:(nonnull NSString *)placeholder forEntry:(KPKEntry * _Nullable)entry {
-  return @"";
-}
-
 
 @end
