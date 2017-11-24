@@ -26,6 +26,7 @@
 #import "KPKEntry_Private.h"
 #import "KPKAttribute.h"
 #import "KPKTree.h"
+#import "KPKMetaData.h"
 #import "KPKGroup.h"
 #import "NSUUID+KPKAdditions.h"
 #import "KPKFormat.h"
@@ -561,6 +562,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   caseInsensitiveMappings[kKPKPlaceholderGroup] = entry.parent.title ? entry.parent.title : @"";
   caseInsensitiveMappings[kKPKPlaceholderGroupPath] = entry.parent ? entry.parent.breadcrumb : @"";
   caseInsensitiveMappings[kKPKPlaceholderGroupNotes] = entry.parent ? entry.parent.notes : @"";
+  caseInsensitiveMappings[kKPKPlaceholderDatabaseName] = entry.tree.metaData.databaseName ? entry.tree.metaData.databaseName : @"";
   
   caseInsensitiveMappings[@"{ENV_DIRSEP}"] = @"/";
   static NSURL *appDirURL;
@@ -577,7 +579,6 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     dispatch_once(&onceToken, ^{
       dbPlaceholder = @[ kKPKPlaceholderDatabasePath,
                          kKPKPlaceholderDatabaseFolder,
-                         kKPKPlaceholderDatabaseName,
                          kKPKPlaceholderDatabaseBasename,
                          kKPKPlaceholderDatabaseFileExtension,
                          kKPKPlaceholderSelectedGroup,
