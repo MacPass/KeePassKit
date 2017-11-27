@@ -99,11 +99,19 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 
 #pragma mark Generic Attribute manipulation
 
+
+/**
+ Generic accessor for any attribute with the key. This will return default as well as custom attributes
+
+ @param key Key for the attribute to retrieve
+ @return Attribute with the given key, nil if none was found
+ */
+- (KPKAttribute *)attributeWithKey:(NSString *)key;
 /**
  @param key String that identifies the attributes
  @returns the attribute with the given key
  */
-- (KPKAttribute *)customAttributeForKey:(NSString *)key;
+- (KPKAttribute *)customAttributeWithKey:(NSString *)key;
 /**
  *  Returns the value for the attribute with the given key
  *
@@ -112,6 +120,8 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *  @return value of the attriubte matching the key, nil if no matching attributes was found
  */
 - (NSString *)valueForAttributeWithKey:(NSString *)key;
+
+- (NSString *)evaluatedValueForAttributeWithKey:(NSString *)key;
 /**
  @returns YES, if the supplied key is a key in the attributes of this entry
  */

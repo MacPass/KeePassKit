@@ -81,7 +81,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 - (void)testAttributeLookupPerformanceA {
   [self measureBlock:^{
-   [testEntry customAttributeForKey:@(0).stringValue];
+   [testEntry customAttributeWithKey:@(0).stringValue];
   }];
 }
 - (void)testDictLockupPerformanceA {
@@ -92,7 +92,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 - (void)testAttributeLookupPerformanceB {
   [self measureBlock:^{
-    XCTAssertNotNil([testEntry customAttributeForKey:@(_kKPKAttributeCount+ - 1).stringValue]);
+    XCTAssertNotNil([testEntry customAttributeWithKey:@(_kKPKAttributeCount+ - 1).stringValue]);
   }];
 }
 - (void)testDictLockupPerformanceB {
@@ -103,7 +103,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 - (void)testAttributeLookupPerformanceC {
   [self measureBlock:^{
-    [testEntry customAttributeForKey:kKPKTitleKey];
+    [testEntry customAttributeWithKey:kKPKTitleKey];
   }];
 }
 
@@ -112,7 +112,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
   NSString *value = [attribute.value copy];
   NSString *changedKey = @"ChangedKey";
   attribute.key = changedKey;
-  XCTAssertEqualObjects([testEntry customAttributeForKey:changedKey].value, value);
+  XCTAssertEqualObjects([testEntry customAttributeWithKey:changedKey].value, value);
 }
 
 - (void)testAllEntriesRetirevalByCopyPerformance {

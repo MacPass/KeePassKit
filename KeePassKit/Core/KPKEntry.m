@@ -448,6 +448,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return [self attributeWithKey:key].value;
 }
 
+- (NSString *)evaluatedValueForAttributeWithKey:(NSString *)key {
+  return [self attributeWithKey:key].evaluatedValue;
+}
+
 - (void)_setValue:(NSString *)value forAttributeWithKey:(NSString *)key {
   [self attributeWithKey:key].value = value;
 }
@@ -660,7 +664,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 #pragma mark CustomAttributes
-- (KPKAttribute *)customAttributeForKey:(NSString *)key {
+- (KPKAttribute *)customAttributeWithKey:(NSString *)key {
   KPKAttribute *attribute = [self attributeWithKey:key];
   if(!attribute.isDefault) {
     return attribute;
