@@ -57,7 +57,7 @@
 }
 
 + (NSSet *)keyPathsForValuesAffectingIcon {
-  return [NSSet setWithObject:NSStringFromSelector(@selector(iconUUID))];
+  return [NSSet setWithArray:@[NSStringFromSelector(@selector(iconUUID)), NSStringFromSelector(@selector(tree))]];
 }
 
 + (NSSet *)keyPathsForValuesAffectingTree {

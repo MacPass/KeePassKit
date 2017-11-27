@@ -56,7 +56,6 @@
   ;
   /* clear undo stack since merge is not supposed to be undoable */
   [self.undoManager removeAllActions];
-  
 }
 
 - (void)_mergeNodes:(NSArray<KPKNode *> *)nodes options:(KPKSynchronizationOptions)options {
