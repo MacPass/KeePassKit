@@ -95,7 +95,7 @@ if( self.updateTiming ) { \
     _trashChanged = [now copy];
     _settingsChanged = [now copy];
     _trashUuid = [NSUUID.kpk_nullUUID copy];
-    _useTrash = NO;
+    _useTrash = YES; // use trash by default
     _lastSelectedGroup = [NSUUID.kpk_nullUUID copy];
     _lastTopVisibleGroup = [NSUUID.kpk_nullUUID copy];
     _historyMaxItems = 10;
