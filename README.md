@@ -5,6 +5,11 @@
 KeePass database loading, storing and manipulation framework.
 It's inspired by [MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) and [KeePass Database Library](https://github.com/mpowrie/KeePassLib) but has diverged a lot over the development.
 
+## Contributors
+
+[Chester Liu](skyline75489@outlook.com)
+[Jordan Sechler](jordan.sechler@gmail.com)
+
 ## License
 
 KeePassKit - Cocoa KeePass Library
