@@ -32,6 +32,7 @@
 + (NSUUID *)kpk_nullUUID;
 + (NSUUID *)kpk_uuidWithEncodedString:(NSString *)string;
 
+@property (nonatomic, readonly) BOOL kpk_isNullUUID;
 @property (nonatomic, readonly, copy) NSData *kpk_uuidData;
 @property (nonatomic, readonly, copy) NSString *kpk_encodedString;
 - (instancetype)initWithEncodedUUIDString:(NSString *)string;

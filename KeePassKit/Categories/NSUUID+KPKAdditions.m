@@ -25,11 +25,12 @@
 
 #import "KPKUTIs.h"
 
+static NSString *const KPKNullUUIDString = @"00000000-0000-0000-0000-000000000000";
 
 @implementation NSUUID (KPKAdditions)
 
 + (NSUUID *)kpk_nullUUID {
-  return [[NSUUID alloc] initWithUUIDString:@"00000000-0000-0000-0000-000000000000"];
+  return [[NSUUID alloc] initWithUUIDString:KPKNullUUIDString];
 }
 
 + (NSUUID *)kpk_uuidWithEncodedString:(NSString *)string {
@@ -67,6 +68,10 @@
     self = [self initWithUUIDString:fixedFormat];
   }
   return self;
+}
+
+- (BOOL)kpk_isNullUUID {
+  return ([self.UUIDString isEqualToString:KPKNullUUIDString]);
 }
 
 - (NSString *)kpk_encodedString {

@@ -189,6 +189,9 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
 - (KPKGroup *)trash {
   /* Caching is dangerous, as we might have deleted the trashcan */
   if(self.metaData.useTrash) {
+    if(self.metaData.trashUuid.kpk_isNullUUID) {
+      return nil;
+    }
     return [self.root groupForUUID:self.metaData.trashUuid];
   }
   return nil;
