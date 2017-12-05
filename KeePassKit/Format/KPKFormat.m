@@ -107,7 +107,7 @@ NSString *const kKPKXmlIconId = @"IconID";
 NSString *const kKPKXmlForegroundColor = @"ForegroundColor";
 NSString *const kKPKXmlBackgroundColor = @"BackgroundColor";
 NSString *const kKPKXmlOverrideURL = @"OverrideURL";
-NSString *const kKPKXmlTagg = @"Tags";
+NSString *const kKPKXmlTags = @"Tags";
 
 #pragma mark Binaries
 NSString *const kKPKXmlBinary   = @"Binary";
