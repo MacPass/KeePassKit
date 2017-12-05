@@ -305,10 +305,10 @@
     entry.iconUUID = [NSUUID kpk_uuidWithEncodedString:[customIconUuidElement stringValue]];
   }
   
-  entry.foregroundColor =  [NSUIColor kpk_colorWithHexString:KPKXmlString(entryElement, @"ForegroundColor")];
-  entry.backgroundColor = [NSUIColor kpk_colorWithHexString:KPKXmlString(entryElement, @"BackgroundColor")];
-  entry.overrideURL = KPKXmlString(entryElement, @"OverrideURL");
-  NSString *tags = KPKXmlString(entryElement, @"Tags");
+  entry.foregroundColor =  [NSUIColor kpk_colorWithHexString:KPKXmlString(entryElement, kKPKXmlForegroundColor)];
+  entry.backgroundColor = [NSUIColor kpk_colorWithHexString:KPKXmlString(entryElement, kKPKXmlBackgroundColor)];
+  entry.overrideURL = KPKXmlString(entryElement, kKPKXmlOverrideURL );
+  NSString *tags = KPKXmlString(entryElement, kKPKXmlTags);
   if(tags.length > 0) {
     entry.tags = [tags componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@",;"]];
   }
@@ -316,7 +316,7 @@
   DDXMLElement *timesElement = [entryElement elementForName:kKPKXmlTimes];
   [self _parseTimes:entry.timeInfo element:timesElement];
   
-  for (DDXMLElement *element in [entryElement elementsForName:@"String"]) {
+  for (DDXMLElement *element in [entryElement elementsForName:kKPKXmlString]) {
     DDXMLElement *valueElement = [element elementForName:kKPKXmlValue];
     BOOL isProtected = KPKXmlBoolAttribute(valueElement, kKPKXmlProtected) || KPKXmlBoolAttribute(valueElement, kKPKXmlProtectInMemory);
     KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:KPKXmlString(element, kKPKXmlKey)

@@ -244,10 +244,10 @@
   if(entry.iconUUID) {
     KPKAddXmlElement(entryElement, kKPKXmlCustomIconUUID, entry.iconUUID.kpk_encodedString);
   }
-  KPKAddXmlElement(entryElement, @"ForegroundColor", entry.foregroundColor.kpk_hexString);
-  KPKAddXmlElement(entryElement, @"BackgroundColor", entry.backgroundColor.kpk_hexString);
-  KPKAddXmlElement(entryElement, @"OverrideURL", entry.overrideURL.kpk_xmlCompatibleString);
-  KPKAddXmlElement(entryElement, @"Tags", [entry.tags componentsJoinedByString:@";"].kpk_xmlCompatibleString);
+  KPKAddXmlElement(entryElement, kKPKXmlForegroundColor, entry.foregroundColor.kpk_hexString);
+  KPKAddXmlElement(entryElement, kKPKXmlBackgroundColor, entry.backgroundColor.kpk_hexString);
+  KPKAddXmlElement(entryElement, kKPKXmlOverrideURL, entry.overrideURL.kpk_xmlCompatibleString);
+  KPKAddXmlElement(entryElement, kKPKXmlTags, [entry.tags componentsJoinedByString:@";"].kpk_xmlCompatibleString);
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:entry.timeInfo];
   [entryElement addChild:timesElement];
@@ -315,7 +315,7 @@
 }
 
 - (DDXMLElement *)_xmlAttribute:(KPKAttribute *)attribute metaData:(KPKMetaData *)metaData{
-  DDXMLElement *attributeElement = [DDXMLElement elementWithName:@"String"];
+  DDXMLElement *attributeElement = [DDXMLElement elementWithName:kKPKXmlString];
   KPKAddXmlElement(attributeElement, kKPKXmlKey, attribute.key);
   
   NSAssert(metaData, @"Metadata needs to be present for attributes");

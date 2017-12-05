@@ -103,6 +103,12 @@ NSString *const kKPKXmlName = @"Name";
 NSString *const kKPKXmlNotes = @"Notes";
 NSString *const kKPKXmlIconId = @"IconID";
 
+#pragma mark Entries
+NSString *const kKPKXmlForegroundColor = @"ForegroundColor";
+NSString *const kKPKXmlBackgroundColor = @"BackgroundColor";
+NSString *const kKPKXmlOverrideURL = @"OverrideURL";
+NSString *const kKPKXmlTagg = @"Tags";
+
 #pragma mark Binaries
 NSString *const kKPKXmlBinary   = @"Binary";
 NSString *const kKPKXmlBinaries = @"Binaries";
@@ -150,6 +156,7 @@ NSString *const kKPKXmlKey = @"Key";
 NSString *const kKPKXmlValue = @"Value";
 NSString *const kKPKXmlData = @"Data";
 NSString *const kKPKXmlEnabled = @"Enabled";
+NSString *const kKPKXmlString = @"String";
 
 #pragma mark Attributes
 NSString *const kKPKXmlProtected        = @"Protected";

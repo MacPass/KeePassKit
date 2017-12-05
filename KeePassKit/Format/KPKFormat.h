@@ -134,6 +134,12 @@ FOUNDATION_EXTERN NSString *const kKPKXmlName;
 FOUNDATION_EXTERN NSString *const kKPKXmlNotes;
 FOUNDATION_EXTERN NSString *const kKPKXmlIconId;
 
+#pragma mark Entries
+FOUNDATION_EXTERN NSString *const kKPKXmlForegroundColor;
+FOUNDATION_EXTERN NSString *const kKPKXmlBackgroundColor;
+FOUNDATION_EXTERN NSString *const kKPKXmlOverrideURL;
+FOUNDATION_EXTERN NSString *const kKPKXmlTags;
+
 #pragma mark Binaries
 FOUNDATION_EXTERN NSString *const kKPKXmlBinary;
 FOUNDATION_EXTERN NSString *const kKPKXmlBinaries;
@@ -182,6 +188,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlKey;
 FOUNDATION_EXTERN NSString *const kKPKXmlValue;
 FOUNDATION_EXTERN NSString *const kKPKXmlData;
 FOUNDATION_EXTERN NSString *const kKPKXmlEnabled;
+FOUNDATION_EXTERN NSString *const kKPKXmlString;
 
 #pragma mark Attributes
 FOUNDATION_EXTERN NSString *const kKPKXmlProtected; // Only used when stored as kdbx files.
