@@ -160,6 +160,8 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   trash = [self createGroup:self.root];
   trash.iconId = KPKIconTrash;
   trash.title = NSLocalizedStringFromTableInBundle(@"TRASH", nil, [NSBundle bundleForClass:[self class]], @"Name for the trash group");
+  trash.isSearchEnabled = KPKInheritNO; // disable search for trash by default
+  trash.isAutoTypeEnabled = KPKInheritNO; // disable autotype for trash by default
   [trash addToGroup:self.root];
   self.metaData.trashUuid = trash.uuid;
   return trash;
