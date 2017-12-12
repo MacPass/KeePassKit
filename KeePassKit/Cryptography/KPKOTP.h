@@ -10,8 +10,7 @@
 
 @interface KPKOTP : NSObject
 
-+ (NSData *)HMACOTPWithKey:(NSData *)key counter:(uint64_t)counter error:(NSError *__autoreleasing *)error;
-
-+ (NSData *)TOTPWithKey:(NSData *)key time:(NSTimeInterval)time slice:(NSUInteger)slice base:(NSUInteger)base error:(NSError *__autoreleasing *)error;
++ (NSData *)HMACOTPWithKey:(NSData *)key counter:(uint64_t)counter;
++ (NSData *)TOTPWithKey:(NSData *)key time:(NSTimeInterval)time slice:(NSUInteger)slice base:(NSUInteger)base;
 
 @end

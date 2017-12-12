@@ -60,6 +60,8 @@ NSCharacterSet *KPKHexCharacterSet() {
   NSUInteger index = 0;
   NSUInteger length = string.length;
   
+  /* FIXME: use fixed buffer no mutable data since we know length */
+  
   NSMutableData *data = [NSMutableData dataWithCapacity:length / 2];
   char byteChars[3] = {'\0','\0','\0'};
   NSUInteger wholeByte;
