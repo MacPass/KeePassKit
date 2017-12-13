@@ -53,6 +53,9 @@ NSCharacterSet *KPKHexCharacterSet() {
   if([string hasPrefix:@"0x"]) {
     string = [self substringFromIndex:2];
   }
+  if(string.length % 2 == 1) {
+    string = [NSString stringWithFormat:@"0%@", string];
+  }
   if(!string.kpk_isValidHexString) {
     return nil;
   }
@@ -74,7 +77,7 @@ NSCharacterSet *KPKHexCharacterSet() {
     [data appendBytes:&wholeByte length:1];
   }
   
-  return data;
+  return [data copy];
 }
 
 - (BOOL)kpk_isValidHexString {

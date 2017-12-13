@@ -49,7 +49,8 @@
   for(NSString *string in results) {
     NSUInteger index = [results indexOfObject:string];
     NSData *hmacOTP = [KPKOTP HMACOTPWithKey:keyData counter:index];
-    XCTAssertEqualObjects(string.kpk_dataFromHexString, hmacOTP);
+    NSData *actual = string.kpk_dataFromHexString;
+    XCTAssertEqualObjects(actual, hmacOTP);
   }
 }
 

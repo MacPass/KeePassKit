@@ -9,6 +9,22 @@
 #import "KPKOTP.h"
 #import <CommonCrypto/CommonCrypto.h>
 
+@implementation NSData (KPKIntegerConversion)
+
+- (NSUInteger)integer {
+  return 0;
+}
+
+- (NSUInteger)integerFromIndex:(NSInteger)index {
+  return 0;
+}
+
+- (NSUInteger)integerFromRange:(NSRange)range {
+  return 0;
+}
+
+@end
+
 @implementation KPKOTP
 
 + (NSData *)HMACOTPWithKey:(NSData *)key counter:(uint64_t)counter {
