@@ -9,17 +9,35 @@
 #import "KPKOTPGenerator.h"
 #import <CommonCrypto/CommonCrypto.h>
 
+@interface NSData (KPKIntegerConversion)
+
+@property (readonly) NSUInteger integer;
+
+- (NSUInteger)integerFromIndex:(NSInteger)index;
+- (NSUInteger)integerFromRange:(NSRange)range;
+
+@end
+
 @implementation NSData (KPKIntegerConversion)
 
 - (NSUInteger)integer {
-  return 0;
+  /* endinaness? */
+  NSUInteger number = 0;
+  [self getBytes:&number length:MIN(self.length, sizeof(NSUInteger))];
+  return number;
 }
 
 - (NSUInteger)integerFromIndex:(NSInteger)index {
-  return 0;
+  NSAssert(index < self.length, @"Index out of bounds!");
+  return [self integerFromRange:NSMakeRange(index, MIN(index + sizeof(NSUInteger), self.length - index))];
 }
 
 - (NSUInteger)integerFromRange:(NSRange)range {
+  NSAssert(range.location + range.length < self.length, @"Range out of bounds");
+  NSUInteger number = 0;
+  /* FIXME shift to LSB */
+  [self getBytes:&number range:range];
+  return number;
   return 0;
 }
 
