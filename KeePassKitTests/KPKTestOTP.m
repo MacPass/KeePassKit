@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "NSString+KPKHexdata.h"
-#import "KPKOTP.h"
+#import "KPKOTPGenerator.h"
 
 @interface KPKTestOTP : XCTestCase
 
@@ -48,7 +48,7 @@
   
   for(NSString *string in results) {
     NSUInteger index = [results indexOfObject:string];
-    NSData *hmacOTP = [KPKOTP HMACOTPWithKey:keyData counter:index];
+    NSData *hmacOTP = [KPKOTPGenerator HMACOTPWithKey:keyData counter:index];
     NSData *actual = string.kpk_dataFromHexString;
     XCTAssertEqualObjects(actual, hmacOTP);
   }

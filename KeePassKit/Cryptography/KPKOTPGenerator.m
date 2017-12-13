@@ -6,7 +6,7 @@
 //  Copyright © 2017 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKOTP.h"
+#import "KPKOTPGenerator.h"
 #import <CommonCrypto/CommonCrypto.h>
 
 @implementation NSData (KPKIntegerConversion)
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation KPKOTP
+@implementation KPKOTPGenerator
 
 + (NSData *)HMACOTPWithKey:(NSData *)key counter:(uint64_t)counter {
   // ensure we use big endian

@@ -17,7 +17,7 @@
 
 @end
 
-@interface KPKOTP : NSObject
+@interface KPKOTPGenerator : NSObject
 
 + (NSData *)HMACOTPWithKey:(NSData *)key counter:(uint64_t)counter;
 + (NSData *)TOTPWithKey:(NSData *)key time:(NSTimeInterval)time slice:(NSUInteger)slice base:(NSUInteger)base;
