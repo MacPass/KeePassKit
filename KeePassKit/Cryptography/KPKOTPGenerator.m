@@ -14,14 +14,19 @@
 - (NSUInteger)unsignedInteger {
   /*
    HMAC data is interpreted as big endian
-   get the bytes from data, convert big endianess to host
-   shift bits down to account for endianess swapping smaller data sizes
    */
   NSUInteger number = 0;
   [self getBytes:&number length:MIN(self.length, sizeof(NSUInteger))];
-  number = CFSwapInt64BigToHost(number);
-  number >>= (8 * (sizeof(NSUInteger) - self.length));
-  return number;
+  
+  /*
+   convert big endian to host
+   if conversion took place, we need to shift by the size
+   */
+  NSUInteger beNumber = CFSwapInt64BigToHost(number);
+  if(beNumber != number) {
+    beNumber >>= (8 * (sizeof(NSUInteger) - self.length));
+  }
+  return beNumber;
 }
 
 - (NSUInteger)unsignedIntegerFromIndex:(NSInteger)index {
