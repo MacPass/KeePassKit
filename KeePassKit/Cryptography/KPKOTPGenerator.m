@@ -9,36 +9,32 @@
 #import "KPKOTPGenerator.h"
 #import <CommonCrypto/CommonCrypto.h>
 
-@interface NSData (KPKIntegerConversion)
-
-@property (readonly) NSUInteger integer;
-
-- (NSUInteger)integerFromIndex:(NSInteger)index;
-- (NSUInteger)integerFromRange:(NSRange)range;
-
-@end
-
 @implementation NSData (KPKIntegerConversion)
 
-- (NSUInteger)integer {
-  /* endinaness? */
+- (NSUInteger)unsignedInteger {
+  /*
+   HMAC data is interpreted as big endian
+   get the bytes from data, convert big endianess to host
+   shift bits down to account for endianess swapping smaller data sizes
+   */
   NSUInteger number = 0;
   [self getBytes:&number length:MIN(self.length, sizeof(NSUInteger))];
+  number = CFSwapInt64BigToHost(number);
+  number >>= (8 * (sizeof(NSUInteger) - self.length));
   return number;
 }
 
-- (NSUInteger)integerFromIndex:(NSInteger)index {
+- (NSUInteger)unsignedIntegerFromIndex:(NSInteger)index {
   NSAssert(index < self.length, @"Index out of bounds!");
-  return [self integerFromRange:NSMakeRange(index, MIN(index + sizeof(NSUInteger), self.length - index))];
+  return [self unsignedIntegerFromRange:NSMakeRange(index, MIN(index + sizeof(NSUInteger), self.length - index))];
 }
 
-- (NSUInteger)integerFromRange:(NSRange)range {
+- (NSUInteger)unsignedIntegerFromRange:(NSRange)range {
   NSAssert(range.location + range.length < self.length, @"Range out of bounds");
   NSUInteger number = 0;
   /* FIXME shift to LSB */
   [self getBytes:&number range:range];
   return number;
-  return 0;
 }
 
 @end

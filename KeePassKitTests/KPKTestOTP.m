@@ -35,7 +35,7 @@
     0x37, 0x38, 0x39, 0x30 };
 
   NSData *keyData = [NSData dataWithBytesNoCopy:key length:sizeof(key) freeWhenDone:NO];
-  NSArray <NSString *> *results = @[ @"4c93cf18",
+  NSArray <NSString *> *hexResults = @[ @"4c93cf18",
                                      @"41397eea",
                                      @"82fef30",
                                      @"66ef7655",
@@ -46,12 +46,33 @@
                                      @"2823443f",
                                      @"2679dc69" ];
   
-  for(NSString *string in results) {
-    NSUInteger index = [results indexOfObject:string];
+  NSArray <NSNumber *> *decimalResults= @[ @1284755224,
+                                           @1094287082,
+                                           @137359152,
+                                           @1726969429,
+                                           @1640338314,
+                                           @868254676,
+                                           @1918287922,
+                                           @82162583,
+                                           @673399871,
+                                           @645520489 ];
+
+  
+  for(NSString *string in hexResults) {
+    NSUInteger index = [hexResults indexOfObject:string];
     NSData *hmacOTP = [KPKOTPGenerator HMACOTPWithKey:keyData counter:index];
     NSData *actual = string.kpk_dataFromHexString;
     XCTAssertEqualObjects(actual, hmacOTP);
   }
+
+  for(NSNumber *number in decimalResults) {
+    NSUInteger index = [decimalResults indexOfObject:number];
+    NSData *hmacOTP = [KPKOTPGenerator HMACOTPWithKey:keyData counter:index];
+    NSUInteger hmacDecimal = hmacOTP.unsignedInteger;
+    NSUInteger actual = number.unsignedIntegerValue;
+    XCTAssertEqual(actual, hmacDecimal);
+  }
+
 }
 
 /* Table 2 details for each count the truncated values (both in

@@ -8,6 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+@interface NSData (KPKIntegerConversion)
+
+@property (readonly) NSUInteger unsignedInteger;
+
+- (NSUInteger)unsignedIntegerFromIndex:(NSInteger)index;
+- (NSUInteger)unsignedIntegerFromRange:(NSRange)range;
+
+@end
+
 @interface KPKOTPGenerator : NSObject
 
 + (NSData *)HMACOTPWithKey:(NSData *)key counter:(uint64_t)counter;
