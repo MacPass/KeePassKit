@@ -27,7 +27,7 @@
  This way you can use the tokeniziation on any state.
  
  The tokenizer will at first yield a non-reduced stream, that is, for each Character a token is generated.
- If you want to have complex tokens containing more than one character at a time, use send reduceTokenStream
+ If you want to have complex tokens containing more than one character at a time, send reduceTokenStream
  and work with the result.
  
  @param value stringValue to tokenzie

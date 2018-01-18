@@ -340,7 +340,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   BOOL foundPlaceholder = NO;
   @autoreleasepool {
     NSString *value = self;
-    /* TODO references are resolved completely, there is no need to rerun the evaulation if a reference was found */
+    /* TODO check if references are resolved completely and there is no need to rerun the evaulation if a reference was found */
     value = [value _kpk_evaluatePlaceholderWithEntry:entry recursionLevel:recursion didChange:&foundPlaceholder];
     value = [value _kpk_resolveReferencesWithTree:entry.tree recursionLevel:recursion didChange:&foundReference];
     if(foundPlaceholder || foundReference ) {
