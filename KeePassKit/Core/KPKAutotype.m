@@ -94,7 +94,7 @@
               currentIndex++;
             }
             else {
-              NSLog(@"Encountered Autotype index %ld but expected %ld. Aborting!", index, currentIndex + 1 );
+              NSLog(@"Encountered Autotype index %ld but expected %ld. Aborting!", (long)index, (long)currentIndex + 1 );
               *stop = YES;
             }
           }

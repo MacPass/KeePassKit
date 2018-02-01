@@ -129,7 +129,7 @@ static NSCalendar *_gregorianCalendar(void) {
   }
   
   struct tm time;
-  char *result = strptime([string cStringUsingEncoding:NSUTF8StringEncoding], "%Y-%m-%dT%H:%M:%SZ", &time);
+  __unused char *result = strptime([string cStringUsingEncoding:NSUTF8StringEncoding], "%Y-%m-%dT%H:%M:%SZ", &time);
   NSAssert(result != NULL, @"Internal inconsitency. Unable to parse date format!");
   time.tm_isdst = 0;
   time.tm_gmtoff = 0;

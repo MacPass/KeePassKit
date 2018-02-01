@@ -112,7 +112,7 @@
           self.accessDate,
           self.expirationDate,
           self.locationChanged,
-          self.usageCount];
+          (unsigned long)self.usageCount];
 }
 
 #pragma mark -
