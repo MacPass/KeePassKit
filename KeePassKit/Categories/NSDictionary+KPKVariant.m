@@ -42,7 +42,7 @@ typedef NS_ENUM(uint8_t, KPKVariantType ) {
 
 static const uint16_t kKPKVariantDictionaryVersion = 0x0100;
 static const uint16_t kKPKVariantDictionaryCritical = 0xFF00;
-static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
+//static const uint16_t kKPKVariantDictionaryInfo = 0x00FF;
 
 @implementation NSDictionary (KPKVariant)
 

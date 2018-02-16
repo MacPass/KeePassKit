@@ -27,7 +27,7 @@
 /**
  *	Initalizes the Tree with the data contained in the given url
  *	@param	url	URL to load the tree data from
- *	@param	password	Password to decrpyt the tree with
+ *	@param	key Key to decrpyt the tree with
  *  @param  error Error if initalization doesnt work
  *	@return	Newly created tree
  */
@@ -35,7 +35,7 @@
 /**
  *	Initalizes a tree with the given data. The data is the raw encrypted file data
  *	@param	data	Data to load the tree from. Supply raw undecrypted file data
- *	@param	password	Password to decrypt the tree
+ *	@param	key Key to decrypt the tree
  *  @param  error Error if initalization doesnt work
  *	@return	Tree with contents of data
  */

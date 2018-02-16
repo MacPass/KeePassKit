@@ -62,7 +62,7 @@ void KPKAddXmlAttribute(DDXMLElement *element, NSString *name, NSString *value) 
 }
 
 NSString * KPKStringFromLong(NSInteger integer) {
-  return [NSString stringWithFormat:@"%ld", integer];
+  return [NSString stringWithFormat:@"%ld", (long)integer];
 }
 
 NSString *KPKStringFromDate(NSDate *date, BOOL isRelativeDate) {

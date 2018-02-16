@@ -67,7 +67,7 @@
   
   Twofish_encrypt(&_context, (Twofish_Byte *)data.bytes, (Twofish_UInt64) data.length, encrypted, encrpyted_length);
   
-  return [NSData dataWithBytes:encrypted length:encrpyted_length];
+  return [NSData dataWithBytes:encrypted length:(NSUInteger)encrpyted_length];
 }
 
 - (NSData *)decryptData:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error {
@@ -79,7 +79,7 @@
   uint64_t decrpyted_length = data.length;
   Twofish_decrypt(&_context, (Twofish_Byte *)data.bytes, data.length, decrypted, &decrpyted_length);
   
-  return [NSData dataWithBytes:decrypted length:decrpyted_length];
+  return [NSData dataWithBytes:decrypted length:(NSUInteger)decrpyted_length];
 }
 
 - (NSData *)encryptData:(NSData *)data withKey:(NSData *)key initializationVector:(NSData *)iv error:(NSError *__autoreleasing  _Nullable *)error {

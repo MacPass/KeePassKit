@@ -54,7 +54,7 @@
 - (instancetype)initWithKey:(NSString *)key value:(NSString *)value;
 /**
  *  Determines if the reviever is equal to the provided attribute
- *  @param attribtue The attribute to test for equality
+ *  @param attribute The attribute to test for equality
  *  @return YES if the reciever is euqal to the attribute. This is a value based equality!
  */
 - (BOOL)isEqualToAttribute:(KPKAttribute *)attribute;

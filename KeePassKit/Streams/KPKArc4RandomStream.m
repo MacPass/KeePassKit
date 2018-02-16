@@ -41,7 +41,7 @@
 - (instancetype)init {
   uint8_t buffer[256];
   
-  int ret = SecRandomCopyBytes(kSecRandomDefault, sizeof(buffer), buffer);
+  __unused int ret = SecRandomCopyBytes(kSecRandomDefault, sizeof(buffer), buffer);
   NSAssert(ret == 0, @"Unable to copy secure bytes!");
 
   return [self initWithKeyData:[NSData dataWithBytes:buffer length:sizeof(buffer)]];

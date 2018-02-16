@@ -115,7 +115,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property (nonatomic, readonly) KPKGroup *rootGroup;
 /**
  *	Determines if the receiving group is an ancestor of the supplied group
- *	@param	group	group to test ancestorship for
+ *	@param node Node to test ancestorship for
  *	@return	YES if receiver is ancestor of group, NO otherwise
  */
 - (BOOL)isAnchestorOf:(KPKNode *)node;

@@ -37,7 +37,7 @@
 - (instancetype)initWithName:(NSString *)name data:(NSData *)data NS_DESIGNATED_INITIALIZER;
 /**
  @param name The name for the attachment, usually this should be the filename with extension
- @param string The data represented as Base64 encoded string.
+ @param value The data represented as Base64 encoded string.
  @param compressed Supply YES if the string data in value is Gziped, otherwise supply NO
  @return Attachment initalized with the given data and name, nil if errors occured
  */
