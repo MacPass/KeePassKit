@@ -13,26 +13,19 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = "10.9"
   s.watchos.deployment_target = "2.0"
   s.tvos.deployment_target = "9.0"
+  s.swift_version = "3.2"
 
   s.resources = "KeePassKit/Localization/*.lproj"
 
   s.subspec 'Core' do |ss|
     ss.source_files  = "KeePassKit/**/*.{h,m}"
     ss.private_header_files = "KeePassKit/**/*_Private.h", "KPKXmlTreeReader.h", "NSDate+KPKPacked.h"
-    # ss.dependency 'KissXML', '5.2.0'
-    ss.dependency 'KeePassKit/KissXML'
+    ss.dependency 'KissXML', '5.2.2'
     ss.dependency 'KeePassKit/Argon2'
     ss.dependency 'KeePassKit/ChaCha20'
     ss.dependency 'KeePassKit/TwoFish'
 
     ss.libraries = 'z'
-  end
-
-  s.subspec 'KissXML' do |ss|
-    ss.source_files = 'KissXML/KissXML/**/*.{h,m}'
-    ss.private_header_files = 'KissXML/KissXML/Private/**/*.h'
-    ss.library      = 'xml2'
-    ss.xcconfig     = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
   end
 
   s.subspec 'Argon2' do |ss|
