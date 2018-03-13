@@ -60,6 +60,15 @@
   XCTAssertFalse([option matchesWindowTitle:@"r"]);
   XCTAssertFalse([option matchesWindowTitle:@"hat"]);
 
+  KPKWindowAssociation *pipedTitle = [[KPKWindowAssociation alloc] initWithWindowTitle:@"test|this" keystrokeSequence:@""];
+  XCTAssertFalse([pipedTitle matchesWindowTitle:@"no"]);
+  XCTAssertFalse([pipedTitle matchesWindowTitle:@"match"]);
+  XCTAssertFalse([pipedTitle matchesWindowTitle:@"test|"]);
+  XCTAssertFalse([pipedTitle matchesWindowTitle:@"test"]);
+  XCTAssertFalse([pipedTitle matchesWindowTitle:@"|"]);
+  XCTAssertFalse([pipedTitle matchesWindowTitle:@"this"]);
+  XCTAssertTrue([pipedTitle matchesWindowTitle:@"test|this"]);
+  
   KPKWindowAssociation *characterClasses = [[KPKWindowAssociation alloc] initWithWindowTitle:@"//^([a-z]*|[0-9]+)$//" keystrokeSequence:@""];
   XCTAssertTrue([characterClasses matchesWindowTitle:@"0"]);
   XCTAssertTrue([characterClasses matchesWindowTitle:@"9"]);
