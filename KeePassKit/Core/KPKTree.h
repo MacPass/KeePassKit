@@ -158,7 +158,7 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
  Returns the minimum database version (tied to the minimum Type) to store the tree without data loss.
  This always returns the maxium supported KDB version for a KDB type, KDBX results depend on data (settings, loaded data, etc.)
  */
-@property(nonatomic) KPKFileVersion minimumVersion;
+@property(nonatomic, readonly) KPKFileVersion minimumVersion;
 
 - (instancetype)initWithTemplateContents;
 
