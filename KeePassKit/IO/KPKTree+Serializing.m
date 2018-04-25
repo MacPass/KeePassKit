@@ -49,6 +49,11 @@
   if(!data) {
     return nil;
   }
+  self = [self initWithXmlData:data error:error];
+  return self;
+}
+
+- (instancetype)initWithXmlData:(NSData *)data error:(NSError *__autoreleasing *)error {
   KPKXmlTreeReader *reader = [[KPKXmlTreeReader alloc] initWithData:data];
   self = [reader tree:error];
   return self;

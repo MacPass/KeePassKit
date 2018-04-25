@@ -48,6 +48,14 @@
  */
 - (instancetype)initWithXmlContentsOfURL:(NSURL *)url error:(NSError *__autoreleasing *)error;
 /**
+ Creates a tree with the given XML data
+
+ @param data XML data to load
+ @param error error object returned on failure
+ @return Tree created from XML data
+ */
+- (instancetype)initWithXmlData:(NSData *)data error:(NSError *__autoreleasing *)error;
+/**
  *	Encrypts the tree with the given password and the version. This operation is possibly lossy
  *	@param	key	The key to encrypt the tree
  *	@param	format The format to write. Possibly lossy
