@@ -13,6 +13,26 @@
 + (NSString *)stringWithEscapedRegularExpression {
   
   NSMutableString *copy = [self mutableCopy];
+  
+  /* * ? + [ ( ) { } ^ $ | \ . */
+
+  NSDictionary *charsToQuote = @{ @"*" : @"\\*",
+                                  @"?" : @"\\?",
+                                  @"+" : @"\\+",
+                                  @"[" : @"\\[",
+                                  @"]" : @"\\]",
+                                  @"(" : @"\\(",
+                                  @")" : @"\\)",
+                                  @"{" : @"\\{",
+                                  @"}" : @"\\}",
+                                  @"^" : @"\\^",
+                                  @"$" : @"\\$",
+                                  @"|" : @"\\|",
+                                  @"\\" : @"\\\\",
+                                  @"." : @"\\."
+                                  };
+  
+  
   [copy replaceOccurrencesOfString:@"|" withString:@"\\|" options:NSCaseInsensitiveSearch range:NSMakeRange(0, copy.length)];
   return [copy copy];
 }

@@ -59,13 +59,15 @@
 @property (readonly, strong) KPKRandomStream *randomStream;
 //@property (strong) NSDateFormatter *dateFormatter;
 @property BOOL useRelativeDate;
-@property (readonly, copy) NSArray *binaries;
+@property (nonatomic, readonly, copy) NSArray *binaries;
 
 @property (nonatomic, readonly) BOOL encrypted;
 
 @end
 
 @implementation KPKXmlTreeWriter
+
+@synthesize binaries = _binaries;
 
 - (instancetype)initWithTree:(KPKTree *)tree delegate:(id<KPKXmlTreeWriterDelegate>)delegate {
   self = [super init];
@@ -93,7 +95,25 @@
 }
 
 - (NSArray *)binaries {
-  return [[self.delegate binariesForWriter:self] copy];
+  if(_binaries) {
+    return _binaries;
+  }
+  if(self.delegate) {
+    _binaries = [[self.delegate binariesForWriter:self] copy];
+  }
+  else {
+    NSArray *allEntries = [self.tree.allEntries arrayByAddingObjectsFromArray:self.tree.allHistoryEntries];
+    NSMutableArray *tempBinaries = [[NSMutableArray alloc] init];
+    for(KPKEntry *entry in allEntries) {
+      for(KPKBinary *binary in entry.mutableBinaries) {
+        if(![tempBinaries containsObject:binary]) {
+          [tempBinaries addObject:binary];
+        }
+      }
+    }
+    _binaries = [tempBinaries copy];
+  }
+  return _binaries;
 }
 
 #pragma mark -
@@ -116,9 +136,9 @@
   if(!self.randomStream || kKPKKdbxFileVersion4 > [self.delegate fileVersionForWriter:self]) {
     self.useRelativeDate = NO;
     /*
-    self.dateFormatter = [[NSDateFormatter alloc] init];
-    self.dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
-    self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+     self.dateFormatter = [[NSDateFormatter alloc] init];
+     self.dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
+     self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
      */
   }
   
@@ -367,13 +387,12 @@
 }
 
 - (DDXMLElement *)_xmlBinary:(KPKBinary *)binary {
+  NSAssert(self.binaries, @"Internal inconsicenty. Serialization for binary requested but no binaries supplied!");
   DDXMLElement *binaryElement = [DDXMLElement elementWithName:kKPKXmlBinary];
   KPKAddXmlElement(binaryElement, kKPKXmlKey, binary.name.kpk_xmlCompatibleString);
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue];
   [binaryElement addChild:valueElement];
-  NSUInteger reference = [self.delegate writer:self referenceForBinary:binary];
-  NSAssert(reference != NSNotFound, @"Binary has to be in binaries array");
-  KPKAddXmlAttribute(valueElement, kKPKXmlIconReference, KPKStringFromLong(reference));
+  KPKAddXmlAttribute(valueElement, kKPKXmlIconReference, KPKStringFromLong([self.binaries indexOfObjectIdenticalTo:binary]));
   return binaryElement;
 }
 
