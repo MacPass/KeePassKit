@@ -149,7 +149,7 @@
 }
 
 - (NSUInteger)writer:(KPKXmlTreeWriter *)writer referenceForBinary:(KPKBinary *)binary {
-  return [self.binaries indexOfObjectIdenticalTo:binary];
+  return [self.binaries indexOfObject:binary];
 }
 
 - (NSArray *)binariesForWriter:(KPKXmlTreeWriter *)writer {

@@ -378,7 +378,7 @@
   BOOL compress = (self.tree.metaData.compressionAlgorithm == KPKCompressionGzip);
   for(KPKBinary *binary in self.binaries) {
     DDXMLElement *binaryElement = [DDXMLElement elementWithName:kKPKXmlBinary];
-    KPKAddXmlAttribute(binaryElement, kKPKXmlBinaryId, KPKStringFromLong([self.binaries indexOfObjectIdenticalTo:binary]));
+    KPKAddXmlAttribute(binaryElement, kKPKXmlBinaryId, KPKStringFromLong([self.binaries indexOfObject:binary]));
     KPKAddXmlAttribute(binaryElement, kKPKXmlCompressed, KPKStringFromBool(compress));
     binaryElement.stringValue = [binary encodedStringUsingCompression:compress];
     [binaryElements addChild:binaryElement];
@@ -392,7 +392,7 @@
   KPKAddXmlElement(binaryElement, kKPKXmlKey, binary.name.kpk_xmlCompatibleString);
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue];
   [binaryElement addChild:valueElement];
-  KPKAddXmlAttribute(valueElement, kKPKXmlIconReference, KPKStringFromLong([self.binaries indexOfObjectIdenticalTo:binary]));
+  KPKAddXmlAttribute(valueElement, kKPKXmlIconReference, KPKStringFromLong([self.binaries indexOfObject:binary]));
   return binaryElement;
 }
 

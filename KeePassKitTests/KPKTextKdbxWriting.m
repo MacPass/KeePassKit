@@ -14,6 +14,7 @@
 @interface KPKTestKdbxWriting : XCTestCase
 @property (strong) KPKTree *tree;
 @property (strong) KPKEntry *entry;
+@property (strong) KPKEntry *anotherEntry;
 @property (strong) NSData *data;
 @end
 
@@ -41,6 +42,18 @@
   
   /* kill all time info that cannot be serialized to ensure equality checks work out! */
   [self.entry.timeInfo _reducePrecicionToSeconds];
+  
+  self.anotherEntry = [[KPKEntry alloc] init];
+  self.anotherEntry.title = @"TestEntryB";
+  
+  [self.anotherEntry addBinary:[[KPKBinary alloc] initWithName:@"Binary0" data:self.data]];
+  [self.anotherEntry addBinary:[[KPKBinary alloc] initWithName:@"Binary1" data:self.data]];
+  
+  [self.anotherEntry addToGroup:self.tree.root.groups.firstObject];
+  
+  /* kill all time info that cannot be serialized to ensure equality checks work out! */
+  [self.anotherEntry.timeInfo _reducePrecicionToSeconds];
+
 }
 
 - (void)testKdbx4BinarySerialization {
@@ -65,6 +78,15 @@
   XCTAssertEqualObjects(entry.binaries[0].data, self.data);
   XCTAssertEqualObjects(entry.binaries[1].data, self.data);
   XCTAssertEqualObjects(entry.binaries[2].data, self.data);
+  
+  KPKEntry *anotherEntry = loadedTree.root.groups.firstObject.entries.lastObject;
+  
+  XCTAssertEqual(KPKComparsionEqual, [self.anotherEntry compareToEntry:anotherEntry]);
+  XCTAssertEqual(anotherEntry.binaries.count, 2);
+  /* explicitly test binaries for equality */
+  XCTAssertEqualObjects(anotherEntry.binaries[0].data, self.data);
+  XCTAssertEqualObjects(anotherEntry.binaries[1].data, self.data);
+  
 }
 
 - (void)testKdbx3BinarySerialization {
@@ -88,6 +110,14 @@
   XCTAssertEqualObjects(entry.binaries[0].data, self.data);
   XCTAssertEqualObjects(entry.binaries[1].data, self.data);
   XCTAssertEqualObjects(entry.binaries[2].data, self.data);
+  
+  KPKEntry *anotherEntry = loadedTree.root.groups.firstObject.entries.lastObject;
+  
+  XCTAssertEqual(KPKComparsionEqual, [self.anotherEntry compareToEntry:anotherEntry]);
+  XCTAssertEqual(anotherEntry.binaries.count, 2);
+  /* explicitly test binaries for equality */
+  XCTAssertEqualObjects(anotherEntry.binaries[0].data, self.data);
+  XCTAssertEqualObjects(anotherEntry.binaries[1].data, self.data);
 }
 
 - (void)testXMLBinarySerialization {
@@ -109,6 +139,14 @@
   XCTAssertEqualObjects(entry.binaries[0].data, self.data);
   XCTAssertEqualObjects(entry.binaries[1].data, self.data);
   XCTAssertEqualObjects(entry.binaries[2].data, self.data);
+  
+  KPKEntry *anotherEntry = loadedTree.root.groups.firstObject.entries.lastObject;
+  
+  XCTAssertEqual(KPKComparsionEqual, [self.anotherEntry compareToEntry:anotherEntry]);
+  XCTAssertEqual(anotherEntry.binaries.count, 2);
+  /* explicitly test binaries for equality */
+  XCTAssertEqualObjects(anotherEntry.binaries[0].data, self.data);
+  XCTAssertEqualObjects(anotherEntry.binaries[1].data, self.data);
 }
 
 

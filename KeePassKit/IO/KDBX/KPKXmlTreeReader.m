@@ -407,6 +407,7 @@
     NSUInteger index = [refAttribute stringValue].integerValue;
     
     KPKBinary *binary = self.binaryMap[ @(index) ];
+    /* we might have no binary map since we did not parse any binaries in the XML so ask the delegate for one */
     if(!binary) {
       binary = [self.delegate reader:self binaryForReference:index];
     }
