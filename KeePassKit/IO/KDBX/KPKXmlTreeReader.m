@@ -406,7 +406,7 @@
     DDXMLNode *refAttribute = [valueElement attributeForName:kKPKXmlIconReference];
     NSUInteger index = [refAttribute stringValue].integerValue;
     
-    KPKBinary *binary = self.binaryMap[ @(index) ];
+    KPKBinary *binary = [self.binaryMap[ @(index) ] copy]; // create a copy since we insert those binaries multiple times!
     /* we might have no binary map since we did not parse any binaries in the XML so ask the delegate for one */
     if(!binary) {
       binary = [self.delegate reader:self binaryForReference:index];

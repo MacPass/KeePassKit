@@ -734,11 +734,15 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(index > self.mutableBinaries.count) {
     return; // index out of bounds!
   }
-  [[self.undoManager prepareWithInvocationTarget:self] removeBinary:binary];
   KPKBinary *duplicate = [self binaryWithName:binary.name];
+  if(binary == duplicate) {
+    NSLog(@"Error: Trying to re-add an already added binary attachment!");
+    return; // do not add the same object twice!
+  }
   if(duplicate) {
     binary.name = [self _proposedNameForBinaryName:duplicate.name];
   }
+  [[self.undoManager prepareWithInvocationTarget:self] removeBinary:binary];
   [self touchModified];
   [self insertObject:binary inMutableBinariesAtIndex:index];
   

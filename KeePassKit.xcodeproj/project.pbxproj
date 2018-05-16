@@ -1023,6 +1023,9 @@
 		4CDDED0B1F79685C00BBB014 /* KPKIcon_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CDDED0A1F79685C00BBB014 /* KPKIcon_Private.h */; };
 		4CE082C01F6D111C0034FF56 /* aspect.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4CE082BF1F6D111C0034FF56 /* aspect.pdf */; };
 		4CE471EE1E08327D00AA3D81 /* KPKTestKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE471ED1E08327D00AA3D81 /* KPKTestKVO.m */; };
+		4CE7061120AC41A50090EEA5 /* Error_DuplicateAttachments_1234.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C429FF520AC3FCC008F53B2 /* Error_DuplicateAttachments_1234.kdbx */; };
+		4CE7061220AC41A60090EEA5 /* Error_DuplicateAttachments_1234.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C429FF520AC3FCC008F53B2 /* Error_DuplicateAttachments_1234.kdbx */; };
+		4CE7061320AC41A60090EEA5 /* Error_DuplicateAttachments_1234.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C429FF520AC3FCC008F53B2 /* Error_DuplicateAttachments_1234.kdbx */; };
 		4CE94DD11F69885E00EE9A5A /* KPKTestTrash.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE94DD01F69885E00EE9A5A /* KPKTestTrash.m */; };
 		4CE95AE61E97BC330019BBDC /* KPKData.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CE95AE41E97BC330019BBDC /* KPKData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CE95AE71E97BC330019BBDC /* KPKData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE95AE51E97BC330019BBDC /* KPKData.m */; };
@@ -1122,6 +1125,7 @@
 		4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKPlatformIncludes.h; sourceTree = "<group>"; };
 		4C415D371F581D4200C08985 /* KPKTestDeletedObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestDeletedObjects.m; sourceTree = "<group>"; };
 		4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestUniqueBinaryNames.m; sourceTree = "<group>"; };
+		4C429FF520AC3FCC008F53B2 /* Error_DuplicateAttachments_1234.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; name = Error_DuplicateAttachments_1234.kdbx; path = Kdbx3/Error_DuplicateAttachments_1234.kdbx; sourceTree = "<group>"; };
 		4C42AC0820502EB900B5B205 /* NSString+KPKAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+KPKAdditions.h"; sourceTree = "<group>"; };
 		4C42AC0920502EB900B5B205 /* NSString+KPKAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+KPKAdditions.m"; sourceTree = "<group>"; };
 		4C44988E1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KPKTestMinimumVersionDetermination.m; path = KeePassKitTests/KPKTestMinimumVersionDetermination.m; sourceTree = SOURCE_ROOT; };
@@ -1487,6 +1491,7 @@
 				4C81381D1BE282DC001BF195 /* CustomIcon_Password_1234.xml */,
 				4C8138211BE282DC001BF195 /* Test_Password_1234.kdbx */,
 				4C199DA21DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx */,
+				4C429FF520AC3FCC008F53B2 /* Error_DuplicateAttachments_1234.kdbx */,
 			);
 			name = Kdbx3;
 			sourceTree = "<group>";
@@ -2709,6 +2714,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CE7061220AC41A60090EEA5 /* Error_DuplicateAttachments_1234.kdbx in Resources */,
 				2D5125551E9BD06700D7EAF6 /* CustomIcon_Password_1234.xml in Resources */,
 				2D5125561E9BD06700D7EAF6 /* Keepass2Key.xml in Resources */,
 				2D5125571E9BD06700D7EAF6 /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
@@ -2744,6 +2750,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CE7061320AC41A60090EEA5 /* Error_DuplicateAttachments_1234.kdbx in Resources */,
 				4C96A43F1F9DEB2300F071D3 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
 				2D5126611E9BD29500D7EAF6 /* CustomIcon_Password_1234.xml in Resources */,
 				2D5126621E9BD29500D7EAF6 /* Keepass2Key.xml in Resources */,
@@ -2787,6 +2794,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CE7061120AC41A50090EEA5 /* Error_DuplicateAttachments_1234.kdbx in Resources */,
 				4C8138281BE282DC001BF195 /* CustomIcon_Password_1234.xml in Resources */,
 				4CD89C201F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
 				4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */,
@@ -3686,7 +3694,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.11;
+				CURRENT_PROJECT_VERSION = 1.12;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3744,7 +3752,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.11;
+				CURRENT_PROJECT_VERSION = 1.12;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;

@@ -15,7 +15,7 @@
 
 @implementation KPKTestUniqueBinaryNames
 
-- (void)testBinaryNameResolving {
+- (void)testAddingDuplicateBinaries {
   KPKEntry *entry = [[KPKEntry alloc] init];
   NSData *data = [NSData kpk_dataWithRandomBytes:1024];
   KPKBinary *binary1 = [[KPKBinary alloc] initWithName:@"Binary" data:data];
@@ -32,6 +32,27 @@
   XCTAssertNotEqualObjects(entry.binaries.lastObject.name, @"Binary");
   XCTAssertNotEqualObjects(entry.binaries.firstObject, entry.binaries.lastObject);
   XCTAssertEqualObjects(entry.binaries.firstObject.data, entry.binaries.lastObject.data);
+  
+  [entry addBinary:binary1];
+  XCTAssertEqual(entry.binaries.count, 2, @"Binary is not added a second time");
+}
+
+- (void)testLoadingDuplicateBinaryFile {
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
+  NSURL *url = [myBundle URLForResource:@"Error_DuplicateAttachments_1234" withExtension:@"kdbx"];
+  NSData *data = [NSData dataWithContentsOfURL:url];
+  KPKCompositeKey  *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
+  NSError *error;
+  
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(tree);
+  XCTAssertNil(error);
+  
+  KPKEntry *entry = tree.allEntries.firstObject;
+  
+  XCTAssertNotNil(entry);
+  XCTAssertEqual(3, entry.binaries.count);
+  
 }
 
 @end
