@@ -145,6 +145,9 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
 
 /**
  *	Adds the given Binary to the binaries of this entry
+ *  Binaries need to have unique names inside an entry. The data of a binary is not considered!
+ *  If a binary with the same name is present, the newly added binary will get it's name updated!
+ *
  *	@param	binary	Binary to add
  */
 - (void)addBinary:(KPKBinary *)binary;
@@ -154,6 +157,15 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
  *	@param	binary	Binary to be removed
  */
 - (void)removeBinary:(KPKBinary *)binary;
+
+/**
+ Returns the first binary with the given name.
+
+ @param name name of the binary to find
+ @return the first matching binary, otherwise nil
+ */
+- (KPKBinary *)binaryWithName:(NSString *)name;
+
 
 #pragma mark History
 /**

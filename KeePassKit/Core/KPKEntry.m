@@ -714,6 +714,14 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
 }
 #pragma mark Attachments
+- (KPKBinary *)binaryWithName:(NSString *)name {
+  for(KPKBinary *binary in self.mutableBinaries) {
+    if([binary.name isEqualToString:name]) {
+      return binary;
+    }
+  }
+  return nil;
+}
 
 - (void)addBinary:(KPKBinary *)binary {
   [self _addBinary:binary atIndex:self.mutableBinaries.count];
@@ -727,6 +735,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     return; // index out of bounds!
   }
   [[self.undoManager prepareWithInvocationTarget:self] removeBinary:binary];
+  KPKBinary *duplicate = [self binaryWithName:binary.name];
+  if(duplicate) {
+    binary.name = [self _proposedNameForBinaryName:duplicate.name];
+  }
   [self touchModified];
   [self insertObject:binary inMutableBinariesAtIndex:index];
   
@@ -746,6 +758,24 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     [self removeObjectFromMutableBinariesAtIndex:index];
   }
 }
+
+
+- (NSString *)_proposedNameForBinaryName:(NSString *)name {
+  NSUInteger counter = 1;
+  NSString *extension = name.pathExtension;
+  NSString *base = [name stringByDeletingPathExtension];
+  NSString *newName = name;
+  while(nil != [self binaryWithName:newName]) {
+    if(extension.length > 0) {
+      newName = [NSString stringWithFormat:@"%@-%lu.%@", base, (unsigned long)counter++, extension];
+    }
+    else {
+      newName = [NSString stringWithFormat:@"%@-%lu", base, (unsigned long)counter++];
+    }
+  }
+  return newName;
+}
+
 
 - (void)_regenerateUUIDs {
   [super _regenerateUUIDs];

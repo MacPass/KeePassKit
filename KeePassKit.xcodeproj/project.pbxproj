@@ -749,6 +749,9 @@
 		4C2ADBF41D7C6665002C3190 /* KPKArchiver_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ADBF31D7C6665002C3190 /* KPKArchiver_Private.h */; };
 		4C2D8B151DEF043600AB72CD /* KPKTestEmptyString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */; };
 		4C415D381F581D4200C08985 /* KPKTestDeletedObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C415D371F581D4200C08985 /* KPKTestDeletedObjects.m */; };
+		4C429FF220AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */; };
+		4C429FF320AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */; };
+		4C429FF420AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */; };
 		4C42AC0A20502EB900B5B205 /* NSString+KPKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C42AC0820502EB900B5B205 /* NSString+KPKAdditions.h */; };
 		4C42AC0B20502EB900B5B205 /* NSString+KPKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C42AC0820502EB900B5B205 /* NSString+KPKAdditions.h */; };
 		4C42AC0C20502EB900B5B205 /* NSString+KPKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C42AC0820502EB900B5B205 /* NSString+KPKAdditions.h */; };
@@ -1118,6 +1121,7 @@
 		4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestEmptyString.m; sourceTree = "<group>"; };
 		4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKPlatformIncludes.h; sourceTree = "<group>"; };
 		4C415D371F581D4200C08985 /* KPKTestDeletedObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestDeletedObjects.m; sourceTree = "<group>"; };
+		4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestUniqueBinaryNames.m; sourceTree = "<group>"; };
 		4C42AC0820502EB900B5B205 /* NSString+KPKAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+KPKAdditions.h"; sourceTree = "<group>"; };
 		4C42AC0920502EB900B5B205 /* NSString+KPKAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+KPKAdditions.m"; sourceTree = "<group>"; };
 		4C44988E1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KPKTestMinimumVersionDetermination.m; path = KeePassKitTests/KPKTestMinimumVersionDetermination.m; sourceTree = SOURCE_ROOT; };
@@ -1700,6 +1704,7 @@
 				4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */,
 				4C415D371F581D4200C08985 /* KPKTestDeletedObjects.m */,
 				4CE94DD01F69885E00EE9A5A /* KPKTestTrash.m */,
+				4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */,
 				4C5CF3291BE10B650019AA81 /* Info.plist */,
 			);
 			path = KeePassKitTests;
@@ -3006,6 +3011,7 @@
 				2D51254A1E9BD06700D7EAF6 /* KPKTestWindowAssociationTitleMatching.m in Sources */,
 				2D51254B1E9BD06700D7EAF6 /* KPKTestMinimumVersionDetermination.m in Sources */,
 				2D51254C1E9BD06700D7EAF6 /* KPKTextXMLUtilities.m in Sources */,
+				4C429FF320AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m in Sources */,
 				2D51254D1E9BD06700D7EAF6 /* KPKTestUUIDAdditions.m in Sources */,
 				2D51254E1E9BD06700D7EAF6 /* KPKTestHashedData.m in Sources */,
 				2D51254F1E9BD06700D7EAF6 /* KPKTestArgon2.m in Sources */,
@@ -3149,6 +3155,7 @@
 				2D5126561E9BD29500D7EAF6 /* KPKTestWindowAssociationTitleMatching.m in Sources */,
 				2D5126571E9BD29500D7EAF6 /* KPKTestMinimumVersionDetermination.m in Sources */,
 				2D5126581E9BD29500D7EAF6 /* KPKTextXMLUtilities.m in Sources */,
+				4C429FF420AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m in Sources */,
 				2D5126591E9BD29500D7EAF6 /* KPKTestUUIDAdditions.m in Sources */,
 				2D51265A1E9BD29500D7EAF6 /* KPKTestHashedData.m in Sources */,
 				2D51265B1E9BD29500D7EAF6 /* KPKTestArgon2.m in Sources */,
@@ -3361,6 +3368,7 @@
 				4CE94DD11F69885E00EE9A5A /* KPKTestTrash.m in Sources */,
 				4C5CF4AA1BE10F090019AA81 /* KPKIconLoading.m in Sources */,
 				4C8836A61FB34DC700CD2CD1 /* KPKTestEntryAttributes.m in Sources */,
+				4C429FF220AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m in Sources */,
 				4C5CF4AE1BE10F090019AA81 /* KPKTestKeyfileParsing.m in Sources */,
 				4C5CF4B71BE10F090019AA81 /* KPKTestUndo.m in Sources */,
 				4C5CF4BA1BE10F090019AA81 /* KPKTestXmlParsing.m in Sources */,
