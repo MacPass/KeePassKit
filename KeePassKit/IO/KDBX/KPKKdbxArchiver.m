@@ -319,7 +319,7 @@
       NSUInteger length = binary.data.length + 1;
       uint8_t *buffer = malloc(sizeof(uint8_t) * (length));
       memset(buffer, 0, (binary.data.length + 1));
-      if(binary.protectInMemory) {
+      if(binary.protect) {
         buffer[0] |= KPKBinaryProtectMemoryFlag;
       }
       /* copy data after flags */

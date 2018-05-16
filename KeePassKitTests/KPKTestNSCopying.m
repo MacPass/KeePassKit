@@ -22,12 +22,12 @@
   
   attribute.key = @"NewKey";
   attribute.value = @"NewValue";
-  attribute.isProtected = YES;
+  attribute.protect = YES;
   
   XCTAssertNotNil(copy, @"Copy shoule exist");
   XCTAssertTrue([copy.key isEqualToString:@"Key"], @"Copy key should be key");
   XCTAssertTrue([copy.value isEqualToString:kKPKXmlValue], @"Copy value should be value");
-  XCTAssertFalse(copy.isProtected, @"Copy should not be protected");
+  XCTAssertFalse(copy.protect, @"Copy should not be protected");
 }
 
 - (void)testEntryCopying {

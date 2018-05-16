@@ -27,7 +27,7 @@
 
 @property (nonatomic, copy, readonly) NSString *name;
 @property (nonatomic, copy, readonly) NSData *data;
-@property (nonatomic) BOOL protectInMemory;
+@property (nonatomic) BOOL protect;
 
 /**
  @param name The name for the attachment, usually this should be the filename with extension

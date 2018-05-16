@@ -78,7 +78,7 @@
   if(self) {
     [self _encodeValue:value];
     _key = [key copy];
-    _isProtected = protected;
+    _protect = protected;
   }
   return self;
 }
@@ -95,20 +95,20 @@
   self = [self init];
   if(self) {
     self.key = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(key))];
-    self.isProtected = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isProtected))];
+    self.protect = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(protect))];
     self.data = [aDecoder decodeObjectOfClass:KPKData.class forKey:NSStringFromSelector(@selector(data))];
   }
   return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-  [aCoder encodeBool:self.isProtected forKey:NSStringFromSelector(@selector(isProtected))];
+  [aCoder encodeBool:self.protect forKey:NSStringFromSelector(@selector(protect))];
   [aCoder encodeObject:self.key forKey:NSStringFromSelector(@selector(key))];
   [aCoder encodeObject:self.data forKey:NSStringFromSelector(@selector(data))];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-  return [[KPKAttribute allocWithZone:zone] initWithKey:self.key value:self.value isProtected:self.isProtected];
+  return [[KPKAttribute allocWithZone:zone] initWithKey:self.key value:self.value isProtected:self.protect];
 }
 
 - (BOOL)isEqual:(id)object {
@@ -173,15 +173,15 @@
   }
 }
 
-- (void)setIsProtected:(BOOL)protected {
-  if(_isProtected != protected) {
+- (void)setProtect:(BOOL)protected {
+  if(_protect != protected) {
     if(!self.isDefault) {
-      [[self.entry.undoManager prepareWithInvocationTarget:self] setIsProtected:_isProtected];
+      [[self.entry.undoManager prepareWithInvocationTarget:self] setProtect:_protect];
       NSString *template = (protected ? NSLocalizedStringFromTableInBundle(@"PROTECT_%@", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting a custom string value protected")
                             : NSLocalizedStringFromTableInBundle(@"UNPROTECT_%@", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting a custom string value non-protected") );
       [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key]];
     }
-    _isProtected = protected;
+    _protect = protected;
   }
 }
 

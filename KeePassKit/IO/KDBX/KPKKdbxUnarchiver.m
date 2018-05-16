@@ -407,7 +407,7 @@
           uint8_t flags = [reader readByte];
           NSData *data = [reader readDataWithLength:length - 1];
           KPKBinary *binary = [[KPKBinary alloc] initWithName:@"INNER_HEADER_DATA" data:data];
-          binary.protectInMemory = (flags & KPKBinaryProtectMemoryFlag);
+          binary.protect = (flags & KPKBinaryProtectMemoryFlag);
           [self.binaries addObject:binary];
         }
         else {

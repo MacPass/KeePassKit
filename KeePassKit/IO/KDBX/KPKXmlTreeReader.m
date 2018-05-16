@@ -325,7 +325,7 @@
     
     if(attribute.isDefault) {
       [entry _setValue:attribute.value forAttributeWithKey:attribute.key];
-      [entry _setProtect:attribute.isProtected valueForkey:attribute.key];
+      [entry _setProtect:attribute.protect valueForkey:attribute.key];
     }
     else {
       [entry addCustomAttribute:attribute];

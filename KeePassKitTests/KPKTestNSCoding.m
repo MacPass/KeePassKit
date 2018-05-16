@@ -25,7 +25,7 @@
   
   XCTAssertTrue([copy.value isEqualToString:attribute.value], @"Values should be preseved");
   XCTAssertTrue([copy.key isEqualToString:attribute.key], @"Keys should be preserved");
-  XCTAssertTrue(copy.isProtected == attribute.isProtected, @"Protected status should be the same");
+  XCTAssertTrue(copy.protect == attribute.protect, @"Protected status should be the same");
 }
 
 - (void)testBinaryCoding {

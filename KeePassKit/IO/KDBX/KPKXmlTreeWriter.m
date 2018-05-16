@@ -339,7 +339,7 @@
   KPKAddXmlElement(attributeElement, kKPKXmlKey, attribute.key);
   
   NSAssert(metaData, @"Metadata needs to be present for attributes");
-  BOOL isProtected = attribute.isProtected;
+  BOOL isProtected = attribute.protect;
   if([attribute.key isEqualToString:kKPKNotesKey]) {
     isProtected |= metaData.protectNotes;
   }
