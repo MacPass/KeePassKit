@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "KeePassKit"
-  s.version      = "1.9"
+  s.version      = "1.12"
   s.summary      = "KeePass Database loading, storing and manipulation framework."
   s.homepage     = "https://github.com/MacPass/KeePassKit"
   s.license      = "GPLv3"
@@ -13,14 +13,13 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = "10.9"
   s.watchos.deployment_target = "2.0"
   s.tvos.deployment_target = "9.0"
-  s.swift_version = "3.2"
 
   s.resources = "KeePassKit/Localization/*.lproj"
 
   s.subspec 'Core' do |ss|
     ss.source_files  = "KeePassKit/**/*.{h,m}"
     ss.private_header_files = "KeePassKit/**/*_Private.h", "KPKXmlTreeReader.h", "NSDate+KPKPacked.h"
-    ss.dependency 'KissXML', '5.2.2'
+    ss.dependency 'KissXML', '5.2.3'
     ss.dependency 'KeePassKit/Argon2'
     ss.dependency 'KeePassKit/ChaCha20'
     ss.dependency 'KeePassKit/TwoFish'
