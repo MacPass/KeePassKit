@@ -20,14 +20,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#import <CommonCrypto/CommonCrypto.h>
+#import <KissXML/KissXML.h>
 
 #import "NSData+KPKKeyfile.h"
-#import <CommonCrypto/CommonCrypto.h>
 
 #import "KPKErrors.h"
 #import "KPKFormat.h"
 
-#import "DDXMLElementAdditions.h"
 #import "NSString+KPKHexdata.h"
 #import "NSData+KPKRandom.h"
 

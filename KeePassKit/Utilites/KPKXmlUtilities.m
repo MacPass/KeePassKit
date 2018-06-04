@@ -24,8 +24,8 @@
 
 #import "NSDate+KPKAdditions.h"
 
-#import "DDXMLElementAdditions.h"
 #import <Foundation/Foundation.h>
+#import <KissXML/KissXML.h>
 
 static NSDate *referenceDate(void) {
   static NSDate *referenceDate;

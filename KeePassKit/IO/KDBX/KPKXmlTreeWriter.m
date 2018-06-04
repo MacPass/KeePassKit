@@ -20,12 +20,12 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#import <KissXML/KissXML.h>
+
 #import "KPKXmlTreeWriter.h"
 #import "KPKTree.h"
 #import "KPKTree_Private.h"
 
-#import "DDXMLDocument.h"
-#import "DDXMLElementAdditions.h"
 #import "NSUUID+KPKAdditions.h"
 
 #import "KPKKdbxFormat.h"

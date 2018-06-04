@@ -8,11 +8,10 @@
 
 
 @import XCTest;
+@import KissXML;
 
 #import "KeePassKit.h"
 #import "KeePassKit_Private.h"
-
-#import "DDXMLDocument.h"
 
 @interface KPKTestXmlParsing : XCTestCase
 

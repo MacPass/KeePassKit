@@ -1,7 +1,6 @@
-language: objective-c
-
-osx_image: xcode8.3
+osx_image: xcode9.2
 xcode_project: KeePassKit.xcodeproj
+language: objective-c
 
 env:
   matrix:
@@ -12,6 +11,7 @@ env:
 before_install:
 - |
   if [ "$TEST_TYPE" = iOS ] || [ "$TEST_TYPE" = macOS ] || [ "$TEST_TYPE" = tvOS ]; then
+    carthage bootstrap --platform $TEST_TYPE
     gem install xcpretty --no-ri --no-rdoc --no-document --quiet
   fi
 
@@ -25,5 +25,5 @@ script:
     xcodebuild test -scheme "KeePassKit macOS" -sdk macosx | xcpretty -c
   elif [ "$TEST_TYPE" = tvOS ]; then
     set -o pipefail
-    xcodebuild test -scheme "KeePassKit tvOS" -sdk appletvsimulator -destination "platform=tvOS Simulator,name=Apple TV 1080p" | xcpretty -c
+    xcodebuild test -scheme "KeePassKit tvOS" -sdk appletvsimulator -destination "platform=tvOS Simulator,name=Apple TV" | xcpretty -c
   fi

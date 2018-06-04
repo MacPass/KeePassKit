@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "KeePassKit"
-  s.version      = "1.9"
+  s.version      = "1.12"
   s.summary      = "KeePass Database loading, storing and manipulation framework."
   s.homepage     = "https://github.com/MacPass/KeePassKit"
   s.license      = "GPLv3"
@@ -19,20 +19,12 @@ Pod::Spec.new do |s|
   s.subspec 'Core' do |ss|
     ss.source_files  = "KeePassKit/**/*.{h,m}"
     ss.private_header_files = "KeePassKit/**/*_Private.h", "KPKXmlTreeReader.h", "NSDate+KPKPacked.h"
-    # ss.dependency 'KissXML', '5.2.0'
-    ss.dependency 'KeePassKit/KissXML'
+    ss.dependency 'KissXML', '5.2.3'
     ss.dependency 'KeePassKit/Argon2'
     ss.dependency 'KeePassKit/ChaCha20'
     ss.dependency 'KeePassKit/TwoFish'
 
     ss.libraries = 'z'
-  end
-
-  s.subspec 'KissXML' do |ss|
-    ss.source_files = 'KissXML/KissXML/**/*.{h,m}'
-    ss.private_header_files = 'KissXML/KissXML/Private/**/*.h'
-    ss.library      = 'xml2'
-    ss.xcconfig     = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
   end
 
   s.subspec 'Argon2' do |ss|

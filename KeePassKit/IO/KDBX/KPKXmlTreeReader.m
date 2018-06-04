@@ -20,8 +20,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#import <KissXML/KissXML.h>
+
 #import "KPKXmlTreeReader.h"
-#import "DDXMLDocument.h"
 
 #import "KPKArc4RandomStream.h"
 #import "KPKAttribute.h"
@@ -48,9 +49,6 @@
 #import "KPKWindowAssociation.h"
 #import "KPKKdbxFormat.h"
 #import "KPKXmlUtilities.h"
-
-#import "DDXML.h"
-#import "DDXMLElementAdditions.h"
 
 #import "NSData+CommonCrypto.h"
 #import "NSUUID+KPKAdditions.h"
