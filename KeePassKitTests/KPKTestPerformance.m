@@ -12,6 +12,7 @@
 #import "KeePassKit_Private.h"
 
 NSUInteger const _kKPKAttributeCount = 1000;
+NSUInteger const _kKPKBinaryCount = 1000;
 NSUInteger const _kKPKItemCount = 100;
 NSUInteger const _kKPKTreeDepth = 10;
 NSUInteger const _kKPKGroupAndEntryCount = 50000;
@@ -24,6 +25,8 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
   NSMutableArray<KPKGroup *> *groups;
   NSMutableArray<NSUUID *> *entryUUIDs;
   NSMutableArray<NSUUID *> *groupUUIDs;
+  NSMutableArray *attributes;
+  NSMutableArray *binaries;
 
 }
 @end
@@ -57,6 +60,17 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
     [groups addObject:[[KPKGroup alloc] init]];
     [groupUUIDs addObject:groups.lastObject.uuid];
   }
+  attributes = [[NSMutableArray alloc] initWithCapacity:_kKPKAttributeCount];
+  binaries = [[NSMutableArray alloc] initWithCapacity:_kKPKBinaryCount];
+  for(NSUInteger index = 0; index < _kKPKAttributeCount; index++) {
+    [attributes addObject:[[KPKAttribute alloc] initWithKey:[NSString stringWithFormat:@"Key %lu", index] value:[NSString stringWithFormat:@"Value %lu", index]]];
+  }
+  
+  for(NSUInteger index = 0; index < _kKPKBinaryCount; index++) {
+    KPKBinary *binary = [[KPKBinary alloc] initWithName:[NSString stringWithFormat:@"Binary %lu", index] data:[NSData kpk_dataWithRandomBytes:1024*1024]];
+    [binaries addObject:binary];
+  }
+
 }
 
 - (void)_add:(NSUInteger)number ofItemsToGroup:(KPKGroup *)root depth:(NSUInteger *)depth{
@@ -135,7 +149,6 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
   }];
 }
 
-
 - (void)testAllEntriesRetirevalByTraversalPerformance {
   [self measureBlock:^{
     [tree.root _traverseNodesWithBlock:^(KPKNode *node){}];
@@ -145,6 +158,22 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 - (void)testAllGroupsRetirevalByTraversalPerformance {
   [self measureBlock:^{
     [tree.root _traverseNodesWithBlock:^(KPKNode *node){}];
+  }];
+}
+
+- (void)testAttributeDataRetrieval {
+  [self measureBlock:^{
+    for(KPKAttribute *attribute in attributes) {
+      NSString *value = attribute.value;
+    }
+  }];
+}
+
+- (void)testBinaryDataRetrieval {
+  [self measureBlock:^{
+    for(KPKBinary *binary in binaries) {
+      NSData *data = binary.data;
+    }
   }];
 }
 
