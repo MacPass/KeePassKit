@@ -7,16 +7,9 @@
 //
 
 #import "KPKData.h"
+#import "KPKData_Private.h"
 #import "NSData+KPKRandom.h"
 #import "NSData+KPKXor.h"
-
-@interface KPKData ()
-
-@property (copy) NSData *xoredData;
-@property (copy) NSData *xorPad;
-@property (assign) NSUInteger length;
-
-@end
 
 @implementation KPKData
 

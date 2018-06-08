@@ -164,7 +164,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 - (void)testAttributeDataRetrieval {
   [self measureBlock:^{
     for(KPKAttribute *attribute in attributes) {
-      NSString *value = attribute.value;
+      XCTAssertNotNil(attribute.value);
     }
   }];
 }
@@ -172,7 +172,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 - (void)testBinaryDataRetrieval {
   [self measureBlock:^{
     for(KPKBinary *binary in binaries) {
-      NSData *data = binary.data;
+      XCTAssertNotNil(binary.data);
     }
   }];
 }

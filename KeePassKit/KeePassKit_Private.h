@@ -15,6 +15,7 @@
 #import "KPKAttribute_Private.h"
 #import "KPKAutotype_Private.h"
 #import "KPKBinary_Private.h"
+#import "KPKData_Private.h"
 #import "KPKEntry_Private.h"
 #import "KPKGroup_Private.h"
 #import "KPKNode_Private.h"

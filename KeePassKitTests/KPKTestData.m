@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "KeePassKit.h"
+#import "KeePassKit_Private.h"
 
 @interface KPKTestData : XCTestCase
 
@@ -44,13 +45,18 @@
   NSData *randomData = [NSData kpk_dataWithRandomBytes:1024];
   KPKData *data = [[KPKData alloc] initWithData:randomData];
   
-  NSData *xoredData = [data valueForKey:@"xoredData"];
-  NSData *xorPad = [data valueForKey:@"xorPad"];
-  NSNumber *length = [data valueForKey:@"length"];
-  
-  XCTAssertEqual(length.integerValue, randomData.length);
-  XCTAssertNotEqualObjects(xoredData, randomData);
-  XCTAssertNotEqualObjects(xorPad, randomData);
+  XCTAssertEqual(data.length, randomData.length);
+  XCTAssertNotEqualObjects(data.xoredData, randomData);
+  XCTAssertNotEqualObjects(data.xorPad, randomData);
+}
+
+- (void)testDataPerformance {
+  KPKData *data = [[KPKData alloc] initWithData:[NSData kpk_dataWithRandomBytes:1024*1024]];
+  [self measureBlock:^{
+    for(NSUInteger count = 0; count < 100; count++) {
+      XCTAssertNotNil(data.data);
+    }
+  }];
 }
 
 @end
