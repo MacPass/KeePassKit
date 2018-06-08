@@ -32,13 +32,14 @@
   if(self.length == 0) {
     return nil;
   }
-  uint8_t buffer[self.length];
-  [self getBytes:buffer length:self.length];
+  
+  NSMutableData *buffer = [self mutableCopy];
   const uint8_t *keyPointer = key.bytes;
+  uint8_t *dataPointer = buffer.mutableBytes;
   for(NSUInteger byteIndex = 0; byteIndex < self.length; byteIndex++) {
-    buffer[byteIndex] ^= keyPointer[byteIndex];
+    dataPointer[byteIndex] ^= keyPointer[byteIndex];
   }
-  return [NSData dataWithBytes:buffer length:self.length];
+  return [buffer copy];
 }
 
 @end
