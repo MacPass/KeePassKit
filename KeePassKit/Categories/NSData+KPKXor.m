@@ -36,6 +36,7 @@
   NSMutableData *buffer = [self mutableCopy];
   const uint8_t *keyPointer = key.bytes;
   uint8_t *dataPointer = buffer.mutableBytes;
+  // TODO: check if this can benefit from dispatch_apply
   for(NSUInteger byteIndex = 0; byteIndex < self.length; byteIndex++) {
     dataPointer[byteIndex] ^= keyPointer[byteIndex];
   }

@@ -11,11 +11,20 @@
 #import "KeePassKit.h"
 #import "KeePassKit_Private.h"
 
+#if !KPK_MAC
 NSUInteger const _kKPKAttributeCount = 1000;
 NSUInteger const _kKPKBinaryCount = 1000;
 NSUInteger const _kKPKItemCount = 100;
 NSUInteger const _kKPKTreeDepth = 10;
 NSUInteger const _kKPKGroupAndEntryCount = 50000;
+#else
+NSUInteger const _kKPKAttributeCount = 500;
+NSUInteger const _kKPKBinaryCount = 300;
+NSUInteger const _kKPKItemCount = 50;
+NSUInteger const _kKPKTreeDepth = 5;
+NSUInteger const _kKPKGroupAndEntryCount = 5000;
+#endif
+
 
 @interface KPKTestPerformance : XCTestCase <KPKTreeDelegate> {
   KPKEntry *testEntry;
