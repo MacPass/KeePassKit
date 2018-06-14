@@ -51,6 +51,7 @@
   [self _mergeLocationFromNodes:tree.allEntries];
   [self _mergeLocationFromNodes:tree.allGroups];
   [self _mergeDeletedObjects:tree.mutableDeletedObjects];
+  // FIXME: Deletions only get re-applied on synchronize merge method
   [self _reapplyDeletions:self.root];
   [self.metaData _mergeWithMetaDataFromTree:tree options:options];
   ;
