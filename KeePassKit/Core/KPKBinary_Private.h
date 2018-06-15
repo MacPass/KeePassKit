@@ -12,5 +12,6 @@
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSData *data;
+@property (nonatomic, copy) KPKData *internalData;
 
 @end

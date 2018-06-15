@@ -27,6 +27,9 @@
 
 @implementation KPKBinary
 
+@dynamic protect;
+@dynamic data;
+
 + (BOOL)supportsSecureCoding {
   return YES;
 }
@@ -35,8 +38,7 @@
   self = [super init];
   if(self) {
     _name = [name copy];
-    _data = [data copy];
-    _protect = NO;
+    _internalData = [[KPKData alloc] initWithUnprotectedData:data];
   }
   return self;
 }
@@ -88,8 +90,7 @@
   KPKBinary *copy = [[KPKBinary allocWithZone:zone] init];
   if(copy) {
     copy.name = _name;
-    copy.data = _data;
-    copy.protect = _protect;
+    copy.internalData = _internalData;
   }
   return copy;
 }
@@ -118,6 +119,23 @@
   
   return result;
 }
+
+- (NSData *)data {
+  return self.internalData.data;
+}
+
+- (void)setData:(NSData *)data {
+  self.internalData.data = data;
+}
+
+- (BOOL)protect {
+  return self.internalData.protect;
+}
+
+- (void)setProtect:(BOOL)protect {
+  self.internalData.protect = protect;
+}
+
 
 - (BOOL)saveToLocation:(NSURL *)location error:(NSError *__autoreleasing *)error {
   return [self.data writeToURL:location options:0 error:error];
