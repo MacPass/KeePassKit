@@ -10,7 +10,7 @@
 
 @interface KPKData ()
 
-@property (copy) NSData *xoredData;
+@property (copy) NSData *internalData;
 @property (copy) NSData *xorPad;
 @property (assign) NSUInteger length;
 

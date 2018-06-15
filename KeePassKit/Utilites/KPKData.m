@@ -18,13 +18,24 @@
 }
 
 - (instancetype)init {
-  self = [super init];
+  self = [self initWithData:nil protect:YES];
   return self;
 }
 
-- (instancetype)initWithData:(NSData *)data {
-  self = [self init];
+- (instancetype)initWithProtectedData:(NSData *)data {
+  self = [self initWithData:data protect:YES];
+  return self;
+}
+
+- (instancetype)initWithUnprotectedData:(NSData *)data {
+  self = [self initWithData:data protect:NO];
+  return self;
+}
+
+- (instancetype)initWithData:(NSData *)data protect:(BOOL)protect {
+  self = [super init];
   if(self) {
+    _protect = protect;
     self.data = data; // use custom setter to use encoding
   }
   return self;
@@ -34,8 +45,9 @@
   NSAssert(aDecoder.allowsKeyedCoding, @"Only keyed coder are supported!");
   self = [self init];
   if(self) {
+    self->_protect = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(protect))];
     self.xorPad = [aDecoder decodeObjectOfClass:NSData.class forKey:NSStringFromSelector(@selector(xorPad))];
-    self.xoredData = [aDecoder decodeObjectOfClass:NSData.class forKey:NSStringFromSelector(@selector(xoredData))];
+    self.internalData = [aDecoder decodeObjectOfClass:NSData.class forKey:NSStringFromSelector(@selector(internalData))];
     self.length = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(length))];
   }
   return self;
@@ -43,21 +55,37 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
   NSAssert(aCoder.allowsKeyedCoding, @"Only keyed coder are supported!");
-  [aCoder encodeObject:self.xoredData forKey:NSStringFromSelector(@selector(xoredData))];
+  [aCoder encodeBool:self.protect forKey:NSStringFromSelector(@selector(protect))];
+  [aCoder encodeObject:self.internalData forKey:NSStringFromSelector(@selector(internalData))];
   [aCoder encodeObject:self.xorPad forKey:NSStringFromSelector(@selector(xorPad))];
   [aCoder encodeInteger:self.length forKey:NSStringFromSelector(@selector(length))];
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-  KPKData *copy = [[KPKData alloc] initWithData:self.data];
+  KPKData *copy = [[KPKData alloc] initWithData:self.data protect:self.protect];
   return copy;
+}
+
+- (void)setProtect:(BOOL)protect {
+  if(_protect == protect) {
+    return;
+  }
+  NSData *data = self.data;
+  _protect = protect;
+  self.data = data;
 }
 
 - (void)setData:(NSData *)data {
   if(!data || data.length == 0) {
     self.length = 0;
-    self.xoredData = nil;
+    self.internalData = nil;
     self.xorPad = nil;
+    return;
+  }
+  /* unprotected data */
+  if(!self.protect) {
+    self.xorPad = nil;
+    self.internalData = data;
     return;
   }
   
@@ -65,11 +93,14 @@
     self.xorPad = [NSData kpk_dataWithRandomBytes:data.length];
   }
   self.length = data.length;
-  self.xoredData = [data kpk_dataXoredWithKey:self.xorPad];
+  self.internalData = [data kpk_dataXoredWithKey:self.xorPad];
 }
 
 - (NSData *)data {
-  return [[self.xoredData kpk_dataXoredWithKey:self.xorPad] copy];
+  if(!self.protect) {
+    return self.internalData;
+  }
+  return [[self.internalData kpk_dataXoredWithKey:self.xorPad] copy];
 }
 
 @end

@@ -66,8 +66,8 @@
 - (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key {
   _hasPassword = (password.length > 0);
   _hasKeyFile = (key != nil);
-  self.kdbKeyData = [[KPKData alloc] initWithData:[self _createKdbDataWithPassword:password keyFile:key]];
-  self.kdbxKeyData = [[KPKData alloc] initWithData:[self _createKdbxDataWithPassword:password keyFile:key]];
+  self.kdbKeyData = [[KPKData alloc] initWithProtectedData:[self _createKdbDataWithPassword:password keyFile:key]];
+  self.kdbxKeyData = [[KPKData alloc] initWithProtectedData:[self _createKdbxDataWithPassword:password keyFile:key]];
 }
 
 - (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseFormat)version {
