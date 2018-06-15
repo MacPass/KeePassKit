@@ -56,7 +56,7 @@
       _mergeable = YES;
     }
     else {
-      /* only modifier keys arent mergabel, the rest should be ok */
+      /* only modifier keys arent mergable, the rest should be ok */
     }
   }
 }

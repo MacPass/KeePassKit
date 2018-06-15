@@ -30,7 +30,7 @@
  If you want to have complex tokens containing more than one character at a time, send reduceTokenStream
  and work with the result.
  
- @param value stringValue to tokenzie
+ @param value stringValue to tokenize
  */
 - (instancetype)initWithValue:(NSString *)value reduce:(BOOL)reduce NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithValue:(NSString *)value;
