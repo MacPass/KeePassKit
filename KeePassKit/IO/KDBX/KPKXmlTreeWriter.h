@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class KPKXmlTreeWriter;
 @class KPKBinary;
 @class KPKRandomStream;
-
+@class KPKData;
 @protocol KPKXmlTreeWriterDelegate <NSObject>
 
 @required
@@ -60,6 +60,9 @@ NS_ASSUME_NONNULL_BEGIN
  @return the unique reference for the binary.
  */
 - (NSUInteger)writer:(KPKXmlTreeWriter *)writer referenceForBinary:(KPKBinary *)binary;
+
+- (NSArray<KPKData *> *)dataForWriter:(KPKXmlTreeWriter *)writer;
+- (NSUInteger)writer:(KPKXmlTreeWriter *)writer referenceForData:(KPKData *)data;
 
 @end
 
