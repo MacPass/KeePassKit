@@ -45,6 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithUnprotectedData:(NSData *)data;
 
+
+- (BOOL)isEqualToData:(KPKData *)data;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -99,6 +99,55 @@
   }];
 }
 
+- (void)testUnprotectedEqualityPerformance {
+  KPKData *data1 = [[KPKData alloc] initWithUnprotectedData:[NSData kpk_dataWithRandomBytes:1024*1024+25]];
+  KPKData *data2 = [data1 copy];
+  [self measureBlock:^{
+    XCTAssertEqualObjects(data1, data2);
+  }];
+}
+
+- (void)testUnprotectedIdentityPerformance {
+  KPKData *data1 = [[KPKData alloc] initWithUnprotectedData:[NSData kpk_dataWithRandomBytes:1024*1024+25]];
+  KPKData *data2 = data1;
+  [self measureBlock:^{
+    XCTAssertEqualObjects(data1, data2);
+  }];
+}
+
+- (void)testProtectedEqualityPerformance {
+  KPKData *data1 = [[KPKData alloc] initWithProtectedData:[NSData kpk_dataWithRandomBytes:1024*1024+25]];
+  KPKData *data2 = [data1 copy];
+  [self measureBlock:^{
+    XCTAssertEqualObjects(data1, data2);
+  }];
+}
+
+- (void)testProtectedIdentityPerformance {
+  KPKData *data1 = [[KPKData alloc] initWithProtectedData:[NSData kpk_dataWithRandomBytes:1024*1024+25]];
+  KPKData *data2 = data1;
+  [self measureBlock:^{
+    XCTAssertEqualObjects(data1, data2);
+  }];
+}
+
+
+- (void)testDataEqualityPerformance {
+  NSData *data1 = [NSData kpk_dataWithRandomBytes:1024*1024+25];
+  NSData *data2 = [data1 copy];
+  [self measureBlock:^{
+    XCTAssertEqualObjects(data1, data2);
+  }];
+}
+
+- (void)testDataIdentityPerformance {
+  NSData *data1 = [NSData kpk_dataWithRandomBytes:1024*1024+25];
+  NSData *data2 = data1;
+  [self measureBlock:^{
+    XCTAssertEqualObjects(data1, data2);
+  }];
+}
+
 
 
 @end

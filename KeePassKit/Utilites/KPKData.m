@@ -66,6 +66,23 @@
   return copy;
 }
 
+- (BOOL)isEqual:(id)object {
+  if(![object isKindOfClass:KPKData.class]) {
+    return NO;
+  }
+  return [self isEqualToData:object];
+}
+
+- (BOOL)isEqualToData:(KPKData *)data {
+  if(self == data) {
+    return YES;
+  }
+  if(self.protect != data.protect) {
+    return NO;
+  }
+  return [self.data isEqualToData:data.data];
+}
+
 - (void)setProtect:(BOOL)protect {
   if(_protect == protect) {
     return;
