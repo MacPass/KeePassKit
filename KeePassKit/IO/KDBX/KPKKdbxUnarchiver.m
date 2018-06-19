@@ -40,6 +40,7 @@
 
 #import "NSDictionary+KPKVariant.h"
 
+#import "KPKData.h"
 #import "KPKNumber.h"
 
 #import <CommonCrypto/CommonCrypto.h>
@@ -53,7 +54,7 @@
 @property KPKCompression compressionAlgorithm;
 
 @property (strong) NSMutableDictionary *customPublicData;
-@property (strong) NSMutableArray *binaries;
+@property (strong) NSMutableArray<KPKData *> *binaryData;
 
 @property NSUInteger headerLength;
 @property (nonatomic,readonly,copy) NSData *headerData;
@@ -81,11 +82,11 @@
 #pragma mark -
 #pragma mark KPKXmlTreeReaderDelegate
 
-- (KPKBinary *)reader:(KPKXmlTreeReader *)reader binaryForReference:(NSUInteger)reference {
-  if(self.binaries.count <= reference) {
+- (KPKData *)reader:(KPKXmlTreeReader *)reader binaryDataForReference:(NSUInteger)reference {
+  if(self.binaryData.count <= reference) {
     return nil;
   }
-  return self.binaries[reference];
+  return self.binaryData[reference];
 }
 
 - (KPKRandomStream *)randomStreamForReader:(KPKXmlTreeReader *)reader {
@@ -390,7 +391,7 @@
   
   uint8_t type;
   uint32_t length;
-  self.binaries = [[NSMutableArray alloc] init];
+  self.binaryData = [[NSMutableArray alloc] init];
   while(reader.hasBytesAvailable) {
     type = [reader readByte];
     length = CFSwapInt32LittleToHost([reader read4Bytes]);
@@ -405,10 +406,15 @@
       case KPKInnerHeaderKeyBinary:
         if(length > 1) {
           uint8_t flags = [reader readByte];
-          NSData *data = [reader readDataWithLength:length - 1];
-          KPKBinary *binary = [[KPKBinary alloc] initWithName:@"INNER_HEADER_DATA" data:data];
-          binary.protect = (flags & KPKBinaryProtectMemoryFlag);
-          [self.binaries addObject:binary];
+          NSData *rawData = [reader readDataWithLength:length - 1];
+          KPKData *data;
+          if(flags & KPKBinaryProtectMemoryFlag) {
+            data = [[KPKData alloc] initWithProtectedData:rawData];
+          }
+          else {
+            data = [[KPKData alloc] initWithUnprotectedData:rawData];
+          }
+          [self.binaryData addObject:data];
         }
         else {
           /* no binary to read */

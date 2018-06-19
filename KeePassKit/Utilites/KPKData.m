@@ -73,6 +73,16 @@
   return [self isEqualToData:object];
 }
 
+- (NSUInteger)hash {
+  NSUInteger result = 1;
+  NSUInteger prime = 149;
+  
+  result = prime * result + (self.data).hash;
+  result = prime * result + self.protect;
+  
+  return result;
+}
+
 - (BOOL)isEqualToData:(KPKData *)data {
   if(self == data) {
     return YES;
@@ -81,6 +91,11 @@
     return NO;
   }
   return [self.data isEqualToData:data.data];
+}
+
+- (NSUInteger)length {
+  /* data is xored so length is preserved */
+  return self.internalData.length;
 }
 
 - (void)setProtect:(BOOL)protect {
@@ -118,6 +133,10 @@
     return self.internalData;
   }
   return [[self.internalData kpk_dataXoredWithKey:self.xorPad] copy];
+}
+
+- (void)getBytes:(void *)buffer length:(NSUInteger)length {
+  [self.data getBytes:buffer length:length];
 }
 
 @end

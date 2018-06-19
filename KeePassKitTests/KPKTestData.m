@@ -99,6 +99,16 @@
   }];
 }
 
+- (void)testHash {
+  NSData *data = [NSData kpk_dataWithRandomBytes:1024+45];
+  KPKData *data1 = [[KPKData alloc] initWithProtectedData:data];
+  KPKData *data2 =  [[KPKData alloc] initWithProtectedData:data];
+  XCTAssertEqual(data1.hash, data2.hash);
+  data1 = [[KPKData alloc] initWithUnprotectedData:data];
+  data2 =  [[KPKData alloc] initWithUnprotectedData:data];
+  XCTAssertEqual(data1.hash, data2.hash);
+}
+
 - (void)testUnprotectedEqualityPerformance {
   KPKData *data1 = [[KPKData alloc] initWithUnprotectedData:[NSData kpk_dataWithRandomBytes:1024*1024+25]];
   KPKData *data2 = [data1 copy];

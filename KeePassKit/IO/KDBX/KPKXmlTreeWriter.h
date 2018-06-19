@@ -50,19 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param writer the calling writer
  @return NSArray containgin the binaries.
  */
-- (NSArray *)binariesForWriter:(KPKXmlTreeWriter *)writer;
-/**
- Called by the writer to retrieve a unique refernce for a given binary.
- This is called regardless of the format!
- 
- @param writer Calling writer
- @param binary The binary to get a reference key for
- @return the unique reference for the binary.
- */
-- (NSUInteger)writer:(KPKXmlTreeWriter *)writer referenceForBinary:(KPKBinary *)binary;
-
-- (NSArray<KPKData *> *)dataForWriter:(KPKXmlTreeWriter *)writer;
-- (NSUInteger)writer:(KPKXmlTreeWriter *)writer referenceForData:(KPKData *)data;
+- (NSArray<KPKData *> *)binaryDataForWriter:(KPKXmlTreeWriter *)writer;
 
 @end
 

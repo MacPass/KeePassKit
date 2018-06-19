@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) BOOL protect;
 @property (nonatomic, copy, nullable) NSData *data;
-
+@property (nonatomic, readonly) NSUInteger length;
 
 /**
  Create a Data object containing the passed data. If protect is set to YES the data will be stored in a more secure fassion in memory.
@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (BOOL)isEqualToData:(KPKData *)data;
+
+- (void)getBytes:(void *)buffer length:(NSUInteger)length;
 
 @end
 

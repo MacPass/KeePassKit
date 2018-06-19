@@ -48,12 +48,6 @@
   return self;
 }
 
-- (instancetype)initWithName:(NSString *)name string:(NSString *)value compressed:(BOOL)compressed {
-  NSData *data = [self _dataForEncodedString:value compressed:compressed];
-  self = [self initWithName:name data:data];
-  return self;
-}
-
 - (instancetype)initWithContentsOfURL:(NSURL *)url {
   if(url) {
     NSError *error = nil;
@@ -138,21 +132,6 @@
 
 - (BOOL)saveToLocation:(NSURL *)location error:(NSError *__autoreleasing *)error {
   return [self.data writeToURL:location options:0 error:error];
-}
-
-- (NSData *)_dataForEncodedString:(NSString *)string compressed:(BOOL)compressed {
-  NSData *data = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
-  if(data && compressed) {
-    return data.kpk_gzipInflated;
-  }
-  return data;
-}
-
-- (NSString *)encodedStringUsingCompression:(BOOL)compress {
-  if(compress) {
-    return [self.data.kpk_gzipDeflated base64EncodedStringWithOptions:0];
-  }
-  return [self.data base64EncodedStringWithOptions:0];
 }
 
 @end

@@ -30,6 +30,7 @@
 #import "KPKBinary.h"
 #import "KPKBinary_Private.h"
 #import "KPKChaCha20RandomStream.h"
+#import "KPKData.h"
 #import "KPKDeletedNode.h"
 #import "KPKEntry.h"
 #import "KPKEntry_Private.h"
@@ -51,6 +52,7 @@
 #import "KPKXmlUtilities.h"
 
 #import "NSData+CommonCrypto.h"
+#import "NSData+KPKGzip.h"
 #import "NSUUID+KPKAdditions.h"
 #import "NSUIColor+KPKAdditions.h"
 
@@ -60,7 +62,7 @@
 @property (nonatomic, strong) KPKRandomStream *randomStream;
 //@property (strong) NSDateFormatter *dateFormatter;
 @property (assign) BOOL useRelativeDates;
-@property (strong) NSMutableDictionary *binaryMap;
+@property (strong) NSMutableDictionary<NSNumber *, KPKData *> *binaryDataMap;
 @property (strong) NSMutableDictionary *iconMap;
 
 @property (copy) NSData *headerHash;
@@ -381,13 +383,21 @@
    */
   DDXMLElement *binariesElement = [root elementForName:kKPKXmlBinaries];
   NSUInteger binaryCount = [binariesElement elementsForName:kKPKXmlBinary].count;
-  self.binaryMap = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,binaryCount)];
+  self.binaryDataMap = [[NSMutableDictionary alloc] initWithCapacity:MAX(1,binaryCount)];
   for (DDXMLElement *element in [binariesElement elementsForName:kKPKXmlBinary]) {
     DDXMLNode *idAttribute = [element attributeForName:kKPKXmlBinaryId];
-    
-    KPKBinary *binary = [[KPKBinary alloc] initWithName:@"UNNAMED" string:[element stringValue] compressed:KPKXmlBoolAttribute(element, kKPKXmlCompressed)];
-    NSUInteger index = [idAttribute stringValue].integerValue;
-    self.binaryMap[ @(index) ] = binary;
+    BOOL compressed = KPKXmlBoolAttribute(element, kKPKXmlCompressed);
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:[element stringValue] options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    // FIXME: Respect protect in memory settings!
+    if(data) {
+      NSUInteger index = [idAttribute stringValue].integerValue;
+      if(compressed) {
+        self.binaryDataMap[@(index)] = [[KPKData alloc] initWithUnprotectedData:data.kpk_gzipInflated];
+      }
+      else {
+        self.binaryDataMap[@(index)] = [[KPKData alloc] initWithUnprotectedData:data];
+      }
+    }
   }
 }
 
@@ -404,16 +414,18 @@
     DDXMLNode *refAttribute = [valueElement attributeForName:kKPKXmlIconReference];
     NSUInteger index = [refAttribute stringValue].integerValue;
     
-    KPKBinary *binary = [self.binaryMap[ @(index) ] copy]; // create a copy since we insert those binaries multiple times!
+    KPKData *binaryData = self.binaryDataMap[@(index)];
     /* we might have no binary map since we did not parse any binaries in the XML so ask the delegate for one */
-    if(!binary) {
-      binary = [self.delegate reader:self binaryForReference:index];
+    if(!binaryData) {
+      binaryData = [[self.delegate reader:self binaryDataForReference:index] copy];
     }
-    NSAssert(binary, @"Unable to dereference binary!");
-    if(!binary) {
+    NSAssert(binaryData, @"Unable to dereference binary!");
+    if(!binaryData) {
       continue;
     }
+    KPKBinary *binary = [[KPKBinary alloc] init];
     binary.name = KPKXmlString(binaryElement, kKPKXmlKey);
+    binary.internalData = binaryData;
     [entry addBinary:binary];
   }
 }

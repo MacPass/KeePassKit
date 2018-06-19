@@ -12,6 +12,7 @@
 #import "KPKArchiver_Private.h"
 
 #import "KPKBinary.h"
+#import "KPKBinary_Private.h"
 #import "KPKCompositeKey.h"
 #import "KPKEntry.h"
 #import "KPKEntry_Private.h"
@@ -34,6 +35,7 @@
 #import "KPKKdbxFormat.h"
 #import "KPKErrors.h"
 
+#import "KPKData.h"
 #import "KPKNumber.h"
 
 #import "NSData+KPKRandom.h"
@@ -95,7 +97,7 @@
 @property (strong) KPKRandomStream *randomStream;
 @property (strong) NSDateFormatter *dateFormatter;
 @property (copy) NSData *headerHash;
-@property (readonly,nonatomic,copy) NSArray *binaries;
+@property (readonly,nonatomic,copy) NSArray<KPKData *> *binaryData;
 
 @end
 
@@ -117,15 +119,13 @@
     }
     
     NSArray *allEntries = [self.tree.allEntries arrayByAddingObjectsFromArray:self.tree.allHistoryEntries];
-    NSMutableArray *tempBinaries = [[NSMutableArray alloc] init];
+    NSMutableSet *tempBinaries = [[NSMutableSet alloc] init];
     for(KPKEntry *entry in allEntries) {
       for(KPKBinary *binary in entry.mutableBinaries) {
-        if(![tempBinaries containsObject:binary]) {
-          [tempBinaries addObject:binary];
-        }
+        [tempBinaries addObject:binary.internalData];
       }
     }
-    _binaries = [tempBinaries copy];
+    _binaryData = tempBinaries.allObjects;
   }
   return self;
 }
@@ -148,12 +148,8 @@
   return [self.headerHash copy];
 }
 
-- (NSUInteger)writer:(KPKXmlTreeWriter *)writer referenceForBinary:(KPKBinary *)binary {
-  return [self.binaries indexOfObject:binary];
-}
-
-- (NSArray *)binariesForWriter:(KPKXmlTreeWriter *)writer {
-  return self.binaries;
+- (NSArray<KPKData *> *)binaryDataForWriter:(KPKXmlTreeWriter *)writer {
+  return self.binaryData;
 }
 
 - (KPKRandomStream *)randomStreamForWriter:(KPKXmlTreeWriter *)writer {
@@ -315,15 +311,15 @@
     uint32_t LErandomStreamId = CFSwapInt32HostToLittle(self.randomStreamID);
     [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyRandomStreamId bytes:&LErandomStreamId length:sizeof(LErandomStreamId)];
     [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyRandomStreamKey data:self.randomStreamKey];
-    for(KPKBinary *binary in self.binaries) {
-      NSUInteger length = binary.data.length + 1;
+    for(KPKData *data in self.binaryData) {
+      NSUInteger length = data.length + 1;
       uint8_t *buffer = malloc(sizeof(uint8_t) * (length));
-      memset(buffer, 0, (binary.data.length + 1));
-      if(binary.protect) {
+      memset(buffer, 0, (data.length + 1));
+      if(data.protect) {
         buffer[0] |= KPKBinaryProtectMemoryFlag;
       }
       /* copy data after flags */
-      [binary.data getBytes:(buffer+1) length:binary.data.length];
+      [data getBytes:(buffer+1) length:data.length];
       [innerDataWriter _writeInnerHeaderField:KPKInnerHeaderKeyBinary bytes:buffer length:length];
       free(buffer);
     }

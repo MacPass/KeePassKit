@@ -26,31 +26,32 @@
 #import "KPKTree.h"
 #import "KPKTree_Private.h"
 
-#import "NSUUID+KPKAdditions.h"
-
-#import "KPKKdbxFormat.h"
-#import "KPKNode_Private.h"
-#import "KPKGroup.h"
-#import "KPKGroup_Private.h"
+#import "KPKAttribute.h"
+#import "KPKAutotype.h"
+#import "KPKBinary.h"
+#import "KPKBinary_Private.h"
+#import "KPKData.h"
+#import "KPKDeletedNode.h"
 #import "KPKEntry.h"
 #import "KPKEntry_Private.h"
 #import "KPKFormat.h"
+#import "KPKGroup.h"
+#import "KPKGroup_Private.h"
+#import "KPKIcon.h"
+#import "KPKKdbxFormat.h"
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
+#import "KPKNode_Private.h"
+#import "KPKRandomStream.h"
 #import "KPKTimeInfo.h"
-#import "KPKDeletedNode.h"
-#import "KPKAttribute.h"
-#import "KPKBinary.h"
-#import "KPKIcon.h"
-#import "KPKAutotype.h"
 #import "KPKWindowAssociation.h"
+#import "KPKXmlUtilities.h"
 
+#import "NSData+KPKGzip.h"
 #import "NSUIColor+KPKAdditions.h"
+#import "NSUUID+KPKAdditions.h"
 #import "NSString+KPKXmlUtilities.h"
 
-#import "KPKRandomStream.h"
-
-#import "KPKXmlUtilities.h"
 
 @interface KPKXmlTreeWriter ()
 
@@ -59,7 +60,7 @@
 @property (readonly, strong) KPKRandomStream *randomStream;
 //@property (strong) NSDateFormatter *dateFormatter;
 @property BOOL useRelativeDate;
-@property (nonatomic, readonly, copy) NSArray *binaries;
+@property (nonatomic, readonly, copy) NSArray<KPKData *> *binaryData;
 
 @property (nonatomic, readonly) BOOL encrypted;
 
@@ -67,7 +68,7 @@
 
 @implementation KPKXmlTreeWriter
 
-@synthesize binaries = _binaries;
+@synthesize binaryData = _binaryData;
 
 - (instancetype)initWithTree:(KPKTree *)tree delegate:(id<KPKXmlTreeWriterDelegate>)delegate {
   self = [super init];
@@ -94,26 +95,24 @@
   return [self.delegate randomStreamForWriter:self];
 }
 
-- (NSArray *)binaries {
-  if(_binaries) {
-    return _binaries;
+- (NSArray<KPKData *> *)binaryData {
+  if(_binaryData) {
+    return _binaryData;
   }
   if(self.delegate) {
-    _binaries = [[self.delegate binariesForWriter:self] copy];
+    _binaryData = [[self.delegate binaryDataForWriter:self] copy];
   }
   else {
     NSArray *allEntries = [self.tree.allEntries arrayByAddingObjectsFromArray:self.tree.allHistoryEntries];
-    NSMutableArray *tempBinaries = [[NSMutableArray alloc] init];
+    NSMutableSet *tempBinaries = [[NSMutableSet alloc] init];
     for(KPKEntry *entry in allEntries) {
       for(KPKBinary *binary in entry.mutableBinaries) {
-        if(![tempBinaries containsObject:binary]) {
-          [tempBinaries addObject:binary];
-        }
+        [tempBinaries addObject:binary.internalData];
       }
     }
-    _binaries = [tempBinaries copy];
+    _binaryData = tempBinaries.allObjects;
   }
-  return _binaries;
+  return _binaryData;
 }
 
 #pragma mark -
@@ -186,7 +185,7 @@
   
   /* only add binaries if we actuall should, ask the delegate! */
   if(!self.randomStream || kKPKKdbxFileVersion4 > [self.delegate fileVersionForWriter:self]) {
-    if(self.binaries) {
+    if(self.binaryData) {
       [metaElement addChild:[self _xmlBinaries]];
     }
   }
@@ -376,23 +375,29 @@
   DDXMLElement *binaryElements = [DDXMLElement elementWithName:kKPKXmlBinaries];
   
   BOOL compress = (self.tree.metaData.compressionAlgorithm == KPKCompressionGzip);
-  for(KPKBinary *binary in self.binaries) {
+  for(KPKData *data in self.binaryData) {
     DDXMLElement *binaryElement = [DDXMLElement elementWithName:kKPKXmlBinary];
-    KPKAddXmlAttribute(binaryElement, kKPKXmlBinaryId, KPKStringFromLong([self.binaries indexOfObject:binary]));
+    KPKAddXmlAttribute(binaryElement, kKPKXmlBinaryId, KPKStringFromLong([self.binaryData indexOfObject:data]));
     KPKAddXmlAttribute(binaryElement, kKPKXmlCompressed, KPKStringFromBool(compress));
-    binaryElement.stringValue = [binary encodedStringUsingCompression:compress];
+    if(compress) {
+      binaryElement.stringValue = [data.data.kpk_gzipDeflated base64EncodedStringWithOptions:0];
+    }
+    else {
+      binaryElement.stringValue = [data.data base64EncodedStringWithOptions:0];
+    }
     [binaryElements addChild:binaryElement];
   }
   return binaryElements;
 }
 
 - (DDXMLElement *)_xmlBinary:(KPKBinary *)binary {
-  NSAssert(self.binaries, @"Internal inconsicenty. Serialization for binary requested but no binaries supplied!");
+  NSAssert(self.binaryData, @"Internal inconsicenty. Serialization for binary requested but no binaries supplied!");
   DDXMLElement *binaryElement = [DDXMLElement elementWithName:kKPKXmlBinary];
   KPKAddXmlElement(binaryElement, kKPKXmlKey, binary.name.kpk_xmlCompatibleString);
   DDXMLElement *valueElement = [DDXMLElement elementWithName:kKPKXmlValue];
   [binaryElement addChild:valueElement];
-  KPKAddXmlAttribute(valueElement, kKPKXmlIconReference, KPKStringFromLong([self.binaries indexOfObject:binary]));
+  NSUInteger reference = [self.binaryData indexOfObject:binary.internalData];
+  KPKAddXmlAttribute(valueElement, kKPKXmlIconReference, KPKStringFromLong(reference));
   return binaryElement;
 }
 
