@@ -127,7 +127,12 @@ static NSCalendar *_gregorianCalendar(void) {
     });
     return referenceDate;
   }
-  
+/*
+ The call to timegm on iOS is even slower than using a date formatter,
+ on macOS using C functions yields much faster times
+ */
+#ifdef KPK_MAC
+
   struct tm time;
   __unused char *result = strptime([string cStringUsingEncoding:NSUTF8StringEncoding], "%Y-%m-%dT%H:%M:%SZ", &time);
   NSAssert(result != NULL, @"Internal inconsitency. Unable to parse date format!");
@@ -136,6 +141,24 @@ static NSCalendar *_gregorianCalendar(void) {
   time.tm_zone = "UTC";
   time_t t = timegm(&time);
   return [NSDate dateWithTimeIntervalSince1970:t];
+
+#else
+
+  NSDateComponents *components = [[NSDateComponents alloc] init];
+  NSUInteger year, month, day, hour, minute, second;
+  sscanf([string cStringUsingEncoding:NSUTF8StringEncoding], "%ld-%ld-%ldT%ld:%ld:%ldZ", &year, &month, &day, &hour, &minute, &second);
+  components.year = year;
+  components.month = month;
+  components.day = day;
+  components.hour = hour;
+  components.minute = minute;
+  components.second = second;
+  components.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+  components.calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+
+  return components.date;
+
+#endif
 }
 
 - (NSString *)kpk_UTCString {

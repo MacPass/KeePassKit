@@ -952,6 +952,8 @@
 		4CA1E49C1D8838BC00100002 /* KPKTestArgon2.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */; };
 		4CA6DB8E1DC3574200650417 /* KPKChaCha20RandomStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA6DB8C1DC3574200650417 /* KPKChaCha20RandomStream.h */; };
 		4CA6DB8F1DC3574200650417 /* KPKChaCha20RandomStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA6DB8D1DC3574200650417 /* KPKChaCha20RandomStream.m */; };
+		4CA7EB7B20D9B009006F3680 /* KPKTestDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9727D1F7E756500956EEB /* KPKTestDateAdditions.m */; };
+		4CA7EB7C20D9B00A006F3680 /* KPKTestDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9727D1F7E756500956EEB /* KPKTestDateAdditions.m */; };
 		4CB13A0E1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
 		4CB13A0F1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
 		4CB13A101FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
@@ -3017,6 +3019,7 @@
 				2D5125441E9BD06700D7EAF6 /* KPKTestNSCoding.m in Sources */,
 				2D5125451E9BD06700D7EAF6 /* KPKTestPerformance.m in Sources */,
 				2D5125461E9BD06700D7EAF6 /* KPKTestModificationDates.m in Sources */,
+				4CA7EB7B20D9B009006F3680 /* KPKTestDateAdditions.m in Sources */,
 				2D5125471E9BD06700D7EAF6 /* KPKTestHexColor.m in Sources */,
 				2D5125481E9BD06700D7EAF6 /* KPKTestKPKNumber.m in Sources */,
 				4C059B6520D4577300655B99 /* KPKTestBinary.m in Sources */,
@@ -3157,6 +3160,7 @@
 				2D5126501E9BD29500D7EAF6 /* KPKTestNSCoding.m in Sources */,
 				2D5126511E9BD29500D7EAF6 /* KPKTestPerformance.m in Sources */,
 				2D5126521E9BD29500D7EAF6 /* KPKTestModificationDates.m in Sources */,
+				4CA7EB7C20D9B00A006F3680 /* KPKTestDateAdditions.m in Sources */,
 				2D5126531E9BD29500D7EAF6 /* KPKTestHexColor.m in Sources */,
 				2D5126541E9BD29500D7EAF6 /* KPKTestKPKNumber.m in Sources */,
 				4C059B6620D4577300655B99 /* KPKTestBinary.m in Sources */,

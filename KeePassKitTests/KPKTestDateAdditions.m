@@ -38,5 +38,19 @@
   XCTAssertEqualObjects(lowPrecisionDate, [NSDate kpk_dateFromUTCString:date.kpk_UTCString]);
 }
 
+- (void)testDateFormatterPerformance {
+  NSDate *date = [NSDate date];
+  [self measureBlock:^{
+  XCTAssertNotNil([self.dateFormatter dateFromString:date.kpk_UTCString]);
+  }];
+}
+
+- (void)testDateAdditionPerformance {
+  NSDate *date = [NSDate date];
+  [self measureBlock:^{
+  XCTAssertNotNil([NSDate kpk_dateFromUTCString:date.kpk_UTCString]);
+  }];
+}
+
 
 @end

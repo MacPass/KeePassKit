@@ -36,8 +36,9 @@
   NSData *data = [self encode:binary];
   KPKBinary *decodedBinary = [self decode:data ofClass:KPKBinary.class];
   
-  XCTAssertTrue([decodedBinary.data isEqualToData:binary.data]);
-  XCTAssertTrue([decodedBinary.name isEqualToString:binary.name]);
+  XCTAssertEqualObjects(decodedBinary.data, binary.data);
+  XCTAssertEqualObjects(decodedBinary.name, binary.name);
+  XCTAssertEqual(decodedBinary.protect, binary.protect);
 }
 
 - (void)testEntryCoding {
@@ -78,8 +79,9 @@
   XCTAssertTrue([copyEntry.binaries count] == 1, @"Binaries should be copied");
   
   KPKBinary *copiedBinary = (copyEntry.binaries).lastObject;
-  XCTAssertTrue([copiedBinary.data isEqualToData:binary.data], @"Binary data should match");
-  XCTAssertTrue([copiedBinary.name isEqualToString:binary.name], @"Binary names should match");
+  XCTAssertEqualObjects(copiedBinary.data, binary.data, @"Binary data should match");
+  XCTAssertEqualObjects(copiedBinary.name, binary.name, @"Binary names should match");
+  XCTAssertEqual(copiedBinary.protect, binary.protect, @"Binary names should match");
   
   XCTAssertEqual(KPKComparsionEqual, [entry compareToEntry:copyEntry], @"Decoede entry is the equal to encoded one!");
   [entry clearHistory];
@@ -87,7 +89,6 @@
 }
 
 #if KPK_MAC
-
 - (void)testIconCoding {
   NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
   NSURL *imageURL = [myBundle URLForImageResource:@"image.png"];
@@ -109,7 +110,6 @@
   NSData *decodedData = (decodedIcon.image).TIFFRepresentation;
   XCTAssertTrue([originalData isEqualToData:decodedData]);
 }
-
 #endif
 
 - (void)testGroupCoding {
@@ -138,11 +138,11 @@
   NSData *data = [self encode:group];
   KPKGroup *decodedGroup = [self decode:data ofClass:KPKGroup.class];
   
-  XCTAssertTrue([group.uuid isEqual:decodedGroup.uuid]);
-  XCTAssertTrue([group.title isEqualToString:decodedGroup.title]);
+  XCTAssertEqualObjects(group.uuid, decodedGroup.uuid);
+  XCTAssertEqualObjects(group.title, decodedGroup.title);
   XCTAssertEqual(group.entries.count, decodedGroup.entries.count);
   XCTAssertEqual(group.iconId, decodedGroup.iconId);
-  XCTAssertTrue([group.notes isEqualToString:decodedGroup.notes]);
+  XCTAssertEqualObjects(group.notes, decodedGroup.notes);
  
   XCTAssertEqualObjects(childGroup.parent, group);
   XCTAssertEqualObjects(subEntry.parent, childGroup);
