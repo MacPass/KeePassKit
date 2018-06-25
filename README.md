@@ -10,6 +10,7 @@ It's inspired by [MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) and [
 
 [Chester Liu](skyline75489@outlook.com)
 [Jordan Sechler](jordan.sechler@gmail.com)
+[Maxime Epain](me@maxep.me)
 
 ## License
 
