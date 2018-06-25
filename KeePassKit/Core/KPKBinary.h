@@ -42,6 +42,7 @@
 - (instancetype)initWithContentsOfURL:(NSURL *)url;
 
 - (BOOL)isEqualtoBinary:(KPKBinary *)binary;
+
 - (BOOL)saveToLocation:(NSURL *)location error:(NSError *__autoreleasing *)error;
 
 @end
