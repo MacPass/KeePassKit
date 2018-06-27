@@ -18,7 +18,7 @@
 }
 
 - (instancetype)init {
-  self = [self initWithData:nil protect:NO];
+  self = [self initWithData:nil protect:YES];
   return self;
 }
 
