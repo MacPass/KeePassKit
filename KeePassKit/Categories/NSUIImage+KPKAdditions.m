@@ -24,7 +24,7 @@
     }
   }
   
-  if(![bestRep isKindOfClass:[NSBitmapImageRep class]]) {
+  if(![bestRep isKindOfClass:NSBitmapImageRep.class]) {
     NSSize renderSize = NSMakeSize(256, 256);
     bestRep = [self bestRepresentationForRect:NSMakeRect(0, 0, renderSize.width, renderSize.height) context:nil hints:nil];
     NSAssert(bestRep, @"No image representation present to render image!");
@@ -39,15 +39,15 @@
       renderSize.width = (renderSize.height * aspect);
     }
     bestRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
-                                                                    pixelsWide:renderSize.width
-                                                                    pixelsHigh:renderSize.height
-                                                                 bitsPerSample:8
-                                                               samplesPerPixel:4
-                                                                      hasAlpha:YES
-                                                                      isPlanar:NO
-                                                                colorSpaceName:NSCalibratedRGBColorSpace
-                                                                   bytesPerRow:0
-                                                                  bitsPerPixel:0];
+                                                      pixelsWide:renderSize.width
+                                                      pixelsHigh:renderSize.height
+                                                   bitsPerSample:8
+                                                 samplesPerPixel:4
+                                                        hasAlpha:YES
+                                                        isPlanar:NO
+                                                  colorSpaceName:NSCalibratedRGBColorSpace
+                                                     bytesPerRow:0
+                                                    bitsPerPixel:0];
     bestRep.size = renderSize;
     
     [NSGraphicsContext saveGraphicsState];

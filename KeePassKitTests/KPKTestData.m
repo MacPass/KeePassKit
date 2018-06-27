@@ -23,6 +23,7 @@
   XCTAssertEqualObjects(data.data, randomData);
   
   data = [[KPKData alloc] init];
+  data.protect = YES;
   XCTAssertNil(data.data);
   data.data = randomData;
   XCTAssertEqualObjects(data.data, randomData);
