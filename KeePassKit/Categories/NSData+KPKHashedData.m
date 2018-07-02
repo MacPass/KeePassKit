@@ -100,6 +100,7 @@
   uint8_t hash[32];
   
   NSMutableData *unhashed = [[NSMutableData alloc] initWithCapacity:self.length];
+  NSMutableData *rawData;
   
   while(YES) {
     
@@ -131,14 +132,17 @@
       return unhashed;
     }
     KPKValidateLength(self.length, location, bufferLength)
-    uint8_t rawData[bufferLength];
-    [self getBytes:rawData range:NSMakeRange(location, bufferLength)];
+    if(!rawData) {
+      rawData = [[NSMutableData alloc] initWithLength:bufferLength];
+    }
+    rawData.length = bufferLength;
+    [self getBytes:rawData.mutableBytes range:NSMakeRange(location, bufferLength)];
     location +=bufferLength;
     
     uint8_t verifyHash[32];
-    CC_SHA256(rawData, bufferLength, verifyHash);
+    CC_SHA256(rawData.bytes, bufferLength, verifyHash);
     if(!memcmp(verifyHash, hash, 32)) {
-      [unhashed appendBytes:rawData length:bufferLength];
+      [unhashed appendBytes:rawData.bytes length:bufferLength];
     }
     if(location == self.length) {
       return unhashed;
@@ -186,18 +190,19 @@
   uint32_t blockCount = ceil((CGFloat)self.length / (CGFloat)blockSize);
   uint32_t location = 0;
   NSMutableData *outputData = [[NSMutableData alloc] initWithCapacity:blockCount * (blockSize + 33)];
+  NSMutableData *sliceData = [[NSMutableData alloc] initWithLength:blockSize];
   uint32_t blockIndex = 0;
   uint32_t blockLength = 0;
   uint8_t hash[32];
   for(; blockIndex < blockCount; blockIndex++) {
     blockLength = MAX(0,MIN((uint32_t)self.length - location, (uint32_t)blockSize));
-    uint8_t slice[blockLength];
-    [self getBytes:slice range:NSMakeRange(location, blockLength)];
+    sliceData.length = blockLength;
+    [self getBytes:sliceData.mutableBytes range:NSMakeRange(location, blockLength)];
     [outputData appendBytes:&blockIndex length:4];
-    CC_SHA256(slice, blockLength, hash);
+    CC_SHA256(sliceData.bytes, blockLength, hash);
     [outputData appendBytes:hash length:32];
     [outputData appendBytes:&blockLength length:4];
-    [outputData appendBytes:slice length:blockLength];
+    [outputData appendBytes:sliceData.bytes length:blockLength];
     location += blockLength;
   }
   /* Write the terminating 0-hash */
