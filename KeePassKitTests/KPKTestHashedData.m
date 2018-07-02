@@ -66,5 +66,23 @@
   }];
 }
 
+- (void)testHmacSha256HashingPerformance {
+  NSData *data = [NSData kpk_dataWithRandomBytes:1024*1024*8 + 512];
+  NSData *key = [NSData kpk_dataWithRandomBytes:64];
+  [self measureBlock:^{
+    XCTAssertNotNil([data kpk_hashedHmacSha256DataWithKey:key error:nil]);
+  }];
+}
+
+- (void)testHmacSha256UnhashingPerformance {
+  NSData *data = [NSData kpk_dataWithRandomBytes:1024*1024*8 + 512];
+  NSData *key = [NSData kpk_dataWithRandomBytes:64];
+  NSData *hashedData = [data kpk_hashedHmacSha256DataWithKey:key error:nil];
+  [self measureBlock:^{
+    XCTAssertNotNil([hashedData kpk_unhashedHmacSha256DataWithKey:key error:nil]);
+  }];
+}
+
+
 
 @end
