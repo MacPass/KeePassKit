@@ -51,5 +51,20 @@
   XCTAssertEqualObjects(data, unhashedData, @"Hashed and unhashed data are the same");
 }
 
+- (void)testSHA256HashingPerformance {
+  NSData *data = [NSData kpk_dataWithRandomBytes:1024*1024*8 + 512]; // 8 MB Data, to use more than one block
+  [self measureBlock:^{
+    XCTAssertNotNil(data.kpk_hashedSha256Data);
+  }];
+}
+
+- (void)testSHA256UnhashingPerformance {
+  NSData *data = [NSData kpk_dataWithRandomBytes:1024*1024*8 + 512]; // 8 MB Data, to use more than one block
+  NSData *hashedData = data.kpk_hashedSha256Data;
+  [self measureBlock:^{
+    XCTAssertNotNil(hashedData.kpk_unhashedSha256Data);
+  }];
+}
+
 
 @end
