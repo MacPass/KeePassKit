@@ -15,7 +15,7 @@
 
 - (void)maintainHistory {
   [self.root _traverseNodesWithOptions:KPKNodeTraversalOptionSkipGroups
-                                 block:^(KPKNode *node) {
+                                 block:^(KPKNode *node, BOOL *stop) {
                                    [node.asEntry _maintainHistory]; 
                                  }];
 }

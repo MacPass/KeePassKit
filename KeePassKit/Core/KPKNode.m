@@ -454,11 +454,11 @@
   _uuid = [[[NSUUID alloc] init] copy];
 }
 
-- (void)_traverseNodesWithOptions:(KPKNodeTraversalOptions)options block:(void (^)(KPKNode *node))block {
+- (void)_traverseNodesWithOptions:(KPKNodeTraversalOptions)options block:(void (^)(KPKNode *, BOOL *))block {
   [self doesNotRecognizeSelector:_cmd];
 }
 
-- (void)_traverseNodesWithBlock:(void (^)(KPKNode *))block {
+- (void)_traverseNodesWithBlock:(void (^)(KPKNode *, BOOL *))block {
   [self _traverseNodesWithOptions:0 block:block];
 }
 

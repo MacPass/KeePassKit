@@ -97,7 +97,7 @@
   
   KPKEntry *entryACopy = [entryA copy];
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   /* make sure deletion was carried over */
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:self.entryUUID];
@@ -111,7 +111,7 @@
   KPKEntry *newEntry = [[KPKEntry alloc] init];
   [newEntry addToGroup:self.treeB.root];
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:newEntry.uuid];
   XCTAssertNotNil(synchronizedEntry);
@@ -127,7 +127,7 @@
   /* make sure entry is actually deleted */
   XCTAssertNil([self.treeB.root entryForUUID:self.entryUUID]);
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   /* make sure deletion was carried over */
   XCTAssertNil([self.treeA.root entryForUUID:self.entryUUID]);
@@ -141,7 +141,7 @@
   /* make sure entry is actually deleted */
   XCTAssertNil([self.treeA.root entryForUUID:self.entryUUID]);
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   /* make sure deletion was carried over */
   XCTAssertNil([self.treeA.root entryForUUID:self.entryUUID]);
@@ -163,7 +163,7 @@
   entryA.title = @"TitleChangeAfterDeletion";
   KPKEntry *entryACopy = [entryA copy];
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   /* make sure deletion was carried over */
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:self.entryUUID];
@@ -189,7 +189,7 @@
   [entryB _pushHistoryAndMaintain:NO];
   entryB.title = @"TitleChangeAfterDeletion";
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   /* make sure deletion was carried over */
   KPKEntry *synchronizedEntry = [self.treeA.root entryForUUID:self.entryUUID];
@@ -206,7 +206,7 @@
   KPKGroup *newGroup = [[KPKGroup alloc] init];
   [newGroup addToGroup:self.treeB.root];
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   KPKGroup *synchronizedGroup = [self.treeA.root groupForUUID:newGroup.uuid];
   XCTAssertNotNil(synchronizedGroup);
@@ -224,7 +224,7 @@
   XCTAssertNil([self.treeA.root groupForUUID:self.subGroupUUID]);
   XCTAssertNil([self.treeA.root entryForUUID:self.subEntryUUID]);
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   /* make sure deletion was carried over */
   XCTAssertNil([self.treeA.root groupForUUID:self.groupUUID]);
@@ -245,7 +245,7 @@
   XCTAssertNil([self.treeB.root groupForUUID:self.subGroupUUID]);
   XCTAssertNil([self.treeB.root entryForUUID:self.subEntryUUID]);
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   /* make sure deletion was carried over */
   XCTAssertNil([self.treeA.root groupForUUID:self.groupUUID]);
@@ -261,7 +261,7 @@
   NSUUID *uuid = group.uuid;
   group.title = @"TheTitleHasChanged";
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   KPKGroup *changedGroup = [self.treeA.root groupForUUID:uuid];
   XCTAssertNotNil(changedGroup);
@@ -285,7 +285,7 @@
   KPKGroup *groupA = [self.treeA.root groupForUUID:self.groupUUID];
   groupA.title = @"TitleChangeAfterDeletion";
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   /* make sure deletion was carried over */
   KPKGroup *synchronizedGroup = [self.treeA.root groupForUUID:self.groupUUID];
@@ -310,7 +310,7 @@
   KPKGroup *groupA = [self.treeA.root groupForUUID:uuid];
   groupA.title = @"ThisChangeWasLaterSoItStays";
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   KPKGroup *changedGroup = [self.treeA.root groupForUUID:uuid];
   XCTAssertNotNil(changedGroup);
@@ -341,7 +341,7 @@
   [entry moveToGroup:self.treeB.root.groups.firstObject];
   
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   KPKEntry *movedEntry = [self.treeA.root entryForUUID:entryUUID];
   
@@ -371,7 +371,7 @@
   
   [subGroup moveToGroup:self.treeB.root];
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   KPKGroup *movedGroup = [self.treeA.root groupForUUID:subGroupUUID];
   
@@ -391,7 +391,7 @@
   
   /* trash */
   self.treeB.metaData.useTrash = YES;
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   XCTAssertEqualObjects(self.treeA.metaData.databaseName, @"NameB");
   XCTAssertEqualObjects(self.treeA.metaData.databaseNameChanged, self.treeB.metaData.databaseNameChanged);
@@ -405,7 +405,7 @@
 
 - (void)testAddedCustomData {
   self.treeB.metaData.mutableCustomData[@"NewKey"] = @"NewData";  
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   KPKMetaData *metaDataA = self.treeA.metaData;
   XCTAssertEqual(3, metaDataA.mutableCustomData.count);
   XCTAssertEqualObjects(@"CustomDataValueA", metaDataA.mutableCustomData[@"CustomDataKeyA"]);
@@ -417,7 +417,7 @@
   self.treeB.metaData.mutableCustomData[@"CustomDataKeyA"] = nil;
   XCTAssertEqual(1, self.treeB.metaData.mutableCustomData.count);
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   KPKMetaData *metaDataA = self.treeA.metaData;
   XCTAssertEqual(2, metaDataA.mutableCustomData.count);
@@ -462,7 +462,7 @@
   XCTAssertEqual(groupA.mutableCustomData.count, 1);
   XCTAssertEqual(entryA.mutableCustomData.count, 1);
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
 
   XCTAssertEqual(groupB.mutableCustomData.count, 0);
   XCTAssertEqual(entryB.mutableCustomData.count, 0);
@@ -488,7 +488,7 @@
   XCTAssertEqual(groupA.mutableCustomData.count, 1);
   XCTAssertEqual(entryA.mutableCustomData.count, 1);
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   XCTAssertEqual(groupB.mutableCustomData.count, 2);
   XCTAssertEqual(entryB.mutableCustomData.count, 2);
@@ -522,7 +522,7 @@
   XCTAssertEqualObjects(groupA.mutableCustomData[@"GroupKeyA"], @"CustomGroupDataA");
 
   
-  [self.treeA synchronizeWithTree:self.treeB options:KPKSynchronizationSynchronizeOption];
+  [self.treeA synchronizeWithTree:self.treeB mode:KPKSynchronizationModeSynchronize options:0];
   
   XCTAssertEqual(groupB.mutableCustomData.count, 1);
   XCTAssertEqual(entryB.mutableCustomData.count, 1);

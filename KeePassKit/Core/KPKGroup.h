@@ -75,7 +75,6 @@ FOUNDATION_EXPORT NSString *const KPKGroupsArrayBinding;
  *  @note   if more than one Group matches, the resutl is the first match.
  */
 - (KPKGroup *)groupForUUID:(NSUUID *)uuid;
-
 /**
  *	Returns an array containing all entries inside searchable groups.
  *	@return	NSArray of KPKEntries contained in searchable groups

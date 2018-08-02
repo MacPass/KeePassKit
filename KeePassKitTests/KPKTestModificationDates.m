@@ -54,48 +54,42 @@
   XCTAssertTrue(self.entry.updateTiming, @"updateTiming is enabled");
   NSDate *before = self.entry.timeInfo.modificationDate;
   self.entry.iconId = self.entry.iconId = KPKIconBattery;
-  NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing node iconID");
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after changing node iconID");
 }
 
 - (void)testNodeIconUUIDModifcationDate {
   XCTAssertTrue(self.entry.updateTiming, @"updateTiming is enabled");
   NSDate *before = self.entry.timeInfo.modificationDate;
   self.entry.iconUUID = [NSUUID UUID];
-  NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing node iconUUID");
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after changing node iconUUID");
 }
 
 - (void)testEntryTitleModificationDate {
   XCTAssertTrue(self.entry.updateTiming, @"updateTiming is enabled");
   NSDate *before = self.entry.timeInfo.modificationDate;
   self.entry.title = @"NewTitle";
-  NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing node title");
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after changing node title");
 }
 
 - (void)testGroupTitleModificationDate {
   XCTAssertTrue(self.group.updateTiming, @"updateTiming is enabled");
   NSDate *before = self.group.timeInfo.modificationDate;
   self.group.title = @"NewTitle";
-  NSComparisonResult compare = [before compare:self.group.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing node title");
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.group.timeInfo.modificationDate], @"Modification date has to be updated after changing node title");
 }
 
 - (void)testEntryNotesModificationDate {
   XCTAssertTrue(self.entry.updateTiming, @"updateTiming is enabled");
   NSDate *before = self.entry.timeInfo.modificationDate;
   self.entry.notes = @"NewTitle";
-  NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing group notes");
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after changing group notes");
 }
 
 - (void)testGroupNotesModificationDate {
   XCTAssertTrue(self.group.updateTiming, @"updateTiming is enabled");
   NSDate *before = self.group.timeInfo.modificationDate;
   self.group.notes = @"NewTitle";
-  NSComparisonResult compare = [before compare:self.group.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after changing group notes");
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.group.timeInfo.modificationDate], @"Modification date has to be updated after changing group notes");
 }
 
 - (void)testGroupEntryRemoveAddModificationDateInvariance {
@@ -103,13 +97,11 @@
   NSDate *before = self.group.timeInfo.modificationDate;
   KPKEntry *entry = [[KPKEntry alloc] init];
   [entry addToGroup:self.group];
-  NSComparisonResult compare = [before compare:self.group.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedSame, @"Modification of a group does not change when entry is added");
+  XCTAssertEqual(NSOrderedSame, [before compare:self.group.timeInfo.modificationDate], @"Modification of a group does not change when entry is added");
 
   before = self.group.timeInfo.modificationDate;
   [entry remove];
-  compare = [before compare:self.group.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedSame, @"Modification of a group does not change when entry is removed");
+  XCTAssertEqual(NSOrderedSame, [before compare:self.group.timeInfo.modificationDate], @"Modification of a group does not change when entry is removed");
 }
 
 - (void)testEntryDefaultAttributesModifiationDate {
@@ -118,8 +110,7 @@
   for(NSString *key in [KPKFormat sharedFormat].entryDefaultKeys) {
     NSDate *before = [self.entry.timeInfo.modificationDate copy];
     [self.entry _setValue:_kUpdatedString forAttributeWithKey:key];
-    NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
-    XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after modification");
+    XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after modification");
   }
 }
 
@@ -128,26 +119,22 @@
   NSDate *before = [self.entry.timeInfo.modificationDate copy];
   KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:@"key" value:@"value"];
   [self.entry addCustomAttribute:attribute];
-  NSComparisonResult compare = [before compare:self.entry.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after adding custom attribute");
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after adding custom attribute");
   
   /* change value of custom attribute */
   before = [self.entry.timeInfo.modificationDate copy];
   attribute.value = @"newValue";
-  compare = [before compare:self.entry.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after change in value of custom attribute");
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after change in value of custom attribute");
   
   /* change key of custom attribute */
   before = [self.entry.timeInfo.modificationDate copy];
   attribute.key = @"newKey";
-  compare = [before compare:self.entry.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after change in key of custom attribute");
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after change in key of custom attribute");
   
   /* remove custom attribute */
   before = [self.entry.timeInfo.modificationDate copy];
   [self.entry removeCustomAttribute:attribute];
-  compare = [before compare:self.entry.timeInfo.modificationDate];
-  XCTAssertTrue(compare == NSOrderedAscending, @"Modification date has to be updated after custom attribute was removed");
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after custom attribute was removed");
 }
 
 - (void)testEntryAutotypeModificationDate {
@@ -155,6 +142,7 @@
   self.entry.autotype.defaultKeystrokeSequence = @"newKeyStrokeSequence";
   KPKWindowAssociation *association = [[KPKWindowAssociation  alloc] initWithWindowTitle:@"windowTitle" keystrokeSequence:@"keys"];
   [self.entry.autotype addAssociation:association];
+  XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after adding a keystroke sequence");
 }
 
 @end

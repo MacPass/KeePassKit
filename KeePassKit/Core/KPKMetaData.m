@@ -258,8 +258,8 @@ if( self.updateTiming ) { \
   [self.tree.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"ADD_CUSTOM_ICON", nil, [NSBundle bundleForClass:[self class]], @"Action name for adding a customt icon.")];
   index = MIN(_mutableCustomIcons.count, index);
   [self insertObject:icon inMutableCustomIconsAtIndex:index];
-  /* trigger a change notification although to encourage reavaluation*/
-  [self.tree.root _traverseNodesWithBlock:^(KPKNode *node) {
+  /* trigger a change notification to encourage reavaluation*/
+  [self.tree.root _traverseNodesWithBlock:^(KPKNode *node, BOOL *stop) {
     if([node.iconUUID isEqual:icon.uuid]) {
       [node willChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
       [node didChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
@@ -273,8 +273,8 @@ if( self.updateTiming ) { \
     [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
     [self.tree.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"DELETE_CUSTOM_ICON", nil, [NSBundle bundleForClass:[self class]], @"Action name for deleting a custom icon")];
     [self removeObjectFromMutableCustomIconsAtIndex:index];
-    /* trigger a change notification although to encourage reavaluation*/
-    [self.tree.root _traverseNodesWithBlock:^(KPKNode *node) {
+    /* trigger a change notification to encourage reavaluation*/
+    [self.tree.root _traverseNodesWithBlock:^(KPKNode *node, BOOL *stop) {
       if([node.iconUUID isEqual:icon.uuid]) {
         [node willChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
         [node didChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
@@ -296,10 +296,10 @@ if( self.updateTiming ) { \
   return _customIconCache[uuid];
 }
 
-- (void)_mergeWithMetaDataFromTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
+- (void)_mergeWithMetaDataFromTree:(KPKTree *)tree mode:(KPKSynchronizationMode)mode {
   KPKMetaData *otherMetaData = tree.metaData;
   
-  BOOL forceUpdate = options == KPKSynchronizationOverwriteExistingOption;
+  BOOL forceUpdate = (mode == KPKSynchronizationModeOverwriteExisting);
   BOOL otherIsNewer = NSOrderedAscending == [otherMetaData.settingsChanged compare:self.settingsChanged];
   KPK_SCOPED_NO_BEGIN(self.updateTiming)
   if(forceUpdate || otherIsNewer) {

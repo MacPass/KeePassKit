@@ -192,7 +192,7 @@ FOUNDATION_EXPORT NSString *const kKPKNodeKey;
  @param tree the externa tree to merge in
  @param options options for the merge
  */
-- (void)synchronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
+- (void)synchronizeWithTree:(KPKTree *)tree mode:(KPKSynchronizationMode)mode options:(KPKSynchronizationOptions)options;
 
 @end
 

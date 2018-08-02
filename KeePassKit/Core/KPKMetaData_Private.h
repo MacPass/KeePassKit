@@ -22,6 +22,6 @@
 @property(nonatomic, strong) NSMutableDictionary<NSString *, id> *mutableCustomPublicData;
 @property(weak) KPKTree *tree;
 
-- (void)_mergeWithMetaDataFromTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options;
+- (void)_mergeWithMetaDataFromTree:(KPKTree *)tree mode:(KPKSynchronizationMode)mode;
 
 @end

@@ -96,29 +96,29 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 - (void)testAttributeLookupPerformanceA {
   [self measureBlock:^{
-   [testEntry customAttributeWithKey:@(0).stringValue];
+   [self->testEntry customAttributeWithKey:@(0).stringValue];
   }];
 }
 - (void)testDictLockupPerformanceA {
   [self measureBlock:^{
-    XCTAssertNotNil(benchmarkDict[@(0).stringValue]);
+    XCTAssertNotNil(self->benchmarkDict[@(0).stringValue]);
   }];
 }
 
 - (void)testAttributeLookupPerformanceB {
   [self measureBlock:^{
-    XCTAssertNotNil([testEntry customAttributeWithKey:@(_kKPKAttributeCount+ - 1).stringValue]);
+    XCTAssertNotNil([self->testEntry customAttributeWithKey:@(_kKPKAttributeCount+ - 1).stringValue]);
   }];
 }
 - (void)testDictLockupPerformanceB {
   [self measureBlock:^{
-    XCTAssertNotNil(benchmarkDict[@(_kKPKAttributeCount - 1).stringValue]);
+    XCTAssertNotNil(self->benchmarkDict[@(_kKPKAttributeCount - 1).stringValue]);
   }];
 }
 
 - (void)testAttributeLookupPerformanceC {
   [self measureBlock:^{
-    [testEntry customAttributeWithKey:kKPKTitleKey];
+    [self->testEntry customAttributeWithKey:kKPKTitleKey];
   }];
 }
 
@@ -132,7 +132,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 - (void)testAllEntriesRetirevalByCopyPerformance {
   [self measureBlock:^{
-    for(KPKEntry *entry in tree.allEntries) {}
+    for(KPKEntry __unused *entry in self->tree.allEntries) {}
   }];
 }
 
@@ -146,25 +146,25 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 - (void)testAllGroupsRetirevalByCopyPerformance {
   [self measureBlock:^{
-    for(KPKGroup *group in tree.allGroups) {}
+    for(KPKGroup __unused *group in self->tree.allGroups) {}
   }];
 }
 
 - (void)testAllEntriesRetirevalByTraversalPerformance {
   [self measureBlock:^{
-    [tree.root _traverseNodesWithBlock:^(KPKNode *node){}];
+    [self->tree.root _traverseNodesWithBlock:^(KPKNode *node, BOOL *stop){}];
   }];
 }
 
 - (void)testAllGroupsRetirevalByTraversalPerformance {
   [self measureBlock:^{
-    [tree.root _traverseNodesWithBlock:^(KPKNode *node){}];
+    [self->tree.root _traverseNodesWithBlock:^(KPKNode *node, BOOL *stop){}];
   }];
 }
 
 - (void)testAttributeDataRetrieval {
   [self measureBlock:^{
-    for(KPKAttribute *attribute in attributes) {
+    for(KPKAttribute *attribute in self->attributes) {
       XCTAssertNotNil(attribute.value);
     }
   }];
@@ -172,7 +172,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 
 - (void)testBinaryDataRetrieval {
   [self measureBlock:^{
-    for(KPKBinary *binary in binaries) {
+    for(KPKBinary *binary in self->binaries) {
       XCTAssertNotNil(binary.data);
     }
   }];
@@ -181,7 +181,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 - (void)testKDBSeralizationPerformance {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   [self measureBlock:^{
-    [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:nil];
+    [self->tree encryptWithKey:key format:KPKDatabaseFormatKdb error:nil];
   }];
 }
 
@@ -197,7 +197,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 - (void)testKDBX31SerializationPerformance {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   [self measureBlock:^{
-    [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
+    [self->tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
   }];
 }
 
@@ -214,7 +214,7 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" key:nil];
   tree.metaData.keyDerivationParameters = [KPKArgon2KeyDerivation defaultParameters];
   [self measureBlock:^{
-    XCTAssertNotNil([tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil]);
+    XCTAssertNotNil([self->tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil]);
   }];
 }
 
@@ -232,33 +232,33 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 - (void)testEntryEqualityPerformance {
   KPKEntry *lastEntry = entries.lastObject;
   [self measureBlock:^{
-    XCTAssertNotEqual(NSNotFound, [entries indexOfObject:lastEntry]);
+    XCTAssertNotEqual(NSNotFound, [self->entries indexOfObject:lastEntry]);
   }];
 }
 
 - (void)testEntryIdentityPerformance {
   KPKEntry *lastEntry = entries.lastObject;
   [self measureBlock:^{
-    XCTAssertNotEqual(NSNotFound, [entries indexOfObjectIdenticalTo:lastEntry]);
+    XCTAssertNotEqual(NSNotFound, [self->entries indexOfObjectIdenticalTo:lastEntry]);
   }];
 }
 
 - (void)testUUIDEqualityPerformanceA {
   [self measureBlock:^{
-    XCTAssertNotEqual(NSNotFound, [entryUUIDs indexOfObject:entryUUIDs.lastObject]);
+    XCTAssertNotEqual(NSNotFound, [self->entryUUIDs indexOfObject:self->entryUUIDs.lastObject]);
   }];
 }
 
 - (void)testUUIDEqualityPerformanceB {
   [self measureBlock:^{
-    XCTAssertNotEqual(NSNotFound, [groupUUIDs indexOfObject:groupUUIDs.lastObject]);
+    XCTAssertNotEqual(NSNotFound, [self->groupUUIDs indexOfObject:self->groupUUIDs.lastObject]);
   }];
 }
 
 - (void)testGroupEqualityPerformance {
   KPKGroup *lastGroup = groups.lastObject;
   [self measureBlock:^{
-    [groups indexOfObject:lastGroup];
+    [self->groups indexOfObject:lastGroup];
   }];
 }
 

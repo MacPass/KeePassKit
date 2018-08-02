@@ -29,9 +29,9 @@
 
 @implementation KPKTree (Synchronization)
 
-- (void)synchronizeWithTree:(KPKTree *)tree options:(KPKSynchronizationOptions)options {
+- (void)synchronizeWithTree:(KPKTree *)tree mode:(KPKSynchronizationMode)mode options:(KPKSynchronizationOptions)options {
   
-  if(options == KPKSynchronizationCreateNewUuidsOption) {
+  if(options & KPKSynchronizationOptionCreateNewUuids) {
     /* create new uuid in the sourc tree */
     [tree.root _regenerateUUIDs];
   }
@@ -46,20 +46,21 @@
    7) update deleted information
    8) reapply deletions to ensure entries and groups are at final place
    */
-  [self _mergeNodes:[@[tree.root] arrayByAddingObjectsFromArray:tree.allGroups] options:options];
-  [self _mergeNodes:tree.allEntries options:options];
+  [self _mergeNodes:[@[tree.root] arrayByAddingObjectsFromArray:tree.allGroups] mode:mode options:options];
+  [self _mergeNodes:tree.allEntries mode:mode options:options];
   [self _mergeLocationFromNodes:tree.allEntries];
   [self _mergeLocationFromNodes:tree.allGroups];
   [self _mergeDeletedObjects:tree.mutableDeletedObjects];
-  // FIXME: Deletions only get re-applied on synchronize merge method
-  [self _reapplyDeletions:self.root];
-  [self.metaData _mergeWithMetaDataFromTree:tree options:options];
+  if(mode == KPKSynchronizationModeSynchronize) {
+    [self _reapplyDeletions:self.root];
+  }
+  [self.metaData _mergeWithMetaDataFromTree:tree mode:mode];
   ;
   /* clear undo stack since merge is not supposed to be undoable */
   [self.undoManager removeAllActions];
 }
 
-- (void)_mergeNodes:(NSArray<KPKNode *> *)nodes options:(KPKSynchronizationOptions)options {
+- (void)_mergeNodes:(NSArray<KPKNode *> *)nodes mode:(KPKSynchronizationMode)mode options:(KPKSynchronizationOptions)options {
   for(KPKNode *externNode in nodes) {
     KPKDeletedNode *deletedNode = self.deletedObjects[externNode.uuid];
     if(nil != deletedNode) {
@@ -68,8 +69,25 @@
         continue; // Node was deleted in destination after being modified in source
       }
     }
-    KPKNode *localNode = externNode.asGroup ? [self.root groupForUUID:externNode.uuid] : [self.root entryForUUID:externNode.uuid];
     
+    __block KPKNode *localNode;
+    
+    if(externNode.asGroup) {
+      if(options & KPKSynchronizationOptionMatchGroupsByTitleOnly) {
+        [self.root _traverseNodesWithOptions:KPKNodeTraversalOptionSkipEntries block:^(KPKNode *node, BOOL *stop) {
+          if([node.title isEqualToString:externNode.title]) {
+            localNode = node;
+            *stop = YES;
+          }
+        }];
+      }
+      else {
+        localNode = [self.root groupForUUID:externNode.uuid];
+      }
+    }
+    else {
+      localNode = [self.root entryForUUID:externNode.uuid];
+    }
     /* Node is unkown, create a copy and integrate it */
     if(!localNode) {
       localNode = [[externNode.class alloc] initWithUUID:externNode.uuid];
@@ -84,30 +102,26 @@
       KPK_SCOPED_NO_END(localNode.updateTiming)
     }
     else {
-      NSAssert(options != KPKSynchronizationCreateNewUuidsOption, @"UUID collision while merging trees!");
       /*
        ignore entries and subgroups to just compare the group attributes,
        KPKNodeEqualityIgnoreHistory not needed since we do not compare entries at all
        */
-      KPKNodeCompareOptions equalityOptions = (KPKNodeCompareIgnoreGroupsOption |
-                                               KPKNodeCompareIgnoreEntriesOption |
-                                               KPKNodeCompareIgnoreGroupsOption |
-                                               KPKNodeCompareIgnoreEntriesOption);
+      KPKNodeCompareOptions equalityOptions = (KPKNodeCompareIgnoreGroupsOption | KPKNodeCompareIgnoreEntriesOption);
       
       if(KPKComparsionEqual == [localNode _compareToNode:externNode options:equalityOptions]) {
         continue; // node did not change
       }
-      KPKUpdateOptions updateOptions = (equalityOptions == KPKSynchronizationOverwriteExistingOption) ? KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionIncludeHistory : 0;
-      if(options == KPKSynchronizationOverwriteExistingOption ||
-         options == KPKSynchronizationOverwriteIfNewerOption ||
-         options == KPKSynchronizationSynchronizeOption) {
+      KPKUpdateOptions updateOptions = (mode == KPKSynchronizationModeOverwriteExisting) ? ( KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionIncludeHistory ) : 0;
+      if(mode == KPKSynchronizationModeOverwriteExisting ||
+         mode == KPKSynchronizationModeOverwriteIfNewer ||
+         mode == KPKSynchronizationModeSynchronize) {
         
         
         KPKEntry *localEntry = localNode.asEntry;
         NSComparisonResult result = [localEntry.timeInfo.modificationDate compare:externNode.timeInfo.modificationDate];
         
         /* keep all changes as history so no extern/local edits will get lost */
-        if(nil != localEntry && options != KPKSynchronizationOverwriteExistingOption) {
+        if(nil != localEntry && mode != KPKSynchronizationModeOverwriteExisting) {
           if(result == NSOrderedAscending && ![externNode.asEntry hasHistoryOfEntry:localEntry]) {
             [localEntry _pushHistoryAndMaintain:NO];
           }
@@ -117,8 +131,8 @@
         }
         [localNode _updateFromNode:externNode options:updateOptions];
         
-        if(options != KPKSynchronizationOverwriteExistingOption) {
-          [self _mergeHistory:localEntry ofEntry:externNode.asEntry options:options];
+        if(mode != KPKSynchronizationModeOverwriteExisting) {
+          [self _mergeHistory:localEntry ofEntry:externNode.asEntry mode:mode];
         }
       }
     }
@@ -158,7 +172,7 @@
   }
 }
 
-- (void)_mergeHistory:(KPKEntry *)entry ofEntry:(KPKEntry *)otherEntry options:(KPKSynchronizationOptions)options {
+- (void)_mergeHistory:(KPKEntry *)entry ofEntry:(KPKEntry *)otherEntry mode:(KPKSynchronizationMode)mode {
   if(!entry || !otherEntry) {
     return; // nil parameters
   }
@@ -186,7 +200,7 @@
   for(KPKEntry *externalHistoryEntry in otherEntry.mutableHistory) {
     NSAssert([externalHistoryEntry.uuid isEqual:entry.uuid], @"UUID of history entry does not match corresponding entry!");
     NSDate *modificationDate = externalHistoryEntry.timeInfo.modificationDate;
-    if(historyDict[modificationDate] && (options & KPKSynchronizationOverwriteExistingOption)) {
+    if(historyDict[modificationDate] && (mode == KPKSynchronizationModeOverwriteExisting)) {
       historyDict[modificationDate] = externalHistoryEntry;
     }
     else {

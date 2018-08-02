@@ -16,7 +16,7 @@
   
   /* * ? + [ ( ) { } ^ $ | \ . */
 
-  NSDictionary *charsToQuote = @{ @"*" : @"\\*",
+  NSDictionary __unused *charsToQuote = @{ @"*" : @"\\*",
                                   @"?" : @"\\?",
                                   @"+" : @"\\+",
                                   @"[" : @"\\[",

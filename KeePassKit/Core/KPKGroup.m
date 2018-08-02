@@ -282,9 +282,13 @@ static NSSet *_observedKeyPathsSet;
   return didChange;
 }
 
-- (void)_traverseNodesWithOptions:(KPKNodeTraversalOptions)options block:(void (^)(KPKNode *))block {
+- (void)_traverseNodesWithOptions:(KPKNodeTraversalOptions)options block:(void (^)(KPKNode *, BOOL *))block {
+  BOOL stop = NO;
   if(block && !(options & KPKNodeTraversalOptionSkipGroups)) {
-    block(self);
+    block(self, &stop);
+    if(stop) {
+      return; // stop travsersal as requested
+    }
   }
   for(KPKGroup *group in self.mutableGroups) {
     [group _traverseNodesWithOptions:options block:block];
@@ -292,7 +296,10 @@ static NSSet *_observedKeyPathsSet;
   if(!(options & KPKNodeTraversalOptionSkipEntries)) {
     for(KPKEntry *entry in self.mutableEntries) {
       if(block) {
-        block(entry);
+        block(entry, &stop);
+        if(stop) {
+          return; // stop travsersal as requested
+        }
       }
     }
   }

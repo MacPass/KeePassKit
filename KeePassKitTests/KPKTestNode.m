@@ -69,7 +69,7 @@
   __block NSUInteger groupCount = 0;
   __block NSUInteger entryCount = 0;
   __block NSMutableSet <NSUUID *> *uuids = [[NSMutableSet alloc] init];
-  [tree.root _traverseNodesWithOptions:0 block:^(KPKNode *node) {
+  [tree.root _traverseNodesWithOptions:0 block:^(KPKNode *node, BOOL *stop) {
     XCTAssertFalse([uuids containsObject:node.uuid]);
     if(node.asGroup) {
       groupCount++;
@@ -88,7 +88,7 @@
   entryCount = 0;
   [uuids removeAllObjects];
   [tree.root _traverseNodesWithOptions:KPKNodeTraversalOptionSkipEntries
-   block:^(KPKNode *node) {
+   block:^(KPKNode *node, BOOL *stop) {
     XCTAssertFalse([uuids containsObject:node.uuid]);
     if(node.asGroup) {
       groupCount++;
@@ -107,7 +107,7 @@
   entryCount = 0;
   [uuids removeAllObjects];
   [tree.root _traverseNodesWithOptions:KPKNodeTraversalOptionSkipGroups
-   block:^(KPKNode *node) {
+   block:^(KPKNode *node, BOOL *stop) {
     XCTAssertFalse([uuids containsObject:node.uuid]);
     if(node.asGroup) {
       groupCount++;
