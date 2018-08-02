@@ -220,7 +220,7 @@ static NSSet *_observedKeyPathsSet;
   };
   
   __block BOOL isEqual = YES;
-  if(!(KPKNodeCompareIgnoreGroupsOption & options)) {
+  if(!(KPKNodeCompareOptionIgnoreGroups & options)) {
     if( self.mutableGroups.count != aGroup.mutableGroups.count) {
       return KPKComparsionDifferent;
     }
@@ -237,7 +237,7 @@ static NSSet *_observedKeyPathsSet;
     }
   }
   
-  if(!(KPKNodeCompareIgnoreEntriesOption & options)) {
+  if(!(KPKNodeCompareOptionIgnoreEntries & options)) {
     if( self.mutableEntries.count != aGroup.mutableEntries.count ) {
       return KPKComparsionDifferent;
     }

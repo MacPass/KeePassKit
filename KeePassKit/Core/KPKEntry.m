@@ -351,7 +351,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
   
   /* Compare History - order has to match! */
-  if(!(options & KPKNodeCompareIgnoreHistoryOption)) {
+  if(!(options & KPKNodeCompareOptionIgnoreHistory)) {
     /* TODO ensure order by date ?*/
     if(self.mutableHistory.count != entry.mutableHistory.count) {
       return KPKComparsionDifferent;
@@ -862,7 +862,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (BOOL)hasHistoryOfEntry:(KPKEntry *)entry {
   for(KPKEntry *historyEntry in self.mutableHistory) {
-    if(KPKComparsionEqual == [historyEntry _compareToNode:entry options:(KPKNodeCompareIgnoreAccessDateOption|KPKNodeCompareIgnoreHistoryOption)]) {
+    if(KPKComparsionEqual == [historyEntry _compareToNode:entry options:(KPKNodeCompareOptionIgnoreAccessDate | KPKNodeCompareOptionIgnoreHistory)]) {
       return YES;
     }
   }

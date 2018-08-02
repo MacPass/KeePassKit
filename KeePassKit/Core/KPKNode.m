@@ -103,17 +103,19 @@
   NSAssert([aNode isKindOfClass:KPKNode.class], @"Unsupported type for quality test");
   
   /* if UUIDs dont's match, nodes aren't considered equal! */
-  if(![self.uuid isEqual:aNode.uuid]) {
-    return KPKComparsionDifferent;
+  if(!(options & KPKNodeCompareOptionIgnoreUUID)) {
+    if(![self.uuid isEqual:aNode.uuid]) {
+      return KPKComparsionDifferent;
+    }
   }
   
-  if(!(options & KPKNodeCompareIgnoreAccessDateOption)) {
+  if(!(options & KPKNodeCompareOptionIgnoreAccessDate)) {
     NSComparisonResult result = [self.timeInfo.accessDate compare:aNode.timeInfo.accessDate];
     if(result != NSOrderedSame) {
       return KPKComparsionDifferent;
     }
   }
-  if(!(options & KPKNodeCompareIgnoreModificationDateOption)) {
+  if(!(options & KPKNodeCompareOptionIgnoreModificationDate)) {
     NSComparisonResult result = [self.timeInfo.modificationDate compare:aNode.timeInfo.modificationDate];
     if(result != NSOrderedSame) {
       return KPKComparsionDifferent;

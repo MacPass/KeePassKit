@@ -27,6 +27,21 @@
 
 #import "KPKScopedSet.h"
 
+
+KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOptions options) {
+  __block KPKNode *localNode = nil;
+  if(options & KPKSynchronizationOptionMatchGroupsByTitleOnly && node.asGroup) {
+    [group _traverseNodesWithOptions:KPKNodeTraversalOptionSkipEntries block:^(KPKNode *aNode, BOOL *stop) {
+      if([aNode.title isEqualToString:node.title]) {
+        localNode = aNode;
+        *stop = YES;
+      }
+    }];
+    return localNode;
+  }
+  return node.asGroup ? [group groupForUUID:node.uuid] : [group entryForUUID:node.uuid];
+}
+
 @implementation KPKTree (Synchronization)
 
 - (void)synchronizeWithTree:(KPKTree *)tree mode:(KPKSynchronizationMode)mode options:(KPKSynchronizationOptions)options {
@@ -48,8 +63,8 @@
    */
   [self _mergeNodes:[@[tree.root] arrayByAddingObjectsFromArray:tree.allGroups] mode:mode options:options];
   [self _mergeNodes:tree.allEntries mode:mode options:options];
-  [self _mergeLocationFromNodes:tree.allEntries];
-  [self _mergeLocationFromNodes:tree.allGroups];
+  [self _mergeLocationFromNodes:tree.allEntries options:options];
+  [self _mergeLocationFromNodes:tree.allGroups options:options];
   [self _mergeDeletedObjects:tree.mutableDeletedObjects];
   if(mode == KPKSynchronizationModeSynchronize) {
     [self _reapplyDeletions:self.root];
@@ -70,24 +85,8 @@
       }
     }
     
-    __block KPKNode *localNode;
-    
-    if(externNode.asGroup) {
-      if(options & KPKSynchronizationOptionMatchGroupsByTitleOnly) {
-        [self.root _traverseNodesWithOptions:KPKNodeTraversalOptionSkipEntries block:^(KPKNode *node, BOOL *stop) {
-          if([node.title isEqualToString:externNode.title]) {
-            localNode = node;
-            *stop = YES;
-          }
-        }];
-      }
-      else {
-        localNode = [self.root groupForUUID:externNode.uuid];
-      }
-    }
-    else {
-      localNode = [self.root entryForUUID:externNode.uuid];
-    }
+    KPKNode *localNode = _findNodeInGroup(externNode, self.root, options);
+
     /* Node is unkown, create a copy and integrate it */
     if(!localNode) {
       localNode = [[externNode.class alloc] initWithUUID:externNode.uuid];
@@ -106,7 +105,10 @@
        ignore entries and subgroups to just compare the group attributes,
        KPKNodeEqualityIgnoreHistory not needed since we do not compare entries at all
        */
-      KPKNodeCompareOptions equalityOptions = (KPKNodeCompareIgnoreGroupsOption | KPKNodeCompareIgnoreEntriesOption);
+      KPKNodeCompareOptions equalityOptions = (KPKNodeCompareOptionIgnoreGroups | KPKNodeCompareOptionIgnoreEntries);
+      if(externNode.asGroup && options & KPKSynchronizationOptionMatchGroupsByTitleOnly) {
+        equalityOptions |= KPKNodeCompareOptionIgnoreUUID;
+      }
       
       if(KPKComparsionEqual == [localNode _compareToNode:externNode options:equalityOptions]) {
         continue; // node did not change
@@ -139,9 +141,11 @@
   }
 }
 
-- (void)_mergeLocationFromNodes:(NSArray <KPKNode *>*)nodes {
+- (void)_mergeLocationFromNodes:(NSArray <KPKNode *>*)nodes options:(KPKSynchronizationOptions)options {
   for(KPKNode *externNode in nodes) {
-    KPKNode *localNode = externNode.asGroup ? [self.root groupForUUID:externNode.uuid] : [self.root entryForUUID:externNode.uuid];
+    
+    KPKNode *localNode = _findNodeInGroup(externNode, self.root, options);
+    
     if(!localNode) {
       /* no local group for extern group found */
       continue;
