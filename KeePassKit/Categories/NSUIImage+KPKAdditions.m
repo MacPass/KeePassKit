@@ -55,7 +55,7 @@
     [self drawInRect:NSMakeRect(0, 0, renderSize.width, renderSize.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
     [NSGraphicsContext restoreGraphicsState];
   }
-  return [(NSBitmapImageRep *)bestRep representationUsingType:NSPNGFileType properties:@{}];
+  return [(NSBitmapImageRep *)bestRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
 #else
   /* test for bitmap content, if so, just use simple API to generate PNG */
   CGImageRef cgImageRef = self.CGImage;

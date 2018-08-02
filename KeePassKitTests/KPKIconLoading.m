@@ -21,7 +21,7 @@
   NSBundle *myBundle = [NSBundle bundleForClass:self.class];
 #if KPK_MAC
   _image = [myBundle imageForResource:@"image.png"];
-  _imageData = [((NSBitmapImageRep *)_image.representations.lastObject) representationUsingType:NSPNGFileType properties:@{}];
+  _imageData = _image.kpk_pngData;
 #else
   _image = [NSUIImage imageNamed:@"image.png" inBundle:myBundle compatibleWithTraitCollection:nil];
   _imageData = UIImagePNGRepresentation(_image);
@@ -42,8 +42,7 @@
   XCTAssertNotNil(imageRep, @"One image rep should be there");
   XCTAssertTrue([imageRep isKindOfClass:NSBitmapImageRep.class], @"Representation should be bitmap");
 
-  NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)imageRep;
-  NSData *pngData = [bitmapRep representationUsingType:NSPNGFileType properties:@{}];
+  NSData *pngData = icon.image.kpk_pngData;
 #else
   NSData *pngData = UIImagePNGRepresentation(icon.image);
 #endif
