@@ -92,7 +92,7 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
       localNode = [[externNode.class alloc] initWithUUID:externNode.uuid];
       [localNode _updateFromNode:externNode options:KPKUpdateOptionIgnoreModificationTime | KPKUpdateOptionIncludeMovedTime | KPKUpdateOptionIncludeHistory];
       
-      KPKGroup *localParent = [self.root groupForUUID:externNode.parent.uuid];
+      KPKGroup *localParent = (KPKGroup *)_findNodeInGroup(externNode.parent, self.root, options);
       if(!localParent) {
         localParent = self.root;
       }
@@ -147,10 +147,10 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
     KPKNode *localNode = _findNodeInGroup(externNode, self.root, options);
     
     if(!localNode) {
-      /* no local group for extern group found */
+      /* no local node for extern node found */
       continue;
     }
-    KPKGroup *localExternParent = [self.root groupForUUID:externNode.parent.uuid];
+    KPKGroup *localExternParent = _findNodeInGroup(externNode.parent, self.root, options);
     KPKGroup *localParent = localNode.parent;
     
     if(!localExternParent || !localParent) {
@@ -160,6 +160,11 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
     if([localParent.uuid isEqual:localExternParent.uuid]) {
       /* parents are the same */
       continue;
+    }
+    else if(KPKSynchronizationOptionMatchGroupsByTitleOnly & options) {
+      if([localParent.title isEqualToString:externNode.title]) {
+        continue; // parents have the same title which is fine for us
+      }
     }
     
     switch([localNode.timeInfo.locationChanged compare:externNode.timeInfo.locationChanged]) {

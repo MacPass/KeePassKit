@@ -17,15 +17,6 @@
 
 @implementation KPKTestNode
 
-- (void)setUp {
-  [super setUp];
-}
-
-- (void)tearDown {
-  
-  [super tearDown];
-}
-
 - (void)testRootGroup {
   NSUInteger depth = 10;
   KPKGroup *root = [[KPKGroup alloc] init];
@@ -120,7 +111,18 @@
   
   XCTAssertEqual(groupCount, 0);
   XCTAssertEqual(entryCount, 10*10 + 10*10*10);
-  
+}
+
+- (void)testCompareOptions {
+  KPKGroup *group = [[KPKGroup alloc] init];
+  group.title = @"A Title";
+  group.iconId = KPKIconHome;
+  KPKGroup *groupCopy = [group copy];
+  XCTAssertEqual(KPKComparsionEqual, [group compareToGroup:groupCopy]);
+  [groupCopy _regenerateUUIDs];
+  XCTAssertNotEqualObjects(group.uuid, groupCopy.uuid);
+  XCTAssertEqual(KPKComparsionDifferent, [group compareToGroup:groupCopy]);
+  XCTAssertEqual(KPKComparsionEqual, [group _compareToNode:groupCopy options:KPKNodeCompareOptionIgnoreUUID]);
 }
 
 @end
