@@ -166,7 +166,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     _mutableAttributes = [[NSMutableArray alloc] init];
     /* create the default attributes */
     _attributeMap = [NSMapTable strongToWeakObjectsMapTable];
-    for(NSString *key in [KPKFormat sharedFormat].entryDefaultKeys) {
+    for(NSString *key in KPKFormat.sharedFormat.entryDefaultKeys) {
       KPKAttribute *attribute = [[KPKAttribute alloc] initWithKey:key value:@""];
       attribute.entry = self;
       [_mutableAttributes addObject:attribute];

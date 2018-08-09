@@ -25,7 +25,7 @@
 }
 
 - (instancetype)initWithData:(NSData *)data key:(KPKCompositeKey *)key error:(NSError * _Nullable __autoreleasing *)error {
-  KPKFileVersion fileVersion = [[KPKFormat sharedFormat] fileVersionForData:data];
+  KPKFileVersion fileVersion = [KPKFormat.sharedFormat fileVersionForData:data];
   switch (fileVersion.format) {
     case KPKDatabaseFormatKdb:
       self = [[KPKKdbUnarchiver alloc] _initWithData:data version:fileVersion.version key:key error:error];

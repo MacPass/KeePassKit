@@ -421,7 +421,7 @@ KPKFileVersion KPKMakeFileVersion(KPKDatabaseFormat format, NSUInteger version) 
 }
 
 + (instancetype)allocWithZone:(NSZone *)zone {
-  return [self sharedFormat];
+  return self.sharedFormat;
 }
 
 - (NSInteger)indexForDefaultKey:(NSString *)key {

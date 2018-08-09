@@ -331,7 +331,7 @@ FOUNDATION_EXPORT NSString *const kKPKAutotypeActivateApplication;
 /**
  @returns The shared format instance
  */
-+ (instancetype)sharedFormat;
+@property (class, readonly, strong) KPKFormat *sharedFormat;
 /**
  Determines the file version for the given raw file data
 

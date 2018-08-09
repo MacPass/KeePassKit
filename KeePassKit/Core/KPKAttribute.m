@@ -186,7 +186,7 @@
 }
 
 - (BOOL)isDefault {
-  return [[KPKFormat sharedFormat].entryDefaultKeys containsObject:self.key];
+  return [KPKFormat.sharedFormat.entryDefaultKeys containsObject:self.key];
 }
 
 - (BOOL)isEditable {

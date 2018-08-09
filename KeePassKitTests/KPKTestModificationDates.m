@@ -107,7 +107,7 @@
 - (void)testEntryDefaultAttributesModifiationDate {
   static NSString *const _kUpdatedString = @"Updated";
 
-  for(NSString *key in [KPKFormat sharedFormat].entryDefaultKeys) {
+  for(NSString *key in KPKFormat.sharedFormat.entryDefaultKeys) {
     NSDate *before = [self.entry.timeInfo.modificationDate copy];
     [self.entry _setValue:_kUpdatedString forAttributeWithKey:key];
     XCTAssertEqual(NSOrderedAscending, [before compare:self.entry.timeInfo.modificationDate], @"Modification date has to be updated after modification");
