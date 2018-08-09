@@ -46,7 +46,7 @@
  
  {REF:P@I:46C9B1FFBD4ABC4BBB260C6190BAD20C}
  {REF:<WantedField>@<SearchIn>:<Text>}
-*/
+ */
 
 @interface KPKAttribute ()
 
@@ -177,9 +177,14 @@
   if(_protect != protected) {
     if(!self.isDefault) {
       [[self.entry.undoManager prepareWithInvocationTarget:self] setProtect:_protect];
-      NSString *template = (protected ? NSLocalizedStringFromTableInBundle(@"PROTECT_%@", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting a custom string value protected")
-                            : NSLocalizedStringFromTableInBundle(@"UNPROTECT_%@", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting a custom string value non-protected") );
-      [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key]];
+      if(protected) {
+        NSString *template = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"PROTECT_%@", nil, [NSBundle bundleForClass:self.class], @"Action name for setting a custom string value protected"), self.key];
+        [self.entry.undoManager setActionName:template];
+      }
+      else {
+        NSString *template = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"PROTECT_%@", nil, [NSBundle bundleForClass:self.class], @"Action name for setting a custom string value protected"), self.key];
+        [self.entry.undoManager setActionName:template];
+      }
     }
     _protect = protected;
   }
