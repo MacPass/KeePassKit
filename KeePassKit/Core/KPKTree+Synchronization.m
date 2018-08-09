@@ -150,7 +150,7 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
       /* no local node for extern node found */
       continue;
     }
-    KPKGroup *localExternParent = _findNodeInGroup(externNode.parent, self.root, options);
+    KPKGroup *localExternParent = (KPKGroup *)_findNodeInGroup(externNode.parent, self.root, options);
     KPKGroup *localParent = localNode.parent;
     
     if(!localExternParent || !localParent) {
