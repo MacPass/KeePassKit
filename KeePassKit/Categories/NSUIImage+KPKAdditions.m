@@ -61,16 +61,8 @@
     [self drawInRect:NSMakeRect(0, 0, renderSize.width, renderSize.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
     [NSGraphicsContext restoreGraphicsState];
   }
-  NSData *pngData = [(NSBitmapImageRep *)bestRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
-  
-  NSRange gammaRange = [pngData rangeOfData:gammaChunkData options:0 range:NSMakeRange(0, pngData.length)];
-  if(gammaRange.location != NSNotFound) {
-    NSMutableData *tmpPngData = [[NSMutableData alloc] initWithCapacity:pngData.length];
-    [tmpPngData appendData:[pngData subdataWithRange:NSMakeRange(0, gammaRange.location)]];
-    [tmpPngData appendData:[pngData subdataWithRange:NSMakeRange(gammaRange.location + 8, pngData.length - (gammaRange.location + 8))]];
-    return [tmpPngData copy];
-  }
-  return pngData;
+  NSBitmapImageRep *bitmapRep = (NSBitmapImageRep *)bestRep;
+  return [bitmapRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
 #else
   /* test for bitmap content, if so, just use simple API to generate PNG */
   CGImageRef cgImageRef = self.CGImage;
