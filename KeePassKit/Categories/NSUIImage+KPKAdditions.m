@@ -12,6 +12,12 @@
 
 - (NSData *)kpk_pngData {
 #if KPK_MAC
+  static NSData *gammaChunkData;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    uint8_t bytes[] = {0x67, 0x41, 0x4D, 0x41};
+    gammaChunkData = [NSData dataWithBytes:bytes length:4];
+  });
   if(!self.isValid) {
     return nil;
   }
@@ -55,7 +61,16 @@
     [self drawInRect:NSMakeRect(0, 0, renderSize.width, renderSize.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
     [NSGraphicsContext restoreGraphicsState];
   }
-  return [(NSBitmapImageRep *)bestRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
+  NSData *pngData = [(NSBitmapImageRep *)bestRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
+  
+  NSRange gammaRange = [pngData rangeOfData:gammaChunkData options:0 range:NSMakeRange(0, pngData.length)];
+  if(gammaRange.location != NSNotFound) {
+    NSMutableData *tmpPngData = [[NSMutableData alloc] initWithCapacity:pngData.length];
+    [tmpPngData appendData:[pngData subdataWithRange:NSMakeRange(0, gammaRange.location)]];
+    [tmpPngData appendData:[pngData subdataWithRange:NSMakeRange(gammaRange.location + 8, pngData.length - (gammaRange.location + 8))]];
+    return [tmpPngData copy];
+  }
+  return pngData;
 #else
   /* test for bitmap content, if so, just use simple API to generate PNG */
   CGImageRef cgImageRef = self.CGImage;
