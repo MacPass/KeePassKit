@@ -78,6 +78,8 @@
   KPKIcon *icon = [[KPKIcon alloc] initWithImageAtURL:[self urlForImageResource:@"test.ico"]];
 #if KPK_MAC
   XCTAssertEqual(icon.image.representations.count,5);
+  XCTAssertNotNil(icon.image);
+  XCTAssertNotNil(icon.image.kpk_pngData);
 #else
   XCTAssertNotNil(icon.image);
   XCTAssertNotNil(icon.image.kpk_pngData);
