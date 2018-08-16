@@ -194,6 +194,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (instancetype)_copyWithUUID:(nullable NSUUID *)uuid {
   KPKEntry *copy = [super _copyWithUUID:uuid];
+  KPK_SCOPED_NO_BEGIN(copy.updateTiming);
   /* Default attributes */
   copy.overrideURL = self.overrideURL;
   
@@ -213,6 +214,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   copy.isHistory = self.isHistory;
   /* parent at last, to prevent undo/redo registration */
   copy.parent = self.parent;
+  KPK_SCOPED_NO_END(copy.updateTiming);
   return copy;
 }
 

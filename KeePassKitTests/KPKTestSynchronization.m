@@ -130,24 +130,24 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
 }
 
 - (void)testLocalModifiedEntryKDB {
-  KPKEntry *entryA = [self.kdbTreeA.root entryForUUID:self.entryUUID];
+  KPKEntry *subEntryA = [self.kdbTreeA.root entryForUUID:self.subEntryUUID];
   
   usleep(10);
   
   /* merge will create a history entry, so supply a appropriate one */
-  [entryA _pushHistoryAndMaintain:NO];
+  [subEntryA _pushHistoryAndMaintain:NO];
   
-  entryA.title = @"TitleChanged";
-  entryA.username = @"ChangedUserName";
-  entryA.url = @"ChangedURL";
+  subEntryA.title = @"TitleChanged";
+  subEntryA.username = @"ChangedUserName";
+  subEntryA.url = @"ChangedURL";
   
-  KPKEntry *entryACopy = [entryA copy];
+  KPKEntry *subEntryACopy = [subEntryA copy];
   
-  [self.kdbxTreeA synchronizeWithTree:self.kdbTreeB mode:KPKSynchronizationModeSynchronize options:KPKSynchronizationOptionMatchGroupsByTitleOnly];
+  [self.kdbTreeA synchronizeWithTree:self.kdbTreeB mode:KPKSynchronizationModeSynchronize options:KPKSynchronizationOptionMatchGroupsByTitleOnly];
   
   /* make sure deletion was carried over */
-  KPKEntry *synchronizedEntry = [self.kdbTreeA.root entryForUUID:self.entryUUID];
-  XCTAssertEqual(KPKComparsionEqual, [entryACopy compareToEntry:synchronizedEntry]);
+  KPKEntry *synchronizedEntry = [self.kdbTreeA.root entryForUUID:self.subEntryUUID];
+  XCTAssertEqual(KPKComparsionEqual, [subEntryACopy compareToEntry:synchronizedEntry]);
   XCTAssertEqualObjects(@"TitleChanged", synchronizedEntry.title);
   XCTAssertEqualObjects(@"ChangedUserName", synchronizedEntry.username);
   XCTAssertEqualObjects(@"ChangedURL", synchronizedEntry.url);

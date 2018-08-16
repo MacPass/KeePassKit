@@ -427,12 +427,14 @@
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
   KPKNode *copy = [[self.class alloc] _initWithUUID:uuid];
+  KPK_SCOPED_NO_BEGIN(copy.updateTiming);
   copy.iconId = self.iconId;
   copy.iconUUID = self.iconUUID;
   copy.notes = self.notes;
   copy.title = self.title;
   copy.timeInfo = self.timeInfo;
   copy.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:self.mutableCustomData copyItems:YES];
+  KPK_SCOPED_NO_END(copy.updateTiming);
   return copy;
 }
 
@@ -468,6 +470,7 @@
   NSAssert(pair.key, @"Custom data key cannot be nil!");
   NSAssert(pair.value, @"Custom data value cannot be nil!");
   self.mutableCustomData[pair.key] = pair.value;
+  [self touchModified];
 }
 
 - (void)removeCustomDataObject:(KPKPair *)pair {
@@ -482,6 +485,7 @@
       NSLog(@"Warning. Expected value for key is %@, but actual value is: %@", pair.value, value);
     }
     self.mutableCustomData[pair.key] = nil;
+    [self touchModified];
   }
 }
 

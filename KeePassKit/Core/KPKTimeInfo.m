@@ -24,6 +24,7 @@
 #import "KPKTimeInfo_Private.h"
 #import "KPKNode.h"
 #import "KPKTree.h"
+#import "KPKScopedSet.h"
 
 @interface KPKTimeInfo ()
 
@@ -94,6 +95,7 @@
 
 - (id)copyWithZone:(NSZone *)zone {
   KPKTimeInfo *timeInfo = [[KPKTimeInfo alloc] init];
+  KPK_SCOPED_NO_BEGIN(timeInfo.updateTiming)
   timeInfo.creationDate = [self.creationDate copyWithZone:zone];
   timeInfo.accessDate = [self.accessDate copyWithZone:zone];
   timeInfo.modificationDate = [self.modificationDate copyWithZone:zone];
@@ -102,6 +104,7 @@
   timeInfo.locationChanged = [self.locationChanged copyWithZone:zone];
   timeInfo.usageCount = self.usageCount; // reset?
   timeInfo.updateTiming = self.updateTiming;
+  KPK_SCOPED_NO_END(timeInfo.updateTiming);
   return timeInfo;
 }
 

@@ -168,7 +168,7 @@ static NSSet *_observedKeyPathsSet;
 
 - (instancetype)_copyWithUUID:(NSUUID *)uuid {
   KPKGroup *copy = [super _copyWithUUID:uuid];
-  copy.updateTiming = NO;
+  KPK_SCOPED_NO_BEGIN(copy.updateTiming);
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
   copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
   copy.isSearchEnabled = self.isSearchEnabled;
@@ -182,7 +182,7 @@ static NSSet *_observedKeyPathsSet;
   
   /* defer parent update to disable undo/redo registration */
   copy.parent = self.parent;
-  copy.updateTiming = YES;
+  KPK_SCOPED_NO_END(copy.updateTiming);
   return copy;
 }
 

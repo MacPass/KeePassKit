@@ -36,6 +36,8 @@
   KPKEntry *entry = [[KPKEntry alloc] init];
   [entry addToGroup:tree.root];
   
+  usleep(10);
+  
   entry.iconUUID = [[NSUUID alloc] initWithUUIDString:@"66873E56-2822-4258-A45F-92CFE194232F"];
   entry.iconId = 500;
   entry.title = @"Title";
@@ -58,6 +60,8 @@
 
   [entry pushHistory];
   XCTAssertEqual(entry.mutableHistory.count, 1);
+  
+  usleep(10);
   
   KPKEntry *copyEntry = [entry copy];
   XCTAssertEqual(KPKComparsionEqual, [entry compareToEntry:copyEntry]);
@@ -124,6 +128,23 @@
   KPKGroup *copy = [root copy];
   
   XCTAssertEqual(KPKComparsionEqual, [root compareToGroup:copy]);
+}
+
+- (void)testTimeInfoCopying {
+  KPKTimeInfo *timeInfo = [[KPKTimeInfo alloc] init];
+  timeInfo.expirationDate = NSDate.date;
+
+  usleep(10);
+  
+  KPKTimeInfo *copy = [timeInfo copy];
+  XCTAssertEqualObjects(timeInfo.accessDate, copy.accessDate);
+  XCTAssertEqualObjects(timeInfo.modificationDate, copy.modificationDate);
+  XCTAssertEqualObjects(timeInfo.locationChanged, copy.locationChanged);
+  XCTAssertEqualObjects(timeInfo.expirationDate, copy.expirationDate);
+  XCTAssertEqual(timeInfo.expires, copy.expires);
+  XCTAssertEqual(timeInfo.usageCount, copy.usageCount);
+  
+  
 }
 
 @end
