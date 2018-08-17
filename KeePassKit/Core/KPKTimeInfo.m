@@ -118,6 +118,31 @@
           (unsigned long)self.usageCount];
 }
 
+- (NSUInteger)hash {
+  return self.creationDate.hash ^ self.modificationDate.hash ^ self.accessDate.hash ^ self.expirationDate.hash ^ self.expires;
+}
+
+- (BOOL)isEqual:(id)object {
+  if(self == object) {
+    return YES;
+  }
+  return [self isEqualToTimeInfo:(KPKTimeInfo *)object];
+}
+
+- (BOOL)isEqualToTimeInfo:(KPKTimeInfo *)timeInfo {
+  if(self == timeInfo) {
+    return YES;
+  }
+  return ([self.accessDate isEqualToDate:timeInfo.accessDate]
+          && [self.creationDate isEqualToDate:timeInfo.creationDate]
+          && [self.modificationDate isEqualToDate:timeInfo.modificationDate]
+          && [self.expirationDate isEqualToDate:timeInfo.expirationDate]
+          && [self.locationChanged isEqualToDate:timeInfo.locationChanged]
+          && self.usageCount == timeInfo.usageCount
+          && self.expires == timeInfo.expires);  
+}
+
+
 #pragma mark -
 #pragma mark Properties
 - (void)setExpires:(BOOL)expires {

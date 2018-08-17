@@ -112,6 +112,9 @@
 }
 
 - (BOOL)isEqual:(id)object {
+  if(self == object) {
+    return YES;
+  }
   if([object isKindOfClass:[self class]]) {
     return [self isEqualToAttribute:object];
   }
@@ -119,6 +122,9 @@
 }
 
 - (BOOL)isEqualToAttribute:(KPKAttribute *)attribute {
+  if(self == attribute) {
+    return YES;
+  }
   NSAssert([attribute isKindOfClass:self.class], @"Only KPKAttributes are allowed in this test");
   return ([self.value isEqualToString:attribute.value]
           && [self.key isEqualToString:attribute.key]);

@@ -243,6 +243,9 @@ if( self.updateTiming ) { \
 }
 
 - (BOOL)isEqual:(id)object {
+  if(self == object) {
+    return YES;
+  }
   if([object isKindOfClass:self.class]) {
     return [self isEqualToMetaData:object];
   }

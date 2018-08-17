@@ -40,4 +40,6 @@
 
 - (void)reset;
 
+- (BOOL)isEqualToTimeInfo:(KPKTimeInfo *)timeInfo;
+
 @end

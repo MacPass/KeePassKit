@@ -137,13 +137,7 @@
   usleep(10);
   
   KPKTimeInfo *copy = [timeInfo copy];
-  XCTAssertEqualObjects(timeInfo.accessDate, copy.accessDate);
-  XCTAssertEqualObjects(timeInfo.modificationDate, copy.modificationDate);
-  XCTAssertEqualObjects(timeInfo.locationChanged, copy.locationChanged);
-  XCTAssertEqualObjects(timeInfo.expirationDate, copy.expirationDate);
-  XCTAssertEqual(timeInfo.expires, copy.expires);
-  XCTAssertEqual(timeInfo.usageCount, copy.usageCount);
-  
+  XCTAssertEqualObjects(copy, timeInfo);
   
 }
 

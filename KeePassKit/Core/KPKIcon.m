@@ -111,6 +111,9 @@
 #pragma mark Equality
 
 - (BOOL)isEqual:(id)object {
+  if(self == object) {
+    return YES;
+  }
   if([object isKindOfClass:KPKIcon.class]) {
     return [self isEqualToIcon:object];
   }
