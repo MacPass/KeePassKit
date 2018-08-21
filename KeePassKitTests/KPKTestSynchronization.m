@@ -161,7 +161,7 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
 
 - (void)testAddedEntryKDBX {
   KPKEntry *newEntry = [[KPKEntry alloc] init];
-  [newEntry addToGroup:self.kdbxTreeB.root];
+  [newEntry addToGroup:self.kdbxTreeB.root.groups.firstObject];
   
   [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
   
@@ -169,11 +169,12 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   XCTAssertNotNil(synchronizedEntry);
   XCTAssertNotEqual(newEntry, synchronizedEntry, @"Entries are different objects!");
   XCTAssertEqual(KPKComparsionEqual, [newEntry compareToEntry:synchronizedEntry]);
+  XCTAssertEqual(synchronizedEntry.parent, self.kdbxTreeA.root.groups.firstObject);
 }
 
 - (void)testAddedEntryKDB {
   KPKEntry *newEntry = [[KPKEntry alloc] init];
-  /* add Entry to Subgroup since root group entries aren't supported for KDB */
+  /* add Entry to Subgroup since root group entries will get moved to first subgroup on save for KDB files */
   [newEntry addToGroup:self.kdbTreeB.root.groups.firstObject];
   
   [self.kdbTreeA synchronizeWithTree:self.kdbTreeB mode:KPKSynchronizationModeSynchronize options:KPKSynchronizationOptionMatchGroupsByTitleOnly];
@@ -182,6 +183,7 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   XCTAssertNotNil(synchronizedEntry);
   XCTAssertNotEqual(newEntry, synchronizedEntry, @"Entries are different objects!");
   XCTAssertEqual(KPKComparsionEqual, [newEntry compareToEntry:synchronizedEntry]);
+  XCTAssertEqual(self.kdbTreeA.root.groups.firstObject, synchronizedEntry.parent);
 }
 
 
