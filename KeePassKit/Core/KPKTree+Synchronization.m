@@ -27,7 +27,6 @@
 
 #import "KPKScopedSet.h"
 
-
 KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOptions options) {
   __block KPKNode *localNode = nil;
   if(options & KPKSynchronizationOptionMatchGroupsByTitleOnly && node.asGroup) {
@@ -156,13 +155,14 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
     if(!localExternParent || !localParent) {
       continue;
     }
-    
+
     if([localParent.uuid isEqual:localExternParent.uuid]) {
-      /* parents are the same */
+      localNode.timeInfo.locationChanged = [localNode.timeInfo.locationChanged laterDate:externNode.timeInfo.locationChanged];
       continue;
     }
     else if(KPKSynchronizationOptionMatchGroupsByTitleOnly & options) {
       if([localParent.title isEqualToString:externNode.title]) {
+        localNode.timeInfo.locationChanged = [localNode.timeInfo.locationChanged laterDate:externNode.timeInfo.locationChanged];
         continue; // parents have the same title which is fine for us
       }
     }

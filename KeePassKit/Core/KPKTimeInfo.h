@@ -30,12 +30,12 @@
 @property(strong) NSDate *creationDate;
 @property(strong) NSDate *modificationDate;
 @property(strong) NSDate *accessDate;
+@property(strong) NSDate *locationChanged;
 
 @property(nonatomic, strong) NSDate *expirationDate;
 @property(nonatomic) BOOL expires;
 @property(readonly) BOOL isExpired;
 
-@property(strong) NSDate *locationChanged;
 @property NSUInteger usageCount;
 
 - (void)reset;
