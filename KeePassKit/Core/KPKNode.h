@@ -141,4 +141,24 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly) KPKGroup *asGroup;
 @property(nonatomic, readonly) KPKEntry *asEntry;
 
+#pragma mark Hierarchy
+/**
+ *  @return The breadcrumb of this group separated by dots.
+ */
+@property (nonatomic, readonly, copy) NSString *breadcrumb;
+/**
+ *  Retursn the path of groups this group is under. The group names a separated by the given separator
+ *
+ *  @param separator a string that is used as group name separator
+ *  @return NSString of the groups breadcrumb.
+ */
+- (NSString *)breadcrumbWithSeparator:(NSString *)separator;
+
+/**
+ *  The index path in the Tree to this group
+ *
+ *  @return NSIndexPath starting at the root group of the tree
+ */
+@property (nonatomic, readonly, copy) NSIndexPath *indexPath;
+
 @end

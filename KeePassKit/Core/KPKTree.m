@@ -127,9 +127,16 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   self.root = nil;
 }
 
-- (id)parent {
-  return nil;
+- (NSString *)description {
+  NSMutableString *description = [[NSMutableString alloc] init];
+  [description appendString:@"{\r"];
+  [self.root _traverseNodesWithBlock:^(KPKNode *node, BOOL *stop) {
+    [description appendFormat:@"\t%@\r", node.description];
+  }];
+  [description appendString:@"}"];
+  return [description copy];
 }
+
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent {
   KPKGroup *group = [[KPKGroup alloc] init];

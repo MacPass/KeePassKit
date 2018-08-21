@@ -638,28 +638,6 @@ static NSSet *_observedKeyPathsSet;
   }
 }
 
-- (NSString *)breadcrumb {
-  return [self breadcrumbWithSeparator:@"."];
-}
-
-- (NSString *)breadcrumbWithSeparator:(NSString *)separator {
-  if(self.parent && (self.rootGroup != self.parent)) {
-    return [[self.parent breadcrumb] stringByAppendingFormat:@" > %@", self.title];
-  }
-  return self.title;
-}
-
-- (NSIndexPath *)indexPath {
-  if(self.parent) {
-    NSUInteger myIndex = [self.parent.groups indexOfObjectIdenticalTo:self];
-    NSIndexPath *parentIndexPath = [self.parent indexPath];
-    NSAssert( nil != parentIndexPath, @"existing parents should always yield a indexPath");
-    return [parentIndexPath indexPathByAddingIndex:myIndex];
-  }
-  NSUInteger indexes[] = {0,0};
-  return [[NSIndexPath alloc] initWithIndexes:indexes length:(sizeof(indexes)/sizeof(NSUInteger))];
-}
-
 #pragma mark Delete
 
 - (void)clear {

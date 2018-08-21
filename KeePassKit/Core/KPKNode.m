@@ -134,11 +134,7 @@
 }
 
 - (NSString*)description {
-  return [NSString stringWithFormat:@"%@\rimage=%ld\rname=%@\r%@]",
-          self.class,
-          (long)self.iconId,
-          self.title,
-          self.timeInfo];
+  return [NSString stringWithFormat:@"{%@, image=%ld, title=%@, parent=%@}", self.class, self.iconId, self.title, self.parent.title];
 }
 
 #pragma mark Properties
@@ -237,6 +233,28 @@
     _timeInfo = [timeInfo copy];
     _timeInfo.node = self;
   }
+}
+
+- (NSString *)breadcrumb {
+  return [self breadcrumbWithSeparator:@"."];
+}
+
+- (NSString *)breadcrumbWithSeparator:(NSString *)separator {
+  if(self.parent && (self.rootGroup != self.parent)) {
+    return [[self.parent breadcrumb] stringByAppendingFormat:@" > %@", self.title];
+  }
+  return self.title;
+}
+
+- (NSIndexPath *)indexPath {
+  if(self.parent) {
+    NSUInteger myIndex = self.asGroup ? [self.parent.mutableGroups indexOfObjectIdenticalTo:self.asGroup] : [self.parent.mutableEntries indexOfObjectIdenticalTo:self.asEntry];
+    NSIndexPath *parentIndexPath = [self.parent indexPath];
+    NSAssert( nil != parentIndexPath, @"existing parents should always yield a indexPath");
+    return [parentIndexPath indexPathByAddingIndex:myIndex];
+  }
+  NSUInteger indexes[] = {0,0};
+  return [[NSIndexPath alloc] initWithIndexes:indexes length:(sizeof(indexes)/sizeof(NSUInteger))];
 }
 
 #pragma mark KPKTimerecording
