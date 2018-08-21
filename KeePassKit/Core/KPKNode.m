@@ -321,11 +321,14 @@
 
 - (void)moveToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   /* TODO handle moving accross trees! */
-  [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:self.index];
-  [self.parent _removeChild:self];
   if(self.tree && group.tree) {
     NSAssert(self.tree == group.tree, @"Moving nodes between trees is not supported. Use -remove and -addToGroup: instead.");
   }
+  if(self.parent == group) {
+    return; // no need to move, we're already there
+  }
+  [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:self.index];
+  [self.parent _removeChild:self];
   [group _addChild:self atIndex:index];
   [self touchMoved];
 }
