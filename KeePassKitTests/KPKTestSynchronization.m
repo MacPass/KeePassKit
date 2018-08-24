@@ -43,8 +43,9 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   //  rootgroup
   //    - group (custom data)
   //      - subgroup
-  //      - subentry
-  //    - entry (custom data)
+  //        - subsubgroup
+  //      - entry
+  //    - rootentry (custom data)
   
   [super setUp];
   self.kdbxTreeA = [[KPKTree alloc] init];
@@ -135,24 +136,24 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
 }
 
 - (void)testLocalModifiedEntryKDB {
-  KPKEntry *subEntryA = [self.kdbTreeA.root entryForUUID:self.entryUUID];
+  KPKEntry *entryA = [self.kdbTreeA.root entryForUUID:self.entryUUID];
   
   usleep(10);
   
   /* merge will create a history entry, so supply a appropriate one */
-  [subEntryA _pushHistoryAndMaintain:NO];
+  [entryA _pushHistoryAndMaintain:NO];
   
-  subEntryA.title = @"TitleChanged";
-  subEntryA.username = @"ChangedUserName";
-  subEntryA.url = @"ChangedURL";
+  entryA.title = @"TitleChanged";
+  entryA.username = @"ChangedUserName";
+  entryA.url = @"ChangedURL";
   
-  KPKEntry *subEntryACopy = [subEntryA copy];
+  KPKEntry *entryACopy = [entryA copy];
   
   [self.kdbTreeA synchronizeWithTree:self.kdbTreeB mode:KPKSynchronizationModeSynchronize options:KPKSynchronizationOptionMatchGroupsByTitleOnly];
   
   /* make sure deletion was carried over */
   KPKEntry *synchronizedEntry = [self.kdbTreeA.root entryForUUID:self.entryUUID];
-  XCTAssertEqual(KPKComparsionEqual, [subEntryACopy compareToEntry:synchronizedEntry]);
+  XCTAssertEqual(KPKComparsionEqual, [entryACopy compareToEntry:synchronizedEntry]);
   XCTAssertEqualObjects(@"TitleChanged", synchronizedEntry.title);
   XCTAssertEqualObjects(@"ChangedUserName", synchronizedEntry.username);
   XCTAssertEqualObjects(@"ChangedURL", synchronizedEntry.url);
@@ -399,19 +400,21 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   XCTAssertEqualObjects(changedGroup.title, @"ThisChangeWasLaterSoItStays");
 }
 
-- (void)testMovedEntry {
+- (void)testMovedEntryKDBX {
   //
   //  before:
   //  rootgroup
   //    - group
   //      - subgroup
-  //    - entry
+  //        - entry
+  //    - rootentry
   //
   //  after:
   //  rootgroup
   //    - group
-  //      - entry
+  //      - rootentry
   //      - subgroup
+  //        - entry
   //
   KPKEntry *entry = self.kdbxTreeB.root.entries.firstObject;
   
@@ -428,6 +431,7 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   XCTAssertNotNil(movedEntry);
   XCTAssertEqualObjects(movedEntry.parent.uuid, groupUUID);
   
+  /* ensure that we do not have any duplications */
   NSMutableSet *uuids = [[NSMutableSet alloc] init];
   for(KPKEntry *entry in self.kdbxTreeA.allEntries) {
     XCTAssertFalse([uuids containsObject:entry.uuid]);
@@ -441,6 +445,46 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   for(KPKGroup *group in self.kdbxTreeA.allGroups) {
     XCTAssertFalse([uuids containsObject:group.uuid]);
     [uuids addObject:group.uuid];
+  }
+}
+
+- (void)testMovedEntryKDB {
+  //
+  //  before:
+  //  rootgroup
+  //    - rootentry
+  //    - group
+  //      - entry
+  //      - subgroup
+  
+  //
+  //  after:
+  //  rootgroup
+  //    - group
+  //      - rootentry (moved due to KDB constraints!)
+  //      - subgroup
+  //        - entry
+  //
+  KPKEntry *entryB = [self.kdbTreeB.root entryForUUID:self.entryUUID];
+  
+  NSUUID *entryUUID = entryB.uuid;
+  KPKGroup *subGroupB = self.kdbTreeB.root.mutableGroups.firstObject.mutableGroups.firstObject;
+  
+  [entryB moveToGroup:subGroupB];
+  
+  [self.kdbTreeA synchronizeWithTree:self.kdbTreeB mode:KPKSynchronizationModeSynchronize options:KPKSynchronizationOptionMatchGroupsByTitleOnly];
+  
+  KPKEntry *entryA = [self.kdbTreeA.root entryForUUID:entryUUID];
+  
+  KPKGroup *subGroupA = self.kdbTreeA.root.mutableGroups.firstObject.mutableGroups.firstObject;
+  
+  XCTAssertNotNil(entryA);
+  XCTAssertEqual(entryA.parent, subGroupA);
+  
+  NSMutableSet *uuids = [[NSMutableSet alloc] init];
+  for(KPKEntry *entry in self.kdbTreeA.allEntries) {
+    XCTAssertFalse([uuids containsObject:entry.uuid]);
+    [uuids addObject:entry.uuid];
   }
 }
 
@@ -475,6 +519,63 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   XCTAssertNotNil(movedGroup);
   XCTAssertEqual(movedGroup.parent, newParent);
 }
+
+- (void)testMovedDateMergeKDBX {
+  KPKEntry *entryA = self.kdbxTreeA.root.entries.firstObject;
+  KPKEntry *entryB = self.kdbxTreeB.root.entries.firstObject;
+  
+  NSDate *locationDataA = entryA.timeInfo.locationChanged;
+  
+  XCTAssertEqualObjects(entryA.uuid, entryB.uuid);
+  
+  NSUUID *entryUUID = entryB.uuid;
+  
+  /* Move entry two times to update moved date but keep old parent */
+  [entryB moveToGroup:self.kdbxTreeB.root.groups.firstObject];
+  usleep(10);
+  [entryB moveToGroup:self.kdbxTreeB.root];
+  
+  
+  NSDate *locationDataB = entryB.timeInfo.locationChanged;
+  
+  XCTAssertEqual(locationDataA, [locationDataB earlierDate:locationDataA]);
+  
+  [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
+  
+  KPKEntry *movedEntryA = [self.kdbxTreeA.root entryForUUID:entryUUID];
+  
+  XCTAssertNotNil(movedEntryA);
+  XCTAssertEqualObjects(movedEntryA.timeInfo.locationChanged, locationDataB);
+}
+
+- (void)testMovedDateMergeKDB {
+  KPKEntry *entryA = self.kdbTreeA.root.mutableGroups.firstObject.mutableEntries.firstObject;
+  KPKEntry *entryB = self.kdbTreeB.root.mutableGroups.firstObject.mutableEntries.firstObject;
+  
+  NSDate *locationDataA = entryA.timeInfo.locationChanged;
+  
+  XCTAssertEqualObjects(entryA.uuid, entryB.uuid);
+  
+  NSUUID *entryUUID = entryB.uuid;
+  
+  /* Move entry two times to update moved date but keep old parent */
+  [entryB moveToGroup:self.kdbTreeB.root.mutableGroups.firstObject.mutableGroups.firstObject];
+  usleep(10);
+  [entryB moveToGroup:self.kdbTreeB.root.mutableGroups.firstObject];
+  
+  
+  NSDate *locationDataB = entryB.timeInfo.locationChanged;
+  
+  XCTAssertEqual(locationDataA, [locationDataB earlierDate:locationDataA]);
+  
+  [self.kdbTreeA synchronizeWithTree:self.kdbTreeB mode:KPKSynchronizationModeSynchronize options:KPKSynchronizationOptionMatchGroupsByTitleOnly];
+  
+  KPKEntry *movedEntryA = [self.kdbTreeA.root entryForUUID:entryUUID];
+  
+  XCTAssertNotNil(movedEntryA);
+  XCTAssertEqualObjects(movedEntryA.timeInfo.locationChanged, locationDataB);
+}
+
 
 
 - (void)testChangedMetaData {
