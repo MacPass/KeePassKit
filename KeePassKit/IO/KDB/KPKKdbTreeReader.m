@@ -544,7 +544,7 @@
     return NO;
   }
   if([entry.notes isEqualToString:KPKMetaEntryCustomKVP]) {
-    // Custom KeyValueProvierd - unsupported!
+    // Custom KeyValueProvider - unsupported!
     return NO;
   }
   if([entry.notes isEqualToString:KPKMetaEntryDatabaseColor]) {
