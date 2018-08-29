@@ -52,6 +52,9 @@ NSString *const KPKMetaEntryDatabaseColor           = @"Database Color";
 NSString *const KPKMetaEntryKeePassXCustomIcon      = @"KPX_CUSTOM_ICONS_2";
 NSString *const KPKMetaEntryKeePassXCustomIcon2     = @"KPX_CUSTOM_ICONS_4";
 NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
+NSString *const KPKMetaEntryMacPassGroupUUIDs       = @"KPKMetaEntryMacPassGroupUUIDs";
+NSString *const KPKMetaEntryMacPassDeletedObjects   = @"KPKMetaEntryMacPassDeletedObjects";
+
 
 
 @interface KPKEntry () {

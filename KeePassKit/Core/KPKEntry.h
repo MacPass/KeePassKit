@@ -48,6 +48,8 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryDatabaseColor;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXCustomIcon;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXCustomIcon2;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryMacPassGroupUUIDs; // backport of group UUIDS of KDBX files to KDB UUIDs
+FOUNDATION_EXTERN NSString *const KPKMetaEntryMacPassDeletedObjects; // backport of deleted object of KDBX to KDB files
 
 /**
  *  Entries hold ciritcal information to store passwords

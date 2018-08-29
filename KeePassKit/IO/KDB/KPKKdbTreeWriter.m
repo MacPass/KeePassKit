@@ -288,15 +288,15 @@
   NSArray *icons = self.tree.metaData.mutableCustomIcons;
   NSMutableData *iconData = [[NSMutableData alloc] initWithCapacity:1024*1024];
   KPKDataStreamWriter *dataWriter = [[KPKDataStreamWriter alloc] initWithData:iconData];
-  [dataWriter write4Bytes:(uint32_t)icons.count];
-  [dataWriter write4Bytes:(uint32_t)_iconEntries.count];
-  [dataWriter write4Bytes:(uint32_t)_iconGroups.count];
+  [dataWriter write4Bytes:CFSwapInt32HostToLittle((uint32_t)icons.count)];
+  [dataWriter write4Bytes:CFSwapInt32HostToLittle((uint32_t)_iconEntries.count)];
+  [dataWriter write4Bytes:CFSwapInt32HostToLittle((uint32_t)_iconGroups.count)];
   
   
   for(KPKIcon *icon in icons) {
     NSData *pngData = icon.image.kpk_pngData;
     if(pngData) {
-      [dataWriter write4Bytes:(uint32_t)pngData.length];
+      [dataWriter write4Bytes:CFSwapInt32HostToLittle((uint32_t)pngData.length)];
       [dataWriter writeData:pngData];
     }
   }
@@ -373,10 +373,30 @@
   [writer write4Bytes:(uint32_t)self.groups.count];
   for(KPKGroup *group in self.groups) {
     uint32_t groupId = [self _groupIdForGroup:group];
-    [writer write4Bytes:(uint32_t)groupId];
+    [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)groupId)];
     [writer writeByte:group.isExpanded];
   }
-  return  [writer data];
+  return  writer.data;
+}
+
+- (NSData *)_groupUUIDsData {
+  /*
+   struct KPKGroupUUIDs {
+    uint32_t numberOfUUIDs;
+    uuid_t UUID;
+  };
+  */
+  KPKDataStreamWriter *writer = [KPKDataStreamWriter streamWriter];
+  [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)self.groups.count)];
+  for(KPKGroup *group in self.groups) {
+    [writer writeData:group.uuid.kpk_uuidData];
+  }
+  return writer.data;
+}
+
+- (NSData *)_deltedObjectsData {
+  KPKDataStreamWriter *writer = [KPKDataStreamWriter streamWriter];
+  return writer.data;
 }
 
 #pragma mark Header
@@ -393,7 +413,7 @@
    2 byte stop field type
    4 byte stop field length (0)
    */
-  [self.dataWriter write4Bytes:82];
+  [self.dataWriter write4Bytes:CFSwapInt32HostToLittle(82)];
   /* Compute a sha256 hash of the header up to but not including the contentsHash */
   [self _writeField:KPKHeaderHashFieldTypeHeaderHash data:hash];
   
@@ -439,8 +459,8 @@
 }
 
 - (void)_writeField:(KPKLegacyFieldType)type bytes:(const void *)bytes length:(NSUInteger)length {
-  [self.dataWriter write2Bytes:(uint16_t)type];
-  [self.dataWriter write4Bytes:(uint32_t)length];
+  [self.dataWriter write2Bytes:CFSwapInt16HostToLittle((uint16_t)type)];
+  [self.dataWriter write4Bytes:CFSwapInt32HostToLittle((uint32_t)length)];
   if(length > 0) {
     [self.dataWriter writeBytes:bytes length:length];
   }
