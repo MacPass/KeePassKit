@@ -502,10 +502,10 @@
 }
 
 - (void)_parseAutotype:(KPKEntry *)entry {
-//  KPKAutotype *autotype = [KPKAutotype autotypeFromString:entry.notes];
-//  if(autotype) {
-//    entry.autotype = autotype;
-//  }
+  //  KPKAutotype *autotype = [KPKAutotype autotypeFromString:entry.notes];
+  //  if(autotype) {
+  //    entry.autotype = autotype;
+  //  }
 }
 
 #pragma mark -
@@ -747,6 +747,32 @@
   }
   return YES;
 }
+
+- (BOOL)_parseGroupUUIDsData:(NSData *)data {
+  /*
+   struct KPKGroupUUIDs {
+   uint32_t numberOfUUIDs;
+   uuid_t UUID;
+   };
+   */
+  return NO;
+}
+
+- (BOOL)_parseDeltedObjectsData:(NSData *)data {
+  /*
+   struct KPKDeletedObject {
+   uuid_t UUID;
+   uint8_t date[5];
+   }
+   
+   struct KPKDeletedObjects {
+   uint32_t count;
+   struct KPKDeletedObject objects[count];
+   };
+   */
+  return NO;
+}
+
 
 #pragma mark -
 #pragma mark Helper

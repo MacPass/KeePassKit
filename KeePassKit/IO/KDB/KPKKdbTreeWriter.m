@@ -24,15 +24,18 @@
 #import "KPKKdbFormat.h"
 
 #import "KPKBinary.h"
+#import "KPKDeletedNode.h"
 #import "KPKEntry.h"
 #import "KPKEntry_Private.h"
 #import "KPKGroup.h"
+#import "KPKGroup_Private.h"
 #import "KPKIcon.h"
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
 #import "KPKNode_Private.h"
 #import "KPKTimeInfo.h"
 #import "KPKTree.h"
+#import "KPKTree_Private.h"
 
 #import "KPKDataStreamWriter.h"
 
@@ -104,7 +107,7 @@
 
 - (BOOL)writeRootGroup {
   NSAssert(self.tree, @"Tree cannot be nil!");
-  return ((self.tree.root.entries.count > 0) && (self.tree.root.groups.count == 0));
+  return ((self.tree.root.mutableEntries.count > 0) && (self.tree.root.mutableGroups.count == 0));
 }
 
 #pragma mark Group/Entry Writing
@@ -117,7 +120,7 @@
   BOOL success = YES;
   for(KPKGroup *group in groups) {
     success &= [self _writeGroup:group];
-    success &= [self _writeGroups:group.groups];
+    success &= [self _writeGroups:group.mutableGroups];
   }
   return success;
 }
@@ -170,7 +173,7 @@
   
   /* Shift all entries in the root group inside the first group */
   uint32_t groupId = [self _groupIdForGroup:entry.parent];
-  if([self.tree.root.entries containsObject:entry]) {
+  if([self.tree.root.mutableEntries containsObject:entry]) {
     groupId = [self _groupIdForGroup:self.groups.firstObject];
   }
   if(groupId == 0) {
@@ -395,7 +398,28 @@
 }
 
 - (NSData *)_deltedObjectsData {
+  /*
+  struct KPKDeletedObject {
+    uuid_t UUID;
+    uint8_t date[5];
+  }
+  
+  struct KPKDeletedObjects {
+    uint32_t count;
+    struct KPKDeletedObject objects[count];
+  };
+  */
+  NSAssert(self.tree.mutableDeletedObjects.count < UINT32_MAX, @"Unable to store deleted objects. Exceeding maxium capacity of deleted objects");
+  if(self.tree.mutableDeletedObjects.count >= UINT32_MAX) {
+    return nil;
+  }
+  
   KPKDataStreamWriter *writer = [KPKDataStreamWriter streamWriter];
+  [writer write4Bytes:CFSwapInt32HostToLittle((uint32_t)self.tree.mutableDeletedObjects.count)];
+  for(KPKDeletedNode *node in self.tree.mutableDeletedObjects) {
+    [writer writeData:node.uuid.kpk_uuidData];
+    [writer writeData:node.deletionDate.kpk_packedBytes];
+  }
   return writer.data;
 }
 
