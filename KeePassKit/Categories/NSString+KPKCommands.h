@@ -45,6 +45,8 @@
 
 @interface NSString (KPKEvaluation)
 
+@property (nonatomic, readonly) BOOL hasReference;
+
 - (NSString *)kpk_finalValueForEntry:(KPKEntry *)entry;
 
 @end

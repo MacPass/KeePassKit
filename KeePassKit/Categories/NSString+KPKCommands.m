@@ -65,8 +65,9 @@ static NSString *const _KPKSpaceSaveGuard = @"{KPK_LITERAL_SPACE}";
 @property (nonatomic, strong) NSDictionary <NSString *, NSString *> *unsafeShortFormats;
 @property (nonatomic, strong) NSArray <NSString *> *valueCommands;
 
-+ (instancetype)sharedCache;
+@property (nonatomic, strong, readonly, class) KPKCommandCache *sharedCache;
 
+@property (nonatomic, strong, readonly) NSRegularExpression *referenceRegExp;
 @end
 
 /**
@@ -136,6 +137,35 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   });
   return valueCommands;
 }
+
+- (NSRegularExpression *)referenceRegExp {
+  static dispatch_once_t onceToken;
+  static NSRegularExpression *referenceRegExp;
+  dispatch_once(&onceToken, ^{
+    NSString *referencePattern = [NSString stringWithFormat:@"\\{%@(%@|%@|%@|%@|%@|%@){1}@(%@|%@|%@|%@|%@|%@|%@){1}:([^\\}]*)\\}",
+                                  kKPKReferencePrefix,
+                                  kKPKReferenceTitleKey,
+                                  kKPKReferenceUsernameKey,
+                                  kKPKReferenceURLKey,
+                                  kKPKReferencePasswordKey,
+                                  kKPKReferenceNotesKey,
+                                  kKPKReferenceUUIDKey,
+                                  kKPKReferenceTitleKey,
+                                  kKPKReferenceUsernameKey,
+                                  kKPKReferenceURLKey,
+                                  kKPKReferencePasswordKey,
+                                  kKPKReferenceNotesKey,
+                                  kKPKReferenceUUIDKey,
+                                  kKPKReferenceCustomFieldKey
+                                  ];
+    referenceRegExp = [NSRegularExpression regularExpressionWithPattern:referencePattern
+                                                                options:NSRegularExpressionCaseInsensitive
+                                                                  error:NULL];
+  });
+  return referenceRegExp;
+}
+
+
 
 - (NSString *)findCommand:(NSString *)command {
   /*
@@ -322,6 +352,11 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 
 @implementation NSString (KPKEvaluation)
 
+- (BOOL)hasReference {
+  NSTextCheckingResult *result = [KPKCommandCache.sharedCache.referenceRegExp firstMatchInString:self options:0 range:NSMakeRange(0, self.length)];
+  return (nil != result);
+}
+
 - (NSString *)kpk_finalValueForEntry:(KPKEntry *)entry {
   return [self _kpk_finalValueForEntry:entry recursion:0];
 }
@@ -384,31 +419,8 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     return self;
   }
   
-  static dispatch_once_t onceToken;
-  static NSRegularExpression *referenceRegExp;
-  dispatch_once(&onceToken, ^{
-    NSString *referencePattern = [NSString stringWithFormat:@"\\{%@(%@|%@|%@|%@|%@|%@){1}@(%@|%@|%@|%@|%@|%@|%@){1}:([^\\}]*)\\}",
-                        kKPKReferencePrefix,
-                        kKPKReferenceTitleKey,
-                        kKPKReferenceUsernameKey,
-                        kKPKReferenceURLKey,
-                        kKPKReferencePasswordKey,
-                        kKPKReferenceNotesKey,
-                        kKPKReferenceUUIDKey,
-                        kKPKReferenceTitleKey,
-                        kKPKReferenceUsernameKey,
-                        kKPKReferenceURLKey,
-                        kKPKReferencePasswordKey,
-                        kKPKReferenceNotesKey,
-                        kKPKReferenceUUIDKey,
-                        kKPKReferenceCustomFieldKey
-                        ];
-    referenceRegExp = [NSRegularExpression regularExpressionWithPattern:referencePattern
-                                                                options:NSRegularExpressionCaseInsensitive
-                                                                  error:NULL];
-  });
   BOOL didReplace = NO;
-  NSArray <NSTextCheckingResult *> *results = [referenceRegExp matchesInString:self options:0 range:NSMakeRange(0, self.length)];
+  NSArray <NSTextCheckingResult *> *results = [KPKCommandCache.sharedCache.referenceRegExp matchesInString:self options:0 range:NSMakeRange(0, self.length)];
   NSMutableString *mutableSelf;
   if(results.count > 0) {
     mutableSelf = [self mutableCopy];
@@ -668,16 +680,16 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   BOOL didReplace = NO;
   for(NSString *placeholderKey in caseInsensitiveMappings) {
     didReplace |= (0 != [supstitudedString replaceOccurrencesOfString:placeholderKey
-                                       withString:caseInsensitiveMappings[placeholderKey]
-                                          options:NSCaseInsensitiveSearch
-                                            range:NSMakeRange(0, supstitudedString.length)]);
+                                                           withString:caseInsensitiveMappings[placeholderKey]
+                                                              options:NSCaseInsensitiveSearch
+                                                                range:NSMakeRange(0, supstitudedString.length)]);
   }
   /* Custom keys should be mapped case senstiviely */
   for(NSString *placeholderKey in caseSensitiviveMappings) {
     didReplace |= (0 != [supstitudedString replaceOccurrencesOfString:placeholderKey
-                                       withString:caseSensitiviveMappings[placeholderKey]
-                                          options:0
-                                            range:NSMakeRange(0, supstitudedString.length)]);
+                                                           withString:caseSensitiviveMappings[placeholderKey]
+                                                              options:0
+                                                                range:NSMakeRange(0, supstitudedString.length)]);
   }
   
   if([treeDelegate respondsToSelector:@selector(tree:resolveUnknownPlaceholdersInString:forEntry:)]) {

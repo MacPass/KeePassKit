@@ -11,10 +11,10 @@
 #import "KeePassKit.h"
 #import "KeePassKit_Private.h"
 
-@interface KPKTestAutotype : XCTestCase
+@interface KPKTestNSStringCommands : XCTestCase
 @end
 
-@implementation KPKTestAutotype
+@implementation KPKTestNSStringCommands
 
 - (void)testCommandValidation {
   XCTAssertFalse(@"".kpk_validCommand, @"Emptry strings aren't valid commands");
@@ -86,6 +86,18 @@
   XCTAssertEqualObjects(sequence, sequence.kpk_normalizedAutotypeSequence);
   NSString *result = [NSString stringWithFormat:@"%@%@%@%@", camelCase.value, lowerCase.value, spacedLetter.value, spacedNumber.value];
   XCTAssertEqualObjects([sequence kpk_finalValueForEntry:entry], result);
+}
+
+- (void)testHasReference {
+  XCTAssertFalse(@"ThisIsNoReferencRef:".hasReference);
+  XCTAssertFalse(@"ThisIsNoReferenc{Ref:".hasReference);
+  XCTAssertFalse(@"ThisIsNoReferencRef:}".hasReference);
+  XCTAssertFalse(@"ThisIsNoReferenc{Ref:}".hasReference);
+  XCTAssertFalse(@"ThisIsNoReferenc{Ref:A@I:".hasReference);
+  XCTAssertFalse(@"ThisIsNoReferencRef:A@I:}".hasReference);
+  
+  XCTAssertTrue(@"ThisIsAReferenc{Ref:A@I:}".hasReference);
+  XCTAssertTrue(@"ThisIsAReferenc{Ref:U@U:}".hasReference);
 }
 
 @end

@@ -40,7 +40,6 @@ if( self.updateTiming ) { \
   value = NSDate.date; \
 } \
 
-
 @interface KPKMetaData () {
   NSMutableDictionary *_customIconCache;
 }
