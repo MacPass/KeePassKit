@@ -271,11 +271,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   copy.title = titleOrNil;
   
   if(options & kKPKCopyOptionReferencePassword) {
-    copy.password = [KPKReferenceBuilder reference:KPKReferenceFieldPassword where:KPKReferenceFieldUUID is:self.uuid.UUIDString];
+    copy.password = [KPKReferenceBuilder reference:KPKReferenceFieldPassword where:KPKReferenceFieldUUID is:self.uuid.kpk_UUIDString];
   }
   
   if(options & kKPKCopyOptionReferenceUsername) {
-    copy.username = [KPKReferenceBuilder reference:KPKReferenceFieldUsername where:KPKReferenceFieldUUID is:self.uuid.UUIDString];
+    copy.username = [KPKReferenceBuilder reference:KPKReferenceFieldUsername where:KPKReferenceFieldUUID is:self.uuid.kpk_UUIDString];
   }
   
   if(!(options & kKPKCopyOptionCopyHistory)) {
