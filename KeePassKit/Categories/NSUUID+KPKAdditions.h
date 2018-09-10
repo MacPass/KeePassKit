@@ -35,6 +35,10 @@
 @property (nonatomic, readonly) BOOL kpk_isNullUUID;
 @property (nonatomic, readonly, copy) NSData *kpk_uuidData;
 @property (nonatomic, readonly, copy) NSString *kpk_encodedString;
+/**
+ The UUIDs stirng without any delemiters, as used by KeePass
+ */
+@property (nonatomic, readonly, copy) NSString *kpk_UUIDString;
 - (instancetype)initWithEncodedUUIDString:(NSString *)string;
 - (instancetype)initWithData:(NSData *)data;
 /* Initsalizes with a UUID string missing any - */

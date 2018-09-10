@@ -84,6 +84,10 @@ static NSString *const KPKNullUUIDString = @"00000000-0000-0000-0000-00000000000
   return [NSData dataWithBytes:bytes length:sizeof(bytes)];
 }
 
+- (NSString *)kpk_UUIDString {
+  return [self.UUIDString stringByReplacingOccurrencesOfString:@"-" withString:@""];
+}
+
 #if KPK_MAC
 
 #pragma mark -
