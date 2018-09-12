@@ -33,6 +33,45 @@
   XCTAssertNotNil(loadTree, @"Tree should be loadable from kdb file data");
 }
 
+- (void)testExpirationDateSerializsation {
+  NSData *packedDate = NSDate.date.kpk_packedBytes;
+  NSDate *expirationDate = [NSDate kpk_dateFromPackedBytes:packedDate.bytes];
+  
+  
+  KPKTree *tree = [[KPKTree alloc] init];
+  KPKGroup *root = [[KPKGroup alloc] init];
+  tree.root = root;
+  KPKGroup *group = [[KPKGroup alloc] init];
+  [group addToGroup:tree.root];
+  group.timeInfo.expires = YES;
+  group.timeInfo.expirationDate = expirationDate;
+  
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  [entry addToGroup:group];
+  entry.timeInfo.expires = YES;
+  entry.timeInfo.expirationDate = expirationDate;
+  
+  NSUUID *entryUUID = entry.uuid;
+  
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" key:nil];
+  NSError *error;
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(data);
+  
+  KPKTree *decryptedTree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(decryptedTree);
+  XCTAssertNil(error);
+  
+  KPKEntry *decryptedEntry = [decryptedTree.root entryForUUID:entryUUID];
+  XCTAssertNotNil(decryptedEntry);
+  XCTAssertTrue(decryptedEntry.timeInfo.expires);
+  XCTAssertEqualObjects(decryptedEntry.timeInfo.expirationDate, expirationDate);
+  XCTAssertTrue(decryptedEntry.parent.timeInfo.expires);
+  XCTAssertEqualObjects(decryptedEntry.parent.timeInfo.expirationDate, expirationDate);
+  
+}
+
 - (void)testLegacyCustomIconSupport {
   KPKTree *tree = [[KPKTree alloc] init];
   tree.root = [[KPKGroup alloc] init];
