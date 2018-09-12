@@ -31,8 +31,12 @@
 #import "NSUUID+KPKAdditions.h"
 #import "KPKFormat.h"
 
-static NSUInteger const _KPKMaxiumRecursionLevel = 10;
 static NSString *const _KPKSpaceSaveGuard = @"{KPK_LITERAL_SPACE}";
+static NSUInteger const _KPKMaxiumRecursionLevel = 10;
+
+BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
+  return (recursion > _KPKMaxiumRecursionLevel);
+}
 
 /**
  *  Cache Entry for Autotype Commands
@@ -307,6 +311,24 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 
 @end
 
+@implementation KPKCommandEvaluationContex
+
++ (instancetype)contextWithEntry:(KPKEntry *)entry options:(KPKCommandEvaluationOptions)options {
+  return [[KPKCommandEvaluationContex alloc] initWithEntry:entry options:options];
+}
+
+- (instancetype)initWithEntry:(KPKEntry *)entry options:(KPKCommandEvaluationOptions)options {
+  self = [super init];
+  if(self) {
+    _options = options;
+    _entry = entry;
+  }
+  return self;
+}
+
+@end
+
+
 @implementation NSString (KPKAutotype)
 
 - (NSString *)kpk_normalizedAutotypeSequence {
@@ -358,11 +380,15 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
 }
 
 - (NSString *)kpk_finalValueForEntry:(KPKEntry *)entry {
-  return [self _kpk_finalValueForEntry:entry recursion:0];
+  return [self kpk_finalValueForEntry:entry options:0];
 }
 
-- (NSString *)_kpk_finalValueForEntry:(KPKEntry *)entry recursion:(NSUInteger)recursion {
-  if(recursion > _KPKMaxiumRecursionLevel) {
+- (NSString *)kpk_finalValueForEntry:(KPKEntry *)entry options:(KPKCommandEvaluationOptions)options {
+  return [self _kpk_finalValueForContext:[KPKCommandEvaluationContex contextWithEntry:entry options:options] recursion:0];
+}
+
+- (NSString *)_kpk_finalValueForContext:(KPKCommandEvaluationContex *)context recursion:(NSUInteger)recursion {
+  if(KPKReachedMaxiumRecursionLevel(recursion)) {
     return self;
   }
   /* if we do not have any curly brackets there's nothing to do */
@@ -371,15 +397,14 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     return self;
   }
   
-  BOOL foundReference = NO;
-  BOOL foundPlaceholder = NO;
+  BOOL didChange = NO;
   @autoreleasepool {
     NSString *value = self;
     /* TODO check if references are resolved completely and there is no need to rerun the evaulation if a reference was found */
-    value = [value _kpk_evaluatePlaceholderWithEntry:entry recursionLevel:recursion didChange:&foundPlaceholder];
-    value = [value _kpk_resolveReferencesWithTree:entry.tree recursionLevel:recursion didChange:&foundReference];
-    if(foundPlaceholder || foundReference ) {
-      return [value _kpk_finalValueForEntry:entry recursion:recursion+1];
+    value = [value _kpk_evaluatePlaceholderForContext:context recursionLevel:recursion didChange:&didChange];
+    value = [value _kpk_resolveReferencesForContext:context recursionLevel:recursion didChange:&didChange];
+    if(didChange) {
+      return [value _kpk_finalValueForContext:context recursion:recursion+1];
     }
     else {
       return self;
@@ -401,17 +426,13 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
  {REF:P@I:46C9B1FFBD4ABC4BBB260C6190BAD20C}
  {REF:<WantedField>@<SearchIn>:<Text>}
  */
-
-- (NSString *)_kpk_resolveReferencesWithTree:(KPKTree *)tree recursionLevel:(NSUInteger)level didChange:(BOOL *)didChange {
-  if(NULL != didChange) {
-    *didChange = NO;
-  }
+- (NSString *)_kpk_resolveReferencesForContext:(KPKCommandEvaluationContex *)context recursionLevel:(NSUInteger)level didChange:(BOOL *)didChange {
   /* No tree, no real references */
-  if(!tree) {
+  if(!context.entry.tree) {
     return self;
   }
-  /* Stop endless recurstion at 10 substitions */
-  if(level > _KPKMaxiumRecursionLevel) {
+  /* Prevent endless recursion  */
+  if(KPKReachedMaxiumRecursionLevel(level)) {
     return self;
   }
   
@@ -432,7 +453,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     NSString *substitute = [self _kpk_retrieveValueOfKey:valueField
                                                  withKey:searchField
                                                 matching:criteria
-                                                withTree:tree
+                                             forContext:context
                                                recursion:level];
     if(substitute) {
       [mutableSelf replaceCharactersInRange:result.range withString:substitute];
@@ -441,13 +462,13 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   };
   
   if(NULL != didChange) {
-    *didChange = didReplace;
+    *didChange |= didReplace;
   }
   /* do not return a copy to minimize string copies each recursion */
   return didReplace ? [mutableSelf copy] : self;
 }
 
-- (NSString *)_kpk_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match withTree:(KPKTree *)tree recursion:(NSUInteger)recursion {
+- (NSString *)_kpk_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match forContext:(KPKCommandEvaluationContex *)context recursion:(NSUInteger)recursion {
   /* Custom and UUID will get special treatment, so we do not collect them inside the array */
   static NSDictionary<NSString *, NSString *> *attributeKeyForReferenceKey;
   static dispatch_once_t onceToken;
@@ -467,11 +488,12 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   /* Custom Attribute search
    First hit will get returned, even if there's a better one later on!
    */
+  KPKTree *tree = context.entry.tree;
   NSArray *allEntries = tree.allEntries;
   if([searchKey isEqualToString:kKPKReferenceCustomFieldKey]) {
     for(KPKEntry *entry in allEntries) {
       for(KPKAttribute *attribute in entry.customAttributes) {
-        NSString *finalValue = [attribute.value _kpk_finalValueForEntry:entry recursion:recursion + 1];
+        NSString *finalValue = [attribute.value _kpk_finalValueForContext:context recursion:recursion + 1];
         NSRange matchRange = [finalValue rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, finalValue.length) locale:[NSLocale currentLocale ]];
         if(matchRange.length > 0) {
           matchingEntry = entry;
@@ -501,7 +523,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
       return nil; // no valid attribute key supplied
     }
     for(KPKEntry *entry in allEntries) {
-      NSString *value = [[entry valueForAttributeWithKey:searchAttributeKey] _kpk_finalValueForEntry:entry recursion:recursion + 1];
+      NSString *value = [[context.entry valueForAttributeWithKey:searchAttributeKey] _kpk_finalValueForContext:context recursion:recursion + 1];
       NSRange matchRange = [value rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, value.length)];
       if(matchRange.length > 0) {
         /* First hit wins */
@@ -517,16 +539,14 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   if([valueKey isEqualToString:kKPKReferenceUUIDKey]) {
     return matchingEntry.uuid.UUIDString;
   }
-  return [[matchingEntry valueForAttributeWithKey:attributeKeyForReferenceKey[valueKey]] _kpk_finalValueForEntry:matchingEntry recursion:recursion + 1];
+  return [[matchingEntry valueForAttributeWithKey:attributeKeyForReferenceKey[valueKey]] _kpk_finalValueForContext:[KPKCommandEvaluationContex contextWithEntry:matchingEntry options:context.options] recursion:recursion + 1];
 }
 
-- (NSString *)_kpk_evaluatePlaceholderWithEntry:(KPKEntry *)entry recursionLevel:(NSUInteger)recursion didChange:(BOOL *)didChange {
-  if(didChange) {
-    *didChange = NO;
-  }
+- (NSString *)_kpk_evaluatePlaceholderForContext:(KPKCommandEvaluationContex *)context recursionLevel:(NSUInteger)recursion didChange:(BOOL *)didChange {
   if(recursion > _KPKMaxiumRecursionLevel) {
     return [self copy];
   }
+  KPKEntry *entry = context.entry;
   /* build mapping for all default fields */
   NSMutableDictionary *caseInsensitiveMappings = [[NSMutableDictionary alloc] init];
   NSMutableDictionary *caseSensitiviveMappings = [[NSMutableDictionary alloc] init];
@@ -619,6 +639,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
     }
   }
   /* {PICKFIELD} */
+  
   if([treeDelegate respondsToSelector:@selector(tree:resolvePickFieldPlaceholderForEntry:)]) {
     if(NSNotFound != [self rangeOfString:kKPKPlaceholderPickField options:NSCaseInsensitiveSearch].location) {
       NSString *value = [treeDelegate tree:entry.tree resolvePickFieldPlaceholderForEntry:entry];
@@ -697,7 +718,7 @@ static KPKCommandCache *_sharedKPKCommandCacheInstance;
   }
   
   if(didChange) {
-    *didChange = didReplace;
+    *didChange |= didReplace;
   }
   return (didReplace ? [supstitudedString copy] : [self copy]);
 }

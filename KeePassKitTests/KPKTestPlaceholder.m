@@ -41,7 +41,7 @@
   NSString *placeholder = @"{USERNAME}{PASSWORD}{NOTHING}{URL}{S:extended}";
   NSString *evaluated = [placeholder kpk_finalValueForEntry:self.entry];
   NSString *evaluatedGoal = [NSString stringWithFormat:@"%@%@{NOTHING}%@%@", self.entry.username, self.entry.password, self.entry.url, attribute.value];
-  XCTAssertTrue([evaluated isEqualToString:evaluatedGoal], @"Evaluated string must match");
+  XCTAssertEqualObjects(evaluated, evaluatedGoal, @"Evaluated string must match");
 }
 
 - (void)testCustomPlaceholder {
