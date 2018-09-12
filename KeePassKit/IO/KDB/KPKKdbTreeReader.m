@@ -252,6 +252,7 @@
           }
           [_dataStreamer readBytes:dateBuffer length:fieldSize];
           group.timeInfo.expirationDate = [NSDate kpk_dateFromPackedBytes:dateBuffer];
+          group.timeInfo.expires = (group.timeInfo.expirationDate != nil);
           break;
           
         case KPKFieldTypeGroupImage:
@@ -416,6 +417,7 @@
           }
           [_dataStreamer readBytes:buffer length:fieldSize];
           entry.timeInfo.expirationDate = [NSDate kpk_dateFromPackedBytes:buffer];
+          entry.timeInfo.expires = (entry.timeInfo.expirationDate != nil);
           break;
           
         case KPKFieldTypeEntryBinaryDescription: {
