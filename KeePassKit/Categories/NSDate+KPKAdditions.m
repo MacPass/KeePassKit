@@ -34,10 +34,12 @@ static NSCalendar *_gregorianCalendar(void) {
 
 @implementation NSDate (KPKAdditions)
 
-+ (NSDate *)kpk_dateFromPackedBytes:(uint8_t *)buffer {
-  uint32_t dw1, dw2, dw3, dw4, dw5;
-  dw1 = (uint32_t)buffer[0]; dw2 = (uint32_t)buffer[1]; dw3 = (uint32_t)buffer[2];
-  dw4 = (uint32_t)buffer[3]; dw5 = (uint32_t)buffer[4];
++ (NSDate *)kpk_dateFromPackedBytes:(const uint8_t *)buffer {
+  uint32_t dw1 = (uint32_t)buffer[0];
+  uint32_t dw2 = (uint32_t)buffer[1];
+  uint32_t dw3 = (uint32_t)buffer[2];
+  uint32_t dw4 = (uint32_t)buffer[3];
+  uint32_t dw5 = (uint32_t)buffer[4];
   int y = (dw1 << 6) | (dw2 >> 2);
   int mon = ((dw2 & 0x00000003) << 2) | (dw3 >> 6);
   int d = (dw3 >> 1) & 0x0000001F;

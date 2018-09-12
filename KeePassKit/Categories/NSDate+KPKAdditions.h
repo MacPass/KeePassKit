@@ -25,7 +25,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSDate (KPKPacked)
-+ (NSDate * _Nullable)kpk_dateFromPackedBytes:(uint8_t *)buffer;
++ (NSDate * _Nullable)kpk_dateFromPackedBytes:(const uint8_t *)buffer;
 + (NSData *)kpk_packedBytesFromDate:(NSDate * _Nullable)date;
 + (void)kpk_getPackedBytes:(uint8_t *)buffer fromDate:(NSDate * _Nullable)date;
 
