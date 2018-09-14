@@ -73,9 +73,7 @@ FOUNDATION_EXTERN NSString *const KPKEntryKey;
 
 /**
  Resolves a placeholder for the tree. Some placeholders require access to document location and other attributes,
- that a KPKTree normally does not know. Addionally any placeholders made availabel via -[delegate addionalPlaceholdersForTree:]
- will get retrieved via this message
- 
+ that a KPKTree normally does not know.  
  Some placeholders might even require user-interaction.
  {PICKCHAR}, {PICKCHARS:Fld:Opt}, {PICKFIELD}, {HMACOTP}
  
