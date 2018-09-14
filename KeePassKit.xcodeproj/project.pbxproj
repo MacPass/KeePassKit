@@ -715,14 +715,6 @@
 		4C2ADBF21D7C649F002C3190 /* KPKUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2ADBF01D7C649F002C3190 /* KPKUnarchiver.m */; };
 		4C2ADBF41D7C6665002C3190 /* KPKArchiver_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ADBF31D7C6665002C3190 /* KPKArchiver_Private.h */; };
 		4C2D8B151DEF043600AB72CD /* KPKTestEmptyString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */; };
-		4C2ECF4E2148FD4C00B8BAD8 /* KPKCommandParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ECF4C2148FD4C00B8BAD8 /* KPKCommandParser.h */; };
-		4C2ECF4F2148FD4C00B8BAD8 /* KPKCommandParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ECF4C2148FD4C00B8BAD8 /* KPKCommandParser.h */; };
-		4C2ECF502148FD4C00B8BAD8 /* KPKCommandParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ECF4C2148FD4C00B8BAD8 /* KPKCommandParser.h */; };
-		4C2ECF512148FD4C00B8BAD8 /* KPKCommandParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ECF4C2148FD4C00B8BAD8 /* KPKCommandParser.h */; };
-		4C2ECF522148FD4C00B8BAD8 /* KPKCommandParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2ECF4D2148FD4C00B8BAD8 /* KPKCommandParser.m */; };
-		4C2ECF532148FD4C00B8BAD8 /* KPKCommandParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2ECF4D2148FD4C00B8BAD8 /* KPKCommandParser.m */; };
-		4C2ECF542148FD4C00B8BAD8 /* KPKCommandParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2ECF4D2148FD4C00B8BAD8 /* KPKCommandParser.m */; };
-		4C2ECF552148FD4C00B8BAD8 /* KPKCommandParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2ECF4D2148FD4C00B8BAD8 /* KPKCommandParser.m */; };
 		4C415D381F581D4200C08985 /* KPKTestDeletedObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C415D371F581D4200C08985 /* KPKTestDeletedObjects.m */; };
 		4C429FF220AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */; };
 		4C429FF320AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */; };
@@ -1143,8 +1135,6 @@
 		4C2ADBF31D7C6665002C3190 /* KPKArchiver_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKArchiver_Private.h; sourceTree = "<group>"; };
 		4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestEmptyString.m; sourceTree = "<group>"; };
 		4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKPlatformIncludes.h; sourceTree = "<group>"; };
-		4C2ECF4C2148FD4C00B8BAD8 /* KPKCommandParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKCommandParser.h; sourceTree = "<group>"; };
-		4C2ECF4D2148FD4C00B8BAD8 /* KPKCommandParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKCommandParser.m; sourceTree = "<group>"; };
 		4C415D371F581D4200C08985 /* KPKTestDeletedObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestDeletedObjects.m; sourceTree = "<group>"; };
 		4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestUniqueBinaryNames.m; sourceTree = "<group>"; };
 		4C429FF520AC3FCC008F53B2 /* Error_DuplicateAttachments_1234.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; name = Error_DuplicateAttachments_1234.kdbx; path = Kdbx3/Error_DuplicateAttachments_1234.kdbx; sourceTree = "<group>"; };
@@ -1851,8 +1841,6 @@
 				4CBE26321EC595D200B93BE2 /* KPKPair.m */,
 				4C8990F91EE981940043B48D /* KPKReferenceBuilder.h */,
 				4C8990FA1EE981940043B48D /* KPKReferenceBuilder.m */,
-				4C2ECF4C2148FD4C00B8BAD8 /* KPKCommandParser.h */,
-				4C2ECF4D2148FD4C00B8BAD8 /* KPKCommandParser.m */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -2000,7 +1988,6 @@
 				2D5124B41E9BCFA700D7EAF6 /* KPKBinary.h in Headers */,
 				2D5124B51E9BCFA700D7EAF6 /* KPKKdbUnarchiver.h in Headers */,
 				4C8836AA1FB3507000CD2CD1 /* KPKToken.h in Headers */,
-				4C2ECF4F2148FD4C00B8BAD8 /* KPKCommandParser.h in Headers */,
 				2D5124B61E9BCFA700D7EAF6 /* KPKIcon.h in Headers */,
 				2D5124B71E9BCFA700D7EAF6 /* thread.h in Headers */,
 				2D5124B81E9BCFA700D7EAF6 /* KPKPlatformIncludes.h in Headers */,
@@ -2121,7 +2108,6 @@
 				2D5125BF1E9BD24500D7EAF6 /* KPKAttribute.h in Headers */,
 				2D5125C01E9BD24500D7EAF6 /* KPKBinary.h in Headers */,
 				2D5125C11E9BD24500D7EAF6 /* KPKKdbUnarchiver.h in Headers */,
-				4C2ECF502148FD4C00B8BAD8 /* KPKCommandParser.h in Headers */,
 				2D5125C21E9BD24500D7EAF6 /* KPKIcon.h in Headers */,
 				2D5125C31E9BD24500D7EAF6 /* thread.h in Headers */,
 				2D5125C41E9BD24500D7EAF6 /* KPKPlatformIncludes.h in Headers */,
@@ -2242,7 +2228,6 @@
 				2D5126CC1E9BD34900D7EAF6 /* KPKBinary.h in Headers */,
 				4C8836AC1FB3507800CD2CD1 /* KPKToken.h in Headers */,
 				2D5126CD1E9BD34900D7EAF6 /* KPKKdbUnarchiver.h in Headers */,
-				4C2ECF512148FD4C00B8BAD8 /* KPKCommandParser.h in Headers */,
 				2D5126CE1E9BD34900D7EAF6 /* KPKIcon.h in Headers */,
 				2D5126CF1E9BD34900D7EAF6 /* thread.h in Headers */,
 				2D5126D01E9BD34900D7EAF6 /* KPKPlatformIncludes.h in Headers */,
@@ -2440,7 +2425,6 @@
 				4C5CF3DA1BE10DF80019AA81 /* NSString+KPKHexdata.h in Headers */,
 				4C5CF3C61BE10DF80019AA81 /* NSData+CommonCrypto.h in Headers */,
 				4C5CF4061BE10E000019AA81 /* KPKAutotype_Private.h in Headers */,
-				4C2ECF4E2148FD4C00B8BAD8 /* KPKCommandParser.h in Headers */,
 				4C2ADBF11D7C649F002C3190 /* KPKUnarchiver.h in Headers */,
 				4CA1E48D1D8832BA00100002 /* core.h in Headers */,
 				4C5C62E81EC99ACC0026061E /* KPKPair_Private.h in Headers */,
@@ -2896,7 +2880,6 @@
 				2D5124621E9BCFA700D7EAF6 /* KPKDeletedNode.m in Sources */,
 				2D5124631E9BCFA700D7EAF6 /* KPKKdbTreeReader.m in Sources */,
 				2D5124641E9BCFA700D7EAF6 /* chacha20_simple.c in Sources */,
-				4C2ECF532148FD4C00B8BAD8 /* KPKCommandParser.m in Sources */,
 				2D5124651E9BCFA700D7EAF6 /* KPKCompositeKey.m in Sources */,
 				2D5124661E9BCFA700D7EAF6 /* KPKKeyDerivation.m in Sources */,
 				2D5124671E9BCFA700D7EAF6 /* KPKCipher.m in Sources */,
@@ -3037,7 +3020,6 @@
 				2D51256D1E9BD24500D7EAF6 /* NSString+KPKXmlUtilities.m in Sources */,
 				2D51256E1E9BD24500D7EAF6 /* KPKDeletedNode.m in Sources */,
 				2D51256F1E9BD24500D7EAF6 /* KPKKdbTreeReader.m in Sources */,
-				4C2ECF542148FD4C00B8BAD8 /* KPKCommandParser.m in Sources */,
 				2D5125701E9BD24500D7EAF6 /* chacha20_simple.c in Sources */,
 				2D5125711E9BD24500D7EAF6 /* KPKCompositeKey.m in Sources */,
 				2D5125721E9BD24500D7EAF6 /* KPKKeyDerivation.m in Sources */,
@@ -3178,7 +3160,6 @@
 				2D5126791E9BD34900D7EAF6 /* NSString+KPKXmlUtilities.m in Sources */,
 				2D51267A1E9BD34900D7EAF6 /* KPKDeletedNode.m in Sources */,
 				2D51267B1E9BD34900D7EAF6 /* KPKKdbTreeReader.m in Sources */,
-				4C2ECF552148FD4C00B8BAD8 /* KPKCommandParser.m in Sources */,
 				2D51267C1E9BD34900D7EAF6 /* chacha20_simple.c in Sources */,
 				2D51267D1E9BD34900D7EAF6 /* KPKCompositeKey.m in Sources */,
 				2D51267E1E9BD34900D7EAF6 /* KPKKeyDerivation.m in Sources */,
@@ -3332,7 +3313,6 @@
 				4C5C82A31D79C13800A1DEA6 /* KPKAESCipher.m in Sources */,
 				4CE95AE71E97BC330019BBDC /* KPKData.m in Sources */,
 				4CA1E4921D8832BA00100002 /* opt.c in Sources */,
-				4C2ECF522148FD4C00B8BAD8 /* KPKCommandParser.m in Sources */,
 				4C88369C1FB34D7E00CD2CD1 /* KPKToken.m in Sources */,
 				4C5CF4151BE10E000019AA81 /* KPKGroup.m in Sources */,
 				4C0B9D8F1DBFB49600E66CD6 /* KPKArc4RandomStream.m in Sources */,
@@ -3722,7 +3702,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.13.8;
+				CURRENT_PROJECT_VERSION = 1.13.9;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3782,7 +3762,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.13.8;
+				CURRENT_PROJECT_VERSION = 1.13.9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
