@@ -87,7 +87,7 @@
 - (void)testRecursion {
   self.entry1.title = [NSString stringWithFormat:@"{%@}", kKPKUsernameKey];
   self.entry1.username = [NSString stringWithFormat:@"{%@}", kKPKTitleKey];
-
+  
   XCTAssertNotNil([self.entry1.title kpk_finalValueForEntry:self.entry1]);
   XCTAssertNotNil([self.entry1.username kpk_finalValueForEntry:self.entry1]);
 }
