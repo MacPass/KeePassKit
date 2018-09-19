@@ -21,23 +21,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "KPKCommandEvaluationContext.h"
 
 @class KPKEntry;
-
-typedef NS_OPTIONS(NSUInteger, KPKCommandEvaluationOptions) {
-  KPKCommandEvaluationOptionSkipUserInteraction = 1 << 0  // Evaluation should be performed without any user interaction (e.g. no user input should be requested)
-};
-
-@interface KPKCommandEvaluationContex : NSObject
-
-@property (readonly, assign) KPKCommandEvaluationOptions options;
-@property (readonly, strong) KPKEntry *entry;
-
-+ (instancetype)contextWithEntry:(KPKEntry *)entry options:(KPKCommandEvaluationOptions)options;
-- (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithEntry:(KPKEntry *)entry options:(KPKCommandEvaluationOptions)options;
-
-@end
 
 @interface NSString (KPKAutotype)
 
