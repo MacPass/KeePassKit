@@ -126,7 +126,11 @@
   if(self == object) {
     return YES;
   }
-  return [self isEqualToTimeInfo:(KPKTimeInfo *)object];
+  if([object isKindOfClass:KPKTimeInfo.class]) {
+    return [self isEqualToTimeInfo:(KPKTimeInfo *)object];
+  }
+  NSLog(@"%@:Incompatible object %@ for equality!", self, object);
+  return NO;
 }
 
 - (BOOL)isEqualToTimeInfo:(KPKTimeInfo *)timeInfo {

@@ -115,7 +115,7 @@
   if(self == object) {
     return YES;
   }
-  if([object isKindOfClass:[self class]]) {
+  if([object isKindOfClass:self.class]) {
     return [self isEqualToAttribute:object];
   }
   return NO;
