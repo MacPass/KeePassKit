@@ -44,18 +44,20 @@ NSString *const KPKMetaEntryTitle               = @"Meta-Info";
 NSString *const KPKMetaEntryUsername            = @"SYSTEM";
 NSString *const KPKMetaEntryURL                 = @"$";
 
-NSString *const KPKMetaEntryUIState                 = @"Simple UI State";
-NSString *const KPKMetaEntryDefaultUsername         = @"Default User Name";
-NSString *const KPKMetaEntrySearchHistoryItem       = @"Search History Item";
-NSString *const KPKMetaEntryCustomKVP               = @"Custom KVP";
-NSString *const KPKMetaEntryDatabaseColor           = @"Database Color";
-NSString *const KPKMetaEntryKeePassXCustomIcon      = @"KPX_CUSTOM_ICONS_2";
-NSString *const KPKMetaEntryKeePassXCustomIcon2     = @"KPX_CUSTOM_ICONS_4";
-NSString *const KPKMetaEntryKeePassXGroupTreeState  = @"KPX_GROUP_TREE_STATE";
-NSString *const KPKMetaEntryMacPassGroupUUIDs       = @"KPKMetaEntryMacPassGroupUUIDs";
-NSString *const KPKMetaEntryMacPassDeletedObjects   = @"KPKMetaEntryMacPassDeletedObjects";
-
-
+NSString *const KPKMetaEntryUIState                         = @"Simple UI State";
+NSString *const KPKMetaEntryDefaultUsername                 = @"Default User Name";
+NSString *const KPKMetaEntrySearchHistoryItem               = @"Search History Item";
+NSString *const KPKMetaEntryCustomKVP                       = @"Custom KVP";
+NSString *const KPKMetaEntryDatabaseColor                   = @"Database Color";
+NSString *const KPKMetaEntryKeePassXCustomIcon              = @"KPX_CUSTOM_ICONS_2";
+NSString *const KPKMetaEntryKeePassXCustomIcon2             = @"KPX_CUSTOM_ICONS_4";
+NSString *const KPKMetaEntryKeePassXGroupTreeState          = @"KPX_GROUP_TREE_STATE";
+NSString *const KPKMetaEntryKeePassKitGroupUUIDs            = @"KeePassKit Group UUIDs";
+NSString *const KPKMetaEntryKeePassKitDeletedObjects        = @"KeePassKit Deleted Objects";
+NSString *const KPKMetaEntryKeePassKitDatabaseName          = @"KeePassKit Database Name";
+NSString *const KPKMetaEntryKeePassKitDatabaseDescription   = @"KeePassKit Database Description";
+NSString *const KPKMetaEntryKeePassKitTrash                 = @"KeePassKit Trash";
+NSString *const KPKMetaEntryKeePassKitUserTemplates         = @"KeePassKit User Templates";
 
 @interface KPKEntry () {
 @private

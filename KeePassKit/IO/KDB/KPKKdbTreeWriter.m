@@ -220,6 +220,16 @@
     KPKEntry *defaultUsernameEntry = [KPKEntry metaEntryWithData:defaultUsernameData name:KPKMetaEntryDefaultUsername];
     [metaEntries addObject:defaultUsernameEntry];
   }
+  if(self.tree.metaData.databaseName.kpk_isNotEmpty) {
+    NSData *databaseNameData = [self.tree.metaData.databaseName dataUsingEncoding:NSUTF8StringEncoding];
+    KPKEntry *databaseNameEntry = [KPKEntry metaEntryWithData:databaseNameData name:KPKMetaEntryKeePassKitDatabaseName];
+    [metaEntries addObject:databaseNameEntry];
+  }
+  if(self.tree.metaData.databaseDescription.kpk_isNotEmpty) {
+    NSData *databaseDescriptionData = [self.tree.metaData.databaseDescription dataUsingEncoding:NSUTF8StringEncoding];
+    KPKEntry *databaseDescriptionEntry = [KPKEntry metaEntryWithData:databaseDescriptionData name:KPKMetaEntryKeePassKitDatabaseDescription];
+    [metaEntries addObject:databaseDescriptionEntry];
+  }
   if(self.tree.metaData.color != nil) {
     KPKEntry *treeColorEntry = [KPKEntry metaEntryWithData:self.tree.metaData.color.kpk_colorData name:KPKMetaEntryDatabaseColor];
     [metaEntries addObject:treeColorEntry];
@@ -420,6 +430,15 @@
     [writer writeData:node.uuid.kpk_uuidData];
     [writer writeData:node.deletionDate.kpk_packedBytes];
   }
+  return writer.data;
+}
+
+- (NSData *)_trashData {
+  KPKDataStreamWriter *writer = [KPKDataStreamWriter streamWriter];
+  [writer writeByte:self.tree.metaData.useTrash];
+  KPKGroup *trash = [self.tree.root groupForUUID:self.tree.metaData.trashUuid];
+  uint32_t groupId = [self _groupIdForGroup:trash];
+  [writer write4Bytes:CFSwapInt32HostToLittle(groupId)];
   return writer.data;
 }
 
