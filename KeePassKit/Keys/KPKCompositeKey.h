@@ -53,18 +53,18 @@
  
  The Final key is then created before a write or read gets performend
  */
-- (instancetype)initWithPassword:(NSString *)password key:(NSURL *)url;
+- (instancetype)initWithPassword:(NSString *)password keyFileData:(NSData *)keyFileData;
 /**
  *  Updates the password and keyfile for the composite key
  *  @param password the new password, can be nil
  *  @param key      the new key file URL, can be nil
  */
-- (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key;
+- (void)setPassword:(NSString *)password andKeyFileData:(NSData *)keyFileData;
 
 /*
  @return YES if the password and/or key are correct for this composite key
  */
-- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseFormat)version;
+- (BOOL)testPassword:(NSString *)password keyFileData:(NSData *)keyFileData forVersion:(KPKDatabaseFormat)version;
 
 - (NSData *)computeKeyDataForFormat:(KPKDatabaseFormat)format masterseed:(NSData *)seed cipher:(KPKCipher *)cipher keyDerivation:(KPKKeyDerivation *)keyDerivation hmacKey:(NSData **)hmacKey error:(NSError *__autoreleasing *)error;
 

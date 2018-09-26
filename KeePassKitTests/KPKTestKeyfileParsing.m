@@ -20,7 +20,10 @@
   NSBundle *myBundle = [NSBundle bundleForClass:self.class];
   NSURL *url = [myBundle URLForResource:@"Keepass2Key" withExtension:@"xml"];
   NSError *error;
-  NSData *data = [NSData kpk_dataWithContentsOfKeyFile:url version:KPKDatabaseFormatKdb error:&error];
+  NSData *keyFileData = [NSData dataWithContentsOfURL:url options:0 error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(keyFileData);
+  NSData *data = [NSData kpk_keyDataForData:keyFileData version:KPKDatabaseFormatKdb error:&error];
   XCTAssertNotNil(data, @"Data should be loaded");
   XCTAssertNil(error, @"No error should occur on keyfile loading");
 }
@@ -38,13 +41,13 @@
 }
 
 - (void)testXmlKeyfilGeneration {
-  NSData *data = [NSData kpk_generateKeyfiledataForFormat:KPKDatabaseFormatKdbx];
+  NSData *data = [NSData kpk_generateKeyfileDataForFormat:KPKDatabaseFormatKdbx];
   // Test if structure is sound;
   XCTAssertNotNil(data, @"Keydata should have been generated");
 }
 
 - (void)testLegacyKeyfileGeneration {
-  NSData *data = [NSData kpk_generateKeyfiledataForFormat:KPKDatabaseFormatKdb];
+  NSData *data = [NSData kpk_generateKeyfileDataForFormat:KPKDatabaseFormatKdb];
   // test if structure is sound;
   XCTAssertNotNil(data, @"Keydata should have been generated");
 }

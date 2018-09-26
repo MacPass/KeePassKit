@@ -57,7 +57,7 @@
 }
 
 - (void)testKdbx4BinarySerialization {
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"Test" key:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"Test" keyFileData:nil];
   self.tree.metaData.keyDerivationParameters = [[KPKArgon2KeyDerivation alloc] init].parameters;
   NSError *error;
   NSData *data = [self.tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
@@ -90,7 +90,7 @@
 }
 
 - (void)testKdbx3BinarySerialization {
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"Test" key:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"Test" keyFileData:nil];
   NSError *error;
   NSData *data = [self.tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
   

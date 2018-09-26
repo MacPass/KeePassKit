@@ -33,18 +33,30 @@
 
 @implementation NSData (KPKKeyfile)
 
-+ (NSData *)kpk_dataWithContentsOfKeyFile:(NSURL *)url version:(KPKDatabaseFormat)version error:(NSError *__autoreleasing *)error {
++ (NSData *)kpk_keyDataForData:(NSData *)data version:(KPKDatabaseFormat)version error:(NSError *__autoreleasing *)error {
+  if(!data) {
+    KPKCreateError(error, KPKErrorNoKeyData);
+    return nil;
+  }
   switch (version) {
     case KPKDatabaseFormatKdb:
-      return [self _kpk_dataVersion1WithWithContentsOfKeyFile:url error:error];
+      return [self _kpk_dataVersion1ForData:data error:error];
     case KPKDatabaseFormatKdbx:
-      return [self _kpk_dataVersion2WithWithContentsOfKeyFile:url error:error];
+      return [self _kpk_dataVersion2ForData:data error:error];
     default:
       return nil;
   }
 }
 
-+ (NSData *)kpk_generateKeyfiledataForFormat:(KPKDatabaseFormat)format {
++ (NSData *)kpk_keyDataWithContentsOfFile:(NSURL *)url version:(KPKDatabaseFormat)version error:(NSError *__autoreleasing *)error {
+  NSData *data = [NSData dataWithContentsOfURL:url options:0 error:error];
+  if(!data) {
+    return nil;
+  }
+  return [self kpk_keyDataForData:data version:version error:error];
+}
+
++ (NSData *)kpk_generateKeyfileDataForFormat:(KPKDatabaseFormat)format {
   NSData *data = [NSData kpk_dataWithRandomBytes:32];
   switch(format) {
     case KPKDatabaseFormatKdb:
@@ -65,37 +77,34 @@
   return [keyDocument XMLDataWithOptions:DDXMLNodePrettyPrint];
 }
 
-+ (NSData *)_kpk_dataVersion1WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
-  // Open the keyfile
-  NSData *fileData = [NSData dataWithContentsOfURL:url options:0 error:error];
-  if(!fileData) {
++ (NSData *)_kpk_dataVersion1ForData:(NSData *)data error:(NSError *__autoreleasing *)error {
+  if(!data) {
     return nil;
   }
-  
-  if(fileData.length == 32) {
-    return fileData; // Loading of a 32 bit binary file succeded;
+  if(data.length == 32) {
+    return data; // Loading of a 32 bit binary file succeded;
   }
   NSData *decordedData = nil;
-  if (fileData.length == 64) {
-    decordedData = [self _kpk_keyDataFromHex:fileData];
+  if (data.length == 64) {
+    decordedData = [self _kpk_keyDataFromHex:data];
   }
   /* Hexdata loading failed, so just hash the key */
   if(!decordedData) {
-    decordedData = [self _kpk_keyDataFromHash:fileData];
+    decordedData = [self _kpk_keyDataFromHash:data];
   }
   return decordedData;
 }
 
-+ (NSData *)_kpk_dataVersion2WithWithContentsOfKeyFile:(NSURL *)url error:(NSError *__autoreleasing *)error {
++ (NSData *)_kpk_dataVersion2ForData:(NSData *)data error:(NSError *__autoreleasing *)error {
   // Try and load a 2.x XML keyfile first
-  NSData *data = [self _kpk_dataWithContentOfXMLKeyFile:url error:error];
-  if(!data) {
-    return [self _kpk_dataVersion1WithWithContentsOfKeyFile:url error:error];
+  NSData *keyData = [self _kpk_dataWithForXMLKeyData:data error:error];
+  if(!keyData) {
+    return [self _kpk_dataVersion1ForData:keyData error:error];
   }
-  return data;
+  return keyData;
 }
 
-+ (NSData *)_kpk_dataWithContentOfXMLKeyFile:(NSURL *)fileURL error:(NSError *__autoreleasing *)error {
++ (NSData *)_kpk_dataWithForXMLKeyData:(NSData *)xmlData error:(NSError *__autoreleasing *)error {
   /*
    Format of the Keyfile
    <KeyFile>
@@ -107,9 +116,8 @@
    </Key>
    </KeyFile>
    */
-  NSData *xmlData = [NSData dataWithContentsOfURL:fileURL options:NSDataReadingUncached error:error];
   if(!xmlData) {
-    // eror is already filled
+    KPKCreateError(error, KPKErrorNoKeyData);
     return nil;
   }
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithData:xmlData options:0 error:error];

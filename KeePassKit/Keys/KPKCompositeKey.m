@@ -50,10 +50,10 @@
 
 @implementation KPKCompositeKey
 
-- (instancetype)initWithPassword:(NSString *)password key:(NSURL *)url {
+- (instancetype)initWithPassword:(NSString *)password keyFileData:(NSData *)keyFileData {
   self = [super init];
   if(self) {
-    [self setPassword:password andKeyfile:url];
+    [self setPassword:password andKeyFileData:keyFileData];
   }
   return self;
 }
@@ -63,21 +63,21 @@
   return (self.hasPassword || self.hasKeyFile);
 }
 
-- (void)setPassword:(NSString *)password andKeyfile:(NSURL *)key {
+- (void)setPassword:(NSString *)password andKeyFileData:(NSData *)keyFileData {
   _hasPassword = (password.length > 0);
-  _hasKeyFile = (key != nil);
-  self.kdbKeyData = [[KPKData alloc] initWithProtectedData:[self _createKdbDataWithPassword:password keyFile:key]];
-  self.kdbxKeyData = [[KPKData alloc] initWithProtectedData:[self _createKdbxDataWithPassword:password keyFile:key]];
+  _hasKeyFile = (keyFileData.length > 0);
+  self.kdbKeyData = [[KPKData alloc] initWithProtectedData:[self _createKdbDataWithPassword:password keyFileData:keyFileData]];
+  self.kdbxKeyData = [[KPKData alloc] initWithProtectedData:[self _createKdbxDataWithPassword:password keyFileData:keyFileData]];
 }
 
-- (BOOL)testPassword:(NSString *)password key:(NSURL *)key forVersion:(KPKDatabaseFormat)version {
+- (BOOL)testPassword:(NSString *)password keyFileData:(NSData *)keyFileData forVersion:(KPKDatabaseFormat)version {
   NSData *data;
   switch(version) {
     case KPKDatabaseFormatKdb:
-      data = [self _createKdbDataWithPassword:password keyFile:key];
+      data = [self _createKdbDataWithPassword:password keyFileData:keyFileData];
       break;
     case KPKDatabaseFormatKdbx:
-      data = [self _createKdbxDataWithPassword:password keyFile:key];
+      data = [self _createKdbxDataWithPassword:password keyFileData:keyFileData];
       break;
     default:
       return NO;
@@ -118,25 +118,25 @@
   return [workingData kpk_resizeKeyDataRange:NSMakeRange(0, workingData.length - 1) toLength:cipher.keyLength];
 }
 
-- (NSData *)_createKdbDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
-  if(!password && !keyURL) {
+- (NSData *)_createKdbDataWithPassword:(NSString *)password keyFileData:(NSData *)keyFileData {
+  if(!password && !keyFileData) {
     return nil;
   }
   uint8_t masterKey[ kKPKKeyFileLength];
-  if(password && !keyURL) {
+  if(password && !keyFileData) {
     /* Hash the password into the master key FIXME: PasswordEncoding! */
     NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
     CC_SHA256(passwordData.bytes, (CC_LONG)passwordData.length, masterKey);
   }
-  else if(!password && keyURL) {
+  else if(!password && keyFileData) {
     /* Get the bytes from the keyfile */
     NSError *error = nil;
-    NSData *keyFileData = [NSData kpk_dataWithContentsOfKeyFile:keyURL version:KPKDatabaseFormatKdb error:&error];
-    if(!keyFileData) {
+    NSData *keyData = [NSData kpk_keyDataForData:keyFileData version:KPKDatabaseFormatKdb error:&error];
+    if(!keyData) {
       NSLog(@"Error while trying to load keyfile:%@", error.localizedDescription);
       return nil;
     }
-    [keyFileData getBytes:masterKey length:32];
+    [keyData getBytes:masterKey length:32];
   }
   else {
     /* Hash the password */
@@ -146,8 +146,8 @@
     
     /* Get the bytes from the keyfile */
     NSError *error = nil;
-    NSData *keyFileData = [NSData kpk_dataWithContentsOfKeyFile:keyURL version:KPKDatabaseFormatKdb error:&error];
-    if( keyFileData == nil) {
+    NSData *keyData = [NSData kpk_keyDataForData:keyFileData version:KPKDatabaseFormatKdb error:&error];
+    if( keyData == nil) {
       return nil;
     }
     
@@ -155,14 +155,14 @@
     CC_SHA256_CTX ctx;
     CC_SHA256_Init(&ctx);
     CC_SHA256_Update(&ctx, passwordHash, 32);
-    CC_SHA256_Update(&ctx, keyFileData.bytes, 32);
+    CC_SHA256_Update(&ctx, keyData.bytes, 32);
     CC_SHA256_Final(masterKey, &ctx);
   }
   return [NSData dataWithBytes:masterKey length:kKPKKeyFileLength];
 }
 
-- (NSData *)_createKdbxDataWithPassword:(NSString *)password keyFile:(NSURL *)keyURL {
-  if(!password && !keyURL) {
+- (NSData *)_createKdbxDataWithPassword:(NSString *)password keyFileData:(NSData *)keyFileData {
+  if(!password && !keyFileData) {
     return nil;
   }
   
@@ -184,15 +184,15 @@
   }
   
   // Add the keyfile to the master key if it was supplied
-  if (keyURL) {
-    // Get the bytes from the keyfile
+  if (keyFileData) {
+    // Transform the keydata to the correct format
     NSError *error = nil;
-    NSData *keyFileData = [NSData kpk_dataWithContentsOfKeyFile:keyURL version:KPKDatabaseFormatKdbx error:&error];
-    if(!keyURL) {
+    NSData *keyData = [NSData kpk_keyDataForData:keyFileData version:KPKDatabaseFormatKdbx error:&error];
+    if(!keyData) {
       return nil;
     }
     // Add the keyfile hash to the master hash
-    CC_SHA256_Update(&ctx, keyFileData.bytes, (CC_LONG)keyFileData.length);
+    CC_SHA256_Update(&ctx, keyData.bytes, (CC_LONG)keyData.length);
   }
   
   // Finish the hash into the master key

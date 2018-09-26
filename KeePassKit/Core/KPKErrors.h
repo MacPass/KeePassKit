@@ -71,6 +71,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   /* Validation error */
   KPKErrorAttributeKeyValidationFailed, // Validation of attribute key failed
   KPKErrorWindowTitleFormatValidationFailed, // The Window title for autotype is not supported
+  KPKErrorNoKeyData // No key data was supplied
 };
 
 #endif
