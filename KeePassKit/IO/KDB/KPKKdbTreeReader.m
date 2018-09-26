@@ -103,6 +103,10 @@
 
 - (KPKTree *)_buildTree:(NSError **)error {
   KPKTree *tree = [[KPKTree alloc] init];
+  
+  /* use sane defaults for KDB */
+  tree.metaData.useTrash = NO;
+  
   /* Read the meta entries after all groups
    and entries are parsed to be able to search for them
    since KeePassX Stores custom icons for entries and groups
