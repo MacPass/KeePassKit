@@ -541,10 +541,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     return NO;
   }
   /* The Name of the type is stored as the note attribute */
-  if(self.notes.length == 0) {
-    return NO;
-  }
-  return YES;
+  return self.notes.length > 0;
 }
 
 - (KPKFileVersion)minimumVersion {
