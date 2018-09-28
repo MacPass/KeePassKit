@@ -7,20 +7,24 @@
 /* Error description */
 "Buffer Too Small" = "Puffer zu  klein";
 
-/* No comment provided by engineer. */
+/* Default title for KDBX databases
+   Title for the root group created for KDB files */
 "DATABASE" = "Datenbank";
-
-/* Action name for deleting a custom icon */
-"DELETE_CUSTOM_ICON" = "Icon entfernen";
 
 /* Error description */
 "Decode Error" = "Dekodierungsfehler";
+
+/* Action name for deleting a custom icon */
+"DELETE_CUSTOM_ICON" = "Icon entfernen";
 
 /* EMail */
 "EMAIL" = "E-Mail";
 
 /* No comment provided by engineer. */
 "ERROR_AES_DECRYPTION_FAILED" = "AES Entschlüsselung fehlgeschlagen";
+
+/* No comment provided by engineer. */
+"ERROR_AES_ENCRYPTION_FAILED" = "AES Verschlüsselung ist fehlgeschlagen";
 
 /* No comment provided by engineer. */
 "ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED" = "Bezeichnung wird bereits verwendet!";
@@ -74,6 +78,24 @@
 "ERROR_KDB_FILE_HEADER_TRUNCATED" = "KDB-Header unvollständig";
 
 /* No comment provided by engineer. */
+"ERROR_KDBX_CORRUPTED_CONTENT_STREAM" = "Die Inhaltsdaten sind fehlerhaft.";
+
+/* No comment provided by engineer. */
+"ERROR_KDBX_CORRUPTED_ENCRYPTION_STREAM" = "Die verschlüsselten Daten sind fehlerhaft.";
+
+/* No comment provided by engineer. */
+"ERROR_KDBX_CORRUPTED_INNER_HEADER" = "Der innere Header ist fehlerhaft.";
+
+/* No comment provided by engineer. */
+"ERROR_KDBX_CORRUPTED_PUBLIC_CUSTOM_DATA" = "Die unverschlüsselten öffentlichen Daten sind fehlerhaft.";
+
+/* No comment provided by engineer. */
+"ERROR_KDBX_INVALID_INNER_HEADER_FIELD" = "Der innere Header enthält ein unbekanntes Feld";
+
+/* No comment provided by engineer. */
+"ERROR_KDBX_INVALID_KEY_DERIVATION_DATA" = "Die Daten zur Schlüsselherleitung sind nicht fehlerhaft";
+
+/* No comment provided by engineer. */
 "ERROR_KEEPASSFILE_ELEMENT_MISSING" = "Datenbank-XML enthält keine KeePassFile-Elemente";
 
 /* No comment provided by engineer. */
@@ -81,6 +103,9 @@
 
 /* No comment provided by engineer. */
 "ERROR_NO_DATA" = "Keine Daten";
+
+/* No comment provided by engineer. */
+"ERROR_NO_KEY_DATA" = "Die Schlüsseldatei enthält keine Daten";
 
 /* No comment provided by engineer. */
 "ERROR_PASSWORD_OR_KEYFILE_WRONG" = "Falsche Password und/oder die Schlüsseldatei";
@@ -142,9 +167,6 @@
 /* Homebanking */
 "HOMEBANKING" = "Homebanking";
 
-/* Internet */
-"INTERNET" = "Internet";
-
 /* Error reason */
 "Illegal parameter supplied to encryption/decryption algorithm" = "Falscher Parameter wurde für Ver-/Entschlüsselung übergeben";
 
@@ -156,6 +178,9 @@
 
 /* Error reason */
 "Insufficient buffer provided for specified operation" = "Zu kleiner Puffer für Operation zur Verfügung";
+
+/* Internet */
+"INTERNET" = "Internet";
 
 /* Title format for a copie of an entry. Contains a %@ placeholder */
 "KPK_ENTRY_COPY_%@" = "Kopie von %@";
@@ -169,11 +194,11 @@
 /* Network */
 "NETWORK" = "Netzwerk";
 
-/* Action name for setting a custom string value protected */
-"PROTECT_%@" = "%@ schützen";
-
 /* Error description */
 "Parameter Error" = "Parameterfehler";
+
+/* Action name for setting a custom string value protected */
+"PROTECT_%@" = "%@ schützen";
 
 /* Action name for setting the background color of an enty */
 "SET_BACKGROUND_COLOR" = "Hintergrundfarbe festlegen";
@@ -208,14 +233,14 @@
 /* Name for the trash group */
 "TRASH" = "Papierkorb";
 
-/* Action name for setting a custom string value non-protected */
-"UNPROTECT_%@" = "%@ nicht schützen";
-
 /* Error description */
 "Unimplemented Function" = "Funktion nicht implementiert";
 
 /* Error description */
 "Unknown Error" = "Unbekannter Fehler";
+
+/* Action name for setting a custom string value non-protected */
+"UNPROTECT_%@" = "%@ nicht schützen";
 
 /* Windows */
 "WINDOWS" = "Windows";

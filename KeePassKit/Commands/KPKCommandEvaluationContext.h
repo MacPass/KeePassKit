@@ -13,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @class KPKEntry;
 
 typedef NS_OPTIONS(NSUInteger, KPKCommandEvaluationOptions) {
-  KPKCommandEvaluationOptionSkipUserInteraction = 1 << 0  // Evaluation should be performed without any user interaction (e.g. no user input should be requested)
+  KPKCommandEvaluationOptionSkipUserInteraction = 1 << 0,  // Evaluation should be performed without any user interaction (e.g. no user input should be requested)
+  KPKCommandEvaluationOptionReadOnly            = 1 << 1 // Evaluation should not modify any data
 };
 
 @interface KPKCommandEvaluationContext : NSObject <NSCopying>

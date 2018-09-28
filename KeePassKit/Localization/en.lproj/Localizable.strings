@@ -7,20 +7,24 @@
 /* Error description */
 "Buffer Too Small" = "Buffer Too Small";
 
-/* No comment provided by engineer. */
+/* Default title for KDBX databases
+   Title for the root group created for KDB files */
 "DATABASE" = "Database";
-
-/* Action name for deleting a custom icon */
-"DELETE_CUSTOM_ICON" = "Delete Custom Icon";
 
 /* Error description */
 "Decode Error" = "Decode Error";
+
+/* Action name for deleting a custom icon */
+"DELETE_CUSTOM_ICON" = "Delete Custom Icon";
 
 /* EMail */
 "EMAIL" = "EMail";
 
 /* No comment provided by engineer. */
 "ERROR_AES_DECRYPTION_FAILED" = "AES decryption failed";
+
+/* No comment provided by engineer. */
+"ERROR_AES_ENCRYPTION_FAILED" = "AES encryption failed";
 
 /* No comment provided by engineer. */
 "ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED" = "The attribute key is not unique!";
@@ -74,6 +78,24 @@
 "ERROR_KDB_FILE_HEADER_TRUNCATED" = "KDB header truncated";
 
 /* No comment provided by engineer. */
+"ERROR_KDBX_CORRUPTED_CONTENT_STREAM" = "The content stream is corrupted";
+
+/* No comment provided by engineer. */
+"ERROR_KDBX_CORRUPTED_ENCRYPTION_STREAM" = "The encrypted stream is corrupted";
+
+/* No comment provided by engineer. */
+"ERROR_KDBX_CORRUPTED_INNER_HEADER" = "The inner header data is corrupted";
+
+/* No comment provided by engineer. */
+"ERROR_KDBX_CORRUPTED_PUBLIC_CUSTOM_DATA" = "The public custom data is corrupted";
+
+/* No comment provided by engineer. */
+"ERROR_KDBX_INVALID_INNER_HEADER_FIELD" = "The inner header contains an invalid field";
+
+/* No comment provided by engineer. */
+"ERROR_KDBX_INVALID_KEY_DERIVATION_DATA" = "The key derivation data is invalid";
+
+/* No comment provided by engineer. */
 "ERROR_KEEPASSFILE_ELEMENT_MISSING" = "The XML file is missing the KeePassFile element";
 
 /* No comment provided by engineer. */
@@ -84,6 +106,9 @@
 
 /* No comment provided by engineer. */
 "ERROR_NO_DATA" = "No data";
+
+/* No comment provided by engineer. */
+"ERROR_NO_KEY_DATA" = "The key file contains no data";
 
 /* No comment provided by engineer. */
 "ERROR_PASSWORD_OR_KEYFILE_WRONG" = "The password and/or the keyfile is wrong";
@@ -145,9 +170,6 @@
 /* Homebanking */
 "HOMEBANKING" = "Homebanking";
 
-/* Internet */
-"INTERNET" = "Internet";
-
 /* Error reason */
 "Illegal parameter supplied to encryption/decryption algorithm" = "Illegal parameter supplied to encryption/decryption algorithm";
 
@@ -159,6 +181,9 @@
 
 /* Error reason */
 "Insufficient buffer provided for specified operation" = "Insufficient buffer provided for specified operation";
+
+/* Internet */
+"INTERNET" = "Internet";
 
 /* Title format for a copie of an entry. Contains a %@ placeholder */
 "KPK_ENTRY_COPY_%@" = "%@ copy";
@@ -172,11 +197,11 @@
 /* Network */
 "NETWORK" = "Network";
 
-/* Action name for setting a custom string value protected */
-"PROTECT_%@" = "Protect %@";
-
 /* Error description */
 "Parameter Error" = "Parameter Error";
+
+/* Action name for setting a custom string value protected */
+"PROTECT_%@" = "Protect %@";
 
 /* Action name for setting the background color of an enty */
 "SET_BACKGROUND_COLOR" = "Set Background Color";
@@ -211,14 +236,14 @@
 /* Name for the trash group */
 "TRASH" = "Trash";
 
-/* Action name for setting a custom string value non-protected */
-"UNPROTECT_%@" = "Unprotect %@";
-
 /* Error description */
 "Unimplemented Function" = "Unimplemented Function";
 
 /* Error description */
 "Unknown Error" = "Unknown Error";
+
+/* Action name for setting a custom string value non-protected */
+"UNPROTECT_%@" = "Unprotect %@";
 
 /* Windows */
 "WINDOWS" = "Windows";

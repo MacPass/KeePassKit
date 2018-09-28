@@ -29,13 +29,14 @@ NSString *const KPKErrorDomain = @"com.hicknhack.keepasskit";
 NSString *KPKErrorMessageForCode(NSInteger errorCode) {
   static NSDictionary *dict;
   static dispatch_once_t onceToken;
-  NSBundle *bundle = [NSBundle bundleForClass:[KPKPair class]];
+  NSBundle *bundle = [NSBundle bundleForClass:KPKPair.class];
   dispatch_once(&onceToken, ^{
     dict = @{
              @(KPKErrorAESDecryptionFailed)               : NSLocalizedStringFromTableInBundle(@"ERROR_AES_DECRYPTION_FAILED", nil, bundle, @""),
-             @(KPKErrorAESEncryptionFailed)               : NSLocalizedStringFromTableInBundle(@"ERROR_ENCRYPTION_FAILED", nil, bundle, @""),
+             @(KPKErrorAESEncryptionFailed)               : NSLocalizedStringFromTableInBundle(@"ERROR_AES_ENCRYPTION_FAILED", nil, bundle, @""),
              @(KPKErrorAttributeKeyValidationFailed)      : NSLocalizedStringFromTableInBundle(@"ERROR_ATTRIBUTE_KEY_VALIDATION_FAILED", nil, bundle, @""),
              @(KPKErrorDecryptionFailed)                  : NSLocalizedStringFromTableInBundle(@"ERROR_DECRYPTION_FAILED", nil, bundle, @""),
+             @(KPKErrorEncryptionFailed)                  : NSLocalizedStringFromTableInBundle(@"ERROR_ENCRYPTION_FAILED", nil, bundle, @""),
              @(KPKErrorIntegrityCheckFailed)              : NSLocalizedStringFromTableInBundle(@"ERROR_INTEGRITY_CHECK_FAILED", nil, bundle, @""),
              @(KPKErrorKdbCorruptTree)                    : NSLocalizedStringFromTableInBundle(@"ERROR_KDB_CORRUPT_TREE", nil, bundle, @""),
              @(KPKErrorKdbHeaderTruncated)                : NSLocalizedStringFromTableInBundle(@"ERROR_KDB_FILE_HEADER_TRUNCATED", nil, bundle, @""),
@@ -63,7 +64,14 @@ NSString *KPKErrorMessageForCode(NSInteger errorCode) {
              @(KPKErrorUnsupportedKeyDerivation)          : NSLocalizedStringFromTableInBundle(@"ERROR_UNSUPPORTED_KEYDERIVATION", nil, bundle, @""),
              @(KPKErrorUnsupportedRandomStream)           : NSLocalizedStringFromTableInBundle(@"ERROR_UNSUPPORTED_KDBX_RANDOM_STREAM", nil, bundle, @""),
              @(KPKErrorWindowTitleFormatValidationFailed) : NSLocalizedStringFromTableInBundle(@"ERROR_WINDOW_TITLE_VALIDATION_FAILED", nil, bundle, @""),
-             @(KPKErrorWrongIVVectorSize)                 : NSLocalizedStringFromTableInBundle(@"ERROR_INVALID_HEADER_IV_SIZE", nil, bundle, @"")
+             @(KPKErrorWrongIVVectorSize)                 : NSLocalizedStringFromTableInBundle(@"ERROR_INVALID_HEADER_IV_SIZE", nil, bundle, @""),
+             @(KPKErrorNoKeyData)                         : NSLocalizedStringFromTableInBundle(@"ERROR_NO_KEY_DATA", nil, bundle, @""),
+             @(KPKErrorKdbxInvalidInnerHeaderFieldType)   : NSLocalizedStringFromTableInBundle(@"ERROR_KDBX_INVALID_INNER_HEADER_FIELD", nil, bundle, @""),
+             @(KPKErrorKdbxCorruptedInnerHeader)          : NSLocalizedStringFromTableInBundle(@"ERROR_KDBX_CORRUPTED_INNER_HEADER", nil, bundle, @""),
+             @(KPKErrorKdbxCorruptedContentStream)        : NSLocalizedStringFromTableInBundle(@"ERROR_KDBX_CORRUPTED_CONTENT_STREAM", nil, bundle, @""),
+             @(KPKErrorKdbxCorruptedEncryptionStream)     : NSLocalizedStringFromTableInBundle(@"ERROR_KDBX_CORRUPTED_ENCRYPTION_STREAM", nil, bundle, @""),
+             @(KPKErrorKdbxCorrutpedPublicCustomData)     : NSLocalizedStringFromTableInBundle(@"ERROR_KDBX_CORRUPTED_PUBLIC_CUSTOM_DATA", nil, bundle, @""),
+             @(KPKErrorKdbxInvalidKeyDerivationData)      : NSLocalizedStringFromTableInBundle(@"ERROR_KDBX_INVALID_KEY_DERIVATION_DATA", nil, bundle, @"")
              };
   });
   NSString *msg = dict[@(errorCode)];
