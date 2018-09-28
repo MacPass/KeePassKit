@@ -11,11 +11,11 @@
 
 #import "KeePassKit.h"
 
-@interface KPKTestLegacyLoading : XCTestCase
+@interface KPKTestKdbLoading : XCTestCase
 
 @end
 
-@implementation KPKTestLegacyLoading
+@implementation KPKTestKdbLoading
 
 - (void)testAESDecryption {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
@@ -59,7 +59,7 @@
 }
 
 
-- (void)testMetaParsing {
+- (void)testCustomIconLoading {
   NSData *data = [self _loadTestDataBase:@"KDB1_KeePassX_test" extension:@"kdb"];
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" keyFileData:nil];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:NULL];

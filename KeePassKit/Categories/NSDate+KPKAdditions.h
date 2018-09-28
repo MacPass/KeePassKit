@@ -41,4 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface NSDate (KPKPrecision)
+
+@property (copy, readonly) NSDate *kpk_dateWithReducedPrecsion;
+
+@end
+
 NS_ASSUME_NONNULL_END

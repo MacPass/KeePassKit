@@ -243,6 +243,9 @@
   KPKEntry *treeStateEntry = [KPKEntry metaEntryWithData:[self _kpxTreeStateData] name:KPKMetaEntryKeePassXGroupTreeState];
   [metaEntries addObject:treeStateEntry];
   
+  KPKEntry *trashEntry = [KPKEntry metaEntryWithData:[self _trashData] name:KPKMetaEntryKeePassKitTrash];
+  [metaEntries addObject:trashEntry];
+  
   for(KPKBinary *metaBinary in self.tree.metaData.mutableUnknownMetaEntryData) {
     KPKEntry *metaEntry = [KPKEntry metaEntryWithData:metaBinary.data name:metaBinary.name];
     [metaEntries addObject:metaEntry];
@@ -434,6 +437,12 @@
 }
 
 - (NSData *)_trashData {
+  /*
+   struct {
+    BOOL useTrash
+    uint32_t trashGroupId
+   } KPKTrashData;
+   */
   KPKDataStreamWriter *writer = [KPKDataStreamWriter streamWriter];
   [writer writeByte:self.tree.metaData.useTrash];
   KPKGroup *trash = [self.tree.root groupForUUID:self.tree.metaData.trashUuid];

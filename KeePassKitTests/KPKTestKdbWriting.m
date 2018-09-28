@@ -11,11 +11,11 @@
 #import "KeePassKit.h"
 #import "KeePassKit_Private.h"
 
-@interface KPKTestLegacyWriting : XCTestCase
+@interface KPKTestKdbWriting : XCTestCase
 
 @end
 
-@implementation KPKTestLegacyWriting
+@implementation KPKTestKdbWriting
 
 - (void)testWriting {
   NSError __autoreleasing *error = nil;
@@ -34,9 +34,7 @@
 }
 
 - (void)testExpirationDateSerializsation {
-  NSData *packedDate = NSDate.date.kpk_packedBytes;
-  NSDate *expirationDate = [NSDate kpk_dateFromPackedBytes:packedDate.bytes];
-  
+  NSDate *expirationDate = NSDate.date.kpk_dateWithReducedPrecsion;
   
   KPKTree *tree = [[KPKTree alloc] init];
   KPKGroup *root = [[KPKGroup alloc] init];
@@ -72,7 +70,7 @@
   
 }
 
-- (void)testLegacyCustomIconSupport {
+- (void)testKdbCustomIconSupport {
   KPKTree *tree = [[KPKTree alloc] init];
   tree.root = [[KPKGroup alloc] init];
 
@@ -104,6 +102,67 @@
   XCTAssertNotNil(loadedEntry.iconUUID);
   XCTAssertEqualObjects(loadedEntry.iconUUID, loadedIcon.uuid);
 }
+
+- (void)testDatabaseNameAndDescriptionSerialization {
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.root = [[KPKGroup alloc] init];
+  
+  KPKGroup *group = [[KPKGroup alloc] init];
+  [group addToGroup:tree.root];
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  [entry addToGroup:tree.root.mutableGroups.firstObject];
+
+  NSString *databaseName = @"DatabaseName";
+  NSString *databaseDescription = @"DatabaseDescription";
+  
+  tree.metaData.databaseName = databaseName;
+  tree.metaData.databaseDescription = databaseDescription;
+  
+  NSError *error;
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" keyFileData:nil];
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(data);
+  
+  KPKTree *loadedTree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(loadedTree);
+
+  XCTAssertEqualObjects(loadedTree.metaData.databaseName, databaseName);
+  XCTAssertEqualObjects(loadedTree.metaData.databaseDescription, databaseDescription);
+}
+
+- (void)testTrashMetaDataSerialization {
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.root = [[KPKGroup alloc] init];
+  
+  KPKGroup *group = [[KPKGroup alloc] init];
+  [group addToGroup:tree.root];
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  [entry addToGroup:tree.root.mutableGroups.firstObject];
+  KPKGroup *trash = [[KPKGroup alloc] init];
+  
+  NSString *trashTitle = @"TrashGroup";
+  trash.title = trashTitle;
+  [trash addToGroup:tree.root];
+  
+  tree.metaData.useTrash = YES;
+  tree.trash = trash;
+  
+  NSError *error;
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" keyFileData:nil];
+  NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(data);
+  
+  KPKTree *loadedTree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(loadedTree);
+  XCTAssertTrue(loadedTree.metaData.useTrash);
+  XCTAssertNotNil(loadedTree.trash);
+  XCTAssertEqualObjects(loadedTree.trash.title, trashTitle);
+}
+
 
 - (NSData *)_dataForFile:(NSString *)name extension:(NSString *)extension {
   NSURL *url = [self _urlForFile:name extension:extension];

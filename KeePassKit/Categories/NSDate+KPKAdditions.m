@@ -176,3 +176,11 @@ static NSCalendar *_gregorianCalendar(void) {
 }
 
 @end
+
+@implementation NSDate (KPKPrecision)
+
+- (NSDate *)kpk_dateWithReducedPrecsion {
+  return [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.timeIntervalSinceReferenceDate)];
+}
+
+@end

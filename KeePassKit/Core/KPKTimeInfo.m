@@ -25,6 +25,7 @@
 #import "KPKNode.h"
 #import "KPKTree.h"
 #import "KPKScopedSet.h"
+#import "NSDate+KPKAdditions.h"
 
 @interface KPKTimeInfo ()
 
@@ -219,11 +220,11 @@
 }
 
 - (void)_reducePrecicionToSeconds {
-  self.creationDate = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.creationDate.timeIntervalSinceReferenceDate)];
-  self.modificationDate = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.modificationDate.timeIntervalSinceReferenceDate)];
-  self.accessDate = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.accessDate.timeIntervalSinceReferenceDate)];
-  self.expirationDate = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.expirationDate.timeIntervalSinceReferenceDate)];
-  self.locationChanged = [NSDate dateWithTimeIntervalSinceReferenceDate:floor(self.locationChanged.timeIntervalSinceReferenceDate)];
+  self.creationDate = self.creationDate.kpk_dateWithReducedPrecsion;
+  self.modificationDate = self.modificationDate.kpk_dateWithReducedPrecsion;
+  self.accessDate = self.accessDate.kpk_dateWithReducedPrecsion;
+  self.expirationDate = self.expirationDate.kpk_dateWithReducedPrecsion;
+  self.locationChanged = self.locationChanged.kpk_dateWithReducedPrecsion;
 }
 
 @end

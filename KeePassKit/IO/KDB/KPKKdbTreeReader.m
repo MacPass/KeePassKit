@@ -561,6 +561,14 @@
     metaData.defaultUserName = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return YES;
   }
+  if([entry.notes isEqualToString:KPKMetaEntryKeePassKitDatabaseName]) {
+    metaData.databaseName = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return YES;
+  }
+  if([entry.notes isEqualToString:KPKMetaEntryKeePassKitDatabaseDescription]) {
+    metaData.databaseDescription = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    return YES;
+  }
   if([entry.notes isEqualToString:KPKMetaEntryUIState]) {
     [self _parseUIStateData:data metaData:metaData];
     return YES;
@@ -570,6 +578,9 @@
   }
   if([entry.notes isEqualToString:KPKMetaEntryKeePassXGroupTreeState]) {
     return [self _parseKPXTreeState:data];
+  }
+  if([entry.notes isEqualToString:KPKMetaEntryKeePassKitTrash]) {
+    return [self _parseTrashData:data metaData:metaData];
   }
   return NO;
 }
@@ -750,6 +761,27 @@
     }
     KPKGroup *group = [self _findGroupForUUID:groupUUID];
     group.isExpanded = isExpanded;
+  }
+  return YES;
+}
+
+- (BOOL)_parseTrashData:(NSData *)data metaData:(KPKMetaData *)metaData {
+  /*
+  struct KPKTrashData {
+    uint8_t useTrash;
+    uint32_t trashGroupId;
+  };
+   */
+  
+  if(data.length != (sizeof(uint8_t) + sizeof(uint32_t))) {
+    return NO;
+  }
+  KPKDataStreamReader *dataReader = [[KPKDataStreamReader alloc] initWithData:data];
+  metaData.useTrash = dataReader.readByte;
+  uint32_t trashId = CFSwapInt32LittleToHost([dataReader read4Bytes]);
+  NSUUID *trashUUID = _groupIdToUUID[@(trashId)];
+  if(trashUUID) {
+    metaData.trashUuid = trashUUID;
   }
   return YES;
 }

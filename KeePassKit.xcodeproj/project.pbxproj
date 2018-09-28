@@ -185,7 +185,7 @@
 		2D51252E1E9BD06700D7EAF6 /* KPKTestKdbxLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A51BE10F090019AA81 /* KPKTestKdbxLoading.m */; };
 		2D51252F1E9BD06700D7EAF6 /* KPKTestNSCopying.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49F1BE10F090019AA81 /* KPKTestNSCopying.m */; };
 		2D5125301E9BD06700D7EAF6 /* KPKTestVariantDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C70F4541D92BF56003564E2 /* KPKTestVariantDictionary.m */; };
-		2D5125311E9BD06700D7EAF6 /* KPKTestLegacyWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49C1BE10F090019AA81 /* KPKTestLegacyWriting.m */; };
+		2D5125311E9BD06700D7EAF6 /* KPKTestKdbWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49C1BE10F090019AA81 /* KPKTestKdbWriting.m */; };
 		2D5125321E9BD06700D7EAF6 /* KPKIconLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4961BE10F090019AA81 /* KPKIconLoading.m */; };
 		2D5125331E9BD06700D7EAF6 /* KPKTestKeyfileParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49A1BE10F090019AA81 /* KPKTestKeyfileParsing.m */; };
 		2D5125341E9BD06700D7EAF6 /* KPKTestUndo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A31BE10F090019AA81 /* KPKTestUndo.m */; };
@@ -195,7 +195,7 @@
 		2D5125381E9BD06700D7EAF6 /* KPKTestEntryOrGroupByUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8FE3B81E004DF5008C75BF /* KPKTestEntryOrGroupByUUID.m */; };
 		2D5125391E9BD06700D7EAF6 /* KPKTestData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE95AE81E97C08C0019BBDC /* KPKTestData.m */; };
 		2D51253A1E9BD06700D7EAF6 /* KPKTestXMLSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A71BE10F090019AA81 /* KPKTestXMLSerialization.m */; };
-		2D51253B1E9BD06700D7EAF6 /* KPKTestLegacyLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49B1BE10F090019AA81 /* KPKTestLegacyLoading.m */; };
+		2D51253B1E9BD06700D7EAF6 /* KPKTestKdbLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49B1BE10F090019AA81 /* KPKTestKdbLoading.m */; };
 		2D51253C1E9BD06700D7EAF6 /* KPKTestNodeForUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */; };
 		2D51253D1E9BD06700D7EAF6 /* KPKTestChaCha20.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C93C4AC1DC2704600260DD4 /* KPKTestChaCha20.m */; };
 		2D51253E1E9BD06700D7EAF6 /* KPKTestEmptyString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */; };
@@ -411,7 +411,7 @@
 		2D51263A1E9BD29500D7EAF6 /* KPKTestKdbxLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A51BE10F090019AA81 /* KPKTestKdbxLoading.m */; };
 		2D51263B1E9BD29500D7EAF6 /* KPKTestNSCopying.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49F1BE10F090019AA81 /* KPKTestNSCopying.m */; };
 		2D51263C1E9BD29500D7EAF6 /* KPKTestVariantDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C70F4541D92BF56003564E2 /* KPKTestVariantDictionary.m */; };
-		2D51263D1E9BD29500D7EAF6 /* KPKTestLegacyWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49C1BE10F090019AA81 /* KPKTestLegacyWriting.m */; };
+		2D51263D1E9BD29500D7EAF6 /* KPKTestKdbWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49C1BE10F090019AA81 /* KPKTestKdbWriting.m */; };
 		2D51263E1E9BD29500D7EAF6 /* KPKIconLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4961BE10F090019AA81 /* KPKIconLoading.m */; };
 		2D51263F1E9BD29500D7EAF6 /* KPKTestKeyfileParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49A1BE10F090019AA81 /* KPKTestKeyfileParsing.m */; };
 		2D5126401E9BD29500D7EAF6 /* KPKTestUndo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A31BE10F090019AA81 /* KPKTestUndo.m */; };
@@ -421,7 +421,7 @@
 		2D5126441E9BD29500D7EAF6 /* KPKTestEntryOrGroupByUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8FE3B81E004DF5008C75BF /* KPKTestEntryOrGroupByUUID.m */; };
 		2D5126451E9BD29500D7EAF6 /* KPKTestData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE95AE81E97C08C0019BBDC /* KPKTestData.m */; };
 		2D5126461E9BD29500D7EAF6 /* KPKTestXMLSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4A71BE10F090019AA81 /* KPKTestXMLSerialization.m */; };
-		2D5126471E9BD29500D7EAF6 /* KPKTestLegacyLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49B1BE10F090019AA81 /* KPKTestLegacyLoading.m */; };
+		2D5126471E9BD29500D7EAF6 /* KPKTestKdbLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49B1BE10F090019AA81 /* KPKTestKdbLoading.m */; };
 		2D5126481E9BD29500D7EAF6 /* KPKTestNodeForUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */; };
 		2D5126491E9BD29500D7EAF6 /* KPKTestChaCha20.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C93C4AC1DC2704600260DD4 /* KPKTestChaCha20.m */; };
 		2D51264A1E9BD29500D7EAF6 /* KPKTestEmptyString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */; };
@@ -859,8 +859,8 @@
 		4C5CF4AC1BE10F090019AA81 /* KPKTestEntryLookup.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4981BE10F090019AA81 /* KPKTestEntryLookup.m */; };
 		4C5CF4AD1BE10F090019AA81 /* KPKTestHexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF4991BE10F090019AA81 /* KPKTestHexColor.m */; };
 		4C5CF4AE1BE10F090019AA81 /* KPKTestKeyfileParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49A1BE10F090019AA81 /* KPKTestKeyfileParsing.m */; };
-		4C5CF4AF1BE10F090019AA81 /* KPKTestLegacyLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49B1BE10F090019AA81 /* KPKTestLegacyLoading.m */; };
-		4C5CF4B01BE10F090019AA81 /* KPKTestLegacyWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49C1BE10F090019AA81 /* KPKTestLegacyWriting.m */; };
+		4C5CF4AF1BE10F090019AA81 /* KPKTestKdbLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49B1BE10F090019AA81 /* KPKTestKdbLoading.m */; };
+		4C5CF4B01BE10F090019AA81 /* KPKTestKdbWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49C1BE10F090019AA81 /* KPKTestKdbWriting.m */; };
 		4C5CF4B11BE10F090019AA81 /* KPKTestModificationDates.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49D1BE10F090019AA81 /* KPKTestModificationDates.m */; };
 		4C5CF4B21BE10F090019AA81 /* KPKTestNSCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49E1BE10F090019AA81 /* KPKTestNSCoding.m */; };
 		4C5CF4B31BE10F090019AA81 /* KPKTestNSCopying.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF49F1BE10F090019AA81 /* KPKTestNSCopying.m */; };
@@ -1282,8 +1282,8 @@
 		4C5CF4981BE10F090019AA81 /* KPKTestEntryLookup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestEntryLookup.m; sourceTree = "<group>"; };
 		4C5CF4991BE10F090019AA81 /* KPKTestHexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestHexColor.m; sourceTree = "<group>"; };
 		4C5CF49A1BE10F090019AA81 /* KPKTestKeyfileParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestKeyfileParsing.m; sourceTree = "<group>"; };
-		4C5CF49B1BE10F090019AA81 /* KPKTestLegacyLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestLegacyLoading.m; sourceTree = "<group>"; };
-		4C5CF49C1BE10F090019AA81 /* KPKTestLegacyWriting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestLegacyWriting.m; sourceTree = "<group>"; };
+		4C5CF49B1BE10F090019AA81 /* KPKTestKdbLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestKdbLoading.m; sourceTree = "<group>"; };
+		4C5CF49C1BE10F090019AA81 /* KPKTestKdbWriting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestKdbWriting.m; sourceTree = "<group>"; };
 		4C5CF49D1BE10F090019AA81 /* KPKTestModificationDates.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestModificationDates.m; sourceTree = "<group>"; };
 		4C5CF49E1BE10F090019AA81 /* KPKTestNSCoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = KPKTestNSCoding.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C5CF49F1BE10F090019AA81 /* KPKTestNSCopying.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestNSCopying.m; sourceTree = "<group>"; };
@@ -1693,8 +1693,6 @@
 				4C5CF4981BE10F090019AA81 /* KPKTestEntryLookup.m */,
 				4C5CF4991BE10F090019AA81 /* KPKTestHexColor.m */,
 				4C5CF49A1BE10F090019AA81 /* KPKTestKeyfileParsing.m */,
-				4C5CF49B1BE10F090019AA81 /* KPKTestLegacyLoading.m */,
-				4C5CF49C1BE10F090019AA81 /* KPKTestLegacyWriting.m */,
 				4C5CF49D1BE10F090019AA81 /* KPKTestModificationDates.m */,
 				4C5CF49E1BE10F090019AA81 /* KPKTestNSCoding.m */,
 				4C5CF49F1BE10F090019AA81 /* KPKTestNSCopying.m */,
@@ -1708,6 +1706,8 @@
 				4C5CF4A41BE10F090019AA81 /* KPKTestUUIDAdditions.m */,
 				4C5CF4A51BE10F090019AA81 /* KPKTestKdbxLoading.m */,
 				4C8CB6B61EEEF3AA00AF4402 /* KPKTextKdbxWriting.m */,
+				4C5CF49B1BE10F090019AA81 /* KPKTestKdbLoading.m */,
+				4C5CF49C1BE10F090019AA81 /* KPKTestKdbWriting.m */,
 				4C8FE3B81E004DF5008C75BF /* KPKTestEntryOrGroupByUUID.m */,
 				4C5CF4A61BE10F090019AA81 /* KPKTestXmlParsing.m */,
 				4C5CF4A71BE10F090019AA81 /* KPKTestXMLSerialization.m */,
@@ -3045,7 +3045,7 @@
 				2D51252E1E9BD06700D7EAF6 /* KPKTestKdbxLoading.m in Sources */,
 				2D51252F1E9BD06700D7EAF6 /* KPKTestNSCopying.m in Sources */,
 				2D5125301E9BD06700D7EAF6 /* KPKTestVariantDictionary.m in Sources */,
-				2D5125311E9BD06700D7EAF6 /* KPKTestLegacyWriting.m in Sources */,
+				2D5125311E9BD06700D7EAF6 /* KPKTestKdbWriting.m in Sources */,
 				2D5125321E9BD06700D7EAF6 /* KPKIconLoading.m in Sources */,
 				4C8836A41FB34DC700CD2CD1 /* KPKTestTokenStream.m in Sources */,
 				2D5125331E9BD06700D7EAF6 /* KPKTestKeyfileParsing.m in Sources */,
@@ -3056,7 +3056,7 @@
 				2D5125381E9BD06700D7EAF6 /* KPKTestEntryOrGroupByUUID.m in Sources */,
 				2D5125391E9BD06700D7EAF6 /* KPKTestData.m in Sources */,
 				2D51253A1E9BD06700D7EAF6 /* KPKTestXMLSerialization.m in Sources */,
-				2D51253B1E9BD06700D7EAF6 /* KPKTestLegacyLoading.m in Sources */,
+				2D51253B1E9BD06700D7EAF6 /* KPKTestKdbLoading.m in Sources */,
 				2D51253C1E9BD06700D7EAF6 /* KPKTestNodeForUUID.m in Sources */,
 				2D51253D1E9BD06700D7EAF6 /* KPKTestChaCha20.m in Sources */,
 				2D51253E1E9BD06700D7EAF6 /* KPKTestEmptyString.m in Sources */,
@@ -3189,7 +3189,7 @@
 				2D51263A1E9BD29500D7EAF6 /* KPKTestKdbxLoading.m in Sources */,
 				2D51263B1E9BD29500D7EAF6 /* KPKTestNSCopying.m in Sources */,
 				2D51263C1E9BD29500D7EAF6 /* KPKTestVariantDictionary.m in Sources */,
-				2D51263D1E9BD29500D7EAF6 /* KPKTestLegacyWriting.m in Sources */,
+				2D51263D1E9BD29500D7EAF6 /* KPKTestKdbWriting.m in Sources */,
 				2D51263E1E9BD29500D7EAF6 /* KPKIconLoading.m in Sources */,
 				4C8836A51FB34DC700CD2CD1 /* KPKTestTokenStream.m in Sources */,
 				2D51263F1E9BD29500D7EAF6 /* KPKTestKeyfileParsing.m in Sources */,
@@ -3200,7 +3200,7 @@
 				2D5126441E9BD29500D7EAF6 /* KPKTestEntryOrGroupByUUID.m in Sources */,
 				2D5126451E9BD29500D7EAF6 /* KPKTestData.m in Sources */,
 				2D5126461E9BD29500D7EAF6 /* KPKTestXMLSerialization.m in Sources */,
-				2D5126471E9BD29500D7EAF6 /* KPKTestLegacyLoading.m in Sources */,
+				2D5126471E9BD29500D7EAF6 /* KPKTestKdbLoading.m in Sources */,
 				2D5126481E9BD29500D7EAF6 /* KPKTestNodeForUUID.m in Sources */,
 				2D5126491E9BD29500D7EAF6 /* KPKTestChaCha20.m in Sources */,
 				2D51264A1E9BD29500D7EAF6 /* KPKTestEmptyString.m in Sources */,
@@ -3428,7 +3428,7 @@
 				4C5CF4B31BE10F090019AA81 /* KPKTestNSCopying.m in Sources */,
 				4C70F4551D92BF56003564E2 /* KPKTestVariantDictionary.m in Sources */,
 				4C059B6420D4577300655B99 /* KPKTestBinary.m in Sources */,
-				4C5CF4B01BE10F090019AA81 /* KPKTestLegacyWriting.m in Sources */,
+				4C5CF4B01BE10F090019AA81 /* KPKTestKdbWriting.m in Sources */,
 				4CE94DD11F69885E00EE9A5A /* KPKTestTrash.m in Sources */,
 				4C5CF4AA1BE10F090019AA81 /* KPKIconLoading.m in Sources */,
 				4C8836A61FB34DC700CD2CD1 /* KPKTestEntryAttributes.m in Sources */,
@@ -3442,7 +3442,7 @@
 				4CE95AE91E97C08C0019BBDC /* KPKTestData.m in Sources */,
 				4CD9727E1F7E756500956EEB /* KPKTestDateAdditions.m in Sources */,
 				4C5CF4BB1BE10F090019AA81 /* KPKTestXMLSerialization.m in Sources */,
-				4C5CF4AF1BE10F090019AA81 /* KPKTestLegacyLoading.m in Sources */,
+				4C5CF4AF1BE10F090019AA81 /* KPKTestKdbLoading.m in Sources */,
 				4CCC95061E24F2BD00593E65 /* KPKTestNodeForUUID.m in Sources */,
 				4C93C4AD1DC2704600260DD4 /* KPKTestChaCha20.m in Sources */,
 				4C2D8B151DEF043600AB72CD /* KPKTestEmptyString.m in Sources */,
