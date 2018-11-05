@@ -112,7 +112,7 @@ static NSString *const _KPKSpaceSaveGuard = @"{KPK_LITERAL_SPACE}";
 
 - (NSString *)findCommand:(NSString *)command {
   /*
-   Caches the entries in a NSDictionary with a maxium entry count
+   Caches the entries in a NSDictionary with a maximum entry count
    If the maxium count is reached, the entries older than lifetime are removed
    */
   static NSUInteger const kMPMaximumCacheEntries = 50;
