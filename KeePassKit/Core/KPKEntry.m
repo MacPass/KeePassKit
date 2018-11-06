@@ -306,6 +306,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return @[KPKEntryUTI];
 }
 
+- (NSPasteboardWritingOptions)writingOptionsForType:(NSPasteboardType)type pasteboard:(NSPasteboard *)pasteboard {
+  if([type isEqualToString:KPKEntryUTI]) {
+    return NSPasteboardWritingPromised;
+  }
+  return 0;
+}
+
 - (id)pasteboardPropertyListForType:(NSString *)type {
   if([type isEqualToString:KPKEntryUTI]) {
     return [NSKeyedArchiver archivedDataWithRootObject:self];

@@ -347,6 +347,13 @@ static NSSet *_observedKeyPathsSet;
   return NSPasteboardReadingAsKeyedArchive;
 }
 
+- (NSPasteboardWritingOptions)writingOptionsForType:(NSPasteboardType)type pasteboard:(NSPasteboard *)pasteboard {
+  if([type isEqualToString:KPKGroupUTI]) {
+    return NSPasteboardWritingPromised;
+  }
+  return 0;
+}
+
 - (id)pasteboardPropertyListForType:(NSString *)type {
   if([type isEqualToString:KPKGroupUTI]) {
     return [NSKeyedArchiver archivedDataWithRootObject:self];
