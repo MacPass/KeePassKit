@@ -17,6 +17,56 @@
 
 @implementation KPKTestNode
 
+- (void)testMoveEntry {
+  KPKGroup *rootGroup = [[KPKGroup alloc] init];
+  KPKGroup *subGroupA = [[KPKGroup alloc] init];
+  [subGroupA addToGroup:rootGroup];
+  
+  NSUInteger entryCount = 5;
+  while(entryCount--) {
+    [[[KPKEntry alloc] init] addToGroup:subGroupA];
+  }
+  
+  KPKGroup *subGroupB = [[KPKGroup alloc] init];
+  [subGroupB addToGroup:rootGroup];
+  
+  KPKEntry *entry = subGroupA.mutableEntries.lastObject;
+  XCTAssertEqual(entry.index, subGroupA.mutableEntries.count - 1);
+  [entry moveToGroup:subGroupA atIndex:0];
+  XCTAssertEqual(entry.parent, subGroupA);
+  XCTAssertEqual(entry.index, 0);
+  
+  [entry moveToGroup:subGroupB];
+  XCTAssertNil([subGroupA entryForUUID:entry.uuid]);
+  XCTAssertEqual(entry.index, 0);
+  XCTAssertEqual(entry.parent, subGroupB);
+}
+
+- (void)testMoveGroup {
+  KPKGroup *rootGroup = [[KPKGroup alloc] init];
+  KPKGroup *subGroupA = [[KPKGroup alloc] init];
+  [subGroupA addToGroup:rootGroup];
+
+  NSUInteger groupCount = 5;
+  while(groupCount--) {
+    [[[KPKGroup alloc] init] addToGroup:subGroupA];
+  }
+  
+  KPKGroup *subGroupB = [[KPKGroup alloc] init];
+  [subGroupB addToGroup:rootGroup];
+  
+  KPKGroup *group = subGroupA.mutableGroups.lastObject;
+  XCTAssertEqual(group.index, subGroupA.mutableGroups.count - 1);
+  [group moveToGroup:subGroupA atIndex:0];
+  XCTAssertEqual(group.parent, subGroupA);
+  XCTAssertEqual(group.index, 0);
+  
+  [group moveToGroup:subGroupB];
+  XCTAssertNil([subGroupA groupForUUID:group.uuid]);
+  XCTAssertEqual(group.index, 0);
+  XCTAssertEqual(group.parent, subGroupB);
+}
+
 - (void)testRootGroup {
   NSUInteger depth = 10;
   KPKGroup *root = [[KPKGroup alloc] init];
