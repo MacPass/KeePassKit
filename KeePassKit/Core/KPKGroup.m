@@ -501,15 +501,15 @@ static NSSet *_observedKeyPathsSet;
   KPKGroup *group = node.asGroup;
   
   if(group) {
-    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeWillRemoveGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: group }];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKTreeWillRemoveGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: group }];
     /* deleted objects should be registred, no undo registration */
     [self removeObjectFromMutableGroupsAtIndex:[self.mutableGroups indexOfObjectIdenticalTo:group]];
-    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeDidRemoveGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: group }];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKTreeDidRemoveGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: group }];
   }
   else if(entry) {
-    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeWillRemoveEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKTreeWillRemoveEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
     [self removeObjectFromMutableEntriesAtIndex:[self.mutableEntries indexOfObjectIdenticalTo:entry]];
-    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeDidRemoveEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKTreeDidRemoveEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
   }
   node.parent = nil;
 }
@@ -679,8 +679,7 @@ static NSSet *_observedKeyPathsSet;
 - (KPKEntry *)objectInEntriesArrayAtIndex:(NSUInteger)index {
   return self.mutableEntries[index];
 }
-
-- (void)getEEntriesArray:(KPKEntry *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:(NSRange)inRange {
+- (void)getEntriesArray:(KPKEntry *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:(NSRange)inRange {
   [self.mutableEntries getObjects:(KPKEntry *__unsafe_unretained  _Nonnull * _Nonnull)buffer range:inRange];
 }
 
