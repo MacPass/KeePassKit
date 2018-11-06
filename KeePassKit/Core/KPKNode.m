@@ -327,8 +327,8 @@
   if(self.tree && group.tree) {
     NSAssert(self.tree == group.tree, @"Moving nodes between trees is not supported. Use -remove and -addToGroup: instead.");
   }
-  if(self.parent == group) {
-    return; // no need to move, we're already there
+  if(self.parent == group && self.index == index) {
+    return; // no need to move, we're where we want to be
   }
   [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:self.index];
   [self.parent _removeChild:self];
