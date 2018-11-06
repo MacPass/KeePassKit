@@ -198,6 +198,9 @@
   if(!node) {
     return NO;
   }
+  if(self == node) {
+    return NO;
+  }
   KPKNode *ancestor = node.parent;
   while(ancestor) {
     if(ancestor == self) {
