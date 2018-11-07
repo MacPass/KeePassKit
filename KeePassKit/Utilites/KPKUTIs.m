@@ -24,4 +24,6 @@
 
 NSString *const KPKUUIDUTI  = @"com.hicknhack.macpass.UUID";
 NSString *const KPKGroupUTI = @"com.hicknhack.macpass.group";
+NSString *const KPKGroupUUIDUTI = @"com.hicknhack.macpass.group.uuid";
 NSString *const KPKEntryUTI = @"com.hicknhack.macpass.entry";
+NSString *const KPKEntryUUDIUTI = @"com.hicknhack.macpass.entry.uuid";

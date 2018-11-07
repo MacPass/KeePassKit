@@ -30,12 +30,13 @@
 #import "KPKEntry_Private.h"
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
+#import "KPKScopedSet.h"
 #import "KPKTree.h"
 #import "KPKTree_Private.h"
 #import "KPKTimeInfo.h"
+#import "KPKUTIs.h"
 
 #import "NSUUID+KPKAdditions.h"
-#import "KPKScopedSet.h"
 
 NSString *const KPKEntriesArrayBinding = @"entriesArray";
 NSString *const KPKGroupsArrayBinding = @"groupsArray";
@@ -336,27 +337,24 @@ static NSSet *_observedKeyPathsSet;
 
 #pragma mark NSPasteboardWriting/Reading
 - (NSArray<NSString *> *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
-  return @[KPKGroupUTI];
+  /* UUID gets put it by default, group only as promise to reduce unnecessary archiving */
+  return @[KPKGroupUUIDUTI, KPKGroupUTI];
 }
 + (NSArray<NSString *> *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
   return @[KPKGroupUTI];
 }
 
 + (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
-  NSAssert([type isEqualToString:KPKGroupUTI], @"Type needs to be KPKGroupUTI");
+  NSAssert([type isEqualToString:KPKGroupUTI] || [type isEqualToString:KPKGroupUUIDUTI], @"Type needs to be KPKGroupUTI");
   return NSPasteboardReadingAsKeyedArchive;
-}
-
-- (NSPasteboardWritingOptions)writingOptionsForType:(NSPasteboardType)type pasteboard:(NSPasteboard *)pasteboard {
-  if([type isEqualToString:KPKGroupUTI]) {
-    return NSPasteboardWritingPromised;
-  }
-  return 0;
 }
 
 - (id)pasteboardPropertyListForType:(NSString *)type {
   if([type isEqualToString:KPKGroupUTI]) {
     return [NSKeyedArchiver archivedDataWithRootObject:self];
+  }
+  if([type isEqualToString:KPKGroupUUIDUTI]) {
+    return [NSKeyedArchiver archivedDataWithRootObject:self.uuid];
   }
   return nil;
 }

@@ -294,7 +294,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 #pragma mark NSPasteBoardWriting/Reading
 
 + (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
-  NSAssert([type isEqualToString:KPKEntryUTI], @"Only KPKEntryUTI type is supported");
+  NSAssert(([type isEqualToString:KPKEntryUTI] || [type isEqualToString:KPKEntryUUDIUTI]), @"Unsupported pasteboard type %@", type);
   return NSPasteboardReadingAsKeyedArchive;
 }
 
@@ -303,19 +303,16 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (NSArray *)writableTypesForPasteboard:(NSPasteboard *)pasteboard {
-  return @[KPKEntryUTI];
-}
-
-- (NSPasteboardWritingOptions)writingOptionsForType:(NSPasteboardType)type pasteboard:(NSPasteboard *)pasteboard {
-  if([type isEqualToString:KPKEntryUTI]) {
-    return NSPasteboardWritingPromised;
-  }
-  return 0;
+  /* UUID gets put it by default, group only as promise to reduce unnecessary archiving */
+  return @[KPKEntryUUDIUTI, KPKEntryUTI];
 }
 
 - (id)pasteboardPropertyListForType:(NSString *)type {
   if([type isEqualToString:KPKEntryUTI]) {
     return [NSKeyedArchiver archivedDataWithRootObject:self];
+  }
+  if([type isEqualToString:KPKEntryUUDIUTI]) {
+    return [NSKeyedArchiver archivedDataWithRootObject:self.uuid];
   }
   return nil;
 }
