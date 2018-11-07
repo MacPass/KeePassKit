@@ -94,18 +94,18 @@ static NSString *const KPKNullUUIDString = @"00000000-0000-0000-0000-00000000000
 #pragma mark NSPasteboardReading
 
 + (NSArray *)readableTypesForPasteboard:(NSPasteboard *)pasteboard {
-  return @[ KPKUUIDUTI ];
+  return @[ KPKUUIDUTI, KPKGroupUUIDUTI, KPKEntryUUDIUTI ];
 }
 
 + (NSPasteboardReadingOptions)readingOptionsForType:(NSString *)type pasteboard:(NSPasteboard *)pasteboard {
-  NSAssert([type isEqualToString:KPKUUIDUTI], @"Only MPUUID type is supported");
+  NSAssert([type isEqualToString:KPKUUIDUTI] || [type isEqualToString:KPKGroupUUIDUTI] || [type isEqualToString:KPKEntryUUDIUTI], @"Unsupporrted type %@ for reading from pasteboar!", type);
   return NSPasteboardReadingAsKeyedArchive;
 }
 
 #pragma mark -
 #pragma mark NSPasteboardWriting
 - (id)pasteboardPropertyListForType:(NSString *)type {
-  NSAssert([type isEqualToString:KPKUUIDUTI], @"Only MPUUID type is supported");
+  NSAssert([type isEqualToString:KPKUUIDUTI] || [type isEqualToString:KPKGroupUUIDUTI] || [type isEqualToString:KPKEntryUUDIUTI], @"Unsupporrted type %@ for reading from pasteboar!", type);
   return [NSKeyedArchiver archivedDataWithRootObject:self];
 }
 
