@@ -24,6 +24,7 @@
 #import "KPKEntry_Private.h"
 #import "KPKNode_Private.h"
 #import "KPKGroup.h"
+#import "KPKGroup_Private.h"
 #import "KPKBinary.h"
 #import "KPKBinary_Private.h"
 #import "KPKAttribute.h"
@@ -147,6 +148,10 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 + (NSSet *)keyPathsForValuesAffectingNotes {
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAttributes))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingIndex {
+  return [NSSet setWithArray:@[NSStringFromSelector(@selector(parent)), [NSString stringWithFormat:@"%@.%@",NSStringFromSelector(@selector(parent)), NSStringFromSelector(@selector(mutableEntries))]]];
 }
 
 - (instancetype)init {

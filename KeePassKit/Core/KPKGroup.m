@@ -81,6 +81,11 @@ static NSSet *_observedKeyPathsSet;
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableEntries))];
 }
 
++ (NSSet<NSString *> *)keyPathsForValuesAffectingIndex {
+  return [NSSet setWithArray:@[NSStringFromSelector(@selector(parent)), [NSString stringWithFormat:@"%@.%@",NSStringFromSelector(@selector(parent)), NSStringFromSelector(@selector(mutableGroups))]]];
+}
+
+
 + (NSUInteger)defaultIcon {
   return KPKIconFolder;
 }
