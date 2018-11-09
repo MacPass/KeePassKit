@@ -497,7 +497,6 @@ static NSSet *_observedKeyPathsSet;
     [self insertObject:entry inMutableEntriesAtIndex:index];
     [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeDidAddEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
   }
-  
   node.parent = self;
 }
 

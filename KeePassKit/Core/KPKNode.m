@@ -72,6 +72,10 @@
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableCustomData))];
 }
 
++ (NSSet<NSString *> *)keyPathsForValuesAffectingIndex {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(parent))];
+}
+
 - (instancetype)init {
   [self doesNotRecognizeSelector:_cmd];
   self = nil;
