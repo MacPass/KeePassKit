@@ -72,6 +72,13 @@
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableCustomData))];
 }
 
++ (NSSet<NSString *> *)keyPathsForValuesAffectingIndex {
+  if(self.class == KPKNode.class) {
+    return [NSSet setWithObject:NSStringFromSelector(@selector(parent))];
+  }
+  return [self.class keyPathsForValuesAffectingIndex];
+}
+
 - (instancetype)init {
   [self doesNotRecognizeSelector:_cmd];
   self = nil;
