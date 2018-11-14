@@ -14,6 +14,8 @@
 
 @interface KPKTestKVO : XCTestCase
 @property (copy) NSString *string;
+@property (copy) NSNumber *index1;
+@property (copy) NSNumber *index2;
 @property (copy) NSDate *date;
 @property (strong) NSArrayController *entryArrayController;
 @end
@@ -109,6 +111,34 @@
   XCTAssertEqual([entries count], 0);
   
 }
+
+- (void)testNodeIndexKVO {
+  KPKGroup *group1 = [[KPKGroup alloc] init];
+  KPKGroup *group2 = [[KPKGroup alloc] init];
+  KPKEntry *entry1 = [[KPKEntry alloc] init];
+  KPKEntry *entry2 = [[KPKEntry alloc] init];
+  [entry1 addToGroup:group1];
+  [entry2 addToGroup:group1];
+  
+  [self bind:NSStringFromSelector(@selector(index1)) toObject:entry1 withKeyPath:NSStringFromSelector(@selector(index)) options:nil];
+  [self bind:NSStringFromSelector(@selector(index2)) toObject:entry2 withKeyPath:NSStringFromSelector(@selector(index)) options:nil];
+  
+  XCTAssertEqual(entry1.index, 0);
+  XCTAssertEqual(entry2.index, 1);
+
+  XCTAssertEqual(self.index1.integerValue, 0);
+  XCTAssertEqual(self.index2.integerValue, 1);
+  
+  [entry1 moveToGroup:group2];
+  
+  XCTAssertEqual(entry1.index, 0);
+  XCTAssertEqual(entry2.index, 0);
+
+  XCTAssertEqual(self.index1.integerValue, 0);
+  XCTAssertEqual(self.index2.integerValue, 0);  
+}
+
+
 
 - (void)_bindAndTestGroup:(KPKGroup *)group selector:(SEL)selector {
   [self bind:NSStringFromSelector(@selector(string)) toObject:group withKeyPath:NSStringFromSelector(selector) options:nil];
