@@ -196,7 +196,7 @@ static NSSet *_observedKeyPathsSet;
   /* We update the UUID */
   KPKGroup *copy = [self _copyWithUUID:nil];
   /* FIXME: pass options to entry forCopyWithTitle */
-  [self _regenerateUUIDs];
+  [copy _regenerateUUIDs];
   
   if(nil == titleOrNil) {
     NSString *format = NSLocalizedStringFromTableInBundle(@"KPK_GROUP_COPY_%@", nil, [NSBundle bundleForClass:[self class]], "Title format for a copie of a group. Contains a %@ placeholder");
