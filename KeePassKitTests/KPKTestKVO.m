@@ -135,7 +135,10 @@
   XCTAssertEqual(entry2.index, 0);
 
   XCTAssertEqual(self.index1.integerValue, 0);
-  XCTAssertEqual(self.index2.integerValue, 0);  
+  XCTAssertEqual(self.index2.integerValue, 0);
+  
+  [self unbind:NSStringFromSelector(@selector(index1))];
+  [self unbind:NSStringFromSelector(@selector(index2))];
 }
 
 
