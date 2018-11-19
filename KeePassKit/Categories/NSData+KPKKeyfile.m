@@ -99,7 +99,7 @@
   // Try and load a 2.x XML keyfile first
   NSData *keyData = [self _kpk_dataWithForXMLKeyData:data error:error];
   if(!keyData) {
-    return [self _kpk_dataVersion1ForData:keyData error:error];
+    return [self _kpk_dataVersion1ForData:data error:error];
   }
   return keyData;
 }
