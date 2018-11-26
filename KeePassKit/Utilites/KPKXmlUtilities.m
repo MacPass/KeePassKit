@@ -127,6 +127,9 @@ BOOL KPKXmlBoolAttribute(DDXMLElement *element, NSString *attribute) {
 
 NSDate *KPKXmlDate(DDXMLElement *element, NSString *name, BOOL isRelativeDate) {
   NSString *value = [[element elementForName:name] stringValue];
+  if(nil == value) {
+    return nil;
+  }
   if(isRelativeDate) {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
     if(data.length != 8) {
