@@ -247,11 +247,18 @@
     //NSRange readRange = NSMakeRange(location, fieldSize);
     
     switch (fieldType) {
-      case KPKHeaderKeyEndOfHeader:
+      case KPKHeaderKeyEndOfHeader: {
         [dataReader skipBytes:fieldSize];
         self.headerLength = dataReader.offset;
-        return YES; // done!
         
+        /* sanity check cipher size */
+        KPKCipher *cipher = [[KPKCipher alloc] initWithUUID:self.cipherUUID];
+        if( self.encryptionIV.length != cipher.IVLength ) {
+          KPKCreateError(error, KPKErrorWrongIVVectorSize);
+          return NO;
+        }
+        return YES;
+      }
       case KPKHeaderKeyComment:
         /* we do not use the comment */
         [dataReader skipBytes:fieldSize];
@@ -290,15 +297,9 @@
         self.mutableKeyDerivationParameters[KPKAESSeedOption] = [dataReader readDataWithLength:fieldSize];
         break;
         
-      case KPKHeaderKeyEncryptionIV: {
-        KPKCipher *cipher = [[KPKCipher alloc] initWithUUID:self.cipherUUID];
-        if( fieldSize != cipher.IVLength ) {
-          KPKCreateError(error, KPKErrorWrongIVVectorSize);
-          return NO;
-        }
+      case KPKHeaderKeyEncryptionIV:
         self.encryptionIV = [dataReader readDataWithLength:fieldSize];
         break;
-      }
       case KPKHeaderKeyProtectedKey:
         if(isVersion4) {
           NSLog(@"Unexptected Public Header field ProtectedKey in KDBX4 public header!");

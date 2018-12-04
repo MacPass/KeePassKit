@@ -72,6 +72,16 @@
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx4));
 }
 
+- (void)testLoadingDifferenHeaderFieldOrderStrongBox {
+  NSError *error;
+  NSData *data =  [self _loadTestDataBase:@"Strongbox" extension:@"kdbx"];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" keyFileData:nil];
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(tree, @"Loading should result in a tree object");
+  
+  XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx4));
+}
+
 - (void)testLoadingInnerHeaderBinaries {
   NSError *error;
   NSData *data =  [self _loadTestDataBase:@"BinaryAttachments_test" extension:@"kdbx"];
