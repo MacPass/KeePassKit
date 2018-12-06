@@ -26,6 +26,8 @@
 #import "KPKAutotype.h"
 #import "KPKErrors.h"
 
+static NSString * const _KPKWindowAssociationWildcard = @"KPKWindowAssociationWildcard";
+
 @interface KPKWindowAssociation () {
   BOOL _regularExpressionValid;
 }
@@ -168,8 +170,9 @@
     pattern = [self.windowTitle substringWithRange:NSMakeRange(2, self.windowTitle.length - 4)];
   }
   else {
-    NSString *regEx = [self.windowTitle stringByReplacingOccurrencesOfString:@"*" withString:@".*" options:NSCaseInsensitiveSearch range:NSMakeRange(0, self.windowTitle.length)];
-    /* ensure that the regex matches exactly */
+    NSString *regEx = [self.windowTitle stringByReplacingOccurrencesOfString:@"*" withString:_KPKWindowAssociationWildcard options:NSCaseInsensitiveSearch range:NSMakeRange(0, self.windowTitle.length)];
+    regEx = [NSRegularExpression escapedPatternForString:regEx];
+    regEx = [regEx stringByReplacingOccurrencesOfString:_KPKWindowAssociationWildcard withString:@".*"];
     pattern = [NSString stringWithFormat:@"^%@$", regEx];
     
   }

@@ -63,11 +63,20 @@
   KPKWindowAssociation *pipedTitle = [[KPKWindowAssociation alloc] initWithWindowTitle:@"test|this" keystrokeSequence:@""];
   XCTAssertFalse([pipedTitle matchesWindowTitle:@"no"]);
   XCTAssertFalse([pipedTitle matchesWindowTitle:@"match"]);
-  //XCTAssertFalse([pipedTitle matchesWindowTitle:@"test|"]);
-  //XCTAssertFalse([pipedTitle matchesWindowTitle:@"test"]);
+  XCTAssertFalse([pipedTitle matchesWindowTitle:@"test|"]);
+  XCTAssertFalse([pipedTitle matchesWindowTitle:@"test"]);
   XCTAssertFalse([pipedTitle matchesWindowTitle:@"|"]);
-  //XCTAssertFalse([pipedTitle matchesWindowTitle:@"this"]);
+  XCTAssertFalse([pipedTitle matchesWindowTitle:@"this"]);
   XCTAssertTrue([pipedTitle matchesWindowTitle:@"test|this"]);
+  
+  KPKWindowAssociation *regularExpressionLookalike = [[KPKWindowAssociation alloc] initWithWindowTitle:@"[a-z]*[0-9]*" keystrokeSequence:@""];
+  XCTAssertFalse([regularExpressionLookalike matchesWindowTitle:@"a0"]);
+  XCTAssertFalse([regularExpressionLookalike matchesWindowTitle:@"0123"]);
+  XCTAssertFalse([regularExpressionLookalike matchesWindowTitle:@"0a"]);
+  XCTAssertTrue([regularExpressionLookalike matchesWindowTitle:@"[a-z][0-9]"]);
+  XCTAssertTrue([regularExpressionLookalike matchesWindowTitle:@"[a-z]hallo[0-9]"]);
+  XCTAssertTrue([regularExpressionLookalike matchesWindowTitle:@"[a-z]1one2two3three![0-9]"]);
+  XCTAssertTrue([regularExpressionLookalike matchesWindowTitle:@"[a-z][0-9]at0-001ß"]);
   
   KPKWindowAssociation *characterClasses = [[KPKWindowAssociation alloc] initWithWindowTitle:@"//^([a-z]*|[0-9]+)$//" keystrokeSequence:@""];
   XCTAssertTrue([characterClasses matchesWindowTitle:@"0"]);
