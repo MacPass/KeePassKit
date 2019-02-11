@@ -22,15 +22,16 @@
 
 #import "KPKTree.h"
 #import "KPKTree_Private.h"
-#import "KPKNode_Private.h"
+#import "KPKAttribute.h"
 #import "KPKEntry.h"
 #import "KPKEntry_Private.h"
+#import "KPKFormat.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
+#import "KPKNode_Private.h"
 #import "KPKTimeInfo.h"
-#import "KPKFormat.h"
 #import "KPKKeyDerivation.h"
 #import "KPKAESKeyDerivation.h"
 
@@ -150,6 +151,10 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   if(!parent.hasDefaultIcon) {
     entry.iconUUID = parent.iconUUID;
     entry.iconId = parent.iconId;
+  }
+  /* ensure default protection settings when creating a new entry */
+  for(KPKAttribute *attribute in entry.mutableAttributes) {
+    attribute.protect |= [self.metaData protectAttributeWithKey:attribute.key];
   }
   /* set parent at the end to prefent undo registration */
   entry.parent = parent;

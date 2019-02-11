@@ -338,22 +338,9 @@
   KPKAddXmlElement(attributeElement, kKPKXmlKey, attribute.key);
   
   NSAssert(metaData, @"Metadata needs to be present for attributes");
-  BOOL isProtected = attribute.protect;
-  if([attribute.key isEqualToString:kKPKNotesKey]) {
-    isProtected |= metaData.protectNotes;
-  }
-  else if([attribute.key isEqualToString:kKPKPasswordKey] ) {
-    isProtected |= metaData.protectPassword;
-  }
-  else if([attribute.key isEqualToString:kKPKTitleKey] ) {
-    isProtected |= metaData.protectTitle;
-  }
-  else if([attribute.key isEqualToString:kKPKURLKey] ) {
-    isProtected |= metaData.protectUrl;
-  }
-  else if([attribute.key isEqualToString:kKPKUsernameKey] ) {
-    isProtected |= metaData.protectUserName;
-  }
+  
+  BOOL isProtected = (attribute.protect || [metaData protectAttributeWithKey:attribute.key]);
+  
   /*
    If we write direct output without later proteting the stream,
    e.g. direct output to XML we need to strip any invalid characters

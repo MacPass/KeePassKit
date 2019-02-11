@@ -97,4 +97,6 @@
 - (void)setValue:(NSString *)value forCustomDataKey:(NSString *)key;
 - (void)setValue:(id)value forPublicCustomDataKey:(NSString *)key;
 
+- (BOOL)protectAttributeWithKey:(NSString *)key;
+
 @end

@@ -298,6 +298,26 @@ if( self.updateTiming ) { \
   return _customIconCache[uuid];
 }
 
+- (BOOL)protectAttributeWithKey:(NSString *)key {
+  
+  if([key isEqualToString:kKPKNotesKey]) {
+    return metaData.protectNotes;
+  }
+  if([key isEqualToString:kKPKPasswordKey] ) {
+    return metaData.protectPassword;
+  }
+  if([key isEqualToString:kKPKTitleKey] ) {
+    return metaData.protectTitle;
+  }
+  if([key isEqualToString:kKPKURLKey] ) {
+    return metaData.protectUrl;
+  }
+  if([key isEqualToString:kKPKUsernameKey] ) {
+    return metaData.protectUserName;
+  }
+  return NO;
+}
+
 - (void)_mergeWithMetaDataFromTree:(KPKTree *)tree mode:(KPKSynchronizationMode)mode {
   KPKMetaData *otherMetaData = tree.metaData;
   
