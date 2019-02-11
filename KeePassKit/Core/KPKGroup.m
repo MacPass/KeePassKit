@@ -440,9 +440,13 @@ static NSSet *_observedKeyPathsSet;
 
 - (KPKFileVersion)minimumVersion {
   KPKFileVersion minimum = { KPKDatabaseFormatKdb, kKPKKdbFileVersion };
-  if(self.customData.count > 0) {
+  if(self.customData.count > 0 ) {
     minimum.format = KPKDatabaseFormatKdbx;
     minimum.version = kKPKKdbxFileVersion4;
+  }
+  if( self.isSearchEnabled != KPKInherit || self.isAutoTypeEnabled != KPKInherit) {
+    minimum.format = KPKDatabaseFormatKdbx;
+    minimum.version = kKPKKdbxFileVersion3;
   }
   for(KPKGroup *group in self.mutableGroups) {
     minimum = KPKFileVersionMax(minimum, group.minimumVersion);
