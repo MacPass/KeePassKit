@@ -301,19 +301,19 @@ if( self.updateTiming ) { \
 - (BOOL)protectAttributeWithKey:(NSString *)key {
   
   if([key isEqualToString:kKPKNotesKey]) {
-    return metaData.protectNotes;
+    return self.protectNotes;
   }
   if([key isEqualToString:kKPKPasswordKey] ) {
-    return metaData.protectPassword;
+    return self.protectPassword;
   }
   if([key isEqualToString:kKPKTitleKey] ) {
-    return metaData.protectTitle;
+    return self.protectTitle;
   }
   if([key isEqualToString:kKPKURLKey] ) {
-    return metaData.protectUrl;
+    return self.protectUrl;
   }
   if([key isEqualToString:kKPKUsernameKey] ) {
-    return metaData.protectUserName;
+    return self.protectUserName;
   }
   return NO;
 }
