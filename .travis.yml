@@ -12,7 +12,7 @@ before_install:
 - |
   if [ "$TEST_TYPE" = iOS ] || [ "$TEST_TYPE" = macOS ] || [ "$TEST_TYPE" = tvOS ]; then
     carthage bootstrap --platform $TEST_TYPE
-    gem install xcpretty --no-ri --no-rdoc --no-document --quiet
+    gem install xcpretty --no-document --quiet
   fi
 
 script:
