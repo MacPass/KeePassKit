@@ -11,7 +11,7 @@
 #import "KeePassKit.h"
 #import "KeePassKit_Private.h"
 
-@interface KPKTestNSStringCommands : XCTestCase
+@interface KPKTestNSStringCommands : XCTestCase <KPKTreeDelegate>
 @end
 
 @implementation KPKTestNSStringCommands
@@ -84,15 +84,42 @@
 }
 
 - (void)testHasReference {
-  XCTAssertFalse(@"ThisIsNoReferencRef:".hasReference);
-  XCTAssertFalse(@"ThisIsNoReferenc{Ref:".hasReference);
-  XCTAssertFalse(@"ThisIsNoReferencRef:}".hasReference);
-  XCTAssertFalse(@"ThisIsNoReferenc{Ref:}".hasReference);
-  XCTAssertFalse(@"ThisIsNoReferenc{Ref:A@I:".hasReference);
-  XCTAssertFalse(@"ThisIsNoReferencRef:A@I:}".hasReference);
+  XCTAssertFalse(@"ThisIsNoReferencRef:".kpk_hasReference);
+  XCTAssertFalse(@"ThisIsNoReferenc{Ref:".kpk_hasReference);
+  XCTAssertFalse(@"ThisIsNoReferencRef:}".kpk_hasReference);
+  XCTAssertFalse(@"ThisIsNoReferenc{Ref:}".kpk_hasReference);
+  XCTAssertFalse(@"ThisIsNoReferenc{Ref:A@I:".kpk_hasReference);
+  XCTAssertFalse(@"ThisIsNoReferencRef:A@I:}".kpk_hasReference);
   
-  XCTAssertTrue(@"ThisIsAReferenc{Ref:A@I:}".hasReference);
-  XCTAssertTrue(@"ThisIsAReferenc{Ref:U@U:}".hasReference);
+  XCTAssertTrue(@"ThisIsAReferenc{Ref:A@I:}".kpk_hasReference);
+  XCTAssertTrue(@"ThisIsAReferenc{Ref:U@U:}".kpk_hasReference);
 }
+
+- (void)testNonInteractiveOption {
+  KPKTree *tree = [[KPKTree alloc] init];
+  tree.root = [[KPKGroup alloc] init];
+  tree.delegate = self;
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  [entry addToGroup:tree.root];
+  entry.username = @"User";
+  NSString *sequence = @"{PICKCHARS}{USERNAME}{PICKFIELD}{USERNAME}";
+  NSString *result = [NSString stringWithFormat:@"{PICKCHARS}%@{PICKFIELD}%@", entry.username, entry.username];
+  XCTAssertEqualObjects([sequence kpk_finalValueForEntry:entry options:KPKCommandEvaluationOptionSkipUserInteraction], result);
+}
+
+/*
+- (NSString *)tree:(KPKTree *)tree resolvePlaceholder:(NSString *)placeholder forEntry:(KPKEntry *)entry;
+ */
+- (NSString *)tree:(KPKTree *)tree resolvePickCharsPlaceholderForEntry:(KPKEntry *)entry field:(NSString *_Nullable)field options:(NSString *_Nullable)options {
+  return @"{RESOLVED-PICKCHARS}";
+}
+- (NSString *)tree:(KPKTree *)tree resolveHMACOTPPlaceholderForEntry:(KPKEntry *)entry {
+  return @"{RESOLVED-HMACOTP}";
+}
+- (NSString *)tree:(KPKTree *)tree resolvePickFieldPlaceholderForEntry:(KPKEntry *)entry {
+  return @"{RESOLVEDPICKFIELD}";
+}
+
+
 
 @end
