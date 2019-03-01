@@ -76,7 +76,7 @@
 
 @implementation NSString (KPKEvaluation)
 
-- (BOOL)hasReference {
+- (BOOL)kpk_hasReference {
   return [KPKCommandParser hasReferenceInSequence:self];
 }
 

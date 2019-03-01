@@ -133,9 +133,9 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
     NSString *searchField = [self.sequence substringWithRange:[result rangeAtIndex:2]];
     NSString *criteria = [self.sequence substringWithRange:[result rangeAtIndex:3]];
     NSString *substitute = [self _retrieveValueOfKey:valueField
-                                                 withKey:searchField
-                                                matching:criteria
-                                               recursion:level];
+                                             withKey:searchField
+                                            matching:criteria
+                                           recursion:level];
     if(substitute) {
       [mutableSelf replaceCharactersInRange:result.range withString:substitute];
       didReplace = YES;
@@ -314,44 +314,51 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
   }
   /*
    the following placeholders might have side effect (e.g. increase counters, show ui)
-   therefor only call out for them if there are actually found!
+   therefor only call out for them if there are actually found or if we are allowed to show them!
    */
-  /* {HMACOTP} */
-  if([treeDelegate respondsToSelector:@selector(tree:resolveHMACOTPPlaceholderForEntry:)]) {
-    if(NSNotFound != [self.sequence rangeOfString:kKPKPlaceholderHMACOTP options:NSCaseInsensitiveSearch].location) {
-      NSString *value = [treeDelegate tree:entry.tree resolveHMACOTPPlaceholderForEntry:entry];
-      if(value) {
-        caseInsensitiveMappings[kKPKPlaceholderHMACOTP] = value;
-      }
-    }
-  }
-  /* {PICKFIELD} */
   
-  if([treeDelegate respondsToSelector:@selector(tree:resolvePickFieldPlaceholderForEntry:)]) {
-    if(NSNotFound != [self.sequence rangeOfString:kKPKPlaceholderPickField options:NSCaseInsensitiveSearch].location) {
-      NSString *value = [treeDelegate tree:entry.tree resolvePickFieldPlaceholderForEntry:entry];
-      if(value) {
-        caseInsensitiveMappings[kKPKPlaceholderPickField] = value;
+  BOOL nonInteractive = (self.context.options & KPKCommandEvaluationOptionSkipUserInteraction);
+  
+  if(!nonInteractive) {
+    BOOL readOnly = (self.context.options & KPKCommandEvaluationOptionReadOnly);
+    if(!readOnly) {
+      /* {HMACOTP} */
+      if([treeDelegate respondsToSelector:@selector(tree:resolveHMACOTPPlaceholderForEntry:)]) {
+        if(NSNotFound != [self.sequence rangeOfString:kKPKPlaceholderHMACOTP options:NSCaseInsensitiveSearch].location) {
+          NSString *value = [treeDelegate tree:entry.tree resolveHMACOTPPlaceholderForEntry:entry];
+          if(value) {
+            caseInsensitiveMappings[kKPKPlaceholderHMACOTP] = value;
+          }
+        }
       }
     }
-  }
-  /* {PICKCHARS:Field:Options} */
-  if([treeDelegate respondsToSelector:@selector(tree:resolvePickCharsPlaceholderForEntry:field:options:)]) {
-    static NSRegularExpression *pickCharsRegEx;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-      pickCharsRegEx = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"\\{%@:?([^:\\{\\}]+)?:?([^:\\{\\}]+)?\\}", kKPKPlaceholderPickChars] options:NSRegularExpressionCaseInsensitive error:nil];
-      NSAssert(pickCharsRegEx, @"Internal error while trying to allocate pickchars regex");
-    });
-    if(NSNotFound != [self.sequence rangeOfString:kKPKPlaceholderPickChars options:NSCaseInsensitiveSearch].location) {
-      for(NSTextCheckingResult *result in [pickCharsRegEx matchesInString:self.sequence options:0 range:NSMakeRange(0, self.sequence.length)]) {
-        NSRange fieldRange = [result rangeAtIndex:1];
-        NSRange optionsRange = [result rangeAtIndex:2];
-        NSString *field = NSNotFound == fieldRange.location ? kKPKPasswordKey : [self.sequence substringWithRange:fieldRange];
-        NSString *options = NSNotFound == optionsRange.location ? nil : [self.sequence substringWithRange:optionsRange];
-        NSString *value = [treeDelegate tree:entry.tree resolvePickCharsPlaceholderForEntry:entry field:field options:options];
+    /* {PICKFIELD} */
+    if([treeDelegate respondsToSelector:@selector(tree:resolvePickFieldPlaceholderForEntry:)]) {
+      if(NSNotFound != [self.sequence rangeOfString:kKPKPlaceholderPickField options:NSCaseInsensitiveSearch].location) {
+        NSString *value = [treeDelegate tree:entry.tree resolvePickFieldPlaceholderForEntry:entry];
         if(value) {
-          caseSensitiviveMappings[[self.sequence substringWithRange:result.range]] = value;
+          caseInsensitiveMappings[kKPKPlaceholderPickField] = value;
+        }
+      }
+    }
+    /* {PICKCHARS:Field:Options} */
+    if([treeDelegate respondsToSelector:@selector(tree:resolvePickCharsPlaceholderForEntry:field:options:)]) {
+      static NSRegularExpression *pickCharsRegEx;
+      static dispatch_once_t onceToken;
+      dispatch_once(&onceToken, ^{
+        pickCharsRegEx = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"\\{%@:?([^:\\{\\}]+)?:?([^:\\{\\}]+)?\\}", kKPKPlaceholderPickChars] options:NSRegularExpressionCaseInsensitive error:nil];
+        NSAssert(pickCharsRegEx, @"Internal error while trying to allocate pickchars regex");
+      });
+      if(NSNotFound != [self.sequence rangeOfString:kKPKPlaceholderPickChars options:NSCaseInsensitiveSearch].location) {
+        for(NSTextCheckingResult *result in [pickCharsRegEx matchesInString:self.sequence options:0 range:NSMakeRange(0, self.sequence.length)]) {
+          NSRange fieldRange = [result rangeAtIndex:1];
+          NSRange optionsRange = [result rangeAtIndex:2];
+          NSString *field = NSNotFound == fieldRange.location ? kKPKPasswordKey : [self.sequence substringWithRange:fieldRange];
+          NSString *options = NSNotFound == optionsRange.location ? nil : [self.sequence substringWithRange:optionsRange];
+          NSString *value = [treeDelegate tree:entry.tree resolvePickCharsPlaceholderForEntry:entry field:field options:options];
+          if(value) {
+            caseSensitiviveMappings[[self.sequence substringWithRange:result.range]] = value;
+          }
         }
       }
     }
@@ -405,7 +412,7 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
   }
   
   if(didReplace) {
-   self.sequence = supstitudedString; // copy so immutable
+    self.sequence = supstitudedString; // copy so immutable
   }
   return didReplace;
 }
