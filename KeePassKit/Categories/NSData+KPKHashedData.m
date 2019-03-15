@@ -46,48 +46,46 @@
   uint8_t computedHmac[32];
   uint32_t blockLength;
   
-  @autoreleasepool {
-    while(reader.hasBytesAvailable) {
-      if(reader.readableBytes < 32) {
-        KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
-        return nil;
-      }
-      /* hmac */
-      [reader readBytes:expectedHmac length:32];
-      /* size */
-      if(reader.readableBytes < 4) {
-        KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
-        return nil;
-      }
-      blockLength = CFSwapInt32LittleToHost(reader.read4Bytes);
-      if(reader.readableBytes < blockLength) {
-        KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
-        return nil;
-      }
-      
-      NSData *hmacKey = [key kpk_hmacKeyForIndex:blockIndex];
-      NSData *content = [reader readDataWithLength:blockLength];
-      
-      CCHmacContext context;
-      uint64_t LEblockIndex = CFSwapInt64HostToLittle(blockIndex);
-      uint64_t LEblockLength = CFSwapInt32HostToLittle(blockLength);
-      CCHmacInit(&context, kCCHmacAlgSHA256, hmacKey.bytes, (CC_LONG)hmacKey.length);
-      CCHmacUpdate(&context, &LEblockIndex, 8);
-      CCHmacUpdate(&context, &LEblockLength, 4);
-      if(content.length > 0) {
-        CCHmacUpdate(&context, content.bytes, (CC_LONG)content.length);
-      }
-      CCHmacFinal(&context, computedHmac);
-      if(memcmp(expectedHmac, computedHmac, 32)) {
-        KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
-        return nil;
-      }
-      if(blockLength == 0) {
-        return [unhashedData copy]; // return the final data
-      }
-      [unhashedData appendData:content];
-      blockIndex++;
+  while(reader.hasBytesAvailable) {
+    if(reader.readableBytes < 32) {
+      KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
+      return nil;
     }
+    /* hmac */
+    [reader readBytes:expectedHmac length:32];
+    /* size */
+    if(reader.readableBytes < 4) {
+      KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
+      return nil;
+    }
+    blockLength = CFSwapInt32LittleToHost(reader.read4Bytes);
+    if(reader.readableBytes < blockLength) {
+      KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
+      return nil;
+    }
+    
+    NSData *hmacKey = [key kpk_hmacKeyForIndex:blockIndex];
+    NSData *content = [reader readDataWithLength:blockLength];
+    
+    CCHmacContext context;
+    uint64_t LEblockIndex = CFSwapInt64HostToLittle(blockIndex);
+    uint64_t LEblockLength = CFSwapInt32HostToLittle(blockLength);
+    CCHmacInit(&context, kCCHmacAlgSHA256, hmacKey.bytes, (CC_LONG)hmacKey.length);
+    CCHmacUpdate(&context, &LEblockIndex, 8);
+    CCHmacUpdate(&context, &LEblockLength, 4);
+    if(content.length > 0) {
+      CCHmacUpdate(&context, content.bytes, (CC_LONG)content.length);
+    }
+    CCHmacFinal(&context, computedHmac);
+    if(memcmp(expectedHmac, computedHmac, 32)) {
+      KPKCreateError(error, KPKErrorKdbxCorruptedEncryptionStream);
+      return nil;
+    }
+    if(blockLength == 0) {
+      return [unhashedData copy]; // return the final data
+    }
+    [unhashedData appendData:content];
+    blockIndex++;
   }
   return nil;
 }
