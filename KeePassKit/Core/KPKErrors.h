@@ -28,7 +28,7 @@
 FOUNDATION_EXPORT NSString *const KPKErrorDomain;
 
 //void KPKCreateError( NSError **errorPtr, NSInteger errorCode, NSString *localizedKey, char *comment);
-void KPKCreateError( NSError **errorPtr, NSInteger errorCode);
+void KPKCreateError( NSError * __autoreleasing *errorPtr, NSInteger errorCode);
 
 typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorNoData = 1000, // No data given

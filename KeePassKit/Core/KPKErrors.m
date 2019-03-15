@@ -78,7 +78,7 @@ NSString *KPKErrorMessageForCode(NSInteger errorCode) {
   return msg ? msg : NSLocalizedStringFromTableInBundle(@"ERROR_UNKNOWN_ERROR_CODE", nil, bundle, @"Error message for unknown error code");
 }
 
-void KPKCreateError( NSError **errorPtr, NSInteger errorCode) {
+void KPKCreateError( NSError * __autoreleasing *errorPtr, NSInteger errorCode) {
   if(errorPtr == NULL) {
     return; // no valid error pointer
   }

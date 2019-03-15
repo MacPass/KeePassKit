@@ -224,7 +224,7 @@
   return [self.data subdataWithRange:NSMakeRange(0, self.headerLength)];
 }
 
-- (BOOL)_parseHeader:(NSData *)data error:(NSError **)error {
+- (BOOL)_parseHeader:(NSData *)data error:(NSError * __autoreleasing *)error {
   /*
    We need to start reading after the version information,
    4bytes signature 1, 4 bytes signature , 4 bytes version
@@ -373,7 +373,7 @@
   }
 }
 
-- (NSUInteger)_parseInnerHeader:(NSData *)data error:(NSError **)error {
+- (NSUInteger)_parseInnerHeader:(NSData *)data error:(NSError *__autoreleasing *)error {
   /*
    struct innerHeaderElement {
    uint8_t type;
