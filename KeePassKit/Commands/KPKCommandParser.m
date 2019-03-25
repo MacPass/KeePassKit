@@ -173,6 +173,9 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
   NSArray *allEntries = tree.allEntries;
   if([searchKey isEqualToString:kKPKReferenceCustomFieldKey]) {
     for(KPKEntry *entry in allEntries) {
+      if([entry isEqual:self.context.entry]) {
+        continue; // self reference is not allowed
+      }
       for(KPKAttribute *attribute in entry.customAttributes) {
         KPKCommandEvaluationContext *context = [KPKCommandEvaluationContext contextWithEntry:self.context.entry options:self.context.options];
         KPKCommandParser *parser = [[KPKCommandParser alloc] initWithSequnce:attribute.value context:context];
@@ -206,8 +209,11 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
       return nil; // no valid attribute key supplied
     }
     for(KPKEntry *entry in allEntries) {
-      KPKCommandEvaluationContext *context = [KPKCommandEvaluationContext contextWithEntry:self.context.entry options:self.context.options];
-      KPKCommandParser *parser = [[KPKCommandParser alloc] initWithSequnce:[self.context.entry valueForAttributeWithKey:searchAttributeKey] context:context];
+      if([entry isEqual:self.context.entry]) {
+        continue; // references to self aren't supported
+      }
+      KPKCommandEvaluationContext *context = [KPKCommandEvaluationContext contextWithEntry:entry options:self.context.options];
+      KPKCommandParser *parser = [[KPKCommandParser alloc] initWithSequnce:[entry valueForAttributeWithKey:searchAttributeKey] context:context];
       NSString *value = [parser _finalValueWithRecursion:recursion + 1];
       NSRange matchRange = [value rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, value.length)];
       if(matchRange.length > 0) {

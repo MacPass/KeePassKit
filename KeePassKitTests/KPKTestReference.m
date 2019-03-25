@@ -73,6 +73,36 @@
   }];
 }
 
+- (void)testReferenceSearchKeys {
+  
+  self.entry1.title = @"Entry1Title";
+  self.entry1.username = @"Entry1Username";
+  self.entry1.password = @"Entry1Password";
+  self.entry1.url = @"Entry1URL";
+  self.entry1.notes = @"Entry1Notes";
+  
+  
+  
+  NSDictionary *values = @{ @(KPKReferenceFieldTitle)       : self.entry1.title,
+                            @(KPKReferenceFieldUsername)    : self.entry1.username,
+                            @(KPKReferenceFieldPassword)    : self.entry1.password,
+                            @(KPKReferenceFieldUrl)         : self.entry1.url,
+                            @(KPKReferenceFieldNotes)       : self.entry1.notes };
+  
+  for(NSNumber *where in values) {
+    KPKReferenceField whereField = where.unsignedIntegerValue;
+    
+    for(NSNumber *reference in values) {
+      KPKReferenceField referenceField = reference.unsignedIntegerValue;
+      NSString *referenceString = [KPKReferenceBuilder reference:referenceField where:whereField is:values[where]];
+      self.entry2.title = referenceString;
+      NSString *actual = [self.entry2.title kpk_finalValueForEntry:self.entry2];
+      XCTAssertEqualObjects(actual, values[reference]);
+    }
+  }
+}
+
+
 - (void)testPlaceholderReference {
   self.entry1.title = [NSString stringWithFormat:@"{%@}", kKPKUsernameKey];
   self.entry1.username = [NSString stringWithFormat:@"Title1{REF:T@i:%@}", self.entry2.uuid.UUIDString];
