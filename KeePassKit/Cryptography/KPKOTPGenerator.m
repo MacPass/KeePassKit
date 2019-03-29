@@ -52,8 +52,8 @@
   uint8_t mac[CC_SHA1_DIGEST_LENGTH];
   CCHmac(kCCHmacAlgSHA1, key.bytes, key.length, &beCounter, sizeof(uint64_t), mac);
   
-  /* offset ist lowest 4 bit on last byte */
-  uint8_t offset = (mac[19] & 0xf);
+  /* offset is lowest 4 bit on last byte */
+  uint8_t offset = (mac[CC_SHA1_DIGEST_LENGTH - 1] & 0xf);
   
   uint8_t otp[4];
   otp[0] = mac[offset] & 0x7f;
