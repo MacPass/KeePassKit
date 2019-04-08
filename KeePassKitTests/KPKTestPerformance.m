@@ -28,7 +28,6 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
   NSMutableArray<NSUUID *> *groupUUIDs;
   NSMutableArray *attributes;
   NSMutableArray *binaries;
-
 }
 @end
 
@@ -64,11 +63,11 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
   attributes = [[NSMutableArray alloc] initWithCapacity:_kKPKAttributeCount];
   binaries = [[NSMutableArray alloc] initWithCapacity:_kKPKBinaryCount];
   for(NSUInteger index = 0; index < _kKPKAttributeCount; index++) {
-    [attributes addObject:[[KPKAttribute alloc] initWithKey:[NSString stringWithFormat:@"Key %lu", index] value:[NSString stringWithFormat:@"Value %lu", index]]];
+    [attributes addObject:[[KPKAttribute alloc] initWithKey:[NSString stringWithFormat:@"Key %lu", (unsigned long)index] value:[NSString stringWithFormat:@"Value %lu", (unsigned long)index]]];
   }
   
   for(NSUInteger index = 0; index < _kKPKBinaryCount; index++) {
-    KPKBinary *binary = [[KPKBinary alloc] initWithName:[NSString stringWithFormat:@"Binary %lu", index] data:[NSData kpk_dataWithRandomBytes:1024*1024]];
+    KPKBinary *binary = [[KPKBinary alloc] initWithName:[NSString stringWithFormat:@"Binary %lu", (unsigned long)index] data:[NSData kpk_dataWithRandomBytes:1024*1024]];
     [binaries addObject:binary];
   }
 
@@ -92,6 +91,16 @@ NSUInteger const _kKPKGroupAndEntryCount = 50000;
 - (void)tearDown {
   // Put teardown code here. This method is called after the invocation of each test method in the class.
   [super tearDown];
+
+  testEntry = nil;
+  benchmarkDict = nil;
+  tree = nil;
+  entries = nil;
+  groups = nil;
+  entryUUIDs = nil;
+  groupUUIDs = nil;
+  attributes = nil;
+  binaries = nil;
 }
 
 - (void)testAttributeLookupPerformanceA {
