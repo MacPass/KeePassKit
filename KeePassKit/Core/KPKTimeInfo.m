@@ -220,11 +220,13 @@
 }
 
 - (void)_reducePrecicionToSeconds {
+  KPK_SCOPED_NO_BEGIN(self.updateTiming);
   self.creationDate = self.creationDate.kpk_dateWithReducedPrecsion;
   self.modificationDate = self.modificationDate.kpk_dateWithReducedPrecsion;
   self.accessDate = self.accessDate.kpk_dateWithReducedPrecsion;
   self.expirationDate = self.expirationDate.kpk_dateWithReducedPrecsion;
   self.locationChanged = self.locationChanged.kpk_dateWithReducedPrecsion;
+  KPK_SCOPED_NO_END(self.updateTiming);
 }
 
 @end
