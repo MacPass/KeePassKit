@@ -6,7 +6,7 @@ env:
   matrix:
     - TEST_TYPE=iOS
     - TEST_TYPE=macOS
-    #- TEST_TYPE=tvOS
+    - TEST_TYPE=tvOS
 
 before_install:
 - |
