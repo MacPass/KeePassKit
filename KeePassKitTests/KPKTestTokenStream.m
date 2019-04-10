@@ -81,14 +81,14 @@
 }
 
 - (void)testEmojiTokenizing {
-  KPKTokenStream *stream = [KPKTokenStream tokenStreamWithValue:@"{TAB}😀A👢B👴🏼C{🐱}{ENTER}"];
+  KPKTokenStream *stream = [KPKTokenStream tokenStreamWithValue:@"{TAB}😀A👢B👴C{🐱}{ENTER}"];
   XCTAssertEqual(9, stream.tokenCount);
   XCTAssertEqualObjects(@"{TAB}", stream.tokens[0].value);
   XCTAssertEqualObjects(@"😀", stream.tokens[1].value);
   XCTAssertEqualObjects(@"A", stream.tokens[2].value);
   XCTAssertEqualObjects(@"👢", stream.tokens[3].value);
   XCTAssertEqualObjects(@"B", stream.tokens[4].value);
-  XCTAssertEqualObjects(@"👴🏼", stream.tokens[5].value);
+  XCTAssertEqualObjects(@"👴", stream.tokens[5].value);
   XCTAssertEqualObjects(@"C", stream.tokens[6].value);
   XCTAssertEqualObjects(@"{🐱}", stream.tokens[7].value);
   XCTAssertEqualObjects(@"{ENTER}", stream.tokens[8].value);

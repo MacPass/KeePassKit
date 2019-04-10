@@ -22,7 +22,12 @@
    convert big endian to host
    if conversion took place, we need to shift by the size
    */
+#if __LP64__ || NS_BUILD_32_LIKE_64
   NSUInteger beNumber = (NSUInteger)CFSwapInt64BigToHost(number);
+#else
+  NSUInteger beNumber = (NSUInteger)CFSwapInt32BigToHost(number);
+#endif
+
   if(beNumber != number) {
     beNumber >>= (8 * (sizeof(NSUInteger) - self.length));
   }

@@ -3622,6 +3622,7 @@
 					"$(SRCROOT)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = KeePassKitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hicknhacksoftware.KeePassKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3639,6 +3640,7 @@
 					"$(SRCROOT)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = KeePassKitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hicknhacksoftware.KeePassKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3850,7 +3852,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lxml2";
@@ -3904,7 +3905,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "-lxml2";
 				SDKROOT = macosx;
@@ -3981,6 +3981,7 @@
 				);
 				INFOPLIST_FILE = KeePassKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hicknhacksoftware.KeePassKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -3997,6 +3998,7 @@
 				);
 				INFOPLIST_FILE = KeePassKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hicknhacksoftware.KeePassKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
