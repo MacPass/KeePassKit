@@ -50,6 +50,13 @@
   XCTAssertTrue([catchAllAssociation matchesWindowTitle:@"Test - some more!"]);
   XCTAssertTrue([catchAllAssociation matchesWindowTitle:@"This is a Test!"]);
 
+  KPKWindowAssociation *partialCatch = [[KPKWindowAssociation alloc] initWithWindowTitle:@"//Part(.*)//" keystrokeSequence:@""];
+  XCTAssertTrue([partialCatch matchesWindowTitle:@"Part"]);
+  XCTAssertTrue([partialCatch matchesWindowTitle:@"Part 1"]);
+  XCTAssertTrue([partialCatch matchesWindowTitle:@"Parts"]);
+  XCTAssertTrue([partialCatch matchesWindowTitle:@"Even more Parts"]);
+
+  
   KPKWindowAssociation *option = [[KPKWindowAssociation alloc] initWithWindowTitle:@"//match|this|or|that//" keystrokeSequence:@""];
   XCTAssertTrue([option matchesWindowTitle:@"match"]);
   XCTAssertTrue([option matchesWindowTitle:@"this"]);
