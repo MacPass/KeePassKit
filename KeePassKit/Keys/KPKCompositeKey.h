@@ -57,7 +57,7 @@
 /**
  *  Updates the password and keyfile for the composite key
  *  @param password the new password, can be nil
- *  @param key      the new key file URL, can be nil
+ *  @param keyFileData the new key file data, can be nil
  */
 - (void)setPassword:(NSString *)password andKeyFileData:(NSData *)keyFileData;
 
