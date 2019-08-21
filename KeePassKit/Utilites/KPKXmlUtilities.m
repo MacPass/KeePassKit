@@ -37,7 +37,7 @@ static NSDate *referenceDate(void) {
     components.calendar = calendar;
     components.year = 1;
     components.month = 1;
-    components.day = 1;
+    components.day = 3; // Specs say 1 but there seems to be an issue with dotNet epoch date so we move up 2 days
     components.hour = 0;
     components.minute = 0;
     referenceDate = [components date];
@@ -67,7 +67,8 @@ NSString * KPKStringFromLong(NSInteger integer) {
 
 NSString *KPKStringFromDate(NSDate *date, BOOL isRelativeDate) {
   if(isRelativeDate) {
-    uint64_t interval = [date timeIntervalSinceDate:referenceDate()];
+    uint64_t interval = CFSwapInt64HostToLittle([date timeIntervalSinceDate:referenceDate()]);
+    
     return [[NSData dataWithBytesNoCopy:&interval length:8 freeWhenDone:NO] base64EncodedStringWithOptions:0];
   }
   return date.kpk_UTCString;
@@ -138,6 +139,7 @@ NSDate *KPKXmlDate(DDXMLElement *element, NSString *name, BOOL isRelativeDate) {
     }
     uint64_t interval;
     [data getBytes:&interval length:8];
+    interval = CFSwapInt64LittleToHost(interval);
     return [referenceDate() dateByAddingTimeInterval:interval];
   }
   return [NSDate kpk_dateFromUTCString:value];
