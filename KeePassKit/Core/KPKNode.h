@@ -147,7 +147,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
  */
 @property (nonatomic, readonly, copy) NSString *breadcrumb;
 /**
- *  Retursn the path of groups this group is under. The group names a separated by the given separator
+ *  Returns the path of groups this group is under. The group names a separated by the given separator
  *
  *  @param separator a string that is used as group name separator
  *  @return NSString of the groups breadcrumb.
