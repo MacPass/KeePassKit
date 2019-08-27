@@ -250,7 +250,7 @@
 }
 
 - (NSString *)breadcrumbWithSeparator:(NSString *)separator {
-  if(self.parent && (self.rootGroup != self.parent)) {
+  if(self.parent) {
     return [[self.parent breadcrumbWithSeparator:separator] stringByAppendingFormat:@"%@%@", separator, self.title];
   }
   return self.title;
