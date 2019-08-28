@@ -99,8 +99,11 @@
   XCTAssertEqualObjects([self.entry.username kpk_finalValueForEntry:self.entry], @"PasswordUsernamePasswordUsernamePasswordUsernamePasswordUsernamePasswordUsername");
 }
 
-- (void)testPickFieldPlaceholder {
+- (void)testMalformedPickCharsPlaceholder {
+  self.tree.delegate = self;
+  self.entry.username = @"{PICKCHARS:Title,C=5}";
   
+  XCTAssertEqualObjects([self.entry.username kpk_finalValueForEntry:self.entry], @"");
 }
 
 #pragma mark - KPKTreeDelegate;
@@ -109,6 +112,10 @@
     return @"-MyPlaceholderValue-";
   }
   return nil;
+}
+
+- (NSString *)tree:(KPKTree *)tree resolvePickFieldPlaceholderForEntry:(KPKEntry *)entry {
+  return @"pickedField";
 }
 
 - (NSString *)tree:(KPKTree *)tree resolvePickCharsPlaceholderForValue:(NSString *)value options:(NSString *)options {
