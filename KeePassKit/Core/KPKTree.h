@@ -84,7 +84,7 @@ FOUNDATION_EXTERN NSString *const KPKEntryKey;
  */
 - (NSString *)tree:(KPKTree *)tree resolvePlaceholder:(NSString *)placeholder forEntry:(KPKEntry *)entry;
 /* specialized placeholder to speed up lookup */
-- (NSString *)tree:(KPKTree *)tree resolvePickCharsPlaceholderForEntry:(KPKEntry *)entry field:(NSString *_Nullable)field options:(NSString *_Nullable)options;
+- (NSString *)tree:(KPKTree *)tree resolvePickCharsPlaceholderForValue:(NSString *)value options:(NSString *_Nullable)options;
 - (NSString *)tree:(KPKTree *)tree resolveHMACOTPPlaceholderForEntry:(KPKEntry *)entry;
 - (NSString *)tree:(KPKTree *)tree resolvePickFieldPlaceholderForEntry:(KPKEntry *)entry;
 /**

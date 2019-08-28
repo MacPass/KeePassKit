@@ -70,7 +70,7 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
 
 - (NSString *)_finalValueWithRecursion:(NSUInteger)recursion {
   if(KPKReachedMaxiumRecursionLevel(recursion)) {
-    return self.sequence;
+    return @""; //self.sequence;
   }
   /* if we do not have any curly brackets there's nothing to do */
   
@@ -236,7 +236,7 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
 }
 
 - (BOOL)_evaluatePlaceholderWithRecursion:(NSUInteger)recursion {
-  if(recursion > _KPKMaxiumRecursionLevel) {
+  if(KPKReachedMaxiumRecursionLevel(recursion)) {
     return NO;
   }
   KPKEntry *entry = self.context.entry;
@@ -348,7 +348,7 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
       }
     }
     /* {PICKCHARS:Field:Options} */
-    if([treeDelegate respondsToSelector:@selector(tree:resolvePickCharsPlaceholderForEntry:field:options:)]) {
+    if([treeDelegate respondsToSelector:@selector(tree:resolvePickCharsPlaceholderForValue:options:)]) {
       static NSRegularExpression *pickCharsRegEx;
       static dispatch_once_t onceToken;
       dispatch_once(&onceToken, ^{
@@ -361,7 +361,12 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
           NSRange optionsRange = [result rangeAtIndex:2];
           NSString *field = NSNotFound == fieldRange.location ? kKPKPasswordKey : [self.sequence substringWithRange:fieldRange];
           NSString *options = NSNotFound == optionsRange.location ? nil : [self.sequence substringWithRange:optionsRange];
-          NSString *value = [treeDelegate tree:entry.tree resolvePickCharsPlaceholderForEntry:entry field:field options:options];
+          /* retrieve the field value before with recursion awareness */
+          KPKCommandEvaluationContext *context = [KPKCommandEvaluationContext contextWithEntry:entry options:self.context.options];
+          KPKCommandParser *parser = [[KPKCommandParser alloc] initWithSequnce:[entry valueForAttributeWithKey:field] context:context];
+          NSString *pickValue = [parser _finalValueWithRecursion:recursion + 1];
+          /* then let the delegate do the string-picking */
+          NSString *value = [treeDelegate tree:entry.tree resolvePickCharsPlaceholderForValue:pickValue options:options];
           if(value) {
             caseSensitiviveMappings[[self.sequence substringWithRange:result.range]] = value;
           }
