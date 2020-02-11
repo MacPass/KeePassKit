@@ -80,7 +80,7 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   [entry setCustomData:@"CustomEntryDataA" forKey:@"EntryKeyA"];
   [entry addToGroup:self.kdbxTreeA.root];
   
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
   NSData *kdbxData = [self.kdbxTreeA encryptWithKey:key format:KPKDatabaseFormatKdbx error:nil];
   /* load both trees to ensure dates are seconds precision */
   self.kdbxTreeB = [[KPKTree alloc] initWithData:kdbxData key:key error:nil];

@@ -20,7 +20,7 @@
 - (void)testWriting {
   NSError __autoreleasing *error = nil;
   NSURL *dbUrl = [self _urlForFile:@"CustomIcon_Password_1234" extension:@"kdbx"];
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
   KPKTree *tree = [[KPKTree alloc] initWithContentsOfUrl:dbUrl key:key error:&error];
   XCTAssertNotNil(tree, @"Tree should be created");
   error = nil;
@@ -51,7 +51,7 @@
   
   NSUUID *entryUUID = entry.uuid;
   
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   NSError *error;
   NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:&error];
   XCTAssertNil(error);
@@ -86,7 +86,7 @@
   entry.iconUUID = icon.uuid;
   
   NSError *error;
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:&error];
   XCTAssertNil(error);
   XCTAssertNotNil(data);
@@ -119,7 +119,7 @@
   tree.metaData.databaseDescription = databaseDescription;
   
   NSError *error;
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:&error];
   XCTAssertNil(error);
   XCTAssertNotNil(data);
@@ -150,7 +150,7 @@
   tree.trash = trash;
   
   NSError *error;
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdb error:&error];
   XCTAssertNil(error);
   XCTAssertNotNil(data);

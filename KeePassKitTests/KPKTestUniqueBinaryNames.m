@@ -41,7 +41,8 @@
   NSBundle *myBundle = [NSBundle bundleForClass:self.class];
   NSURL *url = [myBundle URLForResource:@"Error_DuplicateAttachments_1234" withExtension:@"kdbx"];
   NSData *data = [NSData dataWithContentsOfURL:url];
-  KPKCompositeKey  *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
+  KPKCompositeKey  *key = [[KPKCompositeKey alloc] init];
+  [key addKey:[KPKKey keyWithPassword:@"1234"]];
   NSError *error;
   
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];

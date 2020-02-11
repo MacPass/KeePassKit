@@ -10,6 +10,6 @@
 
 @interface KPKKey ()
 
-@property (nonatomic, copy) NSData *data;
+@property (nonatomic, copy) NSData *rawData;
 
 @end

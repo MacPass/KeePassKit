@@ -9,6 +9,7 @@
 @import Foundation;
 
 #import "NSDate+KPKAdditions.h"
+#import "NSData+KPKBase32.h"
 
 #import "KPKXmlTreeReader.h"
 

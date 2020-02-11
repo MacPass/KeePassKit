@@ -8,14 +8,16 @@
 
 @import Foundation;
 
+#import "KPKFormat.h"
+
 @interface KPKKey : NSObject
 
-@property (nonatomic, readonly, copy) NSData *data;
-
-+ (instancetype)keyWithContentOfURL:(NSURL *)url;
++ (instancetype)keyWithKeyFileData:(NSData *)data;
 + (instancetype)keyWithPassword:(NSString *)password;
 
 - (instancetype)initWithPassword:(NSString *)password;
-- (instancetype)initWithContentOfURL:(NSURL *)url;
+- (instancetype)initWithKeyFileData:(NSData *)data;
+
+- (NSData *)dataForFormat:(KPKDatabaseFormat)format;
 
 @end

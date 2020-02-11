@@ -21,7 +21,7 @@
 - (void)testXmlWriting {
   NSData *data = [self _loadBundleData:@"CustomIcon_Password_1234" extension:@"kdbx"];
   NSError *error;
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   
   KPKFileVersion kdbx3 = { KPKDatabaseFormatKdbx, kKPKKdbxFileVersion3 };
@@ -59,7 +59,7 @@
   
   XCTAssertEqualObjects(entry.autotype.defaultKeystrokeSequence, sequence);
   
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
   NSError *error;
   NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
   XCTAssertNotNil(data, @"Tree encryption yields data!");
@@ -85,7 +85,7 @@
   
   [entry addToGroup:tree.root];
   
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
   NSError *error;
   NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
   XCTAssertNotNil(data, @"Tree encryption yields data!");
@@ -121,7 +121,7 @@
   NSUUID *enabledUUID = enabledGroup.uuid;
   NSUUID *disabledUUID = disabledGroup.uuid;
 
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
   NSError *error;
   NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
   XCTAssertNotNil(data, @"Tree encryption yields data!");
@@ -166,7 +166,7 @@
   NSUUID *disabledUUID = disabledGroup.uuid;
   NSUUID *enabledUUID = enabledGroup.uuid;
   
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
   NSError *error;
   NSData *data = [tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
   XCTAssertNotNil(data, @"Tree encryption yields data!");

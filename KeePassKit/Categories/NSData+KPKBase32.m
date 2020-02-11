@@ -60,4 +60,8 @@
   return self;
 }
 
+- (NSString *)base32EncodedString {
+  return @"";
+}
+
 @end

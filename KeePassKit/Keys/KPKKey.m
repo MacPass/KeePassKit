@@ -7,25 +7,31 @@
 //
 
 #import "KPKKey.h"
+#import "KPKKey_Private.h"
 #import "KPKFileKey.h"
 #import "KPKPasswordKey.h"
 
 @implementation KPKKey
 
-+ (instancetype)keyWithContentOfURL:(NSURL *)url {
-  return [[KPKFileKey alloc] initWithContentOfURL:url];
++ (instancetype)keyWithKeyFileData:(NSData *)data {
+  return [[KPKFileKey alloc] initWithKeyFileData:data];
 }
 
 + (instancetype)keyWithPassword:(NSString *)password {
   return [[KPKPasswordKey alloc] initWithPassword:password];
 }
 
-- (instancetype)initWithContentOfURL:(NSURL *)url {
+- (instancetype)initWithKeyFileData:(NSData *)data {
   [self doesNotRecognizeSelector:_cmd];
   return nil;
 }
 
 - (instancetype)initWithPassword:(NSString *)password {
+  [self doesNotRecognizeSelector:_cmd];
+  return nil;
+}
+
+- (NSData *)dataForFormat:(KPKDatabaseFormat)format {
   [self doesNotRecognizeSelector:_cmd];
   return nil;
 }

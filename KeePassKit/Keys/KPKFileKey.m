@@ -9,17 +9,26 @@
 #import "KPKFileKey.h"
 #import "KPKKey_Private.h"
 
-#import "NSData+CommonCrypto.h"
+#import "NSData+KPKKeyFile.h"
 
 @implementation KPKFileKey
 
-- (instancetype)initWithContentOfURL:(NSURL *)url {
-  self = [self init];
+- (instancetype)initWithKeyFileData:(NSData *)data {
+  self = [super init];
   if(self) {
-    NSError *error;
-    self.data = [NSData dataWithContentsOfURL:url options:0 error:&error];
+    /* parsing is done when data for format is requested */
+    self.rawData = data;
   }
   return self;
+}
+
+- (NSData *)dataForFormat:(KPKDatabaseFormat)format {
+  NSError *error;
+  NSData *data = [NSData kpk_keyDataForData:self.rawData version:format error:&error];
+  if(error) {
+    NSLog(@"Error while trying to parse key data %@: %@", self.rawData, error );
+  }
+  return data;
 }
 
 @end

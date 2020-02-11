@@ -16,9 +16,13 @@
 - (instancetype)initWithPassword:(NSString *)password {
   self = [self init];
   if(self) {
-    self.data = [password dataUsingEncoding:NSUTF8StringEncoding].SHA256Hash;
+    self.rawData = [password dataUsingEncoding:NSUTF8StringEncoding].SHA256Hash;
   }
   return self;
+}
+
+- (NSData *)dataForFormat:(KPKDatabaseFormat)format {
+  return self.rawData;
 }
 
 @end

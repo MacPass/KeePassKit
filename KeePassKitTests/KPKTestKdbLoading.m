@@ -18,28 +18,28 @@
 @implementation KPKTestKdbLoading
 
 - (void)testAESDecryption {
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
   NSData *data = [self _loadTestDataBase:@"Test_Password_1234" extension:@"kdb"];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:NULL];
   XCTAssertNotNil(tree, @"AES decryption yields a valid tree");
 }
 
 - (void)testTwofishDecryption {
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   NSData *data = [self _loadTestDataBase:@"TwofishCipher256bit_test" extension:@"kdb"];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:NULL];
   XCTAssertNotNil(tree, @"Twofish decryption yields a valid tree");
 }
 
 - (void)testValidFile {
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"1234" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
   NSData *data = [self _loadTestDataBase:@"Test_Password_1234" extension:@"kdb"];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:NULL];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
 }
 
 - (void)testWrongPassword {
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"wrongPassword" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"wrongPassword"]]];
   NSData *data = [self _loadTestDataBase:@"KeePass1_native_test" extension:@"kdb"];
   NSError *error;
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
@@ -61,7 +61,7 @@
 
 - (void)testCustomIconLoading {
   NSData *data = [self _loadTestDataBase:@"KDB1_KeePassX_test" extension:@"kdb"];
-  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithPassword:@"test" keyFileData:nil];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:NULL];
   XCTAssertNotNil(tree, @"Tree should be loaded" );
   

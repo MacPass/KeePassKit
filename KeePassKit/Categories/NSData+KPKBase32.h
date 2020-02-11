@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 
 /*
- 
- 
  Value Encoding  Value Encoding  Value Encoding  Value Encoding
  0 A             9 J            18 S            27 3
  1 B            10 K            19 T            28 4
@@ -26,7 +24,10 @@
 
 @interface NSData (KPKBase32)
 
+@property (nonatomic, copy, readonly) NSString *base32EncodedString;
+
 + (instancetype)dataWithBase32EncodedString:(NSString *)string;
 - (instancetype)initWithBase32EncodedString:(NSString *)string;
+
 
 @end
