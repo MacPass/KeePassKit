@@ -153,7 +153,7 @@ static const uint16_t kKPKVariantDictionaryCritical = 0xFF00;
     }
   }
   /* If we get called on NSMutableDictionary vent the NSMutableDictionary instead of a immutable one */
-  if([self.class isSubclassOfClass:[NSMutableDictionary class]]) {
+  if([self.class isSubclassOfClass:NSMutableDictionary.class]) {
     self = dictionary;
   }
   else {
