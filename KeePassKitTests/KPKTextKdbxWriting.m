@@ -23,8 +23,7 @@
 - (void)setUp {
   [super setUp];
   
-  //uint8_t bytes[] = {0x00,0x01,0x02,0x03,0x04,0x05};
-  self.data = [NSData kpk_dataWithRandomBytes:1024*1024*10]; //[NSData dataWithBytes:bytes length:sizeof(bytes)/sizeof(uint8_t)];
+  self.data = [NSData kpk_dataWithRandomBytes:1024*1024*10];
   
   self.tree = [[KPKTree alloc] init];
   self.tree.root = [[KPKGroup alloc] init];
@@ -148,9 +147,5 @@
   XCTAssertEqualObjects(anotherEntry.binaries[0].data, self.data);
   XCTAssertEqualObjects(anotherEntry.binaries[1].data, self.data);
 }
-
-
-
-
 
 @end
