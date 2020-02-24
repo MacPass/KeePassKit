@@ -9,6 +9,7 @@
 #import "KPKFileKey.h"
 #import "KPKKey_Private.h"
 
+#import "KPKData.h"
 #import "NSData+KPKKeyFile.h"
 
 @implementation KPKFileKey
@@ -17,14 +18,14 @@
   self = [super init];
   if(self) {
     /* parsing is done when data for format is requested */
-    self.rawData = data;
+    self.rawData = [[KPKData alloc] initWithProtectedData:data];
   }
   return self;
 }
 
 - (NSData *)dataForFormat:(KPKDatabaseFormat)format {
   NSError *error;
-  NSData *data = [NSData kpk_keyDataForData:self.rawData version:format error:&error];
+  NSData *data = [NSData kpk_keyDataForData:self.rawData.data version:format error:&error];
   if(error) {
     NSLog(@"Error while trying to parse key data %@: %@", self.rawData, error );
   }

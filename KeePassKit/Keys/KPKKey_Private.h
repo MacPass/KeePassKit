@@ -7,9 +7,10 @@
 //
 
 #import "KPKKey.h"
+#import "KPKData.h"
 
 @interface KPKKey ()
 
-@property (nonatomic, copy) NSData *rawData;
+@property (nonatomic, copy) KPKData *rawData;
 
 @end
