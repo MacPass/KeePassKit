@@ -46,8 +46,6 @@
 
 @property (strong) NSMutableArray *keys;
 
-@property (strong) NSDictionary<NSNumber *, NSData*>* hashes;
-
 @property (nonatomic) BOOL hasKeyFile;
 @property (nonatomic) BOOL hasPassword;
 
@@ -95,25 +93,11 @@
     return NO;
   }
   [self.keys addObject:key];
-  [self _updateCaches];
   return YES;
 }
 
 - (void)_clearKeys {
   [self.keys removeAllObjects];
-  [self _updateCaches];
-}
-
-- (void)_updateCaches {
-  self.hashes = nil;
-  
-  NSData *kdbData = [self _createKeyDataForFormat:KPKDatabaseFormatKdb];
-  NSData *kdbxData = [self _createKeyDataForFormat:KPKDatabaseFormatKdbx];
-  
-  self.hashes = @{
-    @(KPKDatabaseFormatKdb) : kdbData ? kdbData : [NSData data],
-    @(KPKDatabaseFormatKdbx) : kdbxData ? kdbxData : [NSData data]
-  };
 }
 
 - (NSData *)computeKeyDataForFormat:(KPKDatabaseFormat)format masterseed:(NSData *)seed cipher:(KPKCipher *)cipher keyDerivation:(KPKKeyDerivation *)keyDerivation hmacKey:(NSData **)hmacKey error:(NSError *__autoreleasing *)error {
@@ -123,7 +107,8 @@
     KPKCreateError(error, KPKErrorUnknownFileFormat);
     return nil;
   }
-  NSData *derivedData = [keyDerivation deriveData:self.hashes[@(format)]];
+  NSData *keyData = [self _createKeyDataForFormat:format];
+  NSData *derivedData = [keyDerivation deriveData:format]];
   if(!derivedData) {
     KPKCreateError(error, KPKErrorKeyDerivationFailed);
     return nil;
@@ -132,7 +117,7 @@
   NSMutableData *workingData = [seed mutableCopy];
   [workingData appendData:derivedData];
   
-  /* add 1 null byte for Hmac */
+  /* add 1 byte for Hmac */
   uint8_t oneByte = 0x01;
   [workingData appendBytes:&oneByte length:1];
   if(hmacKey) {
@@ -141,7 +126,7 @@
     CC_SHA512(workingData.bytes, (CC_LONG)workingData.length, hmacBuffer);
     *hmacKey = [NSData dataWithBytes:hmacBuffer length:64];
   }
-  /* do not use last 0-byte for key computation */
+  /* do not use last 1-byte for key computation */
   return [workingData kpk_resizeKeyDataRange:NSMakeRange(0, workingData.length - 1) toLength:cipher.keyLength];
 }
 
