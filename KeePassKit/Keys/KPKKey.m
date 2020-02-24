@@ -7,7 +7,6 @@
 //
 
 #import "KPKKey.h"
-#import "KPKKey_Private.h"
 #import "KPKFileKey.h"
 #import "KPKPasswordKey.h"
 

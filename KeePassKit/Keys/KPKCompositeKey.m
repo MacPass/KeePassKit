@@ -108,7 +108,7 @@
     return nil;
   }
   NSData *keyData = [self _createKeyDataForFormat:format];
-  NSData *derivedData = [keyDerivation deriveData:format]];
+  NSData *derivedData = [keyDerivation deriveData:keyData];
   if(!derivedData) {
     KPKCreateError(error, KPKErrorKeyDerivationFailed);
     return nil;

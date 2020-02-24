@@ -7,22 +7,29 @@
 //
 
 #import "KPKPasswordKey.h"
-#import "KPKKey_Private.h"
+#import "KPKData.h"
 
 #import "NSData+CommonCrypto.h"
+
+
+@interface KPKPasswordKey ()
+
+@property (nonatomic, copy) KPKData *passwordData;
+
+@end
 
 @implementation KPKPasswordKey
 
 - (instancetype)initWithPassword:(NSString *)password {
   self = [self init];
   if(self) {
-    self.rawData = [[KPKData alloc] initWithProtectedData:[password dataUsingEncoding:NSUTF8StringEncoding].SHA256Hash];
+    self.passwordData = [[KPKData alloc] initWithProtectedData:[password dataUsingEncoding:NSUTF8StringEncoding].SHA256Hash];
   }
   return self;
 }
 
 - (NSData *)dataForFormat:(KPKDatabaseFormat)format {
-  return self.rawData.data;
+  return self.passwordData.data;
 }
 
 @end

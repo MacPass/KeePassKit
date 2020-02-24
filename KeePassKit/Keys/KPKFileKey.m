@@ -7,29 +7,47 @@
 //
 
 #import "KPKFileKey.h"
-#import "KPKKey_Private.h"
 
 #import "KPKData.h"
 #import "NSData+KPKKeyFile.h"
+
+@interface KPKFileKey ()
+
+@property (nonatomic, copy) KPKData *kdbData;
+@property (nonatomic, copy) KPKData *kdbxData;
+
+@end
 
 @implementation KPKFileKey
 
 - (instancetype)initWithKeyFileData:(NSData *)data {
   self = [super init];
   if(self) {
-    /* parsing is done when data for format is requested */
-    self.rawData = [[KPKData alloc] initWithProtectedData:data];
+    NSError *error;
+    self.kdbData = [[KPKData alloc] initWithProtectedData:[NSData kpk_keyDataForData:data version:KPKDatabaseFormatKdb error:&error]];
+    if(!self.kdbData) {
+      NSLog(@"Error while parsing key file data %@", error);
+    }
+    self.kdbxData = [[KPKData alloc] initWithProtectedData:[NSData kpk_keyDataForData:data version:KPKDatabaseFormatKdbx error:&error]];
+    if(!self.kdbxData) {
+      NSLog(@"Error while parsing key file data %@", error);
+    }
   }
   return self;
 }
 
 - (NSData *)dataForFormat:(KPKDatabaseFormat)format {
-  NSError *error;
-  NSData *data = [NSData kpk_keyDataForData:self.rawData.data version:format error:&error];
-  if(error) {
-    NSLog(@"Error while trying to parse key data %@: %@", self.rawData, error );
+  switch (format) {
+    case KPKDatabaseFormatKdb:
+      return self.kdbData.data;
+    
+    case KPKDatabaseFormatKdbx:
+      return self.kdbxData.data;
+    
+    case KPKDatabaseFormatUnknown:
+    default:
+      return nil;
   }
-  return data;
 }
 
 @end
