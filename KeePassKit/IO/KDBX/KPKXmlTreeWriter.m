@@ -128,7 +128,7 @@
   DDXMLElement *metaElement = [DDXMLNode elementWithName:kKPKXmlMeta];
   KPKAddXmlElement(metaElement, kKPKXmlGenerator, metaData.generator);
   
-  if(self.headerHash) {
+  if(self.headerHash.length > 0) {
     KPKAddXmlElement(metaElement, kKPKXmlHeaderHash, [self.headerHash base64EncodedStringWithOptions:0]);
   }
   

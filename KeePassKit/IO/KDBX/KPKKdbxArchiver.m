@@ -143,7 +143,7 @@
 
 - (NSData *)headerHashForWriter:(KPKXmlTreeWriter *)writer {
   if(self.outputVersion4) {
-    return nil;
+    return NSData.data;
   }
   return [self.headerHash copy];
 }
