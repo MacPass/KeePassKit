@@ -17,8 +17,22 @@
 @implementation KPKTestNSData_KPKBase32
 
 
-- (void)testExample {
-  NSData *data = [[NSData alloc] initWithBase32EncodedString:@"ABCDEFGH"];
+- (void)testBase32Decoding {  
+  NSDictionary <NSString*, NSString *> *values = @{
+    @""       : @"",
+    @"f"      : @"MY======",
+    @"fo"     : @"MZXQ====",
+    @"foo"    : @"MZXW6===",
+    @"foob"   : @"MZXW6YQ=",
+    @"fooba"  : @"MZXW6YTB",
+    @"foobar" : @"MZXW6YTBOI======"
+  };
+  
+  for(NSString *key in values) {
+    NSData *expected = [key dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *actual = [NSData dataWithBase32EncodedString:values[key]];
+    XCTAssertEqualObjects(expected, actual);
+  }
 }
 
 @end
