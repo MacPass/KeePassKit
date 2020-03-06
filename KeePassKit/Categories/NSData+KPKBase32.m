@@ -36,25 +36,29 @@
       else if(character >= 'A' && character <= 'Z' ) {
         value = (character - 'A');
       }
-      else if(character >= '2' && character >= '7') {
+      else if(character >= '2' && character <= '7') {
         value = (character - '2') + 26;
       }
       else {
         break;
       }
-      byteValue <<= 5;
+      byteValue <<= 5 ;
       byteValue += value;
       bitsDecoded += 5;
     }
     NSUInteger padding = bitsDecoded % 8;
     byteValue >>= padding;
     bitsDecoded -= padding;
+    NSMutableData *chunkData = [[NSMutableData alloc] init];
     while(bitsDecoded > 0) {
       uint8_t byte = byteValue & 0xFF;
-      [data appendBytes:&byte length:1];
+      // prepend the data to the current working byte!
+      [chunkData replaceBytesInRange:NSMakeRange(0, 0) withBytes:&byte length:1];
       byteValue >>= 8;
       bitsDecoded -= 8;
     }
+    // apend bytes to final result
+    [data appendData:chunkData];
   }
   self = [data copy];
   return self;
