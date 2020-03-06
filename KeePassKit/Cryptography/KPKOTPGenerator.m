@@ -9,7 +9,7 @@
 #import "KPKOTPGenerator.h"
 #import <CommonCrypto/CommonCrypto.h>
 
-@implementation NSData (KPKIntegerConversion)
+@implementation NSData (KPKOTPDataConversion)
 
 - (NSUInteger)unsignedInteger {
   /*
@@ -27,7 +27,7 @@
 #else
   NSUInteger beNumber = (NSUInteger)CFSwapInt32BigToHost(number);
 #endif
-
+  
   if(beNumber != number) {
     beNumber >>= (8 * (sizeof(NSUInteger) - self.length));
   }
@@ -49,29 +49,67 @@
 
 @end
 
+@interface KPKOTPGenerator ()
+
+@property (copy) NSData *key;
+
+@end
+
 @implementation KPKOTPGenerator
 
-+ (NSData *)HMACOTPWithKey:(NSData *)key counter:(uint64_t)counter {
+- (instancetype)initWithOptions:(NSDictionary *)options {
+  self = [super init];
+  if(self) {
+  }
+  return self;
+}
+
+- (instancetype)init {
+  self = [self initWithOptions:@{}];
+  return self;
+}
+
++ (NSData *)HMACOTPWithKey:(NSData *)key counter:(uint64_t)counter algorithm:(KPKOTPHashAlgorithm)algorithm {
   // ensure we use big endian
   uint64_t beCounter = CFSwapInt64HostToBig(counter);
-  uint8_t mac[CC_SHA1_DIGEST_LENGTH];
-  CCHmac(kCCHmacAlgSHA1, key.bytes, key.length, &beCounter, sizeof(uint64_t), mac);
+   
+  uint8_t digestLenght = CC_SHA1_DIGEST_LENGTH;
+  CCHmacAlgorithm hashAlgorithm = kCCHmacAlgSHA1;
+  switch(algorithm) {
+    case KPKOTPHashAlgorithmSha1:
+      break; // nothing to do
+    case KPKOTPHashAlgorithmSha256:
+      hashAlgorithm = kCCHmacAlgSHA256;
+      digestLenght = CC_SHA256_DIGEST_LENGTH;
+      break;
+    case KPKOTPHashAlgorithmSha512:
+      hashAlgorithm = kCCHmacAlgSHA512;
+      digestLenght = CC_SHA256_DIGEST_LENGTH;
+      break;
+    default:
+      // should not happen
+      return nil;
+      break;
+  }
+  
+  uint8_t mac[digestLenght];
+  CCHmac(hashAlgorithm, key.bytes, key.length, &beCounter, sizeof(uint64_t), mac);
   
   /* offset is lowest 4 bit on last byte */
-  uint8_t offset = (mac[CC_SHA1_DIGEST_LENGTH - 1] & 0xf);
+  uint8_t offset = (mac[digestLenght - 1] & 0xf);
   
   uint8_t otp[4];
   otp[0] = mac[offset] & 0x7f;
   otp[1] = mac[offset + 1];
   otp[2] = mac[offset + 2];
   otp[3] = mac[offset + 3];
-
-  return [NSData dataWithBytes:&otp length:sizeof(uint32_t)];
   
+  return [NSData dataWithBytes:&otp length:sizeof(uint32_t)];
 }
-+ (NSData *)TOTPWithKey:(NSData *)key time:(NSTimeInterval)time slice:(NSUInteger)slice base:(NSUInteger)base {
+
++ (NSData *)TOTPWithKey:(NSData *)key time:(NSTimeInterval)time slice:(NSUInteger)slice base:(NSUInteger)base algorithm:(KPKOTPHashAlgorithm)algorithm {
   uint64_t counter = floor((time - base) / slice);
-  return [self HMACOTPWithKey:key counter:counter];
+  return [self HMACOTPWithKey:key counter:counter algorithm:algorithm];
 }
 
 @end
