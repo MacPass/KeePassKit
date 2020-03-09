@@ -65,7 +65,66 @@
 }
 
 - (NSString *)base32EncodedString {
-  return @"";
+  NSMutableString *encodedString = [[NSMutableString alloc] init];
+  NSArray *alphabet = @[
+    @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H",
+    @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P",
+    @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X",
+    @"Y", @"Z", @"2", @"3", @"4", @"5", @"6", @"7"
+  ];
+  
+  
+  NSUInteger bytesToEncode = self.length;
+  
+  NSUInteger byteGroupIndex = 0;
+  while(bytesToEncode >= 5) {
+    uint8_t byteGroup[5] = { 0, 0, 0, 0, 0 };
+
+    uint8_t encodedValues[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    
+    [self getBytes:byteGroup range:NSMakeRange(byteGroupIndex, sizeof(uint8_t))];
+    [self getBytes:(byteGroup + 1)  range:NSMakeRange(byteGroupIndex + 1, sizeof(uint8_t))];
+    [self getBytes:(byteGroup + 2) range:NSMakeRange(byteGroupIndex  + 2, sizeof(uint8_t))];
+    [self getBytes:(byteGroup + 3) range:NSMakeRange(byteGroupIndex + 3, sizeof(uint8_t))];
+    [self getBytes:(byteGroup + 4) range:NSMakeRange(byteGroupIndex + 4, sizeof(uint8_t))];
+    
+        
+    encodedValues[0] = (byteGroup[0] >> 3);
+    encodedValues[1] = (0b00000111 & byteGroup[0]) << 2;
+    encodedValues[1] |= byteGroup[1] >> 6;
+    encodedValues[2] = (0b00111110 & byteGroup[1]) >> 1;
+    encodedValues[3] = (0b00000001 & byteGroup[1]) << 4;
+    encodedValues[3] |= byteGroup[2] >> 4;
+    encodedValues[4] = (0b00001111 & byteGroup[2]) << 1;
+    encodedValues[4] |= byteGroup[3] >> 7;
+    encodedValues[5] = (0b01111100 & byteGroup[3]) >> 2;
+    encodedValues[6] = (0b00000011 & byteGroup[3]) << 3 ;
+    encodedValues[6] |= byteGroup[4] >> 5;
+    encodedValues[7] = (0b00011111 & byteGroup[4]);
+     
+    bytesToEncode -= 5;
+    byteGroupIndex += 5;
+    
+    for(NSUInteger index = 0; index < 8; index++) {
+      [encodedString appendString:alphabet[encodedValues[index]]];
+    }
+  }
+  switch(bytesToEncode) {
+    case 1:
+      break;
+    case 2:
+      break;
+    case 3:
+      break;
+    case 4:
+      break;
+    default:
+      break;
+  }
+  // encode last block!
+
+  
+  return [encodedString copy];;
 }
 
 @end

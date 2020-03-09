@@ -35,4 +35,22 @@
   }
 }
 
+- (void)testBase32Encoding {
+  NSDictionary <NSString*, NSString *> *values = @{
+    @""                 : @"",
+    @"MY======"         : @"f",
+    @"MZXQ===="         : @"fo",
+    @"MZXW6==="         : @"foo",
+    @"MZXW6YQ="         : @"foob",
+    @"MZXW6YTB"         : @"fooba",
+    @"MZXW6YTBOI======" : @"foobar"
+  };
+  
+  for(NSString *key in values) {
+    NSString *expected = key;
+    NSString *actual = [values[key] dataUsingEncoding:NSUTF8StringEncoding].base32EncodedString;
+    XCTAssertEqualObjects(expected, actual);
+  }
+}
+
 @end
