@@ -65,6 +65,7 @@
 }
 
 - (NSString *)base32EncodedString {
+  // TODO fix possible endianess bugs on big endian machines!
   NSMutableString *encodedString = [[NSMutableString alloc] init];
   NSArray *alphabet = @[
     @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H",
