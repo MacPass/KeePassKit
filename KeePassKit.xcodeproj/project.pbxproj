@@ -899,6 +899,8 @@
 		4CA1E49C1D8838BC00100002 /* KPKTestArgon2.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */; };
 		4CA6DB8E1DC3574200650417 /* KPKChaCha20RandomStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA6DB8C1DC3574200650417 /* KPKChaCha20RandomStream.h */; };
 		4CA6DB8F1DC3574200650417 /* KPKChaCha20RandomStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA6DB8D1DC3574200650417 /* KPKChaCha20RandomStream.m */; };
+		4CB048AA2417D65E00C2D2DC /* KPKTestNSData+KPKBase32.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6DD26236C860400C89993 /* KPKTestNSData+KPKBase32.m */; };
+		4CB048AB2417D65F00C2D2DC /* KPKTestNSData+KPKBase32.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6DD26236C860400C89993 /* KPKTestNSData+KPKBase32.m */; };
 		4CB13A0E1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
 		4CB13A0F1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
 		4CB13A101FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
@@ -3094,6 +3096,7 @@
 				9C37DE71225CB7D2002FC5BF /* KPKTestEmptyString.m in Sources */,
 				9C37DE72225CB7D2002FC5BF /* KPKTestNSString+KPKCommands.m in Sources */,
 				9C37DE73225CB7D2002FC5BF /* KPKTestWindowAssociationTitleMatching.m in Sources */,
+				4CB048AA2417D65E00C2D2DC /* KPKTestNSData+KPKBase32.m in Sources */,
 				9C37DE74225CB7D2002FC5BF /* KPKTestChaCha20.m in Sources */,
 				9C37DE75225CB7D2002FC5BF /* KPKTestTwofish.m in Sources */,
 				9C37DE76225CB7D2002FC5BF /* KPKTestHashedData.m in Sources */,
@@ -3243,6 +3246,7 @@
 				9C37DEA3225CB7DE002FC5BF /* KPKTestEmptyString.m in Sources */,
 				9C37DEA4225CB7DE002FC5BF /* KPKTestNSString+KPKCommands.m in Sources */,
 				9C37DEA5225CB7DE002FC5BF /* KPKTestWindowAssociationTitleMatching.m in Sources */,
+				4CB048AB2417D65F00C2D2DC /* KPKTestNSData+KPKBase32.m in Sources */,
 				9C37DEA6225CB7DE002FC5BF /* KPKTestChaCha20.m in Sources */,
 				9C37DEA7225CB7DE002FC5BF /* KPKTestTwofish.m in Sources */,
 				9C37DEA8225CB7DE002FC5BF /* KPKTestHashedData.m in Sources */,
