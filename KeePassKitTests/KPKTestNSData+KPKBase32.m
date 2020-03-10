@@ -17,6 +17,25 @@
 @implementation KPKTestNSData_KPKBase32
 
 
+- (void)testBase32EncodingDecoding {
+  for(NSUInteger dataLenght = 1; dataLenght < 128; dataLenght++) {
+    NSData *data = [NSData kpk_dataWithRandomBytes:dataLenght];
+    NSString *base32 = data.base32EncodedString;
+    NSData *decodedData = [[NSData alloc] initWithBase32EncodedString:base32];
+    XCTAssertEqualObjects(data, decodedData);
+  }
+}
+
+- (void)testBase32HexEncodingDecoding {
+  for(NSUInteger dataLenght = 1; dataLenght < 128; dataLenght++) {
+    NSData *data = [NSData kpk_dataWithRandomBytes:dataLenght];
+    NSString *base32Hex = data.base32HexEncodedString;
+    NSData *decodedData = [[NSData alloc] initWithBase32HexEncodedString:base32Hex];
+    XCTAssertEqualObjects(data, decodedData);
+  }
+}
+
+
 - (void)testBase32Decoding {  
   NSDictionary <NSString*, NSString *> *values = @{
     @""       : @"",
@@ -28,9 +47,23 @@
     @"foobar" : @"MZXW6YTBOI======"
   };
   
+  
+}
+
+- (void)testBase32HexDecoding {
+  NSDictionary <NSString*, NSString *> *values = @{
+    @"" : @"",
+    @"f" : @"CO======",
+    @"fo" : @"CPNG====",
+    @"foo" : @"CPNMU===",
+    @"foob" : @"CPNMUOG=",
+    @"fooba" : @"CPNMUOJ1",
+    @"foobar" : @"CPNMUOJ1E8======"
+  };
+  
   for(NSString *key in values) {
     NSData *expected = [key dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *actual = [NSData dataWithBase32EncodedString:values[key]];
+    NSData *actual = [NSData dataWithBase32HexEncodedString:values[key]];
     XCTAssertEqualObjects(expected, actual);
   }
 }
@@ -49,6 +82,24 @@
   for(NSString *key in values) {
     NSString *expected = key;
     NSString *actual = [values[key] dataUsingEncoding:NSUTF8StringEncoding].base32EncodedString;
+    XCTAssertEqualObjects(expected, actual);
+  }
+}
+
+- (void)testBase32HexEncoding {
+  NSDictionary <NSString*, NSString *> *values = @{
+    @""                 : @"",
+    @"CO======"         : @"f",
+    @"CPNG===="         : @"fo",
+    @"CPNMU==="         : @"foo",
+    @"CPNMUOG="         : @"foob",
+    @"CPNMUOJ1"         : @"fooba",
+    @"CPNMUOJ1E8======" : @"foobar"
+  };
+  
+  for(NSString *key in values) {
+    NSString *expected = key;
+    NSString *actual = [values[key] dataUsingEncoding:NSUTF8StringEncoding].base32HexEncodedString;
     XCTAssertEqualObjects(expected, actual);
   }
 }
