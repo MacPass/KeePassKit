@@ -47,6 +47,11 @@
     @"foobar" : @"MZXW6YTBOI======"
   };
   
+  for(NSString *key in values) {
+    NSData *expected = [key dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *actual = [NSData dataWithBase32EncodedString:values[key]];
+    XCTAssertEqualObjects(expected, actual);
+  }
   
 }
 
