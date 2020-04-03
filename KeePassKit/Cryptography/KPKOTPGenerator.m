@@ -9,18 +9,6 @@
 #import "KPKOTPGenerator.h"
 #import <CommonCrypto/CommonCrypto.h>
 
-static NSUInteger kKPKOTPPinDigitModulo[] = {
-  0,
-  10,
-  100,
-  1000,
-  10000,
-  100000,
-  1000000,
-  10000000,
-  100000000
-};
-
 @implementation NSData (KPKOTPDataConversion)
 
 - (NSUInteger)unsignedInteger {
@@ -48,6 +36,12 @@ static NSUInteger kKPKOTPPinDigitModulo[] = {
 
 @end
 
+@interface KPKOTPGenerator ()
+
+@property (readonly, copy) NSString *alphabet;
+
+@end
+
 @implementation KPKOTPGenerator
 
 - (instancetype)init {
@@ -65,6 +59,20 @@ static NSUInteger kKPKOTPPinDigitModulo[] = {
   return self;
 }
 
+- (NSString *)alphabet {
+  switch (self.type) {
+    case KPKOTPGeneratorHmacOTP:
+    case KPKOTPGeneratorTOTP:
+      return @"0123456789";
+      
+    case KPKOTPGeneratorSteamOTP:
+      return @"23456789BCDFGHJKMNPQRTVWXY";
+    default:
+      return @"";
+      break;
+  }
+}
+
 - (NSData *)data {
   if(![self _validateOptions]) {
     return NSData.data;
@@ -80,27 +88,28 @@ static NSUInteger kKPKOTPPinDigitModulo[] = {
   if(data.length == 0) {
     return @""; // invalid data
   }
-  NSUInteger decimal = data.unsignedInteger % kKPKOTPPinDigitModulo[self.numberOfDigits];
-  return [NSString stringWithFormat:@"%0*ld", (int)self.numberOfDigits, (unsigned long)decimal];
+  
+  NSUInteger decimal = data.unsignedInteger;
+  NSUInteger alphabetLength = self.alphabet.length;
+  NSMutableString *result = [[NSMutableString alloc] init];
+  while(result.length < self.numberOfDigits) {
+    NSUInteger code = decimal % alphabetLength;
+    if(code < alphabetLength) {
+      [result insertString:[self.alphabet substringWithRange:NSMakeRange(code, 1)] atIndex:0];
+    }
+    else {
+      return @""; // falure
+    }
+    decimal /= alphabetLength;
+  }
+  return [result copy];
 }
 
 - (BOOL)_validateOptions {
-  BOOL valid = (self.numberOfDigits >= 1 &&
-                self.numberOfDigits <= 8 &&
-                self.key.length > 0
-                );
-  
-  switch (self.type) {
-    case KPKOTPGeneratorHmacOTP:
-      break;
-    case KPKOTPGeneratorTOTP:
-      break;
-    case KPKOTPGeneratorSteamOTP:
-      valid = NO;
-    default:
-      valid = NO;
-  }
-  return valid;
+  return (self.numberOfDigits >= 1 &&
+          self.numberOfDigits <= 8 &&
+          self.key.length > 0
+          );
 }
 
 - (NSData *)_HMACOTPWithKey:(NSData *)key counter:(uint64_t)counter algorithm:(KPKOTPHashAlgorithm)algorithm {
