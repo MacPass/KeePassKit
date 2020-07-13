@@ -21,6 +21,10 @@
 @implementation KPKFileKey
 
 - (instancetype)initWithKeyFileData:(NSData *)data {
+  if(nil == data) {
+    self = nil;
+    return self;
+  }
   self = [super init];
   if(self) {
     NSError *error;

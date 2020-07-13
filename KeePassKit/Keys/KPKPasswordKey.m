@@ -21,6 +21,10 @@
 @implementation KPKPasswordKey
 
 - (instancetype)initWithPassword:(NSString *)password {
+  if(nil == password) {
+    self = nil;
+    return self;
+  }
   self = [self init];
   if(self) {
     self.passwordData = [[KPKData alloc] initWithProtectedData:[password dataUsingEncoding:NSUTF8StringEncoding].SHA256Hash];
