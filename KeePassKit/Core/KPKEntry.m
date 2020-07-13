@@ -469,8 +469,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)_setValue:(NSString *)value forAttributeWithKey:(NSString *)key {  
+  [self _setValue:value forAttributeWithKey:key sendChanges:YES];
+}
+
+- (void)_setValue:(NSString *)value forAttributeWithKey:(NSString *)key sendChanges:(BOOL)sendChanges {
   KPKAttribute *attribute = [self attributeWithKey:key];
-  BOOL postChanges = attribute.isDefault;
+  BOOL postChanges = sendChanges && attribute.isDefault;
   if(postChanges) {
     [self willChangeValueForKey:key.lowercaseString];
   }
@@ -478,6 +482,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(postChanges) {
     [self didChangeValueForKey:key.lowercaseString];
   }
+
 }
 
 #pragma mark -
@@ -633,31 +638,31 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (void)setTitle:(NSString *)title {
   [[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_TITLE", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the title of an enty")];
-  [self _setValue:title forAttributeWithKey:kKPKTitleKey];
+  [self _setValue:title forAttributeWithKey:kKPKTitleKey sendChanges:NO];
 }
 
 - (void)setUsername:(NSString *)username {
   [[self.undoManager prepareWithInvocationTarget:self] setUsername:self.username];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_USERNAME", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the username of an enty")];
-  [self _setValue:username forAttributeWithKey:kKPKUsernameKey];
+  [self _setValue:username forAttributeWithKey:kKPKUsernameKey sendChanges:NO];
 }
 
 - (void)setPassword:(NSString *)password {
   [[self.undoManager prepareWithInvocationTarget:self] setPassword:self.password];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_PASSWORD", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the password of an enty")];
-  [self _setValue:password forAttributeWithKey:kKPKPasswordKey];
+  [self _setValue:password forAttributeWithKey:kKPKPasswordKey sendChanges:NO];
 }
 
 - (void)setNotes:(NSString *)notes {
   [[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_NOTES", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the notes of an enty")];
-  [self _setValue:notes forAttributeWithKey:kKPKNotesKey];
+  [self _setValue:notes forAttributeWithKey:kKPKNotesKey sendChanges:NO];
 }
 
 - (void)setUrl:(NSString *)url {
   [[self.undoManager prepareWithInvocationTarget:self] setUrl:self.url];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_URL", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the url of an enty")];
-  [self _setValue:url forAttributeWithKey:kKPKURLKey];
+  [self _setValue:url forAttributeWithKey:kKPKURLKey sendChanges:NO];
 }
 
 - (void)setTags:(NSArray<NSString *> *)tags {
