@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, weak, readonly) KPKEntry *entry;
 
-+ (instancetype)autotypeFromNotes:(NSString *)notes;
+- (instancetype)initWithNotes:(NSString *)notes;
 
 - (BOOL)isEqualToAutotype:(KPKAutotype *)autotype;
 

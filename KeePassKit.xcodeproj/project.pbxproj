@@ -618,6 +618,14 @@
 		4C11184F1DCCD93F00254E1D /* twofish.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C11184D1DCCD93F00254E1D /* twofish.h */; };
 		4C15091D1C74AD10008A2C8E /* KPKMetaData_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */; };
 		4C152C5E1C7617D900380A3B /* KPKGroup_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */; };
+		4C16500924191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C16500724191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h */; };
+		4C16500A24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C16500724191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h */; };
+		4C16500B24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C16500724191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h */; };
+		4C16500C24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C16500724191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h */; };
+		4C16500D24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C16500824191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m */; };
+		4C16500E24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C16500824191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m */; };
+		4C16500F24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C16500824191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m */; };
+		4C16501024191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C16500824191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m */; };
 		4C188B731F74F49500B77D6E /* KPKTextUndoCustomIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C188B721F74F49500B77D6E /* KPKTextUndoCustomIcons.m */; };
 		4C18E51021B6DD3F007AE021 /* Strongbox.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C18E50F21B6DD3F007AE021 /* Strongbox.kdbx */; };
 		4C18E51121B6DD3F007AE021 /* Strongbox.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C18E50F21B6DD3F007AE021 /* Strongbox.kdbx */; };
@@ -1177,6 +1185,8 @@
 		4C11184D1DCCD93F00254E1D /* twofish.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = twofish.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C15091B1C74AD10008A2C8E /* KPKMetaData_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKMetaData_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4C152C5C1C7617D900380A3B /* KPKGroup_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = KPKGroup_Private.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4C16500724191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKAutotypeNotesSerializer.h; sourceTree = "<group>"; };
+		4C16500824191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKAutotypeNotesSerializer.m; sourceTree = "<group>"; };
 		4C188B721F74F49500B77D6E /* KPKTextUndoCustomIcons.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTextUndoCustomIcons.m; sourceTree = "<group>"; };
 		4C18E50F21B6DD3F007AE021 /* Strongbox.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Strongbox.kdbx; sourceTree = "<group>"; };
 		4C199DA01DCF310D00D4FDC8 /* TwofishCipher256bit_test.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; name = TwofishCipher256bit_test.kdb; path = Kdb/TwofishCipher256bit_test.kdb; sourceTree = "<group>"; };
@@ -1918,6 +1928,8 @@
 				4CBE26321EC595D200B93BE2 /* KPKPair.m */,
 				4C8990F91EE981940043B48D /* KPKReferenceBuilder.h */,
 				4C8990FA1EE981940043B48D /* KPKReferenceBuilder.m */,
+				4C16500724191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h */,
+				4C16500824191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m */,
 			);
 			path = Utilites;
 			sourceTree = "<group>";
@@ -2101,6 +2113,7 @@
 				4C8836B01FB4407900CD2CD1 /* KPKTokenStream.h in Headers */,
 				2D5124C41E9BCFA700D7EAF6 /* KPKTree+Serializing.h in Headers */,
 				2D5124C51E9BCFA700D7EAF6 /* KPKSalsa20RandomStream.h in Headers */,
+				4C16500A24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h in Headers */,
 				2D5124C61E9BCFA700D7EAF6 /* KPKNode.h in Headers */,
 				2D5124C71E9BCFA700D7EAF6 /* KPKMetaData_Private.h in Headers */,
 				2D5124C81E9BCFA700D7EAF6 /* KPKCipher.h in Headers */,
@@ -2224,6 +2237,7 @@
 				2D5125D01E9BD24500D7EAF6 /* KPKTree+Serializing.h in Headers */,
 				2D5125D11E9BD24500D7EAF6 /* KPKSalsa20RandomStream.h in Headers */,
 				2D5125D21E9BD24500D7EAF6 /* KPKNode.h in Headers */,
+				4C16500B24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h in Headers */,
 				2D5125D31E9BD24500D7EAF6 /* KPKMetaData_Private.h in Headers */,
 				2D5125D41E9BD24500D7EAF6 /* KPKCipher.h in Headers */,
 				2D5125D51E9BD24500D7EAF6 /* KPKTree.h in Headers */,
@@ -2347,6 +2361,7 @@
 				2D5126DC1E9BD34900D7EAF6 /* KPKTree+Serializing.h in Headers */,
 				2D5126DD1E9BD34900D7EAF6 /* KPKSalsa20RandomStream.h in Headers */,
 				2D5126DE1E9BD34900D7EAF6 /* KPKNode.h in Headers */,
+				4C16500C24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h in Headers */,
 				2D5126DF1E9BD34900D7EAF6 /* KPKMetaData_Private.h in Headers */,
 				2D5126E01E9BD34900D7EAF6 /* KPKCipher.h in Headers */,
 				2D5126E11E9BD34900D7EAF6 /* KPKTree.h in Headers */,
@@ -2505,6 +2520,7 @@
 				4C0B9D7D1DBFADE200E66CD6 /* KPKUnarchiver_Private.h in Headers */,
 				4C5CF3CC1BE10DF80019AA81 /* NSData+KPKKeyfile.h in Headers */,
 				4C62F6251D1D77DE0031795C /* KPKAttribute_Private.h in Headers */,
+				4C16500924191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h in Headers */,
 				4CA1E4841D8832BA00100002 /* argon2.h in Headers */,
 				4C7C3FA51D81D620008D8961 /* KPKPasswordKey.h in Headers */,
 				4C5CF3DE1BE10DF80019AA81 /* NSUUID+KPKAdditions.h in Headers */,
@@ -3015,6 +3031,7 @@
 				4CBEFF3A1F99E59E007362E4 /* KPKKdbTreeWriter.m in Sources */,
 				2D5124711E9BCFA700D7EAF6 /* KPKTree+Synchronization.m in Sources */,
 				2D5124721E9BCFA700D7EAF6 /* KPKWindowAssociation.m in Sources */,
+				4C16500E24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m in Sources */,
 				2D5124731E9BCFA700D7EAF6 /* KPKNumber.m in Sources */,
 				2D5124761E9BCFA700D7EAF6 /* twofish.c in Sources */,
 				2D5124771E9BCFA700D7EAF6 /* KPKDataStreamWriter.m in Sources */,
@@ -3165,6 +3182,7 @@
 				2D51257C1E9BD24500D7EAF6 /* KPKUnarchiver.m in Sources */,
 				2D51257D1E9BD24500D7EAF6 /* KPKTree+Synchronization.m in Sources */,
 				2D51257E1E9BD24500D7EAF6 /* KPKWindowAssociation.m in Sources */,
+				4C16500F24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m in Sources */,
 				2D51257F1E9BD24500D7EAF6 /* KPKNumber.m in Sources */,
 				2D5125821E9BD24500D7EAF6 /* twofish.c in Sources */,
 				2D5125831E9BD24500D7EAF6 /* KPKDataStreamWriter.m in Sources */,
@@ -3315,6 +3333,7 @@
 				2D5126881E9BD34900D7EAF6 /* KPKUnarchiver.m in Sources */,
 				2D5126891E9BD34900D7EAF6 /* KPKTree+Synchronization.m in Sources */,
 				2D51268A1E9BD34900D7EAF6 /* KPKWindowAssociation.m in Sources */,
+				4C16501024191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m in Sources */,
 				2D51268B1E9BD34900D7EAF6 /* KPKNumber.m in Sources */,
 				2D51268E1E9BD34900D7EAF6 /* twofish.c in Sources */,
 				2D51268F1E9BD34900D7EAF6 /* KPKDataStreamWriter.m in Sources */,
@@ -3397,6 +3416,7 @@
 				4C7C3F9F1D81D620008D8961 /* KPKCompositeKey.m in Sources */,
 				4C7C3F9C1D81D620008D8961 /* KPKKeyDerivation.m in Sources */,
 				4C5C82A71D79C13800A1DEA6 /* KPKCipher.m in Sources */,
+				4C16500D24191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m in Sources */,
 				4CA1E48C1D8832BA00100002 /* core.c in Sources */,
 				4C5CF46A1BE10E100019AA81 /* KPKTree+Serializing.m in Sources */,
 				4C7F842A1DC8B6D2000B6EF7 /* NSData+KPKKeyComputation.m in Sources */,

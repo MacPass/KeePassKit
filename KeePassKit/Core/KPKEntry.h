@@ -48,12 +48,12 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryDatabaseColor;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXCustomIcon;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXCustomIcon2;
 FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassXGroupTreeState;
-FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitGroupUUIDs; // backport of group UUIDS of KDBX files to KDB UUIDs
-FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitDeletedObjects; // backport of deleted object of KDBX to KDB files
-FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitDatabaseName;
-FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitDatabaseDescription;
-FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitTrash;
-FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;
+FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitGroupUUIDs;           // backport of group UUIDS of KDBX files to KDB UUIDs
+FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitDeletedObjects;       // backport of deleted object of KDBX to KDB files
+FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitDatabaseName;         // backport of database name of KDBX to KDB files
+FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitDatabaseDescription;  // backport of database decription of KDBX to KDB files
+FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitTrash;                // backport of trash settings of KDBX to KDB files
+FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;        // backport of user templates of KDBX to KDB files
 
 /**
  *  Entries hold ciritcal information to store passwords
@@ -86,7 +86,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;
 @property (nonatomic, copy, readonly) NSArray<KPKEntry *> *history;
 @property (nonatomic, readonly) BOOL isHistory;
 /**
- *	Additional information is stores in MetaEntrie in KDB files.
+ *	Additional information is stored in MetaEntrie in KDB files.
  *  This function determines wheter the entry is a meta entry or not.
  *	@return	YES if this entry is a Meta Entry, NO if not
  */

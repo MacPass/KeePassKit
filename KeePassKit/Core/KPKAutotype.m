@@ -131,6 +131,13 @@
   }
   return self;
 }
+- (instancetype)initWithNotes:(NSString *)notes {
+  self = [self init];
+  if(self) {
+    [self _parseNotes:(NSString *)notes];
+  }
+  return self;
+}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
   self = [self init];
@@ -192,6 +199,10 @@
 }
 
 - (NSString *)autotypeNotes {
+  
+  if(self.hasDefaultKeystrokeSequence) {
+    
+  }
   NSAssert(NO, @"Missing implementation!");
   return nil;
 }
@@ -282,6 +293,10 @@
 
 - (BOOL)hasDefaultKeystrokeSequence {
   return ! (_defaultKeystrokeSequence.length > 0);
+}
+
+
+- (void)_parseNotes:(NSString *)notes {
 }
 
 #pragma mark -

@@ -468,8 +468,17 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return [self attributeWithKey:key].evaluatedValue;
 }
 
-- (void)_setValue:(NSString *)value forAttributeWithKey:(NSString *)key {
-  [self attributeWithKey:key].value = value;
+- (void)_setValue:(NSString *)value forAttributeWithKey:(NSString *)key {  
+  KPKAttribute *attribute = [self attributeWithKey:key];
+  BOOL postChanges = attribute.isDefault;
+  if(postChanges) {
+    [self willChangeValueForKey:key.lowercaseString];
+  }
+  attribute.value = value;
+  [self _didChangeValueForAttribute:attribute];
+  if(postChanges) {
+    [self didChangeValueForKey:key.lowercaseString];
+  }
 }
 
 #pragma mark -
