@@ -74,21 +74,15 @@
   return self;
 }
 
-- (instancetype)initWithPassword:(NSString *)password keyFileData:(NSData *)keyFileData {
-  self = [self init];
-  if(self) {
-    [self addKey:[KPKKey keyWithPassword:password]];
-    [self addKey:[KPKKey keyWithKeyFileData:keyFileData]];
-  }
-  return self;
-}
-
 #pragma mark Properties
 - (BOOL)hasKeys {
   return self.keys.count > 0;
 }
 
 - (BOOL)addKey:(KPKKey *)key {
+  if(nil == key) {
+    return NO;
+  }
   if([self.keys containsObject:key]) {
     return NO;
   }
