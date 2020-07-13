@@ -475,7 +475,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     [self willChangeValueForKey:key.lowercaseString];
   }
   attribute.value = value;
-  [self _didChangeValueForAttribute:attribute];
   if(postChanges) {
     [self didChangeValueForKey:key.lowercaseString];
   }
