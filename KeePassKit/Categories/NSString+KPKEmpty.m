@@ -24,6 +24,10 @@
 
 @implementation NSString (Empty)
 
++ (NSSet<NSString *> *)keyPathsForValuesAffectingKpk_isNotEmpty {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(length))];
+}
+
 - (BOOL)kpk_isNotEmpty {
   /*
    nil objects should not get this message.
