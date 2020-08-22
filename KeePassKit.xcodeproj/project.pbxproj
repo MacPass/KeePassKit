@@ -1059,6 +1059,7 @@
 		9CED5FAD203C54DA00C9A6C5 /* KissXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CED5FA4203C40DD00C9A6C5 /* KissXML.framework */; };
 		9CED5FAE203C54E700C9A6C5 /* KissXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CED5FA8203C410300C9A6C5 /* KissXML.framework */; };
 		9CED5FAF203C555600C9A6C5 /* KeePassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C5CF3181BE10B650019AA81 /* KeePassKit.framework */; };
+		AF10904F24F160F30079AA6E /* KPKTestCompositeKeyCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = AF10904E24F160F30079AA6E /* KPKTestCompositeKeyCoding.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1435,6 +1436,7 @@
 		9CED5FA6203C40F500C9A6C5 /* KissXML.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = KissXML.framework.dSYM; path = Carthage/Build/tvOS/KissXML.framework.dSYM; sourceTree = "<group>"; };
 		9CED5FA8203C410300C9A6C5 /* KissXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KissXML.framework; path = Carthage/Build/tvOS/KissXML.framework; sourceTree = "<group>"; };
 		9CED5FAA203C411300C9A6C5 /* KissXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KissXML.framework; path = Carthage/Build/watchOS/KissXML.framework; sourceTree = "<group>"; };
+		AF10904E24F160F30079AA6E /* KPKTestCompositeKeyCoding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestCompositeKeyCoding.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1754,6 +1756,7 @@
 				4CE94DD01F69885E00EE9A5A /* KPKTestTrash.m */,
 				4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */,
 				4C5CF3291BE10B650019AA81 /* Info.plist */,
+				AF10904E24F160F30079AA6E /* KPKTestCompositeKeyCoding.m */,
 			);
 			path = KeePassKitTests;
 			sourceTree = "<group>";
@@ -3511,6 +3514,7 @@
 				4C4A64271FDD601B00FD120F /* KPKTestOTP.m in Sources */,
 				4C5CF4B41BE10F090019AA81 /* KPKTestPerformance.m in Sources */,
 				4C5CF4B11BE10F090019AA81 /* KPKTestModificationDates.m in Sources */,
+				AF10904F24F160F30079AA6E /* KPKTestCompositeKeyCoding.m in Sources */,
 				4C5CF4AD1BE10F090019AA81 /* KPKTestHexColor.m in Sources */,
 				4CFAE3711D88537C007B57DB /* KPKTestKPKNumber.m in Sources */,
 				4CF7E8A61DCA4B4700BB652F /* KPKTestKeyComputation.m in Sources */,

@@ -38,6 +38,11 @@
 
 #import <CommonCrypto/CommonCrypto.h>
 
+NSString* const NSCodingHasPasswordKey = @"KPKCompositeKeyHasPassword";
+NSString* const NSCodingHasKeyfileKey = @"KPKCompositeKeyHasKeyfile";
+NSString* const NSCodingKdbKeyDataKey = @"KPKCompositeKeyKdbKeyData";
+NSString* const NSCodingKdbxKeyDataKey = @"KPKCompositeKeyKdbxKeyData";
+
 @interface KPKCompositeKey ()
 
 @property (copy) KPKData *kdbKeyData;
@@ -54,6 +59,16 @@
   self = [super init];
   if(self) {
     [self setPassword:password andKeyFileData:keyFileData];
+  }
+  return self;
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+  if (self = [super init]) {
+      self.hasKeyFile = [decoder decodeBoolForKey:NSCodingHasKeyfileKey];
+      self.hasPassword = [decoder decodeBoolForKey:NSCodingHasPasswordKey];
+      self.kdbKeyData = [decoder decodeObjectForKey:NSCodingKdbKeyDataKey];
+      self.kdbxKeyData = [decoder decodeObjectForKey:NSCodingKdbxKeyDataKey];
   }
   return self;
 }
@@ -199,6 +214,15 @@
   uint8_t masterKey[kKPKKeyFileLength];
   CC_SHA256_Final(masterKey, &ctx);
   return [NSData dataWithBytes:masterKey length:kKPKKeyFileLength];
+}
+
+#pragma mark NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+  [encoder encodeBool:self.hasKeyFile forKey:NSCodingHasKeyfileKey];
+  [encoder encodeBool:self.hasPassword forKey:NSCodingHasPasswordKey];
+  [encoder encodeObject:self.kdbKeyData forKey:NSCodingKdbKeyDataKey];
+  [encoder encodeObject:self.kdbxKeyData forKey:NSCodingKdbxKeyDataKey];
 }
 
 @end

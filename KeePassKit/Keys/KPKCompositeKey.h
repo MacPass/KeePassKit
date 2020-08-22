@@ -32,7 +32,7 @@
  *  It does not store key  nor password strings rather creates a composite key
  *  every time the password or keyfile is set.
  */
-@interface KPKCompositeKey : NSObject
+@interface KPKCompositeKey : NSObject <NSCoding>
 /**
  *  YES if the composite key has a password or keyfile set - that is, it's considered usable
  */
