@@ -41,21 +41,22 @@
 /**
  *  YES if the composite key has a password with a lenght longer than 0.
  *  Since a composite key can be created with am empty string as password or without one,
- *  this property considers both ways as no password given, although technically and emptry string is a password
+ *  this property considers both ways as no password given, although technically and empty string is a password
  */
 @property (nonatomic, readonly) BOOL hasPassword;
 @property (nonatomic, readonly) BOOL hasKeyFile;
-/*
- The password class to be able to decrypt and encrypt databases
- No raw data is stored in memory.
- 
- The Final key is then created before a write or read is performend
+
+
+/** Creates a composite key with the supplied keys
+ @param keys an array of keys to be used for the composite key. The key is order-dependant!
  */
 - (instancetype)initWithKeys:(NSArray <KPKKey *>*)keys;
 
 /**
- Add a key to the composite key
+ Add a key to the composite key. The key is order dependant.
+ If you add the same keys in a differnt order, the final key is different!
  @param key the key to be added. Re-adding the same key has no effect
+
  */
 - (BOOL)addKey:(KPKKey *)key;
 
