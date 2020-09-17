@@ -46,12 +46,13 @@
 
 @property (strong) NSMutableArray *keys;
 
-@property (nonatomic) BOOL hasKeyFile;
-@property (nonatomic) BOOL hasPassword;
-
 @end
 
 @implementation KPKCompositeKey
+
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
 
 - (instancetype)init {
   self = [super init];
@@ -74,18 +75,71 @@
   return self;
 }
 
+- (void)encodeWithCoder:(nonnull NSCoder *)coder {
+  [coder encodeObject:self.keys forKey:NSStringFromSelector(@selector(keys))];
+}
+
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
+  NSMutableArray *keys = [coder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKKey.class]] forKey:NSStringFromSelector(@selector(keys))];
+  self = [self initWithKeys:keys];
+  return self;
+}
+
+- (BOOL)isEqual:(id)object {
+  if(self == object) {
+    return YES;
+  }
+  if([object isKindOfClass:self.class]) {
+    return [self isEqualToKey:object];
+  }
+  return NO;
+}
+
+- (BOOL)isEqualToKey:(KPKCompositeKey *)key {
+  if(self == key) {
+    return YES;
+  }
+  NSAssert([key isKindOfClass:KPKCompositeKey.class], @"Unsupported class for key");
+  if(self.keys.count != key.keys.count) {
+    return NO;
+  }
+  /* Keys matches if single keys are the same and the key order is the same */
+  for(NSUInteger index = 0; index < self.keys.count; index++) {
+    KPKKey *myKey = self.keys[index];
+    KPKKey *otherKey = key.keys[index];
+    
+    NSData *myKdbData = [myKey dataForFormat:KPKDatabaseFormatKdb];
+    NSData *otherKdbData = [otherKey dataForFormat:KPKDatabaseFormatKdb];
+    if(![myKdbData isEqualToData:otherKdbData]) {
+      return NO;
+    }
+    NSData *myKdbxData = [myKey dataForFormat:KPKDatabaseFormatKdbx];
+    NSData *otherKdbxData = [otherKey dataForFormat:KPKDatabaseFormatKdbx];
+    if(![myKdbxData isEqualToData:otherKdbxData]) {
+      return NO;
+    }
+  }
+  return YES;
+}
+
 #pragma mark Properties
 - (BOOL)hasKeys {
   return self.keys.count > 0;
 }
 
+- (BOOL)hasKeyOfClass:(Class)keyClass {
+  return (nil != [self _keyOfClass:keyClass]);
+}
+
 - (BOOL)addKey:(KPKKey *)key {
+  NSAssert([key.class supportsSecureCoding], @"Keys need to be securely codable!");
   if(nil == key) {
     return NO;
   }
   if([self.keys containsObject:key]) {
     return NO;
   }
+  
   [self.keys addObject:key];
   return YES;
 }
@@ -160,10 +214,6 @@
   uint8_t masterKey[ kKPKKeyFileLength];
   CC_SHA256_Final(masterKey, &ctx);
   return [NSData dataWithBytes:masterKey length:kKPKKeyFileLength];
-}
-
-- (BOOL)_hasKeyOfClass:(Class)keyClass {
-  return (nil != [self _keyOfClass:keyClass]);
 }
 
 - (KPKKey *)_keyOfClass:(Class)keyClass {

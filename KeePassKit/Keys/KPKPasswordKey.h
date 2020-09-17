@@ -8,6 +8,6 @@
 
 #import "KPKKey.h"
 
-@interface KPKPasswordKey : KPKKey
+@interface KPKPasswordKey : KPKKey <NSSecureCoding>
 
 @end

@@ -20,6 +20,10 @@
 
 @implementation KPKPasswordKey
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 - (instancetype)initWithPassword:(NSString *)password {
   if(nil == password) {
     self = nil;
@@ -30,6 +34,17 @@
     self.passwordData = [[KPKData alloc] initWithProtectedData:[password dataUsingEncoding:NSUTF8StringEncoding].SHA256Hash];
   }
   return self;
+}
+
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)coder {
+  self = [self init];
+  self.passwordData = [coder decodeObjectOfClass:KPKData.class forKey:NSStringFromSelector(@selector(passwordData))];
+  return self;
+}
+
+
+- (void)encodeWithCoder:(nonnull NSCoder *)coder {
+  [coder encodeObject:self.passwordData forKey:NSStringFromSelector(@selector(passwordData))];
 }
 
 - (NSData *)dataForFormat:(KPKDatabaseFormat)format {

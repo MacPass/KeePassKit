@@ -35,6 +35,8 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import "KPKArgon2KeyDerivation.h"
 #import "KPKCompositeKey.h"
 #import "KPKKey.h"
+#import "KPKPasswordKey.h"
+#import "KPKFileKey.h"
 #import "KPKCipher.h"
 #import "KPKChaCha20Cipher.h"
 #import "KPKAESCipher.h"

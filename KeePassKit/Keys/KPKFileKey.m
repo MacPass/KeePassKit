@@ -20,6 +20,10 @@
 
 @implementation KPKFileKey
 
++ (BOOL)supportsSecureCoding {
+  return YES;
+}
+
 - (instancetype)initWithKeyFileData:(NSData *)data {
   if(nil == data) {
     self = nil;
@@ -38,6 +42,21 @@
     }
   }
   return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+  self = [self init];
+  if(self) {
+    self.kdbData = [coder decodeObjectOfClass:KPKData.class forKey:NSStringFromSelector(@selector(kdbData))];
+    self.kdbxData = [coder decodeObjectOfClass:KPKData.class forKey:NSStringFromSelector(@selector(kdbxData))];
+  }
+  return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+  NSAssert(coder.allowsKeyedCoding, @"Keyed Archiver is required for encoding");
+  [coder encodeObject:self.kdbData forKey:NSStringFromSelector(@selector(kdbData))];
+  [coder encodeObject:self.kdbxData forKey:NSStringFromSelector(@selector(kdbxData))];
 }
 
 - (NSData *)dataForFormat:(KPKDatabaseFormat)format {
