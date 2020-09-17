@@ -21,7 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "KPKModificationRecording.h"
+#import <KPKModificationRecording.h>
 
 @class KPKNode;
 

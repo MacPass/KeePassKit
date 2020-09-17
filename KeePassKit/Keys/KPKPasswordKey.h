@@ -6,7 +6,7 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKKey.h"
+#import <KPKKey.h>
 
 @interface KPKPasswordKey : KPKKey <NSSecureCoding>
 

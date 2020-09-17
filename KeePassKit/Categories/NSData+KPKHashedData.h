@@ -20,7 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKPlatformIncludes.h"
+#import <KPKPlatformIncludes.h>
 
 /**
  Extension to handle blocked hashed data.

@@ -20,7 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "KPKTree.h"
+#import <KPKTree.h>
 
 @interface KPKTree (Serializing)
 

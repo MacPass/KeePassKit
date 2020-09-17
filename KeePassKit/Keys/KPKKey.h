@@ -8,7 +8,7 @@
 
 @import Foundation;
 
-#import "KPKFormat.h"
+#import <KPKFormat.h>
 
 @interface KPKKey : NSObject
 

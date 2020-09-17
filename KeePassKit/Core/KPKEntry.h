@@ -21,9 +21,9 @@
 //
 
 @import Foundation;
-#import "KPKNode.h"
-#import "KPKModificationRecording.h"
-#import "KPKPlatformIncludes.h"
+#import <KPKNode.h>
+#import <KPKModificationRecording.h>
+#import <KPKPlatformIncludes.h>
 
 @class KPKGroup;
 @class KPKBinary;
