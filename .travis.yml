@@ -1,4 +1,4 @@
-osx_image: xcode10.2
+osx_image: xcode12
 xcode_project: KeePassKit.xcodeproj
 language: objective-c
 
