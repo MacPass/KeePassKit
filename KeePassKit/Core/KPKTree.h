@@ -21,9 +21,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <KPKFormat.h>
-#import <KPKSynchronizationOptions.h>
-#import <KPKNode.h>
+#import <KeePassKit/KPKFormat.h>
+#import <KeePassKit/KPKSynchronizationOptions.h>
+#import <KeePassKit/KPKNode.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -22,7 +22,7 @@
 
 @import Foundation;
 
-#import <KPKFormat.h>
+#import <KeePassKit/KPKFormat.h>
 
 @class KPKKeyDerivation;
 @class KPKCipher;

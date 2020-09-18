@@ -21,7 +21,7 @@
 //
 
 @import Foundation;
-#import <KPKPlatformIncludes.h>
+#import <KeePassKit/KPKPlatformIncludes.h>
 
 @interface KPKIcon : NSObject <NSCopying, NSSecureCoding>
 

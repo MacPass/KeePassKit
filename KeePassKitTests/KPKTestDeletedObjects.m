@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "KeePassKit.h"
+#import <KeePassKit/KeePassKit.h>
 #import "KeePassKit_Private.h"
 
 @interface KPKTestDeletedObjects : XCTestCase

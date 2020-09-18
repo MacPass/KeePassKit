@@ -21,7 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <KPKCommandEvaluationContext.h>
+#import <KeePassKit/KPKCommandEvaluationContext.h>
 
 @class KPKEntry;
 

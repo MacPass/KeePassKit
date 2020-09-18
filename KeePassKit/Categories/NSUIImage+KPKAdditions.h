@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <KPKPlatformIncludes.h>
+#import <KeePassKit/KPKPlatformIncludes.h>
 
 @interface NSUIImage (KPKAdditions)
 

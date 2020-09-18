@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "KeePassKit.h"
+#import <KeePassKit/KeePassKit.h>
 
 #import "KPKChaCha20Cipher.h"
 #import "KPKChaCha20RandomStream.h"

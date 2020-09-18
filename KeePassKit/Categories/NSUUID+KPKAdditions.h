@@ -21,7 +21,7 @@
 //
 
 @import Foundation;
-#include <KPKPlatformIncludes.h>
+#include <KeePassKit/KPKPlatformIncludes.h>
 
 #if KPK_MAC
 @interface NSUUID (KPKAdditions) <NSPasteboardWriting, NSPasteboardReading>

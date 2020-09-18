@@ -22,9 +22,9 @@
 
 
 #import <Foundation/Foundation.h>
-#import <KPKTypes.h>
-#import <KPKFormat.h>
-#import <KPKModificationRecording.h>
+#import <KeePassKit/KPKTypes.h>
+#import <KeePassKit/KPKFormat.h>
+#import <KeePassKit/KPKModificationRecording.h>
 
 @class KPKEntry;
 @class KPKGroup;

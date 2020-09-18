@@ -22,7 +22,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import <KPKFormat.h>
+#import <KeePassKit/KPKFormat.h>
 
 @interface NSData (KPKKeyfile)
 

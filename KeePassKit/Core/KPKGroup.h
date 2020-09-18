@@ -21,9 +21,9 @@
 //
 
 @import Foundation;
-#import <KPKPlatformIncludes.h>
-#import <KPKTypes.h>
-#import <KPKNode.h>
+#import <KeePassKit/KPKPlatformIncludes.h>
+#import <KeePassKit/KPKTypes.h>
+#import <KeePassKit/KPKNode.h>
 
 @class KPKEntry;
 

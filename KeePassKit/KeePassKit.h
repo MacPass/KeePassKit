@@ -14,63 +14,64 @@ FOUNDATION_EXPORT double KeePassKitVersionNumber;
 //! Project version string for KeePassKit.
 FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 
-#import <KPKPlatformIncludes.h>
-#import <KPKTypes.h>
-#import <KPKUTIs.h>
-#import <KPKIconTypes.h>
-#import <KPKSynchronizationOptions.h>
+#import <KeePassKit/KPKPlatformIncludes.h>
+#import <KeePassKit/KPKTypes.h>
+#import <KeePassKit/KPKUTIs.h>
+#import <KeePassKit/KPKIconTypes.h>
+#import <KeePassKit/KPKSynchronizationOptions.h>
 
-#import <KPKData.h>
-#import <KPKNumber.h>
-#import <KPKPair.h>
-#import <KPKToken.h>
+#import <KeePassKit/KPKData.h>
+#import <KeePassKit/KPKNumber.h>
+#import <KeePassKit/KPKPair.h>
+#import <KeePassKit/KPKToken.h>
 
-#import <KPKScopedSet.h>
-#import <KPKReferenceBuilder.h>
+#import <KeePassKit/KPKScopedSet.h>
+#import <KeePassKit/KPKReferenceBuilder.h>
 
-#import <KPKFormat.h>
-#import <KPKKdbxFormat.h>
-#import <KPKKeyDerivation.h>
-#import <KPKAESKeyDerivation.h>
-#import <KPKArgon2KeyDerivation.h>
-#import <KPKCompositeKey.h>
-#import <KPKKey.h>
-#import <KPKPasswordKey.h>
-#import <KPKFileKey.h>
-#import <KPKCipher.h>
-#import <KPKChaCha20Cipher.h>
-#import <KPKAESCipher.h>
-#import <KPKTwofishCipher.h>
+#import <KeePassKit/KPKFormat.h>
+#import <KeePassKit/KPKKdbxFormat.h>
+#import <KeePassKit/KPKKeyDerivation.h>
+#import <KeePassKit/KPKAESKeyDerivation.h>
+#import <KeePassKit/KPKArgon2KeyDerivation.h>
+#import <KeePassKit/KPKCompositeKey.h>
+#import <KeePassKit/KPKKey.h>
+#import <KeePassKit/KPKPasswordKey.h>
+#import <KeePassKit/KPKFileKey.h>
+#import <KeePassKit/KPKCipher.h>
+#import <KeePassKit/KPKChaCha20Cipher.h>
+#import <KeePassKit/KPKAESCipher.h>
+#import <KeePassKit/KPKTwofishCipher.h>
 
-#import <KPKTree.h>
-#import <KPKTree+Serializing.h>
-#import <KPKNode.h>
-#import <KPKEntry.h>
-#import <KPKGroup.h>
+#import <KeePassKit/KPKTree.h>
+#import <KeePassKit/KPKTree+Serializing.h>
+#import <KeePassKit/KPKNode.h>
+#import <KeePassKit/KPKEntry.h>
+#import <KeePassKit/KPKGroup.h>
 
-#import <KPKBinary.h>
-#import <KPKAttribute.h>
-#import <KPKIcon.h>
-#import <KPKDeletedNode.h>
-#import <KPKMetaData.h>
-#import <KPKTimeInfo.h>
-#import <KPKAutotype.h>
-#import <KPKWindowAssociation.h>
+#import <KeePassKit/KPKBinary.h>
+#import <KeePassKit/KPKAttribute.h>
+#import <KeePassKit/KPKIcon.h>
+#import <KeePassKit/KPKDeletedNode.h>
+#import <KeePassKit/KPKMetaData.h>
+#import <KeePassKit/KPKTimeInfo.h>
+#import <KeePassKit/KPKAutotype.h>
+#import <KeePassKit/KPKWindowAssociation.h>
 
-#import <KPKModificationRecording.h>
-#import <KPKCommandEvaluationContext.h>
+#import <KeePassKit/KPKModificationRecording.h>
+#import <KeePassKit/KPKCommandEvaluationContext.h>
 
-#import <KPKErrors.h>
+#import <KeePassKit/KPKErrors.h>
 
-#import <NSData+KPKHashedData.h>
-#import <NSData+KPKKeyfile.h>
-#import <NSData+KPKRandom.h>
-#import <NSData+KPKBase32.h>
-#import <NSDictionary+KPKVariant.h>
-#import <NSString+KPKCommands.h>
-#import <NSString+KPKEmpty.h>
-#import <NSString+KPKXmlUtilities.h>
-#import <NSUUID+KPKAdditions.h>
-#import <NSUIColor+KPKAdditions.h>
-#import <NSUIImage+KPKAdditions.h>
+#import <KeePassKit/NSData+KPKHashedData.h>
+#import <KeePassKit/NSData+KPKKeyfile.h>
+#import <KeePassKit/NSData+KPKRandom.h>
+#import <KeePassKit/NSData+KPKBase32.h>
+#import <KeePassKit/NSData+CommonCrypto.h>
+#import <KeePassKit/NSDictionary+KPKVariant.h>
+#import <KeePassKit/NSString+KPKCommands.h>
+#import <KeePassKit/NSString+KPKEmpty.h>
+#import <KeePassKit/NSString+KPKXmlUtilities.h>
+#import <KeePassKit/NSUUID+KPKAdditions.h>
+#import <KeePassKit/NSUIColor+KPKAdditions.h>
+#import <KeePassKit/NSUIImage+KPKAdditions.h>
 

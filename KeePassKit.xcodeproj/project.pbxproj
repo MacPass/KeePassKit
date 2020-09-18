@@ -150,7 +150,7 @@
 		2D5124FD1E9BCFA700D7EAF6 /* (null) in Headers */ = {isa = PBXBuildFile; };
 		2D5124FE1E9BCFA700D7EAF6 /* (null) in Headers */ = {isa = PBXBuildFile; };
 		2D5124FF1E9BCFA700D7EAF6 /* NSString+KPKHexdata.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3BD1BE10DF80019AA81 /* NSString+KPKHexdata.h */; };
-		2D5125001E9BCFA700D7EAF6 /* NSData+CommonCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3A91BE10DF80019AA81 /* NSData+CommonCrypto.h */; };
+		2D5125001E9BCFA700D7EAF6 /* NSData+CommonCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3A91BE10DF80019AA81 /* NSData+CommonCrypto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2D5125011E9BCFA700D7EAF6 /* KPKAutotype_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3E31BE10E000019AA81 /* KPKAutotype_Private.h */; };
 		2D5125021E9BCFA700D7EAF6 /* KPKUnarchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ADBEF1D7C649F002C3190 /* KPKUnarchiver.h */; };
 		2D5125041E9BCFA700D7EAF6 /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4771D8832BA00100002 /* core.h */; };
@@ -336,7 +336,7 @@
 		2D5126091E9BD24500D7EAF6 /* (null) in Headers */ = {isa = PBXBuildFile; };
 		2D51260A1E9BD24500D7EAF6 /* (null) in Headers */ = {isa = PBXBuildFile; };
 		2D51260B1E9BD24500D7EAF6 /* NSString+KPKHexdata.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3BD1BE10DF80019AA81 /* NSString+KPKHexdata.h */; };
-		2D51260C1E9BD24500D7EAF6 /* NSData+CommonCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3A91BE10DF80019AA81 /* NSData+CommonCrypto.h */; };
+		2D51260C1E9BD24500D7EAF6 /* NSData+CommonCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3A91BE10DF80019AA81 /* NSData+CommonCrypto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2D51260D1E9BD24500D7EAF6 /* KPKAutotype_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3E31BE10E000019AA81 /* KPKAutotype_Private.h */; };
 		2D51260E1E9BD24500D7EAF6 /* KPKUnarchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ADBEF1D7C649F002C3190 /* KPKUnarchiver.h */; };
 		2D5126101E9BD24500D7EAF6 /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4771D8832BA00100002 /* core.h */; };
@@ -522,7 +522,7 @@
 		2D5127151E9BD34900D7EAF6 /* (null) in Headers */ = {isa = PBXBuildFile; };
 		2D5127161E9BD34900D7EAF6 /* (null) in Headers */ = {isa = PBXBuildFile; };
 		2D5127171E9BD34900D7EAF6 /* NSString+KPKHexdata.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3BD1BE10DF80019AA81 /* NSString+KPKHexdata.h */; };
-		2D5127181E9BD34900D7EAF6 /* NSData+CommonCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3A91BE10DF80019AA81 /* NSData+CommonCrypto.h */; };
+		2D5127181E9BD34900D7EAF6 /* NSData+CommonCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3A91BE10DF80019AA81 /* NSData+CommonCrypto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2D5127191E9BD34900D7EAF6 /* KPKAutotype_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3E31BE10E000019AA81 /* KPKAutotype_Private.h */; };
 		2D51271A1E9BD34900D7EAF6 /* KPKUnarchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ADBEF1D7C649F002C3190 /* KPKUnarchiver.h */; };
 		2D51271C1E9BD34900D7EAF6 /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA1E4771D8832BA00100002 /* core.h */; };
@@ -704,7 +704,7 @@
 		4C5CF31C1BE10B650019AA81 /* KeePassKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF31B1BE10B650019AA81 /* KeePassKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C5CF3C41BE10DF80019AA81 /* NSUIColor+KPKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3A71BE10DF80019AA81 /* NSUIColor+KPKAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C5CF3C51BE10DF80019AA81 /* NSUIColor+KPKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3A81BE10DF80019AA81 /* NSUIColor+KPKAdditions.m */; };
-		4C5CF3C61BE10DF80019AA81 /* NSData+CommonCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3A91BE10DF80019AA81 /* NSData+CommonCrypto.h */; };
+		4C5CF3C61BE10DF80019AA81 /* NSData+CommonCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3A91BE10DF80019AA81 /* NSData+CommonCrypto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C5CF3C71BE10DF80019AA81 /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3AA1BE10DF80019AA81 /* NSData+CommonCrypto.m */; };
 		4C5CF3C81BE10DF80019AA81 /* NSData+KPKGzip.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C5CF3AB1BE10DF80019AA81 /* NSData+KPKGzip.h */; };
 		4C5CF3C91BE10DF80019AA81 /* NSData+KPKGzip.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CF3AC1BE10DF80019AA81 /* NSData+KPKGzip.m */; };

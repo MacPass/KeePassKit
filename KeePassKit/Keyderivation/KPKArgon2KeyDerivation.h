@@ -6,7 +6,7 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import <KPKKeyDerivation.h>
+#import <KeePassKit/KPKKeyDerivation.h>
 
 // Argon2 Options
 FOUNDATION_EXPORT NSString *const KPKArgon2SaltParameter; // NSData

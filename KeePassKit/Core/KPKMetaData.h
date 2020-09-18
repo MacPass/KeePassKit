@@ -21,8 +21,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <KPKPlatformIncludes.h>
-#import <KPKModificationRecording.h>
+#import <KeePassKit/KPKPlatformIncludes.h>
+#import <KeePassKit/KPKModificationRecording.h>
 
 @class KPKBinary;
 @class KPKIcon;
