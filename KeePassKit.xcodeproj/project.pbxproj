@@ -809,10 +809,6 @@
 		4C639E551F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C639E531F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C639E561F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C639E541F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.m */; };
 		4C639E581F6AE81600E6C5CD /* test.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E571F6AE81600E6C5CD /* test.pdf */; };
-		4C69040920C877C7007D0B97 /* KissXML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 9CED5FA2203C40CA00C9A6C5 /* KissXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4C69040B20C877F0007D0B97 /* KissXML.framework in Copy Framework */ = {isa = PBXBuildFile; fileRef = 9CED5FA4203C40DD00C9A6C5 /* KissXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4C69040D20C87819007D0B97 /* KissXML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 9CED5FA8203C410300C9A6C5 /* KissXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4C69040F20C87835007D0B97 /* KissXML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 9CED5FAA203C411300C9A6C5 /* KissXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4C69D64823F2D73C007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C69D64623F2D6AB007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb */; };
 		4C69D64923F2D73D007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C69D64623F2D6AB007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb */; };
 		4C69D64A23F2D73D007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C69D64623F2D6AB007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb */; };
@@ -1097,53 +1093,6 @@
 			remoteInfo = KeePassKit;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		4C69040820C8779A007D0B97 /* Copy Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4C69040920C877C7007D0B97 /* KissXML.framework in Copy Frameworks */,
-			);
-			name = "Copy Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4C69040A20C877D1007D0B97 /* Copy Framework */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4C69040B20C877F0007D0B97 /* KissXML.framework in Copy Framework */,
-			);
-			name = "Copy Framework";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4C69040C20C877FA007D0B97 /* Copy Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4C69040D20C87819007D0B97 /* KissXML.framework in Copy Frameworks */,
-			);
-			name = "Copy Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4C69040E20C87822007D0B97 /* Copy Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				4C69040F20C87835007D0B97 /* KissXML.framework in Copy Frameworks */,
-			);
-			name = "Copy Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2D5125251E9BCFA700D7EAF6 /* KeePassKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KeePassKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2590,7 +2539,6 @@
 				2D5124AF1E9BCFA700D7EAF6 /* Headers */,
 				2D5125201E9BCFA700D7EAF6 /* Versioning */,
 				2D5125211E9BCFA700D7EAF6 /* Resources */,
-				4C69040A20C877D1007D0B97 /* Copy Framework */,
 			);
 			buildRules = (
 			);
@@ -2629,7 +2577,6 @@
 				2D5125BB1E9BD24500D7EAF6 /* Headers */,
 				2D51262C1E9BD24500D7EAF6 /* Versioning */,
 				2D51262D1E9BD24500D7EAF6 /* Resources */,
-				4C69040C20C877FA007D0B97 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2668,7 +2615,6 @@
 				2D5126C71E9BD34900D7EAF6 /* Headers */,
 				2D5127381E9BD34900D7EAF6 /* Versioning */,
 				2D5127391E9BD34900D7EAF6 /* Resources */,
-				4C69040E20C87822007D0B97 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2688,7 +2634,6 @@
 				4C5CF3151BE10B650019AA81 /* Headers */,
 				4C7B635B1C0CAEDE00D7038C /* Versioning */,
 				4C5CF3161BE10B650019AA81 /* Resources */,
-				4C69040820C8779A007D0B97 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2976,7 +2921,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 		9CED5FB1203C566300C9A6C5 /* Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2991,7 +2936,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 		9CED5FB2203C566800C9A6C5 /* Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3006,7 +2951,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
