@@ -144,7 +144,7 @@
   return YES;
 }
 
-- (void)_clearKeys {
+- (void)clearKeys {
   [self.keys removeAllObjects];
 }
 

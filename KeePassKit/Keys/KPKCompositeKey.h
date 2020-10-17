@@ -55,6 +55,8 @@
 
 - (BOOL)hasKeyOfClass:(Class)keyClass;
 
+- (void) clearKeys;
+
 /**
  Derives the final key data for the supplied parameters
  @param format The database format to use the key for (kbd or kdbx)
