@@ -62,6 +62,15 @@
   return self;
 }
 
+- (instancetype)initWithPassword:(NSString *)password keyFileData:(NSData *)keyFileData {
+  self = [self init];
+  if(self) {
+    [self addKey:[KPKKey keyWithPassword:password]];
+    [self addKey:[KPKKey keyWithKeyFileData:keyFileData]];
+  }
+  return self;
+}
+
 - (instancetype)initWithKeys:(NSArray<KPKKey *> *)keys {
   self = [self init];
   if(self) {
