@@ -657,10 +657,10 @@
 		4C42AC1020502EB900B5B205 /* NSString+KPKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C42AC0920502EB900B5B205 /* NSString+KPKAdditions.m */; };
 		4C42AC1120502EB900B5B205 /* NSString+KPKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C42AC0920502EB900B5B205 /* NSString+KPKAdditions.m */; };
 		4C44988F1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C44988E1DDE12BE00215BE3 /* KPKTestMinimumVersionDetermination.m */; };
-		4C4A641E1FDBF2D200FD120F /* KPKOTPGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4A641C1FDBF2D100FD120F /* KPKOTPGenerator.h */; };
-		4C4A641F1FDBF2D200FD120F /* KPKOTPGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4A641C1FDBF2D100FD120F /* KPKOTPGenerator.h */; };
-		4C4A64201FDBF2D200FD120F /* KPKOTPGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4A641C1FDBF2D100FD120F /* KPKOTPGenerator.h */; };
-		4C4A64211FDBF2D200FD120F /* KPKOTPGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4A641C1FDBF2D100FD120F /* KPKOTPGenerator.h */; };
+		4C4A641E1FDBF2D200FD120F /* KPKOTPGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4A641C1FDBF2D100FD120F /* KPKOTPGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C4A641F1FDBF2D200FD120F /* KPKOTPGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4A641C1FDBF2D100FD120F /* KPKOTPGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C4A64201FDBF2D200FD120F /* KPKOTPGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4A641C1FDBF2D100FD120F /* KPKOTPGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C4A64211FDBF2D200FD120F /* KPKOTPGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4A641C1FDBF2D100FD120F /* KPKOTPGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C4A64221FDBF2D200FD120F /* KPKOTPGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A641D1FDBF2D100FD120F /* KPKOTPGenerator.m */; };
 		4C4A64231FDBF2D200FD120F /* KPKOTPGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A641D1FDBF2D100FD120F /* KPKOTPGenerator.m */; };
 		4C4A64241FDBF2D200FD120F /* KPKOTPGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A641D1FDBF2D100FD120F /* KPKOTPGenerator.m */; };
