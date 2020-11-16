@@ -11,7 +11,7 @@
 
 @implementation NSData (KPKOTPDataConversion)
 
-- (NSUInteger)unsignedInteger {
+- (NSUInteger)kpk_unsignedInteger {
   /*
    HMAC data is interpreted as big endian
    */
@@ -89,7 +89,7 @@
     return @""; // invalid data
   }
   
-  NSUInteger decimal = data.unsignedInteger;
+  NSUInteger decimal = data.kpk_unsignedInteger;
   NSUInteger alphabetLength = self.alphabet.length;
   NSMutableString *result = [[NSMutableString alloc] init];
   while(result.length < self.numberOfDigits) {

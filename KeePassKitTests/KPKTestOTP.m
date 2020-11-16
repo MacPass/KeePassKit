@@ -67,7 +67,7 @@
   for(NSNumber *number in decimalResults) {
     NSUInteger index = [decimalResults indexOfObject:number];
     generator.counter = index;
-    NSUInteger hmacDecimal = generator.data.unsignedInteger;
+    NSUInteger hmacDecimal = generator.data.kpk_unsignedInteger;
     NSUInteger actual = number.unsignedIntegerValue;
     XCTAssertEqual(actual, hmacDecimal);
   }

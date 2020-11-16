@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSData (KPKOTPDataConversion)
 
-@property (readonly) NSUInteger unsignedInteger;
+@property (readonly) NSUInteger kpk_unsignedInteger;
 
 @end
 
