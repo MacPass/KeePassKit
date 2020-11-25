@@ -207,7 +207,6 @@ NSString *const kKPKPlaceholderPickField = @"{PICKFIELD}";
 NSString *const kKPKPlaceholderHMACOTP = @"{HMACOTP}";
 
 
-
 #pragma mark Autotype commands
 /*
  Tab	{TAB}
