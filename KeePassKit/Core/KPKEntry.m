@@ -734,11 +734,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     NSLog(@"Warning. Attribute with key %@ already present! Changing key to %@", duplicate.key, attribute.key);
   }
   [[self.undoManager prepareWithInvocationTarget:self] removeCustomAttribute:attribute];
-  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillAddAttributeNotification object:self userInfo:nil];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillAddAttributeNotification object:self userInfo:@{KPKAttributeKeyKey: attribute.key}];
   [self touchModified];
   [self insertObject:attribute inMutableAttributesAtIndex:index];
   attribute.entry = self;
-  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidAddAttributeNotification object:self userInfo:nil];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidAddAttributeNotification object:self userInfo:@{KPKAttributeKeyKey: attribute.key}];
 }
 
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
