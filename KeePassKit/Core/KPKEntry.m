@@ -745,9 +745,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   NSUInteger index = [self.mutableAttributes indexOfObjectIdenticalTo:attribute];
   if(NSNotFound != index) {
     [[self.undoManager prepareWithInvocationTarget:self] _addCustomAttribute:attribute atIndex:index];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKWillRemoveAttributeNotification object:self userInfo:@{ KPKAttributeKeyKey: attribute.key}];
     [self touchModified];
     attribute.entry = nil;
     [self removeObjectFromMutableAttributesAtIndex:index];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKDidRemoveAttributeNotification object:self userInfo:@{ KPKAttributeKeyKey: attribute.key}];
   }
 }
 #pragma mark Attachments
