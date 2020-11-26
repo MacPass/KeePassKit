@@ -162,11 +162,13 @@
   }
   if(!self.isDefault) {
     [(KPKAttribute *)[self.entry.undoManager prepareWithInvocationTarget:self] setValue:self.value];
-    NSString *template = NSLocalizedStringFromTableInBundle(@"SET_CUSTOM_ATTTRIBUTE_%@", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting value of a custom attribute. Contains %@ placeholder");
+    NSString *template = NSLocalizedStringFromTableInBundle(@"SET_CUSTOM_ATTTRIBUTE_%@", nil, [NSBundle bundleForClass:self.class], @"Action name for setting value of a custom attribute. Contains %@ placeholder");
     [self.entry.undoManager setActionName:[NSString stringWithFormat:template, self.key ]];
   }
   [self.entry touchModified];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeAttributeNotification object:self.entry userInfo:@{ KPKAttributeKeyKey : self.key}];
   [self _encodeValue:value];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeAttributeNotification object:self.entry userInfo:@{ KPKAttributeKeyKey : self.key}];
 }
 
 - (void)setKey:(NSString *)key {
@@ -178,7 +180,9 @@
   }
   [[self.entry.undoManager prepareWithInvocationTarget:self] setKey:self.key];
   [self.entry touchModified];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeAttributeNotification object:self.entry userInfo:@{ KPKAttributeKeyKey : self.key}];
   _key = [key copy];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeAttributeNotification object:self.entry userInfo:@{ KPKAttributeKeyKey : self.key}];
 }
 
 - (void)setProtect:(BOOL)protected {

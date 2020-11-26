@@ -30,6 +30,17 @@
 @class KPKAttribute;
 @class KPKAutotype;
 
+FOUNDATION_EXTERN NSString *const KPKAttributeKeyKey;
+/*
+ Notifications sent when modifications happen
+ */
+FOUNDATION_EXTERN NSString *const KPKWillAddAttributeNotification;    // KPKAttributeKeyKey
+FOUNDATION_EXTERN NSString *const KPKDidAddAttributeNotification;     // KPKAttributeKeyKey
+FOUNDATION_EXTERN NSString *const KPKWillRemoveAttributeNotification; // KPKAttributeKeyKey
+FOUNDATION_EXTERN NSString *const KPKDidRemoveAttributeNotification;  // KPKAttributeKeyKey
+FOUNDATION_EXTERN NSString *const KPKWillChangeAttributeNotification; // KPKAttributeKeyKey == old key
+FOUNDATION_EXTERN NSString *const KPKDidChangeAttributeNotification;  // KPKAttributeKeyKey == new key
+
 /* Entries declared as MetaEntries in KDB files
  * contain information that is stored in meta data in KDBX file
  */

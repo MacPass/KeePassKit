@@ -40,6 +40,16 @@
 
 #import "KPKScopedSet.h"
 
+// Notifications
+NSString *const KPKAttributeKeyKey                    = @"KPKAttributeKeyKey";
+NSString *const KPKWillAddAttributeNotification       = @"KPKWillAddAttributeNotification";
+NSString *const KPKDidAddAttributeNotification        = @"KPKDidAddAttributeNotification";
+NSString *const KPKWillRemoveAttributeNotification    = @"KPKWillRemoveAttributeNotification";
+NSString *const KPKDidRemoveAttributeNotification     = @"KPKDidRemoveAttributeNotification";
+NSString *const KPKWillChangeAttributeNotification    = @"KPKWillChangeAttributeNotification";
+NSString *const KPKDidChangeAttributeNotification     = @"KPKDidChangeAttributeNotification";
+
+// Magic constants for Meta Entries
 NSString *const KPKMetaEntryBinaryDescription   = @"bin-stream";
 NSString *const KPKMetaEntryTitle               = @"Meta-Info";
 NSString *const KPKMetaEntryUsername            = @"SYSTEM";
@@ -482,7 +492,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(postChanges) {
     [self didChangeValueForKey:key.lowercaseString];
   }
-
 }
 
 #pragma mark -
@@ -725,9 +734,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     NSLog(@"Warning. Attribute with key %@ already present! Changing key to %@", duplicate.key, attribute.key);
   }
   [[self.undoManager prepareWithInvocationTarget:self] removeCustomAttribute:attribute];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillAddAttributeNotification object:self userInfo:nil];
   [self touchModified];
   [self insertObject:attribute inMutableAttributesAtIndex:index];
   attribute.entry = self;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidAddAttributeNotification object:self userInfo:nil];
 }
 
 - (void)removeCustomAttribute:(KPKAttribute *)attribute {
