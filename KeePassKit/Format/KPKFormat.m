@@ -193,18 +193,33 @@ NSString *const kKPKPlaceholderGroupPath  = @"{GROUP_PATH}";
 NSString *const kKPKPlaceholderGroupNotes = @"{GROUP_NOTES}";
 
 /* Placeholder */
-NSString *const kKPKPlaceholderPickChars = @"PICKCHARS";
-NSString *const kKPKPlaceholderPickCharsSpearator = @":";
-NSString *const kKPKPlaceholderPickCharsOptionDelemiter = @",";
-NSString *const kKPKPlaceholderPickCharsOptionID = @"ID";
-NSString *const kKPKPlaceholderPickCharsOptionCountShort = @"C";
-NSString *const kKPKPlaceholderPickCharsOptionCount = @"Count";
-NSString *const kKPKPlaceholderPickCharsOptionHide = @"Hide";
-NSString *const kKPKPlaceholderPickCharsOptionConvert = @"Conv";
+NSString *const kKPKPlaceholderPickChars                    = @"PICKCHARS";
+NSString *const kKPKPlaceholderPickCharsSpearator           = @":";
+NSString *const kKPKPlaceholderPickCharsOptionDelemiter     = @",";
+NSString *const kKPKPlaceholderPickCharsOptionID            = @"ID";
+NSString *const kKPKPlaceholderPickCharsOptionCountShort    = @"C";
+NSString *const kKPKPlaceholderPickCharsOptionCount         = @"Count";
+NSString *const kKPKPlaceholderPickCharsOptionHide          = @"Hide";
+NSString *const kKPKPlaceholderPickCharsOptionConvert       = @"Conv";
 NSString *const kKPKPlaceholderPickCharsOptionConvertOffset = @"Conv-Offset";
 NSString *const kKPKPlaceholderPickCharsOptionConvertFormat = @"Conv-Fmt";
-NSString *const kKPKPlaceholderPickField = @"{PICKFIELD}";
-NSString *const kKPKPlaceholderHMACOTP = @"{HMACOTP}";
+NSString *const kKPKPlaceholderPickField                    = @"{PICKFIELD}";
+NSString *const kKPKPlaceholderHMACOTP                      = @"{HMACOTP}";
+NSString *const kKPKPlaceholderTIMEOTP                      = @"{TIMEOTP}";
+
+NSString *const kKPKHCustomKeyHMACOTPSecret       = @"{HmacOtp-Secret}";
+NSString *const kKPKHCustomKeyHMACOTPSecretHex    = @"{HmacOtp-Secret-Hex}";
+NSString *const kKPKHCustomKeyHMACOTPSecretBase32 = @"{HmacOtp-Secret-Base32}";
+NSString *const kKPKHCustomKeyHMACOTPSecretBase64 = @"{HmacOtp-Secret-Base64}";
+NSString *const kKPKHCustomKeyHMACOTPCounter      = @"{HmacOtp-Counter}";
+NSString *const kKPKHCustomKeyTIMEOTPSecret       = @"{TimeOtp-Secret}";
+NSString *const kKPKHCustomKeyTIMEOTPSecretHex    = @"{TimeOtp-Secret-Hex}";
+NSString *const kKPKHCustomKeyTIMEOTPSecretBase32 = @"{TimeOtp-Secret-Base32}";
+NSString *const kKPKHCustomKeyTIMEOTPSecretBase64 = @"{TimeOtp-Secret-Base64}";
+NSString *const kKPKHCustomKeyTIMEOTPLength       = @"{TimeOtp-Length}";
+NSString *const kKPKHCustomKeyTIMEOTPPeriod       = @"{TimeOtp-Period}";
+NSString *const kKPKHCustomKeyTIMEOTPAlgorithm    = @"{TimeOtp-Algorithm}";
+
 
 
 #pragma mark Autotype commands

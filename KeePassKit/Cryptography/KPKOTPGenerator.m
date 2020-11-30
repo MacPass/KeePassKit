@@ -105,6 +105,10 @@
   return [result copy];
 }
 
+- (BOOL)setupWithOptions:(NSDictionary<NSString *,NSString *> *)options {
+  return NO;
+}
+
 - (BOOL)_validateOptions {
   return (self.numberOfDigits >= 1 &&
           self.numberOfDigits <= 8 &&

@@ -43,6 +43,7 @@ typedef NS_ENUM(NSUInteger, KPKOTPGeneratorType) {
 @property NSUInteger counter; // the counter to calculate the Hmac OTP for, default=0
 @property NSUInteger numberOfDigits; // the number of digits to vent as code, default=6
 
+- (BOOL)setupWithOptions:(NSDictionary <NSString *, NSString *>*)options;
 @end
 
 NS_ASSUME_NONNULL_END
