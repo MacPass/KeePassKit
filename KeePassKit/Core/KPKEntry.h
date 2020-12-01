@@ -106,15 +106,17 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;        //
 /**
  Returns YES if the entry has valid Hmac OTP settings. If the settings are incomplete, wrong or missing NO will get returned
  */
-@property (readonly) BOOL hasHOTP;
+@property (readonly, nonatomic) BOOL hasHmacOTP;
 /**
  Returns YES if the entry has valid Time OTP settings.
  Knowns formats are:
- - KeePass (TimeOtp…)
- - KeePassOTP (
+ - KeePass (TimeOtp… and HmacOtp…)
+ - KeePassOTP  (TOTP Settings, TOTP Seed, otp)
  */
-@property (readonly) BOOL hasTOTP;
+@property (readonly, nonatomic) BOOL hasTimeOTP;
 
+@property (readonly, nonatomic) NSString *HmacOTP;
+@property (readonly, nonatomic) NSString *TimeOTP;
 
 - (KPKComparsionResult)compareToEntry:(KPKEntry *)entry;
 

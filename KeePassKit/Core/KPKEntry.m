@@ -160,6 +160,14 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAttributes))];
 }
 
++ (NSSet<NSString *> *)keyPathsForValuesAffectingHmacOTP {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAttributes))];
+}
+
++ (NSSet<NSString *> *)keyPathsForValuesAffectingTimeOTP {
+  return [NSSet setWithObject:NSStringFromSelector(@selector(mutableAttributes))];
+}
+
 + (NSSet<NSString *> *)keyPathsForValuesAffectingIndex {
   return [NSSet setWithArray:@[NSStringFromSelector(@selector(parent)), [NSString stringWithFormat:@"%@.%@",NSStringFromSelector(@selector(parent)), NSStringFromSelector(@selector(mutableEntries))]]];
 }
@@ -484,12 +492,11 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)_setValue:(NSString *)value forAttributeWithKey:(NSString *)key sendChanges:(BOOL)sendChanges {
   KPKAttribute *attribute = [self attributeWithKey:key];
-  BOOL postChanges = sendChanges && attribute.isDefault;
-  if(postChanges) {
+  if(sendChanges) {
     [self willChangeValueForKey:key.lowercaseString];
   }
   attribute.value = value;
-  if(postChanges) {
+  if(sendChanges) {
     [self didChangeValueForKey:key.lowercaseString];
   }
 }
@@ -698,7 +705,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return self;
 }
 
-- (BOOL)hasTOTP {
+- (BOOL)hasTimeOTP {
   /* FIXME: implement propert changes when attributes update! */
   if([self hasAttributeWithKey:kKPKAttributeKeyOTPOAuthURL]) {
     // setup ??
@@ -706,8 +713,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return NO;
 }
 
-- (BOOL)hasHOTP {
-  
+- (BOOL)hasHmacOTP {
   if(![self hasAttributeWithKey:kKPKAttributeKeyHmacOTPCounter]) {
     return NO;
   }
@@ -1080,5 +1086,15 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark -
 #pragma mark Private Helper
+
+- (void)willChangeValueForKey:(NSString *)key {
+  NSLog(@"willChangeValueForKey:%@", key);
+  [super willChangeValueForKey:key];
+}
+
+- (void)didChangeValueForKey:(NSString *)key {
+  NSLog(@"didChangeValueForKey:%@", key);
+  [super didChangeValueForKey:key];
+}
 
 @end
