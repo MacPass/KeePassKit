@@ -2572,6 +2572,7 @@
 				2D51252A1E9BD06700D7EAF6 /* Sources */,
 				2D5125521E9BD06700D7EAF6 /* Frameworks */,
 				2D5125541E9BD06700D7EAF6 /* Resources */,
+				9CED5FB1203C566300C9A6C5 /* Carthage */,
 			);
 			buildRules = (
 			);
@@ -2609,6 +2610,7 @@
 				2D5126361E9BD29500D7EAF6 /* Sources */,
 				2D51265E1E9BD29500D7EAF6 /* Frameworks */,
 				2D5126601E9BD29500D7EAF6 /* Resources */,
+				9CED5FB2203C566800C9A6C5 /* Carthage */,
 			);
 			buildRules = (
 			);
@@ -2665,6 +2667,7 @@
 				4C5CF31E1BE10B650019AA81 /* Sources */,
 				4C5CF31F1BE10B650019AA81 /* Frameworks */,
 				4C5CF3201BE10B650019AA81 /* Resources */,
+				9CED5FB0203C564F00C9A6C5 /* Carthage */,
 			);
 			buildRules = (
 			);
@@ -2920,6 +2923,51 @@
 			shellPath = /bin/sh;
 			shellScript = "git=`sh /etc/profile; which git`\nbranch_name=`$git symbolic-ref HEAD | sed -e 's,.*/\\\\(.*\\\\),\\\\1,'`\ngit_count=`$git rev-list $branch_name |wc -l | sed 's/^ *//;s/ *$//'`\nsimple_branch_name=`$git rev-parse --abbrev-ref HEAD`\n\nbuild_number=\"${git_count}\"\nif [ $CONFIGURATION != \"Release\" ]; then\nbuild_number+=\"-$simple_branch_name\"\nfi\n\nplist=\"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\ndsym_plist=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\n\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $build_number\" \"$plist\"\nif [ -f \"$DSYM_INFO_PLIST\" ] ; then\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $build_number\" \"$dsym_plist\"\nfi";
 			showEnvVarsInLog = 0;
+		};
+		9CED5FB0203C564F00C9A6C5 /* Carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/KissXML.framework",
+			);
+			name = Carthage;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+		9CED5FB1203C566300C9A6C5 /* Carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/KissXML.framework",
+			);
+			name = Carthage;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+		9CED5FB2203C566800C9A6C5 /* Carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/tvOS/KissXML.framework",
+			);
+			name = Carthage;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
