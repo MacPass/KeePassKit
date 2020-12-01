@@ -204,8 +204,6 @@ FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPSecretHex;
 FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPSecretBase32;
 FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPSecretBase64;
 FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPCounter;
-FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPSeed;
-FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPConfig;
 FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSecret;
 FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSecretHex;
 FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSecretBase32;

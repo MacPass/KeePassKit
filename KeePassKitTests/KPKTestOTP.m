@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "NSString+KPKHexdata.h"
 #import "KPKOTPGenerator.h"
+#import "KPKOTPSettings.h"
 
 @interface KPKTestOTP : XCTestCase
 
@@ -54,27 +55,27 @@
   
   
   KPKOTPGenerator *generator = [[KPKOTPGenerator alloc] init];
-  generator.key = keyData;
-  generator.type = KPKOTPGeneratorHmacOTP;
-  generator.hashAlgorithm = KPKOTPHashAlgorithmSha1;
+  generator.settings.key = keyData;
+  generator.settings.type = KPKOTPGeneratorHmacOTP;
+  generator.settings.hashAlgorithm = KPKOTPHashAlgorithmSha1;
   
   for(NSString *string in hexResults) {
     NSUInteger index = [hexResults indexOfObject:string];
-    generator.counter = index;
+    generator.settings.counter = index;
     XCTAssertEqualObjects(string.kpk_dataFromHexString, generator.data);
   }
   
   for(NSNumber *number in decimalResults) {
     NSUInteger index = [decimalResults indexOfObject:number];
-    generator.counter = index;
+    generator.settings.counter = index;
     NSUInteger hmacDecimal = generator.data.kpk_unsignedInteger;
     NSUInteger actual = number.unsignedIntegerValue;
     XCTAssertEqual(actual, hmacDecimal);
   }
-  generator.numberOfDigits = 6;
+  generator.settings.numberOfDigits = 6;
   for(NSString *string in stringResults) {
     NSUInteger index = [stringResults indexOfObject:string];
-    generator.counter = index;
+    generator.settings.counter = index;
     XCTAssertEqualObjects(string, generator.string);
   }
   
@@ -107,18 +108,18 @@
   };
   
   KPKOTPGenerator *generator = [[KPKOTPGenerator alloc] init];
-  generator.type = KPKOTPGeneratorTOTP;
-  generator.timeBase = 0;
-  generator.timeSlice = 30;
-  generator.numberOfDigits = 8;
+  generator.settings.type = KPKOTPGeneratorTOTP;
+  generator.settings.timeBase = 0;
+  generator.settings.timeSlice = 30;
+  generator.settings.numberOfDigits = 8;
   
   for(NSNumber *time in values) {
-    generator.time = time.unsignedIntegerValue;
+    generator.settings.time = time.unsignedIntegerValue;
     NSDictionary *results = values[time];
     for(NSNumber *algorithm in results) {
       KPKOTPHashAlgorithm hash = (KPKOTPHashAlgorithm)algorithm.unsignedIntegerValue;
-      generator.hashAlgorithm = hash;
-      generator.key = [keyData[algorithm] dataUsingEncoding:NSUTF8StringEncoding];
+      generator.settings.hashAlgorithm = hash;
+      generator.settings.key = [keyData[algorithm] dataUsingEncoding:NSUTF8StringEncoding];
       NSString *result = results[algorithm];
       XCTAssertEqualObjects(result, generator.string);
     }

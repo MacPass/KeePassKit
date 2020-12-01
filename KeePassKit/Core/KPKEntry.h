@@ -103,6 +103,19 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;        //
  */
 @property (nonatomic, readonly) BOOL isMeta;
 
+/**
+ Returns YES if the entry has valid Hmac OTP settings. If the settings are incomplete, wrong or missing NO will get returned
+ */
+@property (readonly) BOOL hasHOTP;
+/**
+ Returns YES if the entry has valid Time OTP settings.
+ Knowns formats are:
+ - KeePass (TimeOtp…)
+ - KeePassOTP (
+ */
+@property (readonly) BOOL hasTOTP;
+
+
 - (KPKComparsionResult)compareToEntry:(KPKEntry *)entry;
 
 #pragma mark MetaEntries
@@ -222,4 +235,3 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;        //
 @property (nonatomic, readonly) NSUInteger estimatedByteSize;
 
 @end
-

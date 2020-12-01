@@ -698,6 +698,33 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return self;
 }
 
+- (BOOL)hasTOTP {
+  /* FIXME: implement propert changes when attributes update! */
+  if([self hasAttributeWithKey:kKPKAttributeKeyOTPOAuthURL]) {
+    // setup ??
+  }
+  return NO;
+}
+
+- (BOOL)hasHOTP {
+  
+  if(![self hasAttributeWithKey:kKPKAttributeKeyHmacOTPCounter]) {
+    return NO;
+  }
+  NSArray *keys = @[kKPKAttributeKeyHmacOTPSecret, kKPKAttributeKeyHmacOTPSecretHex, kKPKAttributeKeyHmacOTPSecretBase32, kKPKAttributeKeyHmacOTPSecretBase64];
+  BOOL hasSecret = NO;
+  for(NSString *key in keys) {
+    if([self hasAttributeWithKey:key]) {
+      if(hasSecret) {
+        return NO;
+      }
+      hasSecret = YES;
+    }
+  }
+  return hasSecret;
+}
+
+
 #pragma mark CustomAttributes
 - (KPKAttribute *)customAttributeWithKey:(NSString *)key {
   KPKAttribute *attribute = [self attributeWithKey:key];
@@ -1053,7 +1080,5 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 #pragma mark -
 #pragma mark Private Helper
-
-
 
 @end

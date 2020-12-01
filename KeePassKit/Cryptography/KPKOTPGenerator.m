@@ -7,6 +7,7 @@
 //
 
 #import "KPKOTPGenerator.h"
+#import "KPKOTPSettings.h"
 #import <CommonCrypto/CommonCrypto.h>
 
 @implementation NSData (KPKOTPDataConversion)
@@ -38,7 +39,6 @@
 
 @interface KPKOTPGenerator ()
 
-@property (readonly, copy) NSString *alphabet;
 
 @end
 
@@ -47,40 +47,19 @@
 - (instancetype)init {
   self = [super init];
   if(self) {
-    _hashAlgorithm = KPKOTPHashAlgorithmSha1;
-    _key = [NSData.data copy]; // use an empty key;
-    _type = KPKOTPGeneratorHmacOTP;
-    _timeBase = 0;
-    _timeSlice = 30;
-    _time = 0;
-    _counter = 0;
-    _numberOfDigits = 6;
+    _settings = [[KPKOTPSettings alloc] init];
   }
   return self;
-}
-
-- (NSString *)alphabet {
-  switch (self.type) {
-    case KPKOTPGeneratorHmacOTP:
-    case KPKOTPGeneratorTOTP:
-      return @"0123456789";
-      
-    case KPKOTPGeneratorSteamOTP:
-      return @"23456789BCDFGHJKMNPQRTVWXY";
-    default:
-      return @"";
-      break;
-  }
 }
 
 - (NSData *)data {
   if(![self _validateOptions]) {
     return NSData.data;
   }
-  if(self.type == KPKOTPGeneratorTOTP) {
-    self.counter = floor((self.time - self.timeBase) / self.timeSlice);
+  if(self.settings.type == KPKOTPGeneratorTOTP) {
+    self.settings.counter = floor((self.settings.time - self.settings.timeBase) / self.settings.timeSlice);
   }
-  return [self _HMACOTPWithKey:self.key counter:self.counter algorithm:self.hashAlgorithm];
+  return [self _HMACOTPWithKey:self.settings.key counter:self.settings.counter algorithm:self.settings.hashAlgorithm];
 }
 
 - (NSString *)string {
@@ -90,12 +69,12 @@
   }
   
   NSUInteger decimal = data.kpk_unsignedInteger;
-  NSUInteger alphabetLength = self.alphabet.length;
+  NSUInteger alphabetLength = self.settings.alphabet.length;
   NSMutableString *result = [[NSMutableString alloc] init];
-  while(result.length < self.numberOfDigits) {
+  while(result.length < self.settings.numberOfDigits) {
     NSUInteger code = decimal % alphabetLength;
     if(code < alphabetLength) {
-      [result insertString:[self.alphabet substringWithRange:NSMakeRange(code, 1)] atIndex:0];
+      [result insertString:[self.settings.alphabet substringWithRange:NSMakeRange(code, 1)] atIndex:0];
     }
     else {
       return @""; // falure
@@ -105,14 +84,10 @@
   return [result copy];
 }
 
-- (BOOL)setupWithOptions:(NSDictionary<NSString *,NSString *> *)options {
-  return NO;
-}
-
 - (BOOL)_validateOptions {
-  return (self.numberOfDigits >= 1 &&
-          self.numberOfDigits <= 8 &&
-          self.key.length > 0
+  return (self.settings.numberOfDigits >= 1 &&
+          self.settings.numberOfDigits <= 8 &&
+          self.settings.key.length > 0
           );
 }
 
