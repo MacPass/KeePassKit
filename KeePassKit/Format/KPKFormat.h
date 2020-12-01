@@ -198,18 +198,23 @@ FOUNDATION_EXTERN NSString *const kKPKXmlFalse;
 FOUNDATION_EXTERN NSString *const kKPKXmlCompressed;
 
 #pragma mark Special Attributes
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyHMACOTPSecret;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyHMACOTPSecretHex;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyHMACOTPSecretBase32;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyHMACOTPSecretBase64;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyHMACOTPCounter;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyTIMEOTPSecret;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyTIMEOTPSecretHex;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyTIMEOTPSecretBase32;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyTIMEOTPSecretBase64;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyTIMEOTPLength;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyTIMEOTPPeriod;
-FOUNDATION_EXTERN NSString *const kKPKHCustomKeyTIMEOTPAlgorithm;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyOTPOAuthURL;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPSecret;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPSecretHex;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPSecretBase32;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPSecretBase64;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPCounter;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPSeed;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyHmacOTPConfig;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSecret;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSecretHex;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSecretBase32;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSecretBase64;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPLength;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPPeriod;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPAlgorithm;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSeed;
+FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSettings;
 
 /**
  *  Referemce Keys used for Referencing attributes inside entries

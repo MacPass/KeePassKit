@@ -207,18 +207,25 @@ NSString *const kKPKPlaceholderPickField                    = @"{PICKFIELD}";
 NSString *const kKPKPlaceholderHMACOTP                      = @"{HMACOTP}";
 NSString *const kKPKPlaceholderTIMEOTP                      = @"{TIMEOTP}";
 
-NSString *const kKPKHCustomKeyHMACOTPSecret       = @"{HmacOtp-Secret}";
-NSString *const kKPKHCustomKeyHMACOTPSecretHex    = @"{HmacOtp-Secret-Hex}";
-NSString *const kKPKHCustomKeyHMACOTPSecretBase32 = @"{HmacOtp-Secret-Base32}";
-NSString *const kKPKHCustomKeyHMACOTPSecretBase64 = @"{HmacOtp-Secret-Base64}";
-NSString *const kKPKHCustomKeyHMACOTPCounter      = @"{HmacOtp-Counter}";
-NSString *const kKPKHCustomKeyTIMEOTPSecret       = @"{TimeOtp-Secret}";
-NSString *const kKPKHCustomKeyTIMEOTPSecretHex    = @"{TimeOtp-Secret-Hex}";
-NSString *const kKPKHCustomKeyTIMEOTPSecretBase32 = @"{TimeOtp-Secret-Base32}";
-NSString *const kKPKHCustomKeyTIMEOTPSecretBase64 = @"{TimeOtp-Secret-Base64}";
-NSString *const kKPKHCustomKeyTIMEOTPLength       = @"{TimeOtp-Length}";
-NSString *const kKPKHCustomKeyTIMEOTPPeriod       = @"{TimeOtp-Period}";
-NSString *const kKPKHCustomKeyTIMEOTPAlgorithm    = @"{TimeOtp-Algorithm}";
+NSString *const kKPKAttributeKeyOTPOAuthURL         = @"otp";
+NSString *const kKPKAttributeKeyHmacOTPSecret       = @"HmacOtp-Secret";
+NSString *const kKPKAttributeKeyHmacOTPSecretHex    = @"HmacOtp-Secret-Hex";
+NSString *const kKPKAttributeKeyHmacOTPSecretBase32 = @"HmacOtp-Secret-Base32";
+NSString *const kKPKAttributeKeyHmacOTPSecretBase64 = @"HmacOtp-Secret-Base64";
+NSString *const kKPKAttributeKeyHmacOTPCounter      = @"HmacOtp-Counter";
+NSString *const kKPKAttributeKeyHmacOTPSeed         = @"HMACOTP-Seed";
+NSString *const kKPKAttributeKeyHmacOTPConfig       = @"HMACOTP-Config";
+NSString *const kKPKAttributeKeyTimeOTPSecret       = @"TimeOtp-Secret";
+NSString *const kKPKAttributeKeyTimeOTPSecretHex    = @"TimeOtp-Secret-Hex";
+NSString *const kKPKAttributeKeyTimeOTPSecretBase32 = @"TimeOtp-Secret-Base32";
+NSString *const kKPKAttributeKeyTimeOTPSecretBase64 = @"TimeOtp-Secret-Base64";
+NSString *const kKPKAttributeKeyTimeOTPLength       = @"TimeOtp-Length";
+NSString *const kKPKAttributeKeyTimeOTPPeriod       = @"TimeOtp-Period";
+NSString *const kKPKAttributeKeyTimeOTPAlgorithm    = @"TimeOtp-Algorithm";
+NSString *const kKPKAttributeKeyTimeOTPSeed         = @"TOTP Seed";
+NSString *const kKPKAttributeKeyTimeOTPSettings     = @"TOTP Settings";
+
+
 
 
 
