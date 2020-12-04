@@ -7,6 +7,7 @@
 //
 
 #import "KPKOTPGenerator.h"
+#import "KPKOTPGenerator_Private.h"
 #import "KPKEntry.h"
 #import <CommonCrypto/CommonCrypto.h>
 
@@ -37,81 +38,32 @@
 
 @end
 
-@interface KPKOTPGenerator ()
-
-@property (readonly, copy) NSString *alphabet;
-
-@end
-
 @implementation KPKOTPGenerator
 
-+ (NSSet<NSString *> *)keyPathsForValuesAffectingData {
-  return [NSSet setWithArray:@[NSStringFromSelector(@selector(hashAlgorithm)), NSStringFromSelector(@selector(key)),
-                               NSStringFromSelector(@selector(type)), NSStringFromSelector(@selector(timeBase)),
-                               NSStringFromSelector(@selector(timeSlice)), NSStringFromSelector(@selector(time)),
-                               NSStringFromSelector(@selector(counter)), NSStringFromSelector(@selector(numberOfDigits))]];
-}
-
-+ (NSSet<NSString *> *)keyPathsForValuesAffectingString {
-  return [NSSet setWithObject:NSStringFromSelector(@selector(data))];
-}
-
-+ (NSArray<KPKOTPGenerator *> *)generatorsOfType:(KPKOTPGeneratorType)type forEntry:(KPKEntry *)entry {
-  switch(type) {
-    case KPKOTPGeneratorTOTP:
-        
-    case KPKOTPGeneratorHmacOTP:
-    
-    case KPKOTPGeneratorSteamOTP:
-    default:
-      return @[];
-  }
-}
-
-- (instancetype)init {
+- (instancetype)_init {
   self = [super init];
   if(self) {
     _hashAlgorithm = KPKOTPHashAlgorithmSha1;
     _key = [NSData.data copy]; // use an empty key;
-    _type = KPKOTPGeneratorHmacOTP;
-    _timeBase = 0;
-    _timeSlice = 30;
-    _time = 0;
-    _counter = 0;
     _numberOfDigits = 6;
   }
   return self;
 }
 
-- (NSTimeInterval)remainingTime {
-  if(self.type != KPKOTPGeneratorTOTP) {
-    return self.timeSlice;
-  }
-  return ((NSInteger)(self.time - self.timeBase) % self.timeSlice);
+- (NSUInteger)_counter {
+   [self doesNotRecognizeSelector:_cmd];
+   return 0;
 }
 
-- (NSString *)alphabet {
-  switch (self.type) {
-    case KPKOTPGeneratorHmacOTP:
-    case KPKOTPGeneratorTOTP:
-      return @"0123456789";
-      
-    case KPKOTPGeneratorSteamOTP:
-      return @"23456789BCDFGHJKMNPQRTVWXY";
-    default:
-      return @"";
-      break;
-  }
+- (NSString *)_alphabet {
+  return @"0123456789";
 }
 
 - (NSData *)data {
   if(![self _validateOptions]) {
     return NSData.data;
   }
-  if(self.type == KPKOTPGeneratorTOTP) {
-    self.counter = floor((self.time - self.timeBase) / self.timeSlice);
-  }
-  return [self _HMACOTPWithKey:self.key counter:self.counter algorithm:self.hashAlgorithm];
+  return [self _HMACOTPWithKey:self.key counter:[self _counter] algorithm:self.hashAlgorithm];
 }
 
 - (NSString *)string {
@@ -121,12 +73,13 @@
   }
   
   NSUInteger decimal = data.kpk_unsignedInteger;
-  NSUInteger alphabetLength = self.alphabet.length;
+  NSString *alphabet = [self _alphabet];
+  NSUInteger alphabetLength = alphabet.length;
   NSMutableString *result = [[NSMutableString alloc] init];
   while(result.length < self.numberOfDigits) {
     NSUInteger code = decimal % alphabetLength;
     if(code < alphabetLength) {
-      [result insertString:[self.alphabet substringWithRange:NSMakeRange(code, 1)] atIndex:0];
+      [result insertString:[alphabet substringWithRange:NSMakeRange(code, 1)] atIndex:0];
     }
     else {
       return @""; // falure

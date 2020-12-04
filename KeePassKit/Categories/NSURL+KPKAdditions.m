@@ -18,19 +18,19 @@
   return nil;
 }
 
-- (KPKOTPGeneratorType)type {
-  NSString *type = self.host;
-  if(!type) {
-    return KPKOTPGeneratorTypeInvalid;
-  }
-  if([type isEqualToString:@"totp"]) {
-    return KPKOTPGeneratorTOTP;
-  }
-  if([type isEqualToString:@"hotp"]) {
-    return KPKOTPGeneratorHmacOTP;
-  }
-  return KPKOTPGeneratorTypeInvalid;
-}
+//- (KPKOTPGeneratorType)type {
+//  NSString *type = self.host;
+//  if(!type) {
+//    return KPKOTPGeneratorTypeInvalid;
+//  }
+//  if([type isEqualToString:@"totp"]) {
+//    return KPKOTPGeneratorTOTP;
+//  }
+//  if([type isEqualToString:@"hotp"]) {
+//    return KPKOTPGeneratorHmacOTP;
+//  }
+//  return KPKOTPGeneratorTypeInvalid;
+//}
 
 - (NSData *)key {
   NSString *query = self.query;

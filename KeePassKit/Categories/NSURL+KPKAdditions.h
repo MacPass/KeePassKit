@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSURL (KPKAdditions)
 
-@property (nonatomic, readonly) KPKOTPGeneratorType type;
 @property (copy, readonly) NSData* key;
 
 + (instancetype)URLWithHmacOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits;

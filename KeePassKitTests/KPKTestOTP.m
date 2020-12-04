@@ -8,7 +8,8 @@
 
 #import <XCTest/XCTest.h>
 #import "NSString+KPKHexdata.h"
-#import "KPKOTPGenerator.h"
+#import "KPKHmacOTPGenerator.h"
+#import "KPKTimeOTPGenerator.h"
 
 @interface KPKTestOTP : XCTestCase
 
@@ -53,9 +54,8 @@
                                            @"520489" ];
   
   
-  KPKOTPGenerator *generator = [[KPKOTPGenerator alloc] init];
+  KPKHmacOTPGenerator *generator = [[KPKHmacOTPGenerator alloc] init];
   generator.key = keyData;
-  generator.type = KPKOTPGeneratorHmacOTP;
   generator.hashAlgorithm = KPKOTPHashAlgorithmSha1;
   
   for(NSString *string in hexResults) {
@@ -106,8 +106,7 @@
                                               @(KPKOTPHashAlgorithmSha512) : @"47863826" },
   };
   
-  KPKOTPGenerator *generator = [[KPKOTPGenerator alloc] init];
-  generator.type = KPKOTPGeneratorTOTP;
+  KPKTimeOTPGenerator *generator = [[KPKTimeOTPGenerator alloc] init];
   generator.timeBase = 0;
   generator.timeSlice = 30;
   generator.numberOfDigits = 8;
