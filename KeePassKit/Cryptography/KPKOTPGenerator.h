@@ -38,6 +38,7 @@ typedef NS_ENUM(NSUInteger, KPKOTPHashAlgorithm ) {
 @property NSUInteger numberOfDigits; // the number of digits to vent as code, default=6
 
 - (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithEntry:(KPKEntry *)entry;
 
 @end
 

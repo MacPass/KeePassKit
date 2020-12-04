@@ -705,6 +705,14 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return self;
 }
 
+- (NSString *)hmacOTP {
+  return @"";
+}
+
+- (NSString *)timeOTP {
+  return @"";
+}
+
 - (BOOL)hasTimeOTP {
   /* FIXME: implement propert changes when attributes update! */
   if([self hasAttributeWithKey:kKPKAttributeKeyOTPOAuthURL]) {

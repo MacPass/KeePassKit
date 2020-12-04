@@ -59,6 +59,12 @@
   return @"0123456789";
 }
 
+- (instancetype)initWithEntry:(KPKEntry *)entry {
+  [self doesNotRecognizeSelector:_cmd];
+  self = nil;
+  return self;
+}
+
 - (NSData *)data {
   if(![self _validateOptions]) {
     return NSData.data;

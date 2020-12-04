@@ -8,6 +8,15 @@
 
 #import "NSURL+KPKAdditions.h"
 
+NSString *const kKPKURLTypeHmacOTP        = @"hotp";
+NSString *const kKPKURLTypeTimeOTP        = @"totp";
+NSString *const kKPKURLParameterSecret    = @"secret";
+NSString *const kKPKURLParameterAlgorithm = @"algorithm";
+NSString *const kKPKURLParameterDigits    = @"digits";
+NSString *const kKPKURLParameterIssuer    = @"issuer";
+NSString *const kKPKURLParameterPeriod    = @"period";
+NSString *const kKPKURLParameterCounter   = @"counter";
+
 @implementation NSURL (KPKAdditions)
 
 + (instancetype)URLWithTimeOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)perid digits:(NSUInteger)digits {
@@ -18,23 +27,23 @@
   return nil;
 }
 
-//- (KPKOTPGeneratorType)type {
-//  NSString *type = self.host;
-//  if(!type) {
-//    return KPKOTPGeneratorTypeInvalid;
-//  }
-//  if([type isEqualToString:@"totp"]) {
-//    return KPKOTPGeneratorTOTP;
-//  }
-//  if([type isEqualToString:@"hotp"]) {
-//    return KPKOTPGeneratorHmacOTP;
-//  }
-//  return KPKOTPGeneratorTypeInvalid;
-//}
-
 - (NSData *)key {
   NSString *query = self.query;
-  return NSData.data;
+  NSURLComponents *components = [[NSURLComponents alloc] initWithURL:self resolvingAgainstBaseURL:NO];
+  for(NSURLQueryItem *queryItem in components.queryItems) {
+    if([queryItem.name compare:kKPKURLParameterSecret options:NSCaseInsensitiveSearch]) {
+      return queryItem.value;
+    }
+  }
+  return nil;
+}
+
+- (BOOL)isHmacOTPURL {
+  return [self.host compare:kKPKURLTypeHmacOTP options:NSCaseInsensitiveSearch];
+}
+
+- (BOOL)isTimeOTPURL {
+  return [self.host compare:kKPKURLTypeTimeOTP options:NSCaseInsensitiveSearch];
 }
 
 @end

@@ -115,8 +115,8 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;        //
  */
 @property (readonly, nonatomic) BOOL hasTimeOTP;
 
-@property (readonly, nonatomic) NSString *HmacOTP;
-@property (readonly, nonatomic) NSString *TimeOTP;
+@property (readonly, nonatomic) NSString *hmacOTP;
+@property (readonly, nonatomic) NSString *timeOTP;
 
 - (KPKComparsionResult)compareToEntry:(KPKEntry *)entry;
 

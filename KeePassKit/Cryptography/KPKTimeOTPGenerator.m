@@ -21,12 +21,30 @@
   return self;
 }
 
+- (instancetype)initWithEntry:(KPKEntry *)entry {
+  self = [self init];
+  if(self) {
+    
+  }
+  return self;
+}
+
 - (NSUInteger)_counter {
   return floor((self.time - self.timeBase) / self.timeSlice);
 }
 
+
 - (NSTimeInterval)remainingTime {
   return ((NSInteger)(self.time - self.timeBase) % self.timeSlice);
+}
+
+- (BOOL)_parseEntryAttributes:(KPKEntry *)entry {
+  KPKAttribute *urlAttribute = [entry attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
+  if(urlAttribute) {
+    
+    
+  }
+  return NO;
 }
 
 @end
