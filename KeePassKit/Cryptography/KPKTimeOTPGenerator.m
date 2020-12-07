@@ -24,7 +24,10 @@
 - (instancetype)initWithEntry:(KPKEntry *)entry {
   self = [self init];
   if(self) {
-    
+    if(![self _parseEntryAttributes:entry]) {
+      self = nil;
+      return self;
+    }
   }
   return self;
 }

@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSURL (KPKAdditions)
 
+FOUNDATION_EXTERN NSString *const kKPKURLOtpAuthScheme;
 FOUNDATION_EXTERN NSString *const kKPKURLTypeHmacOTP;
 FOUNDATION_EXTERN NSString *const kKPKURLTypeTimeOTP;
 FOUNDATION_EXTERN NSString *const kKPKURLParameterSecret;
@@ -26,10 +27,15 @@ FOUNDATION_EXTERN NSString *const kKPKURLParameterCounter;
 @property (readonly, nonatomic) BOOL isTimeOTPURL;
 
 @property (copy, readonly, nullable) NSData* key;
+@property (readonly) KPKOTPHashAlgorithm hashAlgorithm;
+@property (readonly) NSUInteger digits;
+@property (readonly) NSUInteger counter; // only for HmacOTP urls
+@property (readonly) NSUInteger period; // only for TimeOTP urls
 
 + (instancetype)URLWithHmacOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits;
-+ (instancetype)URLWithTimeOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)perid digits:(NSUInteger)digits;
-
++ (instancetype)URLWithTimeOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)period digits:(NSUInteger)digits;
+- (instancetype)initWithHmacOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits;
+- (instancetype)initWithTimeOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)period digits:(NSUInteger)digits;
 @end
 
 NS_ASSUME_NONNULL_END

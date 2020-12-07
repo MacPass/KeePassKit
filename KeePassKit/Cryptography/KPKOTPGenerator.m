@@ -9,6 +9,7 @@
 #import "KPKOTPGenerator.h"
 #import "KPKOTPGenerator_Private.h"
 #import "KPKEntry.h"
+#import "KPKAttribute.h"
 #import <CommonCrypto/CommonCrypto.h>
 
 @implementation NSData (KPKOTPDataConversion)
@@ -142,6 +143,7 @@
 
 - (NSArray <KPKOTPGenerator *> *)_hmacOtpGeneratorForEntry:(KPKEntry *)entry {
   KPKAttribute *urlAttribute = [entry attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
+  NSURL *authURL = [[NSURL alloc] initWithString:urlAttribute.value];
   
   return @[];
 }
