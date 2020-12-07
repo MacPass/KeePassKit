@@ -666,6 +666,7 @@
 		4C4A64241FDBF2D200FD120F /* KPKOTPGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A641D1FDBF2D100FD120F /* KPKOTPGenerator.m */; };
 		4C4A64251FDBF2D200FD120F /* KPKOTPGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A641D1FDBF2D100FD120F /* KPKOTPGenerator.m */; };
 		4C4A64271FDD601B00FD120F /* KPKTestOTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A64261FDD601B00FD120F /* KPKTestOTP.m */; };
+		4C4BE0BD257E8F48000AEA8C /* KPKTestNSURL+KPKAddtions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4BE0BC257E8F48000AEA8C /* KPKTestNSURL+KPKAddtions.m */; };
 		4C4E23031D7DC10700E58983 /* NSDictionary+KPKVariant.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4E23011D7DC10700E58983 /* NSDictionary+KPKVariant.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C4E23041D7DC10700E58983 /* NSDictionary+KPKVariant.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E23021D7DC10700E58983 /* NSDictionary+KPKVariant.m */; };
 		4C4FF1C91BE120D30015827B /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4FF1C81BE120D30015827B /* libz.tbd */; };
@@ -1196,6 +1197,7 @@
 		4C4A641C1FDBF2D100FD120F /* KPKOTPGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKOTPGenerator.h; sourceTree = "<group>"; };
 		4C4A641D1FDBF2D100FD120F /* KPKOTPGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKOTPGenerator.m; sourceTree = "<group>"; };
 		4C4A64261FDD601B00FD120F /* KPKTestOTP.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestOTP.m; sourceTree = "<group>"; };
+		4C4BE0BC257E8F48000AEA8C /* KPKTestNSURL+KPKAddtions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "KPKTestNSURL+KPKAddtions.m"; sourceTree = "<group>"; };
 		4C4E23011D7DC10700E58983 /* NSDictionary+KPKVariant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+KPKVariant.h"; sourceTree = "<group>"; };
 		4C4E23021D7DC10700E58983 /* NSDictionary+KPKVariant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "NSDictionary+KPKVariant.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C4FF1C81BE120D30015827B /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -1771,6 +1773,7 @@
 				4C8CB6B61EEEF3AA00AF4402 /* KPKTextKdbxWriting.m */,
 				4C188B721F74F49500B77D6E /* KPKTextUndoCustomIcons.m */,
 				4C5CF4A81BE10F090019AA81 /* KPKTextXMLUtilities.m */,
+				4C4BE0BC257E8F48000AEA8C /* KPKTestNSURL+KPKAddtions.m */,
 			);
 			path = KeePassKitTests;
 			sourceTree = "<group>";
@@ -3562,6 +3565,7 @@
 				4CCC95061E24F2BD00593E65 /* KPKTestNodeForUUID.m in Sources */,
 				4C93C4AD1DC2704600260DD4 /* KPKTestChaCha20.m in Sources */,
 				4C2D8B151DEF043600AB72CD /* KPKTestEmptyString.m in Sources */,
+				4C4BE0BD257E8F48000AEA8C /* KPKTestNSURL+KPKAddtions.m in Sources */,
 				4C5CF4B51BE10F090019AA81 /* KPKTestPlaceholder.m in Sources */,
 				4C21282E1C1F4F27006DE3C6 /* KPKTestNode.m in Sources */,
 				4C5CF4AC1BE10F090019AA81 /* KPKTestEntryLookup.m in Sources */,

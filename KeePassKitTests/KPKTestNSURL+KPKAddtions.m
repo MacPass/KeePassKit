@@ -7,6 +7,9 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "NSURL+KPKAdditions.h"
+#import "NSData+KPKRandom.h"
+#import "NSData+KPKBase32.h"
 
 @interface KPKTestNSURL_KPKAddtions : XCTestCase
 
@@ -14,24 +17,49 @@
 
 @implementation KPKTestNSURL_KPKAddtions
 
-- (void)setUp {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+- (void)testInvalidScheme {
+    NSData *keyData = [NSData kpk_dataWithRandomBytes:10];
+    NSUInteger period = 30;
+    NSUInteger digits = 8;
+    NSString *urlString = [NSString stringWithFormat:@"nototpauth://totp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&period=%ld&algorithm=sha256&digits=%ld", keyData.base32EncodedString, period, digits];
+    NSURL *timeURL = [NSURL URLWithString:urlString];
+    XCTAssertNotNil(timeURL);
+    XCTAssertFalse(timeURL.isTimeOTPURL);
+    XCTAssertFalse(timeURL.isHmacOTPURL);
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+- (void)testTimeOTPURLProperties {
+  NSData *keyData = [NSData kpk_dataWithRandomBytes:10];
+  NSUInteger period = 30;
+  NSUInteger digits = 8;
+  KPKOTPHashAlgorithm algoritm = KPKOTPHashAlgorithmSha256;
+  NSString *urlString = [NSString stringWithFormat:@"otpauth://totp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&period=%ld&algorithm=sha256&digits=%ld", keyData.base32EncodedString, period, digits];
+  NSURL *timeURL = [NSURL URLWithString:urlString];
+  XCTAssertNotNil(timeURL);
+  XCTAssertTrue(timeURL.isTimeOTPURL);
+  XCTAssertFalse(timeURL.isHmacOTPURL);
+  XCTAssertEqual(timeURL.digits, digits);
+  XCTAssertEqual(timeURL.hashAlgorithm, algoritm);
+  XCTAssertEqual(timeURL.period, period);
+  XCTAssertEqualObjects(timeURL.key, keyData);
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+- (void)testHmacOTPURLProperties {
+  NSData *keyData = [NSData kpk_dataWithRandomBytes:10];
+  NSUInteger counter = 999;
+  NSUInteger digits = 8;
+  KPKOTPHashAlgorithm algoritm = KPKOTPHashAlgorithmSha1;
+  NSString *urlString = [NSString stringWithFormat:@"otpauth://hotp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&counter=%ld&algorithm=sha1&digits=%ld", keyData.base32EncodedString, counter, digits];
+  NSURL *timeURL = [NSURL URLWithString:urlString];
+  XCTAssertNotNil(timeURL);
+  XCTAssertFalse(timeURL.isTimeOTPURL);
+  XCTAssertTrue(timeURL.isHmacOTPURL);
+  XCTAssertEqual(timeURL.digits, digits);
+  XCTAssertEqual(timeURL.hashAlgorithm, algoritm);
+  XCTAssertEqual(timeURL.counter, counter);
+  XCTAssertEqualObjects(timeURL.key, keyData);
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
-}
+
 
 @end
