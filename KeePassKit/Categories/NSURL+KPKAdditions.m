@@ -139,22 +139,22 @@ NSString *const kKPKURLParameterCounter   = @"counter";
   if(hashNumber) {
     return (KPKOTPHashAlgorithm)hashNumber.integerValue;
   }
-  return KPKOTPHashAlgorithmSha1;
+  return KPKOTPHashAlgorithmInvalid;
 }
 
-- (NSUInteger)digits {
+- (NSInteger)digits {
   NSString *keyValue = [self _queryItemValueForKey:kKPKURLParameterDigits];
-  return keyValue.integerValue;
+  return keyValue ? keyValue.integerValue : -1;
 }
 
-- (NSUInteger)period {
+- (NSInteger)period {
   NSString *periodValue = [self _queryItemValueForKey:kKPKURLParameterPeriod];
-  return periodValue.integerValue;
+  return periodValue ? periodValue.integerValue : -1;
 }
 
-- (NSUInteger)counter {
-  NSString *keyValue = [self _queryItemValueForKey:kKPKURLParameterCounter];
-  return keyValue.integerValue;
+- (NSInteger)counter {
+  NSString *counterValue = [self _queryItemValueForKey:kKPKURLParameterCounter];
+  return counterValue ? counterValue.integerValue : -1;
 }
 
 - (BOOL)isHmacOTPURL {

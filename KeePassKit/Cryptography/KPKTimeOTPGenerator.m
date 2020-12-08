@@ -8,6 +8,7 @@
 
 #import "KPKTimeOTPGenerator.h"
 #import "KPKOTPGenerator_Private.h"
+#import "NSURL+KPKAdditions.h"
 
 @implementation KPKTimeOTPGenerator
 
@@ -43,10 +44,36 @@
 
 - (BOOL)_parseEntryAttributes:(KPKEntry *)entry {
   KPKAttribute *urlAttribute = [entry attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
+  
   if(urlAttribute) {
-    
-    
+    NSURL *authURL = [NSURL URLWithString:urlAttribute.evaluatedValue];
+    if(authURL && authURL.isTimeOTPURL) {
+      if(authURL.digits > 0) {
+        self.numberOfDigits = authURL.digits;
+      }
+      if(KPKOTPHashAlgorithmInvalid != authURL.hashAlgorithm) {
+        self.hashAlgorithm = authURL.hashAlgorithm;
+      }
+      if(authURL.period > 0) {
+        self.timeSlice = authURL.period;
+      }
+      if(authURL.key.length != 0) {
+        self.key = authURL.key;
+      }
+      else {
+        return NO; // key is mandatory!
+      }
+    }
   }
+
+  KPKAttribute *settingsAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSettings];
+  KPKAttribute *seedAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSeed];
+
+  KPKAttribute *secretUTFAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecret];
+  KPKAttribute *secretHexAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretHex];
+  KPKAttribute *secretBase32Attribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretBase32];
+  KPKAttribute *secretBase64Attribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretBase64];
+
   return NO;
 }
 

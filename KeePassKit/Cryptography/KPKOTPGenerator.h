@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 typedef NS_ENUM(NSUInteger, KPKOTPHashAlgorithm ) {
+  KPKOTPHashAlgorithmInvalid, // Should be used to indicate invalid state
   KPKOTPHashAlgorithmSha1,
   KPKOTPHashAlgorithmSha256,
   KPKOTPHashAlgorithmSha512,
