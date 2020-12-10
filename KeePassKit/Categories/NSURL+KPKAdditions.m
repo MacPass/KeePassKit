@@ -22,11 +22,11 @@ NSString *const kKPKURLParameterCounter   = @"counter";
 
 @implementation NSURL (KPKAdditions)
 
-+ (instancetype)URLWithTimeOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)perid digits:(NSUInteger)digits {
++ (instancetype)URLWithTimeOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)perid digits:(NSUInteger)digits {
   return [[NSURL alloc] initWithTimeOTPKey:key algorithm:algorithm issuer:issuer period:perid digits:digits];
 }
 
-+ (instancetype)URLWithHmacOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits {
++ (instancetype)URLWithHmacOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits {
   return [[NSURL alloc] initWithHmacOTPKey:key algorithm:algorithm issuer:issuer counter:counter digits:digits];
 }
 
@@ -52,13 +52,12 @@ NSString *const kKPKURLParameterCounter   = @"counter";
   return map;
 }
 
-- (instancetype)initWithHmacOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits {
-  self = [self init];
+- (instancetype)initWithHmacOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits {
   NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
   /* otpauth://hotp/ */
   urlComponents.scheme = kKPKURLOtpAuthScheme;
   urlComponents.host = kKPKURLTypeHmacOTP;
-  NSMutableArray<NSURLQueryItem *>* queryItems;
+  NSMutableArray<NSURLQueryItem *>* queryItems = [[NSMutableArray alloc] init];
   
   /* algorithm */
   NSString *algorithmString = [NSURL _algorithmMap][@(algorithm)];
@@ -71,6 +70,7 @@ NSString *const kKPKURLParameterCounter   = @"counter";
   if(issuer.length > 0) {
     NSURLQueryItem *issuerQueueItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterIssuer value:issuer];
     [queryItems addObject:issuerQueueItem];
+    urlComponents.path = [NSString stringWithFormat:@"/%@",issuer];
   }
   
   /* counter */
@@ -81,20 +81,26 @@ NSString *const kKPKURLParameterCounter   = @"counter";
   NSURLQueryItem *digitsItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterDigits value:[NSString stringWithFormat:@"%ld", digits]];
   [queryItems addObject:digitsItem];
   
+  /* secret */
+  NSURLQueryItem *secretItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterSecret value:key.base32EncodedString];
+  [queryItems addObject:secretItem];
+  
   urlComponents.queryItems = queryItems;
-  if(urlComponents.URL) {
-    self = urlComponents.URL;
+  if(urlComponents.string) {
+    self = [self initWithString:urlComponents.string];
+  }
+  else {
+    self = nil;
   }
   return self;
 }
 
-- (instancetype)initWithTimeOTPKey:(NSString *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)period digits:(NSUInteger)digits {
-  self = [self init];
+- (instancetype)initWithTimeOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)period digits:(NSUInteger)digits {
   NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
   /* otpauth://hotp/ */
   urlComponents.scheme = kKPKURLOtpAuthScheme;
   urlComponents.host = kKPKURLTypeTimeOTP;
-  NSMutableArray<NSURLQueryItem *>* queryItems;
+  NSMutableArray<NSURLQueryItem *>* queryItems = [[NSMutableArray alloc] init];
   
   /* algorithm */
   NSString *algorithmString = [NSURL _algorithmMap][@(algorithm)];
@@ -107,6 +113,7 @@ NSString *const kKPKURLParameterCounter   = @"counter";
   if(issuer.length > 0) {
     NSURLQueryItem *issuerQueueItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterIssuer value:issuer];
     [queryItems addObject:issuerQueueItem];
+    urlComponents.path = [NSString stringWithFormat:@"/%@",issuer];
   }
   
   /* period */
@@ -114,12 +121,19 @@ NSString *const kKPKURLParameterCounter   = @"counter";
   [queryItems addObject:periodQueueItem];
   
   /* digits */
-  NSURLQueryItem *digitsItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterDigits value:[NSString stringWithFormat:@"%ld", period]];
+  NSURLQueryItem *digitsItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterDigits value:[NSString stringWithFormat:@"%ld", digits]];
   [queryItems addObject:digitsItem];
   
+  /* secret */
+  NSURLQueryItem *secretItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterSecret value:key.base32EncodedString];
+  [queryItems addObject:secretItem];
+  
   urlComponents.queryItems = queryItems;
-  if(urlComponents.URL) {
-    self = urlComponents.URL;
+  if(urlComponents.string) {
+    self = [self initWithString:urlComponents.string];
+  }
+  else {
+    self = nil;
   }
   return self;
 }

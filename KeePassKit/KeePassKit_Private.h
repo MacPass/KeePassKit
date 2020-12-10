@@ -24,4 +24,5 @@
 #import "KPKTimeInfo_Private.h"
 #import "KPKMetaData_Private.h"
 #import "KPKWindowAssociation_Private.h"
+#import "KPKOTPGenerator_Private.h"
 

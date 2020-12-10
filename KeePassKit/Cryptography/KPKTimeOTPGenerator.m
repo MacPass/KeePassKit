@@ -65,6 +65,8 @@
       }
     }
   }
+  
+  /* TOTP Settings */
 
   KPKAttribute *settingsAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSettings];
   KPKAttribute *seedAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSeed];
@@ -74,7 +76,7 @@
   KPKAttribute *secretBase32Attribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretBase32];
   KPKAttribute *secretBase64Attribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretBase64];
 
-  return NO;
+  return YES;
 }
 
 @end

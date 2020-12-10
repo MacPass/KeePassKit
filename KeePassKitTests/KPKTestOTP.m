@@ -10,6 +10,7 @@
 #import "NSString+KPKHexdata.h"
 #import "KPKHmacOTPGenerator.h"
 #import "KPKTimeOTPGenerator.h"
+#import "NSURL+KPKAdditions.h"
 
 @interface KPKTestOTP : XCTestCase
 
@@ -122,6 +123,31 @@
       XCTAssertEqualObjects(result, generator.string);
     }
   }
+}
+
+- (void)testTimeOTPParsing {
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  NSData *keyData = [@"ThisIsMySecret" dataUsingEncoding:NSUTF8StringEncoding];
+  NSString *issuer = @"KeePassKitTest:me@test.com";
+  NSInteger period = 30;
+  NSInteger digits = 6;
+  KPKOTPHashAlgorithm algorithm = KPKOTPHashAlgorithmSha1;
+  
+  NSURL *otpURL = [NSURL URLWithTimeOTPKey:keyData algorithm:algorithm issuer:issuer period:period digits:digits];
+  XCTAssertNotNil(otpURL);
+    
+  
+  KPKAttribute *otpAttribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyOTPOAuthURL value:otpURL.absoluteString];
+  [entry addCustomAttribute:otpAttribute];
+  
+  KPKTimeOTPGenerator *totpGenerator = [[KPKTimeOTPGenerator alloc] initWithEntry:entry];
+  XCTAssertNotNil(totpGenerator);
+  XCTAssertEqualObjects(totpGenerator.key, keyData);
+  XCTAssertEqual(totpGenerator.hashAlgorithm, algorithm);
+  XCTAssertEqual(totpGenerator.timeSlice, period);
+  XCTAssertEqual(totpGenerator.numberOfDigits, digits);
+  
+  
 }
 
 @end

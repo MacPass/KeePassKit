@@ -75,4 +75,5 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import <KeePassKit/NSUUID+KPKAdditions.h>
 #import <KeePassKit/NSUIColor+KPKAdditions.h>
 #import <KeePassKit/NSUIImage+KPKAdditions.h>
+#import <KeePassKit/NSURL+KPKAdditions.h>
 

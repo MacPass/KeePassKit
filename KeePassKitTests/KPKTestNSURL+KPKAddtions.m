@@ -17,6 +17,20 @@
 
 @implementation KPKTestNSURL_KPKAddtions
 
+- (void)testTimeOTPInit {
+  NSData *keyData = [@"0123456789" dataUsingEncoding:NSUTF8StringEncoding];
+  KPKOTPHashAlgorithm hashAlgorithm = KPKOTPHashAlgorithmSha1;
+  NSInteger period = 0;
+  NSInteger digits = 6;
+  NSString *issuer = @"Title:me@domain.com";
+  
+  NSURL *totpURL = [NSURL URLWithTimeOTPKey:keyData algorithm:hashAlgorithm issuer:issuer period:period digits:digits];
+  XCTAssertNotNil(totpURL);
+  XCTAssertEqualObjects(totpURL.key, keyData);
+  XCTAssertEqual(totpURL.period, period);
+  XCTAssertEqual(totpURL.digits, digits);
+}
+
 - (void)testInvalidScheme {
     NSData *keyData = [NSData kpk_dataWithRandomBytes:10];
     NSUInteger period = 30;
