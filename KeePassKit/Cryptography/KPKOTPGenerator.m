@@ -60,10 +60,36 @@
   return @"0123456789";
 }
 
+- (NSString *)_issuerForEntry:(KPKEntry *)entry {
+  NSMutableString *issuer = [[NSMutableString alloc] init];
+  if(entry.title) {
+    [issuer appendString:entry.title];
+  }
+  if(entry.username) {
+    if(issuer.length >= 0) {
+      [issuer appendFormat:@":%@", entry.username];
+    }
+    else {
+      [issuer appendString:entry.username];
+    }
+  }
+  if(entry.url) {
+    NSURL *url = [NSURL URLWithString:entry.url];
+    if(url.host) {
+      [issuer appendFormat:@"@%@", url.host];
+    }
+  }
+  return [issuer copy];
+}
+
 - (instancetype)initWithEntry:(KPKEntry *)entry {
   [self doesNotRecognizeSelector:_cmd];
   self = nil;
   return self;
+}
+
+- (void)saveToEntry:(KPKEntry *)entry {
+  [self doesNotRecognizeSelector:_cmd];
 }
 
 - (NSData *)data {
@@ -139,21 +165,6 @@
   otp[3] = mac[offset + 3];
   
   return [NSData dataWithBytes:&otp length:sizeof(uint32_t)];
-}
-
-- (NSArray <KPKOTPGenerator *> *)_hmacOtpGeneratorForEntry:(KPKEntry *)entry {
-  KPKAttribute *urlAttribute = [entry attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
-  NSURL *authURL = [[NSURL alloc] initWithString:urlAttribute.value];
-  
-  return @[];
-}
-
-- (NSArray <KPKOTPGenerator *> *)_timeOtpGeneratorForEntry:(KPKEntry *)entry {
-  return @[];
-}
-
-- (NSArray <KPKOTPGenerator *> *)_steamOtpGeneratorForEntry:(KPKEntry *)entry {
-  return @[];
 }
 
 @end

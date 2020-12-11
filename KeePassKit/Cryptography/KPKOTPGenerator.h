@@ -39,7 +39,8 @@ typedef NS_ENUM(NSUInteger, KPKOTPHashAlgorithm ) {
 @property NSUInteger numberOfDigits; // the number of digits to vent as code, default=6
 
 - (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithEntry:(KPKEntry *)entry;
+- (instancetype)initWithEntry:(KPKEntry *)entry; // initalizes the OTP Generator with the given entry attributes
+- (void)saveToEntry:(KPKEntry *)entry; // save the OTP Generator settings to the supplied entry
 
 @end
 

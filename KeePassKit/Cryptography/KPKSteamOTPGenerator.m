@@ -15,4 +15,19 @@
   return @"23456789BCDFGHJKMNPQRTVWXY";
 }
 
+- (instancetype)initWithEntry:(KPKEntry *)entry {
+  self = [self init];
+  if(self) {
+    
+  }
+  return self;
+}
+
+- (BOOL)_parseEntryAttributes:(KPKEntry *)entry {
+  
+  
+  
+  return NO;
+}
+
 @end
