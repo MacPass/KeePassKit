@@ -177,6 +177,7 @@ NSString *const kKPKReferenceUUIDKey        = @"I";
 NSString *const kKPKReferenceCustomFieldKey = @"O";
 
 #pragma mark Placeholders
+NSString *const kKPKPlaceholderUUID = @"{UUID}";
 
 NSString *const kKPKPlaceholderDatabasePath           = @"{DB_PATH}";
 NSString *const kKPKPlaceholderDatabaseFolder         = @"{DB_DIR}";

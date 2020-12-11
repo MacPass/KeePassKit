@@ -66,7 +66,7 @@
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-  return [KPKMutablePair pairWithKey:self.key value:self.value];
+  return [[KPKMutablePair alloc] initWithKey:self.key value:self.value];
 }
 
 

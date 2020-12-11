@@ -41,6 +41,31 @@
 
 @implementation KPKOTPGenerator
 
++ (KPKOTPHashAlgorithm)algorithmForString:(NSString *)string {
+    static NSDictionary <NSString *, NSNumber *> *map;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      map = @{ @"sha1" : @(KPKOTPHashAlgorithmSha1) ,
+               @"sha256" : @(KPKOTPHashAlgorithmSha256),
+               @"sha512" : @(KPKOTPHashAlgorithmSha512) };
+    });
+  NSNumber *value = map[string.lowercaseString];
+  return value ? (KPKOTPHashAlgorithm)value.integerValue : KPKOTPHashAlgorithmInvalid;
+}
+
++ (NSString *)stringForAlgorithm:(KPKOTPHashAlgorithm)algorithm {
+  switch(algorithm) {
+    case KPKOTPHashAlgorithmSha1:
+      return @"sha1";
+    case KPKOTPHashAlgorithmSha256:
+      return @"sha256";
+    case KPKOTPHashAlgorithmSha512:
+      return @"sha512";
+    default:
+      return @"";
+  }
+}
+
 - (instancetype)_init {
   self = [super init];
   if(self) {

@@ -8,8 +8,11 @@
 
 #import "KPKHmacOTPGenerator.h"
 #import "KPKOTPGenerator_Private.h"
+#import "KPKAttribute.h"
+#import "KPKEntry.h"
 
 #import "NSString+KPKHexdata.h"
+#import "NSURL+KPKAdditions.h"
 #import "NSData+KPKBase32.h"
 
 @implementation KPKHmacOTPGenerator
@@ -30,6 +33,26 @@
     }
   }
   return self;
+}
+
+- (void)saveCounterToEntry:(KPKEntry *)entry {
+  KPKAttribute *urlAttribute = [entry attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
+  if(urlAttribute) {
+    NSURL *url = [NSURL URLWithString:urlAttribute.value];
+    if(url.isHmacOTPURL) {
+      NSURL *newURL = [NSURL URLWithHmacOTPKey:url.key algorithm:url.hashAlgorithm issuer:url.issuer counter:self.counter digits:self.numberOfDigits];
+      urlAttribute.value = newURL.absoluteString;
+    }
+  }
+  NSString *counterString = [NSString stringWithFormat:@"%ld", self.counter];
+  KPKAttribute *counterAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPCounter];
+  if(!counterAttribute) {
+    counterAttribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyHmacOTPCounter value:counterString];
+    [entry addCustomAttribute:counterAttribute];
+  }
+  else {
+    counterAttribute.value = counterString;
+  }
 }
 
 - (NSUInteger)_counter {
@@ -62,7 +85,6 @@
   }
   
   /* HTOP Settings */
-
   KPKAttribute *asciiKeyAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPSecret];
   KPKAttribute *hexKeyAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPSecretHex];
   KPKAttribute *base32KeyAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPSecretBase32];
@@ -85,10 +107,8 @@
   }
   
   KPKAttribute *counterAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPCounter];
-  if(!counterAttribute) {
-    return NO;
-  }
-  self.counter = counterAttribute.evaluatedValue.integerValue;
+  self.counter = counterAttribute.evaluatedValue.integerValue; // defaults to 0 when no counter was found
+
   return YES;
 }
 

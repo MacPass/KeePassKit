@@ -30,28 +30,6 @@ NSString *const kKPKURLParameterCounter   = @"counter";
   return [[NSURL alloc] initWithHmacOTPKey:key algorithm:algorithm issuer:issuer counter:counter digits:digits];
 }
 
-+ (NSDictionary<NSValue *, NSString *>*)_algorithmMap {
-  static NSDictionary <NSNumber *, NSString *> *map;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    map = @{ @(KPKOTPHashAlgorithmSha1) : @"sha1",
-             @(KPKOTPHashAlgorithmSha256) : @"sha256",
-             @(KPKOTPHashAlgorithmSha512) : @"sha512" };
-  });
-  return map;
-}
-
-+ (NSDictionary<NSString *, NSNumber *>*)_algrithmIdentfierMap {
-  static NSDictionary <NSString *, NSNumber *> *map;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    map = @{ @"sha1" : @(KPKOTPHashAlgorithmSha1) ,
-             @"sha256" : @(KPKOTPHashAlgorithmSha256),
-             @"sha512" : @(KPKOTPHashAlgorithmSha512) };
-  });
-  return map;
-}
-
 - (instancetype)initWithHmacOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits {
   NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
   /* otpauth://hotp/ */
@@ -60,8 +38,8 @@ NSString *const kKPKURLParameterCounter   = @"counter";
   NSMutableArray<NSURLQueryItem *>* queryItems = [[NSMutableArray alloc] init];
   
   /* algorithm */
-  NSString *algorithmString = [NSURL _algorithmMap][@(algorithm)];
-  if(algorithmString) {
+  NSString *algorithmString = [KPKOTPGenerator stringForAlgorithm:algorithm];
+  if(algorithmString.length > 0) {
     NSURLQueryItem *algorithmQueueItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterAlgorithm value:algorithmString];
     [queryItems addObject:algorithmQueueItem];
   }
@@ -103,7 +81,7 @@ NSString *const kKPKURLParameterCounter   = @"counter";
   NSMutableArray<NSURLQueryItem *>* queryItems = [[NSMutableArray alloc] init];
   
   /* algorithm */
-  NSString *algorithmString = [NSURL _algorithmMap][@(algorithm)];
+  NSString *algorithmString = [KPKOTPGenerator stringForAlgorithm:algorithm];
   if(algorithmString) {
     NSURLQueryItem *algorithmQueueItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterAlgorithm value:algorithmString];
     [queryItems addObject:algorithmQueueItem];
@@ -147,13 +125,27 @@ NSString *const kKPKURLParameterCounter   = @"counter";
   return nil;
 }
 
+- (NSString *)issuer {
+  NSString *issuerAsPath = self.path;
+  NSString *issuerQuery = [self _queryItemValueForKey:kKPKURLParameterIssuer];
+    
+  if(issuerQuery.length == 0 && issuerAsPath.length == 0) {
+    return @"";
+  }
+  switch([issuerQuery compare:issuerAsPath]) {
+    case NSOrderedSame:
+      return issuerQuery;
+    case NSOrderedAscending:
+      return issuerAsPath;
+    case NSOrderedDescending:
+    default:
+      return issuerQuery;
+  }
+}
+
 - (KPKOTPHashAlgorithm)hashAlgorithm {
   NSString *hashValue = [self _queryItemValueForKey:kKPKURLParameterAlgorithm];
-  NSNumber *hashNumber = [NSURL _algrithmIdentfierMap][hashValue];
-  if(hashNumber) {
-    return (KPKOTPHashAlgorithm)hashNumber.integerValue;
-  }
-  return KPKOTPHashAlgorithmInvalid;
+  return [KPKOTPGenerator algorithmForString:hashValue];
 }
 
 - (NSInteger)digits {

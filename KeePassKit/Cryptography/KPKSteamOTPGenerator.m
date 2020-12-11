@@ -9,6 +9,12 @@
 #import "KPKSteamOTPGenerator.h"
 #import "KPKOTPGenerator_Private.h"
 
+
+#import "KPKAttribute.h"
+#import "KPKEntry.h"
+
+#import "NSData+KPKBase32.h"
+
 @implementation KPKSteamOTPGenerator
 
 - (NSString *)_alphabet {
@@ -24,9 +30,17 @@
 }
 
 - (BOOL)_parseEntryAttributes:(KPKEntry *)entry {
+  KPKAttribute *settingsAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSettings];
+  KPKAttribute *seedAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSeed];
   
-  
-  
+  if(settingsAttribute && seedAttribute) {
+    NSString *base32seed = [seedAttribute.evaluatedValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+    self.key = [NSData dataWithBase32EncodedString:base32seed];
+    NSArray <NSString *> *parts = [settingsAttribute.evaluatedValue componentsSeparatedByString:@";"];
+    self.timeSlice = parts.firstObject.integerValue;
+    self.numberOfDigits = parts.lastObject.integerValue;
+    return YES;
+  }
   return NO;
 }
 

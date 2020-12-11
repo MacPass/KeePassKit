@@ -11,6 +11,8 @@
 #import "NSURL+KPKAdditions.h"
 #import "NSString+KPKHexdata.h"
 #import "NSData+KPKBase32.h"
+#import "KPKAttribute.h"
+#import "KPKEntry.h"
 
 @implementation KPKTimeOTPGenerator
 
@@ -119,7 +121,7 @@
   }
   
   if(!algortihmAttr) {
-   // TODO: implement algorithm mapping
+    // TODO: implement algorithm mapping
   }
   
 }
@@ -159,23 +161,66 @@
   }
   
   /* TOTP Settings */
-
-  KPKAttribute *settingsAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSettings];
+  
   KPKAttribute *seedAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSeed];
   
-  if(settingsAttribute && seedAttribute) {
-    self.key = [NSData dataWithBase32EncodedString:seedAttribute.evaluatedValue];
-
-    NSArray <NSString *> parts =
+  if(seedAttribute) {
+    NSString *base32seed = [seedAttribute.evaluatedValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+    self.key = [NSData dataWithBase32EncodedString:base32seed];
+    
+    KPKAttribute *settingsAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSettings];
+    if(settingsAttribute) {
+      
+      NSArray <NSString *> *parts = [settingsAttribute.evaluatedValue componentsSeparatedByString:@";"];
+      self.timeSlice = parts.firstObject.integerValue;
+      self.numberOfDigits = parts.lastObject.integerValue;
+    }
     return YES;
   }
   
-
-  KPKAttribute *secretUTFAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecret];
-  KPKAttribute *secretHexAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretHex];
-  KPKAttribute *secretBase32Attribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretBase32];
-  KPKAttribute *secretBase64Attribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretBase64];
-
+  KPKAttribute *asciiKeyAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecret];
+  KPKAttribute *hexKeyAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretHex];
+  KPKAttribute *base32KeyAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretBase32];
+  KPKAttribute *base64KeyAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretBase64];
+  
+  if(asciiKeyAttribute) {
+    self.key = [asciiKeyAttribute.evaluatedValue dataUsingEncoding:NSUTF8StringEncoding];
+  }
+  else if(hexKeyAttribute) {
+    self.key = hexKeyAttribute.evaluatedValue.kpk_dataFromHexString;
+  }
+  else if(base32KeyAttribute) {
+    self.key = [NSData dataWithBase32EncodedString:base32KeyAttribute.evaluatedValue];
+  }
+  else if(base64KeyAttribute) {
+    self.key = [[NSData alloc] initWithBase64EncodedString:base64KeyAttribute.evaluatedValue options:NSDataBase64DecodingIgnoreUnknownCharacters];
+  }
+  else {
+    return NO; // no key
+  }
+  
+  KPKAttribute *lengthAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPLength];
+  if(lengthAttribute) {
+    NSInteger length = lengthAttribute.evaluatedValue.integerValue;
+    if(length > 0) {
+      self.numberOfDigits = length;
+    }
+  }
+  KPKAttribute *periodAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPPeriod];
+  if(periodAttribute) {
+    NSInteger period = periodAttribute.evaluatedValue.integerValue;
+    if(period > 0) {
+      self.timeSlice = period;
+    }
+  }
+  KPKAttribute *algorithmAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPAlgorithm];
+  if(algorithmAttribute) {
+    KPKOTPHashAlgorithm algorithm = [KPKOTPGenerator algorithmForString:algorithmAttribute.evaluatedValue];
+    if(algorithm != KPKOTPHashAlgorithmInvalid) {
+      self.hashAlgorithm = algorithm;
+    }
+  }
+  
   return YES;
 }
 

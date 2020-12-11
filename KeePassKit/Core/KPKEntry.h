@@ -115,8 +115,16 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;        //
  */
 @property (readonly, nonatomic) BOOL hasTimeOTP;
 
+/**
+ Returns the current hmacOTP value without any changes to the entry
+ by calling [KPKEntry generateHmacOTPUpdateCounter:NO];
+ If you want to generate the HmacOTP value and increase the counter
+ send the message with YES to update the counter
+ */
 @property (readonly, nonatomic) NSString *hmacOTP;
 @property (readonly, nonatomic) NSString *timeOTP;
+
+- (NSString *)generateHmacOTPUpdateCounter:(BOOL)update;
 
 - (KPKComparsionResult)compareToEntry:(KPKEntry *)entry;
 

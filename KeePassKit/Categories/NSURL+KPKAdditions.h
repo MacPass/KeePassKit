@@ -27,6 +27,7 @@ FOUNDATION_EXTERN NSString *const kKPKURLParameterCounter;
 @property (readonly, nonatomic) BOOL isTimeOTPURL;
 
 @property (copy, readonly, nullable) NSData* key;
+@property (copy, readonly) NSString *issuer;
 @property (readonly) KPKOTPHashAlgorithm hashAlgorithm;
 @property (readonly) NSInteger digits;
 @property (readonly) NSInteger counter; // only for HmacOTP urls

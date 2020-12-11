@@ -11,6 +11,8 @@
 #import "KPKHmacOTPGenerator.h"
 #import "KPKTimeOTPGenerator.h"
 #import "NSURL+KPKAdditions.h"
+#import "KPKEntry.h"
+#import "KPKAttribute.h"
 
 @interface KPKTestOTP : XCTestCase
 
@@ -125,7 +127,7 @@
   }
 }
 
-- (void)testTimeOTPParsing {
+- (void)testURLTimeOTPParsing {
   KPKEntry *entry = [[KPKEntry alloc] init];
   NSData *keyData = [@"ThisIsMySecret" dataUsingEncoding:NSUTF8StringEncoding];
   NSString *issuer = @"KeePassKitTest:me@test.com";
@@ -146,8 +148,73 @@
   XCTAssertEqual(totpGenerator.hashAlgorithm, algorithm);
   XCTAssertEqual(totpGenerator.timeSlice, period);
   XCTAssertEqual(totpGenerator.numberOfDigits, digits);
+}
+
+- (void)testHmacCounterUpdate {
+  NSArray <NSString *> *stringResults = @[ @"755224",
+                                           @"287082",
+                                           @"359152",
+                                           @"969429",
+                                           @"338314",
+                                           @"254676",
+                                           @"287922",
+                                           @"162583",
+                                           @"399871",
+                                           @"520489" ];
+    
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  NSString *keyString = @"12345678901234567890";
+
+  KPKAttribute *secret = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyHmacOTPSecret value:keyString];
+  [entry addCustomAttribute:secret];
   
+  XCTAssertTrue(entry.hasHmacOTP);
+  XCTAssertFalse(entry.hasTimeOTP);
+  
+  NSUInteger counter = 0;
+  for(NSString *string in stringResults) {
+    KPKAttribute *counterAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPCounter];
+    XCTAssertEqual(counterAttribute.evaluatedValue.integerValue, counter);
+    
+    NSString *hmac = [entry generateHmacOTPUpdateCounter:YES];
+    counter++;
+    
+    XCTAssertEqualObjects(string, hmac);
+    /* search the attribute again, since we might have added it */
+    counterAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPCounter];
+    XCTAssertEqual(counterAttribute.evaluatedValue.integerValue, counter);
+  }
   
 }
+
+/*
+- (void)testTimeOTPEntry {
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  NSData *keyData = [@"12345678901234567890" dataUsingEncoding:NSUTF8StringEncoding];
+  NSString *issuer = @"KeePassKitTest:me@test.com";
+  NSInteger period = 30;
+  NSInteger digits = 6;
+  KPKOTPHashAlgorithm algorithm = KPKOTPHashAlgorithmSha1;
+  
+  NSURL *otpURL = [NSURL URLWithTimeOTPKey:keyData algorithm:algorithm issuer:issuer period:period digits:digits];
+  XCTAssertNotNil(otpURL);
+    
+  
+  KPKAttribute *otpAttribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyOTPOAuthURL value:otpURL.absoluteString];
+  [entry addCustomAttribute:otpAttribute];
+  
+  // since the entry uses the current time to generate the TOPT code we need ot construct the code with the same time
+  KPKTimeOTPGenerator *generator = [[KPKTimeOTPGenerator alloc] init];
+  generator.key = keyData;
+  generator.numberOfDigits = digits;
+  generator.timeSlice = period;
+  
+  XCTAssertFalse(entry.hasHmacOTP);
+  XCTAssertTrue(entry.hasTimeOTP);
+  
+  generator.time = NSDate.date.timeIntervalSince1970;
+  XCTAssertEqualObjects(entry.timeOTP, generator.string);
+}
+*/
 
 @end

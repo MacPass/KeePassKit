@@ -42,6 +42,9 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import <KeePassKit/KPKAESCipher.h>
 #import <KeePassKit/KPKTwofishCipher.h>
 #import <KeePassKit/KPKOTPGenerator.h>
+#import <KeePassKit/KPKHmacOTPGenerator.h>
+#import <KeePassKit/KPKTimeOTPGenerator.h>
+#import <KeePassKit/KPKSteamOTPGenerator.h>
 
 #import <KeePassKit/KPKTree.h>
 #import <KeePassKit/KPKTree+Serializing.h>

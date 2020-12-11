@@ -21,21 +21,25 @@
 //
 
 #import "KPKEntry.h"
-#import "KPKEntry_Private.h"
-#import "KPKNode_Private.h"
 #import "KPKGroup.h"
-#import "KPKGroup_Private.h"
 #import "KPKBinary.h"
-#import "KPKBinary_Private.h"
 #import "KPKAttribute.h"
-#import "KPKAttribute_Private.h"
 #import "KPKAutotype.h"
-#import "KPKAutotype_Private.h"
-#import "KPKWindowAssociation.h"
 #import "KPKFormat.h"
 #import "KPKTimeInfo.h"
 #import "KPKUTIs.h"
 #import "KPKReferenceBuilder.h"
+#import "KPKWindowAssociation.h"
+#import "KPKOTPGenerator.h"
+#import "KPKHmacOTPGenerator.h"
+#import "KPKTimeOTPGenerator.h"
+
+#import "KPKAttribute_Private.h"
+#import "KPKAutotype_Private.h"
+#import "KPKBinary_Private.h"
+#import "KPKEntry_Private.h"
+#import "KPKGroup_Private.h"
+#import "KPKNode_Private.h"
 #import "KPKTree_Private.h"
 
 #import "KPKScopedSet.h"
@@ -706,38 +710,69 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (NSString *)hmacOTP {
-  return @"";
+  return [self generateHmacOTPUpdateCounter:NO];
 }
 
 - (NSString *)timeOTP {
-  return @"";
+  if(!self.hasTimeOTP) {
+    return @"";
+  }
+  KPKTimeOTPGenerator *generator = [[KPKTimeOTPGenerator alloc] initWithEntry:self];
+  generator.time = NSDate.date.timeIntervalSince1970;
+  return generator ? generator.string : @"";
 }
 
 - (BOOL)hasTimeOTP {
-  /* FIXME: implement propert changes when attributes update! */
-  if([self hasAttributeWithKey:kKPKAttributeKeyOTPOAuthURL]) {
-    // setup ??
+  KPKAttribute *otpURL = [self attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
+  if(otpURL) {
+    NSURL *url = [NSURL URLWithString:otpURL.evaluatedValue];
+    if(url.isTimeOTPURL) {
+      return YES;
+    }
+  }
+  NSArray *keys = @[kKPKAttributeKeyTimeOTPSeed, kKPKAttributeKeyTimeOTPSecret, kKPKAttributeKeyTimeOTPSecretHex, kKPKAttributeKeyTimeOTPSecretBase32, kKPKAttributeKeyTimeOTPSecretBase64];
+  
+  for(NSString *key in keys) {
+    if([self hasAttributeWithKey:key]) {
+      return YES;
+    }
   }
   return NO;
 }
 
 - (BOOL)hasHmacOTP {
-  if(![self hasAttributeWithKey:kKPKAttributeKeyHmacOTPCounter]) {
-    return NO;
-  }
-  NSArray *keys = @[kKPKAttributeKeyHmacOTPSecret, kKPKAttributeKeyHmacOTPSecretHex, kKPKAttributeKeyHmacOTPSecretBase32, kKPKAttributeKeyHmacOTPSecretBase64];
-  BOOL hasSecret = NO;
-  for(NSString *key in keys) {
-    if([self hasAttributeWithKey:key]) {
-      if(hasSecret) {
-        return NO;
-      }
-      hasSecret = YES;
+  KPKAttribute *otpURL = [self attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
+  if(otpURL) {
+    NSURL *url = [[NSURL alloc] initWithString:otpURL.evaluatedValue];
+    if(url.isHmacOTPURL) {
+      return YES;
     }
   }
-  return hasSecret;
+  NSArray *keys = @[kKPKAttributeKeyHmacOTPSecret, kKPKAttributeKeyHmacOTPSecretHex, kKPKAttributeKeyHmacOTPSecretBase32, kKPKAttributeKeyHmacOTPSecretBase64];
+  for(NSString *key in keys) {
+    if([self hasAttributeWithKey:key]) {
+      return YES;
+    }
+  }
+  return NO;
 }
 
+- (NSString *)generateHmacOTPUpdateCounter:(BOOL)update {
+  if(!self.hasHmacOTP) {
+    return @"";
+  }
+  KPKHmacOTPGenerator *generator = [[KPKHmacOTPGenerator alloc] initWithEntry:self];
+  if(!generator) {
+    return @"";
+  }
+  
+  NSString *value = generator.string;
+  if(update) {
+    generator.counter += 1;
+    [generator saveCounterToEntry:self];
+  }
+  return value;
+}
 
 #pragma mark CustomAttributes
 - (KPKAttribute *)customAttributeWithKey:(NSString *)key {

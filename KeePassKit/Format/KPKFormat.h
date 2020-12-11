@@ -231,6 +231,8 @@ FOUNDATION_EXTERN NSString *const kKPKReferenceCustomFieldKey;
  *  Placeholder keys
  */
 #pragma mark Placeholder
+FOUNDATION_EXTERN NSString *const kKPKPlaceholderUUID;
+
 FOUNDATION_EXTERN NSString *const kKPKPlaceholderDatabasePath;
 FOUNDATION_EXTERN NSString *const kKPKPlaceholderDatabaseFolder;
 FOUNDATION_EXTERN NSString *const kKPKPlaceholderDatabaseName;
@@ -256,6 +258,7 @@ FOUNDATION_EXTERN NSString *const kKPKPlaceholderPickCharsOptionConvert;
 FOUNDATION_EXTERN NSString *const kKPKPlaceholderPickCharsOptionConvertOffset;
 FOUNDATION_EXTERN NSString *const kKPKPlaceholderPickCharsOptionConvertFormat;
 FOUNDATION_EXTERN NSString *const kKPKPlaceholderPickField;
+
 FOUNDATION_EXTERN NSString *const kKPKPlaceholderHMACOTP;
 FOUNDATION_EXTERN NSString *const kKPKPlaceholderTIMEOTP;
 

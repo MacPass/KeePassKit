@@ -31,6 +31,9 @@ typedef NS_ENUM(NSUInteger, KPKOTPHashAlgorithm ) {
  */
 @interface KPKOTPGenerator : NSObject
 
++ (KPKOTPHashAlgorithm)algorithmForString:(NSString *)string;
++ (NSString *)stringForAlgorithm:(KPKOTPHashAlgorithm)algorithm;
+
 @property (readonly, copy, nonatomic) NSString *string; // will be formatted according to the supplied options, bindable and KVO confromant
 @property (readonly, copy, nonatomic) NSData *data; // will return the raw data of the OTP generator, you normally should only need the string value. Is KVO compliant and bindable
 

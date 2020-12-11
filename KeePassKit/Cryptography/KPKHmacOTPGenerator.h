@@ -6,15 +6,18 @@
 //  Copyright © 2020 HicknHack Software GmbH. All rights reserved.
 //
 
-#import <KeePassKit/KeePassKit.h>
+#import <KeePassKit/KPKOTPGenerator.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class KPKEntry;
 
 @interface KPKHmacOTPGenerator : KPKOTPGenerator
 
 @property NSUInteger counter; // the counter to calculate the OTP for, default=0, only for KPKOTPGeneratorHmacOTP
 
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
+- (void)saveCounterToEntry:(KPKEntry *)entry; // Save only the current counter to the entry;
 
 @end
 

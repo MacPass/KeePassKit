@@ -320,26 +320,20 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
       }
     }
   }
+   
+  caseInsensitiveMappings[kKPKPlaceholderTIMEOTP] = entry.timeOTP;
+  
   /*
    the following placeholders might have side effect (e.g. increase counters, show ui)
    therefor only call out for them if there are actually found or if we are allowed to show them!
    */
   
   BOOL nonInteractive = (self.context.options & KPKCommandEvaluationOptionSkipUserInteraction);
+  BOOL readOnly = (self.context.options & KPKCommandEvaluationOptionReadOnly);
+  
+  caseInsensitiveMappings[kKPKPlaceholderHMACOTP] = [entry generateHmacOTPUpdateCounter:!readOnly];
   
   if(!nonInteractive) {
-    BOOL readOnly = (self.context.options & KPKCommandEvaluationOptionReadOnly);
-    if(!readOnly) {
-      /* {HMACOTP} */
-      if([treeDelegate respondsToSelector:@selector(tree:resolveHMACOTPPlaceholderForEntry:)]) {
-        if(NSNotFound != [self.sequence rangeOfString:kKPKPlaceholderHMACOTP options:NSCaseInsensitiveSearch].location) {
-          NSString *value = [treeDelegate tree:entry.tree resolveHMACOTPPlaceholderForEntry:entry];
-          if(value) {
-            caseInsensitiveMappings[kKPKPlaceholderHMACOTP] = value;
-          }
-        }
-      }
-    }
     /* {PICKFIELD} */
     if([treeDelegate respondsToSelector:@selector(tree:resolvePickFieldPlaceholderForEntry:)]) {
       if(NSNotFound != [self.sequence rangeOfString:kKPKPlaceholderPickField options:NSCaseInsensitiveSearch].location) {

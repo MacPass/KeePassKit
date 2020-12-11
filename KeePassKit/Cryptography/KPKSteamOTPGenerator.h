@@ -6,7 +6,7 @@
 //  Copyright © 2020 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKTimeOTPGenerator.h"
+#import <KeePassKit/KPKTimeOTPGenerator.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
