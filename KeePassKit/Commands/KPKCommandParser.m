@@ -320,8 +320,9 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
       }
     }
   }
-   
-  caseInsensitiveMappings[kKPKPlaceholderTIMEOTP] = entry.timeOTP;
+  NSString *timeOTP = entry.timeOTP;
+  caseInsensitiveMappings[kKPKPlaceholderTOTP] = timeOTP;
+  caseInsensitiveMappings[kKPKPlaceholderTIMEOTP] = timeOTP;
   
   /*
    the following placeholders might have side effect (e.g. increase counters, show ui)

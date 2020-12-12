@@ -207,6 +207,7 @@ NSString *const kKPKPlaceholderPickCharsOptionConvertFormat = @"Conv-Fmt";
 NSString *const kKPKPlaceholderPickField                    = @"{PICKFIELD}";
 NSString *const kKPKPlaceholderHMACOTP                      = @"{HMACOTP}";
 NSString *const kKPKPlaceholderTIMEOTP                      = @"{TIMEOTP}";
+NSString *const kKPKPlaceholderTOTP                         = @"{TOTP}";
 
 NSString *const kKPKAttributeKeyOTPOAuthURL         = @"otp";
 NSString *const kKPKAttributeKeyHmacOTPSecret       = @"HmacOtp-Secret";

@@ -261,6 +261,7 @@ FOUNDATION_EXTERN NSString *const kKPKPlaceholderPickField;
 
 FOUNDATION_EXTERN NSString *const kKPKPlaceholderHMACOTP;
 FOUNDATION_EXTERN NSString *const kKPKPlaceholderTIMEOTP;
+FOUNDATION_EXTERN NSString *const kKPKPlaceholderTOTP;
 
 
 #pragma mark Autotype
