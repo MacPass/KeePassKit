@@ -1025,7 +1025,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(removeCount > 0) {
     [self removeMutableHistoryAtIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, removeCount)]];
   }
-  /* remove items if size it to big */
+  /* remove items if size is too big */
   NSUInteger historySize = 0;
   NSInteger removeIndex = -1;
   NSEnumerator *enumerator = self.mutableHistory.reverseObjectEnumerator;
@@ -1093,7 +1093,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 /* Binaries */
 - (void)insertObject:(KPKBinary *)binary inMutableBinariesAtIndex:(NSUInteger)index {
   /* Clamp the index to make sure we do not add at wrong places */
-  index = MIN([self.mutableBinaries count], index);
+  index = MIN(self.mutableBinaries.count, index);
   [self.mutableBinaries insertObject:binary atIndex:index];
 }
 
@@ -1125,19 +1125,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     historyEntry.isHistory = NO;
   }];
   [self.mutableHistory removeObjectsAtIndexes:indexes];
-}
-
-#pragma mark -
-#pragma mark Private Helper
-
-- (void)willChangeValueForKey:(NSString *)key {
-  NSLog(@"willChangeValueForKey:%@", key);
-  [super willChangeValueForKey:key];
-}
-
-- (void)didChangeValueForKey:(NSString *)key {
-  NSLog(@"didChangeValueForKey:%@", key);
-  [super didChangeValueForKey:key];
 }
 
 @end
