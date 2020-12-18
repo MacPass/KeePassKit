@@ -132,7 +132,7 @@
 
 
 - (NSTimeInterval)remainingTime {
-  return ((NSInteger)(self.time - self.timeBase) % self.timeSlice);
+  return self.timeSlice - ((NSUInteger)(self.time - self.timeBase) % self.timeSlice);
 }
 
 - (BOOL)_parseEntryAttributes:(KPKEntry *)entry {
