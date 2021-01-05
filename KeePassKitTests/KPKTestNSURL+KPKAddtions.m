@@ -41,6 +41,10 @@
     XCTAssertFalse(timeURL.isTimeOTPURL);
     XCTAssertFalse(timeURL.isHmacOTPURL);
 }
+- (void)testInvalidURL {
+  NSString *urlString = @"ThisIsNotAnURL";
+  NSURL *url = [NSURL URLWithString:urlString];
+}
 
 - (void)testTimeOTPURLProperties {
   NSData *keyData = [NSData kpk_dataWithRandomBytes:10];

@@ -164,6 +164,10 @@ NSString *const kKPKURLParameterCounter   = @"counter";
 }
 
 - (BOOL)isHmacOTPURL {
+  /* handle invalid nil cases */
+  if(nil == self.scheme || nil == self.host) {
+    return NO;
+  }
   if(NSOrderedSame != [self.scheme compare:kKPKURLOtpAuthScheme options:NSCaseInsensitiveSearch]) {
     return NO;
   }
@@ -171,6 +175,10 @@ NSString *const kKPKURLParameterCounter   = @"counter";
 }
 
 - (BOOL)isTimeOTPURL {
+  /* handle invalid nil cases */
+  if(nil == self.scheme || nil == self.host) {
+    return NO;
+  }
   if(NSOrderedSame != [self.scheme compare:kKPKURLOtpAuthScheme options:NSCaseInsensitiveSearch]) {
     return NO;
   }
