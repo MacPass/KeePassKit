@@ -25,6 +25,7 @@ typedef NS_ENUM(NSUInteger, KPKOTPHashAlgorithm ) {
 };
 
 @class KPKEntry;
+@class KPKAttribute;
 
 FOUNDATION_EXTERN NSUInteger const KPKOTPMinumNumberOfDigits;
 FOUNDATION_EXTERN NSUInteger const KPKOTPMaxiumNumberOfDigits;
@@ -47,7 +48,7 @@ FOUNDATION_EXTERN NSUInteger const KPKOTPMaxiumNumberOfDigits;
 @property (nonatomic, readonly) NSUInteger defaultNumberOfDigits;
 
 - (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithEntry:(KPKEntry *)entry; // initalizes the OTP Generator with the given entry attributes
+- (instancetype)initWithAttributes:(NSArray <KPKAttribute*>*)attributes; // initalizes the OTP Generator with the given entry attributes
 - (void)saveToEntry:(KPKEntry *)entry; // save the OTP Generator settings to the supplied entry
 
 @end

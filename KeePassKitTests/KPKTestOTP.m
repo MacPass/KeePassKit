@@ -142,7 +142,7 @@
   KPKAttribute *otpAttribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyOTPOAuthURL value:otpURL.absoluteString];
   [entry addCustomAttribute:otpAttribute];
   
-  KPKTimeOTPGenerator *totpGenerator = [[KPKTimeOTPGenerator alloc] initWithEntry:entry];
+  KPKTimeOTPGenerator *totpGenerator = [[KPKTimeOTPGenerator alloc] initWithAttributes:entry.attributes];
   XCTAssertNotNil(totpGenerator);
   XCTAssertEqualObjects(totpGenerator.key, keyData);
   XCTAssertEqual(totpGenerator.hashAlgorithm, algorithm);

@@ -115,7 +115,7 @@ static NSUInteger const KPKOTPDefaultNumberOfDigits = 6;
   return [issuer copy];
 }
 
-- (instancetype)initWithEntry:(KPKEntry *)entry {
+- (instancetype)initWithAttributes:(NSArray<KPKAttribute *> *)attributes {
   [self doesNotRecognizeSelector:_cmd];
   self = nil;
   return self;

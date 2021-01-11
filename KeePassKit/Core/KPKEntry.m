@@ -717,7 +717,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(!self.hasTimeOTP) {
     return @"";
   }
-  KPKTimeOTPGenerator *generator = [[KPKTimeOTPGenerator alloc] initWithEntry:self];
+  KPKTimeOTPGenerator *generator = [[KPKTimeOTPGenerator alloc] initWithAttributes:self.mutableAttributes];
   generator.time = NSDate.date.timeIntervalSince1970;
   return generator ? generator.string : @"";
 }
@@ -761,7 +761,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(!self.hasHmacOTP) {
     return @"";
   }
-  KPKHmacOTPGenerator *generator = [[KPKHmacOTPGenerator alloc] initWithEntry:self];
+  KPKHmacOTPGenerator *generator = [[KPKHmacOTPGenerator alloc] initWithAttributes:self.mutableAttributes];
   if(!generator) {
     return @"";
   }

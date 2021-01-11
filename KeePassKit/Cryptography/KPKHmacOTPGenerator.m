@@ -14,6 +14,7 @@
 #import "NSString+KPKHexdata.h"
 #import "NSURL+KPKAdditions.h"
 #import "NSData+KPKBase32.h"
+#import "NSDictionary+KPKAttributes.h"
 
 @implementation KPKHmacOTPGenerator
 
@@ -25,10 +26,10 @@
   return self;
 }
 
-- (instancetype)initWithEntry:(KPKEntry *)entry {
+- (instancetype)initWithAttributes:(NSArray <KPKAttribute *>*)attributes {
   self = [self init];
   if(self) {
-    if(![self _parseEntryAttributes:entry]) {
+    if(![self _parseAttributes:attributes]) {
       self = nil;
     }
   }
@@ -59,8 +60,9 @@
   return self.counter;
 }
 
-- (BOOL)_parseEntryAttributes:(KPKEntry *)entry {
-  KPKAttribute *urlAttribute = [entry attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
+- (BOOL)_parseAttributes:(NSArray <KPKAttribute*>*)attributes {
+  NSDictionary *attributeDict = [NSDictionary dictionaryWithAttributes:attributes];
+  KPKAttribute *urlAttribute = attributeDict[kKPKAttributeKeyOTPOAuthURL];
   
   if(urlAttribute) {
     NSURL *authURL = [NSURL URLWithString:urlAttribute.evaluatedValue];
@@ -85,10 +87,10 @@
   }
   
   /* HTOP Settings */
-  KPKAttribute *asciiKeyAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPSecret];
-  KPKAttribute *hexKeyAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPSecretHex];
-  KPKAttribute *base32KeyAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPSecretBase32];
-  KPKAttribute *base64KeyAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPSecretBase64];
+  KPKAttribute *asciiKeyAttribute = attributeDict[kKPKAttributeKeyHmacOTPSecret];
+  KPKAttribute *hexKeyAttribute = attributeDict[kKPKAttributeKeyHmacOTPSecretHex];
+  KPKAttribute *base32KeyAttribute = attributeDict[kKPKAttributeKeyHmacOTPSecretBase32];
+  KPKAttribute *base64KeyAttribute = attributeDict[kKPKAttributeKeyHmacOTPSecretBase64];
   
   if(asciiKeyAttribute) {
     self.key = [asciiKeyAttribute.evaluatedValue dataUsingEncoding:NSUTF8StringEncoding];
@@ -106,7 +108,7 @@
     return NO; // missing key!!!
   }
   
-  KPKAttribute *counterAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPCounter];
+  KPKAttribute *counterAttribute = attributeDict[kKPKAttributeKeyHmacOTPCounter];
   self.counter = counterAttribute.evaluatedValue.integerValue; // defaults to 0 when no counter was found
 
   return YES;

@@ -14,6 +14,8 @@
 #import "KPKAttribute.h"
 #import "KPKEntry.h"
 
+#import "NSDictionary+KPKAttributes.h"
+
 static NSUInteger const KPKTOTPDefaultTimeSlice = 30;
 
 NSString * stringForAlgoritm(KPKOTPHashAlgorithm algoritm) {
@@ -56,10 +58,10 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   return self;
 }
 
-- (instancetype)initWithEntry:(KPKEntry *)entry {
+- (instancetype)initWithAttributes:(NSArray<KPKAttribute *> *)attributes {
   self = [self init];
   if(self) {
-    if(![self _parseEntryAttributes:entry]) {
+    if(![self _parseAttributes:attributes]) {
       self = nil;
     }
   }
@@ -197,8 +199,12 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   return self.timeSlice - ((NSUInteger)(self.time - self.timeBase) % self.timeSlice);
 }
 
-- (BOOL)_parseEntryAttributes:(KPKEntry *)entry {
-  KPKAttribute *urlAttribute = [entry attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
+- (BOOL)_parseAttributes:(NSArray <KPKAttribute*>*)attributes {
+
+  /* use dict for simpler lookup! */
+  NSDictionary *attributesDict = [NSDictionary dictionaryWithAttributes:attributes];
+  
+  KPKAttribute *urlAttribute = attributesDict[kKPKAttributeKeyOTPOAuthURL];
   
   if(urlAttribute) {
     NSURL *authURL = [NSURL URLWithString:urlAttribute.evaluatedValue];
@@ -224,13 +230,13 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   
   /* TOTP Settings */
   
-  KPKAttribute *seedAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSeed];
+  KPKAttribute *seedAttribute = attributesDict[kKPKAttributeKeyTimeOTPSeed];
   
   if(seedAttribute) {
     NSString *base32seed = [seedAttribute.evaluatedValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
     self.key = [NSData dataWithBase32EncodedString:base32seed];
     
-    KPKAttribute *settingsAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSettings];
+    KPKAttribute *settingsAttribute = attributesDict[kKPKAttributeKeyTimeOTPSettings];
     if(settingsAttribute) {
       
       NSArray <NSString *> *parts = [settingsAttribute.evaluatedValue componentsSeparatedByString:@";"];
@@ -240,10 +246,10 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
     return YES;
   }
   
-  KPKAttribute *asciiKeyAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecret];
-  KPKAttribute *hexKeyAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretHex];
-  KPKAttribute *base32KeyAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretBase32];
-  KPKAttribute *base64KeyAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSecretBase64];
+  KPKAttribute *asciiKeyAttribute = attributesDict[kKPKAttributeKeyTimeOTPSecret];
+  KPKAttribute *hexKeyAttribute = attributesDict[kKPKAttributeKeyTimeOTPSecretHex];
+  KPKAttribute *base32KeyAttribute = attributesDict[kKPKAttributeKeyTimeOTPSecretBase32];
+  KPKAttribute *base64KeyAttribute = attributesDict[kKPKAttributeKeyTimeOTPSecretBase64];
   
   if(asciiKeyAttribute) {
     self.key = [asciiKeyAttribute.evaluatedValue dataUsingEncoding:NSUTF8StringEncoding];
@@ -261,21 +267,21 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
     return NO; // no key
   }
   
-  KPKAttribute *lengthAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPLength];
+  KPKAttribute *lengthAttribute = attributesDict[kKPKAttributeKeyTimeOTPLength];
   if(lengthAttribute) {
     NSInteger length = lengthAttribute.evaluatedValue.integerValue;
     if(length > 0) {
       self.numberOfDigits = length;
     }
   }
-  KPKAttribute *periodAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPPeriod];
+  KPKAttribute *periodAttribute = attributesDict[kKPKAttributeKeyTimeOTPPeriod];
   if(periodAttribute) {
     NSInteger period = periodAttribute.evaluatedValue.integerValue;
     if(period > 0) {
       self.timeSlice = period;
     }
   }
-  KPKAttribute *algorithmAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPAlgorithm];
+  KPKAttribute *algorithmAttribute = attributesDict[kKPKAttributeKeyTimeOTPAlgorithm];
   if(algorithmAttribute) {
     KPKOTPHashAlgorithm algorithm = algoritmForString(algorithmAttribute.evaluatedValue);
     if(algorithm != KPKOTPHashAlgorithmInvalid) {
