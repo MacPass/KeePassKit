@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property NSTimeInterval timeBase; // the base time for Timed OTP, default=0 -> unix reference time
 @property NSUInteger timeSlice; // the time slice for Timed OTP, default=30, , only for KPKOTPGeneratorTimeOTP and KPKOTPGeneratorSteamOTP
+@property (nonatomic, readonly) NSUInteger defaultTimeSlice;
 @property NSTimeInterval time; // the time to calculate the OTP for, default=0, only for KPKOTPGeneratorTimeOTP and KPKOTPGeneratorSteamOTP
 @property (assign, nonatomic, readonly) NSTimeInterval remainingTime; // the time in seconds the data and string is valud only for KPKOTPGeneratorTimeOTP and KPKOTPGeneratorSteamOTP
 

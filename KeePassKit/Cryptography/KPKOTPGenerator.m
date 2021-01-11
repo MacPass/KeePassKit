@@ -39,7 +39,15 @@
 
 @end
 
+NSUInteger const KPKOTPMinumNumberOfDigits = 6;
+NSUInteger const KPKOTPMaxiumNumberOfDigits = 8;
+static NSUInteger const KPKOTPDefaultNumberOfDigits = 6;
+
+
 @implementation KPKOTPGenerator
+
+@dynamic defaultHashAlgoritm;
+@dynamic defaultNumberOfDigits;
 
 + (KPKOTPHashAlgorithm)algorithmForString:(NSString *)string {
     static NSDictionary <NSString *, NSNumber *> *map;
@@ -145,6 +153,14 @@
     decimal /= alphabetLength;
   }
   return [result copy];
+}
+
+- (KPKOTPHashAlgorithm)defaultHashAlgoritm {
+  return KPKOTPHashAlgorithmSha1;
+}
+
+- (NSUInteger)defaultNumberOfDigits {
+  return KPKOTPDefaultNumberOfDigits;
 }
 
 - (BOOL)_validateOptions {

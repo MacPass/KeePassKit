@@ -225,9 +225,9 @@ NSString *const kKPKAttributeKeyTimeOTPAlgorithm    = @"TimeOtp-Algorithm";
 NSString *const kKPKAttributeKeyTimeOTPSeed         = @"TOTP Seed";
 NSString *const kKPKAttributeKeyTimeOTPSettings     = @"TOTP Settings";
 
-
-
-
+NSString *const kKPKAttributeValueTimeOTPHmacSha1   = @"HMAC-SHA-1";
+NSString *const kKPKAttributeValueTimeOTPHmacSha256 = @"HMAC-SHA-256";
+NSString *const kKPKAttributeValueTimeOTPHmacSha512 = @"HMAC-SHA-512";
 
 #pragma mark Autotype commands
 /*

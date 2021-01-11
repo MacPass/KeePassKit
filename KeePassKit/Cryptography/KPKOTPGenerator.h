@@ -26,6 +26,9 @@ typedef NS_ENUM(NSUInteger, KPKOTPHashAlgorithm ) {
 
 @class KPKEntry;
 
+FOUNDATION_EXTERN NSUInteger const KPKOTPMinumNumberOfDigits;
+FOUNDATION_EXTERN NSUInteger const KPKOTPMaxiumNumberOfDigits;
+
 /**
  Abstract base class for all OTP generators. You should only use concrete subclasses
  */
@@ -39,7 +42,9 @@ typedef NS_ENUM(NSUInteger, KPKOTPHashAlgorithm ) {
 
 @property (copy) NSData *key; // the seed key for the OTP Generator, default=empty data
 @property KPKOTPHashAlgorithm hashAlgorithm; // the hash algorithm to base the OTP data on, default=KPKTOPHashAlgorithmSha1
+@property (nonatomic, readonly) KPKOTPHashAlgorithm defaultHashAlgoritm;
 @property NSUInteger numberOfDigits; // the number of digits to vent as code, default=6
+@property (nonatomic, readonly) NSUInteger defaultNumberOfDigits;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithEntry:(KPKEntry *)entry; // initalizes the OTP Generator with the given entry attributes

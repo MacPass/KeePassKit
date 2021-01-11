@@ -214,6 +214,10 @@ FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPAlgorithm;
 FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSeed;
 FOUNDATION_EXTERN NSString *const kKPKAttributeKeyTimeOTPSettings;
 
+FOUNDATION_EXTERN NSString *const kKPKAttributeValueTimeOTPHmacSha1;
+FOUNDATION_EXTERN NSString *const kKPKAttributeValueTimeOTPHmacSha256;
+FOUNDATION_EXTERN NSString *const kKPKAttributeValueTimeOTPHmacSha512;
+
 /**
  *  Referemce Keys used for Referencing attributes inside entries
  */
