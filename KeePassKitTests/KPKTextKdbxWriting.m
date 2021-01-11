@@ -57,7 +57,7 @@
 
 - (void)testKdbx4BinarySerialization {
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
-  self.tree.metaData.keyDerivationParameters = [[KPKArgon2KeyDerivation alloc] init].parameters;
+  self.tree.metaData.keyDerivationParameters = [[KPKArgon2DKeyDerivation alloc] init].parameters;
   NSError *error;
   NSData *data = [self.tree encryptWithKey:key format:KPKDatabaseFormatKdbx error:&error];
   
@@ -67,7 +67,7 @@
   KPKTree *loadedTree = [[KPKTree alloc] initWithData:data key:key error:&error];
   
   XCTAssertNotNil(loadedTree);
-  XCTAssertEqualObjects(loadedTree.metaData.keyDerivationParameters[KPKKeyDerivationOptionUUID], [KPKArgon2KeyDerivation uuid].kpk_uuidData);
+  XCTAssertEqualObjects(loadedTree.metaData.keyDerivationParameters[KPKKeyDerivationOptionUUID], [KPKArgon2DKeyDerivation uuid].kpk_uuidData);
   
   KPKEntry *entry = loadedTree.root.groups.firstObject.entries.firstObject;
   

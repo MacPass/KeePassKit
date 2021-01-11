@@ -35,7 +35,7 @@
   NSData *message = [NSData dataWithBytesNoCopy:messageBytes length:sizeof(messageBytes) freeWhenDone:NO];
   
   NSDictionary *parameters = @{
-                               KPKKeyDerivationOptionUUID: [KPKArgon2KeyDerivation uuid].kpk_uuidData,
+                               KPKKeyDerivationOptionUUID: [KPKArgon2DKeyDerivation uuid].kpk_uuidData,
                                KPKArgon2MemoryParameter: [KPKNumber numberWithUnsignedInteger64:32*1024],
                                KPKArgon2IterationsParameter: [KPKNumber numberWithUnsignedInteger64:3],
                                KPKArgon2ParallelismParameter: [KPKNumber numberWithUnsignedInteger32:4],

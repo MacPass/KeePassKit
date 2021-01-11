@@ -46,7 +46,7 @@
   /* empty tree does not require KDBX */
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdb, tree.minimumVersion));
   
-  kdfParams[KPKKeyDerivationOptionUUID] = [KPKArgon2KeyDerivation uuid].kpk_uuidData;
+  kdfParams[KPKKeyDerivationOptionUUID] = [KPKArgon2DKeyDerivation uuid].kpk_uuidData;
   tree.metaData.keyDerivationParameters = [kdfParams copy];
   
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdbx4, tree.minimumVersion));

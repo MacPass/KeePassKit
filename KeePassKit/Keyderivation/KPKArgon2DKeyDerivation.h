@@ -8,6 +8,13 @@
 
 #import <KeePassKit/KPKKeyDerivation.h>
 
+// Argon2 types
+typedef NS_OPTIONS(NSUInteger, KPKArgon2Type) {
+  KPKArgon2TypeD = 0,
+  KPKArgon2TypeI = 1, // currently unsupported due to no use cases
+  KPKArgon2TypeID = 2
+};
+
 // Argon2 Options
 FOUNDATION_EXPORT NSString *const KPKArgon2SaltParameter; // NSData
 FOUNDATION_EXPORT NSString *const KPKArgon2ParallelismParameter; // KPKNumber uint32_t
@@ -17,7 +24,9 @@ FOUNDATION_EXPORT NSString *const KPKArgon2VersionParameter; // KPKNumber uint32
 FOUNDATION_EXPORT NSString *const KPKArgon2SecretKeyParameter; // NSData
 FOUNDATION_EXPORT NSString *const KPKArgon2AssociativeDataParameter; // NSData
 
-@interface KPKArgon2KeyDerivation : KPKKeyDerivation
+@interface KPKArgon2DKeyDerivation : KPKKeyDerivation
+
+@property (class, readonly) KPKArgon2Type type;
 
 @property (nonatomic, assign) uint64_t iterations;
 @property (nonatomic, assign) uint64_t memory;

@@ -6,7 +6,7 @@
 //  Copyright © 2016 HicknHack Software GmbH. All rights reserved.
 //
 
-#import "KPKArgon2KeyDerivation.h"
+#import "KPKArgon2DKeyDerivation.h"
 #import "KPKKeyDerivation_Private.h"
 
 #import "KPKNumber.h"
@@ -41,10 +41,27 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
 
 #define KPK_ARGON2_CHECK_INVERVALL(min,max,value) ( (value >= min) && (value <= max) )
 
-@implementation KPKArgon2KeyDerivation
+@implementation KPKArgon2DKeyDerivation
 
 + (void)load {
   [KPKKeyDerivation _registerKeyDerivation:self];
+}
+
++ (NSUUID *)uuid {
+  static const uuid_t bytes = {
+    0xEF, 0x63, 0x6D, 0xDF, 0x8C, 0x29, 0x44, 0x4B,
+    0x91, 0xF7, 0xA9, 0xA4, 0x03, 0xE3, 0x0A, 0x0C
+  };
+  static NSUUID *argon2dUUID = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    argon2dUUID = [[NSUUID alloc] initWithUUIDBytes:bytes];
+  });
+  return argon2dUUID;
+}
+
++ (KPKArgon2Type)type {
+  return KPKArgon2TypeD;
 }
 
 + (NSDictionary *)defaultParameters {
@@ -54,23 +71,6 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
   [parameters setUnsignedInteger64:KPKArgon2DefaultMemory forKey:KPKArgon2MemoryParameter];
   [parameters setUnsignedInteger32:KPKArgon2DefaultParallelism forKey:KPKArgon2ParallelismParameter];
   return [parameters copy];
-}
-
-+ (NSUUID *)uuid {
-  static const uuid_t bytes = {
-    0xEF, 0x63, 0x6D, 0xDF, 0x8C, 0x29, 0x44, 0x4B,
-    0x91, 0xF7, 0xA9, 0xA4, 0x03, 0xE3, 0x0A, 0x0C
-  };
-  static NSUUID *argon2UUID = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    argon2UUID = [[NSUUID alloc] initWithUUIDBytes:bytes];
-  });
-  return argon2UUID;
-}
-
-- (NSString *)name {
-  return @"Argon2";
 }
 
 - (uint64_t)iterations {
@@ -202,7 +202,18 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
     context.secretlen = (uint32_t)secretData.length;
   }
   
-  int returnCode = argon2d_ctx(&context);
+  int returnCode = ARGON2_OK;
+  if(self.class.type == KPKArgon2TypeD) {
+    returnCode = argon2d_ctx(&context);;
+  }
+  else if(self.class.type == KPKArgon2TypeID) {
+    returnCode = argon2id_ctx(&context);
+  }
+  else {
+    NSLog(@"Unknown Argon2 key derivation type");
+    return nil;
+  }
+  
   if(ARGON2_OK != returnCode) {
     NSLog(@"%s", argon2_error_message(returnCode));
     return nil;
