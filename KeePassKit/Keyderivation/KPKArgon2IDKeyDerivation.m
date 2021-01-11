@@ -28,4 +28,8 @@
   return argon2idUUID;
 }
 
+- (NSString *)name {
+  return @"Argon2id";
+}
+
 @end

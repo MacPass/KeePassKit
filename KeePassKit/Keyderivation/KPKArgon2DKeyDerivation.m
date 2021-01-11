@@ -73,6 +73,10 @@ const uint32_t KPKArgon2DefaultParallelism = 2;
   return [parameters copy];
 }
 
+- (NSString *)name {
+  return @"Argon2d";
+}
+
 - (uint64_t)iterations {
   return [self.mutableParameters unsignedInteger64ForKey:KPKArgon2IterationsParameter];
 }
