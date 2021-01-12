@@ -109,6 +109,61 @@ if( self.updateTiming ) { \
   return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+  KPKMetaData *copy = [[KPKMetaData alloc] init];
+  
+  KPK_SCOPED_NO_BEGIN(copy.updateTiming)
+  
+  copy.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:self.mutableCustomData copyItems:YES];
+  copy.mutableUnknownMetaEntryData = [[NSMutableDictionary alloc] initWithDictionary:self.mutableUnknownMetaEntryData copyItems:YES];
+  /* set pulic custom data via setter */
+  for(NSString *key in self.mutableCustomPublicData) {
+    [copy setValue:self.mutableCustomPublicData[key] forPublicCustomDataKey:key];
+  }
+  /* add custom icons via API to ensure updates on icon cache! */
+  _customIconCache = [[NSMutableDictionary alloc] init];
+  for(KPKIcon *icon in self.mutableCustomIcons) {
+    [self addCustomIcon:[icon copy]];
+  }
+  
+  copy.keyDerivationParameters = self.keyDerivationParameters;
+  copy.cipherUUID = self.cipherUUID;
+  copy.compressionAlgorithm = _compressionAlgorithm;
+  
+  copy.protectNotes = _protectNotes;
+  copy.protectPassword = _protectPassword;
+  copy.protectTitle = _protectTitle;
+  copy.protectUrl = _protectUrl;
+  copy.protectUserName = _protectUserName;
+  copy.generator = _generator;
+  copy.databaseName = _databaseName;
+  copy.databaseNameChanged = _databaseNameChanged;
+  copy.databaseDescription = _databaseDescription;
+  copy.databaseDescriptionChanged = _databaseDescriptionChanged;
+  copy.defaultUserName = _defaultUserName;
+  copy.defaultUserNameChanged = _defaultUserNameChanged;
+  copy.entryTemplatesGroupUuid = _entryTemplatesGroupUuid;
+  copy.entryTemplatesGroupChanged = _entryTemplatesGroupChanged;
+  copy.trashChanged = _trashChanged;
+  copy.settingsChanged = _settingsChanged;
+  copy.trashUuid = _trashUuid
+  copy.useTrash = _useTrash
+  copy.lastSelectedGroup = _lastSelectedGroup
+  copy.lastTopVisibleGroup = _lastTopVisibleGroup;
+  copy.historyMaxItems = _historyMaxItems;
+  copy.historyMaxSize =  _historyMaxSize;
+  copy.maintenanceHistoryDays = _maintenanceHistoryDays;
+  copy.masterKeyChangeRecommendationInterval = _masterKeyChangeRecommendationInterval;
+  copy.masterKeyChangeEnforcementInterval = _masterKeyChangeEnforcementInterval;
+  copy.enforceMasterKeyChange
+  copy.enforceMasterKeyChangeOnce = _enforceMasterKeyChangeOnce;
+  
+  KPK_SCOPED_NO_END(copy.updateTiming);
+  
+  /* set timing update at last to ensure correct state */
+  copy.updateTiming = _updateTiming;
+}
+
 #pragma mark -
 #pragma mark Properties
 - (NSArray *)customIcons {
@@ -290,7 +345,7 @@ if( self.updateTiming ) { \
 }
 
 - (void)setValue:(id)value forPublicCustomDataKey:(NSString *)key {
-  
+  // FIXME: ensure update timing works as expected.
   self.mutableCustomPublicData[key] = value;
 }
 

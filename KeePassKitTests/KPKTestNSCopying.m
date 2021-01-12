@@ -141,4 +141,8 @@
   
 }
 
+- (void)testMetaDataCopying {
+  
+}
+
 @end

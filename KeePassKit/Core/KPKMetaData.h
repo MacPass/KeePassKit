@@ -28,63 +28,63 @@
 @class KPKIcon;
 @class KPKTree;
 
-@interface KPKMetaData : NSObject <KPKModificationRecording>
+@interface KPKMetaData : NSObject <KPKModificationRecording, NSCopying>
 
 /* Setting for cipher */
-@property(copy) NSDictionary *keyDerivationParameters; // NSDictionary(Variant) with parameters for the key derivation operation
-@property(copy) NSUUID *cipherUUID; // UUID for the chipher used to encrypt the content, defaults are AES (KDB, KDBX3.1) and ChaCha20 (KDBX4)
-@property(assign) uint32_t compressionAlgorithm;
+@property (copy) NSDictionary *keyDerivationParameters; // NSDictionary(Variant) with parameters for the key derivation operation
+@property (copy) NSUUID *cipherUUID; // UUID for the chipher used to encrypt the content, defaults are AES (KDB, KDBX3.1) and ChaCha20 (KDBX4)
+@property uint32_t compressionAlgorithm;
 
-@property(nonatomic, copy) NSString *generator;
+@property (nonatomic, copy) NSString *generator;
 
-@property(copy) NSDate *settingsChanged;
+@property (copy) NSDate *settingsChanged;
 
-@property(nonatomic, copy) NSString *databaseName;
-@property(nonatomic, copy) NSDate *databaseNameChanged;
-@property(nonatomic, copy) NSString *databaseDescription;
-@property(nonatomic, copy) NSDate *databaseDescriptionChanged;
+@property (nonatomic, copy) NSString *databaseName;
+@property (nonatomic, copy) NSDate *databaseNameChanged;
+@property (nonatomic, copy) NSString *databaseDescription;
+@property (nonatomic, copy) NSDate *databaseDescriptionChanged;
 
-@property(nonatomic, copy) NSString *defaultUserName;
-@property(nonatomic, copy) NSDate *defaultUserNameChanged;
-@property(nonatomic) NSInteger maintenanceHistoryDays;
+@property (nonatomic, copy) NSString *defaultUserName;
+@property (nonatomic, copy) NSDate *defaultUserNameChanged;
+@property (nonatomic) NSInteger maintenanceHistoryDays;
 
 /* Hexstring - #AA77FF */
-@property(nonatomic, copy) NSUIColor *color;
+@property (nonatomic, copy) NSUIColor *color;
 
-@property(nonatomic, copy) NSDate *masterKeyChanged;
-@property(nonatomic, readonly) BOOL recommendMasterKeyChange;
-@property(nonatomic) NSInteger masterKeyChangeRecommendationInterval;
-@property(nonatomic, readonly) BOOL enforceMasterKeyChange;
-@property(nonatomic) NSInteger masterKeyChangeEnforcementInterval;
-@property(nonatomic) BOOL enforceMasterKeyChangeOnce;
+@property (nonatomic, copy) NSDate *masterKeyChanged;
+@property (nonatomic, readonly) BOOL recommendMasterKeyChange;
+@property (nonatomic) NSInteger masterKeyChangeRecommendationInterval;
+@property (nonatomic, readonly) BOOL enforceMasterKeyChange;
+@property (nonatomic) NSInteger masterKeyChangeEnforcementInterval;
+@property (nonatomic) BOOL enforceMasterKeyChangeOnce;
 
-@property(nonatomic) BOOL protectTitle;
-@property(nonatomic) BOOL protectUserName;
-@property(nonatomic) BOOL protectPassword;
-@property(nonatomic) BOOL protectUrl;
-@property(nonatomic) BOOL protectNotes;
+@property (nonatomic) BOOL protectTitle;
+@property (nonatomic) BOOL protectUserName;
+@property (nonatomic) BOOL protectPassword;
+@property (nonatomic) BOOL protectUrl;
+@property (nonatomic) BOOL protectNotes;
 
-@property(nonatomic) BOOL useTrash;
-@property(nonatomic, copy) NSUUID *trashUuid;
-@property(nonatomic, copy) NSDate *trashChanged;
+@property (nonatomic) BOOL useTrash;
+@property (nonatomic, copy) NSUUID *trashUuid;
+@property (nonatomic, copy) NSDate *trashChanged;
 
-@property(nonatomic, copy) NSUUID *entryTemplatesGroupUuid;
-@property(nonatomic, copy) NSDate *entryTemplatesGroupChanged;
+@property (nonatomic, copy) NSUUID *entryTemplatesGroupUuid;
+@property (nonatomic, copy) NSDate *entryTemplatesGroupChanged;
 
-@property(nonatomic, readonly) BOOL isHistoryEnabled;
+@property (nonatomic, readonly) BOOL isHistoryEnabled;
 @property NSInteger historyMaxItems;
 @property NSInteger historyMaxSize; // Megabytes
 
-@property(copy) NSUUID *lastSelectedGroup;
-@property(copy) NSUUID *lastTopVisibleGroup;
+@property (copy) NSUUID *lastSelectedGroup;
+@property (copy) NSUUID *lastTopVisibleGroup;
 
-@property(nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *customData;
-@property(nonatomic, copy, readonly) NSArray<KPKIcon *> *customIcons;
-@property(nonatomic, copy, readonly) NSDictionary<NSString *, id> *customPublicData; // NSDictionary(Variant) with custom date stored in the public header
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *customData;
+@property (nonatomic, copy, readonly) NSArray<KPKIcon *> *customIcons;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *customPublicData; // NSDictionary(Variant) with custom date stored in the public header
 /**
  *	Array of KPKBinary objects - extracted from unknown meta entries. Notes is mapped to name, data to data
  */
-@property(nonatomic, copy, readonly) NSArray<KPKBinary *> *unknownMetaEntryData;
+@property (nonatomic, copy, readonly) NSArray<KPKBinary *> *unknownMetaEntryData;
 
 - (BOOL)isEqualToMetaData:(KPKMetaData *)other;
 
