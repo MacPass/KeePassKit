@@ -115,7 +115,7 @@ if( self.updateTiming ) { \
   KPK_SCOPED_NO_BEGIN(copy.updateTiming)
   
   copy.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:self.mutableCustomData copyItems:YES];
-  copy.mutableUnknownMetaEntryData = [[NSMutableDictionary alloc] initWithDictionary:self.mutableUnknownMetaEntryData copyItems:YES];
+  copy.mutableUnknownMetaEntryData = [[NSMutableArray alloc] initWithArray:self.mutableUnknownMetaEntryData copyItems:YES];
   /* set pulic custom data via setter */
   for(NSString *key in self.mutableCustomPublicData) {
     [copy setValue:self.mutableCustomPublicData[key] forPublicCustomDataKey:key];
