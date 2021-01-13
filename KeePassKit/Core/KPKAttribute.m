@@ -108,7 +108,6 @@
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {
-  NSLog(@"Copying attributes is discoureaded since they lose the entry context. Beware of this side effect!");
   return [[KPKAttribute allocWithZone:zone] initWithKey:self.key value:self.value isProtected:self.protect];
 }
 

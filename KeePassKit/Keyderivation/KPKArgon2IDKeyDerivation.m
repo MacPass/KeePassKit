@@ -28,6 +28,10 @@
   return argon2idUUID;
 }
 
++ (KPKArgon2Type)type {
+  return KPKArgon2TypeID;
+}
+
 - (NSString *)name {
   return @"Argon2id";
 }

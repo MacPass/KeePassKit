@@ -71,6 +71,7 @@
   }
   self = [super _initWithData:data version:version key:key error:error];
   if(self) {
+    self.customPublicData = [[NSMutableDictionary alloc] init];
     self.mutableKeyDerivationParameters = [[KPKAESKeyDerivation defaultParameters] mutableCopy];
     if(![self _parseHeader:data error:error]) {
       self = nil;

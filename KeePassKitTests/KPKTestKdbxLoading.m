@@ -72,6 +72,18 @@
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx4));
 }
 
+- (void)testLoadingArong2idKDF {
+  NSError *error;
+  NSData *data =  [self _loadTestDataBase:@"Argon2idKDF_123" extension:@"kdbx"];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"123"]]];
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(tree, @"Loading should result in a tree object");
+  
+  XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx4));
+
+}
+
+
 - (void)testLoadingDifferenHeaderFieldOrderStrongBox {
   NSError *error;
   NSData *data =  [self _loadTestDataBase:@"Strongbox" extension:@"kdbx"];

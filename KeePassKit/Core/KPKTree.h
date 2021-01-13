@@ -110,7 +110,7 @@ FOUNDATION_EXTERN NSString *const KPKEntryKey;
 /* Keys used in UserInfo */
 FOUNDATION_EXPORT NSString *const kKPKNodeKey;
 
-@interface KPKTree : NSObject
+@interface KPKTree : NSObject <NSCopying>
 
 @property (nonatomic, weak, nullable) id<KPKTreeDelegate> delegate;
 @property (nonatomic, copy, readonly) NSDictionary<NSUUID *,KPKDeletedNode *> *deletedObjects;

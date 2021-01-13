@@ -42,4 +42,9 @@
   }
   return self;
 }
+
+- (instancetype)copyWithZone:(NSZone *)zone {
+  return [[KPKDeletedNode alloc] initWithUUID:self.uuid date:self.deletionDate];
+}
+
 @end

@@ -928,6 +928,9 @@
 		4C8836B61FB4407900CD2CD1 /* KPKTokenStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8836AE1FB4407900CD2CD1 /* KPKTokenStream.m */; };
 		4C8990FB1EE981940043B48D /* KPKReferenceBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C8990F91EE981940043B48D /* KPKReferenceBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C8990FC1EE981940043B48D /* KPKReferenceBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8990FA1EE981940043B48D /* KPKReferenceBuilder.m */; };
+		4C8BA7D425AF5C07008A279F /* LargeSize_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C8BA7D325AF5C07008A279F /* LargeSize_test.kdbx */; };
+		4C8BA7D525AF5C07008A279F /* LargeSize_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C8BA7D325AF5C07008A279F /* LargeSize_test.kdbx */; };
+		4C8BA7D625AF5C07008A279F /* LargeSize_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C8BA7D325AF5C07008A279F /* LargeSize_test.kdbx */; };
 		4C8CB6B71EEEF3AA00AF4402 /* KPKTextKdbxWriting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8CB6B61EEEF3AA00AF4402 /* KPKTextKdbxWriting.m */; };
 		4C8F42321C7B2D0D0057AFBF /* KPKTestDatabaseSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8F42311C7B2D0D0057AFBF /* KPKTestDatabaseSize.m */; };
 		4C8FE3B91E004DF5008C75BF /* KPKTestEntryOrGroupByUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8FE3B81E004DF5008C75BF /* KPKTestEntryOrGroupByUUID.m */; };
@@ -961,6 +964,9 @@
 		4CB13A0F1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
 		4CB13A101FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */; };
 		4CB6DD27236C860400C89993 /* KPKTestNSData+KPKBase32.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB6DD26236C860400C89993 /* KPKTestNSData+KPKBase32.m */; };
+		4CBB465025AF7EBA0093F444 /* Argon2idKDF_123.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CBB464F25AF7EBA0093F444 /* Argon2idKDF_123.kdbx */; };
+		4CBB465125AF7EBA0093F444 /* Argon2idKDF_123.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CBB464F25AF7EBA0093F444 /* Argon2idKDF_123.kdbx */; };
+		4CBB465225AF7EBA0093F444 /* Argon2idKDF_123.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4CBB464F25AF7EBA0093F444 /* Argon2idKDF_123.kdbx */; };
 		4CBE26331EC595D200B93BE2 /* KPKPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBE26311EC595D200B93BE2 /* KPKPair.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CBE26341EC595D200B93BE2 /* KPKPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE26321EC595D200B93BE2 /* KPKPair.m */; };
 		4CBEFF3A1F99E59E007362E4 /* KPKKdbTreeWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0B9DA71DBFB4FC00E66CD6 /* KPKKdbTreeWriter.m */; };
@@ -1400,6 +1406,7 @@
 		4C8836AE1FB4407900CD2CD1 /* KPKTokenStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTokenStream.m; sourceTree = "<group>"; };
 		4C8990F91EE981940043B48D /* KPKReferenceBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKReferenceBuilder.h; sourceTree = "<group>"; };
 		4C8990FA1EE981940043B48D /* KPKReferenceBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKReferenceBuilder.m; sourceTree = "<group>"; };
+		4C8BA7D325AF5C07008A279F /* LargeSize_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; name = LargeSize_test.kdbx; path = Kdbx3/LargeSize_test.kdbx; sourceTree = "<group>"; };
 		4C8CB6B61EEEF3AA00AF4402 /* KPKTextKdbxWriting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTextKdbxWriting.m; sourceTree = "<group>"; };
 		4C8F42311C7B2D0D0057AFBF /* KPKTestDatabaseSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestDatabaseSize.m; sourceTree = "<group>"; };
 		4C8FE3B81E004DF5008C75BF /* KPKTestEntryOrGroupByUUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestEntryOrGroupByUUID.m; sourceTree = "<group>"; };
@@ -1437,6 +1444,7 @@
 		4CA6DB8D1DC3574200650417 /* KPKChaCha20RandomStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKChaCha20RandomStream.m; sourceTree = "<group>"; };
 		4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Broken_BinaryAttachments_test.kdbx; sourceTree = "<group>"; };
 		4CB6DD26236C860400C89993 /* KPKTestNSData+KPKBase32.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "KPKTestNSData+KPKBase32.m"; sourceTree = "<group>"; };
+		4CBB464F25AF7EBA0093F444 /* Argon2idKDF_123.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argon2idKDF_123.kdbx; sourceTree = "<group>"; };
 		4CBE26311EC595D200B93BE2 /* KPKPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKPair.h; sourceTree = "<group>"; };
 		4CBE26321EC595D200B93BE2 /* KPKPair.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKPair.m; sourceTree = "<group>"; };
 		4CBEFF381F99E468007362E4 /* KPKTestEntryAttributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestEntryAttributes.m; sourceTree = "<group>"; };
@@ -1584,6 +1592,7 @@
 				4C18E50F21B6DD3F007AE021 /* Strongbox.kdbx */,
 				4CB13A0D1FC353390061264A /* Broken_BinaryAttachments_test.kdbx */,
 				4C5FFA901DCB5597004EF778 /* BinaryAttachments_test.kdbx */,
+				4CBB464F25AF7EBA0093F444 /* Argon2idKDF_123.kdbx */,
 				4C0BF1501DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx */,
 				4CD89C1F1F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx */,
 			);
@@ -1593,6 +1602,7 @@
 		4C0BF1541DC119E800193AD1 /* Kdbx3 */ = {
 			isa = PBXGroup;
 			children = (
+				4C8BA7D325AF5C07008A279F /* LargeSize_test.kdbx */,
 				4C6B7EC621A2B0FF00B26B63 /* No_Password_Kdb1HexKey_Keyfile.kdbx */,
 				4C81381B1BE282DC001BF195 /* Autotype_test.kdbx */,
 				4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */,
@@ -2832,6 +2842,7 @@
 				4C6B7ECF21A2B2D500B26B63 /* No_Password_Kdb1HexKey_Keyfile.kdbx in Resources */,
 				4C6B7ED921A2B9DD00B26B63 /* No_Password_Kdb1HexKey_Keyfile.kdb in Resources */,
 				2D5125561E9BD06700D7EAF6 /* Keepass2Key.xml in Resources */,
+				4C8BA7D525AF5C07008A279F /* LargeSize_test.kdbx in Resources */,
 				2D5125571E9BD06700D7EAF6 /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
 				2D5125591E9BD06700D7EAF6 /* KDB1_KeePassX_test.kdb in Resources */,
 				2D51255B1E9BD06700D7EAF6 /* Test_Password_1234.kdb in Resources */,
@@ -2853,6 +2864,7 @@
 				4CBEFF441F99EA83007362E4 /* test.icns in Resources */,
 				4CBEFF451F99EA83007362E4 /* test.ico in Resources */,
 				2D5125631E9BD06700D7EAF6 /* image.png in Resources */,
+				4CBB465125AF7EBA0093F444 /* Argon2idKDF_123.kdbx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2873,6 +2885,7 @@
 				4C6B7ED021A2B2D500B26B63 /* No_Password_Kdb1HexKey_Keyfile.kdbx in Resources */,
 				4C6B7EDA21A2B9DD00B26B63 /* No_Password_Kdb1HexKey_Keyfile.kdb in Resources */,
 				2D5126611E9BD29500D7EAF6 /* CustomIcon_Password_1234.xml in Resources */,
+				4C8BA7D625AF5C07008A279F /* LargeSize_test.kdbx in Resources */,
 				2D5126621E9BD29500D7EAF6 /* Keepass2Key.xml in Resources */,
 				2D5126631E9BD29500D7EAF6 /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
 				2D5126641E9BD29500D7EAF6 /* TwoFishCipher256bit_test.kdbx in Resources */,
@@ -2894,6 +2907,7 @@
 				4CBEFF481F99EA87007362E4 /* test.icns in Resources */,
 				4CBEFF491F99EA87007362E4 /* test.ico in Resources */,
 				2D51266F1E9BD29500D7EAF6 /* image.png in Resources */,
+				4CBB465225AF7EBA0093F444 /* Argon2idKDF_123.kdbx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2922,6 +2936,7 @@
 				4C6B7ECE21A2B2D400B26B63 /* No_Password_Kdb1HexKey_Keyfile.kdbx in Resources */,
 				4C6B7ED821A2B9DD00B26B63 /* No_Password_Kdb1HexKey_Keyfile.kdb in Resources */,
 				4CD89C201F86D87E0023E96A /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
+				4C8BA7D425AF5C07008A279F /* LargeSize_test.kdbx in Resources */,
 				4C81382E1BE282DC001BF195 /* Keepass2Key.xml in Resources */,
 				4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */,
 				4C199DA31DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx in Resources */,
@@ -2943,6 +2958,7 @@
 				4C639E2C1F6A644400E6C5CD /* test.icns in Resources */,
 				4C639E2A1F6A642500E6C5CD /* test.ico in Resources */,
 				4C81382D1BE282DC001BF195 /* image.png in Resources */,
+				4CBB465025AF7EBA0093F444 /* Argon2idKDF_123.kdbx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

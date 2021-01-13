@@ -84,6 +84,17 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   return self;
 }
 
+- (instancetype)copyWithZone:(NSZone *)zone {
+  KPKTree *copy = [[KPKTree alloc] init];
+  copy.delegate = self.delegate;
+  copy.metaData = [self.metaData copy];
+  copy.mutableDeletedObjects = [[NSMutableDictionary alloc] initWithDictionary:self.mutableDeletedObjects copyItems:YES];
+  copy.mutableDeletedNodes = [[NSMutableDictionary alloc] initWithDictionary:self.mutableDeletedNodes copyItems:YES];
+  copy.root = [self.root copy];
+  
+  return copy;
+}
+
 - (instancetype)initWithTemplateContents {
   self = [self init];
   if (self) {

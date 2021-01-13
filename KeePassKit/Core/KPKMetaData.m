@@ -121,9 +121,8 @@ if( self.updateTiming ) { \
     [copy setValue:self.mutableCustomPublicData[key] forPublicCustomDataKey:key];
   }
   /* add custom icons via API to ensure updates on icon cache! */
-  _customIconCache = [[NSMutableDictionary alloc] init];
   for(KPKIcon *icon in self.mutableCustomIcons) {
-    [self addCustomIcon:[icon copy]];
+    [copy addCustomIcon:[icon copy]];
   }
   
   copy.keyDerivationParameters = self.keyDerivationParameters;
@@ -153,6 +152,7 @@ if( self.updateTiming ) { \
   copy.historyMaxItems = _historyMaxItems;
   copy.historyMaxSize =  _historyMaxSize;
   copy.maintenanceHistoryDays = _maintenanceHistoryDays;
+  copy.masterKeyChanged = _masterKeyChanged;
   copy.masterKeyChangeRecommendationInterval = _masterKeyChangeRecommendationInterval;
   copy.masterKeyChangeEnforcementInterval = _masterKeyChangeEnforcementInterval;
   copy.enforceMasterKeyChangeOnce = _enforceMasterKeyChangeOnce;

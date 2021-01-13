@@ -29,7 +29,7 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeCompareOptions) {
 
 typedef NS_OPTIONS(NSUInteger, KPKNodeTraversalOptions) {
   KPKNodeTraversalOptionSkipEntries   = 1<<0,
-  KPKNodeTraversalOptionSkipGroups    = 1<< 1
+  KPKNodeTraversalOptionSkipGroups    = 1<<1
 };
 
 @interface KPKNode () <KPKExtendedModificationRecording> {
@@ -74,7 +74,7 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeTraversalOptions) {
 
 /**
  Updates the reveiving node with properties form the node.
- The way the update works depends heavily on the provided optoins
+ The way the update works depends heavily on the provided options
 
  @param node node to update from
  @param options options to use for updation

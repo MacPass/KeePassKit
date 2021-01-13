@@ -27,7 +27,7 @@
  Represents a deletion object. These are created whenever a Group or Entry
  is permanently deleted from the database.
  */
-@interface KPKDeletedNode : NSObject
+@interface KPKDeletedNode : NSObject <NSCopying>
 
 @property (nonatomic, copy, readonly) NSUUID *uuid;
 @property (nonatomic, copy, readonly) NSDate *deletionDate;

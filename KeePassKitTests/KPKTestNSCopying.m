@@ -141,7 +141,139 @@
   
 }
 
+- (void)testTreeCopying {
+  KPKTree *tree = [[KPKTree alloc] init];
+  
+  tree.metaData.masterKeyChangeEnforcementInterval = 10;
+  tree.metaData.masterKeyChangeRecommendationInterval = 20;
+  tree.metaData.databaseDescription = @"test database";
+  tree.metaData.defaultUserName = @"default-user-name";
+  
+  KPKGroup *root = [[KPKGroup alloc] init];
+  
+  tree.root = root;
+  
+  KPKGroup *groupA = [[KPKGroup alloc] init];
+  groupA.title = @"groupA";
+  KPKGroup *groupB = [[KPKGroup alloc] init];
+  groupB.title = @"groupB";
+  KPKGroup *trash = [[KPKGroup alloc] init];
+  trash.title = @"trash";
+  KPKGroup *templates = [[KPKGroup alloc] init];
+  templates.title = @"templates";
+  
+  [groupA addToGroup:root];
+  [groupB addToGroup:root];
+  [trash addToGroup:root];
+  [templates addToGroup:root];
+  
+  tree.trash = trash;
+  tree.templates = templates;
+  
+  XCTAssertEqual(tree.trash, trash);
+  XCTAssertEqual(tree.templates, templates);
+  
+  KPKEntry *entryA1 = [[KPKEntry alloc] init];
+  entryA1.title = @"entryA1";
+  entryA1.url = @"www.entryA1.com";
+  KPKEntry *entryA2 = [[KPKEntry alloc] init];
+  entryA2.title = @"entryA2";
+  entryA2.notes = @"entryA2notes";
+  KPKEntry *entryA3 = [[KPKEntry alloc] init];
+  entryA3.title = @"entryA3";
+  entryA3.autotype.enabled = NO;
+  
+
+  [entryA1 addToGroup:groupA];
+  [entryA2 addToGroup:groupA];
+  [entryA3 addToGroup:groupA];
+  
+  KPKEntry *entryB1 = [[KPKEntry alloc] init];
+  KPKEntry *entryB2 = [[KPKEntry alloc] init];
+  KPKEntry *entryB3 = [[KPKEntry alloc] init];
+
+  [entryB1 addToGroup:groupB];
+  [entryB2 addToGroup:groupB];
+  [entryB3 addToGroup:groupB];
+  
+  /*
+   root
+    groupA
+      entryA1
+      entryA2
+      entryA4
+    groupB
+      entryB1
+      entryB2
+      entryB3
+    trash
+    templates
+   */
+
+  [entryA3 trashOrRemove];
+  [entryB3 trashOrRemove];
+  
+  XCTAssertEqual(trash.entries.count, 2 );
+  XCTAssertTrue(entryA3.isTrashed);
+  XCTAssertTrue(entryB3.isTrashed);
+  
+  [trash clear];
+  
+  XCTAssertEqual(tree.mutableDeletedObjects.count,2);
+  XCTAssertNotNil(tree.mutableDeletedNodes[entryA3.uuid]);
+  XCTAssertNotNil(tree.mutableDeletedObjects[entryB3.uuid]);
+  
+  XCTAssertEqual(tree.mutableDeletedNodes.count,2);
+  XCTAssertEqual(tree.mutableDeletedNodes[entryA3.uuid], entryA3);
+  XCTAssertEqual(tree.mutableDeletedNodes[entryB3.uuid], entryB3);
+  
+  
+  KPKTree *copy = [tree copy];
+  
+  XCTAssertEqualObjects(copy.root.uuid, tree.root.uuid);
+  
+  KPKEntry *entryA1copy = [copy.root entryForUUID:entryA1.uuid];
+  XCTAssertNotNil(entryA1copy);
+  KPKEntry *entryA2copy = [copy.root entryForUUID:entryA2.uuid];
+  XCTAssertNotNil(entryA2copy);
+  KPKEntry *entryA3copy = [copy.root entryForUUID:entryA3.uuid];
+  XCTAssertNil(entryA3copy);
+  
+  XCTAssertEqual(copy.mutableDeletedObjects.count,2);
+  XCTAssertNotNil(copy.mutableDeletedNodes[entryA3.uuid]);
+  XCTAssertNotNil(copy.mutableDeletedObjects[entryB3.uuid]);
+  
+  XCTAssertEqual(copy.mutableDeletedNodes.count,2);
+  XCTAssertNotEqual(copy.mutableDeletedNodes[entryA3.uuid], entryA3);
+  XCTAssertNotEqual(copy.mutableDeletedNodes[entryB3.uuid], entryB3);
+  
+}
+
+- (void)testTreeCopyPerformance {
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
+  NSURL *url = [myBundle URLForResource:@"LargeSize_test" withExtension:@"kdbx"];
+  NSData *data = [NSData dataWithContentsOfURL:url];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
+  
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:nil];
+  XCTAssertNotNil(tree);
+  
+  [self measureBlock:^{
+    XCTAssertNotNil([tree copy]);
+  }];
+}
+
 - (void)testMetaDataCopying {
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
+  NSURL *url = [myBundle URLForResource:@"LargeSize_test" withExtension:@"kdbx"];
+  NSData *data = [NSData dataWithContentsOfURL:url];
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
+  
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:nil];
+  
+  KPKMetaData *copy = [tree.metaData copy];
+  
+  XCTAssertTrue([copy isEqualToMetaData:tree.metaData]);
   
 }
 

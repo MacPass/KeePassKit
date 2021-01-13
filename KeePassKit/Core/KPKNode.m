@@ -289,7 +289,7 @@
 }
 
 - (void)trashOrRemove {
-  /* If we do create a trahs group we should also remove it after a undo operation */
+  /* If we do create a trash group we should also remove it after a undo operation */
   if(self == self.tree.trash) {
     return; // Prevent recursive trashing of trash group
   }
