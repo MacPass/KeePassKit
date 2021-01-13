@@ -146,22 +146,23 @@ if( self.updateTiming ) { \
   copy.entryTemplatesGroupChanged = _entryTemplatesGroupChanged;
   copy.trashChanged = _trashChanged;
   copy.settingsChanged = _settingsChanged;
-  copy.trashUuid = _trashUuid
-  copy.useTrash = _useTrash
-  copy.lastSelectedGroup = _lastSelectedGroup
+  copy.trashUuid = _trashUuid;
+  copy.useTrash = _useTrash;
+  copy.lastSelectedGroup = _lastSelectedGroup;
   copy.lastTopVisibleGroup = _lastTopVisibleGroup;
   copy.historyMaxItems = _historyMaxItems;
   copy.historyMaxSize =  _historyMaxSize;
   copy.maintenanceHistoryDays = _maintenanceHistoryDays;
   copy.masterKeyChangeRecommendationInterval = _masterKeyChangeRecommendationInterval;
   copy.masterKeyChangeEnforcementInterval = _masterKeyChangeEnforcementInterval;
-  copy.enforceMasterKeyChange
   copy.enforceMasterKeyChangeOnce = _enforceMasterKeyChangeOnce;
   
   KPK_SCOPED_NO_END(copy.updateTiming);
   
   /* set timing update at last to ensure correct state */
   copy.updateTiming = _updateTiming;
+  
+  return copy;
 }
 
 #pragma mark -
