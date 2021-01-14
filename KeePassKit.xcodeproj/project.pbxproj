@@ -635,10 +635,10 @@
 		4C21282E1C1F4F27006DE3C6 /* KPKTestNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */; };
 		4C2602191DB110930069B059 /* chacha20_simple.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C2602111DB110930069B059 /* chacha20_simple.c */; };
 		4C26021A1DB110930069B059 /* chacha20_simple.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2602121DB110930069B059 /* chacha20_simple.h */; };
-		4C2A9A0E25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */; };
-		4C2A9A0F25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */; };
-		4C2A9A1025AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */; };
-		4C2A9A1125AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */; };
+		4C2A9A0E25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C2A9A0F25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C2A9A1025AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C2A9A1125AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C2A9A1225AC930B00A45D43 /* KPKArgon2IDKeyDerivation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A9A0D25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.m */; };
 		4C2A9A1325AC930B00A45D43 /* KPKArgon2IDKeyDerivation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A9A0D25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.m */; };
 		4C2A9A1425AC930B00A45D43 /* KPKArgon2IDKeyDerivation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2A9A0D25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.m */; };
