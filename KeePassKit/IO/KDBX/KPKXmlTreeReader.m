@@ -218,7 +218,7 @@
   data.historyMaxSize = KPKXmlInteger(metaElement, kKPKXmlHistoryMaxSize);
   
   /* Settings changed might not be supported */
-  if([metaElement elementsForName:kKPKXmlSettingsChanged]) {
+  if([metaElement elementForName:kKPKXmlSettingsChanged]) {
     data.settingsChanged = KPKXmlDate(metaElement, kKPKXmlSettingsChanged, self.useRelativeDates);
   }
   

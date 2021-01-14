@@ -268,7 +268,7 @@ if( self.updateTiming ) { \
   [self.defaultUserName isEqualToString:other.defaultUserName] &&
   [self.defaultUserNameChanged isEqualToDate:other.defaultUserNameChanged] &&
   self.maintenanceHistoryDays == other.maintenanceHistoryDays &&
-  [self.color isEqual:other.color] &&
+  ((!self.color && !other.color) || [self.color isEqual:other.color]) &&
   [self.masterKeyChanged isEqualToDate:other.masterKeyChanged] &&
   self.recommendMasterKeyChange == other.recommendMasterKeyChange &&
   self.masterKeyChangeRecommendationInterval == other.masterKeyChangeRecommendationInterval &&
