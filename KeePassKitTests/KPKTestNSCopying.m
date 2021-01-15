@@ -247,6 +247,7 @@
   XCTAssertNotEqual(copy.mutableDeletedNodes[entryA3.uuid], entryA3);
   XCTAssertNotEqual(copy.mutableDeletedNodes[entryB3.uuid], entryB3);
   
+  XCTAssertEqualObjects(tree.xmlData, copy.xmlData);
 }
 
 - (void)testTreeCopyPerformance {

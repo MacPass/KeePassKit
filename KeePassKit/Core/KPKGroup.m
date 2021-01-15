@@ -176,7 +176,7 @@ static NSSet *_observedKeyPathsSet;
   KPKGroup *copy = [super _copyWithUUID:uuid];
   KPK_SCOPED_NO_BEGIN(copy.updateTiming);
   copy.isAutoTypeEnabled = self.isAutoTypeEnabled;
-  copy.defaultAutoTypeSequence = self.defaultAutoTypeSequence;
+  copy.defaultAutoTypeSequence = self->_defaultAutoTypeSequence; // direct access to member to prevent parent lookup!
   copy.isSearchEnabled = self.isSearchEnabled;
   copy.isExpanded = self.isExpanded;
   copy.lastTopVisibleEntry = self.lastTopVisibleEntry;
@@ -419,7 +419,7 @@ static NSSet *_observedKeyPathsSet;
 - (void)setDefaultAutoTypeSequence:(NSString *)defaultAutoTypeSequence {
   [[self.undoManager prepareWithInvocationTarget:self] setDefaultAutoTypeSequence:_defaultAutoTypeSequence];
   [self touchModified];
-  _defaultAutoTypeSequence = defaultAutoTypeSequence;
+  _defaultAutoTypeSequence = [defaultAutoTypeSequence copy];
 }
 
 - (BOOL)hasDefaultAutotypeSequence {
