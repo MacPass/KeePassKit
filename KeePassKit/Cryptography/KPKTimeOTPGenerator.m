@@ -58,6 +58,17 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   return self;
 }
 
+- (instancetype)initWithURL:(NSString *)otpAuthURL {
+  self = [self init];
+  if(self) {
+    NSURL *url = [NSURL URLWithString:otpAuthURL];
+    if(![self _parseURL:url]) {
+      self = nil;
+    }
+  }
+  return self;
+}
+
 - (instancetype)initWithAttributes:(NSArray<KPKAttribute *> *)attributes {
   self = [self init];
   if(self) {
@@ -200,31 +211,17 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
 }
 
 - (BOOL)_parseAttributes:(NSArray <KPKAttribute*>*)attributes {
-
+  
   /* use dict for simpler lookup! */
   NSDictionary *attributesDict = [NSDictionary dictionaryWithAttributes:attributes];
   
   KPKAttribute *urlAttribute = attributesDict[kKPKAttributeKeyOTPOAuthURL];
-  
+    
   if(urlAttribute) {
     NSURL *authURL = [NSURL URLWithString:urlAttribute.evaluatedValue];
+    /* only parse the URL if it's correct, otherwise try fallback to other attributes */
     if(authURL && authURL.isTimeOTPURL) {
-      if(authURL.digits > 0) {
-        self.numberOfDigits = authURL.digits;
-      }
-      if(KPKOTPHashAlgorithmInvalid != authURL.hashAlgorithm) {
-        self.hashAlgorithm = authURL.hashAlgorithm;
-      }
-      if(authURL.period > 0) {
-        self.timeSlice = authURL.period;
-      }
-      if(authURL.key.length != 0) {
-        self.key = authURL.key;
-      }
-      else {
-        return NO; // key is mandatory!
-      }
-      return YES;
+      return [self _parseURL:authURL];
     }
   }
   
@@ -289,6 +286,30 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
     }
   }
   
+  return YES;
+}
+
+- (BOOL)_parseURL:(NSURL *)authURL {
+  if(!(authURL && authURL.isTimeOTPURL)) {
+    return NO;
+  }
+  
+  if(authURL.key.length != 0) {
+    self.key = authURL.key;
+  }
+  else {
+    return NO; // key is mandatory!
+  }
+  
+  if(authURL.digits > 0) {
+    self.numberOfDigits = authURL.digits;
+  }
+  if(KPKOTPHashAlgorithmInvalid != authURL.hashAlgorithm) {
+    self.hashAlgorithm = authURL.hashAlgorithm;
+  }
+  if(authURL.period > 0) {
+    self.timeSlice = authURL.period;
+  }
   return YES;
 }
 

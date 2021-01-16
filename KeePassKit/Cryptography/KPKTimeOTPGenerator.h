@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic, readonly) NSTimeInterval remainingTime; // the time in seconds the data and string is valud only for KPKOTPGeneratorTimeOTP and KPKOTPGeneratorSteamOTP
 
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithURL:(NSString *)otpAuthURL;
 
 @end
 
