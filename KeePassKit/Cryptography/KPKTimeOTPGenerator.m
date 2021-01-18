@@ -201,6 +201,15 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   return floor((self.time - self.timeBase) / self.timeSlice);
 }
 
+- (BOOL)isRFC6238 {
+  // prevent derived classes from returing YES
+  if(self.class != KPKTimeOTPGenerator.class) {
+    return NO;
+  }
+  return (self.defaultTimeSlice == self.timeSlice
+          && self.numberOfDigits == self.defaultNumberOfDigits
+          && self.hashAlgorithm == self.defaultHashAlgoritm);
+}
 
 - (NSUInteger)defaultTimeSlice {
   return 30;
@@ -216,7 +225,7 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   NSDictionary *attributesDict = [NSDictionary dictionaryWithAttributes:attributes];
   
   KPKAttribute *urlAttribute = attributesDict[kKPKAttributeKeyOTPOAuthURL];
-    
+  
   if(urlAttribute) {
     NSURL *authURL = [NSURL URLWithString:urlAttribute.evaluatedValue];
     /* only parse the URL if it's correct, otherwise try fallback to other attributes */

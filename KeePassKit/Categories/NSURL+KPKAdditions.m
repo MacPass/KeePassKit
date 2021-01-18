@@ -19,6 +19,7 @@ NSString *const kKPKURLParameterDigits    = @"digits";
 NSString *const kKPKURLParameterIssuer    = @"issuer";
 NSString *const kKPKURLParameterPeriod    = @"period";
 NSString *const kKPKURLParameterCounter   = @"counter";
+NSString *const kKPKURLParameterEncoder   = @"encoder";
 
 @implementation NSURL (KPKAdditions)
 
@@ -141,6 +142,10 @@ NSString *const kKPKURLParameterCounter   = @"counter";
     default:
       return issuerQuery;
   }
+}
+
+- (NSString *)encoder {
+  return [self _queryItemValueForKey:kKPKURLParameterEncoder];
 }
 
 - (KPKOTPHashAlgorithm)hashAlgorithm {

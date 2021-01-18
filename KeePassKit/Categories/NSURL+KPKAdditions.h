@@ -22,12 +22,14 @@ FOUNDATION_EXTERN NSString *const kKPKURLParameterDigits;
 FOUNDATION_EXTERN NSString *const kKPKURLParameterIssuer;
 FOUNDATION_EXTERN NSString *const kKPKURLParameterPeriod;
 FOUNDATION_EXTERN NSString *const kKPKURLParameterCounter;
+FOUNDATION_EXTERN NSString *const kKPKURLParameterEncoder;
 
 @property (readonly, nonatomic) BOOL isHmacOTPURL;
 @property (readonly, nonatomic) BOOL isTimeOTPURL;
 
 @property (copy, readonly, nullable) NSData* key;
 @property (copy, readonly) NSString *issuer;
+@property (copy, readonly) NSString *encoder; // KeePassXC custom otp format to encode Stream
 @property (readonly) KPKOTPHashAlgorithm hashAlgorithm;
 @property (readonly) NSInteger digits;
 @property (readonly) NSInteger counter; // only for HmacOTP urls

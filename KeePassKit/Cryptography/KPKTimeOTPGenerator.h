@@ -16,10 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSUInteger timeSlice; // the time slice for Timed OTP, default=30, , only for KPKOTPGeneratorTimeOTP and KPKOTPGeneratorSteamOTP
 @property (nonatomic, readonly) NSUInteger defaultTimeSlice;
 @property NSTimeInterval time; // the time to calculate the OTP for, default=0, only for KPKOTPGeneratorTimeOTP and KPKOTPGeneratorSteamOTP
-@property (assign, nonatomic, readonly) NSTimeInterval remainingTime; // the time in seconds the data and string is valud only for KPKOTPGeneratorTimeOTP and KPKOTPGeneratorSteamOTP
+@property (nonatomic, readonly) NSTimeInterval remainingTime; // the time in seconds the data and string is valud only for KPKOTPGeneratorTimeOTP and KPKOTPGeneratorSteamOTP
+@property (nonatomic, readonly) BOOL isRFC6238; // YES if the settings are the defaults settings recemended in the RFC6238 standard
 
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithURL:(NSString *)otpAuthURL;
+
 
 @end
 
