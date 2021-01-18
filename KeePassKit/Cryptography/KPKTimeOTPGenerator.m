@@ -290,7 +290,7 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
 }
 
 - (BOOL)_parseURL:(NSURL *)authURL {
-  if(!(authURL && authURL.isTimeOTPURL)) {
+  if(!(authURL && authURL.isTimeOTPURL)) {
     return NO;
   }
   
