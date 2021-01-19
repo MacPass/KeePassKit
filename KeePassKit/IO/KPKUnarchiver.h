@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithData:(NSData *)data key:(KPKCompositeKey *)key error:(NSError *__autoreleasing*)error;
 - (instancetype)initWithError:(NSError **)error NS_UNAVAILABLE;
 
-- (KPKTree *)tree:(NSError *__autoreleasing *)error;
+- (KPKTree *_Nullable)tree:(NSError *__autoreleasing *)error;
 
 @end
 

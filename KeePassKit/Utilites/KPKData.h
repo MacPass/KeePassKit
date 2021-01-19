@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param data Data to store securely
  @return Data created
  */
-- (instancetype)initWithProtectedData:(NSData *)data;
+- (instancetype)initWithProtectedData:(NSData *_Nullable)data;
 
 /**
  Convinence constructor to create unproteced data
@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param data Data to store
  @return Data created
  */
-- (instancetype)initWithUnprotectedData:(NSData *)data;
+- (instancetype)initWithUnprotectedData:(NSData *_Nullable)data;
 
 
 - (BOOL)isEqualToData:(KPKData *)data;
