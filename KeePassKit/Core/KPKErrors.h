@@ -31,46 +31,47 @@ FOUNDATION_EXPORT NSString *const KPKErrorDomain;
 void KPKCreateError( NSError * __autoreleasing *errorPtr, NSInteger errorCode);
 
 typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
-  KPKErrorNoData = 1000, // No data given
-  KPKErrorUnknownFileFormat, // The file format is unknown
-  KPKErrorEncryptionFailed, // Failed to encrypt the data
+  KPKErrorAESDecryptionFailed = 1000, // Failed to decrypt the file using AES
   KPKErrorAESEncryptionFailed, // Failed to encrypt the data using AES
+  KPKErrorAttributeKeyValidationFailed, // Validation of attribute key failed
   KPKErrorDecryptionFailed, // Failed to decrypt the data stream
-  KPKErrorAESDecryptionFailed, // Failed to decrypt the file using AES
-  KPKErrorKdbxKeyUnsupportedVersion, // The XML-Keyfile is an usupported version
-  KPKErrorKdbxKeyKeyElementMissing, // The XML-Keyfile has no key element
-  KPKErrorKdbxKeyDataElementMissing, // The XML-Keyfile has no data element
-  KPKErrorKdbxKeyDataParsingError, // The XML-data element couldn't be parsed
-  KPKErrorUnsupportedDatabaseVersion, // The database version is to high/low
-  KPKErrorUnsupportedCipher, // The header specifies a unsupported and/or wrong chipher methed
-  KPKErrorUnsupportedKeyDerivation, // The header specifies an unsupported and/or wrong key derivation method
-  KPKErrorKeyDerivationFailed, // The key derivation failed
-  KPKErrorWrongIVVectorSize, // The header has a wrong size of the IV vector for the specified cipher
-  KPKErrorUnsupportedCompressionAlgorithm, // The header specifies an unsupporte and/or wrong compressoing algorithm
-  KPKErrorUnsupportedRandomStream, // The header specifies an unsupporte stream or it's corrupted
-  KPKErrorPasswordAndOrKeyfileWrong, // Password and or keyfile is wrong
+  KPKErrorEncryptionFailed, // Failed to encrypt the data
   KPKErrorIntegrityCheckFailed, // The startbytes in the header aren't matching the AES stream-start
-  KPKErrorKdbxHeaderHashVerificationFailed, // The header hash does not match the one provieded in the database
-  KPKErrorKdbxKeePassFileElementMissing, // the Keepass root element is missing
-  KPKErrorKdbxRootElementMissing, // The root Elemetn is missing;
-  KPKErrorKdbxMetaElementMissing, // The root element has no meta entry
+  KPKErrorKdbCorruptTree, // Tree sturcture is corrupted
+  KPKErrorKdbHeaderTruncated, // The header (and thus the file) was truncated
+  KPKErrorKdbInvalidFieldSize, // KDB Invalid field size
+  KPKErrorKdbInvalidFieldType, // KDB Invalid field type
+  KPKErrorKdbxCorruptedContentStream, // The content data was corrupted (KDBX3.1)
+  KPKErrorKdbxCorruptedEncryptionStream, // The encrypted data was corrupted (KDBX4)
+  KPKErrorKdbxCorruptedInnerHeader, // the inner header is corrupted
+  KPKErrorKdbxCorrutpedPublicCustomData, // The custom data stored in the header is corrupted
   KPKErrorKdbxGroupElementMissing, // no Group element found
+  KPKErrorKdbxHeaderHashVerificationFailed, // The header hash does not match the one provieded in the database
   KPKErrorKdbxInvalidHeaderFieldSize, // KDBX Header field size missmatch
   KPKErrorKdbxInvalidHeaderFieldType, // KDBX Header field type unknown
-  KPKErrorKdbxInvalidKeyDerivationData, // The key derivation header data is invalid
-  KPKErrorKdbxCorrutpedPublicCustomData, // The custom data stored in the header is corrupted
-  KPKErrorKdbxCorruptedEncryptionStream, // The encrypted data was corrupted (KDBX4)
-  KPKErrorKdbxCorruptedContentStream, // The content data was corrupted (KDBX3.1)
-  KPKErrorKdbxCorruptedInnerHeader, // the inner header is corrupted
   KPKErrorKdbxInvalidInnerHeaderFieldType, // invalid field type in the inner header
-  KPKErrorKdbHeaderTruncated, // The header (and thus the file) was truncated
-  KPKErrorKdbInvalidFieldType, // KDB Invalid field type
-  KPKErrorKdbInvalidFieldSize, // KDB Invalid field size
-  KPKErrorKdbCorruptTree, // Tree sturcture is corrupted
+  KPKErrorKdbxInvalidKeyDerivationData, // The key derivation header data is invalid
+  KPKErrorKdbxKeePassFileElementMissing, // the Keepass root element is missing
+  KPKErrorKdbxKeyDataCorrupted, // The XML-data did not matcht the hash and is considered corrupted
+  KPKErrorKdbxKeyDataElementMissing, // The XML-Keyfile has no data element
+  KPKErrorKdbxKeyDataParsingError, // The XML-data element couldn't be parsed
+  KPKErrorKdbxKeyKeyElementMissing, // The XML-Keyfile has no key element
+  KPKErrorKdbxKeyUnsupportedVersion, // The XML-Keyfile is an usupported version
   KPKErrorKdbxMalformedXmlStructure, // KDBX XML file has malformed structure
-  KPKErrorAttributeKeyValidationFailed, // Validation of attribute key failed
+  KPKErrorKdbxMetaElementMissing, // The root element has no meta entry
+  KPKErrorKdbxRootElementMissing, // The root Elemetn is missing;
+  KPKErrorKeyDerivationFailed, // The key derivation failed
+  KPKErrorNoData, // No data given
+  KPKErrorNoKeyData, // The key file does not contain any data
+  KPKErrorPasswordAndOrKeyfileWrong, // Password and or keyfile is wrong
+  KPKErrorUnknownFileFormat, // The file format is unknown
+  KPKErrorUnsupportedCipher, // The header specifies a unsupported and/or wrong chipher methed
+  KPKErrorUnsupportedCompressionAlgorithm, // The header specifies an unsupporte and/or wrong compressoing algorithm
+  KPKErrorUnsupportedDatabaseVersion, // The database version is to high/low
+  KPKErrorUnsupportedKeyDerivation, // The header specifies an unsupported and/or wrong key derivation method
+  KPKErrorUnsupportedRandomStream, // The header specifies an unsupporte stream or it's corrupted
   KPKErrorWindowTitleFormatValidationFailed, // The Window title for autotype is not supported
-  KPKErrorNoKeyData // The key file does not contain any data
+  KPKErrorWrongIVVectorSize, // The header has a wrong size of the IV vector for the specified cipher
 };
 
 #endif
