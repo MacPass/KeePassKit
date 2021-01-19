@@ -7,7 +7,10 @@
 //
 
 #import "NSURL+KPKAdditions.h"
+
 #import "KPKOTPGenerator.h"
+#import "KPKSteamOTPGenerator.h"
+
 #import "NSData+KPKBase32.h"
 
 NSString *const kKPKURLOtpAuthScheme      = @"otpauth";
@@ -21,6 +24,8 @@ NSString *const kKPKURLParameterPeriod    = @"period";
 NSString *const kKPKURLParameterCounter   = @"counter";
 NSString *const kKPKURLParameterEncoder   = @"encoder";
 
+NSString *const kKPKURLSteamEncoderValue  = @"steam";
+
 @implementation NSURL (KPKAdditions)
 
 + (instancetype)URLWithTimeOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)perid digits:(NSUInteger)digits {
@@ -30,6 +35,11 @@ NSString *const kKPKURLParameterEncoder   = @"encoder";
 + (instancetype)URLWithHmacOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits {
   return [[NSURL alloc] initWithHmacOTPKey:key algorithm:algorithm issuer:issuer counter:counter digits:digits];
 }
+
++ (instancetype)URLWIthSteamOTPKey:(NSData *)key issuer:(NSString *)issuer {
+  return [[NSURL alloc] initWithSteamOTPKey:key issuer:issuer];
+}
+
 
 - (instancetype)initWithHmacOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits {
   NSURLComponents *urlComponents = [[NSURLComponents alloc] init];
@@ -110,6 +120,23 @@ NSString *const kKPKURLParameterEncoder   = @"encoder";
   urlComponents.queryItems = queryItems;
   if(urlComponents.string) {
     self = [self initWithString:urlComponents.string];
+  }
+  else {
+    self = nil;
+  }
+  return self;
+}
+
+- (instancetype)initWithSteamOTPKey:(NSData *)key issuer:(NSString *)issuer {
+  // FIXME: remove magic Steam numbers!
+  NSURL *timeURL = [[NSURL alloc] initWithTimeOTPKey:key algorithm:KPKOTPHashAlgorithmSha1 issuer:issuer period:KPKTimeOTPDefaultTimeSlice digits:KPKSteamOTPGeneratorDigits];
+  NSURLComponents *components = [[NSURLComponents alloc] initWithURL:timeURL resolvingAgainstBaseURL:NO];
+  
+  NSURLQueryItem *encoderItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterEncoder value:kKPKURLSteamEncoderValue];
+  
+  components.queryItems = [components.queryItems arrayByAddingObject:encoderItem];
+  if(components.string) {
+    self = [self initWithString:components.string];
   }
   else {
     self = nil;

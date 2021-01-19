@@ -24,6 +24,8 @@ FOUNDATION_EXTERN NSString *const kKPKURLParameterPeriod;
 FOUNDATION_EXTERN NSString *const kKPKURLParameterCounter;
 FOUNDATION_EXTERN NSString *const kKPKURLParameterEncoder;
 
+FOUNDATION_EXTERN NSString *const kKPKURLSteamEncoderValue; // for steam otpauth urls. encoder=steam
+
 @property (readonly, nonatomic) BOOL isHmacOTPURL;
 @property (readonly, nonatomic) BOOL isTimeOTPURL;
 
@@ -37,8 +39,10 @@ FOUNDATION_EXTERN NSString *const kKPKURLParameterEncoder;
 
 + (instancetype)URLWithHmacOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits;
 + (instancetype)URLWithTimeOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)period digits:(NSUInteger)digits;
++ (instancetype)URLWIthSteamOTPKey:(NSData *)key issuer:(NSString *)issuer;
 - (instancetype)initWithHmacOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer counter:(NSUInteger)counter digits:(NSUInteger)digits;
 - (instancetype)initWithTimeOTPKey:(NSData *)key algorithm:(KPKOTPHashAlgorithm)algorithm issuer:(NSString *)issuer period:(NSUInteger)period digits:(NSUInteger)digits;
+- (instancetype)initWithSteamOTPKey:(NSData *)key issuer:(NSString *)issuer;
 @end
 
 NS_ASSUME_NONNULL_END

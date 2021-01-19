@@ -16,7 +16,7 @@
 
 #import "NSDictionary+KPKAttributes.h"
 
-static NSUInteger const KPKTOTPDefaultTimeSlice = 30;
+NSUInteger const KPKTimeOTPDefaultTimeSlice = 30;
 
 NSString * stringForAlgoritm(KPKOTPHashAlgorithm algoritm) {
   switch(algoritm) {
@@ -52,7 +52,7 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   self = [super _init];
   if(self) {
     _timeBase = 0;
-    _timeSlice = KPKTOTPDefaultTimeSlice;
+    _timeSlice = KPKTimeOTPDefaultTimeSlice;
     _time = 0;
   }
   return self;
@@ -153,14 +153,14 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   if(!secretStored) {
     secretBase32Attribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyHmacOTPSecretBase32 value:self.key.base32EncodedString];
     [entry addCustomAttribute:secretBase32Attribute];
-    secretStored = YES;
   }
   
+  /* lenght */
   BOOL defaultLenght = self.defaultNumberOfDigits == self.numberOfDigits;
-  if(defaultLenght && lengthAttr) {
+  if(defaultLenght) {
     [entry removeCustomAttribute:lengthAttr];
   }
-  if(!defaultLenght) {
+  else {
     if(!lengthAttr) {
       lengthAttr = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyTimeOTPLength value:[NSString stringWithFormat:@"%ld",self.numberOfDigits]];
       [entry addCustomAttribute:lengthAttr];
@@ -169,11 +169,13 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
       lengthAttr.value = [NSString stringWithFormat:@"%ld",self.numberOfDigits];
     }
   }
+  /* period */
+  
   BOOL defaultPeriod = self.timeSlice == self.defaultTimeSlice;
-  if(defaultPeriod && periodAttr) {
+  if(defaultPeriod) {
     [entry removeCustomAttribute:periodAttr];
   }
-  if(!defaultPeriod) {
+  else {
     if(!periodAttr) {
       periodAttr = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyTimeOTPPeriod value:[NSString stringWithFormat:@"%ld",self.timeSlice]];
       [entry addCustomAttribute:periodAttr];
@@ -183,16 +185,19 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
     }
   }
   
+  /* algorithm */
   BOOL defaultAlgorithm = self.defaultHashAlgoritm == self.hashAlgorithm;
-  if(defaultAlgorithm && algorithmAttr) {
+  if(defaultAlgorithm) {
     [entry removeCustomAttribute:algorithmAttr];
   }
-  if(!defaultAlgorithm) {
+  else {
+    NSString *algorithmString = stringForAlgoritm(self.hashAlgorithm);
     if(!algorithmAttr) {
-      NSString *algorithmString = stringForAlgoritm(self.hashAlgorithm);
-      if(algorithmAttr) {
-        algorithmAttr = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyTimeOTPAlgorithm value:algorithmString];
-      }
+      algorithmAttr = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyTimeOTPAlgorithm value:algorithmString];
+      [entry addCustomAttribute:algorithmAttr];
+    }
+    else {
+      algorithmAttr.value = algorithmString;
     }
   }
 }
@@ -212,7 +217,7 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
 }
 
 - (NSUInteger)defaultTimeSlice {
-  return 30;
+  return KPKTimeOTPDefaultTimeSlice;
 }
 
 - (NSTimeInterval)remainingTime {
@@ -246,10 +251,14 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
     if(settingsAttribute) {
       
       NSArray <NSString *> *parts = [settingsAttribute.evaluatedValue componentsSeparatedByString:@";"];
-      self.timeSlice = parts.firstObject.integerValue;
-      self.numberOfDigits = parts.lastObject.integerValue;
+      self.timeSlice = parts[0].integerValue;
+      self.numberOfDigits = parts[1].integerValue;
+      // TODO: add support for time-correction parameter;
+      return YES;
     }
-    return YES;
+  }
+  else {
+    
   }
   
   KPKAttribute *asciiKeyAttribute = attributesDict[kKPKAttributeKeyTimeOTPSecret];

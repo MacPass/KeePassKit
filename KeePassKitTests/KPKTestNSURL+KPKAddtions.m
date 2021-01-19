@@ -26,9 +26,24 @@
   
   NSURL *totpURL = [NSURL URLWithTimeOTPKey:keyData algorithm:hashAlgorithm issuer:issuer period:period digits:digits];
   XCTAssertNotNil(totpURL);
+  XCTAssertEqualObjects(totpURL.issuer, issuer);
   XCTAssertEqualObjects(totpURL.key, keyData);
   XCTAssertEqual(totpURL.period, period);
   XCTAssertEqual(totpURL.digits, digits);
+}
+
+- (void)testSteamOTPInit {
+  NSData *keyData = [@"0123456789" dataUsingEncoding:NSUTF8StringEncoding];
+  NSString *issuer = @"Title:me@domain.com";
+  
+  NSURL *steamOTPURL = [NSURL URLWIthSteamOTPKey:keyData issuer:issuer];
+  XCTAssertNotNil(steamOTPURL);
+  XCTAssertEqualObjects(steamOTPURL.issuer, issuer);
+  XCTAssertEqualObjects(steamOTPURL.key, keyData);
+  XCTAssertEqualObjects(steamOTPURL.encoder, @"steam");
+  XCTAssertEqual(steamOTPURL.period, 30);
+  XCTAssertEqual(steamOTPURL.digits, 5);
+  
 }
 
 - (void)testInvalidScheme {

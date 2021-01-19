@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+FOUNDATION_EXTERN NSUInteger const KPKTimeOTPDefaultTimeSlice;
+
 @interface KPKTimeOTPGenerator : KPKOTPGenerator
 
 @property NSTimeInterval timeBase; // the base time for Timed OTP, default=0 -> unix reference time

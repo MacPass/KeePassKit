@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+FOUNDATION_EXTERN NSUInteger const KPKSteamOTPGeneratorDigits;
+FOUNDATION_EXTERN NSString *const KPKSteamOTPGeneratorSettingsValue;
+
 @interface KPKSteamOTPGenerator : KPKTimeOTPGenerator
 
 @end
