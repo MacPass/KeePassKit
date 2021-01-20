@@ -24,9 +24,15 @@
 #import <Foundation/Foundation.h>
 #import <KeePassKit/KPKFormat.h>
 
+typedef NS_ENUM(NSUInteger, KPKKeyFileType) {
+  KPKKeyFileTypeBinary,       // KDB Binary format (Hex-Key)
+  KPKKeyFileTypeXMLVersion1,  // KDBX XML Version 1
+  KPKKeyFileTypeXMLVersion2   // KDBX XML Version 2
+};
+
 @interface NSData (KPKKeyfile)
 
 + (NSData *)kpk_keyDataForData:(NSData *)data version:(KPKDatabaseFormat)version error:(NSError *__autoreleasing *)error;
-+ (NSData *)kpk_generateKeyfileDataForFormat:(KPKDatabaseFormat)format;
++ (NSData *)kpk_generateKeyfileDataOfType:(KPKKeyFileType)type;
 
 @end

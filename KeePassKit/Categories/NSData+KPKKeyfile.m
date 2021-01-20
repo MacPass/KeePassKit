@@ -30,6 +30,7 @@
 
 #import "NSString+KPKHexdata.h"
 #import "NSData+KPKRandom.h"
+#import "NSData+CommonCrypto.h"
 
 @implementation NSData (KPKKeyfile)
 
@@ -56,25 +57,34 @@
   return [self kpk_keyDataForData:data version:version error:error];
 }
 
-+ (NSData *)kpk_generateKeyfileDataForFormat:(KPKDatabaseFormat)format {
++ (NSData *)kpk_generateKeyfileDataOfType:(KPKKeyFileType)type {
   NSData *data = [NSData kpk_dataWithRandomBytes:32];
-  switch(format) {
-    case KPKDatabaseFormatKdb:
+  switch(type) {
+    case KPKKeyFileTypeBinary:
       return [[NSString kpk_hexstringFromData:data] dataUsingEncoding:NSUTF8StringEncoding];
-      
-    case KPKDatabaseFormatKdbx:
-      return [self _kpk_xmlKeyForData:data];
-    
+    case KPKKeyFileTypeXMLVersion1:
+      return [self _kpk_xmlKeyForData:data addHash:NO];
+    case KPKKeyFileTypeXMLVersion2:
+      return [self _kpk_xmlKeyForData:data addHash:YES];
     default:
       return nil;
   }
 }
 
-+ (NSData *)_kpk_xmlKeyForData:(NSData *)data {
-  NSString *dataString = [data base64EncodedStringWithOptions:0];
-  NSString *xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>1.00</Version></Meta><Key><Data>%@</Data></Key></KeyFile>", dataString];
++ (NSData *)_kpk_xmlKeyForData:(NSData *)data addHash:(BOOL)addHash {
+  if(addHash) {
+    NSData *hashData = data.SHA256Hash;
+    NSString *hashHex = [NSString kpk_hexstringFromData:hashData];
+    NSString *dataHex = [NSString kpk_hexstringFromData:data];
+    xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>2.00</Version></Meta><Key><Data Hash=\"%@\"></Data></Key></KeyFile>", hashHex, dataHex];
+  }
+  else {
+    NSString *base64String = [data base64EncodedStringWithOptions:0];
+    xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>1.00</Version></Meta><Key><Data>%@</Data></Key></KeyFile>", base64String];
+  }
   DDXMLDocument *keyDocument = [[DDXMLDocument alloc] initWithXMLString:xmlString options:0 error:NULL];
   return [keyDocument XMLDataWithOptions:DDXMLNodePrettyPrint];
+
 }
 
 + (NSData *)_kpk_dataVersion1ForData:(NSData *)data error:(NSError *__autoreleasing *)error {
@@ -99,6 +109,9 @@
   // Try and load a 2.x XML keyfile first
   NSData *keyData = [self _kpk_dataWithForXMLKeyData:data error:error];
   if(!keyData) {
+    
+    
+    
     return [self _kpk_dataVersion1ForData:data error:error];
   }
   return keyData;
@@ -107,14 +120,31 @@
 + (NSData *)_kpk_dataWithForXMLKeyData:(NSData *)xmlData error:(NSError *__autoreleasing *)error {
   /*
    Format of the Keyfile
+   
+   Version 1.00
+   
    <KeyFile>
    <Meta>
    <Version>1.00</Version>
    </Meta>
    <Key>
-   <Data>L8JyIjlAd3SowrQPm6ZaR9mMolm/7iL6T1GJRGBNrAE=</Data>
+   <Data>L8JyIjlAd3SowrQPm6ZaR9mMolm/7iL6T1GJRGBNrAE=</Data> // Base64 encoded
    </Key>
    </KeyFile>
+   
+   Version 2.00
+   
+   <KeyFile>
+   <Meta>
+   <Version>2.00</Version>
+   </Meta>
+   <Key>
+   <Data>L8JyIjlAd3SowrQPm6ZaR9mMolm/7iL6T1GJRGBNrAE=</Data> // Hex encoded
+   </Key>
+   </KeyFile>
+   
+   
+   
    */
   if(!xmlData) {
     KPKCreateError(error, KPKErrorNoKeyData);
