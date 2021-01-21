@@ -144,6 +144,9 @@
 "ERROR_WINDOW_TITLE_VALIDATION_FAILED" = "The Format of the Window Title is not valid!";
 
 /* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_CORRUPTED" = "Unable to load corrupted key file";
+
+/* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_DATA_PARSING_ERROR" = "Unable to read the data of the XML keyfile";
 
 /* No comment provided by engineer. */
@@ -151,6 +154,9 @@
 
 /* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT" = "The XML keyfile is missing the data element";
+
+/* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_WITHOUT_HASH_ATTRIBUTE" = "Unable to load key file. Hash is missing.";
 
 /* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT" = "The XML keyfile is missing the key element";

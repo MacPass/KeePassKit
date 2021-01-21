@@ -99,6 +99,9 @@
 "ERROR_KEEPASSFILE_ELEMENT_MISSING" = "Datenbank-XML enthält keine KeePassFile-Elemente";
 
 /* No comment provided by engineer. */
+"ERROR_KEY_DERIVATION_FAILED" = "Schlüsselherleitung fehlgeschlagen";
+
+/* No comment provided by engineer. */
 "ERROR_META_ELEMENT_MISSING" = "Datenbank-XML enthält kein Meta-Element";
 
 /* No comment provided by engineer. */
@@ -141,13 +144,19 @@
 "ERROR_WINDOW_TITLE_VALIDATION_FAILED" = "Format des Fenstertitles ist fehlerhaft!";
 
 /* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_CORRUPTED" = "Schlüssel-XML-Datei ist beschädigt!";
+
+/* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_DATA_PARSING_ERROR" = "Daten des Schlüssels nicht lesbar";
 
 /* No comment provided by engineer. */
-"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION" = "Schlussel-XML-Datei Version wird nicht unterstützt";
+"ERROR_XML_KEYFILE_UNSUPPORTED_VERSION" = "Schlüssel-XML-Datei Version wird nicht unterstützt";
 
 /* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT" = "Schlüssel-XML-Datei enhält kein Data-Element";
+
+/* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_WITHOUT_HASH_ATTRIBUTE" = "Schlüssel-XML-Datei ohne Hash-Attribut!";
 
 /* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT" = "Schlüssel-XML-Datei enhält kein Key-Element";
