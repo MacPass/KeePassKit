@@ -72,6 +72,7 @@
 }
 
 + (NSData *)_kpk_xmlKeyForData:(NSData *)data addHash:(BOOL)addHash {
+  NSString *xmlString = @"";
   if(addHash) {
     NSData *hashData = data.SHA256Hash;
     NSString *hashHex = [NSString kpk_hexstringFromData:hashData];
