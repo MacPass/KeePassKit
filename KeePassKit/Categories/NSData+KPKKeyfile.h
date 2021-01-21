@@ -25,6 +25,7 @@
 #import <KeePassKit/KPKFormat.h>
 
 typedef NS_ENUM(NSUInteger, KPKKeyFileType) {
+  KPKKeyFileTypeUnkown,       // Unkown key file type
   KPKKeyFileTypeBinary,       // KDB Binary format (Hex-Key)
   KPKKeyFileTypeXMLVersion1,  // KDBX XML Version 1
   KPKKeyFileTypeXMLVersion2   // KDBX XML Version 2

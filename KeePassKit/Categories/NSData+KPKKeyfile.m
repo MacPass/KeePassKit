@@ -151,18 +151,18 @@
     return nil;
   }
   
-  KPKKeyFileType keyType = KPKKeyFileTypeXMLVersion1;
+  KPKKeyFileType keyType = KPKKeyFileTypeUnkown;
   
   // Get the root document element
   DDXMLElement *rootElement = [document rootElement];
   DDXMLElement *metaElement = [rootElement elementForName:kKPKXmlMeta];
   if(metaElement) {
     NSDictionary *versionMap =  @{ @"1"     : @(KPKKeyFileTypeXMLVersion1),
-                                          @"1.0"   : @(KPKKeyFileTypeXMLVersion1),
-                                          @"1.00"  : @(KPKKeyFileTypeXMLVersion1),
-                                          @"2"     : @(KPKKeyFileTypeXMLVersion2),
-                                          @"2.0"   : @(KPKKeyFileTypeXMLVersion2),
-                                          @"2.00"  : @(KPKKeyFileTypeXMLVersion2) };
+                                   @"1.0"   : @(KPKKeyFileTypeXMLVersion1),
+                                   @"1.00"  : @(KPKKeyFileTypeXMLVersion1),
+                                   @"2"     : @(KPKKeyFileTypeXMLVersion2),
+                                   @"2.0"   : @(KPKKeyFileTypeXMLVersion2),
+                                   @"2.00"  : @(KPKKeyFileTypeXMLVersion2) };
     
     DDXMLElement *versionElement = [metaElement elementForName:kKPKXmlVersion];
     NSString *versionValue = versionElement.stringValue;
@@ -173,6 +173,10 @@
       return nil;
     }
     keyType = (KPKKeyFileType)fileTypeValue.intValue;
+  }
+  
+  if(keyType == KPKKeyFileTypeUnkown || keyType == KPKKeyFileTypeBinary ) {
+    return nil;
   }
   
   DDXMLElement *keyElement = [rootElement elementForName:kKPKXmlKey];
@@ -189,17 +193,36 @@
   }
   
   NSString *hashValue = [dataElement attributeForName:kKPKXmlHash].stringValue;
-  if(keyType == KPKKeyFileTypeXMLVersion2 && hashValue.length == 0) {
-    KPKCreateError(error, KPKError)
-  }
+  NSString *dataValue = dataElement.stringValue;
   
-  NSString *dataString = dataElement.stringValue;
-  
-  if(dataString == nil) {
+  if(dataValue == nil) {
     KPKCreateError(error, KPKErrorKdbxKeyDataParsingError);
     return nil;
   }
-  return [[NSData alloc] initWithBase64EncodedString:dataString options:NSDataBase64DecodingIgnoreUnknownCharacters];
+  
+  /* Version 1.0 */
+  if(keyType == KPKKeyFileTypeXMLVersion1) {
+    return [[NSData alloc] initWithBase64EncodedString:dataValue options:NSDataBase64DecodingIgnoreUnknownCharacters];
+  }
+  
+  /* Version 2.0 */
+  if(keyType == KPKKeyFileTypeXMLVersion2) {
+    NSData *keyData = dataValue.kpk_dataFromHexString;
+    NSData *hashData = hashValue.kpk_dataFromHexString;
+    if(hashData.length == 0) {
+      KPKCreateError(error, KPKErrorKdbxKeyHashAttributeMissing);
+      return nil;
+    }
+    if([keyData.SHA256Hash isEqualToData:hashData]) {
+      return keyData;
+    }
+    
+    KPKCreateError(error, KPKErrorKdbxKeyDataCorrupted);
+    return nil;
+  }
+  
+  NSAssert(NO, @"Internal inconsitency while loading XML key file");
+  return nil;
 }
 
 + (NSData *)_kpk_keyDataFromHex:(NSData *)hexData {
