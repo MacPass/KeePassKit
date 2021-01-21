@@ -189,6 +189,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlValue;
 FOUNDATION_EXTERN NSString *const kKPKXmlData;
 FOUNDATION_EXTERN NSString *const kKPKXmlEnabled;
 FOUNDATION_EXTERN NSString *const kKPKXmlString;
+FOUNDATION_EXTERN NSString *const kKPKXmlHash;
 
 #pragma mark Attributes
 FOUNDATION_EXTERN NSString *const kKPKXmlProtected; // Only used when stored as kdbx files.

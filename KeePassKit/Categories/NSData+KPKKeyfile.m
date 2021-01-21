@@ -85,7 +85,7 @@
   }
   DDXMLDocument *keyDocument = [[DDXMLDocument alloc] initWithXMLString:xmlString options:0 error:NULL];
   return [keyDocument XMLDataWithOptions:DDXMLNodePrettyPrint];
-
+  
 }
 
 + (NSData *)_kpk_dataVersion1ForData:(NSData *)data error:(NSError *__autoreleasing *)error {
@@ -110,9 +110,6 @@
   // Try and load a 2.x XML keyfile first
   NSData *keyData = [self _kpk_dataWithForXMLKeyData:data error:error];
   if(!keyData) {
-    
-    
-    
     return [self _kpk_dataVersion1ForData:data error:error];
   }
   return keyData;
@@ -144,58 +141,71 @@
    </Key>
    </KeyFile>
    
-   
-   
    */
   if(!xmlData) {
     KPKCreateError(error, KPKErrorNoKeyData);
     return nil;
   }
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithData:xmlData options:0 error:error];
-  if (document == nil) {
+  if(document == nil) {
     return nil;
   }
   
+  KPKKeyFileType keyType = KPKKeyFileTypeXMLVersion1;
+  
   // Get the root document element
   DDXMLElement *rootElement = [document rootElement];
-  
   DDXMLElement *metaElement = [rootElement elementForName:kKPKXmlMeta];
   if(metaElement) {
+    NSDictionary *versionMap =  @{ @"1"     : @(KPKKeyFileTypeXMLVersion1),
+                                          @"1.0"   : @(KPKKeyFileTypeXMLVersion1),
+                                          @"1.00"  : @(KPKKeyFileTypeXMLVersion1),
+                                          @"2"     : @(KPKKeyFileTypeXMLVersion2),
+                                          @"2.0"   : @(KPKKeyFileTypeXMLVersion2),
+                                          @"2.00"  : @(KPKKeyFileTypeXMLVersion2) };
+    
     DDXMLElement *versionElement = [metaElement elementForName:kKPKXmlVersion];
-    NSScanner *versionScanner = [[NSScanner alloc] initWithString:[versionElement stringValue]];
-    double version = 1;
-    if(![versionScanner scanDouble:&version] || version > 1) {
+    NSString *versionValue = versionElement.stringValue;
+    NSNumber *fileTypeValue = versionMap[versionValue];
+    
+    if(!fileTypeValue) {
       KPKCreateError(error, KPKErrorKdbxKeyUnsupportedVersion);
       return nil;
     }
+    keyType = (KPKKeyFileType)fileTypeValue.intValue;
   }
   
   DDXMLElement *keyElement = [rootElement elementForName:kKPKXmlKey];
-  if (keyElement == nil) {
+  if(keyElement == nil) {
     KPKCreateError(error, KPKErrorKdbxKeyKeyElementMissing);
     return nil;
   }
   
   DDXMLElement *dataElement = [keyElement elementForName:kKPKXmlData];
-  if (dataElement == nil) {
+  if(dataElement == nil) {
     KPKCreateError(error, KPKErrorKdbxKeyDataElementMissing);
     return nil;
     
   }
   
-  NSString *dataString = [dataElement stringValue];
-  if (dataString == nil) {
+  NSString *hashValue = [dataElement attributeForName:kKPKXmlHash].stringValue;
+  if(keyType == KPKKeyFileTypeXMLVersion2 && hashValue.length == 0) {
+    KPKCreateError(error, KPKError)
+  }
+  
+  NSString *dataString = dataElement.stringValue;
+  
+  if(dataString == nil) {
     KPKCreateError(error, KPKErrorKdbxKeyDataParsingError);
     return nil;
   }
-
   return [[NSData alloc] initWithBase64EncodedString:dataString options:NSDataBase64DecodingIgnoreUnknownCharacters];
 }
 
 + (NSData *)_kpk_keyDataFromHex:(NSData *)hexData {
   NSString *hexString = [[NSString alloc] initWithData:hexData encoding:NSUTF8StringEncoding];
   if(!hexString) {
-   return nil;
+    return nil;
   }
   if(hexString.length != 64) {
     return nil; // No valid lenght found

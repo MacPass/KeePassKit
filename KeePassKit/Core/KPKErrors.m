@@ -53,6 +53,7 @@ NSString *KPKErrorMessageForCode(NSInteger errorCode) {
       @(KPKErrorKdbxInvalidInnerHeaderFieldType)   : NSLocalizedStringFromTableInBundle(@"ERROR_KDBX_INVALID_INNER_HEADER_FIELD", nil, bundle, @""),
       @(KPKErrorKdbxInvalidKeyDerivationData)      : NSLocalizedStringFromTableInBundle(@"ERROR_KDBX_INVALID_KEY_DERIVATION_DATA", nil, bundle, @""),
       @(KPKErrorKdbxKeePassFileElementMissing)     : NSLocalizedStringFromTableInBundle(@"ERROR_KEEPASSFILE_ELEMENT_MISSING", nil, bundle, @""),
+      @(KPKErrorKdbxKeyHashAttributeMissing)       : NSLocalizedStringFromTableInBundle(@"ERROR_XML_KEYFILE_WITHOUT_HASH_ATTRIBUTE", nil, bundle, @""),
       @(KPKErrorKdbxKeyDataCorrupted)              : NSLocalizedStringFromTableInBundle(@"ERROR_XML_KEYFILE_CORRUPTED", nil, bundle, @""),
       @(KPKErrorKdbxKeyDataElementMissing)         : NSLocalizedStringFromTableInBundle(@"ERROR_XML_KEYFILE_WITHOUT_DATA_ELEMENT", nil, bundle, @""),
       @(KPKErrorKdbxKeyDataParsingError)           : NSLocalizedStringFromTableInBundle(@"ERROR_XML_KEYFILE_DATA_PARSING_ERROR", nil, bundle, @""),

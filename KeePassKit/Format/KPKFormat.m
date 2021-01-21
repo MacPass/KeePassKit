@@ -157,6 +157,7 @@ NSString *const kKPKXmlValue = @"Value";
 NSString *const kKPKXmlData = @"Data";
 NSString *const kKPKXmlEnabled = @"Enabled";
 NSString *const kKPKXmlString = @"String";
+NSString *const kKPKXmlHash = @"Hash";
 
 #pragma mark Attributes
 NSString *const kKPKXmlProtected        = @"Protected";

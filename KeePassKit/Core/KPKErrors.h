@@ -52,6 +52,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorKdbxInvalidInnerHeaderFieldType, // invalid field type in the inner header
   KPKErrorKdbxInvalidKeyDerivationData, // The key derivation header data is invalid
   KPKErrorKdbxKeePassFileElementMissing, // the Keepass root element is missing
+  KPKErrorKdbxKeyHashAttributeMissing, // The Xml-data did not contain a hash for the key data (Version 2.0)
   KPKErrorKdbxKeyDataCorrupted, // The XML-data did not matcht the hash and is considered corrupted
   KPKErrorKdbxKeyDataElementMissing, // The XML-Keyfile has no data element
   KPKErrorKdbxKeyDataParsingError, // The XML-data element couldn't be parsed
