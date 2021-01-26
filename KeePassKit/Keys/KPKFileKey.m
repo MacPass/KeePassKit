@@ -24,22 +24,15 @@
   return YES;
 }
 
-- (instancetype)initWithKeyFileData:(NSData *)data {
+- (instancetype)initWithKeyFileData:(NSData *)data error:(NSError *__autoreleasing *)error {
   if(nil == data) {
     self = nil;
     return self;
   }
   self = [super init];
   if(self) {
-    NSError *error;
-    self.kdbData = [[KPKData alloc] initWithProtectedData:[NSData kpk_keyDataForData:data version:KPKDatabaseFormatKdb error:&error]];
-    if(!self.kdbData) {
-      NSLog(@"Error while parsing key file data %@", error);
-    }
-    self.kdbxData = [[KPKData alloc] initWithProtectedData:[NSData kpk_keyDataForData:data version:KPKDatabaseFormatKdbx error:&error]];
-    if(!self.kdbxData) {
-      NSLog(@"Error while parsing key file data %@", error);
-    }
+    self.kdbData = [[KPKData alloc] initWithProtectedData:[NSData kpk_keyDataForData:data version:KPKDatabaseFormatKdb error:error]];
+    self.kdbxData = [[KPKData alloc] initWithProtectedData:[NSData kpk_keyDataForData:data version:KPKDatabaseFormatKdbx error:error]];
   }
   return self;
 }
