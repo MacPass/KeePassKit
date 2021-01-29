@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "KeePassKit.h"
+#import "NSString+KPKHexdata.h"
 
 @interface KPKTestKeyfileParsing : XCTestCase
 
@@ -44,13 +45,22 @@
   NSData *data = [NSData kpk_generateKeyfileDataOfType:KPKKeyFileTypeXMLVersion1];
   // test if structure is sound;
   XCTAssertNotNil(data, @"Keydata should have been generated");
-
 }
 
-- (void)testLegacyKeyfileGeneration {
+- (void)testBinaryKeyFileGeneration {
   NSData *data = [NSData kpk_generateKeyfileDataOfType:KPKKeyFileTypeBinary];
   XCTAssertNotNil(data, @"Keydata should have been generated");
   XCTAssertEqual(data.length, 32);
 }
+
+- (void)testHexKeyFileGeneration {
+  NSData *data = [NSData kpk_generateKeyfileDataOfType:KPKKeyFileTypeHex];
+  XCTAssertNotNil(data, @"Keydata should have been generated");
+  XCTAssertEqual(data.length, 64);
+  NSString *hexString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+  XCTAssertTrue(hexString.kpk_isValidHexString, @"Key data needs to be in hex format");
+}
+
+
 
 @end

@@ -61,6 +61,8 @@
   NSData *data = [NSData kpk_dataWithRandomBytes:32];
   switch(type) {
     case KPKKeyFileTypeBinary:
+      return data;
+    case KPKKeyFileTypeHex:
       return [[NSString kpk_hexstringFromData:data] dataUsingEncoding:NSUTF8StringEncoding];
     case KPKKeyFileTypeXMLVersion1:
       return [self _kpk_xmlKeyForData:data addHash:NO];
@@ -77,7 +79,7 @@
     NSData *hashData = data.SHA256Hash;
     NSString *hashHex = [NSString kpk_hexstringFromData:hashData];
     NSString *dataHex = [NSString kpk_hexstringFromData:data];
-    xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>2.00</Version></Meta><Key><Data Hash=\"%@\"></Data></Key></KeyFile>", hashHex, dataHex];
+    xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>2.00</Version></Meta><Key><Data Hash=\"%@\">%@</Data></Key></KeyFile>", hashHex, dataHex];
   }
   else {
     NSString *base64String = [data base64EncodedStringWithOptions:0];
@@ -175,7 +177,7 @@
     keyType = (KPKKeyFileType)fileTypeValue.intValue;
   }
   
-  if(keyType == KPKKeyFileTypeUnkown || keyType == KPKKeyFileTypeBinary ) {
+  if(keyType == KPKKeyFileTypeUnkown || keyType == KPKKeyFileTypeHex ) {
     return nil;
   }
   
