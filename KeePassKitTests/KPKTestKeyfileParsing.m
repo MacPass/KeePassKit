@@ -11,6 +11,8 @@
 #import "KeePassKit.h"
 #import "NSString+KPKHexdata.h"
 
+#import <KissXML/KissXML.h>
+
 @interface KPKTestKeyfileParsing : XCTestCase
 
 @end
@@ -41,10 +43,63 @@
   XCTAssertFalse(NO, @"Not Implemented");
 }
 
-- (void)testXmlKeyfilGeneration {
+- (void)testXml1KeyfilGeneration {
   NSData *data = [NSData kpk_generateKeyfileDataOfType:KPKKeyFileTypeXMLVersion1];
   // test if structure is sound;
   XCTAssertNotNil(data, @"Keydata should have been generated");
+  NSError *error;
+  
+  DDXMLDocument *document = [[DDXMLDocument alloc] initWithData:data options:0 error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(document);
+  
+  DDXMLElement *root = [document rootElement];
+  XCTAssertEqualObjects(root.name, kKPKXmlKeyFile);
+  XCTAssertEqual(root.childCount, 2);
+    
+  DDXMLElement *metaElement = [root elementForName:kKPKXmlMeta];
+  XCTAssertEqual(metaElement.childCount, 1);
+  
+  DDXMLElement *versionElement = [metaElement elementForName:kKPKXmlVersion];
+  XCTAssertEqualObjects(versionElement.stringValue, @"1.00");
+  
+  DDXMLElement *keyElement = [root elementForName:kKPKXmlKey];
+  XCTAssertEqual(keyElement.childCount, 1);
+  
+  DDXMLElement *dataElement = [keyElement elementForName:kKPKXmlData];
+  XCTAssertEqual(dataElement.attributes.count, 0);
+  XCTAssertEqual(dataElement.childCount, 1);
+}
+
+- (void)testXml2KeyfilGeneration {
+  NSData *data = [NSData kpk_generateKeyfileDataOfType:KPKKeyFileTypeXMLVersion2];
+  // test if structure is sound;
+  XCTAssertNotNil(data, @"Keydata should have been generated");
+  NSError *error;
+  
+  DDXMLDocument *document = [[DDXMLDocument alloc] initWithData:data options:0 error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(document);
+  
+  DDXMLElement *root = [document rootElement];
+  XCTAssertEqualObjects(root.name, kKPKXmlKeyFile);
+  XCTAssertEqual(root.childCount, 2);
+    
+  DDXMLElement *metaElement = [root elementForName:kKPKXmlMeta];
+  XCTAssertEqual(metaElement.childCount, 1);
+  
+  DDXMLElement *versionElement = [metaElement elementForName:kKPKXmlVersion];
+  XCTAssertEqualObjects(versionElement.stringValue, @"2.00");
+  
+  DDXMLElement *keyElement = [root elementForName:kKPKXmlKey];
+  XCTAssertEqual(keyElement.childCount, 1);
+  
+  DDXMLElement *dataElement = [keyElement elementForName:kKPKXmlData];
+  XCTAssertEqual(dataElement.attributes.count, 1);
+  XCTAssertEqual(dataElement.childCount, 1);
+  
+  DDXMLNode *hashAttribute = [dataElement attributeForName:kKPKXmlHash];
+  XCTAssertEqual(hashAttribute.stringValue.length, 8);
 }
 
 - (void)testBinaryKeyFileGeneration {

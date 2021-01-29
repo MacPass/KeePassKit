@@ -74,19 +74,35 @@
 }
 
 + (NSData *)_kpk_xmlKeyForData:(NSData *)data addHash:(BOOL)addHash {
-  NSString *xmlString = @"";
+  NSString *xmlString = [NSString stringWithFormat:@"<%@></%@>", kKPKXmlKeyFile, kKPKXmlKeyFile];
+  NSError *error;
+  
+  DDXMLDocument *keyFileDocument = [[DDXMLDocument alloc] initWithXMLString:xmlString options:0 error:&error];
+  DDXMLElement *metaElement = [[DDXMLElement alloc] initWithName:kKPKXmlMeta];
+  DDXMLElement *keyElement = [[DDXMLElement alloc] initWithName:kKPKXmlKey];
+  DDXMLElement *versionElement = [[DDXMLElement alloc] initWithName:kKPKXmlVersion];
+  DDXMLElement *dataElement = [[DDXMLElement alloc] initWithName:kKPKXmlData];
+  
+  [keyFileDocument.rootElement addChild:metaElement];
+  [metaElement addChild:versionElement];
+  [keyFileDocument.rootElement addChild:keyElement];
+  [keyElement addChild:dataElement];
+  
   if(addHash) {
-    NSData *hashData = data.SHA256Hash;
+    NSData *hashData = [data.SHA256Hash subdataWithRange:NSMakeRange(0, 4)];
     NSString *hashHex = [NSString kpk_hexstringFromData:hashData];
     NSString *dataHex = [NSString kpk_hexstringFromData:data];
-    xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>2.00</Version></Meta><Key><Data Hash=\"%@\">%@</Data></Key></KeyFile>", hashHex, dataHex];
+    
+    [versionElement setStringValue:@"2.00"];
+    [dataElement setStringValue:dataHex];
+    [dataElement addAttributeWithName:kKPKXmlHash stringValue:hashHex];
   }
   else {
     NSString *base64String = [data base64EncodedStringWithOptions:0];
-    xmlString = [NSString stringWithFormat:@"<KeyFile><Meta><Version>1.00</Version></Meta><Key><Data>%@</Data></Key></KeyFile>", base64String];
+    [versionElement setStringValue:@"1.00"];
+    [dataElement setStringValue:base64String];
   }
-  DDXMLDocument *keyDocument = [[DDXMLDocument alloc] initWithXMLString:xmlString options:0 error:NULL];
-  return [keyDocument XMLDataWithOptions:DDXMLNodePrettyPrint];
+  return [keyFileDocument XMLDataWithOptions:DDXMLNodePrettyPrint];
   
 }
 

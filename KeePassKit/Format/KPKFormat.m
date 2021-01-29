@@ -57,7 +57,6 @@ NSUInteger const kKPKDefaultEntryKeysCount = 5;
 NSString *const kKPKXmlKeePassFile = @"KeePassFile";
 NSString *const kKPKXmlRoot = @"Root";
 NSString *const kKPKXmlHeaderHash = @"HeaderHash";
-NSString *const kKPKXmlMeta = @"Meta";
 NSString *const kKPKXmlGroup = @"Group";
 NSString *const kKPKXmlEntry = @"Entry";
 NSString *const kKPKXmlGenerator = @"Generator";
@@ -104,10 +103,10 @@ NSString *const kKPKXmlNotes = @"Notes";
 NSString *const kKPKXmlIconId = @"IconID";
 
 #pragma mark Entries
-NSString *const kKPKXmlForegroundColor = @"ForegroundColor";
-NSString *const kKPKXmlBackgroundColor = @"BackgroundColor";
-NSString *const kKPKXmlOverrideURL = @"OverrideURL";
-NSString *const kKPKXmlTags = @"Tags";
+NSString *const kKPKXmlForegroundColor  = @"ForegroundColor";
+NSString *const kKPKXmlBackgroundColor  = @"BackgroundColor";
+NSString *const kKPKXmlOverrideURL      = @"OverrideURL";
+NSString *const kKPKXmlTags             = @"Tags";
 
 #pragma mark Binaries
 NSString *const kKPKXmlBinary   = @"Binary";
@@ -116,48 +115,52 @@ NSString *const kKPKXmlBinaryId = @"ID";
 
 #pragma mark CustomIcons
 NSString *const kKPKXmlCustomIconUUID = @"CustomIconUUID";
-NSString *const kKPKXmlCustomIcons = @"CustomIcons";
-NSString *const kKPKXmlIcon = @"Icon";
-NSString *const kKPKXmlIconReference = @"Ref";
+NSString *const kKPKXmlCustomIcons    = @"CustomIcons";
+NSString *const kKPKXmlIcon           = @"Icon";
+NSString *const kKPKXmlIconReference  = @"Ref";
 
 #pragma mark DeletedObjects
 NSString *const kKPKXmlDeletedObjects = @"DeletedObjects";
-NSString *const kKPKXmlDeletedObject = @"DeletedObject";
-NSString *const kKPKXmlDeletionTime = @"DeletionTime";
+NSString *const kKPKXmlDeletedObject  = @"DeletedObject";
+NSString *const kKPKXmlDeletionTime   = @"DeletionTime";
 
 #pragma mark Time
-NSString *const kKPKXmlTimes = @"Times";
+NSString *const kKPKXmlTimes                = @"Times";
 NSString *const kKPKXmlLastModificationDate = @"LastModificationTime";
-NSString *const kKPKXmlCreationDate = @"CreationTime";
-NSString *const kKPKXmlLastAccessDate = @"LastAccessTime";
-NSString *const kKPKXmlExpirationDate = @"ExpiryTime";
-NSString *const kKPKXmlExpires = @"Expires";
-NSString *const kKPKXmlUsageCount = @"UsageCount";
-NSString *const kKPKXmlLocationChanged = @"LocationChanged";
+NSString *const kKPKXmlCreationDate         = @"CreationTime";
+NSString *const kKPKXmlLastAccessDate       = @"LastAccessTime";
+NSString *const kKPKXmlExpirationDate       = @"ExpiryTime";
+NSString *const kKPKXmlExpires              = @"Expires";
+NSString *const kKPKXmlUsageCount           = @"UsageCount";
+NSString *const kKPKXmlLocationChanged      = @"LocationChanged";
 
 #pragma mark Autotype
-NSString *const kKPKXmlAutotype = @"AutoType";
-NSString *const kKPKXmlDefaultSequence = @"DefaultSequence";
-NSString *const kKPKXmlDataTransferObfuscation = @"DataTransferObfuscation";
-NSString *const kKPKXmlWindow = @"Window";
-NSString *const kKPKXmlAssociation = @"Association";
-NSString *const kKPKXmlKeystrokeSequence = @"KeystrokeSequence";
+NSString *const kKPKXmlAutotype                 = @"AutoType";
+NSString *const kKPKXmlDefaultSequence          = @"DefaultSequence";
+NSString *const kKPKXmlDataTransferObfuscation  = @"DataTransferObfuscation";
+NSString *const kKPKXmlWindow                   = @"Window";
+NSString *const kKPKXmlAssociation              = @"Association";
+NSString *const kKPKXmlKeystrokeSequence        = @"KeystrokeSequence";
 
 #pragma mark History
 NSString *const kKPKXmlHistory = @"History";
 
 #pragma mark CustomData
-NSString *const kKPKXmlCustomData = @"CustomData";
+NSString *const kKPKXmlCustomData     = @"CustomData";
 NSString *const kKPKXmlCustomDataItem = @"Item";
 
+#pragma mark KeyFile
+NSString *const kKPKXmlKeyFile = @"KeyFile";
+
 #pragma mark Generic
-NSString *const kKPKXmlVersion = @"Version";
-NSString *const kKPKXmlKey = @"Key";
-NSString *const kKPKXmlValue = @"Value";
-NSString *const kKPKXmlData = @"Data";
-NSString *const kKPKXmlEnabled = @"Enabled";
-NSString *const kKPKXmlString = @"String";
-NSString *const kKPKXmlHash = @"Hash";
+NSString *const kKPKXmlVersion  = @"Version";
+NSString *const kKPKXmlKey      = @"Key";
+NSString *const kKPKXmlValue    = @"Value";
+NSString *const kKPKXmlData     = @"Data";
+NSString *const kKPKXmlEnabled  = @"Enabled";
+NSString *const kKPKXmlString   = @"String";
+NSString *const kKPKXmlHash     = @"Hash";
+NSString *const kKPKXmlMeta = @"Meta";
 
 #pragma mark Attributes
 NSString *const kKPKXmlProtected        = @"Protected";
@@ -178,7 +181,7 @@ NSString *const kKPKReferenceUUIDKey        = @"I";
 NSString *const kKPKReferenceCustomFieldKey = @"O";
 
 #pragma mark Placeholders
-NSString *const kKPKPlaceholderUUID = @"{UUID}";
+NSString *const kKPKPlaceholderUUID                   = @"{UUID}";
 
 NSString *const kKPKPlaceholderDatabasePath           = @"{DB_PATH}";
 NSString *const kKPKPlaceholderDatabaseFolder         = @"{DB_DIR}";
@@ -186,13 +189,13 @@ NSString *const kKPKPlaceholderDatabaseName           = @"{DB_NAME}";
 NSString *const kKPKPlaceholderDatabaseBasename       = @"{DB_BASENAME}";
 NSString *const kKPKPlaceholderDatabaseFileExtension  = @"{DB_EXT}";
 
-NSString *const kKPKPlaceholderSelectedGroup      = @"{GROUP_SEL}";
-NSString *const kKPKPlaceholderSelectedGroupPath  = @"{GROUP_SEL_PATH}";
-NSString *const kKPKPlaceholderSelectedGroupNotes = @"{GROUP_SEL_NOTES}";
+NSString *const kKPKPlaceholderSelectedGroup          = @"{GROUP_SEL}";
+NSString *const kKPKPlaceholderSelectedGroupPath      = @"{GROUP_SEL_PATH}";
+NSString *const kKPKPlaceholderSelectedGroupNotes     = @"{GROUP_SEL_NOTES}";
 
-NSString *const kKPKPlaceholderGroup      = @"{GROUP}";
-NSString *const kKPKPlaceholderGroupPath  = @"{GROUP_PATH}";
-NSString *const kKPKPlaceholderGroupNotes = @"{GROUP_NOTES}";
+NSString *const kKPKPlaceholderGroup                  = @"{GROUP}";
+NSString *const kKPKPlaceholderGroupPath              = @"{GROUP_PATH}";
+NSString *const kKPKPlaceholderGroupNotes             = @"{GROUP_NOTES}";
 
 /* Placeholder */
 NSString *const kKPKPlaceholderPickChars                    = @"PICKCHARS";

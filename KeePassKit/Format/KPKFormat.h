@@ -83,7 +83,6 @@ FOUNDATION_EXTERN NSUInteger const kKPKDefaultEntryKeysCount;
 FOUNDATION_EXTERN NSString *const kKPKXmlKeePassFile;
 FOUNDATION_EXTERN NSString *const kKPKXmlRoot;
 FOUNDATION_EXTERN NSString *const kKPKXmlHeaderHash;
-FOUNDATION_EXTERN NSString *const kKPKXmlMeta;
 FOUNDATION_EXTERN NSString *const kKPKXmlGroup;
 FOUNDATION_EXTERN NSString *const kKPKXmlEntry;
 
@@ -181,6 +180,8 @@ FOUNDATION_EXTERN NSString *const kKPKXmlHistory;
 FOUNDATION_EXTERN NSString *const kKPKXmlCustomData;
 FOUNDATION_EXTERN NSString *const kKPKXmlCustomDataItem;
 
+#pragma mark KeyFile
+FOUNDATION_EXTERN NSString *const kKPKXmlKeyFile;
 
 #pragma mark Generic
 FOUNDATION_EXTERN NSString *const kKPKXmlVersion;
@@ -190,6 +191,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlData;
 FOUNDATION_EXTERN NSString *const kKPKXmlEnabled;
 FOUNDATION_EXTERN NSString *const kKPKXmlString;
 FOUNDATION_EXTERN NSString *const kKPKXmlHash;
+FOUNDATION_EXTERN NSString *const kKPKXmlMeta;
 
 #pragma mark Attributes
 FOUNDATION_EXTERN NSString *const kKPKXmlProtected; // Only used when stored as kdbx files.
