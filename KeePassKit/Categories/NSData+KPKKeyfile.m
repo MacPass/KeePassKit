@@ -231,6 +231,7 @@
       KPKCreateError(error, KPKErrorKdbxKeyHashAttributeMissing);
       return nil;
     }
+    NSData *actualHashData = [keyData.SHA256Hash subdataWithRange:NSMakeRange(0, 4)];
     if([keyData.SHA256Hash isEqualToData:hashData]) {
       return keyData;
     }

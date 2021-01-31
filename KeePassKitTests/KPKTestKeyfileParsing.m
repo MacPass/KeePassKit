@@ -116,6 +116,4 @@
   XCTAssertTrue(hexString.kpk_isValidHexString, @"Key data needs to be in hex format");
 }
 
-
-
 @end
