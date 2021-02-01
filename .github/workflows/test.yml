@@ -17,21 +17,21 @@ jobs:
     strategy:
       matrix:
         include:
-          - setup: iOS
-            os: iOS
-            scheme: "KeePassKit iOS"
-            sdk: iphonesimulator
-            destination: "platform=iOS Simulator,name=iPhone 8"
-          - setup: iOS
+#          - setup: iOS
+#            os: iOS
+#            scheme: "KeePassKit iOS"
+#            sdk: iphonesimulator
+#            destination: "platform=iOS Simulator,name=iPhone 8"
+          - setup: macOS
             os: macOS
             scheme: "KeePassKit macOS"
             sdk: macosx
             destination: ""
-          - setup: tvOS
-            os: tvOS
-            scheme: "KeePassKit tvOS"
-            sdk: appletvsimulator
-            destination: "platform=tvOS Simulator,name=Apple TV"
+#          - setup: tvOS
+#            os: tvOS
+#            scheme: "KeePassKit tvOS"
+#            sdk: appletvsimulator
+#            destination: "platform=tvOS Simulator,name=Apple TV"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
