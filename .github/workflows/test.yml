@@ -26,7 +26,7 @@ jobs:
             os: macOS
             scheme: "KeePassKit macOS"
             sdk: macosx
-            destination: ""
+            destination: "platform=OS X"
 #          - setup: tvOS
 #            os: tvOS
 #            scheme: "KeePassKit tvOS"
