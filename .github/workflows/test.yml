@@ -16,10 +16,10 @@ jobs:
     runs-on: macos-10.15
     strategy:
       matrix:
-        os: [iOs, macOS, tvOS]
-        scheme: ["KeePassKit iOS", "KeePassKit macOS", "KeePassKit tvOS"]
-        sdk: [iphonesimulator, macosx, appletvsimulator]
-        destination: ["platform=iOS Simulator,name=iPhone 8", "", "platform=tvOS Simulator,name=Apple TV"]
+        os: [iOS, macOS, tvOS]
+        #scheme: ["KeePassKit iOS", "KeePassKit macOS", "KeePassKit tvOS"]
+        #sdk: [iphonesimulator, macosx, appletvsimulator]
+        #destination: ["platform=iOS Simulator,name=iPhone 8", "", "platform=tvOS Simulator,name=Apple TV"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -34,5 +34,14 @@ jobs:
 
       - name: Build and Test
         run: |
-          set -o pipefail
-          xcodebuild test -scheme ${{ matrix.scheme }} -sdk ${{ matrix.sdk }} -destination ${{ matrix.destination }} | xcpretty -c        
+          if [ ${{ matrix.os }} = iOS ]; then
+            set -o pipefail
+            xcodebuild test -scheme "KeePassKit iOS" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 8" | xcpretty -c
+          elif [ ${{ matrix.os }} = macOS ]; then
+            set -o pipefail
+            xcodebuild test -scheme "KeePassKit macOS" -sdk macosx | xcpretty -c
+          elif [ ${{ matrix.os }} = tvOS ]; then
+            set -o pipefail
+            xcodebuild test -scheme "KeePassKit tvOS" -sdk appletvsimulator -destination "platform=tvOS Simulator,name=Apple TV" | xcpretty -c
+          fi
+   
