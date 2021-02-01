@@ -16,15 +16,29 @@ jobs:
     runs-on: macos-10.15
     strategy:
       matrix:
-        os: [iOS, macOS, tvOS]
-        #scheme: ["KeePassKit iOS", "KeePassKit macOS", "KeePassKit tvOS"]
-        #sdk: [iphonesimulator, macosx, appletvsimulator]
-        #destination: ["platform=iOS Simulator,name=iPhone 8", "", "platform=tvOS Simulator,name=Apple TV"]
+        include:
+          - setup: iOS
+            os: iOS
+            scheme: "KeePassKit iOS"
+            sdk: iphonesimulator
+            destination: "platform=iOS Simulator,name=iPhone 8"
+          - setup: iOS
+            os: macOS
+            scheme: "KeePassKit macOS"
+            sdk: macosx
+            destination: ""
+          - setup: tvOS
+            os: tvOS
+            scheme: "KeePassKit tvOS"
+            sdk: appletvsimulator
+            destination: "platform=tvOS Simulator,name=Apple TV"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       
       - name: Install xcpretty
         run: gem install xcpretty --no-document --quiet
@@ -33,15 +47,10 @@ jobs:
         run: carthage bootstrap --platform ${{ matrix.os }}
 
       - name: Build and Test
+        env:
+          SCHEME: ${{ matrix.scheme }}
+          SDK: ${{ matrix.sdk }}
+          DESTINATION: ${{ matrix.destination }}
         run: |
-          if [ ${{ matrix.os }} = iOS ]; then
             set -o pipefail
-            xcodebuild test -scheme "KeePassKit iOS" -sdk iphonesimulator -destination "platform=iOS Simulator,name=iPhone 8" | xcpretty -c
-          elif [ ${{ matrix.os }} = macOS ]; then
-            set -o pipefail
-            xcodebuild test -scheme "KeePassKit macOS" -sdk macosx | xcpretty -c
-          elif [ ${{ matrix.os }} = tvOS ]; then
-            set -o pipefail
-            xcodebuild test -scheme "KeePassKit tvOS" -sdk appletvsimulator -destination "platform=tvOS Simulator,name=Apple TV" | xcpretty -c
-          fi
-   
+            xcodebuild test -scheme ${SCHEME} -sdk ${SDK} -destination ${DESTINATION} | xcpretty -c   
