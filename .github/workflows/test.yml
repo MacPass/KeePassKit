@@ -53,4 +53,4 @@ jobs:
           DESTINATION: ${{ matrix.destination }}
         run: |
             set -o pipefail
-            xcodebuild test -scheme ${SCHEME} -sdk ${SDK} -destination ${DESTINATION} | xcpretty -c   
+            xcodebuild test -scheme "${SCHEME}" -sdk "${SDK}" -destination "${DESTINATION}" | xcpretty -c   
