@@ -128,13 +128,19 @@ NSUInteger const KPKKeyFileDataLength             = 32;
 }
 
 + (NSData *)_kpk_dataVersion2ForData:(NSData *)data error:(NSError *__autoreleasing *)error {
-  // Try and load a XML keyfile first
-  NSData *keyData = [self _kpk_dataWithForXMLKeyData:data error:error];
-  (*error).code == KPKErrorNoXmlData
-  if(!keyData) {
+  NSError *internError;
+  NSData *keyData = [self _kpk_dataWithForXMLKeyData:data error:&internError];
+  if(keyData) {
+    if(error) {
+      *error = internError;
+    }
+    return keyData;
+  }
+  /* if the key file was no XML file, try to load legacy key */
+  if(internError.code == KPKErrorNoXmlData) {
     return [self _kpk_dataVersion1ForData:data error:error];
   }
-  return keyData;
+  return nil;
 }
 
 + (NSData *)_kpk_dataWithForXMLKeyData:(NSData *)xmlData error:(NSError *__autoreleasing *)error {
@@ -183,7 +189,7 @@ NSUInteger const KPKKeyFileDataLength             = 32;
   // Get the root document element
   DDXMLElement *rootElement = [document rootElement];
   if(!rootElement) {
-    KPKCreateError(error, KPKErrorKey)
+    KPKCreateError(error, KPKErrorKdbxKeyKeyFileElementMissing);
     return nil;
   }
   DDXMLElement *metaElement = [rootElement elementForName:kKPKXmlMeta];
