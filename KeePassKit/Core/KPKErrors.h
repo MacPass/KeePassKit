@@ -60,6 +60,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorKdbxKeyDataElementMissing, // The XML-Keyfile has no data element
   KPKErrorKdbxKeyDataParsingError, // The XML-data element couldn't be parsed
   KPKErrorKdbxKeyKeyElementMissing, // The XML-Keyfile has no key element
+  KPKErrorKdbxKeyVersionElementMissing, // The XML-keyfile has no version element
   KPKErrorKdbxKeyUnsupportedVersion, // The XML-Keyfile is an usupported version
   KPKErrorKdbxMalformedXmlStructure, // KDBX XML file has malformed structure
   KPKErrorKdbxMetaElementMissing, // The root element has no meta entry

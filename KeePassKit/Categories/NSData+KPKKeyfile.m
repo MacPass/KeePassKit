@@ -130,10 +130,10 @@ NSUInteger const KPKKeyFileDataLength             = 32;
 + (NSData *)_kpk_dataVersion2ForData:(NSData *)data error:(NSError *__autoreleasing *)error {
   NSError *internError;
   NSData *keyData = [self _kpk_dataWithForXMLKeyData:data error:&internError];
+  if(error) {
+    *error = internError;
+  }
   if(keyData) {
-    if(error) {
-      *error = internError;
-    }
     return keyData;
   }
   /* if the key file was no XML file, try to load legacy key */
@@ -202,6 +202,10 @@ NSUInteger const KPKKeyFileDataLength             = 32;
                                    @"2.00"  : @(KPKKeyFileTypeXMLVersion2) };
     
     DDXMLElement *versionElement = [metaElement elementForName:kKPKXmlVersion];
+    if(!versionElement) {
+      KPKCreateError(error, KPKErrorKdbxKeyVersionElementMissing);
+      return nil;
+    }
     NSString *versionValue = versionElement.stringValue;
     NSNumber *fileTypeValue = versionMap[versionValue];
     
@@ -240,7 +244,11 @@ NSUInteger const KPKKeyFileDataLength             = 32;
   
   /* Version 1.0 */
   if(keyType == KPKKeyFileTypeXMLVersion1) {
-    return [[NSData alloc] initWithBase64EncodedString:dataValue options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *keyData = [[NSData alloc] initWithBase64EncodedString:dataValue options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    if(!keyData) {
+      KPKCreateError(error, KPKErrorKdbxKeyDataParsingError);
+    }
+    return keyData;
   }
   
   /* Version 2.0 */
@@ -253,9 +261,10 @@ NSUInteger const KPKKeyFileDataLength             = 32;
     }
     if(hashData.length != 4) {
       KPKCreateError(error, KPKErrorKdbxKeyHashAttributeWrongSize);
+      return nil;
     }
     NSData *actualHashData = [keyData.SHA256Hash subdataWithRange:NSMakeRange(0, 4)];
-    if([keyData.SHA256Hash isEqualToData:hashData]) {
+    if([actualHashData isEqualToData:hashData]) {
       return keyData;
     }
     

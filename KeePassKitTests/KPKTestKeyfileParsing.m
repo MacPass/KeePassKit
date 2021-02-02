@@ -19,29 +19,135 @@
 
 @implementation KPKTestKeyfileParsing
 
-- (void)testXmlKeyfileLoadingValidFile {
+- (void)testValidXmlv1KeyfileLoading {
   NSBundle *myBundle = [NSBundle bundleForClass:self.class];
-  NSURL *url = [myBundle URLForResource:@"Keepass2Key" withExtension:@"xml"];
+  NSURL *url = [myBundle URLForResource:@"Keepass2Key_v1" withExtension:@"xml"];
   NSError *error;
   NSData *keyFileData = [NSData dataWithContentsOfURL:url options:0 error:&error];
   XCTAssertNil(error);
   XCTAssertNotNil(keyFileData);
-  NSData *data = [NSData kpk_keyDataForData:keyFileData version:KPKDatabaseFormatKdb error:&error];
-  XCTAssertNotNil(data, @"Data should be loaded");
+  KPKFileKey *fileKey = [[KPKFileKey alloc] initWithKeyFileData:keyFileData error:&error];
+  XCTAssertNotNil(fileKey, @"Data should be loaded");
   XCTAssertNil(error, @"No error should occur on keyfile loading");
 }
 
-- (void)testXmlKeyfileLoadingCorruptData {
-  XCTAssertFalse(NO, @"Not Implemented");
+- (void)testValidXmlv2KeyfileLoading {
+  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
+  NSURL *url = [myBundle URLForResource:@"Keepass2Key_v2" withExtension:@"xml"];
+  NSError *error;
+  NSData *keyFileData = [NSData dataWithContentsOfURL:url options:0 error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(keyFileData);
+  KPKFileKey *fileKey = [[KPKFileKey alloc] initWithKeyFileData:keyFileData error:&error];
+  XCTAssertNotNil(fileKey, @"Data should be loaded");
+  XCTAssertNil(error, @"No error should occur on keyfile loading");
+}
+
+
+- (void)testXmlv1KeyfileLoadingCorruptData {
+  NSString *file = @"<KeyFile><Meta><Version>1.0</Version></Meta><Key><Data>ThisIsNoBase64Data</Data></Key></KeyFile>";
+  NSError *error;
+  DDXMLDocument *doc = [[DDXMLDocument alloc] initWithXMLString:file options:0 error:&error];
+  
+  XCTAssertNil(error);
+  XCTAssertNotNil(doc);
+  
+  NSData *fileData = [doc XMLData];
+  KPKFileKey *fileKey = [[KPKFileKey alloc] initWithKeyFileData:fileData error:&error];
+  XCTAssertNotNil(fileKey);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(error.code, KPKErrorKdbxKeyDataParsingError);
 }
 
 - (void)testXmlKeyfileLoadingMissingVersion {
-  XCTAssertFalse(NO, @"Not Implemented");
+  NSString *file = @"<KeyFile><Meta></Meta><Key><Data>NODATA</Data></Key></KeyFile>";
+  NSError *error;
+  DDXMLDocument *doc = [[DDXMLDocument alloc] initWithXMLString:file options:0 error:&error];
+  
+  XCTAssertNil(error);
+  XCTAssertNotNil(doc);
+  
+  NSData *fileData = [doc XMLData];
+  KPKFileKey *fileKey = [[KPKFileKey alloc] initWithKeyFileData:fileData error:&error];
+  XCTAssertNotNil(fileKey);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(error.code, KPKErrorKdbxKeyVersionElementMissing);
 }
 
-- (void)testXmlKeyfileLoadingLowerVersion {
-  XCTAssertFalse(NO, @"Not Implemented");
+- (void)testXmlKeyfileLoadingUnsupportedVersion {
+  NSString *file = @"<KeyFile><Meta><Version>1.5</Version></Meta><Key><Data>NODATA</Data></Key></KeyFile>";
+  NSError *error;
+  DDXMLDocument *doc = [[DDXMLDocument alloc] initWithXMLString:file options:0 error:&error];
+  
+  XCTAssertNil(error);
+  XCTAssertNotNil(doc);
+  
+  NSData *fileData = [doc XMLData];
+  KPKFileKey *fileKey = [[KPKFileKey alloc] initWithKeyFileData:fileData error:&error];
+  XCTAssertNotNil(fileKey);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(error.code, KPKErrorKdbxKeyUnsupportedVersion);
 }
+
+- (void)testXmlv2KeyfileMissingHash {
+  NSString *file = @"<KeyFile><Meta><Version>2.0</Version></Meta><Key><Data>NODATA</Data></Key></KeyFile>";
+  NSError *error;
+  DDXMLDocument *doc = [[DDXMLDocument alloc] initWithXMLString:file options:0 error:&error];
+  
+  XCTAssertNil(error);
+  XCTAssertNotNil(doc);
+  
+  NSData *fileData = [doc XMLData];
+  KPKFileKey *fileKey = [[KPKFileKey alloc] initWithKeyFileData:fileData error:&error];
+  XCTAssertNotNil(fileKey);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(error.code, KPKErrorKdbxKeyHashAttributeMissing);
+}
+
+- (void)testXmlv2KeyfileWrongHashSize {
+  NSString *file = @"<KeyFile><Meta><Version>2.0</Version></Meta><Key><Data Hash=\"FF\">NODATA</Data></Key></KeyFile>";
+  NSError *error;
+  DDXMLDocument *doc = [[DDXMLDocument alloc] initWithXMLString:file options:0 error:&error];
+  
+  XCTAssertNil(error);
+  XCTAssertNotNil(doc);
+  
+  NSData *fileData = [doc XMLData];
+  KPKFileKey *fileKey = [[KPKFileKey alloc] initWithKeyFileData:fileData error:&error];
+  XCTAssertNotNil(fileKey);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(error.code, KPKErrorKdbxKeyHashAttributeWrongSize);
+}
+
+- (void)testXmlv2KeyfileCorruptedHashOrData {
+  NSString *file = @"<KeyFile><Meta><Version>2.0</Version></Meta><Key><Data Hash=\"00000000\">0123456789abcdef</Data></Key></KeyFile>";
+  NSError *error;
+  DDXMLDocument *doc = [[DDXMLDocument alloc] initWithXMLString:file options:0 error:&error];
+  
+  XCTAssertNil(error);
+  XCTAssertNotNil(doc);
+  
+  NSData *fileData = [doc XMLData];
+  KPKFileKey *fileKey = [[KPKFileKey alloc] initWithKeyFileData:fileData error:&error];
+  XCTAssertNotNil(fileKey);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(error.code, KPKErrorKdbxKeyDataCorrupted);
+}
+
+- (void)testValidXmlv2Keyfile {
+  NSString *file = @"<KeyFile><Meta><Version>2.0</Version></Meta><Key><Data Hash=\"55c53f5d\">0123456789abcdef</Data></Key></KeyFile>";
+  NSError *error;
+  DDXMLDocument *doc = [[DDXMLDocument alloc] initWithXMLString:file options:0 error:&error];
+  
+  XCTAssertNil(error);
+  XCTAssertNotNil(doc);
+  
+  NSData *fileData = [doc XMLData];
+  KPKFileKey *fileKey = [[KPKFileKey alloc] initWithKeyFileData:fileData error:&error];
+  XCTAssertNotNil(fileKey);
+  XCTAssertNil(error);
+}
+
 
 - (void)testXml1KeyfilGeneration {
   NSData *data = [NSData kpk_generateKeyfileDataOfType:KPKKeyFileTypeXMLVersion1];
