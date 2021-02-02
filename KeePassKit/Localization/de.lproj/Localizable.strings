@@ -111,6 +111,9 @@
 "ERROR_NO_KEY_DATA" = "Die Schlüsseldatei enthält keine Daten";
 
 /* No comment provided by engineer. */
+"ERROR_NO_XML_DATA" = "Die Schlüsseldatei ist keine Xml Datei";
+
+/* No comment provided by engineer. */
 "ERROR_PASSWORD_OR_KEYFILE_WRONG" = "Falsche Password und/oder die Schlüsseldatei";
 
 /* No comment provided by engineer. */
@@ -159,7 +162,16 @@
 "ERROR_XML_KEYFILE_WITHOUT_HASH_ATTRIBUTE" = "Schlüssel-XML-Datei ohne Hash-Attribut!";
 
 /* No comment provided by engineer. */
-"ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT" = "Schlüssel-XML-Datei enhält kein Key-Element";
+"ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT" = "Schlüssel-XML-Datei enthält kein Key-Element";
+
+/* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_WITHOUT_KEYFILE_ELEMENT" = "Schlüssel-XML-Datei ohne KeyFile-Element";
+
+/* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_WITHOUT_META_ELEMENT" = "Schlüssel-XML-Datei enthält kein Meta-Element";
+
+/* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_WRONG_HASH_SIZE" = "Hash-Element in Schlüssel-XML-Datei hat die falsche Länge";
 
 /* No comment provided by engineer. */
 "ERRROR_XML_STRUCUTRE_MALFORMED" = "Datenbank-XML Struktur ist fehlerhaft";

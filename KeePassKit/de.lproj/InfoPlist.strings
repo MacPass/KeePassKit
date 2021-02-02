@@ -1,0 +1,6 @@
+/* Bundle name */
+"CFBundleName" = "KeePassKit";
+
+/* Copyright (human-readable) */
+"NSHumanReadableCopyright" = "Copyright 2013-2021 HicknHack Software GmbH. Alle Rechte vorbehalten.";
+

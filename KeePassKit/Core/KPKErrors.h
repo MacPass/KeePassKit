@@ -52,7 +52,10 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorKdbxInvalidInnerHeaderFieldType, // invalid field type in the inner header
   KPKErrorKdbxInvalidKeyDerivationData, // The key derivation header data is invalid
   KPKErrorKdbxKeePassFileElementMissing, // the Keepass root element is missing
+  KPKErrorKdbxKeyMetaElementMissing, // The key file is missing the meta element
+  KPKErrorKdbxKeyKeyFileElementMissing, // The Key file element is missing form the KeyFile
   KPKErrorKdbxKeyHashAttributeMissing, // The Xml-data did not contain a hash for the key data (Version 2.0)
+  KPKErrorKdbxKeyHashAttributeWrongSize, // The Xml-data wasn't the correct size
   KPKErrorKdbxKeyDataCorrupted, // The XML-data did not matcht the hash and is considered corrupted
   KPKErrorKdbxKeyDataElementMissing, // The XML-Keyfile has no data element
   KPKErrorKdbxKeyDataParsingError, // The XML-data element couldn't be parsed
@@ -64,6 +67,7 @@ typedef NS_ENUM( NSUInteger, KPKErrorCode ) {
   KPKErrorKeyDerivationFailed, // The key derivation failed
   KPKErrorNoData, // No data given
   KPKErrorNoKeyData, // The key file does not contain any data
+  KPKErrorNoXmlData, // The data is no XML file, this error is mostly used internally
   KPKErrorPasswordAndOrKeyfileWrong, // Password and or keyfile is wrong
   KPKErrorUnknownFileFormat, // The file format is unknown
   KPKErrorUnsupportedCipher, // The header specifies a unsupported and/or wrong chipher methed

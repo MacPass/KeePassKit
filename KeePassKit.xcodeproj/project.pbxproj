@@ -657,6 +657,7 @@
 		4C2ADBF21D7C649F002C3190 /* KPKUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2ADBF01D7C649F002C3190 /* KPKUnarchiver.m */; };
 		4C2ADBF41D7C6665002C3190 /* KPKArchiver_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ADBF31D7C6665002C3190 /* KPKArchiver_Private.h */; };
 		4C2D8B151DEF043600AB72CD /* KPKTestEmptyString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */; };
+		4C3A9D9425C997D800EF57D9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C3A9D9225C997D800EF57D9 /* InfoPlist.strings */; };
 		4C3D98462562C3E0007C23E2 /* ref.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D51273F1E9C642D00D7EAF6 /* ref.c */; };
 		4C3D98552562C3E2007C23E2 /* ref.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D51273F1E9C642D00D7EAF6 /* ref.c */; };
 		4C40187B2513CB7900C10C94 /* KPKTestCompositeKeyCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C40187A2513CB7900C10C94 /* KPKTestCompositeKeyCoding.m */; };
@@ -1213,6 +1214,7 @@
 		4C2ADBF31D7C6665002C3190 /* KPKArchiver_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KPKArchiver_Private.h; sourceTree = "<group>"; };
 		4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestEmptyString.m; sourceTree = "<group>"; };
 		4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKPlatformIncludes.h; sourceTree = "<group>"; };
+		4C3A9D9325C997D800EF57D9 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4C40187A2513CB7900C10C94 /* KPKTestCompositeKeyCoding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestCompositeKeyCoding.m; sourceTree = "<group>"; };
 		4C415D371F581D4200C08985 /* KPKTestDeletedObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestDeletedObjects.m; sourceTree = "<group>"; };
 		4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestUniqueBinaryNames.m; sourceTree = "<group>"; };
@@ -1740,6 +1742,7 @@
 				4C5CF31B1BE10B650019AA81 /* KeePassKit.h */,
 				4C5CF4751BE10E170019AA81 /* KeePassKit_Private.h */,
 				4C5CF31D1BE10B650019AA81 /* Info.plist */,
+				4C3A9D9225C997D800EF57D9 /* InfoPlist.strings */,
 			);
 			path = KeePassKit;
 			sourceTree = "<group>";
@@ -2830,6 +2833,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CA0C0C71FBB052500CFFFBE /* Localizable.strings in Resources */,
+				4C3A9D9425C997D800EF57D9 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3670,6 +3674,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		4C3A9D9225C997D800EF57D9 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4C3A9D9325C997D800EF57D9 /* de */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		4CA0C0C31FBB050B00CFFFBE /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

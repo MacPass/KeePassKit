@@ -32,6 +32,9 @@
 #import "NSData+KPKRandom.h"
 #import "NSData+CommonCrypto.h"
 
+NSUInteger const KPKKeyFileTypeXMLv2HashDataSize  = 4;
+NSUInteger const KPKKeyFileDataLength             = 32;
+
 @implementation NSData (KPKKeyfile)
 
 + (NSData *)kpk_keyDataForData:(NSData *)data version:(KPKDatabaseFormat)version error:(NSError *__autoreleasing *)error {
@@ -58,7 +61,7 @@
 }
 
 + (NSData *)kpk_generateKeyfileDataOfType:(KPKKeyFileType)type {
-  NSData *data = [NSData kpk_dataWithRandomBytes:32];
+  NSData *data = [NSData kpk_dataWithRandomBytes:KPKKeyFileDataLength];
   switch(type) {
     case KPKKeyFileTypeBinary:
       return data;
@@ -89,7 +92,7 @@
   [keyElement addChild:dataElement];
   
   if(addHash) {
-    NSData *hashData = [data.SHA256Hash subdataWithRange:NSMakeRange(0, 4)];
+    NSData *hashData = [data.SHA256Hash subdataWithRange:NSMakeRange(0, KPKKeyFileTypeXMLv2HashDataSize)];
     NSString *hashHex = [NSString kpk_hexstringFromData:hashData];
     NSString *dataHex = [NSString kpk_hexstringFromData:data];
     
@@ -110,11 +113,11 @@
   if(!data) {
     return nil;
   }
-  if(data.length == 32) {
+  if(data.length == KPKKeyFileDataLength) {
     return data; // Loading of a 32 bit binary file succeded;
   }
   NSData *decordedData = nil;
-  if (data.length == 64) {
+  if (data.length == KPKKeyFileDataLength * 2) {
     decordedData = [self _kpk_keyDataFromHex:data];
   }
   /* Hexdata loading failed, so just hash the key */
@@ -125,8 +128,9 @@
 }
 
 + (NSData *)_kpk_dataVersion2ForData:(NSData *)data error:(NSError *__autoreleasing *)error {
-  // Try and load a 2.x XML keyfile first
+  // Try and load a XML keyfile first
   NSData *keyData = [self _kpk_dataWithForXMLKeyData:data error:error];
+  (*error).code == KPKErrorNoXmlData
   if(!keyData) {
     return [self _kpk_dataVersion1ForData:data error:error];
   }
@@ -137,26 +141,30 @@
   /*
    Format of the Keyfile
    
-   Version 1.00
+   <!-- Version 1.00 -->
    
    <KeyFile>
-   <Meta>
-   <Version>1.00</Version>
-   </Meta>
-   <Key>
-   <Data>L8JyIjlAd3SowrQPm6ZaR9mMolm/7iL6T1GJRGBNrAE=</Data> // Base64 encoded
-   </Key>
+     <Meta>
+       <Version>1.00</Version>
+     </Meta>
+     <Key>
+       <Data>
+         KeyData  <!-- Base64 encoded key data -->
+       </Data>
+     </Key>
    </KeyFile>
    
-   Version 2.00
+   <!-- Version 2.00 -->
    
    <KeyFile>
-   <Meta>
-   <Version>2.00</Version>
-   </Meta>
-   <Key>
-   <Data>L8JyIjlAd3SowrQPm6ZaR9mMolm/7iL6T1GJRGBNrAE=</Data> // Hex encoded
-   </Key>
+     <Meta>
+       <Version>2.00</Version>
+     </Meta>
+     <Key>
+       <Data Hash="HashData" > <!-- Hex encoded hash data. Hash data are the first 4 bytes of Sha256 of key data -->
+         keyData               <!-- Hex encoded key data. -->
+       </Data>
+     </Key>
    </KeyFile>
    
    */
@@ -166,6 +174,7 @@
   }
   DDXMLDocument *document = [[DDXMLDocument alloc] initWithData:xmlData options:0 error:error];
   if(document == nil) {
+    KPKCreateError(error, KPKErrorNoXmlData);
     return nil;
   }
   
@@ -173,6 +182,10 @@
   
   // Get the root document element
   DDXMLElement *rootElement = [document rootElement];
+  if(!rootElement) {
+    KPKCreateError(error, KPKErrorKey)
+    return nil;
+  }
   DDXMLElement *metaElement = [rootElement elementForName:kKPKXmlMeta];
   if(metaElement) {
     NSDictionary *versionMap =  @{ @"1"     : @(KPKKeyFileTypeXMLVersion1),
@@ -190,13 +203,14 @@
       KPKCreateError(error, KPKErrorKdbxKeyUnsupportedVersion);
       return nil;
     }
+    
     keyType = (KPKKeyFileType)fileTypeValue.intValue;
   }
-  
-  if(keyType == KPKKeyFileTypeUnkown || keyType == KPKKeyFileTypeHex ) {
+  else {
+    KPKCreateError(error, 0);
     return nil;
   }
-  
+    
   DDXMLElement *keyElement = [rootElement elementForName:kKPKXmlKey];
   if(keyElement == nil) {
     KPKCreateError(error, KPKErrorKdbxKeyKeyElementMissing);
@@ -230,6 +244,9 @@
     if(hashData.length == 0) {
       KPKCreateError(error, KPKErrorKdbxKeyHashAttributeMissing);
       return nil;
+    }
+    if(hashData.length != 4) {
+      KPKCreateError(error, KPKErrorKdbxKeyHashAttributeWrongSize);
     }
     NSData *actualHashData = [keyData.SHA256Hash subdataWithRange:NSMakeRange(0, 4)];
     if([keyData.SHA256Hash isEqualToData:hashData]) {

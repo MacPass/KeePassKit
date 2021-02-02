@@ -32,6 +32,9 @@ typedef NS_ENUM(NSUInteger, KPKKeyFileType) {
   KPKKeyFileTypeXMLVersion2   // KDBX XML Version 2
 };
 
+FOUNDATION_EXTERN NSUInteger const KPKKeyFileTypeXMLv2HashDataSize;
+FOUNDATION_EXPORT NSUInteger const KPKKeyFileDataLength;
+
 @interface NSData (KPKKeyfile)
 
 + (NSData *)kpk_keyDataForData:(NSData *)data version:(KPKDatabaseFormat)version error:(NSError *__autoreleasing *)error;

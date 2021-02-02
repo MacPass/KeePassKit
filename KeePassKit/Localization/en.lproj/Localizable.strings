@@ -111,6 +111,9 @@
 "ERROR_NO_KEY_DATA" = "The key file contains no data";
 
 /* No comment provided by engineer. */
+"ERROR_NO_XML_DATA" = "No XML file data";
+
+/* No comment provided by engineer. */
 "ERROR_PASSWORD_OR_KEYFILE_WRONG" = "The password and/or the keyfile is wrong";
 
 /* No comment provided by engineer. */
@@ -160,6 +163,15 @@
 
 /* No comment provided by engineer. */
 "ERROR_XML_KEYFILE_WITHOUT_KEY_ELEMENT" = "The XML keyfile is missing the key element";
+
+/* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_WITHOUT_KEYFILE_ELEMENT" = "The XML keyfile is missing the key file element";
+
+/* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_WITHOUT_META_ELEMENT" = "The Xml keyfile is missing the meta element";
+
+/* No comment provided by engineer. */
+"ERROR_XML_KEYFILE_WRONG_HASH_SIZE" = "The Xml key file has the wrong hash size";
 
 /* No comment provided by engineer. */
 "ERRROR_XML_STRUCUTRE_MALFORMED" = "Malformed XML structure";
