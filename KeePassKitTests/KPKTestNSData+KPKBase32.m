@@ -20,7 +20,7 @@
 - (void)testBase32EncodingDecoding {
   for(NSUInteger dataLenght = 1; dataLenght < 128; dataLenght++) {
     NSData *data = [NSData kpk_dataWithRandomBytes:dataLenght];
-    NSString *base32 = data.base32EncodedString;
+    NSString *base32 = [data base32EncodedStringWithOptions:0];
     NSData *decodedData = [[NSData alloc] initWithBase32EncodedString:base32];
     XCTAssertEqualObjects(data, decodedData);
   }
@@ -29,7 +29,7 @@
 - (void)testBase32HexEncodingDecoding {
   for(NSUInteger dataLenght = 1; dataLenght < 128; dataLenght++) {
     NSData *data = [NSData kpk_dataWithRandomBytes:dataLenght];
-    NSString *base32Hex = data.base32HexEncodedString;
+    NSString *base32Hex = [data base32EncodedStringWithOptions:KPKBase32EncodingOptionHexadecimalAlphabet];
     NSData *decodedData = [[NSData alloc] initWithBase32HexEncodedString:base32Hex];
     XCTAssertEqualObjects(data, decodedData);
   }
@@ -86,10 +86,29 @@
   
   for(NSString *key in values) {
     NSString *expected = key;
-    NSString *actual = [values[key] dataUsingEncoding:NSUTF8StringEncoding].base32EncodedString;
+    NSString *actual = [[values[key] dataUsingEncoding:NSUTF8StringEncoding] base32EncodedStringWithOptions:0];
     XCTAssertEqualObjects(expected, actual);
   }
 }
+
+- (void)testBase32EncodingWithoutPadding {
+  NSDictionary <NSString*, NSString *> *values = @{
+    @""           : @"",
+    @"MY"         : @"f",
+    @"MZXQ"       : @"fo",
+    @"MZXW6"      : @"foo",
+    @"MZXW6YQ"    : @"foob",
+    @"MZXW6YTB"   : @"fooba",
+    @"MZXW6YTBOI" : @"foobar"
+  };
+  
+  for(NSString *key in values) {
+    NSString *expected = key;
+    NSString *actual = [[values[key] dataUsingEncoding:NSUTF8StringEncoding] base32EncodedStringWithOptions:KPKBase32EncodingOptionNoPadding];
+    XCTAssertEqualObjects(expected, actual);
+  }
+}
+
 
 - (void)testBase32HexEncoding {
   NSDictionary <NSString*, NSString *> *values = @{
@@ -104,7 +123,7 @@
   
   for(NSString *key in values) {
     NSString *expected = key;
-    NSString *actual = [values[key] dataUsingEncoding:NSUTF8StringEncoding].base32HexEncodedString;
+    NSString *actual = [[values[key] dataUsingEncoding:NSUTF8StringEncoding] base32EncodedStringWithOptions:KPKBase32EncodingOptionHexadecimalAlphabet];
     XCTAssertEqualObjects(expected, actual);
   }
 }

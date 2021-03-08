@@ -21,7 +21,7 @@ FOUNDATION_EXTERN NSUInteger const KPKTimeOTPDefaultTimeSlice;
 @property (nonatomic, readonly) NSTimeInterval remainingTime; // the time in seconds the data and string is valud only for KPKOTPGeneratorTimeOTP and KPKOTPGeneratorSteamOTP
 @property (nonatomic, readonly) BOOL isRFC6238; // YES if the settings are the defaults settings recemended in the RFC6238 standard
 
-- (instancetype)init NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_DESIGNATED_INITIALIZER; // This will create a RFC6238 compliant TOTP generator with an empty key as secret.
 - (instancetype)initWithURL:(NSString *)otpAuthURL;
 
 

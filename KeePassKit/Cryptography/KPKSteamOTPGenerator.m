@@ -59,7 +59,7 @@ NSString *const KPKSteamOTPGeneratorSettingsValue = @"S";
   KPKAttribute *seedAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSeed];
   if(settingsAttribute) {
     settingsAttribute.value = [NSString stringWithFormat:@"%ld;%@", self.timeSlice, KPKSteamOTPGeneratorSettingsValue];
-    seedAttribute.value = self.key.base32EncodedString;
+    seedAttribute.value = [self.key base32EncodedStringWithOptions:0];
   }
   else {
     [entry removeCustomAttribute:settingsAttribute];

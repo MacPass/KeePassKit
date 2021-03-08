@@ -50,7 +50,7 @@
     NSData *keyData = [NSData kpk_dataWithRandomBytes:10];
     NSUInteger period = 30;
     NSUInteger digits = 8;
-    NSString *urlString = [NSString stringWithFormat:@"nototpauth://totp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&period=%ld&algorithm=sha256&digits=%ld", keyData.base32EncodedString, period, digits];
+    NSString *urlString = [NSString stringWithFormat:@"nototpauth://totp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&period=%ld&algorithm=sha256&digits=%ld", [keyData base32EncodedStringWithOptions:KPKBase32EncodingOptionNoPadding], period, digits];
     NSURL *timeURL = [NSURL URLWithString:urlString];
     XCTAssertNotNil(timeURL);
     XCTAssertFalse(timeURL.isTimeOTPURL);
@@ -66,7 +66,7 @@
   NSUInteger period = 30;
   NSUInteger digits = 8;
   KPKOTPHashAlgorithm algoritm = KPKOTPHashAlgorithmSha256;
-  NSString *urlString = [NSString stringWithFormat:@"otpauth://totp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&period=%ld&algorithm=sha256&digits=%ld", keyData.base32EncodedString, period, digits];
+  NSString *urlString = [NSString stringWithFormat:@"otpauth://totp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&period=%ld&algorithm=sha256&digits=%ld", [keyData base32EncodedStringWithOptions:KPKBase32EncodingOptionNoPadding], period, digits];
   NSURL *timeURL = [NSURL URLWithString:urlString];
   XCTAssertNotNil(timeURL);
   XCTAssertTrue(timeURL.isTimeOTPURL);
@@ -82,7 +82,7 @@
   NSUInteger counter = 999;
   NSUInteger digits = 8;
   KPKOTPHashAlgorithm algoritm = KPKOTPHashAlgorithmSha1;
-  NSString *urlString = [NSString stringWithFormat:@"otpauth://hotp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&counter=%ld&algorithm=sha1&digits=%ld", keyData.base32EncodedString, counter, digits];
+  NSString *urlString = [NSString stringWithFormat:@"otpauth://hotp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&counter=%ld&algorithm=sha1&digits=%ld", [keyData base32EncodedStringWithOptions:KPKBase32EncodingOptionNoPadding], counter, digits];
   NSURL *timeURL = [NSURL URLWithString:urlString];
   XCTAssertNotNil(timeURL);
   XCTAssertFalse(timeURL.isTimeOTPURL);

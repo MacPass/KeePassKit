@@ -71,7 +71,8 @@ NSString *const kKPKURLSteamEncoderValue  = @"steam";
   [queryItems addObject:digitsItem];
   
   /* secret */
-  NSURLQueryItem *secretItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterSecret value:key.base32EncodedString];
+  NSString *base32secret = [key base32EncodedStringWithOptions:KPKBase32EncodingOptionNoPadding];
+  NSURLQueryItem *secretItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterSecret value:base32secret];
   [queryItems addObject:secretItem];
   
   urlComponents.queryItems = queryItems;
@@ -114,7 +115,8 @@ NSString *const kKPKURLSteamEncoderValue  = @"steam";
   [queryItems addObject:digitsItem];
   
   /* secret */
-  NSURLQueryItem *secretItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterSecret value:key.base32EncodedString];
+  NSString *base32secret = [key base32EncodedStringWithOptions:KPKBase32EncodingOptionNoPadding];
+  NSURLQueryItem *secretItem = [[NSURLQueryItem alloc] initWithName:kKPKURLParameterSecret value:base32secret];
   [queryItems addObject:secretItem];
   
   urlComponents.queryItems = queryItems;

@@ -8,8 +8,10 @@
 
 #import <XCTest/XCTest.h>
 #import "NSString+KPKHexdata.h"
+#import "KPKOTPGenerator.h"
 #import "KPKHmacOTPGenerator.h"
 #import "KPKTimeOTPGenerator.h"
+#import "KPKSteamOTPGenerator.h"
 #import "NSURL+KPKAdditions.h"
 #import "KPKEntry.h"
 #import "KPKAttribute.h"
@@ -19,6 +21,43 @@
 @end
 
 @implementation KPKTestOTP
+
+- (void)testDefaultTimeGenerator {
+  KPKTimeOTPGenerator *generator = [[KPKTimeOTPGenerator alloc] init];
+  XCTAssertNotNil(generator.key);
+  XCTAssertEqual(generator.key.length, 0);
+  XCTAssertEqual(generator.hashAlgorithm, KPKOTPHashAlgorithmSha1);
+  XCTAssertEqual(generator.defaultHashAlgoritm, KPKOTPHashAlgorithmSha1);
+  XCTAssertEqual(generator.numberOfDigits, 6);
+  XCTAssertEqual(generator.defaultNumberOfDigits, 6);
+  XCTAssertEqual(generator.time, 0);
+  XCTAssertEqual(generator.timeSlice, 30);
+  XCTAssertEqual(generator.defaultTimeSlice, 30);
+  XCTAssertEqual(generator.timeBase, 0);
+}
+
+- (void)testDefaultSteamGenerator {
+  KPKHmacOTPGenerator *generator = [[KPKHmacOTPGenerator alloc] init];
+  XCTAssertNotNil(generator.key);
+  XCTAssertEqual(generator.key.length, 0);
+  XCTAssertEqual(generator.hashAlgorithm, KPKOTPHashAlgorithmSha1);
+  XCTAssertEqual(generator.defaultHashAlgoritm, KPKOTPHashAlgorithmSha1);
+  XCTAssertEqual(generator.counter, 0);
+}
+
+- (void)testDefaultHmacGenerator {
+  KPKSteamOTPGenerator *generator = [[KPKSteamOTPGenerator alloc] init];
+  XCTAssertNotNil(generator.key);
+  XCTAssertEqual(generator.key.length, 0);
+  XCTAssertEqual(generator.hashAlgorithm, KPKOTPHashAlgorithmSha1);
+  XCTAssertEqual(generator.defaultHashAlgoritm, KPKOTPHashAlgorithmSha1);
+  XCTAssertEqual(generator.numberOfDigits, 5);
+  XCTAssertEqual(generator.defaultNumberOfDigits, 5);
+  XCTAssertEqual(generator.time, 0);
+  XCTAssertEqual(generator.timeSlice, 30);
+  XCTAssertEqual(generator.defaultTimeSlice, 30);
+  XCTAssertEqual(generator.timeBase, 0);
+}
 
 - (void)testHmacOTP {
   /* Test values from https://tools.ietf.org/html/rfc4226#appendix-D */

@@ -91,11 +91,30 @@ NSUInteger valueForCharacterInAlphabet(unichar character, KPKBase32AlphabetType 
 }
 
 - (instancetype)_initWithBase32EncodedString:(NSString *)string alphabetType:(KPKBase32AlphabetType)type {
-  // TODO fix possible endianess bugs on big endian machines!
-  if(string.length % 8 != 0) {
-    self = nil;
+  /* return null data */
+  if(string.length == 0) {
+    self = NSData.data;
     return self;
   }
+  static NSDictionary *paddingDict;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    paddingDict = @{ @(0) : @"",
+                     @(2) : @"======",
+                     @(4) : @"====",
+                     @(5) : @"===",
+                     @(7) : @"=" };
+  });
+  
+  NSString *missingPadding = paddingDict[@(string.length % 8)];
+  if(!missingPadding) {
+    /* FIXME: Raise Excpetion since this is no valid Base32 code at all */
+    self = NSData.data;
+    return self;
+  }
+  /* add missing padding */
+  string = [string stringByAppendingString:missingPadding];
+  
   NSMutableData *data = [[NSMutableData alloc] init];
   for(NSUInteger chunkIndex = 0; chunkIndex < string.length; chunkIndex += 8) {
     NSUInteger byteValue = 0;
@@ -132,18 +151,9 @@ NSUInteger valueForCharacterInAlphabet(unichar character, KPKBase32AlphabetType 
   return self;
 }
 
-- (NSString *)base32EncodedString {
-  return [self _base32EncodedStringWithAlphabetType:KPKBase32Alphabet];
-}
-
-- (NSString *)base32HexEncodedString {
-  return [self _base32EncodedStringWithAlphabetType:KPKBase32HexAlphabet];
-  
-}
-
-- (NSString *)_base32EncodedStringWithAlphabetType:(KPKBase32AlphabetType)type {
+- (NSString *)base32EncodedStringWithOptions:(KPKBase32EncodingOptions)options {
+  KPKBase32AlphabetType type = (options & KPKBase32EncodingOptionHexadecimalAlphabet) ? KPKBase32HexAlphabet : KPKBase32Alphabet;
   // TODO fix possible endianess bugs on big endian machines!
-  // TODO add alphabet as parameter!
   NSMutableString *encodedString = [[NSMutableString alloc] init];
   
   NSArray *alphabet = alphabetForType(type);
@@ -202,9 +212,11 @@ NSUInteger valueForCharacterInAlphabet(unichar character, KPKBase32AlphabetType 
     for(NSUInteger index = 0; index < bitCount[bytesToEncode]; index++) {
       [encodedString appendString:alphabet[characterValues[index]]];
     }
-    uint8_t pad = paddingCount[bytesToEncode];
-    while(pad--) {
-      [encodedString appendString:@"="];
+    if(!(options & KPKBase32EncodingOptionNoPadding)) {
+      uint8_t pad = paddingCount[bytesToEncode];
+      while(pad--) {
+        [encodedString appendString:@"="];
+      }
     }
   }
   return [encodedString copy];;

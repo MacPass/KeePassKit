@@ -77,9 +77,9 @@ static NSUInteger const KPKOTPDefaultNumberOfDigits = 6;
 - (instancetype)_init {
   self = [super init];
   if(self) {
-    _hashAlgorithm = KPKOTPHashAlgorithmSha1;
+    _hashAlgorithm = self.defaultHashAlgoritm;
     _key = [NSData.data copy]; // use an empty key;
-    _numberOfDigits = 6;
+    _numberOfDigits = self.defaultNumberOfDigits;
   }
   return self;
 }

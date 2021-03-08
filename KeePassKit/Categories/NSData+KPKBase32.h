@@ -8,15 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSData (KPKBase32)
+typedef NS_OPTIONS(NSUInteger, KPKBase32EncodingOptions) {
+  KPKBase32EncodingOptionNoPadding            = 1 << 0,
+  KPKBase32EncodingOptionHexadecimalAlphabet  = 1 << 1
+};
 
-@property (nonatomic, copy, readonly) NSString *base32EncodedString;
-@property (nonatomic, copy, readonly) NSString *base32HexEncodedString;
+@interface NSData (KPKBase32)
 
 + (instancetype)dataWithBase32EncodedString:(NSString *)string;
 + (instancetype)dataWithBase32HexEncodedString:(NSString *)string;
 - (instancetype)initWithBase32EncodedString:(NSString *)string;
 - (instancetype)initWithBase32HexEncodedString:(NSString *)string;
+
+- (NSString *)base32EncodedStringWithOptions:(KPKBase32EncodingOptions)options;
 
 
 @end

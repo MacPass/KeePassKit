@@ -103,7 +103,7 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   KPKAttribute *seedAttribute = [entry attributeWithKey:kKPKAttributeKeyTimeOTPSeed];
   if(settingsAttribute) {
     settingsAttribute.value = [NSString stringWithFormat:@"%ld:%ld", self.timeSlice, self.numberOfDigits];
-    seedAttribute.value = self.key.base32EncodedString;
+    seedAttribute.value = [self.key base32EncodedStringWithOptions:0];
   }
   else {
     [entry removeCustomAttribute:settingsAttribute];
@@ -151,7 +151,7 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
     }
   }
   if(!secretStored) {
-    secretBase32Attribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyHmacOTPSecretBase32 value:self.key.base32EncodedString];
+    secretBase32Attribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyHmacOTPSecretBase32 value:[self.key base32EncodedStringWithOptions:0]];
     [entry addCustomAttribute:secretBase32Attribute];
   }
   

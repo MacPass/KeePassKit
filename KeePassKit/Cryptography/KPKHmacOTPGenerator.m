@@ -145,11 +145,11 @@
   /* brute write, nil just works */
   asciiKeyAttribute.value = [[NSString alloc] initWithData:self.key encoding:NSUTF8StringEncoding];
   hexKeyAttribute.value = [NSString kpk_hexstringFromData:self.key];
-  base32KeyAttribute.value = self.key.base32EncodedString;
+  base32KeyAttribute.value = [self.key base32EncodedStringWithOptions:0];
   base64KeyAttribute.value = [self.key base64EncodedStringWithOptions:0];
   
   if(!(asciiKeyAttribute || hexKeyAttribute || base32KeyAttribute || base64KeyAttribute)) {
-    base32KeyAttribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyHmacOTPSecretBase32 value:self.key.base32EncodedString];
+    base32KeyAttribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyHmacOTPSecretBase32 value:[self.key base32EncodedStringWithOptions:0]];
     [entry addCustomAttribute:base32KeyAttribute];
   }
   
