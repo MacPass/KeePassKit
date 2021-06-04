@@ -83,7 +83,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;        //
 @property (nonatomic, copy) NSString *url;
 
 @property (nonatomic, copy, readonly) NSArray<KPKBinary *> *binaries;
-@property (nonatomic, copy) NSArray<NSString *> *tags;
+//@property (nonatomic, copy) NSArray<NSString *> *tags;
 @property (nonatomic, copy) NSUIColor *foregroundColor;
 @property (nonatomic, copy) NSUIColor *backgroundColor;
 @property (nonatomic, copy) NSString *overrideURL;

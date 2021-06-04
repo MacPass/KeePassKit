@@ -26,7 +26,7 @@
 
 @implementation NSString (KPKHexdata)
 
-NSCharacterSet *KPKHexCharacterSet() {
+NSCharacterSet *KPKHexCharacterSet(void) {
   static dispatch_once_t onceToken;
   static NSCharacterSet *set;
   dispatch_once(&onceToken, ^{

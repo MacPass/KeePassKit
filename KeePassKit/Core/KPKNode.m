@@ -129,6 +129,13 @@
     }
   }
   
+  if(self.tags.count != aNode.tags.count) {
+    // FIXME: Tag order should not matter!
+    if(![self.tags isEqualToArray:aNode.tags]) {
+      return KPKComparsionDifferent;
+    }
+  }
+  
   if(![self.mutableCustomData isEqualToDictionary:aNode.mutableCustomData]) {
     return KPKComparsionDifferent;
   }
@@ -243,6 +250,14 @@
     _timeInfo = [timeInfo copy];
     _timeInfo.node = self;
   }
+}
+
+- (void)setTags:(NSArray<NSString *> *)tags {
+  [[self.undoManager prepareWithInvocationTarget:self] setTags:self.tags];
+  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_TAGS", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the tags of an enty")];
+  [self.tree _unregisterTags:_tags];
+  _tags = tags ? [[NSArray alloc] initWithArray:tags copyItems:YES] : nil;
+  [self.tree _registerTags:_tags];
 }
 
 - (NSString *)breadcrumb {
@@ -445,9 +460,11 @@
     _uuid = [[aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(uuid))] copy];
     _iconId = [aDecoder decodeIntegerForKey:NSStringFromSelector(@selector(iconId))];
     _iconUUID = [[aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(iconUUID))] copy];
+    _tags = [[aDecoder decodeObjectOfClass:NSArray.class forKey:NSStringFromSelector(@selector(tags))] copy];
+    _mutableCustomData = [aDecoder decodeObjectOfClass:NSMutableDictionary.class forKey:NSStringFromSelector(@selector(mutableCustomData))];
     /* decode time info at last */
     self.timeInfo = [aDecoder decodeObjectOfClass:KPKTimeInfo.class forKey:NSStringFromSelector(@selector(timeInfo))];
-    _mutableCustomData = [aDecoder decodeObjectOfClass:NSMutableDictionary.class forKey:NSStringFromSelector(@selector(mutableCustomData))];
+    
   }
   return self;
 }
@@ -457,6 +474,7 @@
   [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
   [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
+  [aCoder encodeObject:_tags forKey:NSStringFromSelector(@selector(tags))];
   [aCoder encodeObject:self.mutableCustomData forKey:NSStringFromSelector(@selector(mutableCustomData))];
 }
 
@@ -469,6 +487,7 @@
   copy.title = self.title;
   copy.timeInfo = self.timeInfo;
   copy.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:self.mutableCustomData copyItems:YES];
+  copy.tags = self.tags;
   KPK_SCOPED_NO_END(copy.updateTiming);
   return copy;
 }

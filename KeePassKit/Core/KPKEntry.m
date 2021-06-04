@@ -232,7 +232,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   
   copy.mutableBinaries = [[NSMutableArray alloc] initWithArray:self.mutableBinaries copyItems:YES];
   copy.mutableAttributes = [[NSMutableArray alloc] initWithArray:self.mutableAttributes copyItems:YES];
-  copy.tags = self.tags;
   copy.autotype = self.autotype;
   /* Shallow copy skipps history */
   copy.isHistory = NO;
@@ -263,7 +262,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
                                                    forKey:NSStringFromSelector(@selector(mutableHistory))];
     self.mutableBinaries = [aDecoder decodeObjectOfClasses:[NSSet setWithArray:@[NSMutableArray.class, KPKBinary.class]]
                                                     forKey:NSStringFromSelector(@selector(mutableBinaries))];
-    _tags = [[aDecoder decodeObjectOfClass:NSArray.class forKey:NSStringFromSelector(@selector(tags))] copy];
     _foregroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
     _backgroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
     _overrideURL = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(overrideURL))] copy];
@@ -279,7 +277,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [super _encodeWithCoder:aCoder];
   [aCoder encodeObject:_mutableAttributes forKey:NSStringFromSelector(@selector(mutableAttributes))];
   [aCoder encodeObject:_mutableBinaries forKey:NSStringFromSelector(@selector(mutableBinaries))];
-  [aCoder encodeObject:_tags forKey:NSStringFromSelector(@selector(tags))];
   [aCoder encodeObject:_foregroundColor forKey:NSStringFromSelector(@selector(foregroundColor))];
   [aCoder encodeObject:_backgroundColor forKey:NSStringFromSelector(@selector(backgroundColor))];
   [aCoder encodeObject:_overrideURL forKey:NSStringFromSelector(@selector(overrideURL))];
@@ -369,11 +366,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   for(KPKAttribute *attribute in self.mutableAttributes) {
     KPKAttribute *otherAttribute = [entry attributeWithKey:attribute.key];
     if(NO == [otherAttribute isEqualToAttribute:attribute]) {
-      return KPKComparsionDifferent;
-    }
-  }
-  if(self.tags.count != entry.tags.count) {
-    if(![self.tags isEqualToArray:entry.tags]) {
       return KPKComparsionDifferent;
     }
   }
@@ -683,14 +675,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [[self.undoManager prepareWithInvocationTarget:self] setUrl:self.url];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_URL", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the url of an enty")];
   [self _setValue:url forAttributeWithKey:kKPKURLKey sendChanges:NO];
-}
-
-- (void)setTags:(NSArray<NSString *> *)tags {
-  [[self.undoManager prepareWithInvocationTarget:self] setTags:self.tags];
-  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_TAGS", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the tags of an enty")];
-  [self.tree _unregisterTags:_tags];
-  _tags = tags ? [[NSArray alloc] initWithArray:tags copyItems:YES] : nil;
-  [self.tree _registerTags:_tags];
 }
 
 - (void)setForegroundColor:(NSUIColor *)foregroundColor {

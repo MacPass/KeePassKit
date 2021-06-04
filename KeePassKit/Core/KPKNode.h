@@ -59,7 +59,9 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly, copy) NSUUID *uuid;
 @property(nonatomic, copy) NSString *title;
 @property(nonatomic, copy) NSString *notes;
+@property (nonatomic, copy) NSArray<NSString *> *tags; // FIXME: Move to NSSet?
 @property(nonatomic, readonly, copy) NSDictionary<NSString *, NSString *> *customData;
+
 
 @property(nonatomic, readonly, copy) KPKTimeInfo *timeInfo;
 
