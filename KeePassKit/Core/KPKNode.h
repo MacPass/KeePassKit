@@ -66,6 +66,7 @@ typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
 @property(nonatomic, readonly, copy) KPKTimeInfo *timeInfo;
 
 @property(nonatomic, readonly, weak) KPKGroup *parent;
+@property(nonatomic, readonly, copy) NSUUID *previousParent;
 @property(nonatomic, readonly, weak) KPKTree *tree;
 
 @property(nonatomic, readonly) NSUndoManager *undoManager;

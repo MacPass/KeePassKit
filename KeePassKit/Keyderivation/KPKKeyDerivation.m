@@ -21,7 +21,7 @@ static NSMutableDictionary *_keyDerivations;
 }
 
 + (NSUUID *)uuid {
-  return [NSUUID kpk_nullUUID];
+  return NSUUID.kpk_nullUUID;
 }
 
 + (void)_registerKeyDerivation:(Class)derivationClass {

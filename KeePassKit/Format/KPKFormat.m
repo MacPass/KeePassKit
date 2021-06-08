@@ -43,195 +43,197 @@ uint32_t const kKPKKdbxSignature2 = 0xB54BFB67;
 uint32_t const kKPKKeyFileLength = 32;
 
 #pragma mark Attribute Keys
-NSString *const kKPKTitleKey     = @"Title";
-NSString *const kKPKNameKey      = @"Name";
-NSString *const kKPKUsernameKey  = @"UserName";
-NSString *const kKPKPasswordKey  = @"Password";
-NSString *const kKPKURLKey       = @"URL";
-NSString *const kKPKNotesKey     = @"Notes";
-NSString *const kKPKUUIDKey      = @"UUID";
-NSUInteger const kKPKDefaultEntryKeysCount = 5;
-
+NSString *const kKPKTitleKey                                  = @"Title";
+NSString *const kKPKNameKey                                   = @"Name";
+NSString *const kKPKUsernameKey                               = @"UserName";
+NSString *const kKPKPasswordKey                               = @"Password";
+NSString *const kKPKURLKey                                    = @"URL";
+NSString *const kKPKNotesKey                                  = @"Notes";
+NSString *const kKPKUUIDKey                                   = @"UUID";
+NSUInteger const kKPKDefaultEntryKeysCount                    = 5;
 
 #pragma mark Nodes
-NSString *const kKPKXmlKeePassFile = @"KeePassFile";
-NSString *const kKPKXmlRoot = @"Root";
-NSString *const kKPKXmlHeaderHash = @"HeaderHash";
-NSString *const kKPKXmlGroup = @"Group";
-NSString *const kKPKXmlEntry = @"Entry";
-NSString *const kKPKXmlGenerator = @"Generator";
-NSString *const kKPKXmlSettingsChanged = @"SettingsChanged";
-NSString *const kKPKXmlDatabaseName = @"DatabaseName";
-NSString *const kKPKXmlDatabaseNameChanged = @"DatabaseNameChanged";
-NSString *const kKPKXmlDatabaseDescription = @"DatabaseDescription";
-NSString *const kKPKXmlDatabaseDescriptionChanged = @"DatabaseDescriptionChanged";
-NSString *const kKPKXmlDefaultUserName = @"DefaultUserName";
-NSString *const kKPKXmlDefaultUserNameChanged = @"DefaultUserNameChanged";
-NSString *const kKPKXmlMaintenanceHistoryDays = @"MaintenanceHistoryDays";
-NSString *const kKPKXmlColor = @"Color";
-NSString *const kKPKXmlMasterKeyChanged = @"MasterKeyChanged";
-NSString *const kKPKXmlMasterKeyChangeRecommendationInterval = @"MasterKeyChangeRec";
-NSString *const kKPKXmlMasterKeyChangeForceInterval = @"MasterKeyChangeForce";
-NSString *const kKPKXmlMasterKeyChangeForceOnce = @"MasterKeyChangeForceOnce";
+NSString *const kKPKXmlKeePassFile                            = @"KeePassFile";
+NSString *const kKPKXmlRoot                                   = @"Root";
+NSString *const kKPKXmlHeaderHash                             = @"HeaderHash";
+NSString *const kKPKXmlGroup                                  = @"Group";
+NSString *const kKPKXmlEntry                                  = @"Entry";
+NSString *const kKPKXmlGenerator                              = @"Generator";
+NSString *const kKPKXmlSettingsChanged                        = @"SettingsChanged";
+NSString *const kKPKXmlDatabaseName                           = @"DatabaseName";
+NSString *const kKPKXmlDatabaseNameChanged                    = @"DatabaseNameChanged";
+NSString *const kKPKXmlDatabaseDescription                    = @"DatabaseDescription";
+NSString *const kKPKXmlDatabaseDescriptionChanged             = @"DatabaseDescriptionChanged";
+NSString *const kKPKXmlDefaultUserName                        = @"DefaultUserName";
+NSString *const kKPKXmlDefaultUserNameChanged                 = @"DefaultUserNameChanged";
+NSString *const kKPKXmlMaintenanceHistoryDays                 = @"MaintenanceHistoryDays";
+NSString *const kKPKXmlColor                                  = @"Color";
+NSString *const kKPKXmlMasterKeyChanged                       = @"MasterKeyChanged";
+NSString *const kKPKXmlMasterKeyChangeRecommendationInterval  = @"MasterKeyChangeRec";
+NSString *const kKPKXmlMasterKeyChangeForceInterval           = @"MasterKeyChangeForce";
+NSString *const kKPKXmlMasterKeyChangeForceOnce               = @"MasterKeyChangeForceOnce";
 
-NSString *const kKPKXmlMemoryProtection = @"MemoryProtection";
-NSString *const kKPKXmlProtectTitle = @"ProtectTitle";
-NSString *const kKPKXmlProtectUserName = @"ProtectUserName";
-NSString *const kKPKXmlProtectPassword = @"ProtectPassword";
-NSString *const kKPKXmlProtectURL = @"ProtectURL";
-NSString *const kKPKXmlProtectNotes = @"ProtectNotes";
+NSString *const kKPKXmlMemoryProtection                       = @"MemoryProtection";
+NSString *const kKPKXmlProtectTitle                           = @"ProtectTitle";
+NSString *const kKPKXmlProtectUserName                        = @"ProtectUserName";
+NSString *const kKPKXmlProtectPassword                        = @"ProtectPassword";
+NSString *const kKPKXmlProtectURL                             = @"ProtectURL";
+NSString *const kKPKXmlProtectNotes                           = @"ProtectNotes";
 
-NSString *const kKPKXmlRecycleBinEnabled = @"RecycleBinEnabled";
-NSString *const kKPKXmlRecycleBinUUID = @"RecycleBinUUID";
-NSString *const kKPKXmlRecycleBinChanged = @"RecycleBinChanged";
-NSString *const kKPKXmlEntryTemplatesGroup = @"EntryTemplatesGroup";
-NSString *const kKPKXmlEntryTemplatesGroupChanged = @"EntryTemplatesGroupChanged";
-NSString *const kKPKXmlHistoryMaxItems = @"HistoryMaxItems";
-NSString *const kKPKXmlHistoryMaxSize = @"HistoryMaxSize";
-NSString *const kKPKXmlLastSelectedGroup = @"LastSelectedGroup";
-NSString *const kKPKXmlLastTopVisibleGroup = @"LastTopVisibleGroup";
+NSString *const kKPKXmlRecycleBinEnabled                      = @"RecycleBinEnabled";
+NSString *const kKPKXmlRecycleBinUUID                         = @"RecycleBinUUID";
+NSString *const kKPKXmlRecycleBinChanged                      = @"RecycleBinChanged";
+NSString *const kKPKXmlEntryTemplatesGroup                    = @"EntryTemplatesGroup";
+NSString *const kKPKXmlEntryTemplatesGroupChanged             = @"EntryTemplatesGroupChanged";
+NSString *const kKPKXmlHistoryMaxItems                        = @"HistoryMaxItems";
+NSString *const kKPKXmlHistoryMaxSize                         = @"HistoryMaxSize";
+NSString *const kKPKXmlLastSelectedGroup                      = @"LastSelectedGroup";
+NSString *const kKPKXmlLastTopVisibleGroup                    = @"LastTopVisibleGroup";
 
-NSString *const kKPKXmlIsExpanded = @"IsExpanded";
-NSString *const kKPKXmlDefaultAutoTypeSequence = @"DefaultAutoTypeSequence";
-NSString *const kKPKXmlEnableAutoType = @"EnableAutoType";
-NSString *const kKPKXmlEnableSearching = @"EnableSearching";
-NSString *const kKPKXmlLastTopVisibleEntry = @"LastTopVisibleEntry";
+#pragma mark Common
+NSString *const kKPKXmlUUID                                   = @"UUID";
+NSString *const kKPKXmlName                                   = @"Name";
+NSString *const kKPKXmlNotes                                  = @"Notes";
+NSString *const kKPKXmlIconId                                 = @"IconID";
+NSString *const kKPKXmlTags                                   = @"Tags";
+NSString *const kKPKXmlPreviousParentGroup                    = @"PreviousParentGroup";
 
-NSString *const kKPKXmlUUID = @"UUID";
-NSString *const kKPKXmlName = @"Name";
-NSString *const kKPKXmlNotes = @"Notes";
-NSString *const kKPKXmlIconId = @"IconID";
+#pragma mark Groups
+NSString *const kKPKXmlIsExpanded                             = @"IsExpanded";
+NSString *const kKPKXmlDefaultAutoTypeSequence                = @"DefaultAutoTypeSequence";
+NSString *const kKPKXmlEnableAutoType                         = @"EnableAutoType";
+NSString *const kKPKXmlEnableSearching                        = @"EnableSearching";
+NSString *const kKPKXmlLastTopVisibleEntry                    = @"LastTopVisibleEntry";
 
 #pragma mark Entries
-NSString *const kKPKXmlForegroundColor  = @"ForegroundColor";
-NSString *const kKPKXmlBackgroundColor  = @"BackgroundColor";
-NSString *const kKPKXmlOverrideURL      = @"OverrideURL";
-NSString *const kKPKXmlTags             = @"Tags";
+NSString *const kKPKXmlForegroundColor                        = @"ForegroundColor";
+NSString *const kKPKXmlBackgroundColor                        = @"BackgroundColor";
+NSString *const kKPKXmlOverrideURL                            = @"OverrideURL";
 
 #pragma mark Binaries
-NSString *const kKPKXmlBinary   = @"Binary";
-NSString *const kKPKXmlBinaries = @"Binaries";
-NSString *const kKPKXmlBinaryId = @"ID";
+NSString *const kKPKXmlBinary                                 = @"Binary";
+NSString *const kKPKXmlBinaries                               = @"Binaries";
+NSString *const kKPKXmlBinaryId                               = @"ID";
 
 #pragma mark CustomIcons
-NSString *const kKPKXmlCustomIconUUID = @"CustomIconUUID";
-NSString *const kKPKXmlCustomIcons    = @"CustomIcons";
-NSString *const kKPKXmlIcon           = @"Icon";
-NSString *const kKPKXmlIconReference  = @"Ref";
+NSString *const kKPKXmlCustomIconUUID                         = @"CustomIconUUID";
+NSString *const kKPKXmlCustomIcons                            = @"CustomIcons";
+NSString *const kKPKXmlIcon                                   = @"Icon";
+NSString *const kKPKXmlIconReference                          = @"Ref";
 
 #pragma mark DeletedObjects
-NSString *const kKPKXmlDeletedObjects = @"DeletedObjects";
-NSString *const kKPKXmlDeletedObject  = @"DeletedObject";
-NSString *const kKPKXmlDeletionTime   = @"DeletionTime";
+NSString *const kKPKXmlDeletedObjects                         = @"DeletedObjects";
+NSString *const kKPKXmlDeletedObject                          = @"DeletedObject";
+NSString *const kKPKXmlDeletionTime                           = @"DeletionTime";
 
 #pragma mark Time
-NSString *const kKPKXmlTimes                = @"Times";
-NSString *const kKPKXmlLastModificationDate = @"LastModificationTime";
-NSString *const kKPKXmlCreationDate         = @"CreationTime";
-NSString *const kKPKXmlLastAccessDate       = @"LastAccessTime";
-NSString *const kKPKXmlExpirationDate       = @"ExpiryTime";
-NSString *const kKPKXmlExpires              = @"Expires";
-NSString *const kKPKXmlUsageCount           = @"UsageCount";
-NSString *const kKPKXmlLocationChanged      = @"LocationChanged";
+NSString *const kKPKXmlTimes                                  = @"Times";
+NSString *const kKPKXmlLastModificationDate                   = @"LastModificationTime";
+NSString *const kKPKXmlCreationDate                           = @"CreationTime";
+NSString *const kKPKXmlLastAccessDate                         = @"LastAccessTime";
+NSString *const kKPKXmlExpirationDate                         = @"ExpiryTime";
+NSString *const kKPKXmlExpires                                = @"Expires";
+NSString *const kKPKXmlUsageCount                             = @"UsageCount";
+NSString *const kKPKXmlLocationChanged                        = @"LocationChanged";
 
 #pragma mark Autotype
-NSString *const kKPKXmlAutotype                 = @"AutoType";
-NSString *const kKPKXmlDefaultSequence          = @"DefaultSequence";
-NSString *const kKPKXmlDataTransferObfuscation  = @"DataTransferObfuscation";
-NSString *const kKPKXmlWindow                   = @"Window";
-NSString *const kKPKXmlAssociation              = @"Association";
-NSString *const kKPKXmlKeystrokeSequence        = @"KeystrokeSequence";
+NSString *const kKPKXmlAutotype                               = @"AutoType";
+NSString *const kKPKXmlDefaultSequence                        = @"DefaultSequence";
+NSString *const kKPKXmlDataTransferObfuscation                = @"DataTransferObfuscation";
+NSString *const kKPKXmlWindow                                 = @"Window";
+NSString *const kKPKXmlAssociation                            = @"Association";
+NSString *const kKPKXmlKeystrokeSequence                      = @"KeystrokeSequence";
 
 #pragma mark History
-NSString *const kKPKXmlHistory = @"History";
+NSString *const kKPKXmlHistory                                = @"History";
 
 #pragma mark CustomData
-NSString *const kKPKXmlCustomData     = @"CustomData";
-NSString *const kKPKXmlCustomDataItem = @"Item";
+NSString *const kKPKXmlCustomData                             = @"CustomData";
+NSString *const kKPKXmlCustomDataItem                         = @"Item";
 
 #pragma mark KeyFile
-NSString *const kKPKXmlKeyFile = @"KeyFile";
+NSString *const kKPKXmlKeyFile                                = @"KeyFile";
 
 #pragma mark Generic
-NSString *const kKPKXmlVersion  = @"Version";
-NSString *const kKPKXmlKey      = @"Key";
-NSString *const kKPKXmlValue    = @"Value";
-NSString *const kKPKXmlData     = @"Data";
-NSString *const kKPKXmlEnabled  = @"Enabled";
-NSString *const kKPKXmlString   = @"String";
-NSString *const kKPKXmlHash     = @"Hash";
-NSString *const kKPKXmlMeta = @"Meta";
+NSString *const kKPKXmlVersion                                = @"Version";
+NSString *const kKPKXmlKey                                    = @"Key";
+NSString *const kKPKXmlValue                                  = @"Value";
+NSString *const kKPKXmlData                                   = @"Data";
+NSString *const kKPKXmlEnabled                                = @"Enabled";
+NSString *const kKPKXmlString                                 = @"String";
+NSString *const kKPKXmlHash                                   = @"Hash";
+NSString *const kKPKXmlMeta                                   = @"Meta";
 
 #pragma mark Attributes
-NSString *const kKPKXmlProtected        = @"Protected";
-NSString *const kKPKXmlProtectInMemory  = @"ProtectInMemory";
-NSString *const kKPKXmlTrue             = @"True";
-NSString *const kKPKXmlFalse            = @"False";
-NSString *const kKPKXmlCompressed       = @"Compressed";
+NSString *const kKPKXmlProtected                              = @"Protected";
+NSString *const kKPKXmlProtectInMemory                        = @"ProtectInMemory";
+NSString *const kKPKXmlTrue                                   = @"True";
+NSString *const kKPKXmlFalse                                  = @"False";
+NSString *const kKPKXmlCompressed                             = @"Compressed";
 
 #pragma mark Reference Keys
 
-NSString *const kKPKReferencePrefix         = @"REF:";
-NSString *const kKPKReferenceTitleKey       = @"T";
-NSString *const kKPKReferenceUsernameKey    = @"U";
-NSString *const kKPKReferencePasswordKey    = @"P";
-NSString *const kKPKReferenceURLKey         = @"A";
-NSString *const kKPKReferenceNotesKey       = @"N";
-NSString *const kKPKReferenceUUIDKey        = @"I";
-NSString *const kKPKReferenceCustomFieldKey = @"O";
+NSString *const kKPKReferencePrefix                           = @"REF:";
+NSString *const kKPKReferenceTitleKey                         = @"T";
+NSString *const kKPKReferenceUsernameKey                      = @"U";
+NSString *const kKPKReferencePasswordKey                      = @"P";
+NSString *const kKPKReferenceURLKey                           = @"A";
+NSString *const kKPKReferenceNotesKey                         = @"N";
+NSString *const kKPKReferenceUUIDKey                          = @"I";
+NSString *const kKPKReferenceCustomFieldKey                   = @"O";
 
 #pragma mark Placeholders
-NSString *const kKPKPlaceholderUUID                   = @"{UUID}";
+NSString *const kKPKPlaceholderUUID                           = @"{UUID}";
 
-NSString *const kKPKPlaceholderDatabasePath           = @"{DB_PATH}";
-NSString *const kKPKPlaceholderDatabaseFolder         = @"{DB_DIR}";
-NSString *const kKPKPlaceholderDatabaseName           = @"{DB_NAME}";
-NSString *const kKPKPlaceholderDatabaseBasename       = @"{DB_BASENAME}";
-NSString *const kKPKPlaceholderDatabaseFileExtension  = @"{DB_EXT}";
+NSString *const kKPKPlaceholderDatabasePath                   = @"{DB_PATH}";
+NSString *const kKPKPlaceholderDatabaseFolder                 = @"{DB_DIR}";
+NSString *const kKPKPlaceholderDatabaseName                   = @"{DB_NAME}";
+NSString *const kKPKPlaceholderDatabaseBasename               = @"{DB_BASENAME}";
+NSString *const kKPKPlaceholderDatabaseFileExtension          = @"{DB_EXT}";
 
-NSString *const kKPKPlaceholderSelectedGroup          = @"{GROUP_SEL}";
-NSString *const kKPKPlaceholderSelectedGroupPath      = @"{GROUP_SEL_PATH}";
-NSString *const kKPKPlaceholderSelectedGroupNotes     = @"{GROUP_SEL_NOTES}";
+NSString *const kKPKPlaceholderSelectedGroup                  = @"{GROUP_SEL}";
+NSString *const kKPKPlaceholderSelectedGroupPath              = @"{GROUP_SEL_PATH}";
+NSString *const kKPKPlaceholderSelectedGroupNotes             = @"{GROUP_SEL_NOTES}";
 
-NSString *const kKPKPlaceholderGroup                  = @"{GROUP}";
-NSString *const kKPKPlaceholderGroupPath              = @"{GROUP_PATH}";
-NSString *const kKPKPlaceholderGroupNotes             = @"{GROUP_NOTES}";
+NSString *const kKPKPlaceholderGroup                          = @"{GROUP}";
+NSString *const kKPKPlaceholderGroupPath                      = @"{GROUP_PATH}";
+NSString *const kKPKPlaceholderGroupNotes                     = @"{GROUP_NOTES}";
 
 /* Placeholder */
-NSString *const kKPKPlaceholderPickChars                    = @"PICKCHARS";
-NSString *const kKPKPlaceholderPickCharsSpearator           = @":";
-NSString *const kKPKPlaceholderPickCharsOptionDelemiter     = @",";
-NSString *const kKPKPlaceholderPickCharsOptionID            = @"ID";
-NSString *const kKPKPlaceholderPickCharsOptionCountShort    = @"C";
-NSString *const kKPKPlaceholderPickCharsOptionCount         = @"Count";
-NSString *const kKPKPlaceholderPickCharsOptionHide          = @"Hide";
-NSString *const kKPKPlaceholderPickCharsOptionConvert       = @"Conv";
-NSString *const kKPKPlaceholderPickCharsOptionConvertOffset = @"Conv-Offset";
-NSString *const kKPKPlaceholderPickCharsOptionConvertFormat = @"Conv-Fmt";
-NSString *const kKPKPlaceholderPickField                    = @"{PICKFIELD}";
-NSString *const kKPKPlaceholderHMACOTP                      = @"{HMACOTP}";
-NSString *const kKPKPlaceholderTIMEOTP                      = @"{TIMEOTP}";
-NSString *const kKPKPlaceholderTOTP                         = @"{TOTP}";
+NSString *const kKPKPlaceholderPickChars                      = @"PICKCHARS";
+NSString *const kKPKPlaceholderPickCharsSpearator             = @":";
+NSString *const kKPKPlaceholderPickCharsOptionDelemiter       = @",";
+NSString *const kKPKPlaceholderPickCharsOptionID              = @"ID";
+NSString *const kKPKPlaceholderPickCharsOptionCountShort      = @"C";
+NSString *const kKPKPlaceholderPickCharsOptionCount           = @"Count";
+NSString *const kKPKPlaceholderPickCharsOptionHide            = @"Hide";
+NSString *const kKPKPlaceholderPickCharsOptionConvert         = @"Conv";
+NSString *const kKPKPlaceholderPickCharsOptionConvertOffset   = @"Conv-Offset";
+NSString *const kKPKPlaceholderPickCharsOptionConvertFormat   = @"Conv-Fmt";
+NSString *const kKPKPlaceholderPickField                      = @"{PICKFIELD}";
+NSString *const kKPKPlaceholderHMACOTP                        = @"{HMACOTP}";
+NSString *const kKPKPlaceholderTIMEOTP                        = @"{TIMEOTP}";
+NSString *const kKPKPlaceholderTOTP                           = @"{TOTP}";
 
-NSString *const kKPKAttributeKeyOTPOAuthURL         = @"otp";
-NSString *const kKPKAttributeKeyHmacOTPSecret       = @"HmacOtp-Secret";
-NSString *const kKPKAttributeKeyHmacOTPSecretHex    = @"HmacOtp-Secret-Hex";
-NSString *const kKPKAttributeKeyHmacOTPSecretBase32 = @"HmacOtp-Secret-Base32";
-NSString *const kKPKAttributeKeyHmacOTPSecretBase64 = @"HmacOtp-Secret-Base64";
-NSString *const kKPKAttributeKeyHmacOTPCounter      = @"HmacOtp-Counter";
-NSString *const kKPKAttributeKeyTimeOTPSecret       = @"TimeOtp-Secret";
-NSString *const kKPKAttributeKeyTimeOTPSecretHex    = @"TimeOtp-Secret-Hex";
-NSString *const kKPKAttributeKeyTimeOTPSecretBase32 = @"TimeOtp-Secret-Base32";
-NSString *const kKPKAttributeKeyTimeOTPSecretBase64 = @"TimeOtp-Secret-Base64";
-NSString *const kKPKAttributeKeyTimeOTPLength       = @"TimeOtp-Length";
-NSString *const kKPKAttributeKeyTimeOTPPeriod       = @"TimeOtp-Period";
-NSString *const kKPKAttributeKeyTimeOTPAlgorithm    = @"TimeOtp-Algorithm";
-NSString *const kKPKAttributeKeyTimeOTPSeed         = @"TOTP Seed";
-NSString *const kKPKAttributeKeyTimeOTPSettings     = @"TOTP Settings";
+NSString *const kKPKAttributeKeyOTPOAuthURL                   = @"otp";
+NSString *const kKPKAttributeKeyHmacOTPSecret                 = @"HmacOtp-Secret";
+NSString *const kKPKAttributeKeyHmacOTPSecretHex              = @"HmacOtp-Secret-Hex";
+NSString *const kKPKAttributeKeyHmacOTPSecretBase32           = @"HmacOtp-Secret-Base32";
+NSString *const kKPKAttributeKeyHmacOTPSecretBase64           = @"HmacOtp-Secret-Base64";
+NSString *const kKPKAttributeKeyHmacOTPCounter                = @"HmacOtp-Counter";
+NSString *const kKPKAttributeKeyTimeOTPSecret                 = @"TimeOtp-Secret";
+NSString *const kKPKAttributeKeyTimeOTPSecretHex              = @"TimeOtp-Secret-Hex";
+NSString *const kKPKAttributeKeyTimeOTPSecretBase32           = @"TimeOtp-Secret-Base32";
+NSString *const kKPKAttributeKeyTimeOTPSecretBase64           = @"TimeOtp-Secret-Base64";
+NSString *const kKPKAttributeKeyTimeOTPLength                 = @"TimeOtp-Length";
+NSString *const kKPKAttributeKeyTimeOTPPeriod                 = @"TimeOtp-Period";
+NSString *const kKPKAttributeKeyTimeOTPAlgorithm              = @"TimeOtp-Algorithm";
+NSString *const kKPKAttributeKeyTimeOTPSeed                   = @"TOTP Seed";
+NSString *const kKPKAttributeKeyTimeOTPSettings               = @"TOTP Settings";
 
-NSString *const kKPKAttributeValueTimeOTPHmacSha1   = @"HMAC-SHA-1";
-NSString *const kKPKAttributeValueTimeOTPHmacSha256 = @"HMAC-SHA-256";
-NSString *const kKPKAttributeValueTimeOTPHmacSha512 = @"HMAC-SHA-512";
+NSString *const kKPKAttributeValueTimeOTPHmacSha1             = @"HMAC-SHA-1";
+NSString *const kKPKAttributeValueTimeOTPHmacSha256           = @"HMAC-SHA-256";
+NSString *const kKPKAttributeValueTimeOTPHmacSha512           = @"HMAC-SHA-512";
 
 #pragma mark Autotype commands
 /*

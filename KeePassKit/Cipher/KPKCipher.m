@@ -19,7 +19,7 @@
 static NSMutableDictionary<NSUUID *, Class> *_ciphers;
 
 + (NSUUID *)uuid {
-  return [NSUUID kpk_nullUUID];
+  return NSUUID.kpk_nullUUID;
 }
 
 + (KPKCipher *)cipherWithUUID:(NSUUID *)uuid {

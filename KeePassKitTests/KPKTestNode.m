@@ -34,11 +34,13 @@
   XCTAssertEqual(entry.index, subGroupA.mutableEntries.count - 1);
   [entry moveToGroup:subGroupA atIndex:0];
   XCTAssertEqual(entry.parent, subGroupA);
+  XCTAssertEqualObjects(entry.previousParent, subGroupA.uuid);
   XCTAssertEqual(entry.index, 0);
   
   [entry moveToGroup:subGroupB];
   XCTAssertNil([subGroupA entryForUUID:entry.uuid]);
   XCTAssertEqual(entry.index, 0);
+  XCTAssertEqualObjects(entry.previousParent, subGroupA.uuid);
   XCTAssertEqual(entry.parent, subGroupB);
 }
 

@@ -121,6 +121,14 @@ FOUNDATION_EXTERN NSString *const kKPKXmlHistoryMaxSize;
 FOUNDATION_EXTERN NSString *const kKPKXmlLastSelectedGroup;
 FOUNDATION_EXTERN NSString *const kKPKXmlLastTopVisibleGroup;
 
+#pragma mark Common
+FOUNDATION_EXTERN NSString *const kKPKXmlUUID;
+FOUNDATION_EXTERN NSString *const kKPKXmlName;
+FOUNDATION_EXTERN NSString *const kKPKXmlNotes;
+FOUNDATION_EXTERN NSString *const kKPKXmlIconId;
+FOUNDATION_EXTERN NSString *const kKPKXmlTags;
+FOUNDATION_EXTERN NSString *const kKPKXmlPreviousParentGroup;
+
 #pragma mark Groups
 FOUNDATION_EXTERN NSString *const kKPKXmlIsExpanded;
 FOUNDATION_EXTERN NSString *const kKPKXmlDefaultAutoTypeSequence;
@@ -128,16 +136,10 @@ FOUNDATION_EXTERN NSString *const kKPKXmlEnableAutoType;
 FOUNDATION_EXTERN NSString *const kKPKXmlEnableSearching;
 FOUNDATION_EXTERN NSString *const kKPKXmlLastTopVisibleEntry;
 
-FOUNDATION_EXTERN NSString *const kKPKXmlUUID;
-FOUNDATION_EXTERN NSString *const kKPKXmlName;
-FOUNDATION_EXTERN NSString *const kKPKXmlNotes;
-FOUNDATION_EXTERN NSString *const kKPKXmlIconId;
-
 #pragma mark Entries
 FOUNDATION_EXTERN NSString *const kKPKXmlForegroundColor;
 FOUNDATION_EXTERN NSString *const kKPKXmlBackgroundColor;
 FOUNDATION_EXTERN NSString *const kKPKXmlOverrideURL;
-FOUNDATION_EXTERN NSString *const kKPKXmlTags;
 
 #pragma mark Binaries
 FOUNDATION_EXTERN NSString *const kKPKXmlBinary;

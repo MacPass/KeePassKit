@@ -408,7 +408,7 @@ if( self.updateTiming ) { \
       self.trashUuid = otherMetaData.trashUuid;
     }
     else if(![tree.root groupForUUID:self.trashUuid]) {
-      self.trashUuid = [NSUUID kpk_nullUUID];
+      self.trashUuid = NSUUID.kpk_nullUUID;
     }
     // else keep old uuid!
   }
@@ -420,7 +420,7 @@ if( self.updateTiming ) { \
       self.entryTemplatesGroupUuid = otherMetaData.entryTemplatesGroupUuid;
     }
     else if(![tree.root groupForUUID:self.entryTemplatesGroupUuid]) {
-      self.entryTemplatesGroupUuid = [NSUUID kpk_nullUUID];
+      self.entryTemplatesGroupUuid = NSUUID.kpk_nullUUID;
     }
     // else keep old uuid
   }

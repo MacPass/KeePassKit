@@ -112,7 +112,7 @@ static NSSet *_observedKeyPathsSet;
     _mutableEntries = [@[] mutableCopy];
     _isAutoTypeEnabled = KPKInherit;
     _isSearchEnabled = KPKInherit;
-    _lastTopVisibleEntry = [NSUUID kpk_nullUUID];
+    _lastTopVisibleEntry = NSUUID.kpk_nullUUID;
     //self.updateTiming = YES;
     if(!_observedKeyPathsSet) {
       _observedKeyPathsSet = [NSSet setWithArray:@[NSStringFromSelector(@selector(children)), NSStringFromSelector(@selector(childEntries))]];

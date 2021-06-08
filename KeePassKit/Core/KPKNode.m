@@ -357,6 +357,7 @@
     return; // no need to move, we're where we want to be
   }
   [[self.undoManager prepareWithInvocationTarget:self] moveToGroup:self.parent atIndex:self.index];
+  self.previousParent = self.parent.uuid;
   [self.parent _removeChild:self];
   [group _addChild:self atIndex:index];
   [self touchMoved];
@@ -450,6 +451,7 @@
     self.timeInfo = [[KPKTimeInfo alloc] init];
     _iconId = self.class.defaultIcon;
     _mutableCustomData = [[NSMutableDictionary alloc] init];
+    _previousParent = NSUUID.kpk_nullUUID;
   }
   return self;
 }
@@ -462,6 +464,7 @@
     _iconUUID = [[aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(iconUUID))] copy];
     _tags = [[aDecoder decodeObjectOfClass:NSArray.class forKey:NSStringFromSelector(@selector(tags))] copy];
     _mutableCustomData = [aDecoder decodeObjectOfClass:NSMutableDictionary.class forKey:NSStringFromSelector(@selector(mutableCustomData))];
+    _previousParent = [aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(previousParent))];
     /* decode time info at last */
     self.timeInfo = [aDecoder decodeObjectOfClass:KPKTimeInfo.class forKey:NSStringFromSelector(@selector(timeInfo))];
     
@@ -475,6 +478,7 @@
   [aCoder encodeInteger:self.iconId forKey:NSStringFromSelector(@selector(iconId))];
   [aCoder encodeObject:self.iconUUID forKey:NSStringFromSelector(@selector(iconUUID))];
   [aCoder encodeObject:_tags forKey:NSStringFromSelector(@selector(tags))];
+  [aCoder encodeObject:self.previousParent forKey:NSStringFromSelector(@selector(previousParent))];
   [aCoder encodeObject:self.mutableCustomData forKey:NSStringFromSelector(@selector(mutableCustomData))];
 }
 
@@ -488,6 +492,7 @@
   copy.timeInfo = self.timeInfo;
   copy.mutableCustomData = [[NSMutableDictionary alloc] initWithDictionary:self.mutableCustomData copyItems:YES];
   copy.tags = self.tags;
+  copy.previousParent = self.previousParent;
   KPK_SCOPED_NO_END(copy.updateTiming);
   return copy;
 }

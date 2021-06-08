@@ -40,6 +40,7 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeTraversalOptions) {
 @property(nonatomic, readwrite, weak) KPKTree *tree;
 @property(nonatomic, copy) KPKTimeInfo *timeInfo;
 @property(nonatomic, weak) KPKGroup *parent;
+@property(nonatomic, copy) NSUUID *previousParent;
 @property(nonatomic, readonly) KPKFileVersion minimumVersion;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableCustomData;
 

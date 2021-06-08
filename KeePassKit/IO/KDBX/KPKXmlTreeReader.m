@@ -258,8 +258,13 @@
   group.iconId = KPKXmlInteger(groupElement, kKPKXmlIconId);
   
   DDXMLElement *customIconUuidElement = [groupElement elementForName:kKPKXmlCustomIconUUID];
-  if (customIconUuidElement != nil) {
-    group.iconUUID = [NSUUID kpk_uuidWithEncodedString:[customIconUuidElement stringValue]];
+  if(customIconUuidElement != nil) {
+    group.iconUUID = [NSUUID kpk_uuidWithEncodedString:customIconUuidElement.stringValue];
+  }
+  
+  DDXMLElement *previousParentGroupElement = [groupElement elementForName:kKPKXmlPreviousParentGroup];
+  if(previousParentGroupElement != nil) {
+    group.previousParent = [NSUUID kpk_uuidWithEncodedString:previousParentGroupElement.stringValue];
   }
   
   DDXMLElement *timesElement = [groupElement elementForName:kKPKXmlTimes];
@@ -303,6 +308,11 @@
   DDXMLElement *customIconUuidElement = [entryElement elementForName:kKPKXmlCustomIconUUID];
   if (customIconUuidElement != nil) {
     entry.iconUUID = [NSUUID kpk_uuidWithEncodedString:[customIconUuidElement stringValue]];
+  }
+  
+  DDXMLElement *previousParentGroupElement = [entryElement elementForName:kKPKXmlPreviousParentGroup];
+  if(previousParentGroupElement != nil) {
+    entry.previousParent = [NSUUID kpk_uuidWithEncodedString:previousParentGroupElement.stringValue];
   }
   
   entry.foregroundColor =  [NSUIColor kpk_colorWithHexString:KPKXmlString(entryElement, kKPKXmlForegroundColor)];
