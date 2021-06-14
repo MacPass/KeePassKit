@@ -589,6 +589,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     
     version.format = KPKDatabaseFormatKdbx;
     version.version = self.mutableCustomData.count > 0 ? kKPKKdbxFileVersion4 : kKPKKdbxFileVersion3;
+    // FIXME: add support for KDBX4.1
   }
   return version;
 }

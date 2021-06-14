@@ -237,7 +237,7 @@
   KPKAddXmlElement(groupElement, kKPKXmlEnableAutoType, stringFromInheritBool(group.isAutoTypeEnabled));
   KPKAddXmlElement(groupElement, kKPKXmlEnableSearching, stringFromInheritBool(group.isSearchEnabled));
   KPKAddXmlElement(groupElement, kKPKXmlLastTopVisibleEntry, group.lastTopVisibleEntry.kpk_encodedString);
-  // FIXME: do not writ this if not KDBX4.1
+  // FIXME: do only write this if KDBX4.1 is allowed
   KPKAddXmlElement(groupElement, kKPKXmlTags, [group.tags componentsJoinedByString:@";"].kpk_xmlCompatibleString);
   KPKAddXmlElement(groupElement, kKPKXmlPreviousParentGroup, group.previousParent.kpk_encodedString);
   

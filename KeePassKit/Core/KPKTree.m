@@ -289,6 +289,7 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   if( !aesKdf || entriesInRoot || publicData ) {
     minimum.format = KPKDatabaseFormatKdbx;
     minimum.version = (publicData || !aesKdf) ? kKPKKdbxFileVersion4 : kKPKKdbxFileVersion3;
+    // FIXME: add support for KDBX4.1
   }
   if(!self.root) {
     return minimum;

@@ -25,22 +25,23 @@
 #import "KPKKdbxFormat.h"
 
 #pragma mark Signatures/Format
-uint32_t const kKPKKdbFileVersion            = 0x00030004;
-uint32_t const kKPKKdbFileVersionMask        = 0xFFFFFF00;
-uint32_t const kKPKKdbSignature1             = 0x9AA2D903;
-uint32_t const kKPKKdbSignature2             = 0xB54BFB65;
+uint32_t const kKPKKdbFileVersion                 = 0x00030004;
+uint32_t const kKPKKdbFileVersionMask             = 0xFFFFFF00;
+uint32_t const kKPKKdbSignature1                  = 0x9AA2D903;
+uint32_t const kKPKKdbSignature2                  = 0xB54BFB65;
 
-uint32_t const kKPKInvalidFileVersion           = UINT32_MAX;
-uint32_t const kKPKKdbxFileVersion3              = 0x00030001; //3.1 used since KeePass 2.20
-uint32_t const kKPKKdbxFileVersion3CriticalMax   = 0x00030000;
-uint32_t const kKPKKdbxFileVersion4              = 0x00040000;
-uint32_t const kKPKKdbxFileVersion4CriticalMax   = 0x00040000;
-uint32_t const kKPKKdbxFileVersionCriticalMask   = 0xFFFF0000;
+uint32_t const kKPKInvalidFileVersion             = UINT32_MAX;
+uint32_t const kKPKKdbxFileVersion3               = 0x00030001; //3.1 used since KeePass 2.20
+uint32_t const kKPKKdbxFileVersion3CriticalMax    = 0x00030000;
+uint32_t const kKPKKdbxFileVersion4               = 0x00040000;
+uint32_t const kKPKKdbxFileVersion4_1             = 0x00040001;
+uint32_t const kKPKKdbxFileVersion4CriticalMax    = 0x00040000;
+uint32_t const kKPKKdbxFileVersionCriticalMask    = 0xFFFF0000;
 
-uint32_t const kKPKKdbxSignature1 = 0x9AA2D903;
-uint32_t const kKPKKdbxSignature2 = 0xB54BFB67;
+uint32_t const kKPKKdbxSignature1                 = 0x9AA2D903;
+uint32_t const kKPKKdbxSignature2                 = 0xB54BFB67;
 
-uint32_t const kKPKKeyFileLength = 32;
+uint32_t const kKPKKeyFileLength                  = 32;
 
 #pragma mark Attribute Keys
 NSString *const kKPKTitleKey                                  = @"Title";

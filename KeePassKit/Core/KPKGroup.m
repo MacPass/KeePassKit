@@ -443,6 +443,7 @@ static NSSet *_observedKeyPathsSet;
   if(self.customData.count > 0 ) {
     minimum.format = KPKDatabaseFormatKdbx;
     minimum.version = kKPKKdbxFileVersion4;
+    // FIXME: add support for KDBX4.1
   }
   if( self.isSearchEnabled != KPKInherit || self.isAutoTypeEnabled != KPKInherit) {
     minimum.format = KPKDatabaseFormatKdbx;
