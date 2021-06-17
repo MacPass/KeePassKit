@@ -110,6 +110,7 @@ NSString *const kKPKXmlLastTopVisibleEntry                    = @"LastTopVisible
 NSString *const kKPKXmlForegroundColor                        = @"ForegroundColor";
 NSString *const kKPKXmlBackgroundColor                        = @"BackgroundColor";
 NSString *const kKPKXmlOverrideURL                            = @"OverrideURL";
+NSString *const kKPKXmlQualityCheck                           = @"QualityCheck";
 
 #pragma mark Binaries
 NSString *const kKPKXmlBinary                                 = @"Binary";

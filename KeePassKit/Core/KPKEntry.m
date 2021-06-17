@@ -210,6 +210,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     
     _autotype.entry = self;
     _isHistory = NO;
+    _checkPasswordQuality = YES;
   }
   return self;
 }
@@ -240,6 +241,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   copy.foregroundColor = self.foregroundColor;
   copy.backgroundColor = self.backgroundColor;
   
+  /* Quality estimation */
+  copy.checkPasswordQuality = self.checkPasswordQuality;
+  
   /* History */
   copy.mutableHistory = [[NSMutableArray alloc] initWithArray:self.mutableHistory copyItems:YES];
   copy.isHistory = self.isHistory;
@@ -265,6 +269,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     _foregroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(foregroundColor))] copy];
     _backgroundColor = [[aDecoder decodeObjectOfClass:NSUIColor.class forKey:NSStringFromSelector(@selector(backgroundColor))] copy];
     _overrideURL = [[aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(overrideURL))] copy];
+    _checkPasswordQuality = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(checkPasswordQuality))];
     self.autotype = [aDecoder decodeObjectOfClass:KPKAutotype.class forKey:NSStringFromSelector(@selector(autotype))];
     _isHistory = [aDecoder decodeBoolForKey:NSStringFromSelector(@selector(isHistory))];
     
@@ -280,6 +285,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [aCoder encodeObject:_foregroundColor forKey:NSStringFromSelector(@selector(foregroundColor))];
   [aCoder encodeObject:_backgroundColor forKey:NSStringFromSelector(@selector(backgroundColor))];
   [aCoder encodeObject:_overrideURL forKey:NSStringFromSelector(@selector(overrideURL))];
+  [aCoder encodeBool:_checkPasswordQuality forKey:NSStringFromSelector(@selector(checkPasswordQuality))];
   [aCoder encodeObject:_mutableHistory forKey:NSStringFromSelector(@selector(mutableHistory))];
   [aCoder encodeObject:_autotype forKey:NSStringFromSelector(@selector(autotype))];
   [aCoder encodeBool:_isHistory forKey:NSStringFromSelector(@selector(isHistory))];
@@ -378,6 +384,16 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     if(![self.backgroundColor isEqual:entry.backgroundColor]) {
       return KPKComparsionDifferent;
     }
+  }
+  /* FIXME: correctly check override URL in comparsion
+  if(self.overrideURL != entry.overrideURL) {
+    if([self.overrideURL isEqual:entry.overrideURL]) {
+      return KPKComparsionDifferent;
+    }
+  }
+   */
+  if(self.checkPasswordQuality != entry.checkPasswordQuality) {
+    return KPKComparsionDifferent;
   }
   
   /* Compare History - order has to match! */
@@ -585,11 +601,19 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   if(self.binaries.count > 1 ||
      self.customAttributes.count > 0 ||
      self.mutableHistory.count > 0  ||
-     self.mutableCustomData.count > 0) {
+     self.mutableCustomData.count > 0 ||
+     self.checkPasswordQuality == NO) {
     
     version.format = KPKDatabaseFormatKdbx;
-    version.version = self.mutableCustomData.count > 0 ? kKPKKdbxFileVersion4 : kKPKKdbxFileVersion3;
-    // FIXME: add support for KDBX4.1
+    version.version = kKPKKdbxFileVersion3;
+    /* Entry based custom data was requries version 4 */
+    if(self.mutableCustomData.count > 0) {
+      version.version = MAX(version.version, kKPKKdbxFileVersion4);
+    }
+    /* Password quality estimation disabling requires version 4.1 */
+    if(!self.checkPasswordQuality) {
+      version.version = MAX(version.version, kKPKKdbxFileVersion4_1);
+    }
   }
   return version;
 }
@@ -650,44 +674,49 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (void)setTitle:(NSString *)title {
   [[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
-  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_TITLE", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the title of an enty")];
+  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_TITLE", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the title of an enty")];
   [self _setValue:title forAttributeWithKey:kKPKTitleKey sendChanges:NO];
 }
 
 - (void)setUsername:(NSString *)username {
   [[self.undoManager prepareWithInvocationTarget:self] setUsername:self.username];
-  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_USERNAME", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the username of an enty")];
+  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_USERNAME", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the username of an enty")];
   [self _setValue:username forAttributeWithKey:kKPKUsernameKey sendChanges:NO];
 }
 
 - (void)setPassword:(NSString *)password {
   [[self.undoManager prepareWithInvocationTarget:self] setPassword:self.password];
-  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_PASSWORD", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the password of an enty")];
+  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_PASSWORD", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the password of an enty")];
   [self _setValue:password forAttributeWithKey:kKPKPasswordKey sendChanges:NO];
 }
 
 - (void)setNotes:(NSString *)notes {
   [[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
-  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_NOTES", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the notes of an enty")];
+  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_NOTES", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the notes of an enty")];
   [self _setValue:notes forAttributeWithKey:kKPKNotesKey sendChanges:NO];
 }
 
 - (void)setUrl:(NSString *)url {
   [[self.undoManager prepareWithInvocationTarget:self] setUrl:self.url];
-  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_URL", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the url of an enty")];
+  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_URL", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the url of an enty")];
   [self _setValue:url forAttributeWithKey:kKPKURLKey sendChanges:NO];
 }
 
 - (void)setForegroundColor:(NSUIColor *)foregroundColor {
   [[self.undoManager prepareWithInvocationTarget:self] setForegroundColor:self.foregroundColor];
-  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_FOREGROUND_COLOR", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the foreground color of an enty")];
+  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_FOREGROUND_COLOR", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the foreground color of an enty")];
   _foregroundColor = foregroundColor;
 }
 
 - (void)setBackgroundColor:(NSUIColor *)backgroundColor {
   [[self.undoManager prepareWithInvocationTarget:self] setBackgroundColor:self.backgroundColor];
-  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_BACKGROUND_COLOR", nil, [NSBundle bundleForClass:[self class]], @"Action name for setting the background color of an enty")];
+  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_BACKGROUND_COLOR", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the background color of an enty")];
   _backgroundColor = backgroundColor;
+}
+
+- (void)setCheckPasswordQuality:(BOOL)checkPasswordQuality {
+  [[self.undoManager prepareWithInvocationTarget:self] setCheckPasswordQuality:self.checkPasswordQuality];
+  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_CHECK_PASSWORD_QUALITY", nil,[NSBundle bundleForClass:self.class] , @"Action name for enabling or disabling the password quality estimation display")];
 }
 
 - (KPKEntry *)asEntry {
@@ -982,6 +1011,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   self.foregroundColor = entry.foregroundColor;
   self.backgroundColor = entry.backgroundColor;
   self.overrideURL = entry.overrideURL;
+  self.checkPasswordQuality = entry.checkPasswordQuality;
   
   self.autotype = entry.autotype;
   
@@ -1029,7 +1059,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 
 - (NSUInteger)estimatedByteSize {
-  
+  // FIXME: This assumes old structures and KeePass states to calculate process memory, so this needs to be evaluated for Obj-C
   NSUInteger __block size = 128; // KeePass suggest this as the inital size
   
   /* Attributes */

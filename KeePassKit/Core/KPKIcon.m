@@ -39,6 +39,8 @@
   self = [super init];
   if(self) {
     _uuid = [NSUUID UUID];
+    _name = nil;
+    _modificationDate = nil;
   }
   return self;
 }

@@ -440,21 +440,34 @@ static NSSet *_observedKeyPathsSet;
 
 - (KPKFileVersion)minimumVersion {
   KPKFileVersion minimum = { KPKDatabaseFormatKdb, kKPKKdbFileVersion };
-  if(self.customData.count > 0 ) {
-    minimum.format = KPKDatabaseFormatKdbx;
-    minimum.version = kKPKKdbxFileVersion4;
-    // FIXME: add support for KDBX4.1
-  }
-  if( self.isSearchEnabled != KPKInherit || self.isAutoTypeEnabled != KPKInherit) {
+  
+  BOOL requiresKDBX = (self.customData.count > 0 ||
+                       self.isSearchEnabled != KPKInherit ||
+                       self.isAutotypeable != KPKInherit ||
+                       self.tags.count > 0);
+  
+  if(self.requiresKDBX) {
     minimum.format = KPKDatabaseFormatKdbx;
     minimum.version = kKPKKdbxFileVersion3;
+    
+    if(self.customData.count > 0) {
+      KPKFileVersion required = {KPKDatabaseFormatKdbx, kKPKKdbxFileVersion4 };
+      minimum = KPKFileVersionMax(minimum, required);
+    }
+    
+    if(self.tags.count > 0) {
+      KPKFileVersion required = { KPKDatabaseFormatKdbx, kKPKKdbxFileVersion4_1 };
+      minimum 0 KPKFileVersionMax(minimum, required);
+    }
   }
+  
   for(KPKGroup *group in self.mutableGroups) {
     minimum = KPKFileVersionMax(minimum, group.minimumVersion);
   }
   for(KPKEntry *entry in self.mutableEntries) {
     minimum = KPKFileVersionMax(minimum, entry.minimumVersion);
   }
+  
   return minimum;
 }
 

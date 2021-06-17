@@ -283,9 +283,19 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
 
 - (KPKFileVersion)minimumVersion {
   KPKFileVersion minimum = { KPKDatabaseFormatKdb, kKPKKdbFileVersion };
+  
   BOOL aesKdf = [self.metaData.keyDerivationParameters[KPKKeyDerivationOptionUUID] isEqual:[KPKAESKeyDerivation uuid].kpk_uuidData];
   BOOL entriesInRoot = self.root.entries.count > 0;
   BOOL publicData = self.metaData.mutableCustomPublicData.count > 0;
+  BOOL changedCustomIcon = NO;
+  
+  for(KPKIcon *icon in self.metaData.mutableCustomIcons) {
+    
+  }
+  
+  
+  BOOL requiresKDBX = aesKdf || entriesInRoot || publicData;
+  
   if( !aesKdf || entriesInRoot || publicData ) {
     minimum.format = KPKDatabaseFormatKdbx;
     minimum.version = (publicData || !aesKdf) ? kKPKKdbxFileVersion4 : kKPKKdbxFileVersion3;

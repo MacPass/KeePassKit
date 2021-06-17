@@ -87,6 +87,7 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;        //
 @property (nonatomic, copy) NSUIColor *foregroundColor;
 @property (nonatomic, copy) NSUIColor *backgroundColor;
 @property (nonatomic, copy) NSString *overrideURL;
+@property (nonatomic) BOOL checkPasswordQuality;
 
 @property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *attributes;
 @property (nonatomic, copy, readonly) NSArray<KPKAttribute *> *customAttributes;

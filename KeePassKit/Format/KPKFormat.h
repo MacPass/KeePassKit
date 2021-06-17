@@ -60,8 +60,6 @@ FOUNDATION_EXTERN KPKFileVersion KPKFileVersionMin(KPKFileVersion a, KPKFileVers
 FOUNDATION_EXTERN NSComparisonResult KPKFileVersionCompare(KPKFileVersion a, KPKFileVersion b);
 FOUNDATION_EXTERN KPKFileVersion KPKMakeFileVersion(KPKDatabaseFormat format, NSUInteger version);
 
-BOOL KPKIsValidFileInfo(KPKFileVersion fileInfo);
-
 /**
  *  Key
  */
@@ -140,6 +138,7 @@ FOUNDATION_EXTERN NSString *const kKPKXmlLastTopVisibleEntry;
 FOUNDATION_EXTERN NSString *const kKPKXmlForegroundColor;
 FOUNDATION_EXTERN NSString *const kKPKXmlBackgroundColor;
 FOUNDATION_EXTERN NSString *const kKPKXmlOverrideURL;
+FOUNDATION_EXTERN NSString *const kKPKXmlQualityCheck;
 
 #pragma mark Binaries
 FOUNDATION_EXTERN NSString *const kKPKXmlBinary;
