@@ -35,6 +35,7 @@
 #import "KPKTree_Private.h"
 #import "KPKTimeInfo.h"
 #import "KPKUTIs.h"
+#import "KPKFormat.h"
 
 #import "NSUUID+KPKAdditions.h"
 
@@ -443,10 +444,10 @@ static NSSet *_observedKeyPathsSet;
   
   BOOL requiresKDBX = (self.customData.count > 0 ||
                        self.isSearchEnabled != KPKInherit ||
-                       self.isAutotypeable != KPKInherit ||
+                       self.isAutoTypeEnabled != KPKInherit ||
                        self.tags.count > 0);
   
-  if(self.requiresKDBX) {
+  if(requiresKDBX) {
     minimum.format = KPKDatabaseFormatKdbx;
     minimum.version = kKPKKdbxFileVersion3;
     
@@ -457,7 +458,7 @@ static NSSet *_observedKeyPathsSet;
     
     if(self.tags.count > 0) {
       KPKFileVersion required = { KPKDatabaseFormatKdbx, kKPKKdbxFileVersion4_1 };
-      minimum 0 KPKFileVersionMax(minimum, required);
+      minimum = KPKFileVersionMax(minimum, required);
     }
   }
   

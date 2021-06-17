@@ -36,6 +36,7 @@ FOUNDATION_EXTERN uint32_t const kKPKInvalidFileVersion;
 FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersion3;
 FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersion3CriticalMax;
 FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersion4;
+FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersion4_1;
 FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersion4CriticalMax;
 
 FOUNDATION_EXTERN uint32_t const kKPKKdbxFileVersionCriticalMask;
