@@ -702,6 +702,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   [self _setValue:url forAttributeWithKey:kKPKURLKey sendChanges:NO];
 }
 
+- (void)setOverrideURL:(NSString *)overrideURL {
+  [[self.undoManager prepareWithInvocationTarget:self] setOverrideURL:self.overrideURL];
+  [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_OVERRIDE_URL", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the overridel url of an entry")];
+  _overrideURL = [overrideURL copy];
+}
+
 - (void)setForegroundColor:(NSUIColor *)foregroundColor {
   [[self.undoManager prepareWithInvocationTarget:self] setForegroundColor:self.foregroundColor];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_FOREGROUND_COLOR", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the foreground color of an enty")];
@@ -717,6 +723,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (void)setCheckPasswordQuality:(BOOL)checkPasswordQuality {
   [[self.undoManager prepareWithInvocationTarget:self] setCheckPasswordQuality:self.checkPasswordQuality];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_CHECK_PASSWORD_QUALITY", nil,[NSBundle bundleForClass:self.class] , @"Action name for enabling or disabling the password quality estimation display")];
+  _checkPasswordQuality = checkPasswordQuality;
 }
 
 - (KPKEntry *)asEntry {
