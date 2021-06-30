@@ -16,6 +16,7 @@
   KPKTree *_tree;
   KPKGroup *_root, *_groupA, *_groupB;
   KPKEntry *_entryA, *_entryB;
+  KPKIcon *_icon;
 }
 @end
 
@@ -44,6 +45,12 @@
   
   /* Disable undo registration in the setup to have a clean test environment */
   KPK_SCOPED_DISABLE_UNDO_BEGIN(_undoManager)
+    
+  NSBundle *bundle = [NSBundle bundleForClass:self.class];
+  NSURL *imageURL = [bundle URLForImageResource:@"image"];
+  
+  _icon = [[KPKIcon alloc] initWithImageAtURL:imageURL];
+  [_tree.metaData addCustomIcon:_icon];
   
   _root = [[KPKGroup alloc] init];
   
@@ -412,8 +419,54 @@
   XCTAssertFalse(_undoManager.canRedo, @"Redo stack is empty");
   
   KPKEntry *copy = [_entryA copy];
-  copy.title = @"New Title";
-  copy.url = @"New URL";
+  
+  // Title
+  _entryA.title = @"New Title";
+  
+  XCTAssertEqualObjects(_entryA.title, @"New Title");
+  XCTAssertTrue(_undoManager.canUndo, @"Changing title adds item to undo stack");
+
+  [_undoManager undo];
+  
+  XCTAssertTrue(_undoManager.canRedo, @"Undoing change enabeld redo");
+  XCTAssertFalse(_undoManager.canUndo, @"Undoing change disabled undo");
+  
+  XCTAssertEqualObjects(_entryA.title, copy.title);
+  
+  // URL
+  _entryA.url = @"New URL";
+  
+  XCTAssertNotEqualObjects(_entryA.url, copy.url);
+  XCTAssertEqualObjects(_entryA.url, @"New URL");
+  
+  XCTAssertTrue(_undoManager.canUndo);
+  XCTAssertFalse(_undoManager.canRedo);
+  
+  [_undoManager undo];
+  
+  XCTAssertEqualObjects(_entryA.url, copy.url);
+  XCTAssertNotEqualObjects(_entryA.url, @"New URL");
+  
+  XCTAssertFalse(_undoManager.canUndo);
+  XCTAssertTrue(_undoManager.canRedo);
+  
+  // OverrideURL
+  _entryA.overrideURL = @"New OverrideURL";
+  
+  XCTAssertNotEqualObjects(_entryA.overrideURL, copy.overrideURL);
+  XCTAssertEqualObjects(_entryA.overrideURL, @"New OverrideURL");
+  
+  XCTAssertTrue(_undoManager.canUndo);
+  XCTAssertFalse(_undoManager.canRedo);
+
+  [_undoManager undo];
+  
+  XCTAssertEqualObjects(_entryA.overrideURL, copy.overrideURL);
+  XCTAssertNotEqualObjects(_entryA.overrideURL, @"New URL");
+  
+  XCTAssertFalse(_undoManager.canUndo);
+  XCTAssertTrue(_undoManager.canRedo);
+  
 }
 
 - (void)testUndoRedoEditGroup {
