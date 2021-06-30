@@ -25,6 +25,7 @@
 #import "KPKMetaData_Private.h"
 #import "KPKKdbxFormat.h"
 #import "KPKIcon.h"
+#import "KPKIcon_Private.h"
 #import "KPKTree.h"
 #import "KPKNode_Private.h"
 #import "KPKGroup.h"
@@ -316,6 +317,7 @@ if( self.updateTiming ) { \
   [self.tree.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"ADD_CUSTOM_ICON", nil, [NSBundle bundleForClass:[self class]], @"Action name for adding a customt icon.")];
   index = MIN(_mutableCustomIcons.count, index);
   [self insertObject:icon inMutableCustomIconsAtIndex:index];
+  icon.tree = self.tree;
   /* trigger a change notification to encourage reavaluation*/
   [self.tree.root _traverseNodesWithBlock:^(KPKNode *node, BOOL *stop) {
     if([node.iconUUID isEqual:icon.uuid]) {
@@ -331,6 +333,7 @@ if( self.updateTiming ) { \
     [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
     [self.tree.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"DELETE_CUSTOM_ICON", nil, [NSBundle bundleForClass:[self class]], @"Action name for deleting a custom icon")];
     [self removeObjectFromMutableCustomIconsAtIndex:index];
+    icon.tree = nil;
     /* trigger a change notification to encourage reavaluation*/
     [self.tree.root _traverseNodesWithBlock:^(KPKNode *node, BOOL *stop) {
       if([node.iconUUID isEqual:icon.uuid]) {
@@ -342,11 +345,10 @@ if( self.updateTiming ) { \
 }
 
 - (void)setValue:(NSString *)value forCustomDataKey:(NSString *)key {
-
+  // FIXME: ensure update timing works as expected.
 }
 
 - (void)setValue:(id)value forPublicCustomDataKey:(NSString *)key {
-  // FIXME: ensure update timing works as expected.
   self.mutableCustomPublicData[key] = value;
 }
 

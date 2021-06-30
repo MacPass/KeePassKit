@@ -39,8 +39,6 @@
   self = [super init];
   if(self) {
     _uuid = [NSUUID UUID];
-    _name = nil;
-    _modificationDate = nil;
   }
   return self;
 }
@@ -132,6 +130,13 @@
 }
 
 #pragma mark Properties
+
+- (void)setName:(NSString *)name {
+  [self.tree.undoManager registerUndoWithTarget:self selector:@selector(setName:) object:self.name];
+  [self.tree.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_ICON_NAME", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the icons name")];
+  _name = [name copy];
+  self.modificationDate = [NSDate date];
+}
 
 - (NSUInteger)hash {
   return (self.uuid.hash ^ self.encodedString.hash);

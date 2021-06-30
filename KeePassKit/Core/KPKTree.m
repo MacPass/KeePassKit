@@ -28,6 +28,7 @@
 #import "KPKFormat.h"
 #import "KPKGroup.h"
 #import "KPKIconTypes.h"
+#import "KPKIcon.h"
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
 #import "KPKNode_Private.h"
@@ -290,16 +291,25 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   BOOL changedCustomIcon = NO;
   
   for(KPKIcon *icon in self.metaData.mutableCustomIcons) {
-    
+    if(icon.name.length > 0 || icon.modificationDate != nil) {
+      changedCustomIcon = YES;
+      break;
+    }
   }
+
+  BOOL requiresKDBX = aesKdf || entriesInRoot || publicData || changedCustomIcon;
   
-  
-  BOOL requiresKDBX = aesKdf || entriesInRoot || publicData;
-  
-  if( !aesKdf || entriesInRoot || publicData ) {
+  if(requiresKDBX) {
     minimum.format = KPKDatabaseFormatKdbx;
-    minimum.version = (publicData || !aesKdf) ? kKPKKdbxFileVersion4 : kKPKKdbxFileVersion3;
-    // FIXME: add support for KDBX4.1
+    minimum.version = kKPKKdbxFileVersion3;
+    if(publicData || !aesKdf) {
+      if(changedCustomIcon) {
+        minimum.version = kKPKKdbxFileVersion4_1;
+      }
+      else {
+        minimum.version = kKPKKdbxFileVersion4;
+      }
+    }
   }
   if(!self.root) {
     return minimum;
