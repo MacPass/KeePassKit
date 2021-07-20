@@ -325,7 +325,6 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
 }
 
 - (NSArray<NSString *> *)availableTags {
-  
   return _tags.allObjects;
 }
 

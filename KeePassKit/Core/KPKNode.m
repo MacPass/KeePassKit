@@ -256,6 +256,9 @@
   [[self.undoManager prepareWithInvocationTarget:self] setTags:self.tags];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_TAGS", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the tags of an enty")];
   [self.tree _unregisterTags:_tags];
+  
+  tags = [[NSSet setWithArray:tags].allObjects sortedArrayUsingSelector:@selector(compare:)];
+ 
   _tags = tags ? [[NSArray alloc] initWithArray:tags copyItems:YES] : nil;
   [self.tree _registerTags:_tags];
 }

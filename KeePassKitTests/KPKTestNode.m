@@ -177,4 +177,26 @@
   XCTAssertEqual(KPKComparsionEqual, [group _compareToNode:groupCopy options:KPKNodeCompareOptionIgnoreUUID]);
 }
 
+- (void)testTags {
+  KPKGroup *group = [[KPKGroup alloc] init];
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  
+  [entry moveToGroup:group];
+  
+  NSArray *tags = @[@"this", @"is", @"cool"];
+  NSArray *duplicateTags = @[@"this", @"is", @"cool", @"cool", @"cool", @"cool"];
+  NSArray *sortedTags = [tags sortedArrayUsingSelector:@selector(compare:)];
+
+  group.tags = tags;
+  XCTAssertEqualObjects(group.tags, sortedTags);
+  group.tags = duplicateTags;
+  XCTAssertEqualObjects(group.tags, sortedTags);
+  
+  entry.tags = tags;
+  XCTAssertEqualObjects(entry.tags, sortedTags);
+  entry.tags = duplicateTags;
+  XCTAssertEqualObjects(entry.tags, sortedTags);
+  
+}
+
 @end
