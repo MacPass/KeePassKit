@@ -274,6 +274,11 @@
   
   group.defaultAutoTypeSequence = KPKXmlNonEmptyString(groupElement, kKPKXmlDefaultAutoTypeSequence);
   
+  NSString *tags = KPKXmlString(groupElement, kKPKXmlTags);
+  if(tags.length > 0) {
+    group.tags = [tags componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@",;"]];
+  }
+  
   group.isAutoTypeEnabled = parseInheritBool(groupElement, kKPKXmlEnableAutoType);
   group.isSearchEnabled = parseInheritBool(groupElement, kKPKXmlEnableSearching);
   NSString *uuidString = KPKXmlString(groupElement, kKPKXmlLastTopVisibleEntry);

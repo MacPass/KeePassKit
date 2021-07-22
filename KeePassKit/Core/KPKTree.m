@@ -330,12 +330,14 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
 
 
 - (void)_registerTags:(NSArray<NSString *> *)tags {
+  // _tags is NSCountedSet
   for(NSString *tag in tags) {
     [_tags addObject:tag];
   }
 }
 
 - (void)_unregisterTags:(NSArray<NSString *> *)tags  {
+  // _tags is NSCountedSet
   for(NSString *tag in tags) {
     [_tags removeObject:tag];
   }
