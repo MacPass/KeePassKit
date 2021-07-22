@@ -397,6 +397,13 @@
     DDXMLElement *iconElement = [DDXMLNode elementWithName:kKPKXmlIcon];
     KPKAddXmlElement(iconElement, kKPKXmlUUID, icon.uuid.kpk_encodedString);
     KPKAddXmlElement(iconElement, kKPKXmlData, icon.encodedString);
+    // KDBX 4.1
+    if(icon.name.length > 0) {
+      KPKAddXmlElement(iconElement, kKPKXmlName, icon.name.kpk_xmlCompatibleString);
+    }
+    if(icon.modificationDate != nil) {
+      KPKAddXmlElement(iconElement, kKPKXmlLastModificationDate, KPKStringFromDate(icon.modificationDate, YES));
+    }
     [customIconsElements addChild:iconElement];
   }
   return customIconsElements;

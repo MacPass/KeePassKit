@@ -92,6 +92,9 @@ NSString *stringFromInheritBool(KPKInheritBool value) {
 }
 
 #pragma mark Reading Helper
+BOOL KPKXmlHasElement(DDXMLElement *element, NSString *elementName) {
+  return nil != [element elementForName:elementName];
+}
 
 BOOL KPKXmlTrue(DDXMLNode *attribute) {
   return (attribute && NSOrderedSame == [[attribute stringValue] caseInsensitiveCompare:@"True"]);

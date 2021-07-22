@@ -38,6 +38,7 @@
 #import "KPKFormat.h"
 #import "KPKGroup.h"
 #import "KPKIcon.h"
+#import "KPKIcon_Private.h"
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
 #import "KPKNode.h"
@@ -327,6 +328,9 @@
   if(tags.length > 0) {
     entry.tags = [tags componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@",;"]];
   }
+  if(KPKXmlHasElement(entryElement, kKPKXmlQualityCheck)) {
+    entry.checkPasswordQuality = KPKXmlBool(entryElement, kKPKXmlQualityCheck);
+  }
   
   DDXMLElement *timesElement = [entryElement elementForName:kKPKXmlTimes];
   [self _parseTimes:entry.timeInfo element:timesElement];
@@ -383,6 +387,14 @@
   for (DDXMLElement *iconElement in [customIconsElement elementsForName:kKPKXmlIcon]) {
     NSUUID *uuid = [NSUUID kpk_uuidWithEncodedString:KPKXmlString(iconElement, kKPKXmlUUID)];
     KPKIcon *icon = [[KPKIcon alloc] initWithUUID:uuid encodedString:KPKXmlString(iconElement, kKPKXmlData)];
+    
+    if(KPKXmlHasElement(iconElement, kKPKXmlName)) {
+      icon.name = KPKXmlString(iconElement, kKPKXmlName);
+    }
+    if(KPKXmlHasElement(iconElement, kKPKXmlLastModificationDate)) {
+      icon.modificationDate = KPKXmlDate(iconElement, kKPKXmlLastModificationDate, YES);
+    }
+    
     [metaData addCustomIcon:icon];
     self.iconMap[ icon.uuid ] = icon;
   }

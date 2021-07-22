@@ -89,6 +89,7 @@ NSString *KPKStringFromBool(BOOL value);
 NSString *stringFromInheritBool(KPKInheritBool value);
 
 #pragma mark Reading Helper
+BOOL KPKXmlHasElement(DDXMLElement *element, NSString *elementName);
 BOOL KPKXmlTrue(DDXMLNode *attribute);
 BOOL KPKXmlFalse(DDXMLNode *attribute);
 NSString *KPKXmlString(DDXMLElement *element, NSString *name);
