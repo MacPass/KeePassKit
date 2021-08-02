@@ -119,8 +119,14 @@
     generator.counter = index;
     XCTAssertEqualObjects(string, generator.string);
   }
-  
 }
+
+- (void)testHmacOTPWithEmpyKey {
+  KPKHmacOTPGenerator *generator = [[KPKHmacOTPGenerator alloc] init];
+  NSString *string = generator.string;
+  XCTAssertNotNil(string);
+}
+
 
 - (void)testTOTP {
   /* Test data base on https://tools.ietf.org/html/rfc6238#appendix-B */

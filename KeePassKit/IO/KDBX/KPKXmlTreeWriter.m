@@ -238,7 +238,11 @@
   KPKAddXmlElement(groupElement, kKPKXmlEnableSearching, stringFromInheritBool(group.isSearchEnabled));
   KPKAddXmlElement(groupElement, kKPKXmlLastTopVisibleEntry, group.lastTopVisibleEntry.kpk_encodedString);
   // FIXME: do only write this if KDBX4.1 is allowed
-  KPKAddXmlElement(groupElement, kKPKXmlTags, [group.tags componentsJoinedByString:@";"].kpk_xmlCompatibleString);
+  if(group.tags.count > 0) {
+    KPKAddXmlElement(groupElement, kKPKXmlTags, [group.tags componentsJoinedByString:@";"].kpk_xmlCompatibleString);
+  }
+  // FIXME: do not write if not set!
+  
   KPKAddXmlElement(groupElement, kKPKXmlPreviousParentGroup, group.previousParent.kpk_encodedString);
   
   DDXMLElement *customDataElement = [self _xmlCustomData:group.mutableCustomData addEmptyElement:NO];
@@ -270,6 +274,10 @@
   KPKAddXmlElement(entryElement, kKPKXmlBackgroundColor, entry.backgroundColor.kpk_hexString);
   KPKAddXmlElement(entryElement, kKPKXmlOverrideURL, entry.overrideURL.kpk_xmlCompatibleString);
   KPKAddXmlElement(entryElement, kKPKXmlTags, [entry.tags componentsJoinedByString:@";"].kpk_xmlCompatibleString);
+
+  if(!entry.checkPasswordQuality) {
+    KPKAddXmlElement(entryElement, kKPKXmlQualityCheck, kKPKXmlFalse);
+  }
   
   DDXMLElement *timesElement = [self _xmlTimeinfo:entry.timeInfo];
   [entryElement addChild:timesElement];

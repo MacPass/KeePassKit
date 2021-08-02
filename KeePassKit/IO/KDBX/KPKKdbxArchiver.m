@@ -92,7 +92,7 @@
 @property (copy) NSData *randomStreamKey;
 @property (copy) NSData *streamStartBytes;
 @property (assign) KPKRandomStreamType randomStreamID;
-@property (assign) BOOL outputVersion4;
+@property (assign) KPKFileVersion fileVersion;
 
 @property (strong) KPKRandomStream *randomStream;
 @property (strong) NSDateFormatter *dateFormatter;
@@ -109,14 +109,8 @@
 - (instancetype)_initWithTree:(KPKTree *)tree key:(KPKCompositeKey *)key {
   self = [super _initWithTree:tree key:key];
   if(self) {
-    KPKFileVersion version4 = { KPKDatabaseFormatKdbx, kKPKKdbxFileVersion4 };
-    NSComparisonResult result = KPKFileVersionCompare(self.tree.minimumVersion, version4);
-    if(result == NSOrderedSame || result == NSOrderedDescending) {
-      _outputVersion4 = YES;
-    }
-    else {
-      _outputVersion4 = NO;
-    }
+    /* we write kdbx3 at minimum */
+    _fileVersion = KPKFileVersionMax(KPKMakeFileVersion(KPKDatabaseFormatKdbx, kKPKKdbxFileVersion3), self.tree.minimumVersion);
     
     NSArray *allEntries = [self.tree.allEntries arrayByAddingObjectsFromArray:self.tree.allHistoryEntries];
     NSMutableSet *tempBinaries = [[NSMutableSet alloc] init];
@@ -142,7 +136,7 @@
 }
 
 - (NSData *)headerHashForWriter:(KPKXmlTreeWriter *)writer {
-  if(self.outputVersion4) {
+  if(self.fileVersion.version >= kKPKKdbxFileVersion4) {
     return NSData.data;
   }
   return [self.headerHash copy];
@@ -157,7 +151,7 @@
 }
 
 - (NSUInteger)fileVersionForWriter:(KPKXmlTreeWriter *)writer {
-  if(self.outputVersion4) {
+  if(self.fileVersion.version >= kKPKKdbxFileVersion4) {
     return kKPKKdbxFileVersion4;
   }
   return kKPKKdbxFileVersion3;
@@ -182,7 +176,8 @@
   self.masterSeed = [NSData kpk_dataWithRandomBytes:32];
   self.encryptionIV = [NSData kpk_dataWithRandomBytes:cipher.IVLength];
   
-  if(self.outputVersion4) {
+  
+  if(self.fileVersion.version >= kKPKKdbxFileVersion4) {
     self.randomStreamID = KPKRandomStreamChaCha20;
     self.randomStreamKey = [NSData kpk_dataWithRandomBytes:64];
   }
@@ -200,43 +195,42 @@
   [self.dataWriter write4Bytes:CFSwapInt32HostToLittle(kKPKKdbxSignature2)];
   
   /* file version */
-  if(self.outputVersion4) {
-    [self.dataWriter write4Bytes:CFSwapInt32HostToLittle(kKPKKdbxFileVersion4)];
-  }
-  else {
-    [self.dataWriter write4Bytes:CFSwapInt32HostToLittle(kKPKKdbxFileVersion3)];
-  }
-  /* header fields */
+  [self.dataWriter write4Bytes:CFSwapInt32HostToLittle((uint32_t)self.fileVersion.version)];
+
+  BOOL isFileVersion4 = self.fileVersion.version >= kKPKKdbxFileVersion4;
   
-  [self.dataWriter _writeHeaderField:KPKHeaderKeyCipherId data:self.tree.metaData.cipherUUID.kpk_uuidData useWideField:self.outputVersion4];
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyCipherId data:self.tree.metaData.cipherUUID.kpk_uuidData useWideField:isFileVersion4];
   uint32_t compressionAlgorithm = CFSwapInt32HostToLittle(self.tree.metaData.compressionAlgorithm);
-  [self.dataWriter _writeHeaderField:KPKHeaderKeyCompression bytes:&compressionAlgorithm length:sizeof(compressionAlgorithm) useWideField:self.outputVersion4];
-  [self.dataWriter _writeHeaderField:KPKHeaderKeyMasterSeed data:self.masterSeed useWideField:self.outputVersion4];
-  [self.dataWriter _writeHeaderField:KPKHeaderKeyEncryptionIV data:self.encryptionIV useWideField:self.outputVersion4];
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyCompression bytes:&compressionAlgorithm length:sizeof(compressionAlgorithm) useWideField:isFileVersion4];
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyMasterSeed data:self.masterSeed useWideField:isFileVersion4];
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyEncryptionIV data:self.encryptionIV useWideField:isFileVersion4];
   
-  if(!self.outputVersion4) {
-    [self.dataWriter _writeHeaderField:KPKHeaderKeyTransformSeed data:keyDerivation.parameters[KPKAESSeedOption] useWideField:self.outputVersion4];
-    uint64_t rounds = CFSwapInt64HostToLittle([keyDerivation.parameters[KPKAESRoundsOption] unsignedInteger64Value]);
-    [self.dataWriter _writeHeaderField:KPKHeaderKeyTransformRounds bytes:&rounds length:sizeof(rounds) useWideField:self.outputVersion4];
-    [self.dataWriter _writeHeaderField:KPKHeaderKeyProtectedKey data:self.randomStreamKey useWideField:self.outputVersion4];
-    [self.dataWriter _writeHeaderField:KPKHeaderKeyStartBytes data:self.streamStartBytes useWideField:self.outputVersion4];
-    uint32_t randomStreamId = CFSwapInt32HostToLittle(_randomStreamID);
-    [self.dataWriter _writeHeaderField:KPKHeaderKeyRandomStreamId bytes:&randomStreamId length:sizeof(randomStreamId) useWideField:self.outputVersion4];
+  /* kdbx 4.x */
+  if(isFileVersion4) {
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.parameters.kpk_variantDictionaryData useWideField:isFileVersion4];
+    if(self.tree.metaData.customPublicData.count > 0) {
+      [self.dataWriter _writeHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.kpk_variantDictionaryData useWideField:isFileVersion4];
+    }
   }
+  /* kdbx3 */
   else {
-    [self.dataWriter _writeHeaderField:KPKHeaderKeyKdfParameters data:keyDerivation.parameters.kpk_variantDictionaryData useWideField:self.outputVersion4];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyTransformSeed data:keyDerivation.parameters[KPKAESSeedOption] useWideField:isFileVersion4];
+    uint64_t rounds = CFSwapInt64HostToLittle([keyDerivation.parameters[KPKAESRoundsOption] unsignedInteger64Value]);
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyTransformRounds bytes:&rounds length:sizeof(rounds) useWideField:isFileVersion4];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyProtectedKey data:self.randomStreamKey useWideField:isFileVersion4];
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyStartBytes data:self.streamStartBytes useWideField:isFileVersion4];
+    uint32_t randomStreamId = CFSwapInt32HostToLittle(_randomStreamID);
+    [self.dataWriter _writeHeaderField:KPKHeaderKeyRandomStreamId bytes:&randomStreamId length:sizeof(randomStreamId) useWideField:isFileVersion4];
   }
-  if(self.tree.metaData.customPublicData.count > 0) {
-    NSAssert(self.outputVersion4, @"Custom data requires KDBX version 4");
-    [self.dataWriter _writeHeaderField:KPKHeaderKeyPublicCustomData data:self.tree.metaData.mutableCustomPublicData.kpk_variantDictionaryData useWideField:self.outputVersion4];
-  }
+
   /* endOfHeader */
 #if KPK_MAC
   uint8_t endBuffer[] = { NSCarriageReturnCharacter, NSNewlineCharacter, NSCarriageReturnCharacter, NSNewlineCharacter };
 #else
   uint8_t endBuffer[] = { '\r', '\n', '\r', '\n' };
 #endif
-  [self.dataWriter _writeHeaderField:KPKHeaderKeyEndOfHeader bytes:endBuffer length:4 useWideField:self.outputVersion4];
+  
+  [self.dataWriter _writeHeaderField:KPKHeaderKeyEndOfHeader bytes:endBuffer length:4 useWideField:isFileVersion4];
   
   /* setup the random stream */
   switch(self.randomStreamID) {
@@ -276,9 +270,8 @@
     return nil;
   }
   
-  if(!self.outputVersion4) {
+  if(!isFileVersion4) {
     NSMutableData *contentData = [[NSMutableData alloc] initWithData:self.streamStartBytes];
-    
 
     /* compress data */
     if(self.tree.metaData.compressionAlgorithm == KPKCompressionGzip) {
@@ -301,7 +294,6 @@
     [self.dataWriter writeData:self.headerHash];
     /* add header hmac */
     [self.dataWriter writeData:headerHmac];
-    
     
     /* inner header and xml data are encrypted */
     NSMutableData *innerData = [[NSMutableData alloc] init];

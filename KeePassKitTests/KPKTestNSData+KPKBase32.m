@@ -52,7 +52,6 @@
     NSData *actual = [NSData dataWithBase32EncodedString:values[key]];
     XCTAssertEqualObjects(expected, actual);
   }
-  
 }
 
 - (void)testBase32HexDecoding {
