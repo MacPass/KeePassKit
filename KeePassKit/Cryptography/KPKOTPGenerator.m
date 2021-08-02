@@ -165,9 +165,9 @@ static NSUInteger const KPKOTPDefaultNumberOfDigits = 6;
 
 - (BOOL)_validateOptions {
   return (self.numberOfDigits >= 6 &&
-          self.numberOfDigits <= 10 &&
-          self.key.length > 0
+          self.numberOfDigits <= 10
           );
+  // an empty key seems to be allowed
 }
 
 - (NSData *)_HMACOTPWithKey:(NSData *)key counter:(uint64_t)counter algorithm:(KPKOTPHashAlgorithm)algorithm {

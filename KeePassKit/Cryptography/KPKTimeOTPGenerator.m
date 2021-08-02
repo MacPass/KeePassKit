@@ -258,7 +258,7 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
     }
   }
   else {
-    
+    // nothing to do
   }
   
   KPKAttribute *asciiKeyAttribute = attributesDict[kKPKAttributeKeyTimeOTPSecret];
