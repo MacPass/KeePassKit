@@ -283,7 +283,7 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
 }
 
 - (KPKFileVersion)minimumVersion {
-  KPKFileVersion minimum = { KPKDatabaseFormatKdb, kKPKKdbFileVersion };
+  KPKFileVersion minimum = KPKMakeFileVersion(KPKDatabaseFormatKdb, kKPKKdbFileVersion);
   
   BOOL aesKdf = [self.metaData.keyDerivationParameters[KPKKeyDerivationOptionUUID] isEqual:[KPKAESKeyDerivation uuid].kpk_uuidData];
   BOOL entriesInRoot = self.root.entries.count > 0;
