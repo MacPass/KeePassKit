@@ -372,6 +372,7 @@
 
 - (void)addToGroup:(KPKGroup *)group atIndex:(NSUInteger)index {
   /* setup parent relationship to make undo possible */
+  NSAssert(self.parent == nil, @"Added nodes cannot have a parent. Please use -moveToGroup:atIndex: and moveToGroup: instead");
   self.parent = group;
   [[self.undoManager prepareWithInvocationTarget:self] remove];
   [group _addChild:self atIndex:index];
@@ -454,7 +455,6 @@
     self.timeInfo = [[KPKTimeInfo alloc] init];
     _iconId = self.class.defaultIcon;
     _mutableCustomData = [[NSMutableDictionary alloc] init];
-    _previousParent = NSUUID.kpk_nullUUID;
   }
   return self;
 }
