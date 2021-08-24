@@ -44,6 +44,18 @@
   XCTAssertEqual(entry.parent, subGroupB);
 }
 
+- (void)testAddPresentGroup {
+  KPKGroup *root = [[KPKGroup alloc] init];
+  KPKGroup *subgroupA = [[KPKGroup alloc] init];
+  KPKGroup *subgroupB = [[KPKGroup alloc] init];
+  
+  [subgroupA addToGroup:root];
+  [subgroupB addToGroup:root];
+  
+  XCTAssertThrows([subgroupA addToGroup:subgroupB], "Added groups cannot be part of another group and/or tree");
+}
+
+
 - (void)testMoveGroup {
   KPKGroup *rootGroup = [[KPKGroup alloc] init];
   KPKGroup *subGroupA = [[KPKGroup alloc] init];
