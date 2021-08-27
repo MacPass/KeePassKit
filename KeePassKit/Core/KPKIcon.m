@@ -84,6 +84,8 @@
   if(self) {
     _image = [aDecoder decodeObjectOfClass:NSUIImage.class forKey:NSStringFromSelector(@selector(image))];
     _uuid = [aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(uuid))];
+    _name = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(name))];
+    _modificationDate = [aDecoder decodeObjectOfClass:NSDate.class forKey:@selector(modificationDate)];
   }
   return self;
 }
@@ -92,6 +94,8 @@
   if([aCoder isKindOfClass:NSKeyedArchiver.class]) {
     [aCoder encodeObject:self.image forKey:NSStringFromSelector(@selector(image))];
     [aCoder encodeObject:self.uuid forKey:NSStringFromSelector(@selector(uuid))];
+    [aCoder encodeObject:self.name forKey:NSStringFromSelector(@selector(name))];
+    [aCoder encodeObject:self.modificationDate forKey:NSStringFromSelector(@selector(modificationDate))];
   }
 }
 
@@ -105,6 +109,8 @@
   copy.image = self.image;
 #endif
   copy.uuid = [self.uuid copyWithZone:zone];
+  copy.name = self.name;
+  copy.modificationDate = self.modificationDate;
   return copy;
 }
 
