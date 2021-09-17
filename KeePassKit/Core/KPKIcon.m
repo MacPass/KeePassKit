@@ -85,7 +85,7 @@
     _image = [aDecoder decodeObjectOfClass:NSUIImage.class forKey:NSStringFromSelector(@selector(image))];
     _uuid = [aDecoder decodeObjectOfClass:NSUUID.class forKey:NSStringFromSelector(@selector(uuid))];
     _name = [aDecoder decodeObjectOfClass:NSString.class forKey:NSStringFromSelector(@selector(name))];
-    _modificationDate = [aDecoder decodeObjectOfClass:NSDate.class forKey:@selector(modificationDate)];
+    _modificationDate = [aDecoder decodeObjectOfClass:NSDate.class forKey:NSStringFromSelector(@selector(modificationDate))];
   }
   return self;
 }

@@ -338,7 +338,7 @@
   if(nil != self.tree.mutableDeletedObjects[self.uuid]) {
     NSLog(@"Internal inconsitency: Node %@ already registered as deleted!", self);
   }
-  self.tree.mutableDeletedObjects[self.uuid] = [[KPKDeletedNode alloc] initWithNode:self];
+  self.tree.mutableDeletedObjects[self.uuid] = [[KPKDeletedNode alloc] initWithUUID:self.uuid];
   /* keep a strong reference for undo support in the tree */
   if(nil != self.tree.mutableDeletedNodes[self.uuid]) {
     NSLog(@"Internal inconsintency: Node %@ is already deleted!", self);

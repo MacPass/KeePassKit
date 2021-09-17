@@ -22,9 +22,10 @@
 #import <Foundation/Foundation.h>
 
 @class KPKNode;
+@class KPKIcon;
 
 /**
- Represents a deletion object. These are created whenever a Group or Entry
+ Represents a deletion object. These are created whenever a Group, Entry or Icon
  is permanently deleted from the database.
  */
 @interface KPKDeletedNode : NSObject <NSCopying>
@@ -32,9 +33,7 @@
 @property (nonatomic, copy, readonly) NSUUID *uuid;
 @property (nonatomic, copy, readonly) NSDate *deletionDate;
 
-+ (instancetype)deletedNodeForNode:(KPKNode *)node;
-
-- (instancetype)initWithNode:(KPKNode *)node;
+- (instancetype)initWithUUID:(NSUUID *)uuid;
 - (instancetype)initWithUUID:(NSUUID *)uuid date:(NSDate *)date;
 
 @end
