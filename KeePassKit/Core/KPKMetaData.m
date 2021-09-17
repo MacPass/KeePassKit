@@ -27,6 +27,7 @@
 #import "KPKIcon.h"
 #import "KPKIcon_Private.h"
 #import "KPKTree.h"
+#import "KPKTree_Private.h"
 #import "KPKNode_Private.h"
 #import "KPKGroup.h"
 #import "KPKAESCipher.h"
@@ -317,6 +318,8 @@ if( self.updateTiming ) { \
   [self.tree.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"ADD_CUSTOM_ICON", nil, [NSBundle bundleForClass:[self class]], @"Action name for adding a customt icon.")];
   index = MIN(_mutableCustomIcons.count, index);
   [self insertObject:icon inMutableCustomIconsAtIndex:index];
+  /* remove delted node if icon is re-added via undo */
+  self.tree.mutableDeletedObjects[icon.uuid] = nil;
   icon.tree = self.tree;
   /* trigger a change notification to encourage reavaluation*/
   [self.tree.root _traverseNodesWithBlock:^(KPKNode *node, BOOL *stop) {
@@ -332,6 +335,9 @@ if( self.updateTiming ) { \
   if(index != NSNotFound) {
     [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
     [self.tree.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"DELETE_CUSTOM_ICON", nil, [NSBundle bundleForClass:[self class]], @"Action name for deleting a custom icon")];
+    NSAssert(self.tree.mutableDeletedObjects[icon.uuid] == nil, @"Internal inconsistency. Deleted node should not be present");
+    self.tree.mutableDeletedObjects[icon.uuid] = [[KPKDeletedNode alloc] initWithUUID:icon.uuid];
+    /* register deleted node for delted icon */
     [self removeObjectFromMutableCustomIconsAtIndex:index];
     icon.tree = nil;
     /* trigger a change notification to encourage reavaluation*/
