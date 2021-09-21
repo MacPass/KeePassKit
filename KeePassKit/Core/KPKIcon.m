@@ -131,7 +131,11 @@
     return YES; // Pointers match, should be the same object
   }
   NSAssert([icon isKindOfClass:KPKIcon.class], @"icon needs to be of class KPKIcon");
-  BOOL equal = [self.uuid isEqual:icon.uuid] && [self.encodedString isEqualToString:icon.encodedString];
+  /* modification date and name might be nil */
+  BOOL equal = ([self.uuid isEqual:icon.uuid]
+                && [self.encodedString isEqualToString:icon.encodedString]
+                && (self.modificationDate == icon.modificationDate || [self.modificationDate isEqualToDate:icon.modificationDate])
+                && (self.name == icon.name || [self.name isEqualToString:icon.name]));
   return equal;
 }
 

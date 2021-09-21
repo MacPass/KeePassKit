@@ -66,7 +66,7 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
   [self _mergeLocationFromNodes:tree.allGroups options:options];
   [self _mergeDeletedObjects:tree.mutableDeletedObjects];
   if(mode == KPKSynchronizationModeSynchronize) {
-    [self _reapplyDeletions:self.root];
+    [self _reapplyNodeDeletions:self.root];
   }
   [self.metaData _mergeWithMetaDataFromTree:tree mode:mode];
   ;
@@ -240,10 +240,10 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
   }
 }
 
-- (void)_reapplyDeletions:(KPKGroup *)group {
+- (void)_reapplyNodeDeletions:(KPKGroup *)group {
   
   for(KPKGroup *subGroup in group.mutableGroups.reverseObjectEnumerator) {
-    [self _reapplyDeletions:subGroup];
+    [self _reapplyNodeDeletions:subGroup];
   }
   
   for(KPKEntry *entry in group.mutableEntries.reverseObjectEnumerator) {
@@ -281,6 +281,10 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
         self.mutableDeletedObjects[group.uuid] = nil;
     }
   }
+}
+
+- (void)_reapplyIconDeletions:(KPKTree *)tree {
+  
 }
 
 @end

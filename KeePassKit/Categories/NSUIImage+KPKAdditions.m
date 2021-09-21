@@ -35,7 +35,7 @@
     return UIImagePNGRepresentation(self);
   }
   return nil;
-  /* no bitmap data is present, we need to render it first */
+  /* TODO: no bitmap data is present, we need to render it first */
 #endif
 }
 
