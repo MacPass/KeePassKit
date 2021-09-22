@@ -14,6 +14,7 @@
   KPKFileVersion kdb;
   KPKFileVersion kdbx3;
   KPKFileVersion kdbx4;
+  KPKFileVersion kdbx4_1;
   KPKTree *tree;
   NSMutableDictionary *kdfParams;
 }
@@ -24,14 +25,10 @@
 - (void)setUp {
   [super setUp];
   
-  kdb.format = KPKDatabaseFormatKdb;
-  kdb.version = kKPKKdbFileVersion;
-  
-  kdbx3.format = KPKDatabaseFormatKdbx;
-  kdbx3.version = kKPKKdbxFileVersion3;
-  
-  kdbx4.format = KPKDatabaseFormatKdbx;
-  kdbx4.version = kKPKKdbxFileVersion4;
+  kdb = KPKMakeFileVersion(KPKDatabaseFormatKdb, kKPKKdbFileVersion);
+  kdbx3 = KPKMakeFileVersion(KPKDatabaseFormatKdbx, kKPKKdbxFileVersion3);
+  kdbx4 = KPKMakeFileVersion(KPKDatabaseFormatKdbx, kKPKKdbxFileVersion4);
+  kdbx4_1 = KPKMakeFileVersion(KPKDatabaseFormatKdbx, kKPKKdbxFileVersion4_1);
   
   tree = [[KPKTree alloc] init];
   tree.root = [[KPKGroup alloc] init];
@@ -61,6 +58,10 @@
   KPKEntry *entry = [[KPKEntry alloc] init];
   [entry addToGroup:group];
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(kdb, tree.minimumVersion));
+}
+
+- (void)testMinimumVersionForNamedIcons {
+  XCTAssertTrue(NO);
 }
 
 - (void)testMinimumVersionForCustomPublicData {
