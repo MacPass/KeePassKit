@@ -358,6 +358,9 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 
 - (KPKComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options {
   KPKEntry *entry = aNode.asEntry;
+  if(aNode == nil) {
+    return NO;
+  }
   NSAssert([entry isKindOfClass:KPKEntry.class], @"Test only allowed with KPKEntry classes");
   
   if(KPKComparsionDifferent == [super _compareToNode:aNode options:options]) {
