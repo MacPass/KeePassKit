@@ -297,7 +297,7 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
     }
   }
 
-  BOOL requiresKDBX = aesKdf || entriesInRoot || publicData || changedCustomIcon;
+  BOOL requiresKDBX = !aesKdf || entriesInRoot || publicData || changedCustomIcon;
   
   if(requiresKDBX) {
     minimum.format = KPKDatabaseFormatKdbx;

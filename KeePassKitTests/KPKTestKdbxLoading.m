@@ -30,11 +30,8 @@
   _data = [NSData dataWithContentsOfURL:url];
   _key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"1234"]]];
   
-  _kdbx3.format = KPKDatabaseFormatKdbx;
-  _kdbx3.version = kKPKKdbxFileVersion3;
-
-  _kdbx4.format = KPKDatabaseFormatKdbx;
-  _kdbx4.version = kKPKKdbxFileVersion4;
+  _kdbx3 = KPKMakeFileVersion(KPKDatabaseFormatKdbx, kKPKKdbxFileVersion3);
+  _kdbx4 = KPKMakeFileVersion(KPKDatabaseFormatKdbx, kKPKKdbxFileVersion4);
 }
 
 - (void)tearDown {
