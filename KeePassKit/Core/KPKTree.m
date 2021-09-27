@@ -302,13 +302,11 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   if(requiresKDBX) {
     minimum.format = KPKDatabaseFormatKdbx;
     minimum.version = kKPKKdbxFileVersion3;
-    if(publicData || !aesKdf) {
-      if(changedCustomIcon) {
-        minimum.version = kKPKKdbxFileVersion4_1;
-      }
-      else {
-        minimum.version = kKPKKdbxFileVersion4;
-      }
+    if(changedCustomIcon) {
+      minimum.version = kKPKKdbxFileVersion4_1;
+    }
+    else if(publicData || !aesKdf) {
+          minimum.version = kKPKKdbxFileVersion4;
     }
   }
   if(!self.root) {

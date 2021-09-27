@@ -61,7 +61,22 @@
 }
 
 - (void)testMinimumVersionForNamedIcons {
-  XCTAssertTrue(NO);
+  KPKIcon *icon = [[KPKIcon alloc] initWithImage:[NSImage imageNamed:NSImageNameCaution]];
+  XCTAssertEqual(0,icon.name.length);
+  XCTAssertNil(icon.modificationDate);
+  
+  [tree.metaData addCustomIcon:icon];
+  
+  XCTAssertEqual(0,icon.name.length);
+  XCTAssertNil(icon.modificationDate);
+  XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, kdb));
+  
+  icon.name = @"New Icon Name";
+  
+  XCTAssertTrue(0 < icon.name.length);
+  XCTAssertNotNil(icon.modificationDate);
+  
+  XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, kdbx4_1));
 }
 
 - (void)testMinimumVersionForCustomPublicData {
