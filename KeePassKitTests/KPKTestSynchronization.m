@@ -61,6 +61,9 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   self.kdbxTreeA.metaData.mutableCustomPublicData[@"Data"] = [NSData dataWithBytes:bytes length:4];
   self.kdbxTreeA.metaData.mutableCustomPublicData[@"String"] = @"String";
   
+  KPKIcon *icon = [[KPKIcon alloc] initWithImage:[NSImage imageNamed:NSImageNameCaution]];
+  
+  [self.kdbxTreeA.metaData addCustomIcon:icon];
   
   self.kdbxTreeA.root = [[KPKGroup alloc] init];
   self.kdbxTreeA.root.title = @"RootGroup";
