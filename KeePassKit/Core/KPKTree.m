@@ -169,7 +169,7 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
     attribute.protect |= [self.metaData protectAttributeWithKey:attribute.key];
   }
   /* set parent at the end to prefent undo registration */
-  entry.parent = parent;
+  //entry.parent = parent; Do not set the parent, since we have not added the entry yet
   return entry;
 }
 
