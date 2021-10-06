@@ -444,6 +444,50 @@ if( self.updateTiming ) { \
       self.mutableCustomPublicData[key] = [backup[key] copy];
     }
   }
+  /* Merge icons */
+  for(KPKIcon *otherIcon in otherMetaData.mutableCustomIcons) {
+    KPKIcon *localIcon = [self findIcon:otherIcon.uuid];
+    /* no local icon, just import */
+    if(nil == localIcon) {
+      [self addCustomIcon:otherIcon];
+      continue;
+    }
+    /* icons are equal, continue */
+    if([localIcon isEqualToIcon:otherIcon]) {
+      continue;
+    }
+    /* force update - replace exiting icon */
+    if(forceUpdate) {
+      [self removeCustomIcon:localIcon];
+      [self addCustomIcon:otherIcon];
+      continue;
+    }
+    /* merge changes */
+    if(localIcon.modificationDate == nil) {
+      if(otherIcon.modificationDate != nil) {
+        [self removeCustomIcon:localIcon];
+        [self addCustomIcon:otherIcon];
+      }
+      else {
+        /* both icons have no modification date, we cannot decide which one to keep, keep ours? */
+        continue;
+      }
+    }
+    if(otherIcon.modificationDate == nil) {
+      continue; // local is newer or we cannot decide!
+    }
+    NSComparisonResult dateCompare = [localIcon.modificationDate compare:otherIcon.modificationDate];
+    switch(dateCompare) {
+      case NSOrderedAscending:
+        //other is newer
+        [self removeCustomIcon:localIcon];
+        [self addCustomIcon:otherIcon];
+        continue;
+      case NSOrderedSame: // matching icons
+      case NSOrderedDescending: // local is newer
+        continue;
+    }
+  }
   KPK_SCOPED_NO_END(self.updateTiming)
 }
 

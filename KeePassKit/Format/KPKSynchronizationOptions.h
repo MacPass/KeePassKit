@@ -10,7 +10,7 @@
 #define KPKSynchronizationOptions_h
 
 #import <Foundation/Foundation.h>
-
+// TODO: These flags make the merge algorithms vastly more complicated. Getting rid of them, since only KPKSynchronizationModeSynchronize is used might prove helpfull to reduce code complexity
 typedef NS_ENUM(NSUInteger, KPKSynchronizationMode) {
   KPKSynchronizationModeOverwriteExisting, // Overwrite every node with the external node, this will not remove any entries or groups found in the source
   KPKSynchronizationModeKeepExisting, // Only take new items, but keep the old ones just like they are
