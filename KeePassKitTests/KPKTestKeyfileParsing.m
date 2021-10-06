@@ -33,7 +33,7 @@
 
 - (void)testValidXmlv2KeyfileLoading {
   NSBundle *myBundle = [NSBundle bundleForClass:self.class];
-  NSURL *url = [myBundle URLForResource:@"Keepass2Key_v2" withExtension:@"xml"];
+  NSURL *url = [myBundle URLForResource:@"Keepass2Key_v2" withExtension:@"keyx"];
   NSError *error;
   NSData *keyFileData = [NSData dataWithContentsOfURL:url options:0 error:&error];
   XCTAssertNil(error);

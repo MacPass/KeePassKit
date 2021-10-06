@@ -633,6 +633,9 @@
 		4C199DA31DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C199DA21DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx */; };
 		4C1B582F1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */; };
 		4C21282E1C1F4F27006DE3C6 /* KPKTestNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */; };
+		4C2561DE270DD8A000AEBC99 /* Keepass2Key_v2.keyx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561DD270DD8A000AEBC99 /* Keepass2Key_v2.keyx */; };
+		4C2561DF270DD8A000AEBC99 /* Keepass2Key_v2.keyx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561DD270DD8A000AEBC99 /* Keepass2Key_v2.keyx */; };
+		4C2561E0270DD8A000AEBC99 /* Keepass2Key_v2.keyx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561DD270DD8A000AEBC99 /* Keepass2Key_v2.keyx */; };
 		4C2602191DB110930069B059 /* chacha20_simple.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C2602111DB110930069B059 /* chacha20_simple.c */; };
 		4C26021A1DB110930069B059 /* chacha20_simple.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2602121DB110930069B059 /* chacha20_simple.h */; };
 		4C2A9A0E25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -658,9 +661,6 @@
 		4C2ADBF41D7C6665002C3190 /* KPKArchiver_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2ADBF31D7C6665002C3190 /* KPKArchiver_Private.h */; };
 		4C2D8B151DEF043600AB72CD /* KPKTestEmptyString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */; };
 		4C3A9D9425C997D800EF57D9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C3A9D9225C997D800EF57D9 /* InfoPlist.strings */; };
-		4C3A9D9D25C9B45000EF57D9 /* Keepass2Key_v2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C3A9D9C25C9B45000EF57D9 /* Keepass2Key_v2.xml */; };
-		4C3A9D9E25C9B45000EF57D9 /* Keepass2Key_v2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C3A9D9C25C9B45000EF57D9 /* Keepass2Key_v2.xml */; };
-		4C3A9D9F25C9B45000EF57D9 /* Keepass2Key_v2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C3A9D9C25C9B45000EF57D9 /* Keepass2Key_v2.xml */; };
 		4C3D98462562C3E0007C23E2 /* ref.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D51273F1E9C642D00D7EAF6 /* ref.c */; };
 		4C3D98552562C3E2007C23E2 /* ref.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D51273F1E9C642D00D7EAF6 /* ref.c */; };
 		4C40187B2513CB7900C10C94 /* KPKTestCompositeKeyCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C40187A2513CB7900C10C94 /* KPKTestCompositeKeyCoding.m */; };
@@ -1209,6 +1209,7 @@
 		4C199DA21DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; name = TwoFishCipher256bit_test.kdbx; path = Kdbx3/TwoFishCipher256bit_test.kdbx; sourceTree = "<group>"; };
 		4C1B582E1D61F4C300F2D28B /* AutotypeCustomKeystrokeSequence_1234.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AutotypeCustomKeystrokeSequence_1234.xml; path = Kdbx3/AutotypeCustomKeystrokeSequence_1234.xml; sourceTree = "<group>"; };
 		4C21282D1C1F4F27006DE3C6 /* KPKTestNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestNode.m; sourceTree = "<group>"; };
+		4C2561DD270DD8A000AEBC99 /* Keepass2Key_v2.keyx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Keepass2Key_v2.keyx; sourceTree = "<group>"; };
 		4C2602111DB110930069B059 /* chacha20_simple.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = chacha20_simple.c; sourceTree = "<group>"; };
 		4C2602121DB110930069B059 /* chacha20_simple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chacha20_simple.h; sourceTree = "<group>"; };
 		4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKArgon2IDKeyDerivation.h; sourceTree = "<group>"; };
@@ -1223,7 +1224,6 @@
 		4C2D8B141DEF043600AB72CD /* KPKTestEmptyString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestEmptyString.m; sourceTree = "<group>"; };
 		4C2D8B231DEF22AA00AB72CD /* KPKPlatformIncludes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKPlatformIncludes.h; sourceTree = "<group>"; };
 		4C3A9D9325C997D800EF57D9 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		4C3A9D9C25C9B45000EF57D9 /* Keepass2Key_v2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Keepass2Key_v2.xml; sourceTree = "<group>"; };
 		4C40187A2513CB7900C10C94 /* KPKTestCompositeKeyCoding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestCompositeKeyCoding.m; sourceTree = "<group>"; };
 		4C415D371F581D4200C08985 /* KPKTestDeletedObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KPKTestDeletedObjects.m; sourceTree = "<group>"; };
 		4C429FF120AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestUniqueBinaryNames.m; sourceTree = "<group>"; };
@@ -2043,9 +2043,9 @@
 		4C8138241BE282DC001BF195 /* Keyfiles */ = {
 			isa = PBXGroup;
 			children = (
+				4C2561DD270DD8A000AEBC99 /* Keepass2Key_v2.keyx */,
 				4C6B7EC421A2B0F600B26B63 /* Kdb1HexKey.key */,
 				4C8138251BE282DC001BF195 /* Keepass2Key_v1.xml */,
-				4C3A9D9C25C9B45000EF57D9 /* Keepass2Key_v2.xml */,
 			);
 			path = Keyfiles;
 			sourceTree = "<group>";
@@ -2864,7 +2864,6 @@
 				2D51255B1E9BD06700D7EAF6 /* Test_Password_1234.kdb in Resources */,
 				4C69D64923F2D73D007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */,
 				4C6B7ED521A2B2E200B26B63 /* Kdb1HexKey.key in Resources */,
-				4C3A9D9E25C9B45000EF57D9 /* Keepass2Key_v2.xml in Resources */,
 				4CB13A0F1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				2D51255C1E9BD06700D7EAF6 /* Test_Password_1234.kdbx in Resources */,
 				2D51255D1E9BD06700D7EAF6 /* Autotype_test.kdbx in Resources */,
@@ -2874,6 +2873,7 @@
 				4C18E51121B6DD3F007AE021 /* Strongbox.kdbx in Resources */,
 				2D51255A1E9BD06700D7EAF6 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
 				4CBEFF411F99EA59007362E4 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
+				4C2561DF270DD8A000AEBC99 /* Keepass2Key_v2.keyx in Resources */,
 				2D5125601E9BD06700D7EAF6 /* CustomIcon_Password_1234.kdbx in Resources */,
 				2D5125611E9BD06700D7EAF6 /* TwofishCipher256bit_test.kdb in Resources */,
 				4CBEFF421F99EA83007362E4 /* aspect.pdf in Resources */,
@@ -2908,7 +2908,6 @@
 				2D5126641E9BD29500D7EAF6 /* TwoFishCipher256bit_test.kdbx in Resources */,
 				4C69D64823F2D73C007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */,
 				4C6B7ED621A2B2E300B26B63 /* Kdb1HexKey.key in Resources */,
-				4C3A9D9F25C9B45000EF57D9 /* Keepass2Key_v2.xml in Resources */,
 				4CB13A101FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				2D5126651E9BD29500D7EAF6 /* KDB1_KeePassX_test.kdb in Resources */,
 				2D5126661E9BD29500D7EAF6 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
@@ -2918,6 +2917,7 @@
 				4C18E51221B6DD3F007AE021 /* Strongbox.kdbx in Resources */,
 				2D51266A1E9BD29500D7EAF6 /* KeePass1_native_test.kdb in Resources */,
 				2D51266B1E9BD29500D7EAF6 /* BinaryAttachments_test.kdbx in Resources */,
+				4C2561E0270DD8A000AEBC99 /* Keepass2Key_v2.keyx in Resources */,
 				2D51266C1E9BD29500D7EAF6 /* CustomIcon_Password_1234.kdbx in Resources */,
 				2D51266D1E9BD29500D7EAF6 /* TwofishCipher256bit_test.kdb in Resources */,
 				4CBEFF461F99EA87007362E4 /* aspect.pdf in Resources */,
@@ -2960,7 +2960,6 @@
 				4C199DA31DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx in Resources */,
 				4C69D64A23F2D73D007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */,
 				4C6B7ED421A2B2E200B26B63 /* Kdb1HexKey.key in Resources */,
-				4C3A9D9D25C9B45000EF57D9 /* Keepass2Key_v2.xml in Resources */,
 				4CB13A0E1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				4C8138291BE282DC001BF195 /* KDB1_KeePassX_test.kdb in Resources */,
 				4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
@@ -2970,6 +2969,7 @@
 				4C18E51021B6DD3F007AE021 /* Strongbox.kdbx in Resources */,
 				4C81382A1BE282DC001BF195 /* KeePass1_native_test.kdb in Resources */,
 				4C5FFA911DCB5597004EF778 /* BinaryAttachments_test.kdbx in Resources */,
+				4C2561DE270DD8A000AEBC99 /* Keepass2Key_v2.keyx in Resources */,
 				4C8138271BE282DC001BF195 /* CustomIcon_Password_1234.kdbx in Resources */,
 				4C199DA11DCF310D00D4FDC8 /* TwofishCipher256bit_test.kdb in Resources */,
 				4CE082C01F6D111C0034FF56 /* aspect.pdf in Resources */,

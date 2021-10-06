@@ -235,7 +235,8 @@ NSUInteger const KPKKeyFileDataLength             = 32;
   }
   
   NSString *hashValue = [dataElement attributeForName:kKPKXmlHash].stringValue;
-  NSString *dataValue = dataElement.stringValue;
+  NSString *trimmedValue = [dataElement.stringValue stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+  NSString *dataValue = [[trimmedValue componentsSeparatedByCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet] componentsJoinedByString:@""];
   
   if(dataValue == nil) {
     KPKCreateError(error, KPKErrorKdbxKeyDataParsingError);
