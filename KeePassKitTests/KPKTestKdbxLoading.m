@@ -41,7 +41,7 @@
 
 - (void)testLoadingAESKDFTwofishCipher {
   NSError *error;
-  NSData *data =  [self _loadTestDataBase:@"TwoFishCipher256bit_test" extension:@"kdbx"];
+  NSData *data =  [self _loadTestDataFromBundle:@"TwoFishCipher256bit_test" extension:@"kdbx"];
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
@@ -51,7 +51,7 @@
 
 - (void)testLoadingArgon2KDFAESCipher {
   NSError *error;
-  NSData *data =  [self _loadTestDataBase:@"Argon2KDF_AES_Cipher_test" extension:@"kdbx"];
+  NSData *data =  [self _loadTestDataFromBundle:@"Argon2KDF_AES_Cipher_test" extension:@"kdbx"];
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
@@ -61,7 +61,7 @@
 
 - (void)testLoadingArgon2KDFChaCha20Cipher {
   NSError *error;
-  NSData *data =  [self _loadTestDataBase:@"Argon2KDF_ChaCha_Cipher_test" extension:@"kdbx"];
+  NSData *data =  [self _loadTestDataFromBundle:@"Argon2KDF_ChaCha_Cipher_test" extension:@"kdbx"];
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
@@ -71,7 +71,7 @@
 
 - (void)testLoadingArong2idKDF {
   NSError *error;
-  NSData *data =  [self _loadTestDataBase:@"Argon2idKDF_123" extension:@"kdbx"];
+  NSData *data =  [self _loadTestDataFromBundle:@"Argon2idKDF_123" extension:@"kdbx"];
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"123"]]];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
@@ -81,9 +81,9 @@
 }
 
 
-- (void)testLoadingDifferenHeaderFieldOrderStrongBox {
+- (void)testLoadingDifferentHeaderFieldOrderStrongBox {
   NSError *error;
-  NSData *data =  [self _loadTestDataBase:@"Strongbox" extension:@"kdbx"];
+  NSData *data =  [self _loadTestDataFromBundle:@"Strongbox" extension:@"kdbx"];
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
@@ -91,9 +91,24 @@
   XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx4));
 }
 
+- (void)testLoadingKeyFileVersion2 {
+  NSError *error;
+  NSData *data =  [self _loadTestDataFromBundle:@"Database_test_keyFileV2" extension:@"kdbx"];
+  NSData *keyData = [self _loadTestDataFromBundle:@"Database_test_keyFileV2" extension:@"keyx"];
+  KPKKey *fileKey = [KPKKey keyWithKeyFileData:keyData error:&error];
+  XCTAssertNotNil(fileKey);
+  XCTAssertNil(error);
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"], fileKey]];
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(tree, @"Loading should result in a tree object");
+  
+  //XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx4));
+}
+
+
 - (void)testLoadingInnerHeaderBinaries {
   NSError *error;
-  NSData *data =  [self _loadTestDataBase:@"BinaryAttachments_test" extension:@"kdbx"];
+  NSData *data =  [self _loadTestDataFromBundle:@"BinaryAttachments_test" extension:@"kdbx"];
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Loading should result in a tree object");
@@ -158,7 +173,7 @@
   XCTAssertLessThanOrEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx3));
 }
 
-- (NSData *)_loadTestDataBase:(NSString *)name extension:(NSString *)extension {
+- (NSData *)_loadTestDataFromBundle:(NSString *)name extension:(NSString *)extension {
   NSBundle *myBundle = [NSBundle bundleForClass:self.class];
   NSURL *url = [myBundle URLForResource:name withExtension:extension];
   return [NSData dataWithContentsOfURL:url];

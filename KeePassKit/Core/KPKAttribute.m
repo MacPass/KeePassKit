@@ -200,7 +200,9 @@
       [self.entry.undoManager setActionName:template];
     }
   }
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeAttributeNotification object:self.entry userInfo:@{ KPKAttributeKeyKey : self.key }];
   _protect = protected;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeAttributeNotification object:self.entry userInfo:@{ KPKAttributeKeyKey : self.key }];
   
 }
 

@@ -34,6 +34,8 @@ FOUNDATION_EXTERN NSString *const KPKAttributeKeyKey;
 /*
  Notifications sent when modifications happen
  */
+FOUNDATION_EXTERN NSString *const KPKWillChangeEntryNotification;     // object == entry
+FOUNDATION_EXTERN NSString *const KPKDidChangeEntryNotification;      // object == entry
 FOUNDATION_EXTERN NSString *const KPKWillAddAttributeNotification;    // KPKAttributeKeyKey
 FOUNDATION_EXTERN NSString *const KPKDidAddAttributeNotification;     // KPKAttributeKeyKey
 FOUNDATION_EXTERN NSString *const KPKWillRemoveAttributeNotification; // KPKAttributeKeyKey

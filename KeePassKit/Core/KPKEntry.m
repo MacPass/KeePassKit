@@ -622,22 +622,27 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)setMutableAttributes:(NSMutableArray<KPKAttribute *> *)mutableAttributes {
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
   _mutableAttributes = mutableAttributes;
   [_attributeMap removeAllObjects];
   for(KPKAttribute *attribute in self.mutableAttributes) {
     attribute.entry = self;
     [_attributeMap setObject:attribute forKey:attribute.key];
   }
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
 }
 
 - (void)setMutableHistory:(NSMutableArray<KPKEntry *> *)mutableHistory {
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
   _mutableHistory = mutableHistory;
   for(KPKEntry *entry in self.mutableHistory) {
     entry.parent = self.parent;
   }
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
 }
 
 - (void)setParent:(KPKGroup *)parent {
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
   super.parent = parent;
   if(self.isHistory) {
     return;
@@ -645,6 +650,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   for(KPKEntry *entry in self.mutableHistory) {
     entry.parent = parent;
   }
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
 }
 
 - (void)setProtectNotes:(BOOL)protectNotes {
@@ -668,11 +674,13 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (void)setAutotype:(KPKAutotype *)autotype {
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
   if(autotype == _autotype) {
     return;
   }
   _autotype = [autotype copy];
   _autotype.entry = self;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
 }
 
 - (void)setTitle:(NSString *)title {
@@ -708,25 +716,33 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 - (void)setOverrideURL:(NSString *)overrideURL {
   [[self.undoManager prepareWithInvocationTarget:self] setOverrideURL:self.overrideURL];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_OVERRIDE_URL", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the overridel url of an entry")];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
   _overrideURL = [overrideURL copy];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
 }
 
 - (void)setForegroundColor:(NSUIColor *)foregroundColor {
   [[self.undoManager prepareWithInvocationTarget:self] setForegroundColor:self.foregroundColor];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_FOREGROUND_COLOR", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the foreground color of an enty")];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
   _foregroundColor = foregroundColor;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
 }
 
 - (void)setBackgroundColor:(NSUIColor *)backgroundColor {
   [[self.undoManager prepareWithInvocationTarget:self] setBackgroundColor:self.backgroundColor];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_BACKGROUND_COLOR", nil, [NSBundle bundleForClass:self.class], @"Action name for setting the background color of an enty")];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
   _backgroundColor = backgroundColor;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
 }
 
 - (void)setCheckPasswordQuality:(BOOL)checkPasswordQuality {
   [[self.undoManager prepareWithInvocationTarget:self] setCheckPasswordQuality:self.checkPasswordQuality];
   [self.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"SET_CHECK_PASSWORD_QUALITY", nil,[NSBundle bundleForClass:self.class] , @"Action name for enabling or disabling the password quality estimation display")];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
   _checkPasswordQuality = checkPasswordQuality;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
 }
 
 - (KPKEntry *)asEntry {
@@ -1067,7 +1083,6 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   }
 }
 
-
 - (NSUInteger)estimatedByteSize {
   // FIXME: This assumes old structures and KeePass states to calculate process memory, so this needs to be evaluated for Obj-C
   NSUInteger __block size = 128; // KeePass suggest this as the inital size
@@ -1118,14 +1133,20 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 /* Binaries */
 - (void)insertObject:(KPKBinary *)binary inMutableBinariesAtIndex:(NSUInteger)index {
   /* Clamp the index to make sure we do not add at wrong places */
+  // FIXME: add fine grain notifications for binaries
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
   index = MIN(self.mutableBinaries.count, index);
   [self.mutableBinaries insertObject:binary atIndex:index];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
 }
 
 - (void)removeObjectFromMutableBinariesAtIndex:(NSUInteger)index {
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
+  // FIXME: add fine grain notifications for binaries
   if(index < self.mutableBinaries.count) {
     [self.mutableBinaries removeObjectAtIndex:index];
   }
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
 }
 
 /* History */
