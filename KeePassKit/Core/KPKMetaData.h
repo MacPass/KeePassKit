@@ -27,6 +27,7 @@
 @class KPKBinary;
 @class KPKIcon;
 @class KPKTree;
+@class KPKModifiedString;
 
 @interface KPKMetaData : NSObject <KPKModificationRecording, NSCopying>
 
@@ -78,7 +79,7 @@
 @property (copy) NSUUID *lastSelectedGroup;
 @property (copy) NSUUID *lastTopVisibleGroup;
 
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *customData;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, KPKModifiedString *> *customData;
 @property (nonatomic, copy, readonly) NSArray<KPKIcon *> *customIcons;
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *customPublicData; // NSDictionary(Variant) with custom date stored in the public header
 /**
@@ -94,7 +95,9 @@
 - (void)addCustomIcon:(KPKIcon *)icon atIndex:(NSUInteger)index;
 - (void)removeCustomIcon:(KPKIcon *)icon;
 
+- (NSString *)valueForCustomDataKey:(NSString *)key;
 - (void)setValue:(NSString *)value forCustomDataKey:(NSString *)key;
+- (void)removeCustomDataForKey:(NSString *)key;
 - (void)setValue:(id)value forPublicCustomDataKey:(NSString *)key;
 
 - (BOOL)protectAttributeWithKey:(NSString *)key;

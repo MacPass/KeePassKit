@@ -246,6 +246,9 @@
   KPKEntry *trashEntry = [KPKEntry metaEntryWithData:[self _trashData] name:KPKMetaEntryKeePassKitTrash];
   [metaEntries addObject:trashEntry];
   
+  // TODO: Add Group UUIDs and DeletedObjects
+  
+  
   for(KPKBinary *metaBinary in self.tree.metaData.mutableUnknownMetaEntryData) {
     KPKEntry *metaEntry = [KPKEntry metaEntryWithData:metaBinary.data name:metaBinary.name];
     [metaEntries addObject:metaEntry];

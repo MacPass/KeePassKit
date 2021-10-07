@@ -13,12 +13,13 @@
 @class KPKBinary;
 @class KPKIcon;
 @class KPKBinary;
+@class KPKModifiedString;
 
 @interface KPKMetaData () <KPKExtendedModificationRecording>
 
 @property(nonatomic, strong) NSMutableArray<KPKIcon *> *mutableCustomIcons;
 @property(nonatomic, strong) NSMutableArray<KPKBinary *> *mutableUnknownMetaEntryData;
-@property(nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *mutableCustomData;
+@property(nonatomic, strong) NSMutableDictionary<NSString *, KPKModifiedString *> *mutableCustomData;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, id> *mutableCustomPublicData;
 @property(weak) KPKTree *tree;
 

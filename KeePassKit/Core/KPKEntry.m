@@ -45,6 +45,9 @@
 #import "KPKScopedSet.h"
 
 // Notifications
+NSString *const KPKWillChangeEntryNotification        = @"KPKWillChangeEntryNotification";
+NSString *const KPKDidChangeEntryNotification         = @"KPKDidChangeEntryNotification";
+
 NSString *const KPKAttributeKeyKey                    = @"KPKAttributeKeyKey";
 NSString *const KPKWillAddAttributeNotification       = @"KPKWillAddAttributeNotification";
 NSString *const KPKDidAddAttributeNotification        = @"KPKDidAddAttributeNotification";

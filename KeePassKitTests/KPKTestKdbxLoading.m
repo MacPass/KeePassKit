@@ -105,7 +105,6 @@
   //XCTAssertEqual(NSOrderedSame, KPKFileVersionCompare(tree.minimumVersion, _kdbx4));
 }
 
-
 - (void)testLoadingInnerHeaderBinaries {
   NSError *error;
   NSData *data =  [self _loadTestDataFromBundle:@"BinaryAttachments_test" extension:@"kdbx"];
@@ -148,6 +147,23 @@
 }
 */
 
+- (void)testLoadingKDBX4_1 {
+  NSData *data = [self _loadTestDataFromBundle:@"Database_test" extension:@"kdbx"];
+  XCTAssertNotNil(data);
+  KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
+  NSError *error;
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
+  XCTAssertNotNil(tree);
+  XCTAssertNil(error);
+  KPKFileVersion kdbx4_1 = KPKMakeFileVersion(KPKDatabaseFormatKdbx, kKPKKdbxFileVersion4_1);
+  XCTAssertLessThanOrEqual(NSOrderedSame, KPKFileVersionCompare(kdbx4_1,tree.minimumVersion));
+  
+  XCTAssertEqual(tree.metaData.customIcons.count, 1);
+  KPKIcon *icon = tree.metaData.customIcons.firstObject;
+  XCTAssertNotNil(icon.name);
+  XCTAssertNotNil(icon.modificationDate);
+}
+
 - (void)testLoadingVersion3 {
   NSError *error;
   KPKTree *tree = [[KPKTree alloc] initWithData:_data key:_key error:&error];
@@ -161,11 +177,10 @@
 }
 
 - (void)testAutotypeLoading {
-  NSBundle *myBundle = [NSBundle bundleForClass:self.class];
-  NSURL *url = [myBundle URLForResource:@"Autotype_test" withExtension:@"kdbx"];
+  NSData *data = [self _loadTestDataFromBundle:@"Autotype_test" extension:@"kdbx"];
   KPKCompositeKey *key = [[KPKCompositeKey alloc] initWithKeys:@[[KPKKey keyWithPassword:@"test"]]];
   NSError *error;
-  KPKTree *tree = [[KPKTree alloc] initWithContentsOfUrl:url key:key error:&error];
+  KPKTree *tree = [[KPKTree alloc] initWithData:data key:key error:&error];
   XCTAssertNotNil(tree, @"Tree shoud be loaded");
   KPKEntry *entry = tree.root.entries.firstObject;
   XCTAssertNotNil(entry, @"Entry should be there");

@@ -31,6 +31,7 @@
 #import "KPKIcon.h"
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
+#import "KPKModifiedString.h"
 #import "KPKNode_Private.h"
 #import "KPKTimeInfo.h"
 #import "KPKKeyDerivation.h"
@@ -289,6 +290,7 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
   BOOL entriesInRoot = self.root.entries.count > 0;
   BOOL publicData = self.metaData.mutableCustomPublicData.count > 0;
   BOOL changedCustomIcon = NO;
+  BOOL changedCustomData = NO;
   
   for(KPKIcon *icon in self.metaData.mutableCustomIcons) {
     if(icon.name.length > 0 || icon.modificationDate != nil) {
@@ -296,13 +298,20 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
       break;
     }
   }
+  
+  for(NSString *key in self.metaData.mutableCustomData) {
+    KPKModifiedString *string = self.metaData.mutableCustomData[key];
+    if(string.modificationDate != nil) {
+      changedCustomData = YES;
+    }
+  }
 
-  BOOL requiresKDBX = !aesKdf || entriesInRoot || publicData || changedCustomIcon;
+  BOOL requiresKDBX = !aesKdf || entriesInRoot || publicData || changedCustomIcon || changedCustomData;
   
   if(requiresKDBX) {
     minimum.format = KPKDatabaseFormatKdbx;
     minimum.version = kKPKKdbxFileVersion3;
-    if(changedCustomIcon) {
+    if(changedCustomIcon || changedCustomData) {
       minimum.version = kKPKKdbxFileVersion4_1;
     }
     else if(publicData || !aesKdf) {

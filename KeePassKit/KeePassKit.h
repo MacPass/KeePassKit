@@ -21,6 +21,7 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import <KeePassKit/KPKSynchronizationOptions.h>
 
 #import <KeePassKit/KPKData.h>
+#import <KeePassKit/KPKModifiedString.h>
 #import <KeePassKit/KPKNumber.h>
 #import <KeePassKit/KPKPair.h>
 #import <KeePassKit/KPKToken.h>

@@ -350,8 +350,22 @@ if( self.updateTiming ) { \
   }
 }
 
+- (NSString *)valueForCustomDataKey:(NSString *)key {
+  KPKModifiedString *string = self.mutableCustomData[key];
+  return string.value;
+}
+
 - (void)setValue:(NSString *)value forCustomDataKey:(NSString *)key {
-  // FIXME: ensure update timing works as expected.
+  KPKModifiedString *customData = self.mutableCustomData[key];
+  if(nil == customData) {
+    customData = [[KPKModifiedString alloc] init];
+    self.mutableCustomData[key] = customData;
+  }
+  customData.value = value;
+}
+
+- (void)removeCustomDataForKey:(NSString *)key {
+  self.mutableCustomData[key] = nil;
 }
 
 - (void)setValue:(id)value forPublicCustomDataKey:(NSString *)key {
@@ -432,6 +446,7 @@ if( self.updateTiming ) { \
     }
     // else keep old uuid
   }
+  // TODO: Add support for KDBX4.1 modified date
   for(NSString *key in otherMetaData.mutableCustomData) {
     if(otherIsNewer || (nil == self.mutableCustomData[key])) {
       self.mutableCustomData[key] = otherMetaData.mutableCustomData[key];
@@ -519,9 +534,8 @@ if( self.updateTiming ) { \
   return self.mutableCustomData.objectEnumerator;
 }
 
-- (NSString *)memberOfCustomData:(NSString *)object {
+- (KPKModifiedString *)memberOfCustomData:(NSString *)object {
   return self.mutableCustomData[object];
 }
-
 
 @end

@@ -50,8 +50,8 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   [super setUp];
   self.kdbxTreeA = [[KPKTree alloc] init];
   
-  self.kdbxTreeA.metaData.mutableCustomData[@"CustomDataKeyA"] = @"CustomDataValueA";
-  self.kdbxTreeA.metaData.mutableCustomData[@"CustomDataKeyB"] = @"CustomDataValueB";
+  [self.kdbxTreeA.metaData setValue:@"CustomDataValueA" forCustomDataKey:@"CustomDataKeyA"];
+  [self.kdbxTreeA.metaData setValue:@"CustomDataValueB" forCustomDataKey:@"CustomDataKeyB"];
   
   uint8_t bytes[] = {0x00, 0x01, 0x02, 0x03};
   self.kdbxTreeA.metaData.mutableCustomPublicData[@"UInt32"] = [KPKNumber numberWithUnsignedInteger32:32];
@@ -607,25 +607,25 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
 }
 
 - (void)testAddedCustomData {
-  self.kdbxTreeB.metaData.mutableCustomData[@"NewKey"] = @"NewData";
+  [self.kdbxTreeB.metaData setValue:@"NewData" forCustomDataKey:@"NewKey"];
   [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
   KPKMetaData *metaDataA = self.kdbxTreeA.metaData;
   XCTAssertEqual(3, metaDataA.mutableCustomData.count);
-  XCTAssertEqualObjects(@"CustomDataValueA", metaDataA.mutableCustomData[@"CustomDataKeyA"]);
-  XCTAssertEqualObjects(@"CustomDataValueB", metaDataA.mutableCustomData[@"CustomDataKeyB"]);
-  XCTAssertEqualObjects(@"NewData", metaDataA.mutableCustomData[@"NewKey"]);
+  XCTAssertEqualObjects(@"CustomDataValueA", [metaDataA valueForCustomDataKey:@"CustomDataKeyA"]);
+  XCTAssertEqualObjects(@"CustomDataValueB", [metaDataA valueForCustomDataKey:@"CustomDataKeyB"]);
+  XCTAssertEqualObjects(@"NewData", [metaDataA valueForCustomDataKey:@"NewKey"]);
 }
 
 - (void)testRemovedCustomData {
-  self.kdbxTreeB.metaData.mutableCustomData[@"CustomDataKeyA"] = nil;
+  [self.kdbxTreeB.metaData removeCustomDataForKey:@"CustomDataKeyA"];
   XCTAssertEqual(1, self.kdbxTreeB.metaData.mutableCustomData.count);
   
   [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
   
   KPKMetaData *metaDataA = self.kdbxTreeA.metaData;
   XCTAssertEqual(2, metaDataA.mutableCustomData.count);
-  XCTAssertEqualObjects(@"CustomDataValueA", metaDataA.mutableCustomData[@"CustomDataKeyA"]);
-  XCTAssertEqualObjects(@"CustomDataValueB", metaDataA.mutableCustomData[@"CustomDataKeyB"]);
+  XCTAssertEqualObjects(@"CustomDataValueA", [metaDataA valueForCustomDataKey:@"CustomDataKeyA"]);
+  XCTAssertEqualObjects(@"CustomDataValueB", [metaDataA valueForCustomDataKey:@"CustomDataKeyB"]);
 }
 
 - (void)testChangedCustomData {

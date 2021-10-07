@@ -156,13 +156,13 @@
   else {
     /*  header | sha256(header) | hmacsha256(header) | hashed(encrypted(zipped(data))) */
     
-    NSData *exptectedHash = [self.data subdataWithRange:NSMakeRange(self.headerLength, 32)];
+    NSData *exptectedHash = [self.data subdataWithRange:NSMakeRange(self.headerLength, CC_SHA256_DIGEST_LENGTH)];
     NSData *actualHash = [self.data subdataWithRange:NSMakeRange(0, self.headerLength)].SHA256Hash;
     if(![exptectedHash isEqualToData:actualHash]) {
       KPKCreateError(error, KPKErrorKdbxHeaderHashVerificationFailed);
       return nil;
     }
-    NSData *expectedHeaderHmac = [self.data subdataWithRange:NSMakeRange(self.headerLength + 32, 32)];
+    NSData *expectedHeaderHmac = [self.data subdataWithRange:NSMakeRange(self.headerLength + CC_SHA256_DIGEST_LENGTH, CC_SHA256_DIGEST_LENGTH)];
     NSData *headerMac = [self.headerData kpk_headerHmacWithKey:hmacKey];
     if(![headerMac isEqualToData:expectedHeaderHmac]) {
       KPKCreateError(error, KPKErrorKdbxHeaderHashVerificationFailed);

@@ -41,6 +41,7 @@
 #import "KPKIcon_Private.h"
 #import "KPKMetaData.h"
 #import "KPKMetaData_Private.h"
+#import "KPKModifiedString.h"
 #import "KPKNode.h"
 #import "KPKNode_Private.h"
 #import "KPKRandomStream.h"
@@ -61,7 +62,6 @@
 
 @property (strong) DDXMLDocument *document;
 @property (nonatomic, strong) KPKRandomStream *randomStream;
-//@property (strong) NSDateFormatter *dateFormatter;
 @property (assign) BOOL useRelativeDates;
 @property (strong) NSMutableDictionary<NSNumber *, KPKData *> *binaryDataMap;
 @property (strong) NSMutableDictionary *iconMap;
@@ -95,11 +95,6 @@
   
   if(!self.randomStream || (kKPKKdbxFileVersion4 > [self.delegate fileVersionForReader:self])) {
     self.useRelativeDates = NO;
-    /*
-    self.dateFormatter = [[NSDateFormatter alloc] init];
-    self.dateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
-    self.dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"GMT"];
-   */
   }
   
   if(!self.document) {
@@ -243,7 +238,7 @@
   
   [self _parseCustomIcons:metaElement meta:data];
   [self _parseBinaries:metaElement meta:data];
-  [self _parseCustomData:metaElement intoDictionary:data.mutableCustomData];
+  [self _parseMetaCustomData:metaElement intoDictionary:data.mutableCustomData];
 }
 
 - (KPKGroup *)_parseGroup:(DDXMLElement *)groupElement {
@@ -378,6 +373,8 @@
    <CustomIcons>
    <Icon>
    <UUID></UUID>
+   <Name></Name> <!-- KDBX 4.1 -->
+   <LastModificationTime></LastModificationTime> <!-- KDBX 4.1 -->
    <Data></Data>
    </Icon>
    </CustomIcons>
@@ -457,6 +454,27 @@
   }
 }
 
+- (void)_parseMetaCustomData:(DDXMLElement *)root intoDictionary:(NSMutableDictionary<NSString *, KPKModifiedString *> *)dict {
+  DDXMLElement *customDataElement = [root elementForName:kKPKXmlCustomData];
+  for(DDXMLElement *dataElement in [customDataElement elementsForName:kKPKXmlCustomDataItem]) {
+    /*
+     <CustomData>
+     <Item>
+     <Key></Key> - plain string
+     <Value></Value> - plain string
+     <LastModificationTime></LastModificationTime> - time format according to medium (xml, kdbx)
+     </Item>
+     </CustomData>
+     */
+    NSString *key = KPKXmlString(dataElement, kKPKXmlKey);
+    NSString *value = KPKXmlString(dataElement, kKPKXmlValue);
+    NSDate *date = KPKXmlDate(dataElement, kKPKXmlLastModificationDate, self.useRelativeDates);
+    if((key.length > 0) && value) {
+      dict[key] = [[KPKModifiedString alloc] initWithValue:value modificationDate:date];
+    }
+  }
+}
+
 - (void)_parseCustomData:(DDXMLElement *)root intoDictionary:(NSMutableDictionary<NSString *, NSString *> *)dict{
   DDXMLElement *customDataElement = [root elementForName:kKPKXmlCustomData];
   for(DDXMLElement *dataElement in [customDataElement elementsForName:kKPKXmlCustomDataItem]) {
@@ -465,6 +483,7 @@
      <Item>
      <Key></Key> - plain string
      <Value></Value> - plain string
+     <LastModificationTime></LastModificationTime> - time format according to medium (xml, kdbx)
      </Item>
      </CustomData>
      */

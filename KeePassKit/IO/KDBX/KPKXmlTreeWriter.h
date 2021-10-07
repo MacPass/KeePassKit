@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  Called by the writer to retrieve a list of all available binaries.
  The writer will not send this message, if the output is a KDBX4 binary,
  since then Binaries aren't stored inside the XML tree.
- For KDBX3 binariy files ore XML files this is called and binaries should be supplied!
+ For KDBX3 binariy files or XML files this is called and binaries should be supplied!
 
  @param writer the calling writer
  @return NSArray containgin the binaries.

@@ -837,6 +837,21 @@
 		4C639E551F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C639E531F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C639E561F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C639E541F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.m */; };
 		4C639E581F6AE81600E6C5CD /* test.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E571F6AE81600E6C5CD /* test.pdf */; };
+		4C63AE75270F403D00F900EB /* KPKModifiedString.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C63AE73270F403D00F900EB /* KPKModifiedString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C63AE76270F403D00F900EB /* KPKModifiedString.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C63AE73270F403D00F900EB /* KPKModifiedString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C63AE77270F403D00F900EB /* KPKModifiedString.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C63AE73270F403D00F900EB /* KPKModifiedString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C63AE78270F403D00F900EB /* KPKModifiedString.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C63AE73270F403D00F900EB /* KPKModifiedString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C63AE79270F403D00F900EB /* KPKModifiedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C63AE74270F403D00F900EB /* KPKModifiedString.m */; };
+		4C63AE7A270F403D00F900EB /* KPKModifiedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C63AE74270F403D00F900EB /* KPKModifiedString.m */; };
+		4C63AE7B270F403D00F900EB /* KPKModifiedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C63AE74270F403D00F900EB /* KPKModifiedString.m */; };
+		4C63AE7C270F403D00F900EB /* KPKModifiedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C63AE74270F403D00F900EB /* KPKModifiedString.m */; };
+		4C63AE7E270F469000F900EB /* KPKTestModifiedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C63AE7D270F469000F900EB /* KPKTestModifiedString.m */; };
+		4C63AE92270F6D3400F900EB /* Database_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C63AE81270F5D8600F900EB /* Database_test.kdbx */; };
+		4C63AE93270F6D3400F900EB /* Database_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C63AE81270F5D8600F900EB /* Database_test.kdbx */; };
+		4C63AE94270F6D3400F900EB /* Database_test.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C63AE81270F5D8600F900EB /* Database_test.kdbx */; };
+		4C63AE95270F6D3900F900EB /* Database.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C63AE80270F5D8600F900EB /* Database.xml */; };
+		4C63AE96270F6D3900F900EB /* Database.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C63AE80270F5D8600F900EB /* Database.xml */; };
+		4C63AE97270F6D3900F900EB /* Database.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4C63AE80270F5D8600F900EB /* Database.xml */; };
 		4C69D64823F2D73C007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C69D64623F2D6AB007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb */; };
 		4C69D64923F2D73D007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C69D64623F2D6AB007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb */; };
 		4C69D64A23F2D73D007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */ = {isa = PBXBuildFile; fileRef = 4C69D64623F2D6AB007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb */; };
@@ -1373,6 +1388,11 @@
 		4C639E531F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUIImage+KPKAdditions.h"; sourceTree = "<group>"; };
 		4C639E541F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUIImage+KPKAdditions.m"; sourceTree = "<group>"; };
 		4C639E571F6AE81600E6C5CD /* test.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = test.pdf; sourceTree = "<group>"; };
+		4C63AE73270F403D00F900EB /* KPKModifiedString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKModifiedString.h; sourceTree = "<group>"; };
+		4C63AE74270F403D00F900EB /* KPKModifiedString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKModifiedString.m; sourceTree = "<group>"; };
+		4C63AE7D270F469000F900EB /* KPKTestModifiedString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestModifiedString.m; sourceTree = "<group>"; };
+		4C63AE80270F5D8600F900EB /* Database.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Database.xml; sourceTree = "<group>"; };
+		4C63AE81270F5D8600F900EB /* Database_test.kdbx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Database_test.kdbx; sourceTree = "<group>"; };
 		4C69D64623F2D6AB007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb */ = {isa = PBXFileReference; lastKnownFileType = file; name = KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb; path = Kdb/KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb; sourceTree = "<group>"; };
 		4C69DD561EB4705800194900 /* KPKScopedSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KPKScopedSet.h; sourceTree = "<group>"; };
 		4C6B7EC021A2B08B00B26B63 /* KPKTestKeyFileEncryption.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KPKTestKeyFileEncryption.m; sourceTree = "<group>"; };
@@ -1776,6 +1796,7 @@
 				4C8138241BE282DC001BF195 /* Keyfiles */,
 				4C5CF4961BE10F090019AA81 /* KPKIconLoading.m */,
 				4CA1E49B1D8838BC00100002 /* KPKTestArgon2.m */,
+				4C63AE7D270F469000F900EB /* KPKTestModifiedString.m */,
 				4C059B6320D4577300655B99 /* KPKTestBinary.m */,
 				4C93C4AC1DC2704600260DD4 /* KPKTestChaCha20.m */,
 				4C40187A2513CB7900C10C94 /* KPKTestCompositeKeyCoding.m */,
@@ -1993,8 +2014,19 @@
 				4C8990FA1EE981940043B48D /* KPKReferenceBuilder.m */,
 				4C16500724191C9D0042D7F6 /* KPKAutotypeNotesSerializer.h */,
 				4C16500824191C9D0042D7F6 /* KPKAutotypeNotesSerializer.m */,
+				4C63AE73270F403D00F900EB /* KPKModifiedString.h */,
+				4C63AE74270F403D00F900EB /* KPKModifiedString.m */,
 			);
 			path = Utilites;
+			sourceTree = "<group>";
+		};
+		4C63AE7F270F5D8600F900EB /* Kdbx4.1 */ = {
+			isa = PBXGroup;
+			children = (
+				4C63AE80270F5D8600F900EB /* Database.xml */,
+				4C63AE81270F5D8600F900EB /* Database_test.kdbx */,
+			);
+			path = Kdbx4.1;
 			sourceTree = "<group>";
 		};
 		4C7C3F891D81D620008D8961 /* Keyderivation */ = {
@@ -2034,6 +2066,7 @@
 				4C0BF1551DC11A3000193AD1 /* Kdb */,
 				4C0BF1541DC119E800193AD1 /* Kdbx3 */,
 				4C0BF14F1DC1199900193AD1 /* Kdbx4 */,
+				4C63AE7F270F5D8600F900EB /* Kdbx4.1 */,
 			);
 			path = Databases;
 			sourceTree = "<group>";
@@ -2258,6 +2291,7 @@
 				2D51250C1E9BCFA700D7EAF6 /* KPKKdbArchiver.h in Headers */,
 				2D51250D1E9BCFA700D7EAF6 /* KPKKdbFormat.h in Headers */,
 				2D51250E1E9BCFA700D7EAF6 /* (null) in Headers */,
+				4C63AE76270F403D00F900EB /* KPKModifiedString.h in Headers */,
 				2D51250F1E9BCFA700D7EAF6 /* blamka-round-ref.h in Headers */,
 				2D5125111E9BCFA700D7EAF6 /* KPKEntry_Private.h in Headers */,
 				2D5125121E9BCFA700D7EAF6 /* NSData+KPKXor.h in Headers */,
@@ -2388,6 +2422,7 @@
 				2D5126181E9BD24500D7EAF6 /* KPKKdbArchiver.h in Headers */,
 				2D5126191E9BD24500D7EAF6 /* KPKKdbFormat.h in Headers */,
 				2D51261A1E9BD24500D7EAF6 /* (null) in Headers */,
+				4C63AE77270F403D00F900EB /* KPKModifiedString.h in Headers */,
 				2D51261B1E9BD24500D7EAF6 /* blamka-round-ref.h in Headers */,
 				2D51261D1E9BD24500D7EAF6 /* KPKEntry_Private.h in Headers */,
 				2D51261E1E9BD24500D7EAF6 /* NSData+KPKXor.h in Headers */,
@@ -2518,6 +2553,7 @@
 				2D5127241E9BD34900D7EAF6 /* KPKKdbArchiver.h in Headers */,
 				2D5127251E9BD34900D7EAF6 /* KPKKdbFormat.h in Headers */,
 				2D5127261E9BD34900D7EAF6 /* (null) in Headers */,
+				4C63AE78270F403D00F900EB /* KPKModifiedString.h in Headers */,
 				2D5127271E9BD34900D7EAF6 /* blamka-round-ref.h in Headers */,
 				2D5127291E9BD34900D7EAF6 /* KPKEntry_Private.h in Headers */,
 				2D51272A1E9BD34900D7EAF6 /* NSData+KPKXor.h in Headers */,
@@ -2604,6 +2640,7 @@
 				4C5CF3CE1BE10DF80019AA81 /* NSData+KPKRandom.h in Headers */,
 				4C7C3F9E1D81D620008D8961 /* KPKCompositeKey.h in Headers */,
 				4C5CF3DC1BE10DF80019AA81 /* NSString+KPKXmlUtilities.h in Headers */,
+				4C63AE75270F403D00F900EB /* KPKModifiedString.h in Headers */,
 				4C5CF3D61BE10DF80019AA81 /* NSString+KPKCommands.h in Headers */,
 				4C7C3FA01D81D620008D8961 /* KPKFileKey.h in Headers */,
 				4C0B9D7D1DBFADE200E66CD6 /* KPKUnarchiver_Private.h in Headers */,
@@ -2878,10 +2915,12 @@
 				4CB13A0F1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				2D51255C1E9BD06700D7EAF6 /* Test_Password_1234.kdbx in Resources */,
 				2D51255D1E9BD06700D7EAF6 /* Autotype_test.kdbx in Resources */,
+				4C63AE93270F6D3400F900EB /* Database_test.kdbx in Resources */,
 				2D51255E1E9BD06700D7EAF6 /* KeePass1_native_test.kdb in Resources */,
 				2D51255F1E9BD06700D7EAF6 /* BinaryAttachments_test.kdbx in Resources */,
 				2D5125581E9BD06700D7EAF6 /* TwoFishCipher256bit_test.kdbx in Resources */,
 				4C18E51121B6DD3F007AE021 /* Strongbox.kdbx in Resources */,
+				4C63AE95270F6D3900F900EB /* Database.xml in Resources */,
 				2D51255A1E9BD06700D7EAF6 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
 				4C2561E4270DDC3B00AEBC99 /* Database_test_keyFileV2.kdbx in Resources */,
 				4CBEFF411F99EA59007362E4 /* Argon2KDF_ChaCha_Cipher_test.kdbx in Resources */,
@@ -2924,10 +2963,12 @@
 				4CB13A101FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				2D5126651E9BD29500D7EAF6 /* KDB1_KeePassX_test.kdb in Resources */,
 				2D5126661E9BD29500D7EAF6 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
+				4C63AE92270F6D3400F900EB /* Database_test.kdbx in Resources */,
 				2D5126671E9BD29500D7EAF6 /* Test_Password_1234.kdb in Resources */,
 				2D5126681E9BD29500D7EAF6 /* Test_Password_1234.kdbx in Resources */,
 				2D5126691E9BD29500D7EAF6 /* Autotype_test.kdbx in Resources */,
 				4C18E51221B6DD3F007AE021 /* Strongbox.kdbx in Resources */,
+				4C63AE97270F6D3900F900EB /* Database.xml in Resources */,
 				2D51266A1E9BD29500D7EAF6 /* KeePass1_native_test.kdb in Resources */,
 				4C2561E5270DDC3B00AEBC99 /* Database_test_keyFileV2.kdbx in Resources */,
 				2D51266B1E9BD29500D7EAF6 /* BinaryAttachments_test.kdbx in Resources */,
@@ -2978,10 +3019,12 @@
 				4CB13A0E1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				4C8138291BE282DC001BF195 /* KDB1_KeePassX_test.kdb in Resources */,
 				4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
+				4C63AE94270F6D3400F900EB /* Database_test.kdbx in Resources */,
 				4C81382B1BE282DC001BF195 /* Test_Password_1234.kdb in Resources */,
 				4C81382C1BE282DC001BF195 /* Test_Password_1234.kdbx in Resources */,
 				4C8138261BE282DC001BF195 /* Autotype_test.kdbx in Resources */,
 				4C18E51021B6DD3F007AE021 /* Strongbox.kdbx in Resources */,
+				4C63AE96270F6D3900F900EB /* Database.xml in Resources */,
 				4C81382A1BE282DC001BF195 /* KeePass1_native_test.kdb in Resources */,
 				4C2561E3270DDC3B00AEBC99 /* Database_test_keyFileV2.kdbx in Resources */,
 				4C5FFA911DCB5597004EF778 /* BinaryAttachments_test.kdbx in Resources */,
@@ -3118,6 +3161,7 @@
 				4C2A9A1325AC930B00A45D43 /* KPKArgon2IDKeyDerivation.m in Sources */,
 				2D5124631E9BCFA700D7EAF6 /* KPKKdbTreeReader.m in Sources */,
 				2D5124641E9BCFA700D7EAF6 /* chacha20_simple.c in Sources */,
+				4C63AE7A270F403D00F900EB /* KPKModifiedString.m in Sources */,
 				2D5124651E9BCFA700D7EAF6 /* KPKCompositeKey.m in Sources */,
 				2D5124661E9BCFA700D7EAF6 /* KPKKeyDerivation.m in Sources */,
 				2D5124671E9BCFA700D7EAF6 /* KPKCipher.m in Sources */,
@@ -3278,6 +3322,7 @@
 				4C2A9A1425AC930B00A45D43 /* KPKArgon2IDKeyDerivation.m in Sources */,
 				2D51256E1E9BD24500D7EAF6 /* KPKDeletedNode.m in Sources */,
 				2D51256F1E9BD24500D7EAF6 /* KPKKdbTreeReader.m in Sources */,
+				4C63AE7B270F403D00F900EB /* KPKModifiedString.m in Sources */,
 				2D5125701E9BD24500D7EAF6 /* chacha20_simple.c in Sources */,
 				2D5125711E9BD24500D7EAF6 /* KPKCompositeKey.m in Sources */,
 				2D5125721E9BD24500D7EAF6 /* KPKKeyDerivation.m in Sources */,
@@ -3438,6 +3483,7 @@
 				4C2A9A1525AC930B00A45D43 /* KPKArgon2IDKeyDerivation.m in Sources */,
 				2D51267A1E9BD34900D7EAF6 /* KPKDeletedNode.m in Sources */,
 				2D51267B1E9BD34900D7EAF6 /* KPKKdbTreeReader.m in Sources */,
+				4C63AE7C270F403D00F900EB /* KPKModifiedString.m in Sources */,
 				2D51267C1E9BD34900D7EAF6 /* chacha20_simple.c in Sources */,
 				2D51267D1E9BD34900D7EAF6 /* KPKCompositeKey.m in Sources */,
 				2D51267E1E9BD34900D7EAF6 /* KPKKeyDerivation.m in Sources */,
@@ -3555,6 +3601,7 @@
 				4CA1E4891D8832BA00100002 /* blake2b.c in Sources */,
 				4C5CF41C1BE10E000019AA81 /* KPKNode.m in Sources */,
 				4C2ADBF21D7C649F002C3190 /* KPKUnarchiver.m in Sources */,
+				4C63AE79270F403D00F900EB /* KPKModifiedString.m in Sources */,
 				4CBE26341EC595D200B93BE2 /* KPKPair.m in Sources */,
 				4C639E561F6AC9AB00E6C5CD /* NSUIImage+KPKAdditions.m in Sources */,
 				4C6C6EFB1DDE231A0079C26D /* KPKTree+Synchronization.m in Sources */,
@@ -3644,6 +3691,7 @@
 				4C5CF4B01BE10F090019AA81 /* KPKTestKdbWriting.m in Sources */,
 				4CE94DD11F69885E00EE9A5A /* KPKTestTrash.m in Sources */,
 				4CB6DD27236C860400C89993 /* KPKTestNSData+KPKBase32.m in Sources */,
+				4C63AE7E270F469000F900EB /* KPKTestModifiedString.m in Sources */,
 				4C5CF4AA1BE10F090019AA81 /* KPKIconLoading.m in Sources */,
 				4C8836A61FB34DC700CD2CD1 /* KPKTestEntryAttributes.m in Sources */,
 				4C429FF220AC2BC9008F53B2 /* KPKTestUniqueBinaryNames.m in Sources */,
