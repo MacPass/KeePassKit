@@ -150,16 +150,6 @@
   return self.randomStream;
 }
 
-- (NSUInteger)fileVersionForWriter:(KPKXmlTreeWriter *)writer {
-  return self.fileVersion.version;
-  /*
-  if(self.fileVersion.version >= kKPKKdbxFileVersion4) {
-    return kKPKKdbxFileVersion4;
-  }
-  return kKPKKdbxFileVersion3;
-  */
-}
-
 #pragma mark -
 
 - (NSData *)archiveTree:(NSError *__autoreleasing *)error {

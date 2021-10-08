@@ -160,7 +160,7 @@
   
   XCTAssertEqual(tree.metaData.customIcons.count, 1);
   KPKIcon *icon = tree.metaData.customIcons.firstObject;
-  XCTAssertNotNil(icon.name);
+  XCTAssertEqualObjects(icon.name, @"Custom Image");
   XCTAssertNotNil(icon.modificationDate);
 }
 

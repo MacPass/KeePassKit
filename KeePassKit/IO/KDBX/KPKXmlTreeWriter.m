@@ -58,9 +58,9 @@
 @property (strong, readwrite) KPKTree *tree;
 @property (readonly, copy) NSData *headerHash;
 @property (readonly, strong) KPKRandomStream *randomStream;
-//@property (strong) NSDateFormatter *dateFormatter;
 @property BOOL useRelativeDate;
 @property (nonatomic, readonly, copy) NSArray<KPKData *> *binaryData;
+@property KPKFileVersion fileVersion;
 
 @property (nonatomic, readonly) BOOL encrypted;
 
@@ -76,6 +76,7 @@
     _delegate = delegate;
     _tree = tree;
     _useRelativeDate = YES;
+    _fileVersion = KPKFileVersionMax(KPKMakeFileVersion(KPKDatabaseFormatKdbx, kKPKKdbxFileVersion3), tree.minimumVersion);
   }
   return self;
 }
@@ -131,8 +132,8 @@
   if(self.headerHash.length > 0) {
     KPKAddXmlElement(metaElement, kKPKXmlHeaderHash, [self.headerHash base64EncodedStringWithOptions:0]);
   }
-  
-  if(!self.randomStream || kKPKKdbxFileVersion4 > [self.delegate fileVersionForWriter:self]) {
+
+  if(!self.randomStream || kKPKKdbxFileVersion4 > self.fileVersion.version) {
     self.useRelativeDate = NO;
     /*
      self.dateFormatter = [[NSDateFormatter alloc] init];
@@ -150,7 +151,7 @@
   KPKAddXmlElement(metaElement, kKPKXmlMaintenanceHistoryDays, KPKStringFromLong(metaData.maintenanceHistoryDays));
   KPKAddXmlElement(metaElement, kKPKXmlColor, metaData.color.kpk_hexString);
   /* Settings changed only in KDBX4 */
-  if(kKPKKdbxFileVersion4 <= [self.delegate fileVersionForWriter:self]) {
+  if(kKPKKdbxFileVersion4 <= self.fileVersion.version) {
     KPKAddXmlElement(metaElement, kKPKXmlSettingsChanged, KPKStringFromDate(metaData.settingsChanged, self.useRelativeDate));
   }
   KPKAddXmlElement(metaElement, kKPKXmlMasterKeyChanged, KPKStringFromDate(metaData.masterKeyChanged, self.useRelativeDate));
@@ -184,7 +185,7 @@
   KPKAddXmlElement(metaElement, kKPKXmlLastTopVisibleGroup, metaData.lastTopVisibleGroup.kpk_encodedString);
   
   /* only add binaries if we actuall should, ask the delegate! */
-  if(!self.randomStream || kKPKKdbxFileVersion4 > [self.delegate fileVersionForWriter:self]) {
+  if(!self.randomStream || kKPKKdbxFileVersion4 > self.fileVersion.version) {
     if(self.binaryData) {
       [metaElement addChild:[self _xmlBinaries]];
     }
@@ -239,7 +240,7 @@
   KPKAddXmlElement(groupElement, kKPKXmlLastTopVisibleEntry, group.lastTopVisibleEntry.kpk_encodedString);
   
   if(group.tags.count > 0) {
-    NSAssert([self.delegate fileVersionForWriter:self] >= kKPKKdbxFileVersion4_1, @"Internal inconsitency with minimum required version");
+    NSAssert(self.fileVersion.version >= kKPKKdbxFileVersion4_1, @"Internal inconsitency with minimum required version");
     KPKAddXmlElement(groupElement, kKPKXmlTags, [group.tags componentsJoinedByString:@";"].kpk_xmlCompatibleString);
   }
   
@@ -407,11 +408,11 @@
     KPKAddXmlElement(iconElement, kKPKXmlData, icon.encodedString);
     
     if(icon.name.length > 0) {
-      NSAssert( [self.delegate fileVersionForWriter:self] >= kKPKKdbxFileVersion4_1, @"Icon names require KDBX 4.1");
+      NSAssert( self.fileVersion.version >= kKPKKdbxFileVersion4_1, @"Icon names require KDBX 4.1");
       KPKAddXmlElement(iconElement, kKPKXmlName, icon.name.kpk_xmlCompatibleString);
     }
     if(icon.modificationDate != nil) {
-      NSAssert( [self.delegate fileVersionForWriter:self] >= kKPKKdbxFileVersion4_1, @"Icon modificiation dates require KDBX 4.1");
+      NSAssert( self.fileVersion.version >= kKPKKdbxFileVersion4_1, @"Icon modificiation dates require KDBX 4.1");
       KPKAddXmlElement(iconElement, kKPKXmlLastModificationDate, KPKStringFromDate(icon.modificationDate, YES));
     }
     [customIconsElements addChild:iconElement];
@@ -443,7 +444,7 @@
     KPKAddXmlElement(itemElement, kKPKXmlKey, key.kpk_xmlCompatibleString);
     KPKAddXmlElement(itemElement, kKPKXmlValue, string.value.kpk_xmlCompatibleString);
     if(string.modificationDate != nil) {
-      NSAssert( [self.delegate fileVersionForWriter:self] >= kKPKKdbxFileVersion4_1, @"Custom data modificiation dates require KDBX 4.1");
+      NSAssert( self.fileVersion.version >= kKPKKdbxFileVersion4_1, @"Custom data modificiation dates require KDBX 4.1");
       KPKAddXmlElement(itemElement, kKPKXmlLastModificationDate, KPKStringFromDate(string.modificationDate, self.useRelativeDate));
     }
     [customDataElement addChild:itemElement];

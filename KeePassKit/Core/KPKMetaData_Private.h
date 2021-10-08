@@ -24,5 +24,6 @@
 @property(weak) KPKTree *tree;
 
 - (void)_mergeWithMetaDataFromTree:(KPKTree *)tree mode:(KPKSynchronizationMode)mode;
+- (void)_removeCustomIconAtIndex:(NSUInteger)index;
 
 @end

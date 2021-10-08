@@ -335,20 +335,30 @@ if( self.updateTiming ) { \
   if(index != NSNotFound) {
     [[self.tree.undoManager prepareWithInvocationTarget:self] addCustomIcon:icon atIndex:index];
     [self.tree.undoManager setActionName:NSLocalizedStringFromTableInBundle(@"DELETE_CUSTOM_ICON", nil, [NSBundle bundleForClass:[self class]], @"Action name for deleting a custom icon")];
-    NSAssert(self.tree.mutableDeletedObjects[icon.uuid] == nil, @"Internal inconsistency. Deleted node should not be present");
+    if(self.tree.mutableDeletedObjects[icon.uuid] != nil) {
+      NSLog(@"Warning. Potential Internal inconsistency. Deleted node should not be present");
+    }
     self.tree.mutableDeletedObjects[icon.uuid] = [[KPKDeletedNode alloc] initWithUUID:icon.uuid];
-    /* register deleted node for delted icon */
-    [self removeObjectFromMutableCustomIconsAtIndex:index];
-    icon.tree = nil;
-    /* trigger a change notification to encourage reavaluation*/
-    [self.tree.root _traverseNodesWithBlock:^(KPKNode *node, BOOL *stop) {
-      if([node.iconUUID isEqual:icon.uuid]) {
-        [node willChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
-        [node didChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
-      }
-    }];
+    [self _removeCustomIconAtIndex:index];
   }
 }
+
+- (void)_removeCustomIconAtIndex:(NSUInteger)index {
+  /* register deleted node for delted icon */
+  KPKIcon *icon = self.mutableCustomIcons[index];
+  NSAssert(icon, @"No valid icon index supplied!");
+  [self removeObjectFromMutableCustomIconsAtIndex:index];
+  icon.tree = nil;
+  /* trigger a change notification to encourage reavaluation*/
+  [self.tree.root _traverseNodesWithBlock:^(KPKNode *node, BOOL *stop) {
+    if([node.iconUUID isEqual:icon.uuid]) {
+      [node willChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
+      [node didChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
+    }
+  }];
+
+}
+
 
 - (NSString *)valueForCustomDataKey:(NSString *)key {
   KPKModifiedString *string = self.mutableCustomData[key];
@@ -460,6 +470,7 @@ if( self.updateTiming ) { \
     }
   }
   /* Merge icons */
+  
   for(KPKIcon *otherIcon in otherMetaData.mutableCustomIcons) {
     KPKIcon *localIcon = [self findIcon:otherIcon.uuid];
     /* no local icon, just import */

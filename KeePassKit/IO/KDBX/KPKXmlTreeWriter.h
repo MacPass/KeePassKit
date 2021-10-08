@@ -39,7 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
  Called by the writer to retrieve the random stream for the inner protection
  */
 - (KPKRandomStream *)randomStreamForWriter:(KPKXmlTreeWriter *)writer;
-- (NSUInteger)fileVersionForWriter:(KPKXmlTreeWriter *)writer;
 - (NSData *)headerHashForWriter:(KPKXmlTreeWriter *)writer;
 /**
  Called by the writer to retrieve a list of all available binaries.

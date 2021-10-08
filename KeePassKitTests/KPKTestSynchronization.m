@@ -645,6 +645,38 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   
 }
 
+- (void)testAddedCustomIcon {
+  KPKIcon *icon = [[KPKIcon alloc] initWithImage:[NSImage imageNamed:NSImageNameInfo]];
+  [self.kdbxTreeB.metaData addCustomIcon:icon];
+  XCTAssertEqual(1, self.kdbxTreeA.metaData.mutableCustomIcons.count);
+  XCTAssertEqual(2, self.kdbxTreeB.metaData.mutableCustomIcons.count);
+  
+  [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
+  XCTAssertEqual(2, self.kdbxTreeA.metaData.mutableCustomIcons.count);
+}
+
+- (void)testRemovedCustomIcon {
+  KPKIcon *icon = [[KPKIcon alloc] initWithImage:[NSImage imageNamed:NSImageNameInfo]];
+  [self.kdbxTreeA.metaData addCustomIcon:icon];
+  [self.kdbxTreeB.metaData addCustomIcon:icon];
+  
+  [self.kdbxTreeB.metaData removeCustomIcon:icon];
+  
+  XCTAssertEqual(2, self.kdbxTreeA.metaData.mutableCustomIcons.count);
+  XCTAssertEqual(1, self.kdbxTreeB.metaData.mutableCustomIcons.count);
+  
+  KPKDeletedNode *deletedNodeA = self.kdbxTreeA.mutableDeletedObjects[icon.uuid];
+  XCTAssertNil(deletedNodeA);
+  
+  KPKDeletedNode *deletedNodeB = self.kdbxTreeB.mutableDeletedObjects[icon.uuid];
+  XCTAssertNotNil(deletedNodeB);
+  
+  [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
+  XCTAssertEqual(1, self.kdbxTreeA.metaData.mutableCustomIcons.count);
+  deletedNodeA = self.kdbxTreeA.mutableDeletedObjects[icon.uuid];
+  XCTAssertNotNil(deletedNodeA);  
+}
+
 - (void)testRemovedCustomNodeData {
   KPKGroup *groupB = [self.kdbxTreeB.root groupForUUID:self.groupUUID];
   KPKEntry *entryB = [self.kdbxTreeB.root entryForUUID:self.rootEntryUUID];
