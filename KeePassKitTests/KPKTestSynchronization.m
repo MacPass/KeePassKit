@@ -62,6 +62,7 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   self.kdbxTreeA.metaData.mutableCustomPublicData[@"String"] = @"String";
   
   KPKIcon *icon = [[KPKIcon alloc] initWithImage:[NSImage imageNamed:NSImageNameCaution]];
+  icon.name = @"Icon";
   
   [self.kdbxTreeA.metaData addCustomIcon:icon];
   
@@ -640,7 +641,20 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
 }
 
 - (void)testRemovedPublicCustomData {
+  /*
+  self.kdbxTreeA.metaData.mutableCustomPublicData[@"UInt32"] = [KPKNumber numberWithUnsignedInteger32:32];
+  self.kdbxTreeA.metaData.mutableCustomPublicData[@"UInt64"] = [KPKNumber numberWithUnsignedInteger64:64];
+  self.kdbxTreeA.metaData.mutableCustomPublicData[@"Int32"] = [KPKNumber numberWithInteger32:-32];
+  self.kdbxTreeA.metaData.mutableCustomPublicData[@"Int64"] = [KPKNumber numberWithInteger64:-64];
+  self.kdbxTreeA.metaData.mutableCustomPublicData[@"Data"] = [NSData dataWithBytes:bytes length:4];
+  self.kdbxTreeA.metaData.mutableCustomPublicData[@"String"] = @"String";
+  */
   
+  [self.kdbxTreeB.metaData removePublicCustomDataForKey:@"UInt32"];
+  [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
+  
+  XCTAssertNil([self.kdbxTreeA.metaData valueForPublicCustomDataKey:@"UInt32"]);
+  XCTAssertEqual(5, self.kdbxTreeA.metaData.mutableCustomPublicData.count);
 }
 
 - (void)testAddedPublicCustomData {
@@ -684,11 +698,54 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
 }
 
 - (void)testLocalDeletedExternalModifiedCustomIcon {
+  KPKIcon *iconA = self.kdbxTreeA.metaData.mutableCustomIcons.firstObject;
+  [self.kdbxTreeA.metaData removeCustomIcon:iconA];
+  XCTAssertEqual(0, self.kdbxTreeA.metaData.mutableCustomIcons.count);
+  XCTAssertEqual(1, self.kdbxTreeA.mutableDeletedObjects.count);
+  
+  KPKIcon *iconB = self.kdbxTreeB.metaData.mutableCustomIcons.firstObject;
+  usleep(10);
+  iconB.name = @"ChangedName";
+  
+  [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
+  KPKIcon *synchedIconA = [self.kdbxTreeA.metaData findIcon:iconA.uuid];
+  XCTAssertNotNil(synchedIconA);
+  XCTAssertEqual(1, self.kdbxTreeA.metaData.mutableCustomIcons.count);
+  XCTAssertEqualObjects(iconB, synchedIconA);
+}
 
+- (void)testExternalDeletedLocalModifiedCustomIcon {
+  KPKIcon *iconA = self.kdbxTreeA.metaData.mutableCustomIcons.firstObject;
+  KPKIcon *iconB = [self.kdbxTreeB.metaData findIcon:iconA.uuid];
+  
+  [self.kdbxTreeB.metaData removeCustomIcon:iconB];
+  XCTAssertEqual(0, self.kdbxTreeB.metaData.mutableCustomIcons.count);
+  XCTAssertEqual(1, self.kdbxTreeB.mutableDeletedObjects.count);
+
+  usleep(10);
+  iconA.name = @"ChangedName";
+  
+  [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
+  KPKIcon *synchedIconA = [self.kdbxTreeA.metaData findIcon:iconA.uuid];
+  XCTAssertNotNil(synchedIconA);
+  XCTAssertEqual(1, self.kdbxTreeA.metaData.mutableCustomIcons.count);
+  XCTAssertEqualObjects(iconA, synchedIconA);
 }
 
 - (void)testLocalModifiedExternalDeletedCustomIcon {
+  KPKIcon *iconA = self.kdbxTreeA.metaData.mutableCustomIcons.firstObject;
+  iconA.name = @"ChangedName";
   
+  KPKIcon *iconB = [self.kdbxTreeB.metaData findIcon:iconA.uuid];
+  [self.kdbxTreeB.metaData removeCustomIcon:iconB];
+  XCTAssertEqual(0, self.kdbxTreeB.metaData.mutableCustomIcons.count);
+  XCTAssertEqual(1, self.kdbxTreeB.mutableDeletedObjects.count);
+  
+  [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
+  KPKIcon *synchedIconA = [self.kdbxTreeA.metaData findIcon:iconA.uuid];
+  XCTAssertNil(synchedIconA);
+  XCTAssertEqual(0, self.kdbxTreeA.metaData.mutableCustomIcons.count);
+  XCTAssertNotNil(self.kdbxTreeA.deletedObjects[iconA.uuid]);
 }
 
 - (void)testRemovedCustomNodeData {

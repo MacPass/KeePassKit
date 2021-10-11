@@ -32,9 +32,9 @@
 @interface KPKMetaData : NSObject <KPKModificationRecording, NSCopying>
 
 /* Setting for cipher */
-@property (copy) NSDictionary *keyDerivationParameters; // NSDictionary(Variant) with parameters for the key derivation operation
-@property (copy) NSUUID *cipherUUID; // UUID for the chipher used to encrypt the content, defaults are AES (KDB, KDBX3.1) and ChaCha20 (KDBX4)
-@property uint32_t compressionAlgorithm;
+@property (nonatomic, copy) NSDictionary *keyDerivationParameters; // NSDictionary(Variant) with parameters for the key derivation operation
+@property (nonatomic, copy) NSUUID *cipherUUID; // UUID for the chipher used to encrypt the content, defaults are AES (KDB, KDBX3.1) and ChaCha20 (KDBX4)
+@property (nonatomic) uint32_t compressionAlgorithm;
 
 @property (nonatomic, copy) NSString *generator;
 
@@ -98,7 +98,13 @@
 - (NSString *)valueForCustomDataKey:(NSString *)key;
 - (void)setValue:(NSString *)value forCustomDataKey:(NSString *)key;
 - (void)removeCustomDataForKey:(NSString *)key;
+
+/// Returns the value for the given key of the public custom data dictionary
+/// @param key the key to get the data for
+- (id)valueForPublicCustomDataKey:(NSString *)key;
 - (void)setValue:(id)value forPublicCustomDataKey:(NSString *)key;
+- (void)removePublicCustomDataForKey:(NSString *)key;
+
 
 - (BOOL)protectAttributeWithKey:(NSString *)key;
 

@@ -197,6 +197,25 @@ value = NSDate.date; \
   return self.masterKeyChangeRecommendationInterval > -1;
 }
 
+- (void)setCipherUUID:(NSUUID *)cipherUUID {
+  if(![_cipherUUID isEqual:cipherUUID]) {
+    _cipherUUID = [cipherUUID copy];
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged);
+  }
+}
+
+- (void)setKeyDerivationParameters:(NSDictionary *)keyDerivationParameters {
+  _keyDerivationParameters = [keyDerivationParameters copy];
+  KPK_METADATA_UPDATE_DATE(self.settingsChanged)
+}
+
+- (void)setCompressionAlgorithm:(uint32_t)compressionAlgorithm {
+  if(compressionAlgorithm != _compressionAlgorithm) {
+    _compressionAlgorithm = compressionAlgorithm;
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged);
+  }
+}
+
 - (void)setColor:(NSUIColor *)color {
   if(![_color isEqual:color]) {
     /*
@@ -212,6 +231,7 @@ value = NSDate.date; \
   if(![_databaseName isEqualToString:databaseName]) {
     _databaseName = [databaseName copy];
     KPK_METADATA_UPDATE_DATE(self.databaseNameChanged)
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged)
   }
 }
 
@@ -219,6 +239,7 @@ value = NSDate.date; \
   if(![_databaseDescription isEqualToString:databaseDescription]) {
     _databaseDescription = [databaseDescription copy];
     KPK_METADATA_UPDATE_DATE(self.databaseDescriptionChanged)
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged)
   }
 }
 
@@ -226,6 +247,7 @@ value = NSDate.date; \
   if(![_defaultUserName isEqualToString:defaultUserName]) {
     _defaultUserName = [defaultUserName copy];
     KPK_METADATA_UPDATE_DATE(self.defaultUserNameChanged)
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged)
   }
 }
 
@@ -233,6 +255,7 @@ value = NSDate.date; \
   if(![_entryTemplatesGroupUuid isEqual:entryTemplatesGroup]) {
     _entryTemplatesGroupUuid = entryTemplatesGroup;
     KPK_METADATA_UPDATE_DATE(self.entryTemplatesGroupChanged)
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged)
   }
 }
 
@@ -240,6 +263,7 @@ value = NSDate.date; \
   if(_useTrash != useTrash) {
     _useTrash = useTrash;
     KPK_METADATA_UPDATE_DATE(self.trashChanged)
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged)
   }
 }
 
@@ -247,6 +271,7 @@ value = NSDate.date; \
   if(![_trashUuid isEqual:trashUuid]) {
     _trashUuid = trashUuid;
     KPK_METADATA_UPDATE_DATE(self.trashChanged)
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged)
   }
 }
 
@@ -378,8 +403,16 @@ value = NSDate.date; \
   self.mutableCustomData[key] = nil;
 }
 
+- (id)valueForPublicCustomDataKey:(NSString *)key {
+  return self.mutableCustomPublicData[key];
+}
+
 - (void)setValue:(id)value forPublicCustomDataKey:(NSString *)key {
   self.mutableCustomPublicData[key] = value;
+}
+
+- (void)removePublicCustomDataForKey:(NSString *)key {
+  self.mutableCustomPublicData[key] = nil;
 }
 
 - (KPKIcon *)findIcon:(NSUUID *)uuid {
