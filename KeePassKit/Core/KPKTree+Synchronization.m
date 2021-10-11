@@ -283,9 +283,8 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
 }
 
 - (void)_reapplyIconDeletions {
-  for(KPKIcon *icon in self.metaData.mutableCustomIcons) {
-    /* FIXME: this code defeats fast enumartion */
-    NSUInteger index = [self.metaData.mutableCustomIcons indexOfObject:icon];
+  for(NSUInteger index = 0; index < self.metaData.mutableCustomIcons.count; index++) {
+    KPKIcon *icon = self.metaData.mutableCustomIcons[index];
     KPKDeletedNode *deletedNode = self.mutableDeletedObjects[icon.uuid];
     if(!deletedNode) {
       continue;
