@@ -629,9 +629,15 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
 }
 
 - (void)testChangedCustomData {
+  KPKModifiedString *dataB = self.kdbxTreeB.metaData.mutableCustomData[@"CustomDataKeyB"];
+  NSDate *oldDateB = dataB.modificationDate;
+  [self.kdbxTreeB.metaData setValue:@"ChangedCustomDataValueB" forCustomDataKey:@"CustomDataKeyB"];
+  XCTAssertEqual(NSOrderedAscending, [oldDateB compare:dataB.modificationDate]);
   
+  [self.kdbxTreeA synchronizeWithTree:self.kdbxTreeB mode:KPKSynchronizationModeSynchronize options:0];
+  XCTAssertEqual(2, self.kdbxTreeA.metaData.mutableCustomData.count);
+  XCTAssertEqualObjects(@"ChangedCustomDataValueB", [self.kdbxTreeA.metaData valueForCustomDataKey:@"CustomDataKeyB"]);
 }
-
 
 - (void)testRemovedPublicCustomData {
   
@@ -675,6 +681,14 @@ KPKGroup *_findGroupByTitle(NSString *title, KPKTree *tree) {
   XCTAssertEqual(1, self.kdbxTreeA.metaData.mutableCustomIcons.count);
   deletedNodeA = self.kdbxTreeA.mutableDeletedObjects[icon.uuid];
   XCTAssertNotNil(deletedNodeA);  
+}
+
+- (void)testLocalDeletedExternalModifiedCustomIcon {
+
+}
+
+- (void)testLocalModifiedExternalDeletedCustomIcon {
+  
 }
 
 - (void)testRemovedCustomNodeData {

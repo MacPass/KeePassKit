@@ -39,7 +39,7 @@
 
 #define KPK_METADATA_UPDATE_DATE(value) \
 if( self.updateTiming ) { \
-  value = NSDate.date; \
+value = NSDate.date; \
 } \
 
 @interface KPKMetaData () {
@@ -356,7 +356,7 @@ if( self.updateTiming ) { \
       [node didChangeValueForKey:NSStringFromSelector(@selector(iconUUID))];
     }
   }];
-
+  
 }
 
 
@@ -420,17 +420,17 @@ if( self.updateTiming ) { \
     self.databaseName = otherMetaData.databaseName;
     self.databaseNameChanged = otherMetaData.databaseNameChanged;
   }
-
+  
   if(forceUpdate || NSOrderedAscending == [self.databaseDescriptionChanged compare:otherMetaData.databaseDescriptionChanged]) {
     self.databaseDescription = otherMetaData.databaseDescription;
     self.databaseDescriptionChanged = otherMetaData.databaseDescriptionChanged;
   }
-
+  
   if(forceUpdate || NSOrderedAscending == [self.defaultUserNameChanged compare:otherMetaData.defaultUserNameChanged]) {
     self.defaultUserName = otherMetaData.defaultUserName;
     self.defaultUserNameChanged = otherMetaData.defaultUserNameChanged;
   }
-
+  
   if(forceUpdate || NSOrderedAscending == [self.trashChanged compare:otherMetaData.trashChanged]) {
     
     self.trashChanged = otherMetaData.trashChanged;
@@ -456,10 +456,39 @@ if( self.updateTiming ) { \
     }
     // else keep old uuid
   }
-  // TODO: Add support for KDBX4.1 modified date
   for(NSString *key in otherMetaData.mutableCustomData) {
-    if(otherIsNewer || (nil == self.mutableCustomData[key])) {
-      self.mutableCustomData[key] = otherMetaData.mutableCustomData[key];
+    KPKModifiedString *otherData = otherMetaData.mutableCustomData[key];
+    KPKModifiedString *localData = self.mutableCustomData[key];
+    if(localData == nil) {
+      self.mutableCustomData[key] = [otherData copy];
+      continue;
+    }
+    if([localData isEqualToModifiedString:otherData]) {
+      continue;
+    }
+    if(forceUpdate) {
+      self.mutableCustomData[key] = [otherData copy];
+      continue;
+    }
+    if(localData.modificationDate == nil) {
+      if(otherData.modificationDate != nil) {
+        self.mutableCustomData[key] = [otherData copy]; // other has newer kdbx format
+      }
+      else {
+        if(otherIsNewer) {
+          self.mutableCustomData[key] = [otherData copy]; // device based on settings-changed
+        }
+        continue;
+      }
+    }
+    NSComparisonResult result = [localData.modificationDate compare:otherData.modificationDate];
+    switch(result) {
+      case NSOrderedAscending:
+        self.mutableCustomData[key] = [otherData copy];
+        continue;
+      case NSOrderedSame:
+      case NSOrderedDescending:
+        continue;
     }
   }
   NSDictionary *backup = [[NSDictionary alloc] initWithDictionary:self.mutableCustomPublicData copyItems:YES];
