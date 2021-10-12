@@ -154,7 +154,7 @@ NSString *const KPKEntryKey       = @"KPKEntryKey";
 
 - (KPKGroup *)createGroup:(KPKGroup *)parent {
   KPKGroup *group = [[KPKGroup alloc] init];
-  group.parent = parent;
+  //group.parent = parent;
   return group;
 }
 
