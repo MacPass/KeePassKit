@@ -5,7 +5,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 KeePass database loading, storing and manipulation framework.
-It's inspired by [MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) and [KeePass Database Library](https://github.com/mpowrie/KeePassLib) but has diverged a lot over the development.
+It's inspired by [MiniKeePass](https://github.com/MiniKeePass/MiniKeePass) and [KeePass Database Library](https://github.com/mykeepass/KeePassLib) but has diverged a lot over the development.
 
 ## Contributors
 
