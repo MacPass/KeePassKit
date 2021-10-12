@@ -639,9 +639,6 @@
 		4C2561E3270DDC3B00AEBC99 /* Database_test_keyFileV2.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561E1270DDC3B00AEBC99 /* Database_test_keyFileV2.kdbx */; };
 		4C2561E4270DDC3B00AEBC99 /* Database_test_keyFileV2.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561E1270DDC3B00AEBC99 /* Database_test_keyFileV2.kdbx */; };
 		4C2561E5270DDC3B00AEBC99 /* Database_test_keyFileV2.kdbx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561E1270DDC3B00AEBC99 /* Database_test_keyFileV2.kdbx */; };
-		4C2561E6270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561E2270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx */; };
-		4C2561E7270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561E2270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx */; };
-		4C2561E8270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561E2270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx */; };
 		4C2602191DB110930069B059 /* chacha20_simple.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C2602111DB110930069B059 /* chacha20_simple.c */; };
 		4C26021A1DB110930069B059 /* chacha20_simple.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2602121DB110930069B059 /* chacha20_simple.h */; };
 		4C2A9A0E25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C2A9A0C25AC930B00A45D43 /* KPKArgon2IDKeyDerivation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1012,6 +1009,9 @@
 		4CBEFF491F99EA87007362E4 /* test.ico in Resources */ = {isa = PBXBuildFile; fileRef = 4C639E291F6A642500E6C5CD /* test.ico */; };
 		4CC34FE71D21290D00D79EC1 /* KPKTestUndoAutotype.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC34FE61D21290D00D79EC1 /* KPKTestUndoAutotype.m */; };
 		4CC57A281DCD454A003EE16C /* KPKTestTwofish.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC57A271DCD454A003EE16C /* KPKTestTwofish.m */; };
+		4CC7EE7C27159F6C002141F1 /* Database_test_keyFileV2.keyx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561E2270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx */; };
+		4CC7EE7D27159F6C002141F1 /* Database_test_keyFileV2.keyx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561E2270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx */; };
+		4CC7EE7E27159F6C002141F1 /* Database_test_keyFileV2.keyx in Resources */ = {isa = PBXBuildFile; fileRef = 4C2561E2270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx */; };
 		4CCB50AC1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCB50AB1E2E619400DFC5B9 /* KPKTestWindowAssociationTitleMatching.m */; };
 		4CCC95061E24F2BD00593E65 /* KPKTestNodeForUUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC95051E24F2BD00593E65 /* KPKTestNodeForUUID.m */; };
 		4CCE00C71D78598800B8D50A /* KPKTimeInfo_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCE00C51D78598800B8D50A /* KPKTimeInfo_Private.h */; };
@@ -2911,7 +2911,6 @@
 				2D51255B1E9BD06700D7EAF6 /* Test_Password_1234.kdb in Resources */,
 				4C69D64923F2D73D007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */,
 				4C6B7ED521A2B2E200B26B63 /* Kdb1HexKey.key in Resources */,
-				4C2561E7270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx in Resources */,
 				4CB13A0F1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				2D51255C1E9BD06700D7EAF6 /* Test_Password_1234.kdbx in Resources */,
 				2D51255D1E9BD06700D7EAF6 /* Autotype_test.kdbx in Resources */,
@@ -2933,6 +2932,7 @@
 				4CBEFF451F99EA83007362E4 /* test.ico in Resources */,
 				2D5125631E9BD06700D7EAF6 /* image.png in Resources */,
 				4CBB465125AF7EBA0093F444 /* Argon2idKDF_123.kdbx in Resources */,
+				4CC7EE7D27159F6C002141F1 /* Database_test_keyFileV2.keyx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2959,7 +2959,6 @@
 				2D5126641E9BD29500D7EAF6 /* TwoFishCipher256bit_test.kdbx in Resources */,
 				4C69D64823F2D73C007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */,
 				4C6B7ED621A2B2E300B26B63 /* Kdb1HexKey.key in Resources */,
-				4C2561E8270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx in Resources */,
 				4CB13A101FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				2D5126651E9BD29500D7EAF6 /* KDB1_KeePassX_test.kdb in Resources */,
 				2D5126661E9BD29500D7EAF6 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
@@ -2981,6 +2980,7 @@
 				4CBEFF491F99EA87007362E4 /* test.ico in Resources */,
 				2D51266F1E9BD29500D7EAF6 /* image.png in Resources */,
 				4CBB465225AF7EBA0093F444 /* Argon2idKDF_123.kdbx in Resources */,
+				4CC7EE7C27159F6C002141F1 /* Database_test_keyFileV2.keyx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3015,7 +3015,6 @@
 				4C199DA31DCF311700D4FDC8 /* TwoFishCipher256bit_test.kdbx in Resources */,
 				4C69D64A23F2D73D007ABE04 /* KDB1_Password_1234_Keyfile_Kdb1HexKey.kdb in Resources */,
 				4C6B7ED421A2B2E200B26B63 /* Kdb1HexKey.key in Resources */,
-				4C2561E6270DDC3B00AEBC99 /* Database_test_keyFileV2.keyx in Resources */,
 				4CB13A0E1FC3533A0061264A /* Broken_BinaryAttachments_test.kdbx in Resources */,
 				4C8138291BE282DC001BF195 /* KDB1_KeePassX_test.kdb in Resources */,
 				4C0BF1521DC1199900193AD1 /* Argon2KDF_AES_Cipher_test.kdbx in Resources */,
@@ -3037,6 +3036,7 @@
 				4C639E2A1F6A642500E6C5CD /* test.ico in Resources */,
 				4C81382D1BE282DC001BF195 /* image.png in Resources */,
 				4CBB465025AF7EBA0093F444 /* Argon2idKDF_123.kdbx in Resources */,
+				4CC7EE7E27159F6C002141F1 /* Database_test_keyFileV2.keyx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
