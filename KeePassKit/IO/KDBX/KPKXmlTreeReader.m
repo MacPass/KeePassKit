@@ -151,7 +151,7 @@
   
   tree.root = [self _parseGroup:rootGroup];
   [self _parseDeletedObjects:root tree:tree];
-  
+
   tree.metaData.updateTiming = YES;
   
   return tree;
