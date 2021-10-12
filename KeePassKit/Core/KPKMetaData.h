@@ -38,15 +38,15 @@
 
 @property (nonatomic, copy) NSString *generator;
 
-@property (copy) NSDate *settingsChanged;
+@property (readonly, copy) NSDate *settingsChanged;
 
 @property (nonatomic, copy) NSString *databaseName;
-@property (nonatomic, copy) NSDate *databaseNameChanged;
+@property (nonatomic, readonly, copy) NSDate *databaseNameChanged;
 @property (nonatomic, copy) NSString *databaseDescription;
-@property (nonatomic, copy) NSDate *databaseDescriptionChanged;
+@property (nonatomic, readonly, copy) NSDate *databaseDescriptionChanged;
 
 @property (nonatomic, copy) NSString *defaultUserName;
-@property (nonatomic, copy) NSDate *defaultUserNameChanged;
+@property (nonatomic, readonly, copy) NSDate *defaultUserNameChanged;
 @property (nonatomic) NSInteger maintenanceHistoryDays;
 
 /* Hexstring - #AA77FF */
@@ -67,10 +67,10 @@
 
 @property (nonatomic) BOOL useTrash;
 @property (nonatomic, copy) NSUUID *trashUuid;
-@property (nonatomic, copy) NSDate *trashChanged;
+@property (nonatomic, readonly, copy) NSDate *trashChanged;
 
 @property (nonatomic, copy) NSUUID *entryTemplatesGroupUuid;
-@property (nonatomic, copy) NSDate *entryTemplatesGroupChanged;
+@property (nonatomic, readonly, copy) NSDate *entryTemplatesGroupChanged;
 
 @property (nonatomic, readonly) BOOL isHistoryEnabled;
 @property NSInteger historyMaxItems;

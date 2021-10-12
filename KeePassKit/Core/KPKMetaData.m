@@ -190,11 +190,34 @@ value = NSDate.date; \
 }
 
 - (BOOL)enforceMasterKeyChange {
-  return  self.masterKeyChangeEnforcementInterval > -1;
+  return self.masterKeyChangeEnforcementInterval > -1;
 }
 
 - (BOOL)recommendMasterKeyChange {
   return self.masterKeyChangeRecommendationInterval > -1;
+}
+
+- (void)setMasterKeyChangeEnforcementInterval:(NSInteger)masterKeyChangeEnforcementInterval {
+  masterKeyChangeEnforcementInterval = MAX(-1, masterKeyChangeEnforcementInterval);
+  if(_masterKeyChangeEnforcementInterval != masterKeyChangeEnforcementInterval) {
+    _masterKeyChangeEnforcementInterval = masterKeyChangeEnforcementInterval;
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged);
+  }
+}
+
+- (void)setMasterKeyChangeRecommendationInterval:(NSInteger)masterKeyChangeRecommendationInterval {
+  masterKeyChangeRecommendationInterval = MAX(-1, masterKeyChangeRecommendationInterval);
+  if(_masterKeyChangeRecommendationInterval != masterKeyChangeRecommendationInterval) {
+    _masterKeyChangeRecommendationInterval = masterKeyChangeRecommendationInterval;
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged);
+  }
+}
+
+- (void)setEnforceMasterKeyChangeOnce:(BOOL)enforceMasterKeyChangeOnce {
+  if(_enforceMasterKeyChangeOnce != enforceMasterKeyChangeOnce) {
+    _enforceMasterKeyChangeOnce = enforceMasterKeyChangeOnce;
+    KPK_METADATA_UPDATE_DATE(self.settingsChanged);
+  }
 }
 
 - (void)setCipherUUID:(NSUUID *)cipherUUID {
@@ -241,6 +264,11 @@ value = NSDate.date; \
     KPK_METADATA_UPDATE_DATE(self.databaseDescriptionChanged)
     KPK_METADATA_UPDATE_DATE(self.settingsChanged)
   }
+}
+
+- (void)setMaintenanceHistoryDays:(NSInteger)maintenanceHistoryDays {
+  _maintenanceHistoryDays = maintenanceHistoryDays;
+  KPK_METADATA_UPDATE_DATE(self.settingsChanged)
 }
 
 - (void)setDefaultUserName:(NSString *)defaultUserName {
@@ -297,9 +325,7 @@ value = NSDate.date; \
   self.maintenanceHistoryDays == other.maintenanceHistoryDays &&
   ((!self.color && !other.color) || [self.color isEqual:other.color]) &&
   [self.masterKeyChanged isEqualToDate:other.masterKeyChanged] &&
-  self.recommendMasterKeyChange == other.recommendMasterKeyChange &&
   self.masterKeyChangeRecommendationInterval == other.masterKeyChangeRecommendationInterval &&
-  self.enforceMasterKeyChange == other.enforceMasterKeyChange &&
   self.masterKeyChangeEnforcementInterval == other.masterKeyChangeEnforcementInterval &&
   self.enforceMasterKeyChangeOnce == other.enforceMasterKeyChangeOnce &&
   self.protectTitle == other.protectTitle &&
