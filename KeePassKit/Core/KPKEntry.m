@@ -44,17 +44,39 @@
 
 #import "KPKScopedSet.h"
 
+// UserInfo Keys
+NSString *const KPKAttributeKeyKey                    = @"KPKAttributeKeyKey";
+NSString *const KPKBinaryKey                          = @"KPKBinaryKey";
+NSString *const KPKBinaryIndexKey                     = @"KPKBinaryIndexKey";
+NSString *const KPKWindowAssociationKey               = @"KPKWindowAssociationKey";
+NSString *const KPKWindowAssociationIndexKey          = @"KPKWindowAssociationIndexKey";
+
 // Notifications
 NSString *const KPKWillChangeEntryNotification        = @"KPKWillChangeEntryNotification";
 NSString *const KPKDidChangeEntryNotification         = @"KPKDidChangeEntryNotification";
 
-NSString *const KPKAttributeKeyKey                    = @"KPKAttributeKeyKey";
 NSString *const KPKWillAddAttributeNotification       = @"KPKWillAddAttributeNotification";
 NSString *const KPKDidAddAttributeNotification        = @"KPKDidAddAttributeNotification";
 NSString *const KPKWillRemoveAttributeNotification    = @"KPKWillRemoveAttributeNotification";
 NSString *const KPKDidRemoveAttributeNotification     = @"KPKDidRemoveAttributeNotification";
 NSString *const KPKWillChangeAttributeNotification    = @"KPKWillChangeAttributeNotification";
 NSString *const KPKDidChangeAttributeNotification     = @"KPKDidChangeAttributeNotification";
+
+NSString *const KPKWillChangeBinaryNotification       = @"KPKWillChangeBinaryNotification";
+NSString *const KPKDidChangeBinaryNotification        = @"KPKDidChangeBinaryNotification";
+NSString *const KPKWillAddBinaryNotification          = @"KPKWillAddBinaryNotification";
+NSString *const KPKDidAddBinaryNotification           = @"KPKDidAddBinaryNotification";
+NSString *const KPKWillRemoveBinaryNotification       = @"KPKWillRemoveBinaryNotification";
+NSString *const KPKDidRemoveBinaryNotification        = @"KPKDidRemoveBinaryNotification";
+
+NSString *const KPKWillChangeAutotypeNotification           = @"KPKWillChangeAutotypeNotification";
+NSString *const KPKDidChangeAutotypeNotification            = @"KPKDidChangeAutotypeNotification";
+NSString *const KPKWillAddWindowAssociationNotification     = @"KPKWillAddWindowAssociationNotification";
+NSString *const KPKDidAddWindowAssociationNotification      = @"KPKDidAddWindowAssociationNotification";
+NSString *const KPKWillRemoveWindowAssociationNotification  = @"KPKWillRemoveWindowAssociationNotification";
+NSString *const KPKDidRemoveWindowAssociationNotification   = @"KPKDidRemoveWindowAssociationNotification";
+NSString *const KPKWillChangeWindowAssociationNotification  = @"KPKWillChangeWindowAssociationNotification";
+NSString *const KPKDidChangeWindowAssociationNotification   = @"KPKDidChangeWindowAssociationNotification";
 
 // Magic constants for Meta Entries
 NSString *const KPKMetaEntryBinaryDescription   = @"bin-stream";
@@ -526,7 +548,7 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
 }
 
 - (BOOL)protectPassword {
-  return  [self _protectValueForKey:kKPKPasswordKey];
+  return [self _protectValueForKey:kKPKPasswordKey];
 }
 
 - (BOOL)protectTitle {
@@ -853,10 +875,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     NSLog(@"Warning. Attribute with key %@ already present! Changing key to %@", duplicate.key, attribute.key);
   }
   [[self.undoManager prepareWithInvocationTarget:self] removeCustomAttribute:attribute];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
   [NSNotificationCenter.defaultCenter postNotificationName:KPKWillAddAttributeNotification object:self userInfo:@{KPKAttributeKeyKey: attribute.key}];
   [self touchModified];
   [self insertObject:attribute inMutableAttributesAtIndex:index];
   attribute.entry = self;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
   [NSNotificationCenter.defaultCenter postNotificationName:KPKDidAddAttributeNotification object:self userInfo:@{KPKAttributeKeyKey: attribute.key}];
 }
 
@@ -864,10 +888,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   NSUInteger index = [self.mutableAttributes indexOfObjectIdenticalTo:attribute];
   if(NSNotFound != index) {
     [[self.undoManager prepareWithInvocationTarget:self] _addCustomAttribute:attribute atIndex:index];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
     [NSNotificationCenter.defaultCenter postNotificationName:KPKWillRemoveAttributeNotification object:self userInfo:@{ KPKAttributeKeyKey: attribute.key}];
     [self touchModified];
     attribute.entry = nil;
     [self removeObjectFromMutableAttributesAtIndex:index];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
     [NSNotificationCenter.defaultCenter postNotificationName:KPKDidRemoveAttributeNotification object:self userInfo:@{ KPKAttributeKeyKey: attribute.key}];
   }
 }
@@ -901,8 +927,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
     binary.name = [self _proposedNameForBinaryName:duplicate.name];
   }
   [[self.undoManager prepareWithInvocationTarget:self] removeBinary:binary];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillAddBinaryNotification object:@{KPKBinaryKey: binary, KPKBinaryIndexKey: @(index)}];
   [self touchModified];
   [self insertObject:binary inMutableBinariesAtIndex:index];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidAddBinaryNotification object:@{KPKBinaryKey: binary, KPKBinaryIndexKey: @(index)}];
   
 }
 
@@ -916,8 +946,12 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   NSUInteger index = [self.mutableBinaries indexOfObjectIdenticalTo:binary];
   if(index != NSNotFound) {
     [[self.undoManager prepareWithInvocationTarget:self] addBinary:binary];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKWillRemoveBinaryNotification object:@{KPKBinaryKey: binary, KPKBinaryIndexKey: @(index)}];
     [self touchModified];
     [self removeObjectFromMutableBinariesAtIndex:index];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKDidRemoveBinaryNotification object:@{KPKBinaryKey: binary, KPKBinaryIndexKey: @(index)}];
   }
 }
 

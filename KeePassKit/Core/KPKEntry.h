@@ -30,18 +30,40 @@
 @class KPKAttribute;
 @class KPKAutotype;
 
-FOUNDATION_EXTERN NSString *const KPKAttributeKeyKey;
+FOUNDATION_EXTERN NSString *const KPKAttributeKeyKey;           // NSString with attribute key
+FOUNDATION_EXTERN NSString *const KPKBinaryKey;                 // KPKBinary affected
+FOUNDATION_EXTERN NSString *const KPKBinaryIndexKey;            // index (NSInteger) of KPKBinary affected
+FOUNDATION_EXTERN NSString *const KPKWindowAssociationKey;      // KPKWindowAssociation affected
+FOUNDATION_EXTERN NSString *const KPKWindowAssociationIndexKey; // index (NSInteger) of KPKWindowAssociation affected
 /*
  Notifications sent when modifications happen
  */
 FOUNDATION_EXTERN NSString *const KPKWillChangeEntryNotification;     // object == entry
 FOUNDATION_EXTERN NSString *const KPKDidChangeEntryNotification;      // object == entry
+
 FOUNDATION_EXTERN NSString *const KPKWillAddAttributeNotification;    // KPKAttributeKeyKey
 FOUNDATION_EXTERN NSString *const KPKDidAddAttributeNotification;     // KPKAttributeKeyKey
 FOUNDATION_EXTERN NSString *const KPKWillRemoveAttributeNotification; // KPKAttributeKeyKey
 FOUNDATION_EXTERN NSString *const KPKDidRemoveAttributeNotification;  // KPKAttributeKeyKey
 FOUNDATION_EXTERN NSString *const KPKWillChangeAttributeNotification; // KPKAttributeKeyKey == old key
 FOUNDATION_EXTERN NSString *const KPKDidChangeAttributeNotification;  // KPKAttributeKeyKey == new key
+
+FOUNDATION_EXTERN NSString *const KPKWillChangeBinaryNotification; // userinfo contains KPKBinaryKey key with KPKBinary object
+FOUNDATION_EXTERN NSString *const KPKDidChangeBinaryNotification;  // userinfo contains KPKBinaryKey key with KPKBinary object
+FOUNDATION_EXTERN NSString *const KPKWillAddBinaryNotification; // userinfo contains KPKBinaryKey key with KPKBinary object
+FOUNDATION_EXTERN NSString *const KPKDidAddBinaryNotification;  // userinfo contains KPKBinaryKey key with KPKBinary object
+FOUNDATION_EXTERN NSString *const KPKWillRemoveBinaryNotification; // userinfo contains KPKBinaryKey and KPKBinaryIndexKey
+FOUNDATION_EXTERN NSString *const KPKDidRemoveBinaryNotification;  // userinfo contains KPKBinaryKey and KPKBinaryIndexKey
+
+FOUNDATION_EXTERN NSString *const KPKWillChangeAutotypeNotification;
+FOUNDATION_EXTERN NSString *const KPKDidChangeAutotypeNotification;
+FOUNDATION_EXTERN NSString *const KPKWillAddWindowAssociationNotification;
+FOUNDATION_EXTERN NSString *const KPKDidAddWindowAssociationNotification;
+FOUNDATION_EXTERN NSString *const KPKWillRemoveWindowAssociationNotification;
+FOUNDATION_EXTERN NSString *const KPKDidRemoveWindowAssociationNotification;
+FOUNDATION_EXTERN NSString *const KPKWillChangeWindowAssociationNotification;
+FOUNDATION_EXTERN NSString *const KPKDidChangeWindowAssociationNotification;
+
 
 /* Entries declared as MetaEntries in KDB files
  * contain information that is stored in meta data in KDBX file

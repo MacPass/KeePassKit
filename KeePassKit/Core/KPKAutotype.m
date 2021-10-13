@@ -212,8 +212,11 @@
     return; // no changes
   }
   [[self.entry.undoManager prepareWithInvocationTarget:self] setEnabled:self.enabled];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeAutotypeNotification object:self];
   [self.entry touchModified];
   _enabled = enabled;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeAutotypeNotification object:self];
+
 }
 
 - (void)setObfuscateDataTransfer:(BOOL)obfuscateDataTransfer {
@@ -221,8 +224,10 @@
     return; // no changes
   }
   [[self.entry.undoManager prepareWithInvocationTarget:self] setObfuscateDataTransfer:self.obfuscateDataTransfer];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeAutotypeNotification object:self];
   [self.entry touchModified];
   _obfuscateDataTransfer = obfuscateDataTransfer;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeAutotypeNotification object:self];
 }
 
 - (NSString *)defaultKeystrokeSequence {
@@ -238,8 +243,10 @@
     return; // no changes
   }
   [[self.entry.undoManager prepareWithInvocationTarget:self] setDefaultKeystrokeSequence:_defaultKeystrokeSequence];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeAutotypeNotification object:self];
   [self.entry touchModified];
   _defaultKeystrokeSequence = defaultSequence.length  > 0 ? [defaultSequence copy] : nil;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeAutotypeNotification object:self];
 }
 
 - (void)setMutableAssociations:(NSMutableArray<KPKWindowAssociation *> *)mutableAssociations {
@@ -263,17 +270,30 @@
 - (void)addAssociation:(KPKWindowAssociation *)association atIndex:(NSUInteger)index {
   [[self.entry.undoManager prepareWithInvocationTarget:self] removeAssociation:association];
   [self.entry touchModified];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillAddWindowAssociationNotification
+                                                    object:self
+                                                  userInfo:@{KPKWindowAssociationKey: association, KPKWindowAssociationIndexKey: @(index)}];
   association.autotype = self;
   [self insertObject:association inMutableAssociationsAtIndex:index];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidAddWindowAssociationNotification
+                                                    object:self
+                                                  userInfo:@{KPKWindowAssociationKey: association, KPKWindowAssociationIndexKey: @(index)}];
 }
 
 - (void)removeAssociation:(KPKWindowAssociation *)association {
   NSUInteger index = [self.mutableAssociations indexOfObjectIdenticalTo:association];
   if(index != NSNotFound) {
     [[self.entry.undoManager prepareWithInvocationTarget:self] addAssociation:association atIndex:index];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKWillRemoveWindowAssociationNotification
+                                                      object:self
+                                                    userInfo:@{KPKWindowAssociationKey: association, KPKWindowAssociationIndexKey: @(index)}];
     [self.entry touchModified];
     association.autotype = nil;
     [self removeObjectFromMutableAssociationsAtIndex:index];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKDidRemoveWindowAssociationNotification
+                                                      object:self
+                                                    userInfo:@{KPKWindowAssociationKey: association, KPKWindowAssociationIndexKey: @(index)}];
+
   }
 }
 
