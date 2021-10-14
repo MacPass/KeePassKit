@@ -30,13 +30,10 @@
 @property (nonatomic, copy) NSString *value;
 @property (nonatomic) BOOL protect;
 @property (nonatomic, readonly, getter=isEditable) BOOL editable;
-//@property (nonatomic, readonly) NSString *referencedValue;
-//@property (nonatomic, readonly) NSString *placeholderValue;
 /**
  *  @return Value evaluated with references and replaced placeholders
  */
 @property (nonatomic, readonly) NSString *evaluatedValue;
-
 /**
  *  Designates initalizer. Creats a Attribute with the given key, value and set the protetection
  *  @param key       Key for the attributes
