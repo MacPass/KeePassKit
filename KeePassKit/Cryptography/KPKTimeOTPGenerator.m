@@ -315,9 +315,6 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   if(authURL.key.length != 0) {
     self.key = authURL.key;
   }
-  else {
-    return NO; // key is mandatory!
-  }
   
   if(authURL.digits > 0) {
     self.numberOfDigits = authURL.digits;
