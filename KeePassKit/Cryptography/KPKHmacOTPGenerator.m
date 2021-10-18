@@ -36,6 +36,12 @@
   return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+  KPKHmacOTPGenerator *copy = [super copyWithZone:zone];
+  copy.counter = self.counter;
+  return copy;
+}
+
 - (void)saveCounterToEntry:(KPKEntry *)entry {
   KPKAttribute *urlAttribute = [entry attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
   if(urlAttribute) {

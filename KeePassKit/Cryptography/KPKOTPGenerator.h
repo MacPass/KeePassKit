@@ -33,7 +33,7 @@ FOUNDATION_EXTERN NSUInteger const KPKOTPMaxiumNumberOfDigits;
 /**
  Abstract base class for all OTP generators. You should only use concrete subclasses
  */
-@interface KPKOTPGenerator : NSObject
+@interface KPKOTPGenerator : NSObject <NSCopying>
 
 + (KPKOTPHashAlgorithm)algorithmForString:(NSString *)string;
 + (NSString *)stringForAlgorithm:(KPKOTPHashAlgorithm)algorithm;

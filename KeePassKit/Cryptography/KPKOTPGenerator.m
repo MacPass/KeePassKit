@@ -74,6 +74,14 @@ static NSUInteger const KPKOTPDefaultNumberOfDigits = 6;
   }
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+  KPKOTPGenerator *copy = [[self.class alloc] _init];
+  copy.key = self.key;
+  copy.hashAlgorithm = self.hashAlgorithm;
+  copy.numberOfDigits = self.numberOfDigits;
+  return copy;
+}
+
 - (instancetype)_init {
   self = [super init];
   if(self) {

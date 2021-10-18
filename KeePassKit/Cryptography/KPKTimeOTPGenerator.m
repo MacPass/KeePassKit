@@ -79,6 +79,14 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
   return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+  KPKTimeOTPGenerator *copy = [super copyWithZone:zone];
+  copy.timeBase = self.timeBase;
+  copy.timeSlice = self.timeSlice;
+  copy.time = self.time;
+  return copy;
+}
+
 - (void)saveToEntry:(KPKEntry *)entry {
   /**
    strategy ist to add a otp attribute regardless of the current state
