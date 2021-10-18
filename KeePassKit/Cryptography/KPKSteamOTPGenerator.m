@@ -129,11 +129,8 @@ NSString *const KPKSteamOTPGeneratorSettingsValue = @"S";
   if(authURL.key.length != 0) {
     self.key = authURL.key;
   }
-  else {
-    return NO; // key is mandatory!
-  }
   
-  /* TODO: we should not need to parse this since Steam requires fixed settings */
+  /* FIXME: we should not need to parse this since Steam requires fixed settings */
   
   if(authURL.digits > 0) {
     self.numberOfDigits = authURL.digits;
