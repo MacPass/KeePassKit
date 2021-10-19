@@ -77,6 +77,25 @@
   XCTAssertEqualObjects(timeURL.key, keyData);
 }
 
+- (void)testTimeOTPURLWithPaddingProperties {
+  NSData *keyData = [NSData kpk_dataWithRandomBytes:11];
+  NSUInteger period = 30;
+  NSUInteger digits = 8;
+  KPKOTPHashAlgorithm algoritm = KPKOTPHashAlgorithmSha256;
+  
+  NSString *secretString = [[keyData base32EncodedStringWithOptions:0] stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+  
+  NSString *urlString = [NSString stringWithFormat:@"otpauth://totp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&period=%ld&algorithm=sha256&digits=%ld", secretString, period, digits];
+  NSURL *timeURL = [NSURL URLWithString:urlString];
+  XCTAssertNotNil(timeURL);
+  XCTAssertTrue(timeURL.isTimeOTPURL);
+  XCTAssertFalse(timeURL.isHmacOTPURL);
+  XCTAssertEqual(timeURL.digits, digits);
+  XCTAssertEqual(timeURL.hashAlgorithm, algoritm);
+  XCTAssertEqual(timeURL.period, period);
+  XCTAssertEqualObjects(timeURL.key, keyData);
+}
+
 - (void)testHmacOTPURLProperties {
   NSData *keyData = [NSData kpk_dataWithRandomBytes:10];
   NSUInteger counter = 999;
