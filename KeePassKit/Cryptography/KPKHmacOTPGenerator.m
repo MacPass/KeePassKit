@@ -42,6 +42,11 @@
   return copy;
 }
 
+- (NSString *)description {
+  NSString *baseString = [super description];
+  return [baseString stringByAppendingFormat:@" counter:%ld", self.counter];
+}
+
 - (void)saveCounterToEntry:(KPKEntry *)entry {
   KPKAttribute *urlAttribute = [entry attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
   if(urlAttribute) {

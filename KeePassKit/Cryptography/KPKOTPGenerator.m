@@ -82,6 +82,14 @@ static NSUInteger const KPKOTPDefaultNumberOfDigits = 6;
   return copy;
 }
 
+- (NSString *)description {
+  return [NSString stringWithFormat:@"%@: key:%@ algorithm:%@ numberOfDigits:%lu",
+          self.class,
+          self.key,
+          [KPKOTPGenerator stringForAlgorithm:self.hashAlgorithm],
+          (unsigned long)self.numberOfDigits];
+}
+
 - (instancetype)_init {
   self = [super init];
   if(self) {
