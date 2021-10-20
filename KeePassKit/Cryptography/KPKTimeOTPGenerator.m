@@ -164,7 +164,7 @@ KPKOTPHashAlgorithm algoritmForString(NSString *string) {
     }
   }
   if(!secretStored) {
-    secretBase32Attribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyHmacOTPSecretBase32 value:[self.key base32EncodedStringWithOptions:0]];
+    secretBase32Attribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyTimeOTPSecretBase32 value:[self.key base32EncodedStringWithOptions:0]];
     [entry addCustomAttribute:secretBase32Attribute];
   }
   
