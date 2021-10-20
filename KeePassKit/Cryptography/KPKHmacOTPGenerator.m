@@ -126,14 +126,12 @@
 }
 
 - (void)saveToEntry:(KPKEntry *)entry {
-  /**
+  /*
    strategy ist to add a otp attribute regardless of the current state
    update or add KeePass native settings regardless of current state
    
    This leads to entries having at least the otp and the native settings
    */
-  
-  
   NSString *urlString = [NSURL URLWithHmacOTPKey:self.key algorithm:self.hashAlgorithm issuer:[self _issuerForEntry:entry] counter:self.counter digits:self.numberOfDigits].absoluteString;
   KPKAttribute *urlAttribute = [entry attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
   /* update or create the URL attribute */
@@ -145,9 +143,7 @@
     urlAttribute.value = urlString;
   }
   
-  
   /* HTOP Settings */
-
   KPKAttribute *asciiKeyAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPSecret];
   KPKAttribute *hexKeyAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPSecretHex];
   KPKAttribute *base32KeyAttribute = [entry attributeWithKey:kKPKAttributeKeyHmacOTPSecretBase32];
