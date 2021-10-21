@@ -109,6 +109,10 @@ static NSUInteger const KPKOTPDefaultNumberOfDigits = 6;
   return @"0123456789";
 }
 
+- (BOOL)_reverseCodeGeneration {
+  return NO;
+}
+
 - (NSString *)_issuerForEntry:(KPKEntry *)entry {
   NSMutableString *issuer = [[NSMutableString alloc] init];
   if(entry.title) {
@@ -162,10 +166,16 @@ static NSUInteger const KPKOTPDefaultNumberOfDigits = 6;
   NSString *alphabet = [self _alphabet];
   NSUInteger alphabetLength = alphabet.length;
   NSMutableString *result = [[NSMutableString alloc] init];
+  BOOL shouldAppend = [self _reverseCodeGeneration];
   while(result.length < self.numberOfDigits) {
     NSUInteger code = decimal % alphabetLength;
     if(code < alphabetLength) {
-      [result insertString:[alphabet substringWithRange:NSMakeRange(code, 1)] atIndex:0];
+      if(shouldAppend) {
+        [result appendString:[alphabet substringWithRange:NSMakeRange(code, 1)]];
+      }
+      else {
+        [result insertString:[alphabet substringWithRange:NSMakeRange(code, 1)] atIndex:0];
+      }
     }
     else {
       return @""; // falure

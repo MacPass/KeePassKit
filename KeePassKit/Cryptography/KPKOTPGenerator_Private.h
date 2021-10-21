@@ -13,6 +13,7 @@
 
 - (instancetype)_init;
 - (BOOL)_validateOptions;
+- (BOOL)_reverseCodeGeneration;
 - (NSUInteger)_counter;
 - (NSString *)_alphabet;
 - (NSString *)_issuerForEntry:(KPKEntry *)entry;

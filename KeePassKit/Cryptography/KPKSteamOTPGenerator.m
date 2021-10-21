@@ -32,6 +32,10 @@ NSString *const KPKSteamOTPGeneratorSettingsValue = @"S";
           && self.timeSlice == self.defaultTimeSlice);
 }
 
+- (BOOL)_reverseCodeGeneration {
+  return YES;
+}
+
 - (instancetype)initWithEntry:(KPKEntry *)entry {
   self = [self init];
   if(self) {
