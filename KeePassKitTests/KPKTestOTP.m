@@ -195,6 +195,29 @@
   XCTAssertEqual(totpGenerator.numberOfDigits, digits);
 }
 
+- (void)testURLSteamOTPParsing {
+  KPKEntry *entry = [[KPKEntry alloc] init];
+  NSData *keyData = [@"ThisIsMySecret" dataUsingEncoding:NSUTF8StringEncoding];
+  NSString *issuer = @"KeePassKitTest:me@test.com";
+  NSInteger period = 30;
+  NSInteger digits = 5;
+  KPKOTPHashAlgorithm algorithm = KPKOTPHashAlgorithmSha1;
+  
+  NSURL *otpURL = [NSURL URLWIthSteamOTPKey:keyData issuer:issuer];
+  XCTAssertNotNil(otpURL);
+    
+  
+  KPKAttribute *otpAttribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyOTPOAuthURL value:otpURL.absoluteString];
+  [entry addCustomAttribute:otpAttribute];
+  
+  KPKSteamOTPGenerator *totpGenerator = [[KPKSteamOTPGenerator alloc] initWithAttributes:entry.attributes];
+  XCTAssertNotNil(totpGenerator);
+  XCTAssertEqualObjects(totpGenerator.key, keyData);
+  XCTAssertEqual(totpGenerator.hashAlgorithm, algorithm);
+  XCTAssertEqual(totpGenerator.timeSlice, period);
+  XCTAssertEqual(totpGenerator.numberOfDigits, digits);
+}
+
 - (void)testHmacCounterUpdate {
   NSArray <NSString *> *stringResults = @[ @"755224",
                                            @"287082",

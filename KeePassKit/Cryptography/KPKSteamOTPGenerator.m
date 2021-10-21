@@ -125,7 +125,7 @@ NSString *const KPKSteamOTPGeneratorSettingsValue = @"S";
     return NO;
   }
   
-  if([authURL.encoder.lowercaseString isEqualToString:kKPKURLSteamEncoderValue]) {
+  if(![authURL.encoder.lowercaseString isEqualToString:kKPKURLSteamEncoderValue]) {
     return NO; // invalid encoder!
   }
   
