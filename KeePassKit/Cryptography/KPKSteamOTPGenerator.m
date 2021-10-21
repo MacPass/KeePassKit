@@ -38,7 +38,7 @@ NSString *const KPKSteamOTPGeneratorSettingsValue = @"S";
   return KPKSteamOTPGeneratorDigits;
 }
 
-- (void)saveToEntry:(KPKEntry *)entry {
+- (void)saveToEntry:(KPKEntry *)entry options:(KPKOTPSaveOptions)options {
   /**
    KeePassXC uses a custom otpauth url so we use this first.
    Additionally we update any KeeTrayOTP settings

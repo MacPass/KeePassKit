@@ -130,7 +130,6 @@ NSString *const kKPKURLSteamEncoderValue  = @"steam";
 }
 
 - (instancetype)initWithSteamOTPKey:(NSData *)key issuer:(NSString *)issuer {
-  // FIXME: remove magic Steam numbers!
   NSURL *timeURL = [[NSURL alloc] initWithTimeOTPKey:key algorithm:KPKOTPHashAlgorithmSha1 issuer:issuer period:KPKTimeOTPDefaultTimeSlice digits:KPKSteamOTPGeneratorDigits];
   NSURLComponents *components = [[NSURLComponents alloc] initWithURL:timeURL resolvingAgainstBaseURL:NO];
   
@@ -217,6 +216,16 @@ NSString *const kKPKURLSteamEncoderValue  = @"steam";
     return NO;
   }
   return (NSOrderedSame == [self.host compare:kKPKURLTypeTimeOTP options:NSCaseInsensitiveSearch]);
+}
+
+- (BOOL)isSteamOTPURL {
+  if(!self.isTimeOTPURL) {
+    return NO;
+  }
+  return (self.hashAlgorithm == KPKOTPHashAlgorithmSha1
+          && [self.encoder isEqualToString:kKPKURLSteamEncoderValue]
+          && self.digits == KPKSteamOTPGeneratorDigits
+          && self.period == KPKTimeOTPDefaultTimeSlice);
 }
 
 - (NSString *)_queryItemValueForKey:(NSString *)key {

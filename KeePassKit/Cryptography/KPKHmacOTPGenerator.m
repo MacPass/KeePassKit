@@ -121,11 +121,11 @@
   
   KPKAttribute *counterAttribute = attributeDict[kKPKAttributeKeyHmacOTPCounter];
   self.counter = counterAttribute.evaluatedValue.integerValue; // defaults to 0 when no counter was found
-
+  
   return YES;
 }
 
-- (void)saveToEntry:(KPKEntry *)entry {
+- (void)saveToEntry:(KPKEntry *)entry options:(KPKOTPSaveOptions)options {
   /*
    strategy ist to add a otp attribute regardless of the current state
    update or add KeePass native settings regardless of current state
@@ -140,6 +140,7 @@
     [entry addCustomAttribute:urlAttribute];
   }
   else {
+    // might be nil, but that's ok
     urlAttribute.value = urlString;
   }
   

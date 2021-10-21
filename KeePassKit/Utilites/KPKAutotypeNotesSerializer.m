@@ -118,9 +118,9 @@ NSString *autotypeWindowPrefixForIndex(NSUInteger index) {
 
 - (void)_parseWindowTitleInLine:(NSString *)line {
   if(self.mutableAutotypeEntries.count == 0) {
-    return; // w
+    return;
   }
-  NSString *prefix = autotypeWindowPrefixForIndex(self.mutableAutotypeEntries.count);
+  ///NSString *prefix = autotypeWindowPrefixForIndex(self.mutableAutotypeEntries.count);
 }
 
 - (NSString *)serializeAutotype:(KPKAutotype *)autotype {

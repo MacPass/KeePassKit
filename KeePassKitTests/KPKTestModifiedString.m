@@ -24,8 +24,9 @@
   XCTAssertNotNil(data);
   XCTAssertNil(error);
   
-  KPKModifiedString *decodedString = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+  KPKModifiedString *decodedString = [NSKeyedUnarchiver unarchivedObjectOfClass:KPKModifiedString.class fromData:data error:&error];
   
+  XCTAssertNil(error);
   XCTAssertNotNil(decodedString);
   XCTAssertEqualObjects(string, decodedString);
 }

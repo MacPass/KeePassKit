@@ -154,30 +154,19 @@
 }
 
 - (NSData *)encode:(id)object {
-  NSMutableData *data = [[NSMutableData alloc] initWithCapacity:500];
-  NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-  if(![object respondsToSelector:@selector(encodeWithCoder:)]) {
-    return nil;
-  }
-  [object encodeWithCoder:archiver];
-  [archiver finishEncoding];
+  NSError *error;
+  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:object requiringSecureCoding:YES error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(data);
   return data;
 }
 
-- (id)decode:(NSData *)data ofClass:(Class)class usingSecureCoding:(BOOL)secureCoding {
-  if(![class instancesRespondToSelector:@selector(initWithCoder:)]) {
-    return nil;
-  }
-  NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-  unarchiver.requiresSecureCoding = secureCoding;
-  id object = [[class alloc] initWithCoder:unarchiver];
-  [unarchiver finishDecoding];
-  return object;
-}
-
-
 - (id)decode:(NSData *)data ofClass:(Class)class {
-  return [self decode:data ofClass:class usingSecureCoding:YES];
+  NSError *error;
+  id object = [NSKeyedUnarchiver unarchivedObjectOfClass:class fromData:data error:&error];
+  XCTAssertNil(error);
+  XCTAssertNotNil(object);
+  return object;
 }
 
 @end

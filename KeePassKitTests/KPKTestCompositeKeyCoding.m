@@ -28,10 +28,12 @@
   KPKFileKey *fileKey = [[KPKFileKey alloc] initWithKeyFileData:keyFileData];
   KPKCompositeKey *compositeKey = [[KPKCompositeKey alloc] initWithKeys:@[passwordKey, fileKey]];
   XCTAssertNotNil(compositeKey);
-  
-  NSData* archivedData = [NSKeyedArchiver archivedDataWithRootObject:compositeKey];
+    
+  NSData* archivedData = [NSKeyedArchiver archivedDataWithRootObject:compositeKey requiringSecureCoding:YES error:&error];
+  XCTAssertNil(error);
   XCTAssertNotNil(archivedData);
-  KPKCompositeKey* decodedCompositeKey = [NSKeyedUnarchiver unarchiveObjectWithData:archivedData];
+  KPKCompositeKey* decodedCompositeKey = [NSKeyedUnarchiver unarchivedObjectOfClass:KPKCompositeKey.class fromData:archivedData error:&error];
+  XCTAssertNil(error);
   XCTAssertNotNil(decodedCompositeKey);
   XCTAssertTrue([decodedCompositeKey isEqualToKey:compositeKey]);
 }

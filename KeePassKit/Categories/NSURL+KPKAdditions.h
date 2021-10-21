@@ -28,6 +28,7 @@ FOUNDATION_EXTERN NSString *const kKPKURLSteamEncoderValue; // for steam otpauth
 
 @property (readonly, nonatomic) BOOL isHmacOTPURL;
 @property (readonly, nonatomic) BOOL isTimeOTPURL;
+@property (readonly, nonatomic) BOOL isSteamOTPURL;
 
 @property (copy, readonly, nullable) NSData* key;
 @property (copy, readonly) NSString *issuer;

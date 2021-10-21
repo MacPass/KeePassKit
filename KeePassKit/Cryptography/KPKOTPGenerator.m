@@ -138,6 +138,10 @@ static NSUInteger const KPKOTPDefaultNumberOfDigits = 6;
 }
 
 - (void)saveToEntry:(KPKEntry *)entry {
+  [self saveToEntry:entry options:KPKOTPSaveOptionDefault];
+}
+
+- (void)saveToEntry:(KPKEntry *)entry options:(KPKOTPSaveOptions)options {
   [self doesNotRecognizeSelector:_cmd];
 }
 

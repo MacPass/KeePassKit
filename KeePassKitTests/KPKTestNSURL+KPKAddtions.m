@@ -59,6 +59,7 @@
 - (void)testInvalidURL {
   NSString *urlString = @"ThisIsNotAnURL";
   NSURL *url = [NSURL URLWithString:urlString];
+  XCTAssertNotNil(url);
 }
 
 - (void)testTimeOTPURLProperties {
