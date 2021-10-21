@@ -62,6 +62,42 @@
   XCTAssertNotNil(url);
 }
 
+- (void)testSteamOTPURLWithDefaultProperties {
+  NSData *keyData = [NSData kpk_dataWithRandomBytes:10];
+  NSInteger period = -1;
+  NSInteger digits = -1;
+  KPKOTPHashAlgorithm algoritm = KPKOTPHashAlgorithmInvalid;
+  NSString *urlString = [NSString stringWithFormat:@"otpauth://totp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&encoder=%@", [keyData base32EncodedStringWithOptions:KPKBase32EncodingOptionNoPadding], kKPKURLSteamEncoderValue];
+  NSURL *steamURL = [NSURL URLWithString:urlString];
+  XCTAssertNotNil(steamURL);
+  XCTAssertTrue(steamURL.isTimeOTPURL);
+  XCTAssertTrue(steamURL.isSteamOTPURL);
+  XCTAssertFalse(steamURL.isHmacOTPURL);
+  XCTAssertEqual(steamURL.digits, digits);
+  XCTAssertEqual(steamURL.hashAlgorithm, algoritm);
+  XCTAssertEqual(steamURL.period, period);
+  XCTAssertEqualObjects(steamURL.key, keyData);
+}
+
+
+- (void)testSteamOTPURLWithProperties {
+  NSData *keyData = [NSData kpk_dataWithRandomBytes:10];
+  NSUInteger period = 30;
+  NSUInteger digits = 5;
+  KPKOTPHashAlgorithm algoritm = KPKOTPHashAlgorithmSha1;
+  NSString *urlString = [NSString stringWithFormat:@"otpauth://totp/title:user@domain.com?secret=%@&issuer=titleuserdomaincom&period=%ld&algorithm=sha1&digits=%ld&encoder=%@", [keyData base32EncodedStringWithOptions:KPKBase32EncodingOptionNoPadding], period, digits, kKPKURLSteamEncoderValue];
+  NSURL *steamURL = [NSURL URLWithString:urlString];
+  XCTAssertNotNil(steamURL);
+  XCTAssertTrue(steamURL.isTimeOTPURL);
+  XCTAssertTrue(steamURL.isSteamOTPURL);
+  XCTAssertFalse(steamURL.isHmacOTPURL);
+  XCTAssertEqual(steamURL.digits, digits);
+  XCTAssertEqual(steamURL.hashAlgorithm, algoritm);
+  XCTAssertEqual(steamURL.period, period);
+  XCTAssertEqualObjects(steamURL.key, keyData);
+}
+
+
 - (void)testTimeOTPURLProperties {
   NSData *keyData = [NSData kpk_dataWithRandomBytes:10];
   NSUInteger period = 30;

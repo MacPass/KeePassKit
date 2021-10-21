@@ -183,17 +183,17 @@ NSString *const kKPKURLSteamEncoderValue  = @"steam";
 
 - (NSInteger)digits {
   NSString *keyValue = [self _queryItemValueForKey:kKPKURLParameterDigits];
-  return keyValue ? keyValue.integerValue : -1;
+  return (keyValue.length > 0) ? keyValue.integerValue : -1;
 }
 
 - (NSInteger)period {
   NSString *periodValue = [self _queryItemValueForKey:kKPKURLParameterPeriod];
-  return periodValue ? periodValue.integerValue : -1;
+  return (periodValue.length > 0) ? periodValue.integerValue : -1;
 }
 
 - (NSInteger)counter {
   NSString *counterValue = [self _queryItemValueForKey:kKPKURLParameterCounter];
-  return counterValue ? counterValue.integerValue : -1;
+  return (counterValue.length > 0) ? counterValue.integerValue : -1;
 }
 
 - (BOOL)isHmacOTPURL {
@@ -222,10 +222,10 @@ NSString *const kKPKURLSteamEncoderValue  = @"steam";
   if(!self.isTimeOTPURL) {
     return NO;
   }
-  return (self.hashAlgorithm == KPKOTPHashAlgorithmSha1
+  return ( (self.hashAlgorithm == KPKOTPHashAlgorithmInvalid || self.hashAlgorithm == KPKOTPHashAlgorithmSha1)
           && [self.encoder isEqualToString:kKPKURLSteamEncoderValue]
-          && self.digits == KPKSteamOTPGeneratorDigits
-          && self.period == KPKTimeOTPDefaultTimeSlice);
+          && (self.digits == -1 || self.digits == KPKSteamOTPGeneratorDigits)
+          && (self.period == -1 || self.period == KPKTimeOTPDefaultTimeSlice) );
 }
 
 - (NSString *)_queryItemValueForKey:(NSString *)key {
