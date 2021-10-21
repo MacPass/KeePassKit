@@ -26,6 +26,12 @@ NSString *const KPKSteamOTPGeneratorSettingsValue = @"S";
   return @"23456789BCDFGHJKMNPQRTVWXY";
 }
 
+- (BOOL)_validateOptions {
+  return (self.numberOfDigits == self.defaultNumberOfDigits
+          && self.hashAlgorithm == self.defaultHashAlgoritm
+          && self.timeSlice == self.defaultTimeSlice);
+}
+
 - (instancetype)initWithEntry:(KPKEntry *)entry {
   self = [self init];
   if(self) {

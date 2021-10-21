@@ -34,18 +34,20 @@
   XCTAssertEqual(generator.timeSlice, 30);
   XCTAssertEqual(generator.defaultTimeSlice, 30);
   XCTAssertEqual(generator.timeBase, 0);
+  XCTAssertTrue(generator.string.length > 0);
 }
 
-- (void)testDefaultSteamGenerator {
+- (void)testDefaultHmacGenerator {
   KPKHmacOTPGenerator *generator = [[KPKHmacOTPGenerator alloc] init];
   XCTAssertNotNil(generator.key);
   XCTAssertEqual(generator.key.length, 0);
   XCTAssertEqual(generator.hashAlgorithm, KPKOTPHashAlgorithmSha1);
   XCTAssertEqual(generator.defaultHashAlgoritm, KPKOTPHashAlgorithmSha1);
   XCTAssertEqual(generator.counter, 0);
+  XCTAssertTrue(generator.string.length > 0);
 }
 
-- (void)testDefaultHmacGenerator {
+- (void)testDefaultSteamGenerator {
   KPKSteamOTPGenerator *generator = [[KPKSteamOTPGenerator alloc] init];
   XCTAssertNotNil(generator.key);
   XCTAssertEqual(generator.key.length, 0);
@@ -57,6 +59,7 @@
   XCTAssertEqual(generator.timeSlice, 30);
   XCTAssertEqual(generator.defaultTimeSlice, 30);
   XCTAssertEqual(generator.timeBase, 0);
+  XCTAssertTrue(generator.string.length > 0);
 }
 
 - (void)testHmacOTP {

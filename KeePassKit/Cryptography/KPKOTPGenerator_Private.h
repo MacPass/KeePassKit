@@ -12,8 +12,10 @@
 @interface KPKOTPGenerator ()
 
 - (instancetype)_init;
+- (BOOL)_validateOptions;
 - (NSUInteger)_counter;
 - (NSString *)_alphabet;
 - (NSString *)_issuerForEntry:(KPKEntry *)entry;
+
 
 @end
