@@ -805,6 +805,26 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return NO;
 }
 
+- (BOOL)hasSteamOTP {
+  if(!self.hasTimeOTP) {
+    return NO;
+  }
+  KPKAttribute *otpURL = [self attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
+  if(otpURL) {
+    NSURL *url = [NSURL URLWithString:otpURL.evaluatedValue];
+    if(url.isSteamOTPURL) {
+      return YES;
+    }
+  }
+  KPKAttribute *timeOTPSettings = [self attributeWithKey:kKPKAttributeKeyTimeOTPSettings];
+  if(!timeOTPSettings) {
+    return NO;
+  }
+  KPKSteamOTPGenerator *generator = [[KPKSteamOTPGenerator alloc] initWithAttributes:self.mutableAttributes];
+  return (nil != generator);
+}
+
+
 - (BOOL)hasHmacOTP {
   KPKAttribute *otpURL = [self attributeWithKey:kKPKAttributeKeyOTPOAuthURL];
   if(otpURL) {

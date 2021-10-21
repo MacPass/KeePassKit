@@ -107,6 +107,9 @@ NSString *const KPKSteamOTPGeneratorSettingsValue = @"S";
       
       NSArray <NSString *> *parts = [settingsAttribute.evaluatedValue componentsSeparatedByString:@";"];
       self.timeSlice = parts.firstObject.integerValue;
+      if(self.timeSlice != 30) {
+        NSLog(@"Warning. Steam uses a 30s time intervall. Using %ld might lead to invalid codes", self.timeSlice);
+      }
       NSString *numberOfDigits = parts[1];
       if(NSOrderedSame != [numberOfDigits compare:KPKSteamOTPGeneratorSettingsValue options:NSCaseInsensitiveSearch]) {
         return NO; // invalid special key for Stream

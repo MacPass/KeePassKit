@@ -139,6 +139,9 @@ FOUNDATION_EXTERN NSString *const KPKMetaEntryKeePassKitUserTemplates;        //
  - KeePassOTP  (TOTP Settings, TOTP Seed, otp)
  */
 @property (readonly, nonatomic) BOOL hasTimeOTP;
+/// Returns YES if the entry has valid Steam Time OTP settings.
+/// SteamOTP is a TimeOTP so hasTimeOTP will also return YES!
+@property (readonly, nonatomic) BOOL hasSteamOTP;
 
 /**
  Returns the current hmacOTP value without any changes to the entry
