@@ -86,6 +86,12 @@ typedef NS_OPTIONS(NSUInteger, KPKNodeTraversalOptions) {
 #pragma mark comparsion
 - (KPKComparsionResult)_compareToNode:(KPKNode *)aNode options:(KPKNodeCompareOptions)options;
 
+#pragma mark Change Notifications
+- (void)_postWillChangeNodeNotification;
+- (void)_postDidChangeNodeNotification;
+- (void)_postWillChangeNodeNotificationWithUserInfo:(NSDictionary *)userInfo;
+- (void)_postDidChangeNodeNotificationWithUserInfo:(NSDictionary *)userInfo;
+
 @end
 
 #endif

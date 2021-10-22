@@ -42,6 +42,9 @@
 NSString *const KPKEntriesArrayBinding = @"entriesArray";
 NSString *const KPKGroupsArrayBinding = @"groupsArray";
 
+NSString *const KPKWillChangeGroupNotification  = @"KPKWillChangeGroupNotification"; // object = KPKGroup
+NSString *const KPKDidChangeGroupNotification   = @"KPKDidChangeGroupNotification";  // object = KPKGroup
+
 @implementation KPKGroup
 
 static NSSet *_observedKeyPathsSet;
@@ -85,7 +88,6 @@ static NSSet *_observedKeyPathsSet;
 + (NSSet<NSString *> *)keyPathsForValuesAffectingIndex {
   return [NSSet setWithArray:@[NSStringFromSelector(@selector(parent)), [NSString stringWithFormat:@"%@.%@",NSStringFromSelector(@selector(parent)), NSStringFromSelector(@selector(mutableGroups))]]];
 }
-
 
 + (NSUInteger)defaultIcon {
   return KPKIconFolder;
@@ -391,17 +393,21 @@ static NSSet *_observedKeyPathsSet;
 
 - (void)setNotes:(NSString *)notes {
   if(![_notes isEqualToString:notes]) {
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeGroupNotification object:self];
     [[self.undoManager prepareWithInvocationTarget:self] setNotes:self.notes];
     [self touchModified];
     _notes = [notes copy];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeGroupNotification object:self];
   }
 }
 
 - (void)setTitle:(NSString *)title {
   if(![_title isEqualToString:title]) {
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeGroupNotification object:self];
     [[self.undoManager prepareWithInvocationTarget:self] setTitle:self.title];
     [self touchModified];
     _title = [title copy];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeGroupNotification object:self];
   }
 }
 
@@ -419,8 +425,10 @@ static NSSet *_observedKeyPathsSet;
 
 - (void)setDefaultAutoTypeSequence:(NSString *)defaultAutoTypeSequence {
   [[self.undoManager prepareWithInvocationTarget:self] setDefaultAutoTypeSequence:_defaultAutoTypeSequence];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeGroupNotification object:self];
   [self touchModified];
   _defaultAutoTypeSequence = [defaultAutoTypeSequence copy];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeGroupNotification object:self];
 }
 
 - (BOOL)hasDefaultAutotypeSequence {
@@ -429,14 +437,18 @@ static NSSet *_observedKeyPathsSet;
 
 - (void)setIsAutoTypeEnabled:(KPKInheritBool)isAutoTypeEnabled {
   [[self.undoManager prepareWithInvocationTarget:self] setIsAutoTypeEnabled:_isAutoTypeEnabled];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeGroupNotification object:self];
   [self touchModified];
   _isAutoTypeEnabled = isAutoTypeEnabled;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeGroupNotification object:self];
 }
 
 - (void)setIsSearchEnabled:(KPKInheritBool)isSearchEnabled {
   [[self.undoManager prepareWithInvocationTarget:self] setIsSearchEnabled:_isSearchEnabled];
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeGroupNotification object:self];
   [self touchModified];
   _isSearchEnabled = isSearchEnabled;
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeGroupNotification object:self];
 }
 
 - (KPKFileVersion)minimumVersion {
@@ -512,16 +524,16 @@ static NSSet *_observedKeyPathsSet;
   KPKGroup *group = node.asGroup;
   
   if(group) {
-    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeWillAddGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKGroupKey: group }];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKTreeWillAddGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKGroupKey: group }];
     index = MAX(0, MIN(self.mutableGroups.count, index));
     [self insertObject:group inMutableGroupsAtIndex:index];
-    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeDidAddGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKGroupKey: group }];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKTreeDidAddGroupNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKGroupKey: group }];
   }
   else if(entry) {
     index = MAX(0, MIN(self.mutableEntries.count, index));
-    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeWillAddEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKTreeWillAddEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
     [self insertObject:entry inMutableEntriesAtIndex:index];
-    [[NSNotificationCenter defaultCenter] postNotificationName:KPKTreeDidAddEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKTreeDidAddEntryNotification object:self.tree userInfo:@{ KPKParentGroupKey: self, KPKEntryKey: entry }];
   }
   node.parent = self;
 }
@@ -688,6 +700,16 @@ static NSSet *_observedKeyPathsSet;
     [self remove];
   }
 }
+
+#pragma mark Notification
+- (void)_postWillChangeNodeNotificationWithUserInfo:(NSDictionary *)userInfo {
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeGroupNotification object:self userInfo:userInfo];
+}
+
+- (void)_postDidChangeNodeNotificationWithUserInfo:(NSDictionary *)userInfo {
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeGroupNotification object:self userInfo:userInfo];
+}
+
 #pragma mark -
 #pragma mark KVC
 - (NSUInteger)countOfGroupsArray {

@@ -27,6 +27,9 @@
 #import "KPKScopedSet.h"
 #import "NSDate+KPKAdditions.h"
 
+NSString *const KPKWillChangeTimeInfoNotification = @"KPKWillChangeTimeInfoNotification";     // object == timeInfo
+NSString *const KPKDidChangeTimeInfoNotification  = @"KPKDidChangeTimeInfoNotification";      // object == timeInfo
+
 @interface KPKTimeInfo ()
 
 @property(assign) BOOL isExpired;
@@ -152,18 +155,22 @@
 - (void)setExpires:(BOOL)expires {
   if(self.expires != expires) {
     [[self.node.undoManager prepareWithInvocationTarget:self] setExpires:self.expires];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeTimeInfoNotification object:self];
     [self touchModified];
     _expires = expires;
     [self _updateExpireState];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeTimeInfoNotification object:self];
   }
 }
 
 - (void)setExpirationDate:(NSDate *)expirationDate {
   if(self.expirationDate != expirationDate) {
     [[self.node.undoManager prepareWithInvocationTarget:self] setExpirationDate:self.expirationDate];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeTimeInfoNotification object:self];
     [self touchModified];
     _expirationDate = expirationDate;
     [self _updateExpireState];
+    [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeTimeInfoNotification object:self];
   }
 }
 

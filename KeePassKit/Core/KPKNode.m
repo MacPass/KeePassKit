@@ -235,20 +235,26 @@
 
 - (void)setIconId:(NSInteger)iconId {
   [[self.undoManager prepareWithInvocationTarget:self] setIconId:self.iconId];
+  [self _postWillChangeNodeNotification];
   [self touchModified];
   _iconId = iconId;
+  [self _postDidChangeNodeNotification];
 }
 
 - (void)setIconUUID:(NSUUID *)iconUUID {
   [[self.undoManager prepareWithInvocationTarget:self] setIconUUID:self.iconUUID];
+  [self _postWillChangeNodeNotification];
   [self touchModified];
   _iconUUID = iconUUID;
+  [self _postDidChangeNodeNotification];
 }
 
 - (void)setTimeInfo:(KPKTimeInfo *)timeInfo {
   if(self.timeInfo != timeInfo) {
+    [self _postWillChangeNodeNotification];
     _timeInfo = [timeInfo copy];
     _timeInfo.node = self;
+    [self _postDidChangeNodeNotification];
   }
 }
 
@@ -259,8 +265,10 @@
   
   tags = [[NSSet setWithArray:tags].allObjects sortedArrayUsingSelector:@selector(compare:)];
  
+  [self _postWillChangeNodeNotification];
   _tags = tags ? [[NSArray alloc] initWithArray:tags copyItems:YES] : nil;
   [self.tree _registerTags:_tags];
+  [self _postDidChangeNodeNotification];
 }
 
 - (NSString *)breadcrumb {
@@ -527,6 +535,23 @@
 - (void)_traverseNodesWithBlock:(void (^)(KPKNode *, BOOL *))block {
   [self _traverseNodesWithOptions:0 block:block];
 }
+
+- (void)_postWillChangeNodeNotification {
+  [self _postWillChangeNodeNotificationWithUserInfo:nil];
+}
+
+- (void)_postDidChangeNodeNotification {
+  [self _postDidChangeNodeNotificationWithUserInfo:nil];
+}
+
+- (void)_postWillChangeNodeNotificationWithUserInfo:(NSDictionary *)userInfo {
+  [self doesNotRecognizeSelector:_cmd];
+}
+
+- (void)_postDidChangeNodeNotificationWithUserInfo:(NSDictionary *)userInfo {
+  [self doesNotRecognizeSelector:_cmd];
+}
+
 
 - (void)addCustomDataObject:(KPKPair *)pair {
   NSAssert(pair.key, @"Custom data key cannot be nil!");

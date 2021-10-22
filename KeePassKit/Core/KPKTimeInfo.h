@@ -23,6 +23,9 @@
 #import <Foundation/Foundation.h>
 #import <KeePassKit/KPKModificationRecording.h>
 
+FOUNDATION_EXTERN NSString *const KPKWillChangeTimeInfoNotification;     // object == timeInfo
+FOUNDATION_EXTERN NSString *const KPKDidChangeTimeInfoNotification;      // object == timeInfo
+
 @class KPKNode;
 
 @interface KPKTimeInfo : NSObject <NSSecureCoding, NSCopying, KPKModificationRecording>

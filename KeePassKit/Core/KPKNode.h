@@ -32,6 +32,9 @@
 @class KPKTree;
 @class KPKBinary;
 
+FOUNDATION_EXPORT NSString *const KPKWillChangeNodeNotification;
+FOUNDATION_EXPORT NSString *const KPKDidChangeNodeNotification;
+
 typedef NS_OPTIONS(NSUInteger, KPKCopyOptions) {
   kKPKCopyOptionNone               = 0,    // No option
   kKPKCopyOptionCopyHistory        = 1<<0, // KPKEntry only - make a copy of the soures' history.

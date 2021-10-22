@@ -1184,6 +1184,14 @@ NSSet *_protectedKeyPathForAttribute(SEL aSelector) {
   return size;
 }
 
+- (void)_postWillChangeNodeNotificationWithUserInfo:(NSDictionary *)userInfo {
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKWillChangeEntryNotification object:self userInfo:userInfo];
+}
+
+- (void)_postDidChangeNodeNotificationWithUserInfo:(NSDictionary *)userInfo {
+  [NSNotificationCenter.defaultCenter postNotificationName:KPKDidChangeEntryNotification object:self userInfo:userInfo];
+}
+
 #pragma mark -
 #pragma mark KVO
 
