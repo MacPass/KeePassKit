@@ -7,9 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "NSURL+KPKAdditions.h"
-#import "NSData+KPKRandom.h"
-#import "NSData+KPKBase32.h"
+#import <KeePassKit/KeePassKit.h>
 
 @interface KPKTestNSURL_KPKAddtions : XCTestCase
 
@@ -64,6 +62,8 @@
 
 - (void)testSteamOTPURLWithDefaultProperties {
   NSData *keyData = [NSData kpk_dataWithRandomBytes:10];
+  uint8_t bytes[] = { 0x43, 0xE0, 0xC1, 0x73};
+  keyData = [NSData dataWithBytes:bytes length:4];
   NSInteger period = -1;
   NSInteger digits = -1;
   KPKOTPHashAlgorithm algoritm = KPKOTPHashAlgorithmInvalid;
@@ -77,6 +77,10 @@
   XCTAssertEqual(steamURL.hashAlgorithm, algoritm);
   XCTAssertEqual(steamURL.period, period);
   XCTAssertEqualObjects(steamURL.key, keyData);
+
+  KPKSteamOTPGenerator *otp = [[KPKSteamOTPGenerator alloc] initWithURL:urlString];
+  XCTAssertNotNil(otp);
+  XCTAssertEqualObjects(steamURL.key, otp.key);
 }
 
 
