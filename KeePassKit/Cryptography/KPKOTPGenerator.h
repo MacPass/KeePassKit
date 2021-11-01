@@ -26,8 +26,8 @@ typedef NS_ENUM(NSUInteger, KPKOTPHashAlgorithm ) {
 
 /// Use these options to specify how to save settings to an entry
 /// Normally KPKOTPSaveOptionsDefault should be used.
-/// Since there is are multipe storage formats used by various plugins and clients the default options tries to be highly compatible
-/// This might lead to duplication of settings. If you only want to ensure a dedicated settings, use the appropriate option
+/// Since there are multipe storage formats used by various plugins and clients the default options tries to be highly compatible
+/// This might lead to duplication of settings. If you only want to ensure a dedicated format, use the appropriate option
 typedef NS_OPTIONS(NSUInteger, KPKOTPSaveOptions) {
   KPKOTPSaveOptionKeePassNative = 1 << 0, /// saves the options using the native Keepass custom attributes
   KPKOTPSaveOptionURL           = 1 << 1, /// saves the options using the otpauth URI scheme custom attribute favoured by KeePassXC and others
@@ -48,8 +48,8 @@ FOUNDATION_EXTERN NSUInteger const KPKOTPMaxiumNumberOfDigits;
 + (KPKOTPHashAlgorithm)algorithmForString:(NSString *)string;
 + (NSString *)stringForAlgorithm:(KPKOTPHashAlgorithm)algorithm;
 
-@property (readonly, copy, nonatomic) NSString *string; /// will be formatted according to the supplied options, bindable and KVO confromant
-@property (readonly, copy, nonatomic) NSData *data; /// will return the raw data of the OTP generator, you normally should only need the string value. Is KVO compliant and bindable
+@property (readonly, copy, nonatomic) NSString *string; /// will be formatted according to the supplied options
+@property (readonly, copy, nonatomic) NSData *data; /// will return the raw data of the OTP generator, you normally should only need the string value
 
 @property (copy) NSData *key; // the seed key for the OTP Generator, default=empty data
 @property KPKOTPHashAlgorithm hashAlgorithm; // the hash algorithm to base the OTP data on, default=KPKTOPHashAlgorithmSha1
