@@ -46,7 +46,7 @@ NSString *const KPKAESRoundsOption              = @"R"; // uint64_t wrapped in K
   [KPKKeyDerivation _registerKeyDerivation:self];
 }
 
-- (void)parametersForDelay:(NSUInteger)seconds completionHandler:(void (^)(NSDictionary * _Nonnull options))completionHandler {
++ (void)parametersForDelay:(NSUInteger)seconds completionHandler:(void (^)(NSDictionary * _Nonnull options))completionHandler {
   // Transform the key
   dispatch_queue_t normalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
   dispatch_async(normalQueue, ^{
