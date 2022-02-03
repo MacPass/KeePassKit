@@ -26,6 +26,8 @@
 #import "KPKAutotype.h"
 #import "KPKErrors.h"
 
+#import "NSString+KPKCommands.h"
+
 static NSString * const _KPKWindowAssociationWildcard = @"KPKWindowAssociationWildcard";
 
 @interface KPKWindowAssociation () {
@@ -153,6 +155,8 @@ static NSString * const _KPKWindowAssociationWildcard = @"KPKWindowAssociationWi
 }
 
 - (BOOL)matchesWindowTitle:(NSString *)windowTitle {
+  // FIXME: Evaluate windowTitle before matching
+  // NSString *evaluatedWindowTitle = [self.windowTitle kpk_finalValueForEntry:self.autotype.entry]
   if(NSOrderedSame == [self.windowTitle caseInsensitiveCompare:windowTitle]) {
     return YES;
   }
