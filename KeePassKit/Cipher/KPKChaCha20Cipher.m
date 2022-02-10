@@ -70,9 +70,9 @@
 }
 
 - (NSData *)encryptData:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error {
-  uint8_t buffer[data.length];
+  uint8_t *buffer = malloc(sizeof(uint8_t) * (data.length));
   chacha20_encrypt(&_context, data.bytes, buffer, data.length);
-  return [[NSData alloc] initWithBytes:buffer length:data.length];
+  return [[NSData alloc] initWithBytesNoCopy:buffer length:data.length freeWhenDone:YES];
 }
 
 - (NSData *)decryptData:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error {
