@@ -103,7 +103,7 @@ extern void Twofish_initialise(void);
  * The cipher key is an array of bytes; the Twofish_Byte type is
  * defined above to a type suitable on your platform.
  *
- * Any key must be converted to an internal form in the Twofisk_key structure
+ * Any key must be converted to an internal form in the Twofish_key structure
  * before it can be used.
  * The encryption and decryption functions only work with the internal form.
  * The conversion to internal form need only be done once for each key value.
