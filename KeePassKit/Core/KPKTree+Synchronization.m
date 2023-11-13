@@ -21,6 +21,8 @@
 #import "KPKNode.h"
 #import "KPKNode_Private.h"
 #import "KPKScopedSet.h"
+#import "KPKSynchronizationChangesItem.h"
+#import "KPKSynchronizationChangesStore_Private.h"
 #import "KPKTimeInfo.h"
 #import "KPKTree_Private.h"
 
@@ -41,8 +43,11 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
 @implementation KPKTree (Synchronization)
 
 - (void)synchronizeWithTree:(KPKTree *)tree mode:(KPKSynchronizationMode)mode options:(KPKSynchronizationOptions)options {
-  
-  if(options & KPKSynchronizationOptionCreateNewUuids) {
+  KPKSynchronizationChangesStore *changesStore;
+  if([tree.delegate respondsToSelector:@selector(synchronizationChangeStoreForTree:)]) {
+    changesStore = [tree.delegate synchronizationChangeStoreForTree:tree];
+  }
+  if(!(options & KPKSynchronizationOptionDryRun) && (options & KPKSynchronizationOptionCreateNewUuids)) {
     /* create new uuid in the sourc tree */
     [tree.root _regenerateUUIDs];
   }
@@ -57,6 +62,7 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
    7) update deleted information
    8) reapply deletions to ensure entries and groups are at final place
    */
+  [changesStore _beginRecordingChanges];
   [self _mergeNodes:[@[tree.root] arrayByAddingObjectsFromArray:tree.allGroups] mode:mode options:options];
   [self _mergeNodes:tree.allEntries mode:mode options:options];
   [self _mergeLocationFromNodes:tree.allEntries options:options];
@@ -67,8 +73,7 @@ KPKNode *_findNodeInGroup(KPKNode *node, KPKGroup *group, KPKSynchronizationOpti
     [self _reapplyNodeDeletions:self.root];
     [self _reapplyIconDeletions];
   }
-  
-  ;
+  [changesStore _endRecordingChanges];
   /* clear undo stack since merge is not supposed to be undoable */
   [self.undoManager removeAllActions];
 }

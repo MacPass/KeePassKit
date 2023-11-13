@@ -65,6 +65,7 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 
 #import <KeePassKit/KPKModificationRecording.h>
 #import <KeePassKit/KPKCommandEvaluationContext.h>
+#import <KeePassKit/KPKSynchronizationChangesStore.h>
 
 #import <KeePassKit/KPKErrors.h>
 
@@ -77,6 +78,7 @@ FOUNDATION_EXPORT const unsigned char KeePassKitVersionString[];
 #import <KeePassKit/NSString+KPKCommands.h>
 #import <KeePassKit/NSString+KPKEmpty.h>
 #import <KeePassKit/NSString+KPKXmlUtilities.h>
+#import <KeePassKit/NSString+KPKHexData.h>
 #import <KeePassKit/NSUUID+KPKAdditions.h>
 #import <KeePassKit/NSUIColor+KPKAdditions.h>
 #import <KeePassKit/NSUIImage+KPKAdditions.h>

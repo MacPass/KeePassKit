@@ -124,7 +124,7 @@
   }
 }
 
-- (void)testHmacOTPWithEmpyKey {
+- (void)testHmacOTPWithEmptyKey {
   KPKHmacOTPGenerator *generator = [[KPKHmacOTPGenerator alloc] init];
   NSString *string = generator.string;
   XCTAssertNotNil(string);
@@ -258,13 +258,17 @@
   
 }
 
-- (void)testEntryOTPproperties {
+- (void)testEntryOTPProperties {
   KPKEntry *entry = [[KPKEntry alloc] init];
   KPKAttribute *otpAttribute = [[KPKAttribute alloc] initWithKey:kKPKAttributeKeyOTPOAuthURL value:@"This-is-no-valid-URL"];
   [entry addCustomAttribute:otpAttribute];
   
   XCTAssertFalse(entry.hasTimeOTP);
   XCTAssertFalse(entry.hasHmacOTP);
+}
+
+- (void)testEntryOTPPropertiesUpdate {
+  XCTFail();
 }
 
 /*

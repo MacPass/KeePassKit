@@ -20,7 +20,8 @@ typedef NS_ENUM(NSUInteger, KPKSynchronizationMode) {
 
 typedef NS_OPTIONS(NSUInteger, KPKSynchronizationOptions) {
   KPKSynchronizationOptionCreateNewUuids          = 1 << 0, // generate new UUIDs in source tree before merging it into target
-  KPKSynchronizationOptionMatchGroupsByTitleOnly  = 1 << 1 // match groups by title not by UUID. This is usefull when trying to merge KDB trees since only entry retain their UUID after save and load
+  KPKSynchronizationOptionMatchGroupsByTitleOnly  = 1 << 1, // match groups by title not by UUID. This is usefull when trying to merge KDB trees since only entry retain their UUID after save and load
+  KPKSynchronizationOptionDryRun                  = 1 << 2 // do not make any real changes, just run a dry run
 };
 
 #endif /* KPKSynchronizationOptions_h */

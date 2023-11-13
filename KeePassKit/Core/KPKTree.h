@@ -23,6 +23,7 @@
 #import <Foundation/Foundation.h>
 #import <KeePassKit/KPKFormat.h>
 #import <KeePassKit/KPKSynchronizationOptions.h>
+#import <KeePassKit/KPKSynchronizationChangesStore.h>
 #import <KeePassKit/KPKNode.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -97,6 +98,11 @@ FOUNDATION_EXTERN NSString *const KPKEntryKey;
  If you do not change anythin simply return NO and do not touch the string
  */
 - (BOOL)tree:(KPKTree *)tree resolveUnknownPlaceholdersInString:(NSMutableString *)string forEntry:(KPKEntry *)entry;
+
+/// Allows the delegate to supply a changesStore to retrieve any changes when a synchonization is done.
+/// Run the synchronization in dry mode to retriefe those changes before applying the merge
+/// - Parameter tree: the tree to supply the store for
+- (KPKSynchronizationChangesStore *)synchronizationChangeStoreForTree:(KPKTree *)tree;
 
 @end
 

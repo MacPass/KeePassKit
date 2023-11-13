@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithTree:(KPKTree *)tree;
 
-- (NSData *)treeDataWithHeaderHash:(NSData *)hash;
+- (NSData * _Nullable)treeDataWithHeaderHash:(NSData *)hash;
 
 @end
 
