@@ -95,8 +95,8 @@
 }
 
 - (BOOL)_setupContext:(NSError **)error {
-  NSAssert(self.initializationVector.length == self.IVLength, @"Twofish IV length must be 16 bytes!");
-  NSAssert(self.key.length == self.keyLength, @"Twofish key lenght must be 32 bytes");
+  NSAssert(self.initializationVector.length == self.IVLength, @"Twofish IV length has to be 16 bytes!");
+  NSAssert(self.key.length == self.keyLength, @"Twofish key length has to be 32 bytes");
   if(self.key.length != 32) {
     KPKCreateError(error, KPKErrorDecryptionFailed);
     return NO;
