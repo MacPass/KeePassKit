@@ -30,7 +30,7 @@ const uint64_t KPKArgon2MinIterations = 1;
 const uint64_t KPKArgon2MaxIterations = UINT32_MAX;
 
 const uint64_t KPKArgon2MinMemory = 1024 * 8;
-const uint64_t KPKArgon2MaxMemory = INT32_MAX;
+const uint64_t KPKArgon2MaxMemory = UINT32_MAX;
 
 const uint32_t KPKArgon2MinParallelism = 1;
 const uint32_t KPKArgon2MaxParallelism = (1 << 24) - 1;
