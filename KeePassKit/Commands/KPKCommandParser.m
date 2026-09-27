@@ -14,6 +14,7 @@
 #import "KPKEntry.h"
 #import "KPKGroup.h"
 #import "KPKMetaData.h"
+#import "KPKReferenceBuilder.h"
 #import "KPKTree.h"
 
 #import "KPKFormat.h"
@@ -125,116 +126,58 @@ BOOL KPKReachedMaxiumRecursionLevel(NSUInteger recursion) {
   }
   
   BOOL didReplace = NO;
-  NSArray <NSTextCheckingResult *> *results = [KPKCommandCache.sharedCache.referenceRegExp matchesInString:self.sequence options:0 range:NSMakeRange(0, self.sequence.length)];
-  NSMutableString *mutableSelf;
-  if(results.count > 0) {
-    mutableSelf = [self.sequence mutableCopy];
-  }
-  for(NSTextCheckingResult *result in results.reverseObjectEnumerator) {
-    NSString *valueField = [self.sequence substringWithRange:[result rangeAtIndex:1]];
-    NSString *searchField = [self.sequence substringWithRange:[result rangeAtIndex:2]];
-    NSString *criteria = [self.sequence substringWithRange:[result rangeAtIndex:3]];
-    NSString *substitute = [self _retrieveValueOfKey:valueField
-                                             withKey:searchField
-                                            matching:criteria
-                                           recursion:level];
+  NSArray<KPKFieldReference *> *references = [KPKFieldReference referencesInString:self.sequence];
+  NSMutableString *mutableSelf = references.count > 0 ? [self.sequence mutableCopy] : nil;
+  for(KPKFieldReference *reference in references.reverseObjectEnumerator) {
+    KPKFieldReferenceValueTransformer transformer = ^NSString *(KPKEntry *candidateEntry, KPKReferenceField field, NSString *candidateValue) {
+      KPKEntry *contextEntry = field == KPKReferenceFieldOther ? self.context.entry : candidateEntry;
+      KPKCommandEvaluationContext *context = [KPKCommandEvaluationContext contextWithEntry:contextEntry options:self.context.options];
+      KPKCommandParser *parser = [[KPKCommandParser alloc] initWithSequnce:candidateValue context:context];
+      return [parser _finalValueWithRecursion:level + 1];
+    };
+    KPKFieldReferenceResolution *resolution = [KPKReferenceBuilder resolveReference:reference
+                                                                             inTree:self.context.entry.tree
+                                                                      excludingEntry:self.context.entry
+                                                                    valueTransformer:transformer
+                                                                  collectAllMatches:NO];
+    KPKEntry *matchingEntry = resolution.selectedEntry;
+    if(!matchingEntry) {
+      continue;
+    }
+    NSString *substitute;
+    if(reference.wantedField == KPKReferenceFieldUUID) {
+      substitute = matchingEntry.uuid.kpk_UUIDString;
+    }
+    else {
+      NSString *attributeKey = nil;
+      switch(reference.wantedField) {
+        case KPKReferenceFieldTitle: attributeKey = kKPKTitleKey; break;
+        case KPKReferenceFieldUsername: attributeKey = kKPKUsernameKey; break;
+        case KPKReferenceFieldPassword: attributeKey = kKPKPasswordKey; break;
+        case KPKReferenceFieldUrl: attributeKey = kKPKURLKey; break;
+        case KPKReferenceFieldNotes: attributeKey = kKPKNotesKey; break;
+        case KPKReferenceFieldUUID:
+        case KPKReferenceFieldOther:
+          break;
+      }
+      if(!attributeKey) {
+        continue;
+      }
+      KPKCommandEvaluationContext *context = [KPKCommandEvaluationContext contextWithEntry:matchingEntry options:self.context.options];
+      KPKCommandParser *parser = [[KPKCommandParser alloc] initWithSequnce:[matchingEntry valueForAttributeWithKey:attributeKey] context:context];
+      substitute = [parser _finalValueWithRecursion:level + 1];
+    }
     if(substitute) {
-      [mutableSelf replaceCharactersInRange:result.range withString:substitute];
+      [mutableSelf replaceCharactersInRange:reference.range withString:substitute];
       didReplace = YES;
     }
-  };
+  }
   
   /* do not return a copy to minimize string copies each recursion */
   if(didReplace) {
     self.sequence = mutableSelf;
   }
   return didReplace;
-}
-
-- (NSString *)_retrieveValueOfKey:(NSString *)valueKey withKey:(NSString *)searchKey matching:(NSString *)match recursion:(NSUInteger)recursion {
-  /* Custom and UUID will get special treatment, so we do not collect them inside the array */
-  static NSDictionary<NSString *, NSString *> *attributeKeyForReferenceKey;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    attributeKeyForReferenceKey = @{
-                                    kKPKReferenceTitleKey : kKPKTitleKey,
-                                    kKPKReferenceUsernameKey : kKPKUsernameKey,
-                                    kKPKReferencePasswordKey : kKPKPasswordKey,
-                                    kKPKReferenceURLKey : kKPKURLKey,
-                                    kKPKReferenceNotesKey : kKPKNotesKey,
-                                    };
-  });
-  /* Noramlize the keys */
-  searchKey = searchKey.uppercaseString;
-  valueKey = valueKey.uppercaseString;
-  KPKEntry *matchingEntry;
-  /* Custom Attribute search
-   First hit will get returned, even if there's a better one later on!
-   */
-  KPKTree *tree = self.context.entry.tree;
-  NSArray *allEntries = tree.allEntries;
-  if([searchKey isEqualToString:kKPKReferenceCustomFieldKey]) {
-    for(KPKEntry *entry in allEntries) {
-      if([entry isEqual:self.context.entry]) {
-        continue; // self reference is not allowed
-      }
-      for(KPKAttribute *attribute in entry.customAttributes) {
-        KPKCommandEvaluationContext *context = [KPKCommandEvaluationContext contextWithEntry:self.context.entry options:self.context.options];
-        KPKCommandParser *parser = [[KPKCommandParser alloc] initWithSequnce:attribute.value context:context];
-        NSString *finalValue = [parser _finalValueWithRecursion:recursion + 1];
-        NSRange matchRange = [finalValue rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, finalValue.length) locale:NSLocale.currentLocale];
-        if(matchRange.length > 0) {
-          matchingEntry = entry;
-          break;
-        }
-      }
-      if(matchingEntry) {
-        break;
-      }
-    }
-  }
-  /* Direct UUID search */
-  else if([searchKey isEqualToString:kKPKReferenceUUIDKey]) {
-    NSUUID *uuid;
-    if(match.length == 32) {
-      uuid = [[NSUUID alloc] initWithUndelemittedUUIDString:match];
-    }
-    else {
-      uuid = [[NSUUID alloc] initWithUUIDString:match];
-    }
-    matchingEntry = [tree.root entryForUUID:uuid];
-  }
-  /* Default attribute search */
-  else {
-    NSString *searchAttributeKey = attributeKeyForReferenceKey[searchKey];
-    if(!searchAttributeKey) {
-      return nil; // no valid attribute key supplied
-    }
-    for(KPKEntry *entry in allEntries) {
-      if([entry isEqual:self.context.entry]) {
-        continue; // references to self aren't supported
-      }
-      KPKCommandEvaluationContext *context = [KPKCommandEvaluationContext contextWithEntry:entry options:self.context.options];
-      KPKCommandParser *parser = [[KPKCommandParser alloc] initWithSequnce:[entry valueForAttributeWithKey:searchAttributeKey] context:context];
-      NSString *value = [parser _finalValueWithRecursion:recursion + 1];
-      NSRange matchRange = [value rangeOfString:match options:NSCaseInsensitiveSearch range:NSMakeRange(0, value.length)];
-      if(matchRange.length > 0) {
-        /* First hit wins */
-        matchingEntry = entry;
-        break;
-      }
-    }
-  }
-  if(!matchingEntry) {
-    return nil;
-  }
-  /* Direct UUID retrieval */
-  if([valueKey isEqualToString:kKPKReferenceUUIDKey]) {
-    return matchingEntry.uuid.UUIDString;
-  }
-  KPKCommandEvaluationContext *context = [KPKCommandEvaluationContext contextWithEntry:matchingEntry options:self.context.options];
-  KPKCommandParser *parser = [[KPKCommandParser alloc] initWithSequnce:[matchingEntry valueForAttributeWithKey:attributeKeyForReferenceKey[valueKey]] context:context];
-  return [parser _finalValueWithRecursion:recursion + 1];
 }
 
 - (BOOL)_evaluatePlaceholderWithRecursion:(NSUInteger)recursion {

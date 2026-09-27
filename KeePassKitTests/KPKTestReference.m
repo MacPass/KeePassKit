@@ -128,6 +128,9 @@
   
   XCTAssertNoThrow([self.entry2.title kpk_finalValueForEntry:self.entry2], @"Malformed UUID string does not throw exception!");
   XCTAssertEqualObjects([self.entry2.title kpk_finalValueForEntry:self.entry2], self.entry2.title, @"Malformed UUID does not yield a match!");
+
+  self.entry2.title = [NSString stringWithFormat:@"{REF:T@I:%@}", [self.entry1.uuid.kpk_UUIDString substringToIndex:8]];
+  XCTAssertEqualObjects([self.entry2.title kpk_finalValueForEntry:self.entry2], self.entry2.title, @"Partial UUID does not yield a match!");
 }
 
 - (void)testReferncePasswordByTitle {
@@ -156,6 +159,114 @@
   NSString *actual = [self.entry1.username kpk_finalValueForEntry:self.entry1];
   NSString *expected = [NSString stringWithFormat:@"Username:%@ Password:%@", self.entry2.username, self.entry2.password];
   XCTAssertEqualObjects(actual,expected, @"Multiple references inside a string get resolved correctly");
+}
+
+- (void)testStructuredReferenceParsing {
+  NSString *value = @"prefix {ref:p@i:0123456789ABCDEF0123456789ABCDEF} middle {REF:U@T:Example Account} suffix";
+  NSArray<KPKFieldReference *> *references = [KPKFieldReference referencesInString:value];
+
+  XCTAssertEqual(references.count, 2);
+  XCTAssertEqual(references[0].wantedField, KPKReferenceFieldPassword);
+  XCTAssertEqual(references[0].searchField, KPKReferenceFieldUUID);
+  XCTAssertEqualObjects(references[0].searchText, @"0123456789ABCDEF0123456789ABCDEF");
+  XCTAssertEqualObjects([value substringWithRange:references[0].range], references[0].rawReference);
+  XCTAssertEqual(references[1].wantedField, KPKReferenceFieldUsername);
+  XCTAssertEqual(references[1].searchField, KPKReferenceFieldTitle);
+}
+
+- (void)testMalformedReferencesAreNotParsed {
+  XCTAssertEqual([KPKFieldReference referencesInString:@"{REF:P@I:}"].count, 0);
+  XCTAssertEqual([KPKFieldReference referencesInString:@"{REF:O@I:0123456789ABCDEF0123456789ABCDEF}"].count, 0);
+  XCTAssertEqual([KPKFieldReference referencesInString:@"{REF:P@X:value}"].count, 0);
+}
+
+- (void)testBuilderValidationAndCanonicalUUID {
+  NSString *reference = [KPKReferenceBuilder referenceToField:KPKReferenceFieldPassword inEntry:self.entry1];
+  NSString *expectedReference = [NSString stringWithFormat:@"{REF:P@I:%@}", self.entry1.uuid.kpk_UUIDString];
+  XCTAssertEqualObjects(reference, expectedReference);
+  XCTAssertNil([KPKReferenceBuilder reference:KPKReferenceFieldOther where:KPKReferenceFieldUUID is:self.entry1.uuid.kpk_UUIDString]);
+  XCTAssertNil([KPKReferenceBuilder reference:KPKReferenceFieldPassword where:KPKReferenceFieldUUID is:@""]);
+  XCTAssertNil([KPKReferenceBuilder reference:KPKReferenceFieldPassword where:KPKReferenceFieldTitle is:@"invalid}"]);
+}
+
+- (void)testDashedUUIDReferencesRemainCompatible {
+  NSString *rawReference = [NSString stringWithFormat:@"{REF:P@I:%@}", self.entry1.uuid.UUIDString];
+  KPKFieldReference *reference = [KPKFieldReference referencesInString:rawReference].firstObject;
+  KPKFieldReferenceResolution *resolution = [KPKReferenceBuilder resolveReference:reference inTree:self.tree];
+
+  XCTAssertEqual(resolution.status, KPKFieldReferenceResolutionStatusResolvedUnique);
+  XCTAssertEqualObjects(resolution.selectedEntry, self.entry1);
+}
+
+- (void)testReferenceResolutionReportsAmbiguityInTreeOrder {
+  self.entry1.title = @"Shared Production Account";
+  self.entry2.title = @"Shared Production Backup";
+  KPKFieldReference *reference = [KPKFieldReference referencesInString:@"{REF:U@T:Shared Production}"].firstObject;
+  KPKFieldReferenceResolution *resolution = [KPKReferenceBuilder resolveReference:reference inTree:self.tree];
+
+  XCTAssertEqual(resolution.status, KPKFieldReferenceResolutionStatusResolvedAmbiguous);
+  XCTAssertEqual(resolution.matchingEntries.count, 2);
+  XCTAssertEqualObjects(resolution.selectedEntry, self.entry1);
+}
+
+- (void)testEvaluationDoesNotResolveAgainstCurrentEntry {
+  self.entry1.title = @"Only Current Entry Matches";
+  self.entry1.notes = @"{REF:T@T:Only Current Entry}";
+
+  XCTAssertEqualObjects([self.entry1.notes kpk_finalValueForEntry:self.entry1], self.entry1.notes);
+}
+
+- (void)testSimpleExpressionReferenceSearch {
+  self.entry1.title = @"Shared Production Account";
+  self.entry1.username = @"production-user";
+  self.entry2.title = @"Shared Staging Account";
+  self.entry2.username = @"staging-user";
+
+  self.entry2.notes = @"{REF:U@T:Shared Production -Backup}";
+  XCTAssertEqualObjects([self.entry2.notes kpk_finalValueForEntry:self.entry2], @"production-user");
+
+  self.entry2.notes = @"{REF:U@T:\"Production Account\"}";
+  XCTAssertEqualObjects([self.entry2.notes kpk_finalValueForEntry:self.entry2], @"production-user");
+}
+
+- (void)testCustomFieldSearchUsesEvaluatedCandidateValues {
+  self.entry1.username = @"custom-user";
+  self.entry2.username = @"Shared Production";
+  [self.entry1 addCustomAttribute:[[KPKAttribute alloc] initWithKey:@"Environment" value:@"{USERNAME}"]];
+  [self.entry2 addCustomAttribute:[[KPKAttribute alloc] initWithKey:@"Environment" value:@"Shared Staging"]];
+  self.entry2.notes = @"{REF:U@O:Shared Production}";
+
+  XCTAssertEqualObjects([self.entry2.notes kpk_finalValueForEntry:self.entry2], @"custom-user");
+}
+
+- (void)testStandardFieldSearchUsesEvaluatedCandidateValues {
+  self.entry1.title = @"{USERNAME}";
+  self.entry1.username = @"Expanded target";
+  self.entry1.password = @"matched-password";
+  self.entry2.notes = @"{REF:P@T:Expanded target}";
+
+  XCTAssertEqualObjects([self.entry2.notes kpk_finalValueForEntry:self.entry2], @"matched-password");
+}
+
+- (void)testEvaluationStopsAfterFirstMatch {
+  self.entry1.title = @"Shared target";
+  self.entry2.title = @"Shared target";
+  KPKFieldReference *reference = [KPKFieldReference referencesInString:@"{REF:U@T:Shared}"].firstObject;
+  KPKFieldReferenceResolution *resolution = [KPKReferenceBuilder resolveReference:reference
+                                                                            inTree:self.tree
+                                                                     excludingEntry:nil
+                                                                   valueTransformer:nil
+                                                                 collectAllMatches:NO];
+
+  XCTAssertEqual(resolution.matchingEntries.count, 1);
+  XCTAssertEqualObjects(resolution.selectedEntry, self.entry1);
+}
+
+- (void)testUUIDWantedFieldUsesUndelimitedForm {
+  self.entry2.notes = [KPKReferenceBuilder reference:KPKReferenceFieldUUID where:KPKReferenceFieldTitle is:@"Root target"];
+  self.entry1.title = @"Root target";
+
+  XCTAssertEqualObjects([self.entry2.notes kpk_finalValueForEntry:self.entry2], self.entry1.uuid.kpk_UUIDString);
 }
 
 

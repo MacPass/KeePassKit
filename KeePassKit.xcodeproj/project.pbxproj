@@ -3158,7 +3158,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+			shellScript = "/usr/bin/env carthage copy-frameworks\n";
 		};
 		9CED5FB1203C566300C9A6C5 /* Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3173,7 +3173,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+			shellScript = "/usr/bin/env carthage copy-frameworks\n";
 		};
 		9CED5FB2203C566800C9A6C5 /* Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3188,7 +3188,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+			shellScript = "/usr/bin/env carthage copy-frameworks\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
